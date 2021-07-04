@@ -6,6 +6,7 @@ import { InputGroupField } from 'components/fields/InputGroupField';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { ICompany } from 'stores/company/Reducer';
 import { editCompanyInfoAction } from 'stores/company/Actions';
+import { useTranslation } from 'react-i18next';
 
 interface CompanyInfoProps {
   companyInfo: ICompany;
@@ -104,17 +105,21 @@ const CompanyInfoFormComponent = (
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
-        Basic Information
+        {t('app.company.Company-profile.Basic')}
+        {/* Basic Information */}
       </h1>
       <div className={` ${errors.name ? 'mb3' : 'mb4'}`}>
         <InputGroupField
           id="name"
           value={values.name}
           onChange={handleChange('name')}
-          placeHolder="Company Name (Required)"
+          placeHolder={`${t('app.forms.Create-company.Name')} (Required)`}
+          // placeHolder="Company Name (Required)"
           leftIcon="user"
           style={{
             boxShadow: 'none',
@@ -182,7 +187,8 @@ const CompanyInfoFormComponent = (
           id="address"
           value={values.address}
           onChange={handleChange('address')}
-          placeHolder="Company Address (Required)"
+          placeHolder={`${t('app.forms.Create-company.Address')} (Required)`}
+          // placeHolder="Company Address (Required)"
           leftIcon="map-marker"
           style={{
             boxShadow: 'none',
@@ -222,7 +228,8 @@ const CompanyInfoFormComponent = (
           id="email"
           value={values.email}
           onChange={handleChange('email')}
-          placeHolder="Company email address"
+          placeHolder={t('app.forms.Create-company.Email')}
+          // placeHolder="Company email address"
           leftIcon="envelope"
           style={{
             boxShadow: 'none',
@@ -265,7 +272,8 @@ const CompanyInfoFormComponent = (
           id="legalOwnerName"
           value={values.legalOwnerName}
           onChange={handleChange('legalOwnerName')}
-          placeHolder="Legal Owner Name"
+          placeHolder={t('app.forms.Create-company.Legal-name')}
+          // placeHolder="Legal Owner Name"
           leftIcon="mugshot"
           style={{
             boxShadow: 'none',
@@ -309,7 +317,8 @@ const CompanyInfoFormComponent = (
           id="legalOwnerMail"
           value={values.legalOwnerMail}
           onChange={handleChange('legalOwnerMail')}
-          placeHolder="Legal Owner email address"
+          placeHolder={t('app.forms.Create-company.Legal-email')}
+          // placeHolder="Legal Owner email address"
           leftIcon="envelope"
           style={{
             boxShadow: 'none',

@@ -35,6 +35,8 @@ import 'react-flags-select/css/react-flags-select.css';
 // import { allCountryList } from './countryCode';
 import InputTooltip from 'components/input-tooltip/InputTooltip';
 import './Signup.scss';
+import { useTranslation } from 'react-i18next';
+
 const validation = {
   rules: [
     'At least 1 capital letter',
@@ -104,6 +106,8 @@ export const SignUpPageComponent = (
     }
   }, [props.location.search]);
 
+const { t } = useTranslation();
+
   return (
     <div className="cf ph2-ns">
       <div
@@ -133,7 +137,8 @@ export const SignUpPageComponent = (
                 ...rest
               }) => (
                 <>
-                  <h1 className="pl3-ns">Sign Up</h1>
+                  {/* <h1 className="pl3-ns">Sign Up</h1> */}
+                  <h1 className="pl3-ns">{t('landing.sign-up.sign-up-form.sign-up-text')}</h1>
                   <form className="dt fl cf" onSubmit={handleSubmit}>
                     <div className="mw9 center ph3-ns v-mid dtc">
                       <SubmitError errorMessage={submitError} />
@@ -176,7 +181,8 @@ export const SignUpPageComponent = (
                                     fontSize: '18px',
                                     paddingLeft: '40px',
                                   }}
-                                  placeHolder="First Name"
+                                  // placeHolder="First Name"
+                                  placeHolder={t('landing.sign-up.sign-up-form.first-name')}
                                   error={
                                     checkError(meta) &&
                                     (meta.error || meta.submitError)
@@ -209,7 +215,8 @@ export const SignUpPageComponent = (
                                     boxShadow: 'none',
                                     fontSize: '18px',
                                   }}
-                                  placeHolder="Last Name"
+                                  // placeHolder="Last Name"
+                                  placeHolder={t('landing.sign-up.sign-up-form.last-name')}
                                   error={
                                     checkError(meta) &&
                                     (meta.error || meta.submitError)
@@ -362,7 +369,8 @@ export const SignUpPageComponent = (
                                     targetClassName: 'w-100',
                                   }}
                                   minDate={new Date('1934-01-01')}
-                                  placeholder="Birth Date"
+                                  // placeholder="Birth Date"
+                                  placeholder={t('landing.sign-up.sign-up-form.birthday')}
                                   maxDate={moment(new Date())
                                     .subtract(13, 'years')
                                     .toDate()}
@@ -420,7 +428,8 @@ export const SignUpPageComponent = (
                                     fontSize: '18px',
                                     paddingLeft: '40px',
                                   }}
-                                  placeHolder="contact@onethread.app"
+                                  // placeHolder="contact@onethread.app"
+                                  placeHolder={t('landing.sign-up.sign-up-form.your-email')}
                                   error={
                                     checkError(meta) &&
                                     (meta.error || meta.submitError)
@@ -547,7 +556,8 @@ export const SignUpPageComponent = (
                                     fontSize: '18px',
                                     paddingLeft: '40px',
                                   }}
-                                  placeHolder="Password"
+                                  // placeHolder="Password"
+                                  placeHolder={t('landing.sign-up.sign-up-form.password')}
                                   error={
                                     checkError(meta) &&
                                     (meta.error || meta.submitError)
@@ -632,7 +642,8 @@ export const SignUpPageComponent = (
                                     fontSize: '18px',
                                     paddingLeft: '40px',
                                   }}
-                                  placeHolder="Confirm Password"
+                                  // placeHolder="Confirm Password"
+                                  placeHolder={t('landing.sign-up.sign-up-form.confirmation')}
                                   error={
                                     checkError(meta) &&
                                     (meta.error || meta.submitError)
@@ -658,13 +669,15 @@ export const SignUpPageComponent = (
                         type="submit"
                         disabled={submitting || pristine}
                       >
-                        Sign up
+                        {/* Sign up */}
+                        {t('landing.sign-up.sign-up-form.sign-up-button')}
                       </Button>
                       <NavLink
                         className="fw9 dt center tigrow-lightBlue pt4-ns pt2"
                         to="/signin"
                       >
-                        Already have an account?
+                        {/* Already have an account? */}
+                        {t('landing.sign-up.sign-up-form.account-exist')}
                       </NavLink>
                     </div>
                   </form>
@@ -692,13 +705,16 @@ export const SignUpPageComponent = (
               <img src={logo} alt="onethread" />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
+              {t('landing.sign-up.about-one-thread-sign-up.content-sign-up')}
+            </h3>
+            {/* <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
               Onethread is designed keeping in mind that Ease of
               Communication is the key to success for any enterprise.
               Onethread’s architecture has the key unique element of
               containerization with its feature called Project which
               ensures privacy within it, and fluidity to collaborate
               with external and internal stakeholders.
-            </h3>
+            </h3> */}
           </div>
         </div>
       </div>

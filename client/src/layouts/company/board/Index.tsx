@@ -22,6 +22,7 @@ import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import { User } from 'stores/user/Reducer';
 import { NavbarCompany } from 'components/NavbarCompany';
+import { useTranslation } from 'react-i18next';
 
 interface IBoardCardComponent {
   boardList: TaskBoard[];
@@ -218,6 +219,8 @@ const TaskPageComponent = (
     </div>
   );
 
+  const { t } = useTranslation();
+
   return (
     <>
       <MobileView>
@@ -239,7 +242,8 @@ const TaskPageComponent = (
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Preface</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+            {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
             exact
@@ -249,6 +253,7 @@ const TaskPageComponent = (
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Room</small>
+            {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
             exact
@@ -257,7 +262,8 @@ const TaskPageComponent = (
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Boards</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
+            {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
             exact
@@ -266,7 +272,8 @@ const TaskPageComponent = (
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Teammates</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+            {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
             exact
@@ -286,12 +293,14 @@ const TaskPageComponent = (
           <div className="pl2 flex-ns justify-between">
             {isMobileOnly ? undefined : (
               <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
-                Board
+                {t('app.project.Project-boards.Board')}
+                {/* Board */}
               </h3>
             )}
             <div className="flex">
               <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
-                Filter By
+                {t('app.project.Project-boards.Criteria')}
+                {/* Filter By */}
               </p>
               <div className="mt2" style={{ width: '200px' }}>
                 <HTMLSelect
@@ -323,7 +332,8 @@ const TaskPageComponent = (
             className="pl2 mt3"
             style={{ color: '#6B6B6B', fontSize: '18px' }}
           >
-            My Boards
+           {t('app.project.Project-boards.My-boards')}
+            {/* My Boards */}
           </p>
           <div className="overflow-auto">
             {loading === false ? (

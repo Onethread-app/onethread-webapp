@@ -112,6 +112,7 @@ const ChangePasswordComponentView = (
           <SubmitError errorMessage={submitError} />
           <h1 className="f5 lh-copy  mb4 tigrow-lightBlue">
             Change Password
+            {/* Change Password */}
           </h1>
           <div>
             <h1 className="f6">Old Password</h1>

@@ -15,6 +15,7 @@ import {
   isMobileOnly,
 } from 'react-device-detect';
 import { companyPermit } from 'stores/UtilsActions';
+import { useTranslation } from 'react-i18next';
 
 interface ICoverPhotoProps {
   company?: ICompany;
@@ -107,6 +108,7 @@ const UserCustomView = (props: IUserProps) => {
 };
 
 const CompanyCustomView = (props: ICompanyProps) => {
+  const { t } = useTranslation();
   return (
     <>
       <div className="relative flex companyProfilepicOuterOuter ">
@@ -121,7 +123,8 @@ const CompanyCustomView = (props: ICompanyProps) => {
                 style={{ marginTop: '10rem' }}
               >
                 <h1 className="f6 ma0 ws-break ttc">
-                  Total Employee
+                {t('app.company.Company-profile.Total-Employee')}
+                  {/* Total Employee */}
                 </h1>
                 <h1 className="f3-l f4 fw4 ma0 ws-break tc">
                   {props.company.totalMember
@@ -134,7 +137,8 @@ const CompanyCustomView = (props: ICompanyProps) => {
                 style={{ marginTop: '10rem' }}
               >
                 <h1 className="f6 ma0 ws-break ttc">
-                  Total Partners
+                    {t('app.company.Company-profile.Associates')}
+                  {/* Total Partners */}
                 </h1>
                 <h1 className="f3-l f4 fw4 ma0 ws-break tc ">
                   {props.company.totalAssociate
@@ -152,7 +156,8 @@ const CompanyCustomView = (props: ICompanyProps) => {
           style={{ marginTop: '5rem' }}
         >
           <div className="">
-            <h1 className="f7 ma0 ws-break ttc">Total Employee</h1>
+            <h1 className="f7 ma0 ws-break ttc">{t('app.company.Company-profile.Total-Employee')}</h1>
+            {/* <h1 className="f7 ma0 ws-break ttc">Total Employee</h1> */}
             <h1 className="fw4 ma0 ws-break tc">
               {props.company.totalMember
                 ? props.company.totalMember
@@ -160,7 +165,8 @@ const CompanyCustomView = (props: ICompanyProps) => {
             </h1>
           </div>
           <div className="">
-            <h1 className="f7 ma0 ws-break ttc">Partners</h1>
+            <h1 className="f7 ma0 ws-break ttc">{t('app.company.Company-profile.Associates')}</h1>
+            {/* <h1 className="f7 ma0 ws-break ttc">Partners</h1> */}
             <h1 className="fw4 ma0 ws-break tc ">
               {props.company.totalAssociate
                 ? props.company.totalAssociate
@@ -174,6 +180,7 @@ const CompanyCustomView = (props: ICompanyProps) => {
 };
 
 const ChangeButton = (props: IChangeButtonProps) => {
+  const { t } = useTranslation();
   if (props.company) {
     return (
       <div className="h-100 child bg-black-40 br4">
@@ -185,7 +192,8 @@ const ChangeButton = (props: IChangeButtonProps) => {
             }}
             onClick={() => props.setShowDialogPicture(true)}
           >
-            Change Cover
+            {t('app.user.Personal-profile.Cover')}
+            {/* Change Cover */}
           </Button>
         )}
       </div>
@@ -200,7 +208,8 @@ const ChangeButton = (props: IChangeButtonProps) => {
           }}
           onClick={() => props.setShowDialogPicture(true)}
         >
-          Change Cover
+          {t('app.user.Personal-profile.Cover')}
+          {/* Change Cover */}
         </Button>
       </div>
     );

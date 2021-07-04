@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Tabs, Tab, Dialog, Button } from '@blueprintjs/core';
 import { ChangePasswordComponent } from 'layouts/user/settings/ChangePasswordComponent';
-
+import { useTranslation } from 'react-i18next';
+ 
 export const ProfileSettingsComponent = () => {
+  
   const [showDialog, setShowDialog] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div className="bl b--black-05 bw1 pl3-ns pl1 vh-50">
@@ -17,7 +20,8 @@ export const ProfileSettingsComponent = () => {
         }}
         onClick={() => setShowDialog(true)}
       >
-        Change Password
+        {t('app.user.User-settings.Password')}
+        {/* Change Password */}
       </Button>
       {showDialog && (
         <Dialog
@@ -36,18 +40,38 @@ export const ProfileSettingsComponent = () => {
   );
 };
 
-const ProfileSettingsPageComponent = () => (
-  <div className="bg-white mh4 mv5 br3 pa4-ns h-75 shadow-4-ns w-90-ns">
-    <Tabs id="TabsExample" vertical={true}>
-      <Tab
-        id="profile_settings"
-        title="Profile Settings"
-        panel={<ProfileSettingsComponent />}
-        className="outline-0 w-100"
-      />
-    </Tabs>
-  </div>
-);
+
+const ProfileSettingsPageComponent = () => {
+  const { t } = useTranslation();
+  return(
+    <div className="bg-white mh4 mv5 br3 pa4-ns h-75 shadow-4-ns w-90-ns">
+      <Tabs id="TabsExample" vertical={true}>
+        <Tab
+          id="profile_settings"
+          title={t('app.user.User-settings.Profile')}
+          // title="Profile Settings"
+          panel={<ProfileSettingsComponent />}
+          className="outline-0 w-100"
+        />
+      </Tabs>
+    </div>
+  )
+};
+
+// const ProfileSettingsPageComponent = () => (
+//   <div className="bg-white mh4 mv5 br3 pa4-ns h-75 shadow-4-ns w-90-ns">
+//     <Tabs id="TabsExample" vertical={true}>
+//       <Tab
+//         id="profile_settings"
+//         // title={t('app.user.User-settings.Profile')}
+//         title="Profile Settings"
+//         panel={<ProfileSettingsComponent />}
+//         className="outline-0 w-100"
+//       />
+//     </Tabs>
+//   </div>
+// );
+
 export const ProfileSettingsPage = connect(
   null,
   null,

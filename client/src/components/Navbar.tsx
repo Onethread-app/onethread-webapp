@@ -30,6 +30,7 @@ import { fetchRooms, fetchChats } from '../stores/room/Actions';
 import { IRoom, IChat } from '../stores/room/Reducer';
 import logo from 'resources/images/onethread-text.png';
 import ChatListItem from 'components/chat/ChatListItem';
+import { useTranslation } from 'react-i18next';
 
 interface NavbarTopInternalProps {
   user: User;
@@ -66,6 +67,8 @@ const NavbarTopComponent = (
     props.seen !== 0 && (await props.seenNotification());
     // props.getNotifications();
   };
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -203,7 +206,8 @@ const NavbarTopComponent = (
                   color:
                     props.type === 'home' ? 'white' : 'dark-gray',
                 }}
-                text="My Companies"
+                // text="My Companies"
+                text= {t('app.homepage.My-Companies')}
               />
             }
           />

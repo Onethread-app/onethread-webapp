@@ -4,9 +4,12 @@ import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { Button } from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
 
 const RoomPageComponent = (props: any) => {
   const [disabled] = React.useState(false);
+  const { t } = useTranslation();
+
   return (
     <div className="bl b--black-05 bw1 pl5 ml5 h5">
       <p>room</p>
@@ -27,7 +30,8 @@ const RoomPageComponent = (props: any) => {
             <div className="mb3">
               <SubmitError errorMessage={submitError} />
             </div>
-            <p className="b f5 mb3">Admins</p>
+            <p className="b f5 mb3">{t('app.project.Project-teammates.Admins')}</p>
+            {/* <p className="b f5 mb3">Admins</p> */}
             <div className="mb3">
               <Field<string>
                 name="optionalRole"

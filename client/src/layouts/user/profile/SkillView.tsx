@@ -10,6 +10,7 @@ import {
 
 import skillImage from './../../../resources/images/skills.png';
 import { RightSidebar } from 'components/RightSidebar';
+import { useTranslation } from 'react-i18next';
 interface SkillViewComponentProps {
   user: User;
   addSkillAction: (skillSet: string[]) => void;
@@ -20,9 +21,12 @@ export const SkillViewComponent = (
   props: SkillViewComponentProps,
 ) => {
   const [showDialog, setShowDialog] = useState(false);
+  const { t } = useTranslation();
+
   return (
     <>
-      <h1 className="f5 lh-copy">Skills</h1>
+      <h1 className="f5 lh-copy">{t('app.user.Personal-profile.Skills')}</h1>
+      {/* <h1 className="f5 lh-copy">Skills</h1> */}
       <div className="dib">
         {props.user.skillArea && props.user.skillArea.length > 0 ? (
           props.user.skillArea.map((skill: ItemEntityProps) => {
@@ -65,7 +69,8 @@ export const SkillViewComponent = (
           className="br3 grow ph3-l ph2-m pointer pv2 bg-white ba b--lightBlue tigrow-lightBlue outline-0 mt3 mb2 bw1 fw7"
           onClick={() => setShowDialog(!showDialog)}
         >
-          Add Skills
+          {t('app.user.Personal-profile.Add-skills')}
+          {/* Add Skills */}
         </button>
       </div>
       {showDialog && (

@@ -9,6 +9,7 @@ import { User } from 'stores/user/Reducer';
 import { CoverPhoto } from 'components/cover-photo/CoverPhoto';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface UserProfilePageProps {
   user: User;
@@ -18,6 +19,9 @@ interface UserProfilePageProps {
 const _UserProfilePage = (
   props: UserProfilePageProps & RouteComponentProps,
 ) => {
+
+  const { t } = useTranslation();
+
   return (
     <>
       <div
@@ -42,13 +46,15 @@ const _UserProfilePage = (
               <Tabs id="TabsExample" className="w-85-ns">
                 <Tab
                   id="Experience"
-                  title="Experience"
+                  title={t('app.user.Personal-profile.Experience')}
+                  // title="Experience"
                   panel={<ExperienceView />}
                   className="h-auto outline-0 f5 fw6"
                 />
                 <Tab
                   id="Basic Information"
-                  title="Basic Information"
+                  title={t('app.user.Personal-profile.Basic-info')}
+                  // title="Basic Information"
                   panel={<BasicInfoDetailsView />}
                   className="outline-0 h-auto f5 fw6"
                 />

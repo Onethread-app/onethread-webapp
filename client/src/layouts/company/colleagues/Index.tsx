@@ -37,6 +37,7 @@ import { isMobileOnly } from 'react-device-detect';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { InviteColleagueView } from './InviteColleagueView';
 import { inviteColleagueInBulkSuccess } from '../../../stores/company/Actions';
+import { useTranslation } from 'react-i18next';
 
 interface Colleagues {
   company: ICompany;
@@ -169,6 +170,8 @@ const ColleaguesPageComponent = (props: Colleagues) => {
     }
   }, [props.company.pendingMembers]);
 
+const { t } = useTranslation();
+
   return (
     <>
       <NavbarCompany title="My Colleagues" />
@@ -210,16 +213,21 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         </div>
 
         {/* Admins list starts */}
-        <h1 className="f4 mb0 tigrow-lightGray-1">Admins</h1>
+        <h1 className="f4 mb0 tigrow-lightGray-1">{t('app.company.Colleagues.Admins')}</h1>
+        {/* <h1 className="f4 mb0 tigrow-lightGray-1">Admins</h1> */}
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
-              <th style={{ width: '25%' }}>Name</th>
-              <th style={{ width: '25%' }}>Email</th>
+              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Name')}</th>
+              {/* <th style={{ width: '25%' }}>Name</th> */}
+              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Email')}</th>
+              {/* <th style={{ width: '25%' }}>Email</th> */}
               {/* <th style={{ width: '20%' }}>Contact No</th> */}
-              <th style={{ width: '25%' }}>Division</th>
+              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Division')}</th>
+              {/* <th style={{ width: '25%' }}>Division</th> */}
               {/* <th style={{ width: '20%' }}>Department</th> */}
-              <th style={{ width: '25%' }}>Position</th>
+              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Position')}</th>
+              {/* <th style={{ width: '25%' }}>Position</th> */}
               <th></th>
             </tr>
           </thead>
@@ -382,16 +390,21 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         </HTMLTable>
         {/* Admins list ends */}
         {/* members list starts */}
-        <h1 className="f4 mb0 tigrow-lightGray-1">Members</h1>
+        <h1 className="f4 mb0 tigrow-lightGray-1">{t('app.company.Colleagues.Members')}</h1>
+        {/* <h1 className="f4 mb0 tigrow-lightGray-1">Members</h1> */}
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
-              <th style={{ width: '25%' }}>Name</th>
-              <th style={{ width: '25%' }}>Email</th>
+              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Name')}</th>
+              {/* <th style={{ width: '25%' }}>Name</th> */}
+              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Email')}</th>
+              {/* <th style={{ width: '25%' }}>Email</th> */}
               {/* <th style={{ width: '20%' }}>Contact No</th> */}
-              <th style={{ width: '25%' }}>Division</th>
+              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Division')}</th>
+              {/* <th style={{ width: '25%' }}>Division</th> */}
               {/* <th style={{ width: '20%' }}>Department</th> */}
-              <th style={{ width: '25%' }}>Position</th>
+              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Position')}</th>
+              {/* <th style={{ width: '25%' }}>Position</th> */}
               <th></th>
             </tr>
           </thead>

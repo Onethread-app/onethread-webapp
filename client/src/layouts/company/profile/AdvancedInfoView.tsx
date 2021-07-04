@@ -13,6 +13,7 @@ import { getAllProduct } from 'stores/company/Actions';
 import { companyPermit } from 'stores/UtilsActions';
 import { OrganizationEditEditor } from './ParentOrganizationEditEditor';
 import { CertificateEdit } from './CertificateEditEditor';
+import { useTranslation } from 'react-i18next';
 
 interface AdvancedInfoInternalProps {
   company?: ICompany;
@@ -49,12 +50,15 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
     getAPI();
   }, []);
 
+ const { t } = useTranslation();
+
   return (
     <>
       <div className="w-100 mb6">
         <div>
           <div className="flex justify-between">
-            <h1 className="f5">Products/Services</h1>
+            <h1 className="f5">{t('app.company.Company-profile.Service')}</h1>
+            {/* <h1 className="f5">Products/Services</h1> */}
             {
               companyPermit(props.company!.role) && (
                 <img
@@ -81,7 +85,8 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         </div>
         <div className="mt4">
           <div className="flex justify-between">
-            <h1 className="f5">Certificates</h1>
+            <h1 className="f5">{t('app.company.Company-profile.Certificates')}</h1>
+            {/* <h1 className="f5">Certificates</h1> */}
             {
               companyPermit(props.company!.role) && (
                 <img
@@ -138,7 +143,8 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         </div>
         <div className="mt4">
           <div className="flex justify-between">
-            <h1 className="f5">Member of Parent Organizations</h1>
+            <h1 className="f5">{t('app.company.Company-profile.Parent')}</h1>
+            {/* <h1 className="f5">Member of Parent Organizations</h1> */}
             {
               companyPermit(props.company!.role) && (
                 <img

@@ -8,6 +8,7 @@ import {
   createCompanyAction,
   clearErrorOnCompanyCreate,
 } from 'stores/company/Actions';
+import { useTranslation } from 'react-i18next';
 
 // const Type = [
 //   'Manufacturer',
@@ -149,10 +150,13 @@ const CompanySignupFormComponent = (
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
-        Create Company
+        {t('app.forms.Create-company.Create')}
+        {/* Create Company */}
       </h1>
       <div className={` ${errors.name ? 'mb3' : 'mb4'}`}>
         <div className="flex">
@@ -160,7 +164,8 @@ const CompanySignupFormComponent = (
             id="companyName"
             value={values.name}
             onChange={handleChange('name')}
-            placeHolder="Company Name (Required)"
+            placeHolder={`${t('app.forms.Create-company.Name')} (Required)`}
+            // placeHolder="Company Name (Required)"
             leftIcon="briefcase"
             style={{
               boxShadow: 'none',
@@ -207,7 +212,8 @@ const CompanySignupFormComponent = (
             id="companyAddress"
             value={values.address}
             onChange={handleChange('address')}
-            placeHolder="Company Address"
+            placeHolder={t('app.forms.Create-company.Address')}
+            // placeHolder="Company Address"
             leftIcon="map-marker"
             style={{
               boxShadow: 'none',
@@ -286,7 +292,8 @@ const CompanySignupFormComponent = (
             id="companyMail"
             value={values.email}
             onChange={handleChange('email')}
-            placeHolder="Company Email Address"
+            placeHolder={t('app.forms.Create-company.Email')}
+            // placeHolder="Company Email Address"
             leftIcon="envelope"
             style={{
               boxShadow: 'none',
@@ -329,7 +336,8 @@ const CompanySignupFormComponent = (
             id="legalOwnerName"
             value={values.legalOwnerName}
             onChange={handleChange('legalOwnerName')}
-            placeHolder="Legal Owner's Name"
+            placeHolder={t('app.forms.Create-company.Legal-name')}
+            // placeHolder="Legal Owner's Name"
             leftIcon="mugshot"
             style={{
               boxShadow: 'none',
@@ -367,7 +375,8 @@ const CompanySignupFormComponent = (
             id="legalOwnerMail"
             value={values.legalOwnerMail}
             onChange={handleChange('legalOwnerMail')}
-            placeHolder="Legal Owner's Email Address"
+            placeHolder={t('app.forms.Create-company.Legal-email')}
+            // placeHolder="Legal Owner's Email Address"
             leftIcon="envelope"
             style={{
               boxShadow: 'none',

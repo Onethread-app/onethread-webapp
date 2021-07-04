@@ -7,6 +7,7 @@ import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { ICompany } from 'stores/company/Reducer';
+import { useTranslation } from 'react-i18next';
 
 interface ProfilePageProps {
   user: User;
@@ -26,6 +27,9 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
           );
     }
   }, []);
+
+  const { t } = useTranslation();
+
   return (
     <>
       <NavbarCompany title="Company Profile" />
@@ -34,13 +38,15 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
         <Tabs id="TabsExample" className="mt6-ns mt5 ph5-ns ph3">
           <Tab
             id="basic_info"
-            title="Basic Information"
+            title={t('app.company.Company-profile.Basic')}
+            // title="Basic Information"
             panel={<BasicInfoDetailsView />}
             className="outline-0"
           />
           <Tab
             id="advance_info"
-            title="Advanced Information"
+            title={t('app.company.Company-profile.Advanced')}
+            // title="Advanced Information"
             panel={<AdvancedInfo />}
             className="outline-0"
           />

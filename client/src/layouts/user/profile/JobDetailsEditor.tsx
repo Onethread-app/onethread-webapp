@@ -18,6 +18,7 @@ import {
 } from 'components/final-form/utils';
 import { IExperience } from 'stores/user/Reducer';
 import { SubmitError } from 'components/final-form/SubmitError';
+import { useTranslation } from 'react-i18next';
 interface IJobFormProps {
   setShowDialog: (val: boolean) => void;
   edit: boolean;
@@ -55,6 +56,9 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
     }
     return { [response.fieldName]: response.message };
   };
+
+  const { t } = useTranslation();
+
   return (
     <>
       <Form
@@ -121,7 +125,8 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
-                  <label>Company Name</label>
+                  <label>{t('app.user.User-job.Company-name')}</label>
+                  {/* <label>Company Name</label> */}
                   <InputGroupFieldWithError
                     id="companyName"
                     className="mt1"
@@ -145,7 +150,8 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
-                  <label>Position Name</label>
+                  <label>{t('app.user.User-job.Position-name')}</label>
+                  {/* <label>Position Name</label> */}
                   <InputGroupFieldWithError
                     id="positionName"
                     className="mt1"
@@ -169,7 +175,8 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                 <div
                   className={`${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
-                  <label>Start Year</label>
+                  <label>{t('app.user.User-job.Start-year')}</label>
+                  {/* <label>Start Year</label> */}
                   <DateInput
                     formatDate={(date: Date) =>
                       date.toLocaleDateString()
@@ -208,7 +215,8 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
-                  <label>End Year</label>
+                  <label>{t('app.user.User-job.End')}</label>
+                  {/* <label>End Year</label> */}
                   <DateInput
                     formatDate={(date: Date) =>
                       date.toLocaleDateString()
@@ -254,7 +262,8 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
-                  <label>Description</label>
+                  <label>{t('app.user.User-job.Description')}</label>
+                  {/* <label>Description</label> */}
                   <TextArea
                     className="mt1"
                     id="jobDescription"
@@ -293,7 +302,8 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                       values.endingYear = '';
                     }}
                     checked={values.currentlyWork}
-                    label="I currently work here"
+                    label={t('app.user.User-job.Current-work')}
+                    // label="I currently work here"
                     disabled={values.startYear === '' ? true : false}
                   />
                   {checkError(meta) && (

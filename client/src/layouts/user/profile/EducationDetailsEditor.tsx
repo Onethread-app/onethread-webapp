@@ -18,6 +18,7 @@ import {
 } from 'stores/user/Actions';
 import { IExperience } from 'stores/user/Reducer';
 import { SubmitError } from 'components/final-form/SubmitError';
+import { useTranslation } from 'react-i18next';
 interface IEduFormProps {
   setShowDialog: (val: boolean) => void;
   edit: boolean;
@@ -55,6 +56,8 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
     }
     return { [response.fieldName]: response.message };
   };
+
+  const { t } = useTranslation();
 
   return (
     <Form
@@ -116,7 +119,8 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             validate={composeValidators(required, maxValue(32))}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>Degree</label>
+                <label>{t('app.user.User-Education.Degree')}</label>
+                {/* <label>Degree</label> */}
                 <InputGroupFieldWithError
                   id="degree"
                   className="mt1"
@@ -138,7 +142,8 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             validate={composeValidators(required, maxValue(32))}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>Institution Name</label>
+                <label>{t('app.user.User-Education.Institution')}</label>
+                {/* <label>Institution Name</label> */}
                 <InputGroupFieldWithError
                   id="institutionName"
                   className="mt1"
@@ -160,7 +165,8 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             validate={required}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>Start Year</label>
+                <label>{t('app.user.User-Education.Start-year')}</label>
+                {/* <label>Start Year</label> */}
                 <DateInput
                   formatDate={(date: Date) =>
                     date.toLocaleDateString()
@@ -198,7 +204,8 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             name="endingYear"
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>End Year</label>
+                <label>{t('app.user.User-Education.End-year')}</label>
+                {/* <label>End Year</label> */}
                 <DateInput
                   formatDate={(date: Date) =>
                     date.toLocaleDateString()
@@ -242,7 +249,8 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             name="eduDescription"
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>Description</label>
+                <label>{t('app.user.User-Education.Description')}</label>
+                {/* <label>Description</label> */}
                 <TextArea
                   id="eduDescription"
                   className="mt1"
@@ -278,7 +286,8 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                     values.endingYear = '';
                   }}
                   checked={values.currentlyStudy}
-                  label="I currently study here"
+                  label={t('app.user.User-Education.Currently')}
+                  // label="I currently study here"
                   disabled={values.startYear === '' ? true : false}
                 />
                 {checkError(meta) && (

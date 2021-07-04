@@ -13,6 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
 import { Grid, makeStyles, ExpansionPanel, ExpansionPanelSummary } from '@material-ui/core';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,16 +43,20 @@ export const VideoConferenceComponent = (props: VideoComponentProps & RouteCompo
     props.getAllVideoHistory();
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="flex justify-between items-center mv4">
-        <h1 className="f3-ns f5">Video Conferences</h1>
+        <h1 className="f3-ns f5">{t('app.homepage.Video-conferences')}</h1>
+        {/* <h1 className="f3-ns f5">Video Conferences</h1> */}
         <Button
           onClick={() => (props.history.push(`/video/conferences`))}
           icon="plus"
           className="pa3-ns pa2 ml2"
           style={{ background: '#0F0C4E', color: 'white', width: isMobileOnly ? '215px' : '285px' }}>
-          Create A Video Conference
+          {t('app.homepage.Create-conference')}
+          {/* Create A Video Conference */}
           </Button>
       </div>
       {props.user.videos && props.user.videos.length > 0 ?
@@ -128,10 +133,12 @@ export const VideoConferenceComponent = (props: VideoComponentProps & RouteCompo
         :
         <div className="tc white pv4 bg-white">
           <img className={`${isMobileOnly && 'w4'}`} src={video} alt="video" />
-          <h1 className="light-silver fw4 f5 f3-ns">There's no existing Video Conference to show</h1>
+          <h1 className="light-silver fw4 f5 f3-ns">{t('app.homepage.No-video-conference')}</h1>
+          {/* <h1 className="light-silver fw4 f5 f3-ns">There's no existing Video Conference to show</h1> */}
           <h2 className="light-silver fw4 f7 f4">
-            Simply click on 'Create Video Conference' button to create a new one
-              </h2>
+            {t('app.homepage.Click-a-button')}
+            {/* Simply click on 'Create Video Conference' button to create a new one */}
+          </h2>
         </div>
       }
     </>

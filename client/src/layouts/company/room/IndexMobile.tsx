@@ -16,6 +16,7 @@ import {
 import Pusher from 'pusher-js';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { ICompany } from 'stores/company/Reducer';
+import { useTranslation } from 'react-i18next';
 
 export interface RoomQueries {
   view: 'default' | 'mobile';
@@ -57,6 +58,8 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
     props.getRoleForProject(projectId);
   }
 
+  const { t } = useTranslation();
+
   return (
     <>
       <NavbarCompany title="Rooms" />
@@ -81,7 +84,8 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Preface</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+            {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
             exact
@@ -90,7 +94,8 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Room</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-rooms.Rooms')}</small>
+            {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
             exact
@@ -99,7 +104,8 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Boards</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
+            {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
             exact
@@ -108,7 +114,8 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Teammates</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+            {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
             exact

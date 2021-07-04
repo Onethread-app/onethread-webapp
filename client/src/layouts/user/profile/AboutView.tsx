@@ -5,18 +5,21 @@ import { connect } from 'react-redux';
 
 import editIcon from '../../../resources/images/editIcon.png';
 import { RightSidebar } from 'components/RightSidebar';
+import { useTranslation } from 'react-i18next';
 interface IAboutViewProps {
   user: User;
 }
 
 const AboutViewComponent = (props: IAboutViewProps) => {
   const [showDialogAbout, setShowDialogAbout] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <>
       <div className="cf ">
         <h1 className="f5 lh-copy dib tigrow-lightGray-1 ws-break">
-          About
+          {t('app.user.Personal-profile.About')}
+          {/* About */}
         </h1>
         <img
           src={editIcon}

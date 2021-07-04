@@ -1,0 +1,287 @@
+{
+  "landing": {
+    "homepage": {
+      "main-header": {
+        "heading": {"first-part":"Collaborate with people on projects","second-part":"with the click of a button"},
+        "sub-heading": {"first-part":"Onethread" ,"second-part":"is a project management tool built from the ground up for multi-team collaboration among startups, agencies and NGOs."},
+        "Sign-Up button": "Create Unlimited Projects For Free"
+      },
+
+      "second-section": {
+        "unified-text":{ "first-part":"We spend 23% more time in external projects for", "second-part":" lack of a unified tool"},
+        "unified-heading":{ "first-part":"Onethread", "second-part":"lets you efficiently organize all your projects and communicate with everyone involved in a single platform"},
+        "messages": "Keep your work and personal inboxes separate",
+        "project-dashboard": "Task assignment, one-click approvals and project folders",
+        "reports": "No more asking “what’s done”. You already know it!",
+        "unified-footer": "Read: Get rid of infinite email chains and WhatsApp threads"
+      },
+
+      "third-section": {
+        "upper-content": "No more deadly email loops.",
+        "main-upper-content": "Forward that very long email chain to your project’s private email address. We got the rest covered.",
+        "lower-content": "Real-time task overview.",
+        "main-lower-content": "Our tasks panel is built to provide real-time charts and tables to make sure you are aligned with everything"
+      },
+
+      "teams": {
+        "listoftheusers":{"first-part": "Teams large & small are using Onethread to", "second-part": "3x their output in half the time."}
+      },
+
+      "product-details": {
+        "header1": {"first-part":"Everything " ,"second-part":"a project manager dreamed of, ", "third-part": "in one single package."},
+        "header2": "Never lose track of a project again.",
+        "subheader2": "Each project gets a separate space with chat threads, tasks and files, powered by an intelligent search engine.",
+        "header3": "Communicate with anyone in your project",
+        "subheader3": "Direct messages and group messages, as well as audio-video calls. Oh, we have Zoom, Meet and Teams integrations too!",
+        "header4": "Manage all tasks from a single dashboard",
+        "subheader4": "Create and manage tasks in projects, assign team members, and view them however you like",
+        "header5": "Work with your favorite tools",
+        "subheader5": "With 500+ integrations, onethread plays nicely with all the tools that we love and use"
+      },
+
+      "footer": {
+        "headline": {"first-part": "Change how you manage external stakeholders. ","second-part": "Start today."},
+        "content": "Sign up with your email below to use Onethread for free while in beta. The private beta is just the beginning, but we want you to be a part of it!",
+        "createbutton": "Create Your First Project",
+        "features": "features",
+        "integration": "integration",
+        "pricing": "pricing",
+        "blog": "blog",
+        "for-startups": "for Startups",
+        "for-agencis": "for Agencies",
+        "for-NGOs": "For NGOs",
+        "see-more-use-cases": "See more use cases",
+        "whatsApp-compare": "OneThread vs WhatsApp",
+        "email-compare": "OneThread vs Email",
+        "team-compare": "OneThread vs Teams",
+        "more-compare": "See More Comparisons",
+        "about-us": "About Us",
+        "privacy": "Privacy Policy",
+        "security": "Data Security",
+        "copyright": "Copyright 2021 Onethread. All rights reserved. Proudly made in Bangladesh."
+      }
+    },
+
+    "login": {
+      "about-one-thread-login": {
+        "login-heading": "Onethread",
+        "content-login": "Onethread is designed keeping in mind that Ease of Communication is the key to success for any enterprise. Onethread’s architecture has the key unique element of containerization with its feature called Project which ensures privacy within it, and fluidity to collaborate with external and internal stakeholders."
+      },
+
+      "sign-in-form": {
+        "sign-in-text": "Sign in",
+        "email": "Email Address",
+        "password": "Password",
+        "sign-in-button": "Sign in",
+        "forgot-password": "Forgot Password",
+        "no-account": "Don't have an account?",
+        "sign-up button": "Sign Up Here"
+      }
+    },
+
+    "sign-up": {
+      "about-one-thread-sign-up": {
+        "sign-up-heading": "Onethread",
+        "content-sign-up": "Onethread is designed keeping in mind that Ease of Communication is the key to success for any enterprise. Onethread’s architecture has the key unique element of containerization with its feature called Project which ensures privacy within it, and fluidity to collaborate with external and internal stakeholders."
+      },
+
+      "sign-up-form": {
+        "sign-up-text": "Sign up",
+        "first-name": "First Name",
+        "last-name": "Last Name",
+        "birthday": "Birth Date",
+        "your-email": "contact@onethread.app",
+        "password": "Password",
+        "confirmation": "Comfirm Password",
+        "sign-up-button": "Sign up",
+        "account-exist": "Already have an account?"
+      }
+    }
+  },
+
+  "app": {
+     "homepage": {
+        "My-Companies": "My Companies",
+        "Work-place": "Places You Work",
+        "Company-name": "Onethread",
+        "Position": "Role: ",
+        "Create-company": "Create a Company",
+        "Projects": "Projects",
+        "Search": "Search input",
+        "New-project": "Start a New Project",
+        "Project-name": "Name",
+        "Project-type": "Type",
+        "Project-lead": "Lead",
+        "Video-conferences": "Video Conferences",
+        "Create-conference": "Create a Video Conference",
+        "No-video-conference": "There's no existing Video Conference to show",
+        "Click-a-button": "Simply click on 'Create Video Conference' button to create a new one"
+      },
+    "company": {
+
+      "Dashboard": {
+        "Headline": "Dashboard",
+        "Ongoing-projects": {"first-part": "Running", "second-part": "Projects"},
+        "Finished-projects": {"first-part": "Completed", "second-part":"Projects"},
+        "Number-of-employees": "Total Employees",
+        "Number-of-associates": "Total Associates",
+        "Update-of-task": "Latest Completed Task",
+        "Complete-notification": "has been marked as completed",
+        "Project-status": "Project Status",
+        "Sales": "Sales",
+        "Marketing": "Marketing",
+        "Easy-english": "Easy English",
+        "Sport": "Sportic=Scprer",
+        "Us": "onethread",
+        "Announce": "Company Announcement",
+        "Sender": "From"
+      },
+
+      "Projects": {
+        "My-projects": "My Projects",
+        "Everything": "All",
+        "Running": "Ongoing",
+        "Done": "Completed",
+        "Future-work": "Not Started",
+        "Beginning": "Starting date",
+        "Finish": "End date",
+        "Find": "Search"
+      },
+
+      "Company-profile": {
+        "Company-name": "Onethread",
+        "Total-Employee": "Total Employee",
+        "Associates": "Total Partners",
+        "Basic": "Basic Information",
+        "Advanced": "Advanced Information",
+        "Name": "Company Name",
+        "Type": "Company Type",
+        "Address": "Company Address",
+        "Mail-company": "Company Mail Address",
+        "Legal-owner": "Legal Owner",
+        "Legal-mail": "Legal Owner Mail Address",
+        "Service": "Products/Services",
+        "Certificates": "Certificates",
+        "Parent": "Member of Parent Organizations"
+      },
+
+      "Colleagues": {
+        "Admins": "Admins",
+        "Members": "Members",
+        "Name": "Name",
+        "Email": "Email",
+        "Division": "Division",
+        "Department": "Department",
+        "Position": "Position"
+      }
+    },
+    "project": {
+      "Project-preface": {
+        "Intro": "Preface",
+        "Details": "Project Description",
+        "Outline": "Project Outline",
+        "Media": "Shared Files",
+        "Upload": "Upload Files",
+        "Team": "Project Members"
+      },
+
+      "Project-rooms": {
+        "Rooms": "Rooms",
+        "Find-room": "Search for rooms",
+        "Select-room": "Please, select a room !!"
+      },
+
+      "Project-boards": {
+        "Board": "Boards",
+        "My-boards": "My Boards",
+        "Criteria": "Filter by"
+      },
+
+      "Project-teammates": {
+        "Team-members": "Teammates",
+        "Admins": "Admins",
+        "Moderators": "Project Moderators",
+        "Teammates": "Project Teammates",
+        "Name": "Name",
+        "Email": "Email",
+        "Division": "Division",
+        "Department": "Department",
+        "Position": "Position",
+        "Co-partner": "Project Associates"
+      },
+
+      "Project-settings": {
+        "Moderator": "Project Moderator",
+        "General": "General",
+        "Update-archive": "Update Archive Project",
+        "Preface": "Project Preface",
+        "Update-preface": "Update info's in Project Preface",
+        "Add-files": "Add files in Project Preface",
+        "Rooms": "Rooms",
+        "Change-members": "Add/Remove Members in Room",
+        "Room-related": "Create/Update Room",
+        "Archive-room": "Archive room",
+        "Board": "Board",
+        "Change-board": "Create/Update Board",
+        "Change-column": "Create/Update Column",
+        "Assigning": "Assign/Delete Board Members"
+      }
+    },
+    "user": {
+      "Personal-profile": {
+        "Cover": "Change Cover",
+        "About": "About",
+        "Skills": "Skills",
+        "Add-skills": "Add Skills",
+        "Experience": "Experience",
+        "Basic-info": "Basic Information",
+        "Email": "Email",
+        "Secondaty": "Secondary Email",
+        "Address": "Address",
+        "Blood": "Blood Group",
+        "Date-of-birth": "Birthdate",
+        "Gender": "Gender"
+      },
+
+      "User-job": {
+        "Company-name": "Company Name",
+        "Position-name": "Position Name",
+        "Start-year": "Start Year",
+        "End": "End Year",
+        "Description": "Description",
+        "Current-work": "I currently work here"
+      },
+
+      "User-Education": {
+        "Degree": "Degree",
+        "Institution": "Institution Name",
+        "Start-year": "Start Year",
+        "End-year": "End Year",
+        "Description": "Description",
+        "Currently": "I currently study here"
+      },
+
+      "User-settings": {
+        "Profile": "Profile Settings",
+        "Password": "Change Password"
+      }
+    },
+    "forms": {
+      "Create-company": {
+        "Create": "Create Company",
+        "Name": "Comapny Name",
+        "Address": "Company Address",
+        "Type": "Please Select a company type",
+        "Email": "Company Email Address",
+        "Legal-name": "Legal Owner's Name",
+        "Legal-email": "Legal Owner's Email Address"
+      },
+
+      "Start-project": {
+        "Create-project": "Create Project",
+        "Name": "Project Name (Required)",
+        "Type": "Please Select a company"
+      }
+    }
+  }
+}

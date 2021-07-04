@@ -15,6 +15,7 @@ import addMemberIcon from './../../../../resources/images/addMemberIcon.png';
 import settingsIcon from './../../../../resources/images/settings.svg';
 // import videoCallIcon from './../../../../resources/images/video-call.png';
 import { VideoCallRequest } from './VideoCallRequest';
+import { useTranslation } from 'react-i18next';
 
 interface ChatLayoutComponentProps {
   getRoomMembers: (roomId: string) => void;
@@ -44,6 +45,8 @@ export const ChatLayoutComponent = (
     props.projectRole,
     props.optionalRole,
   );
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -235,7 +238,8 @@ export const ChatLayoutComponent = (
           )}
         </div>
       ) : (
-        <h2>Please, select a room !!</h2>
+        <h2>{t('app.project.Project-rooms.Select-room')}</h2>
+        // <h2>Please, select a room !!</h2>
       )}
 
       {showVideoCallDialog && (

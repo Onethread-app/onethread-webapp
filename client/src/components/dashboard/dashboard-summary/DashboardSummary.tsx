@@ -1,6 +1,7 @@
 import React from 'react';
 import './DashboardSummary.scss';
 import DashboardChart from '../dashboard-chart/DashboardChart';
+import { useTranslation } from 'react-i18next';
 const primaryColor = {
   color: '#3484F0',
 };
@@ -50,6 +51,8 @@ export const DashboardSummary = (props) => {
   const runningProjects = runningProjectsVal;
   const completedProjects = completedProjectsVal;
 
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-row-ns flex-column">
       <div className="w-30-l w-100 b--black-05 br-l bn bw1 summary-wrapper">
@@ -65,8 +68,10 @@ export const DashboardSummary = (props) => {
             style={fontColor}
           >
             <div className="flex flex-column">
-              <span>Running</span>
-              <span>Projects</span>
+              <span>{t('app.company.Dashboard.Ongoing-projects.first-part')}</span>
+              <span>{t('app.company.Dashboard.Ongoing-projects.second-part')}</span>
+              {/* <span>Running</span>
+              <span>Projects</span> */}
             </div>
             <span className="fr f2-ns f3 pl3" style={primaryColor}>
               {runningProjects}
@@ -85,8 +90,10 @@ export const DashboardSummary = (props) => {
             style={fontColor}
           >
             <div className="flex flex-column">
-              <span>Completed</span>
-              <span>Projects</span>
+              <span>{t('app.company.Dashboard.Finished-projects.first-part')}</span>
+              <span>{t('app.company.Dashboard.Finished-projects.second-part')}</span>
+              {/* <span>Completed</span>
+              <span>Projects</span> */}
             </div>
             <span className="fr f2-ns f3 pl3" style={primaryColor}>
               {completedProjects}
