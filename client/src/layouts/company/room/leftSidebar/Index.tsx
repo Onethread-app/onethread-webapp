@@ -6,7 +6,7 @@ import { CreateForm } from './Form';
 import { clearRoomError } from 'stores/room/Actions';
 import { RightSidebar } from 'components/RightSidebar';
 import { InputGroupField } from 'components/fields/InputGroupField';
-import { projectRules } from './../../project/settings/projectrules';
+// import { projectRules } from './../../project/settings/projectrules';
 import createIcon from './../../../../resources/images/create.svg';
 import searchIcon from './../../../../resources/images/search.svg';
 import { isMobileOnly } from 'react-device-detect';
@@ -28,10 +28,10 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const dispatch = useDispatch();
-  const permissions = projectRules(
-    props.projectRole,
-    props.optionalRole,
-  );
+  // const permissions = projectRules(
+  //   props.projectRole,
+  //   props.optionalRole,
+  // );
 
   const { t } = useTranslation();
 
@@ -47,10 +47,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           {/* <h3 className="tigrow-darkGray">Rooms</h3> */}
           {props.projectRole &&
             props.optionalRole &&
-            (permissions.grantAll ||
-              permissions.projectModerator.includes(
-                'createUpdateRoom',
-              )) && (
+           (
               <span
                 className="bp3-icon grow pointer"
                 onClick={() => {

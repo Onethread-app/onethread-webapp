@@ -4,6 +4,7 @@ const { Team } = require('../team-member/team.model');
 const { Project } = require('../project/project.model');
 const { Room } = require('../room/room.model');
 const Board = require('../board/board.model');
+const BoardColumn = require('../boardColumn/boardColumn.model');
 const Task = require('../task/task.model');
 const TaskAssign = require('../task/taskAssign.model');
 const Subtask = require('../task/subtask/subtask.model');
@@ -45,6 +46,49 @@ module.exports.userTokenFCM = async (req, res, next) => {
     });
 };
 
+module.exports.notifyToBoardMembers = async (
+  senderName,
+  company,
+  taskId,
+  adminUser,
+  sourceColumnId,
+  destinationColumnId
+) => {
+  try {
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    let task = await Task.findById({_id: taskId}).select('name boardId project');
+    let boardMember = await Board.findOne({_id: task.boardId, project: task.project}).select('members');
+    let sourceColumnName = await BoardColumn.findOne({_id: sourceColumnId}).select('name');
+    let destName = await BoardColumn.findOne({_id: destinationColumnId}).select('name');
+    let notifications = {
+      type: 'subtask',
+      text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
+        senderFullName.lastName,
+      )} move task ${task.name} from ${sourceColumnName.name} to ${destName.name}`,
+      account: adminUser._id,
+      company: company,
+      project: task.project,
+      task: taskId,
+      board: task.boardId,
+      fromColumn: sourceColumnId,
+      toColumn: destinationColumnId,
+    };
+    boardMember.members.forEach(async e=>{
+      if(e.toString() !== senderName){
+        notifications = await Notification.create(notifications);
+        await UserNotification.create({
+          notification: notifications._id,
+          account: e,
+        });
+        await triggerUnreadNotifications(e);
+      }
+    });
+  } catch (error) {
+    logger.error(`Notifications: ${error}`);
+  }
+}
 module.exports.notifyToTaskMember = async (
   senderName,
   company,
