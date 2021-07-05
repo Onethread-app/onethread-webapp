@@ -3,6 +3,7 @@ import { connect, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { find } from 'lodash';
 import moment from 'moment';
+import { isMobileOnly } from 'react-device-detect';
 
 import { IChat } from 'stores/room/Reducer';
 import { CHANGE_ROOM } from 'stores/room/Types';
@@ -47,13 +48,15 @@ const ChatListItem = (props: IChatListItem) => {
 
   return (
     <div
-      className="flex flex-auto items-center pointer dim ph3 pv1 mb1 w-100"
+      className={`flex flex-auto items-center pointer dim ${
+        isMobileOnly ? 'ph1' : 'ph3'
+      } pv1 mb1 w-100`}
       style={{
         background: props.chat.read ? '#f2f3f4' : '#fff',
       }}
       onClick={handleClick}
     >
-      <div className="mr2" style={{ width: '42px' }}>
+      <div className="mr2" style={{ width: '32px', flexShrink: 0 }}>
         <img
           src={
             props.chat.message.account.profileImage
@@ -99,12 +102,15 @@ const ChatListItem = (props: IChatListItem) => {
         </div>
         <div className="flex items-center justify-between flex-auto">
           <p
-            className={`truncate mr3 ${
+            className={`truncate mr3 w-60 ${
               props.chat.read ? 'gray' : 'inherit'
             }`}
             style={{ maxWidth: '60%' }}
           >{`${props.chat.message.text}`}</p>
-          <p className="gray">
+          <p
+            className="gray w-40 self-end tr"
+            style={{ fontSize: '11px' }}
+          >
             {moment(props.chat.message.createdAt).fromNow()}
           </p>
         </div>

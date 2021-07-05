@@ -98,7 +98,11 @@ const NavbarCompanyComponent = (
                   position={Position.BOTTOM}
                   content={
                     <div
-                      style={{ maxHeight: '300px' }}
+                      style={{
+                        maxHeight: '300px',
+                        width: '350px',
+                        maxWidth: '100%',
+                      }}
                       className="pa3 overflow-y-auto"
                     >
                       {props.chats && props.chats.length ? (
