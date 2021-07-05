@@ -40,6 +40,8 @@ router
 router.route('/').get(authorization, accountCtrl.getAccount);
 router.route('/skill-area').get(authorization, accountCtrl.skillArea);
 router.route('/task-list').get(authorization, accountCtrl.userTaskList);
+router.route('/upcoming-task').get(authorization, accountCtrl.userUpcomingTask);
+router.route('/due-task').get(authorization, accountCtrl.userDueTask);
 router.route('/timeline').get(authorization, accountCtrl.timeline);
 router
   .route('/update')
