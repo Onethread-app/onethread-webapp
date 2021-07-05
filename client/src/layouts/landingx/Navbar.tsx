@@ -7,13 +7,8 @@ import DarkLogo from 'resources/images/onethread-logo-dark.png';
 
 const Navbar = () => {
   const { i18n } = useTranslation();
-
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-  };
-
-  const [isToggle, setIsToggle] = useState(true)
-
+  const [isToggle,  setIsToggle] = useState(false)
+ 
   useEffect(() => {
     const getCountry = async ()=>{
     const data = await axios.get("https://extreme-ip-lookup.com/json/")
@@ -21,27 +16,27 @@ const Navbar = () => {
   }
   getCountry().then(data=>{
     const country = data.data.country;
-    console.log('contry',country)
     if(country === 'Bangladesh'){
-      changeLanguage('bn')
+      i18n.changeLanguage('bn');
       setIsToggle(true)
     }
     else{
-      changeLanguage('en')
+      i18n.changeLanguage('en');
       setIsToggle(false)
     }
   })
   },[])
 
-  const languageToggle =()=>{
+  const handleToggle = (value)=>{
+    if(value === true){
+      i18n.changeLanguage('bn');
+    }
+    if(value === false){
+      i18n.changeLanguage('en');
+    }
     setIsToggle(!isToggle)
-    if(isToggle === true) {
-    changeLanguage('bn')
-    }
-    if(isToggle === false) {
-      changeLanguage('en')
-    }
   }
+
 
 return (
     <div className="navbar flex justify-between items-center">
@@ -63,7 +58,7 @@ return (
       </ul>
       <ul className="flex">
         <li>
-          <Switch isToggle={isToggle} onToggle={languageToggle}/>
+          <Switch isToggle={isToggle} onToggle={()=>handleToggle(!isToggle)}/>
         </li>
         <li>
           <NavLink to="/signin">Login</NavLink>
