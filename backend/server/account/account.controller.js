@@ -229,15 +229,42 @@ const login = async (req, res, next) => {
 
 const getAccount = async (req, res, next) => {
   try {
-    const userInfo = await Account.findOne({
+    let userInfo = await Account.findOne({
       _id: req.user._id,
     })
       .select('-password')
       .populate('skillArea', '_id name');
-    // console.log(userInfo);
+    let count = 0;
+    if(userInfo.skillArea.length=== 0 ){
+      count ++;
+    }
+    if(userInfo.education.length=== 0){
+      count++;
+    }
+    if(userInfo.jobExperience.length === 0){
+      count++;
+    }
+    if( userInfo.position === '' || userInfo.position === undefined){
+      count++;
+    }
+    if( userInfo.gender === '' || userInfo.gender === undefined){
+      count++;
+    }
+    if( userInfo.bloodGroup === '' || userInfo.bloodGroup === undefined){
+      count++;
+    }
+    if( userInfo.location === '' || userInfo.location === undefined){
+      count++;
+    }
+    if( userInfo.about === '' || userInfo.about === undefined){
+      count++;
+    }
+    let compilation= ((count/12)*100).toFixed(2);
+    userInfo ={...userInfo._doc, "complete": compilation};
     return sendJSONresponse(res, 200, {
       success: true,
       user: userInfo,
+
     });
   } catch (error) {
     logger.error(`${error}`);
