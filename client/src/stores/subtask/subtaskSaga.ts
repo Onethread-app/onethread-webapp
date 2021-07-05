@@ -31,6 +31,7 @@ import {
   updateSubTaskFailure,
   updateSubTaskSuccess,
 } from './Actions';
+import { getCurrentBoardId } from 'stores/board/Selector';
 
 function* createSubtaskAsync({ payload }: any) {
   try {
@@ -117,8 +118,10 @@ function* addSubTaskMemberAsync({ payload }: any) {
   try {
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
+    const boardId = yield select(getCurrentBoardId);
     const reqBody = {
       assignmember: payload.memberId,
+      boardId,
     };
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
