@@ -7,36 +7,40 @@ import DarkLogo from 'resources/images/onethread-logo-dark.png';
 
 const Navbar = () => {
   const { i18n } = useTranslation();
-  const [isToggle,  setIsToggle] = useState(false)
+  const [isToggle,  setIsToggle] = useState(false);
  
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+
   useEffect(() => {
     const getCountry = async ()=>{
     const data = await axios.get("https://extreme-ip-lookup.com/json/")
     return data;
-  }
+  };
   getCountry().then(data=>{
     const country = data.data.country;
     if(country === 'Bangladesh'){
-      i18n.changeLanguage('bn');
+      changeLanguage('bn');
       setIsToggle(true)
     }
     else{
-      i18n.changeLanguage('en');
+      changeLanguage('en');
       setIsToggle(false)
     }
   })
-  },[])
+  },[]);
 
-  const handleToggle = (value)=>{
+  const handleToggle = (value:boolean)=>{
     if(value === true){
-      i18n.changeLanguage('bn');
+      changeLanguage('bn');
     }
     if(value === false){
-      i18n.changeLanguage('en');
+      changeLanguage('en');
     }
     setIsToggle(!isToggle)
-  }
-
+  };
+  
 
 return (
     <div className="navbar flex justify-between items-center">

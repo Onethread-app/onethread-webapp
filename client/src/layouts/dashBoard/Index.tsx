@@ -413,7 +413,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         />
                       </span>
                       <span className="ml2-ns">
-                        Create Announcement
+                        {t('app.company.Dashboard.Create-Announcement')}
+                        {/* Create Announcement */}
                       </span>
                     </button>
                   )}
