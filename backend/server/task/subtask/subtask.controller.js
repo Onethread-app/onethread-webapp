@@ -1,6 +1,9 @@
 const SubTask = require('./subtask.model');
 const { Team } = require('../../team-member/team.model');
+const Board = require('../../board/board.model');
+const { addToBoard } = require('../../board/board.controller');
 const logger = require('../../../config/winston');
+const _ = require('lodash');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const {
   search,
@@ -8,6 +11,9 @@ const {
 } = require('../../services/elastic.services');
 const {
   subTaskAssignNotificationToUsers,
+} = require('../../notification/notification.controller');
+const {
+  createBoardNotification,
 } = require('../../notification/notification.controller');
 const {
   triggerUnreadNotifications,
@@ -103,36 +109,81 @@ const addMember = async (req, res, next) => {
   try {
     const requestedMember = req.body.assignmember;
     const subTaskId = req.params.subTaskId;
-    //TODOs: need to check if user already added in this subtask
-    const subTask = await SubTask.findByIdAndUpdate(
-      { _id: subTaskId },
-      { $push: { assignedMembers: requestedMember } },
-      { safe: true, upsert: true, new: true },
-    )
-      .select('_id assignedMembers')
-      .populate([
-        {
-          path: 'assignedMembers',
-          select: '_id firstName lastName profileImage',
-        },
-      ])
-      .exec();
-    if (req.user._id !== requestedMember) {
-      await subTaskAssignNotificationToUsers(
-        req.user._id,
-        req.headers.companyid,
-        subTaskId,
-        requestedMember,
-        {
-          _id: req.user._id,
-          name: req.user.name,
-          pusherSock: req.headers.clientid,
-        },
-      );
-      await triggerUnreadNotifications(requestedMember);
-    }
+    const subtask = await SubTask.findById(subTaskId)
+      .select('_id taskId')
+      .populate('taskId', '_id boardId');
+    const { boardId } = subtask.taskId;
+    const board = await Board.findOne({
+      _id: boardId,
+    });
+    const boardMembers = board.members.map((member) =>
+      member.toString(),
+    );
+    const memberAlreadyExistsInBoard =
+      boardMembers.includes(requestedMember);
 
-    return sendJSONresponse(res, 201, subTask);
+    if (memberAlreadyExistsInBoard) {
+      //TODOs: need to check if user already added in this subtask
+      const subTask = await SubTask.findByIdAndUpdate(
+        { _id: subTaskId },
+        { $push: { assignedMembers: requestedMember } },
+        { safe: true, upsert: true, new: true },
+      )
+        .select('_id assignedMembers')
+        .populate([
+          {
+            path: 'assignedMembers',
+            select: '_id firstName lastName profileImage',
+          },
+        ])
+        .exec();
+      if (req.user._id !== requestedMember) {
+        await subTaskAssignNotificationToUsers(
+          req.user._id,
+          req.headers.companyid,
+          subTaskId,
+          requestedMember,
+          {
+            _id: req.user._id,
+            name: req.user.name,
+            pusherSock: req.headers.clientid,
+          },
+        );
+        await triggerUnreadNotifications(requestedMember);
+      }
+      return sendJSONresponse(res, 201, subTask);
+    } else {
+      await addToBoard(boardId, requestedMember);
+      //TODOs: need to check if user already added in this subtask
+      const subTask = await SubTask.findByIdAndUpdate(
+        { _id: subTaskId },
+        { $push: { assignedMembers: requestedMember } },
+        { safe: true, upsert: true, new: true },
+      )
+        .select('_id assignedMembers')
+        .populate([
+          {
+            path: 'assignedMembers',
+            select: '_id firstName lastName profileImage',
+          },
+        ])
+        .exec();
+      if (req.user._id !== requestedMember) {
+        await subTaskAssignNotificationToUsers(
+          req.user._id,
+          req.headers.companyid,
+          subTaskId,
+          requestedMember,
+          {
+            _id: req.user._id,
+            name: req.user.name,
+            pusherSock: req.headers.clientid,
+          },
+        );
+        await triggerUnreadNotifications(requestedMember);
+      }
+      return sendJSONresponse(res, 201, subTask);
+    }
   } catch (error) {
     logger.error(`Subtask: ${error}`);
     next(error);
@@ -240,71 +291,6 @@ const searchMember = async (req, res, next) => {
       message: `Suggested members for ${subTaskId}`,
       data: members,
     });
-
-    // const subTask = await SubTask.findById(subTaskId).exec();
-
-    // if (name) {
-    //   let body = {
-    //     size: 200,
-    //     from: 0,
-    //     query: {
-    //       bool:
-    //         subTask.assignedMembers.length > 0
-    //           ? {
-    //               must: [
-    //                 {
-    //                   multi_match: {
-    //                     query: req.query.name,
-    //                     type: 'phrase_prefix',
-    //                     fields: [
-    //                       'email',
-    //                       'firstName',
-    //                       'lastName',
-    //                       'name',
-    //                     ],
-    //                   },
-    //                 },
-    //               ],
-    //               must_not: [
-    //                 {
-    //                   terms: {
-    //                     mongo_id: subTask.assignedMembers,
-    //                   },
-    //                 },
-    //               ],
-    //             }
-    //           : {
-    //               must: [
-    //                 {
-    //                   multi_match: {
-    //                     query: req.query.name,
-    //                     type: 'phrase_prefix',
-    //                     fields: [
-    //                       'email',
-    //                       'firstName',
-    //                       'lastName',
-    //                       'name',
-    //                     ],
-    //                   },
-    //                 },
-    //               ],
-    //             },
-    //     },
-    //   };
-
-    //   const response = await search(accountIndex, '_doc', body);
-
-    //   console.log(response.hits.hits);
-    //   return sendJSONresponse(res, 200, {
-    //     success: true,
-    //     message: `Search complete for ${name}`,
-    //     data: response.hits.hits,
-    //   });
-    // } else {
-    //   return sendErrorResponse(res, 400, 'EmptySearchError', {
-    //     message: `query error`,
-    //   });
-    // }
   } catch (error) {
     logger.error(`Subtask: ${error}`);
     next(error);
