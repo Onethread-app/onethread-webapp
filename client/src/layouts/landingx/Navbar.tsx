@@ -1,14 +1,54 @@
-import React from 'react';
+import axios from 'axios';
+import Switch from 'components/Switch/Switch';
+import React, { useEffect, useState} from 'react';
+import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import DarkLogo from 'resources/images/onethread-logo-dark.png';
 
 const Navbar = () => {
-  return (
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+
+  const [isToggle, setIsToggle] = useState(true)
+
+  useEffect(() => {
+    const getCountry = async ()=>{
+    const data = await axios.get("https://extreme-ip-lookup.com/json/")
+    return data;
+  }
+  getCountry().then(data=>{
+    const country = data.data.country;
+    console.log('contry',country)
+    if(country === 'Bangladesh'){
+      changeLanguage('bn')
+      setIsToggle(true)
+    }
+    else{
+      changeLanguage('en')
+      setIsToggle(false)
+    }
+  })
+  },[])
+
+  const languageToggle =()=>{
+    setIsToggle(!isToggle)
+    if(isToggle === true) {
+    changeLanguage('bn')
+    }
+    if(isToggle === false) {
+      changeLanguage('en')
+    }
+  }
+
+return (
     <div className="navbar flex justify-between items-center">
-      <NavLink to="/">
-        <img src={DarkLogo} alt="Onethread" />
-      </NavLink>
       <ul className="flex">
+        <NavLink to="/">
+          <img src={DarkLogo} alt="Onethread" />
+        </NavLink>
         <li>
           <a
             href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
@@ -19,6 +59,11 @@ const Navbar = () => {
         </li>
         <li>
           <NavLink to="/pricing">Pricing</NavLink>
+        </li>
+      </ul>
+      <ul className="flex">
+        <li>
+          <Switch isToggle={isToggle} onToggle={languageToggle}/>
         </li>
         <li>
           <NavLink to="/signin">Login</NavLink>
