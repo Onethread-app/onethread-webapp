@@ -19,6 +19,7 @@ router
       'all',
       'admin',
       'projectModerator',
+      'member'
     ),
     SchemaValidator(joiSchema.createRoom),
     roomCtrl.create,

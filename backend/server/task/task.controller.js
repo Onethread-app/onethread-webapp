@@ -14,6 +14,7 @@ const File = require('../file/file.model');
 const {
   taskAssignNotificationToUsers,
   sendNotificationToProjectTeamMates,
+  notifyToBoardMembers,
 } = require('../notification/notification.controller');
 
 const {
@@ -81,27 +82,9 @@ const create = async (req, res, next) => {
         },
       });
 
-      // const text = `${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
-      // createCompanyRoleNotification(
-      //   {
-      //     _id: column.boardId.project.company,
-      //     project: column.boardId.project._id,
-      //     board: column.boardId,
-      //     task: createdTask._id,
-      //   },
-      //   {
-      //     _id: req.user._id,
-      //     name: req.user.name,
-      //     pusherSock: req.headers.clientid,
-      //   },
-      //   text,
-      //   'task',
-      // );
-
       column.tasks.push(createdTask._id);
       await column.save();
-   
-
+  
       await Project.findByIdAndUpdate(
         { _id: req.query.pid },
         {
@@ -109,14 +92,6 @@ const create = async (req, res, next) => {
         },
         { safe: true, upsert: true, new: true },
       );
-
-      // await ActivityCtrl.create(
-      //   `added this card to ${column.name}`,
-      //   'create',
-      //   createdTask._id,
-      //   req.user,
-      // );
-
       const responseData = {
         _id: createdTask._id,
         name: createdTask.name,
@@ -459,30 +434,18 @@ const dragTask = async (req, res, next) => {
       },
       { safe: true, upsert: true, new: true },
     ).exec();
-
-    // const text = `${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
-    // createCompanyRoleNotification(
-    //   {
-    //     _id: column.boardId.project.company,
-    //     project: column.boardId.project._id,
-    //     board: column.boardId,
-    //     task: task._id,
-    //   },
-    //   {
-    //     _id: req.user._id,
-    //     name: req.user.name,
-    //     pusherSock: req.headers.clientid,
-    //   },
-    //   text,
-    //   'task',
-    // );
-
-    // await ActivityCtrl.create(
-    //   `moved this card from ${sourceColumn.name} to ${destinationColumn.name}`,
-    //   'move',
-    //   req.body.taskId,
-    //   req.user,
-    // );
+    await notifyToBoardMembers(
+      req.user._id,
+      req.headers.companyid,
+      req.body.taskId,
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
+      req.body.sourceColumnId,
+      req.body.destinationColumnId
+      )
 
     const responseData = {
       sourceColumn: {

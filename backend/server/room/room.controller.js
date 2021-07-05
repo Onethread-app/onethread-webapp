@@ -65,7 +65,7 @@ const create = async (req, res, next) => {
       req.user._id,
       req.body.name,
     );
-
+    
     const roomMember = await createRoomMember(
       req.headers.companyid,
       req.query.pid,
