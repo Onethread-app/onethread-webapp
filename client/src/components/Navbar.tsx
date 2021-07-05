@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Dialog,
 } from '@blueprintjs/core';
+import { isMobileOnly } from 'react-device-detect';
 import { connect } from 'react-redux';
 import { upperFirst } from 'lodash';
 import { NavLink } from 'react-router-dom';
@@ -66,6 +67,12 @@ const NavbarTopComponent = (
   const handleSeenNotifications = async () => {
     props.seen !== 0 && (await props.seenNotification());
     // props.getNotifications();
+  };
+
+  const compareChats = (a: any, b: any) => {
+    if (a.message.createdAt < b.message.createdAt) return 1;
+    else if (a.message.createdAt > b.message.createdAt) return -1;
+    else return 0;
   };
 
   const { t } = useTranslation();
@@ -154,13 +161,18 @@ const NavbarTopComponent = (
             position={Position.BOTTOM}
             content={
               <div
-                style={{ maxHeight: '300px', width: '420px' }}
-                className="pt2 pb1 overflow-y-auto"
+                style={{
+                  maxHeight: '300px',
+                  width: isMobileOnly ? '320px' : '420px',
+                }}
+                className={`pt2 pb1 overflow-y-auto`}
               >
                 {props.chats && props.chats.length ? (
-                  props.chats.map((chat: IChat, index) => (
-                    <ChatListItem chat={chat} key={index} />
-                  ))
+                  props.chats
+                    .sort(compareChats)
+                    .map((chat: IChat, index) => (
+                      <ChatListItem chat={chat} key={index} />
+                    ))
                 ) : (
                   <p className="ph2">No room To Show</p>
                 )}
@@ -207,7 +219,7 @@ const NavbarTopComponent = (
                     props.type === 'home' ? 'white' : 'dark-gray',
                 }}
                 // text="My Companies"
-                text= {t('app.homepage.My-Companies')}
+                text={t('app.homepage.My-Companies')}
               />
             }
           />

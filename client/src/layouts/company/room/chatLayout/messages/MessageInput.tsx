@@ -106,6 +106,7 @@ const CustomMentionEditor = (
     ({ value }: { value: string }) => {
       setSuggestions(defaultSuggestionsFilter(value, props.mentions));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -201,6 +202,9 @@ const CustomMentionEditor = (
             onChange={onChange}
             plugins={plugins}
             ref={ref}
+            autoCapitalize="off"
+            autoComplete="off"
+            autoCorrect="off"
             placeholder="Type your message and hit ENTER to send"
           />
           <MentionSuggestions
@@ -224,7 +228,7 @@ const CustomMentionEditor = (
         <SendIcon
           className="pointer"
           style={{ color: '#3F61C5', margin: '0 .5rem' }}
-          onClick={handleSend}
+          onClick={() => handleSend()}
         />
       </div>
       {messageError && (
