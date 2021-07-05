@@ -34,7 +34,9 @@ const {
   savePushSubscription,
   removePushSubscription,
 } = require('../services/webpush.services');
-
+const { Tasks } = require('elasticsearch');
+const Task = require('../task/task.model');
+const TaskAssign = require('../task/taskAssign.model');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -714,6 +716,48 @@ const inviteSignup = async (req, res, next) => {
     next(error);
   }
 };
+
+const userTaskList = async (req, res, next)=>{
+  try {
+    const options = [
+      {
+        path: 'taskId',
+        select: '_id name boardId columnId project',
+        populate: [
+          {
+            path: 'project',
+            select: '_id name',
+          },
+          {
+            path: 'boardId',
+            select: '_id',
+          },
+          {
+            path: 'columnId',
+            select: '_id',
+          },
+        ],
+      },
+      {
+        path: 'account',
+        select: '_id firstName lastName',
+      },
+    ];
+    const taskList = await Task.find({"dueDate": {"$lte":new Date()},status:{$ne: 'done'}});
+    const taskId = taskList.map(e=>e._id);
+    const assignToUser = await TaskAssign.find({taskId: taskId, assignedPerson: req.user._id})
+                    .select('taskId')
+                    .populate(options);
+    const assignByUser = await TaskAssign.find({taskId: taskId, account: req.user._id, assignedPerson:{$nin: {_id: req.user._id}} }).sort({createdAt: -1})
+    .select('taskId')
+    .populate(options);
+    const userTask = {assignToUser:[...assignToUser],assignByUser:[...assignByUser]};                
+    return sendJSONresponse(res, 200, userTask);
+  } catch (error) {
+    logger.error(`Account: ${error}`);
+    next(error);
+  }
+}
 module.exports = {
   register,
   resendEmail,
@@ -729,4 +773,5 @@ module.exports = {
   changePassword,
   skillArea,
   inviteSignup,
+  userTaskList,
 };
