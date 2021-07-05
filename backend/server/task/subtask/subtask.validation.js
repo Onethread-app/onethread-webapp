@@ -41,6 +41,7 @@ module.exports = {
   addMember: Joi.object().keys({
     body: Joi.object().keys({
       assignmember: idSchema.id.required(),
+      boardId: idSchema.id.required(),
     }),
     params: subTaskId,
   }),

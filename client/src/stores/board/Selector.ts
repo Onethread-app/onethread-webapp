@@ -10,6 +10,8 @@ const selectColumns = createSelector(
 
 export const getCurrentBoard = (state) =>
   state.boardIndexReducer.boardReducer.currentBoard;
+export const getCurrentBoardId = (state) =>
+  state.boardIndexReducer.boardReducer.currentBoard._id;
 export const getCurrentTask = (state) =>
   state.boardIndexReducer.boardReducer.currentTask._id;
 

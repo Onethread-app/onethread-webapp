@@ -4,7 +4,10 @@ const Board = require('../../board/board.model');
 const { addToBoard } = require('../../board/board.controller');
 const logger = require('../../../config/winston');
 const _ = require('lodash');
-const { sendJSONresponse } = require('../../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../../helpers/jsonResponse');
 const {
   search,
   accountIndex,
@@ -109,10 +112,16 @@ const addMember = async (req, res, next) => {
   try {
     const requestedMember = req.body.assignmember;
     const subTaskId = req.params.subTaskId;
-    const subtask = await SubTask.findById(subTaskId)
-      .select('_id taskId')
-      .populate('taskId', '_id boardId');
-    const { boardId } = subtask.taskId;
+    const boardId = req.body.boardId;
+
+    const subtask = await SubTask.findOne({
+      _id: subTaskId,
+    });
+    const memberAlreadyExistsInSubtask =
+      subtask.assignedMembers.filter(
+        (assignedMember) => assignedMember._id === requestedMember,
+      );
+
     const board = await Board.findOne({
       _id: boardId,
     });
@@ -122,67 +131,73 @@ const addMember = async (req, res, next) => {
     const memberAlreadyExistsInBoard =
       boardMembers.includes(requestedMember);
 
-    if (memberAlreadyExistsInBoard) {
-      //TODOs: need to check if user already added in this subtask
-      const subTask = await SubTask.findByIdAndUpdate(
-        { _id: subTaskId },
-        { $push: { assignedMembers: requestedMember } },
-        { safe: true, upsert: true, new: true },
-      )
-        .select('_id assignedMembers')
-        .populate([
-          {
-            path: 'assignedMembers',
-            select: '_id firstName lastName profileImage',
-          },
-        ])
-        .exec();
-      if (req.user._id !== requestedMember) {
-        await subTaskAssignNotificationToUsers(
-          req.user._id,
-          req.headers.companyid,
-          subTaskId,
-          requestedMember,
-          {
-            _id: req.user._id,
-            name: req.user.name,
-            pusherSock: req.headers.clientid,
-          },
-        );
-        await triggerUnreadNotifications(requestedMember);
-      }
-      return sendJSONresponse(res, 201, subTask);
+    if (memberAlreadyExistsInSubtask.length > 0) {
+      logger.info('Member already exists');
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'Member already exists',
+        fieldName: 'name',
+      });
     } else {
-      await addToBoard(boardId, requestedMember);
-      //TODOs: need to check if user already added in this subtask
-      const subTask = await SubTask.findByIdAndUpdate(
-        { _id: subTaskId },
-        { $push: { assignedMembers: requestedMember } },
-        { safe: true, upsert: true, new: true },
-      )
-        .select('_id assignedMembers')
-        .populate([
-          {
-            path: 'assignedMembers',
-            select: '_id firstName lastName profileImage',
-          },
-        ])
-        .exec();
-      if (req.user._id !== requestedMember) {
-        await subTaskAssignNotificationToUsers(
-          req.user._id,
-          req.headers.companyid,
-          subTaskId,
-          requestedMember,
-          {
-            _id: req.user._id,
-            name: req.user.name,
-            pusherSock: req.headers.clientid,
-          },
-        );
-        await triggerUnreadNotifications(requestedMember);
+      if (memberAlreadyExistsInBoard) {
+        const subTask = await SubTask.findByIdAndUpdate(
+          { _id: subTaskId },
+          { $push: { assignedMembers: requestedMember } },
+          { safe: true, upsert: true, new: true },
+        )
+          .select('_id assignedMembers')
+          .populate([
+            {
+              path: 'assignedMembers',
+              select: '_id firstName lastName profileImage',
+            },
+          ])
+          .exec();
+        if (req.user._id !== requestedMember) {
+          await subTaskAssignNotificationToUsers(
+            req.user._id,
+            req.headers.companyid,
+            subTaskId,
+            requestedMember,
+            {
+              _id: req.user._id,
+              name: req.user.name,
+              pusherSock: req.headers.clientid,
+            },
+          );
+          await triggerUnreadNotifications(requestedMember);
+        }
+        return sendJSONresponse(res, 201, subTask);
+      } else {
+        await addToBoard(boardId, requestedMember);
+        const subTask = await SubTask.findByIdAndUpdate(
+          { _id: subTaskId },
+          { $push: { assignedMembers: requestedMember } },
+          { safe: true, upsert: true, new: true },
+        )
+          .select('_id assignedMembers')
+          .populate([
+            {
+              path: 'assignedMembers',
+              select: '_id firstName lastName profileImage',
+            },
+          ])
+          .exec();
+        if (req.user._id !== requestedMember) {
+          await subTaskAssignNotificationToUsers(
+            req.user._id,
+            req.headers.companyid,
+            subTaskId,
+            requestedMember,
+            {
+              _id: req.user._id,
+              name: req.user.name,
+              pusherSock: req.headers.clientid,
+            },
+          );
+          await triggerUnreadNotifications(requestedMember);
+        }
+        return sendJSONresponse(res, 201, subTask);
       }
-      return sendJSONresponse(res, 201, subTask);
     }
   } catch (error) {
     logger.error(`Subtask: ${error}`);
