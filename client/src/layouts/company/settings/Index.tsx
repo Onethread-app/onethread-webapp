@@ -15,6 +15,7 @@ import Subscriptions from './subscriptions/Index';
 import Modal from 'react-modal';
 import ErrorText from './ErrorText';
 import './styles.scss';
+import { useTranslation } from 'react-i18next';
 
 export const customStyles = {
   content: {
@@ -56,6 +57,9 @@ const ViewContent = ({ selectedTab }) => {
 const MobileView = () => {
   const [selectedTab, setSelectedTab] = React.useState(1);
   const liClasses = 'pv2';
+
+  const { t } = useTranslation();
+
   return (
     <MobileOnlyView>
       <div className="mobile-nav w-100 tc">
@@ -66,7 +70,8 @@ const MobileView = () => {
             }
             onClick={() => setSelectedTab(1)}
           >
-            General
+            {t('app.company.Settings.General')}
+            {/* General */}
           </li>
           <li
             className={
@@ -74,7 +79,8 @@ const MobileView = () => {
             }
             onClick={() => setSelectedTab(2)}
           >
-            Role Permission
+            {t('app.company.Settings.Role-Permission')}
+            {/* Role Permission */}
           </li>
           <li
             className={
@@ -82,7 +88,8 @@ const MobileView = () => {
             }
             onClick={() => setSelectedTab(3)}
           >
-            Departments
+            {t('app.company.Settings.Departments')}
+            {/* Departments */}
           </li>
           <li
             className={
@@ -90,7 +97,8 @@ const MobileView = () => {
             }
             onClick={() => setSelectedTab(4)}
           >
-            Subscription And Billing
+            {t('app.company.Settings.Subscription')}
+            {/* Subscription And Billing */}
           </li>
         </ul>
       </div>
@@ -109,13 +117,18 @@ const SettingsPagComponent = (
   React.useEffect(() => {
     setSuccess(props.subscriptiontExpired);
   }, []);
+
+  const { t } = useTranslation();
+
   return (
     <>
-      <NavbarCompany title="My Settings" />
+      <NavbarCompany title={t('app.company.Settings.Settings')} />
+      {/* <NavbarCompany title="My Settings" /> */}
       <div className="fl w-100 pl4-ns pr2-ns ph3 pb4 mt5 mt0-ns">
         <div className="fl w-100">
           {isMobileOnly ? undefined : (
-            <h3 className="f3 b">Settings</h3>
+            <h3 className="f3 b">{t('app.company.Settings.Settings')}</h3>
+            // <h3 className="f3 b">Settings</h3>
           )}
         </div>
         {isMobileOnly ? (
@@ -131,7 +144,8 @@ const SettingsPagComponent = (
               panelClassName={`b--black-05 ${
                 isMobileOnly ? '' : 'bl'
               } bw1 ml3-ns ml1 w-100`}
-              title="General"
+              title={t('app.company.Settings.General')}
+              // title="General"
               panel={<GeneralView />}
               className="outline-0 f6-ns f7"
             />
@@ -140,7 +154,8 @@ const SettingsPagComponent = (
               panelClassName={`b--black-05 ${
                 isMobileOnly ? '' : 'bl'
               } bw1 ml3-ns ml1 w-100`}
-              title="Role Permissions"
+              title={t('app.company.Settings.Role-Permission')}
+              // title="Role Permissions"
               panel={<AdminRoleView />}
               className="outline-0 f6-ns f7"
             />
@@ -149,7 +164,7 @@ const SettingsPagComponent = (
               panelClassName={`b--black-05 ${
                 isMobileOnly ? '' : 'bl'
               } bw1 ml3-ns ml1 w-100`}
-              title="Department"
+              title={t('app.company.Settings.Departments')}
               panel={<DepartmentView />}
               className="outline-0 f6-ns f7"
             />
@@ -159,7 +174,8 @@ const SettingsPagComponent = (
                 panelClassName={`b--black-05 ${
                   isMobileOnly ? '' : 'bl'
                 } bw1 ml3-ns ml1 w-100`}
-                title="Subscriptions and Billing"
+                title={t('app.company.Settings.Subscription')}
+                // title="Subscriptions and Billing"
                 panel={<Subscriptions />}
                 className="outline-0 f6-ns f7"
               />
@@ -174,12 +190,15 @@ const SettingsPagComponent = (
             onRequestClose={closeModal}
             style={customStyles}
             contentLabel="Example Modal"
+            // contentLabel="Example Modal"
           >
             <ErrorText
               closeModal={closeModal}
-              text="Your Subscription has expired"
-              subtext="To keep using Onethread without interruption you need to pay your
-              dues."
+              text={t('app.company.Settings.Expired')}
+              subtext={t('app.company.Settings.Expired-text')}
+              // text="Your Subscription has expired"
+              // subtext="To keep using Onethread without interruption you need to pay your
+              // dues."
             />
           </Modal>
         )}

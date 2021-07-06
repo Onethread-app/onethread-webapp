@@ -4,6 +4,7 @@ import { TextArea, Button } from '@blueprintjs/core';
 import { ICompany } from 'stores/company/Reducer';
 import { addAnnouncement } from 'stores/company/Actions';
 import { isEmpty } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 interface AnnouncementEditorProps {
   setShowDialog: (val: boolean) => void;
@@ -34,10 +35,13 @@ const AnnouncementEditorComponent = (
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="bg-white pa4">
-        <h1 className="f5">Company Announcement</h1>
+        <h1 className="f5">{t('app.company.Dashboard.Announce')}</h1>
+        {/* <h1 className="f5">Company Announcement</h1> */}
         <TextArea
           className="mt1"
           id="jobDescription"

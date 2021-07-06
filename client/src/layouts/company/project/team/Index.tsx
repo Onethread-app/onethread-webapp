@@ -411,7 +411,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               ))
             ) : (
               <tr>
-                <td colSpan={5}>No Moderators</td>
+                <td colSpan={5}>{t('app.project.Project-teammates.No-Moderators')}</td>
+                {/* <td colSpan={5}>No Moderators</td> */}
               </tr>
             )}
           </tbody>
@@ -507,12 +508,14 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               ))
             ) : (
               <tr>
-                <td colSpan={5}>No Teammates</td>
+                <td colSpan={5}>{t('app.project.Project-teammates.No-Teammates')}</td>
+                {/* <td colSpan={5}>No Teammates</td> */}
               </tr>
             )}
           </tbody>
         </HTMLTable>
-        <h1 className="f4 mv4">External Partners</h1>
+        <h1 className="f4 mv4">{t('app.company.Partners.External')}</h1>
+        {/* <h1 className="f4 mv4">External Partners</h1> */}
         <AssociateList />
       </div>
 

@@ -17,6 +17,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { IProject } from 'stores/project/Reducer';
 
 import addMemberIcon from 'resources/images/addMemberIcon.png';
+import { useTranslation } from 'react-i18next';
 
 interface BoardDetailsViewInternalProps {
   currentBoard: TaskBoard;
@@ -44,6 +45,8 @@ const BoardDetailsViewComponent = (
     false,
   );
   const permissions = projectRules(props.role, props.optionalRole);
+
+  const { t } = useTranslation();
 
   return (
     <div
@@ -100,14 +103,16 @@ const BoardDetailsViewComponent = (
                   style={{ minWidth: '130px', background: 'inherit' }}
                   onClick={() => setShowColumnFormDialog(true)}
                 >
-                  Add New Column
+                  {t('app.project.Project-boards.Add-Column')}
+                  {/* Add New Column */}
                 </button>
                 <button
                   className="mb0 mr2 pointer f5 f6-ns bn white br2 pa1"
                   style={{ minWidth: '130px', background: '#3F61C5' }}
                   onClick={() => setShowTaskBoardDialog(true)}
                 >
-                  Create New Board
+                  {t('app.project.Project-boards.Create-Board')}
+                  {/* Create New Board */}
                 </button>
                 {/* <img
                   className="br2 pointer"

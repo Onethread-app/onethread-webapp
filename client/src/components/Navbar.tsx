@@ -264,7 +264,8 @@ const NavbarTopComponent = (
                     props.history.push(`/${props.user.name}/settings`)
                   }
                 >
-                  Settings
+                  {t('app.company.Settings.Settings')}
+                  {/* Settings */}
                 </Button>
                 <Button
                   className="bp3-minimal outline-0 bp3-popover-dismiss"
@@ -274,7 +275,8 @@ const NavbarTopComponent = (
                   icon="log-in"
                   alignText="left"
                 >
-                  Logout
+                  {t('app.user.User-settings.Logout')}
+                  {/* Logout */}
                 </Button>
               </ButtonGroup>
             }

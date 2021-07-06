@@ -128,29 +128,45 @@
         "Number-of-associates": "মোট সহযোগী",
         "Update-of-task": "সর্বশেষ সমাপ্ত প্রজেক্টসমূহ",
         "Complete-notification": "সমাপ্ত হিসাবে চিহ্নিত করা হয়েছে",
+        "Not-Marked": "কোনও কাজই সম্পন্ন হিসাবে চিহ্নিত করা হয়নি।",
         "Project-status": "প্রজেক্টের অবস্থা",
+        "Task-Remaining": "বাকি কাজ",
         "Sales": "Sales",
         "Marketing": "Marketing",
         "Easy-english": "Easy English",
         "Sport": "Sportic=Scprer",
         "Us": "onethread",
         "Announce": "প্রতিষ্ঠানের ঘোষণাসমূহ",
+        "Create-Announcement": "ঘোষণা তৈরি করুন",
+        "No-Announcement": "কোনও ঘোষণা নেই",
         "Sender": "হতে"
       },
 
       "Projects": {
+        "Overview": "ওভারভিউ",
+        "Name": "প্রজেক্টের নাম",
+        "Project-Settings": "প্রজেক্টের সেটিংস",
         "My-projects": "আমার প্রজেক্টসমূহ",
+        "Completed-projects": "সমাপ্ত প্রজেক্টসমূহ",
+        "No-completed-projects": "কোনও সমাপ্ত প্রজেক্ট নেই",
+        "Pending Projects": "বিচারাধীন প্রজেক্টসমূহ",
+        "No-pending-projects": "কোনও বিচারাধীন প্রজেক্ট নেই",
         "Everything": "সকল",
         "Running": "চলমান",
         "Done": "সমাপ্ত",
         "Future-work": "ভবিষ্যত কাজ",
         "Beginning": "শুরু",
         "Finish": "সমাপ্ত",
-        "Find": "খুঁজুন"
+        "Lead": "লিড",
+        "Status": "স্থিতি",
+        "Find": "খুঁজুন",
+        "Not-available": "কোন কাজ লিপিবদ্ধ নেই। দয়া করে বোর্ডে কিছু কাজ তৈরি করুন।"
       },
 
       "Company-profile": {
         "Company-name": "ওয়ানথ্রেড",
+        "Company-profile": "কোম্পানির প্রোফাইল",
+        "Individual": "পৃথক প্রোফাইল",
         "Total-Employee": "মোট কর্মীসংখ্যা",
         "Associates": "মোট সহযোগী",
         "Basic": "সাধারণ তথ্যসমূহ",
@@ -167,6 +183,11 @@
       },
 
       "Colleagues": {
+        "Colleagues": "সহকর্মী",
+        "Add-Colleagues": "সহকর্মী যোগ করুন",
+        "Invite-Colleagues": "সহকর্মীদের আমন্ত্রণ জানান",
+        "Invited-Colleagues": "আমন্ত্রিত সহকর্মী",
+        "No-pending": "বিচারাধীন অনুরোধ নেই",
         "Admins": "অ্যাডমিন",
         "Members": "সদস্যগণ",
         "Name": "নাম",
@@ -174,6 +195,67 @@
         "Division": "ডিভিশন",
         "Department": "বিভাগ",
         "Position": "পদমর্যাদা"
+      },
+
+      "Partners":{
+        "Partners": "অংশীদার",
+        "No-Partners": "আপনি এখনও কারও সাথে অংশীদারি করছেন না।",
+        "Pending-partners": "বিচারাধীন অংশীদার",
+        "No-Pending": "কোন বিচারাধীন অনুরোধ নেই",
+        "External": "বাহ্যিক অংশীদার",
+        "No-associates": "কোনও সহযোগী নেই"
+      },
+
+      "Settings":{
+        "Settings": "সেটিংস",
+        "General": "সাধারণ",
+        "Role-Permission": "ভূমিকা অনুমতি",
+        "Departments": "বিভাগসমূহ",
+        "Subscription": "সাবস্ক্রিপশন এবং বিলিং",
+        "Expired": "আপনার সাবস্ক্রিপশনের মেয়াদ শেষ হয়ে গেছে",
+        "Expired-text": "কোনও বাধা ছাড়াই অনথ্রেড ব্যবহার চালিয়ে যাওয়ার জন্য আপনাকে আপনার বকেয়া অর্থ প্রদান করতে হবে।",
+        "Change-Name": "কোম্পানির নাম পরিবর্তন করুন"
+      },
+
+      "Role-Permissions":{
+        "Permission-1": "কোম্পানির ঘোষণাগুলি তৈরি/আপডেট/ডিলিট",
+        "Permission-2": "প্রোফাইলের প্রাথমিক/অ্যাডভান্স তথ্য পরিবর্তন করা",
+        "Permission-3": "প্রজেক্ট সংরক্ষণ",
+        "Permission-4": "প্রকল্পের পরিচালককে যুক্ত/বাদ",
+        "Permission-5": "বার্তা সহযোগী",
+        "Permission-6": "সংযুক্ত হতে সংস্থাগুলি থেকে অনুরোধগুলি যুক্ত/গ্রহণ/প্রত্যাখ্যান করা",
+        "Permission-7": "সহযোগীদের কাছ থেকে প্রকল্পের অনুরোধ গ্রহণ / প্রত্যাখ্যান করা"
+      },
+
+      "Departments":{
+        "Departments": "বিভাগসমূহ",
+        "Add-department": "বিভাগ যুক্ত করুন",
+        "No-departments": "কোন বিভাগ নেই"
+      },
+
+      "Subscription-And-Billing":{
+        "Subscription": "সাবস্ক্রিপশন এবং বিলিং",
+        "Current": "বর্তমান সাবস্ক্রিপশন পরিকল্পনা",
+        "Payment-date": "পরিশোধযোগ্য তারিখ",
+        "Payment-history": "অর্থ পরিশোধের ইতিহাস",
+        "No-Payment": "কোনও অর্থ পরিশোধের করা হয়নি",
+        "Change": "পরিবর্তন",
+        "View-history": "সমস্ত ইতিহাস দেখুন",
+        "Invoice": "চালান নং.",
+        "Date": "তারিখ",
+        "Status": "লেনদেনের অবস্থা",
+        "Amount": "পরিমাণ"
+      },
+
+      "Feedback":{
+        "Feedback": "মতামত",
+        "Optional": "নিম্নলিখিত প্রশ্নগুলির উত্তর দিয়ে আপনার রেটিং বুঝতে আমাদের সহায়তা করুন (ঐচ্ছিক):",
+        "Opinion-1": {"Number":"১. ", "text": "১-১০ স্কেলের উপর, আপনি কীভাবে বন্ধু / সহকর্মীর কাছে আমাদের পণ্যটি সুপারিশ করতে পারেন?"} ,
+        "Opinion-2": {"Number":"২. ", "text": "আমরা কোন বৈশিষ্ট্যটি উন্নত করতে পারি?"} ,
+        "Opinion-3": {"Number":"৩. ", "text": "কোন বৈশিষ্ট্যটি কার্যকর ছিল?"} ,
+        "Opinion-4": {"Number":"৪. ", "text": "আপনি চান এমন কোন বৈশিষ্ট্যটি আমরা সরবরাহ করতে পারি?"},
+        "Clear": "মুছে ফেলুন",
+        "Submit": "জমা দিন" 
       }
     },
     "project": {
@@ -183,18 +265,28 @@
         "Outline": "প্রজেক্টের রূপরেখা",
         "Media": "শেয়ার করা ফাইলসমূহ",
         "Upload": "ফাইল আপলোড করুন",
-        "Team": "প্রজেক্টের সদস্যবৃন্দ"
+        "Team": "প্রজেক্টের সদস্যবৃন্দ",
+        "Deadline": "শেষ তারিখ",
+        "Remaining-Tasks": "বাকি কাজ",
+        "Update-Project": "আপডেট প্রজেক্ট",
+        "Archive-Project": "সংরক্ষণাগার প্রজেক্ট"
       },
 
       "Project-rooms": {
         "Rooms": "রুম্‌স",
         "Find-room": "রুম খুঁজুন",
-        "Select-room": "অনুগ্রহ করে একটি রুম বাছাই করুন!"
+        "Select-room": "অনুগ্রহ করে একটি রুম বাছাই করুন!",
+        "Highlighted-Discussions": "হাইলাইট আলোচনা",
+        "No-discussions": "কোন আলোচনা নেই।",
+        "No-files": "কোনও ফাইল নেই।"
       },
 
       "Project-boards": {
         "Board": "বোর্ড",
         "My-boards": "আমার বোর্ডসমূহ",
+        "Add-Column": "নতুন কলাম যুক্ত করুন",
+        "Create-Board": "নতুন বোর্ড তৈরি করুন",
+        "Add-task": "টাস্ক যোগ করুন",
         "Criteria": "পর্যায়ক্রম"
       },
 
@@ -208,7 +300,9 @@
         "Division": "ডিভিশন",
         "Department": "বিভাগ",
         "Position": "পদমর্যাদা",
-        "Co-partner": "প্রজেক্টের সহযোগীসমূহ"
+        "Co-partner": "প্রজেক্টের সহযোগীসমূহ",
+        "No-Teammates": "সদস্যবৃন্দ নেই",
+        "No-Moderators": "কোনও মডারেটর নেই"
       },
 
       "Project-settings": {
@@ -230,6 +324,7 @@
     },
     "user": {
       "Personal-profile": {
+        "Profile": "প্রোফাইল",
         "Cover": "কভার পরিবর্তন",
         "About": "আমার প্রোফাইল",
         "Skills": "দক্ষতা",
@@ -263,10 +358,19 @@
       },
 
       "User-settings": {
+        "Home": "হোম",
         "Profile": "প্রোফাইল সেটিংস",
-        "Password": "পাসওয়ার্ড পরিবর্তন"
+        "Password": "পাসওয়ার্ড পরিবর্তন",
+        "Logout": "লগ আউট"
       }
     },
+    "Navbar":{
+      "How-It-Works": "কিভাবে এটা কাজ করে",
+      "Pricing": "প্যাকেজ মূল্য",
+      "Login": "লগইন",
+      "SignUp": "সাইন আপ"
+    },
+
     "forms": {
       "Create-company": {
         "Create": "প্রতিষ্ঠান তৈরি করুন",
