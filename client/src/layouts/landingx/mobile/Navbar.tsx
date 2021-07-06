@@ -52,6 +52,8 @@ const Menu = ({ setOpen }) => {
     }
     setIsToggle(!isToggle)
   };
+
+  const { t } = useTranslation();
   
   return (
     <animated.div style={props} className="overlay-menu">
@@ -69,21 +71,25 @@ const Menu = ({ setOpen }) => {
               target="_blank"
               rel="noreferrer"
             >
-              How It Works
+              {t('app.Navbar.How-It-Works')}
+              {/* How It Works */}
             </a>
           </li>
           <li>
-            <NavLink to="/pricing">Pricing</NavLink>
+            <NavLink to="/pricing">{t('app.Navbar.Pricing')}</NavLink>
+            {/* <NavLink to="/pricing">Pricing</NavLink> */}
           </li>
           <li>
             <Switch isToggle={isToggle} onToggle={()=>handleToggle(!isToggle)}/>
           </li>
           <li>
-            <NavLink to="/signin">Login</NavLink>
+            <NavLink to="/signin">{t('app.Navbar.Login')}</NavLink>
+            {/* <NavLink to="/signin">Login</NavLink> */}
           </li>
           <li>
             <NavLink to="/signup" className="b">
-              SignUp
+              {t('app.Navbar.SignUp')}
+              {/* SignUp */}
             </NavLink>
           </li>
         </ul>

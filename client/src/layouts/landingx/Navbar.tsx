@@ -41,6 +41,7 @@ const Navbar = () => {
     setIsToggle(!isToggle)
   };
   
+  const { t } = useTranslation();
 
 return (
     <div className="navbar flex justify-between items-center">
@@ -54,11 +55,13 @@ return (
             href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
             target="_blank"
           >
-            How It Works
+            {t('app.Navbar.How-It-Works')}
+            {/* How It Works */}
           </a>
         </li>
         <li>
-          <NavLink to="/pricing">Pricing</NavLink>
+          <NavLink to="/pricing">{t('app.Navbar.Pricing')}</NavLink>
+          {/* <NavLink to="/pricing">Pricing</NavLink> */}
         </li>
        </ul>
       </ul>
@@ -67,11 +70,13 @@ return (
           <Switch isToggle={isToggle} onToggle={()=>handleToggle(!isToggle)}/>
         </li>
         <li>
-          <NavLink to="/signin">Login</NavLink>
+          <NavLink to="/signin">{t('app.Navbar.Login')}</NavLink>
+          {/* <NavLink to="/signin">Login</NavLink> */}
         </li>
         <li>
           <NavLink to="/signup" className="b">
-            SignUp
+            {t('app.Navbar.SignUp')}
+            {/* SignUp */}
           </NavLink>
         </li>
       </ul>

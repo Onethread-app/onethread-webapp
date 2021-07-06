@@ -364,6 +364,13 @@
         "Logout": "লগ আউট"
       }
     },
+    "Navbar":{
+      "How-It-Works": "কিভাবে এটা কাজ করে",
+      "Pricing": "প্যাকেজ মূল্য",
+      "Login": "লগইন",
+      "SignUp": "সাইন উপ"
+    },
+
     "forms": {
       "Create-company": {
         "Create": "প্রতিষ্ঠান তৈরি করুন",

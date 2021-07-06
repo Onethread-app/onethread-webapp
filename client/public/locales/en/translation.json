@@ -364,6 +364,13 @@
         "Logout": "Logout"
       }
     },
+   "Navbar":{
+      "How-It-Works":"How It Works",
+      "Pricing": "Pricing",
+      "Login": "Login",
+      "SignUp": "SignUp"
+    },
+
     "forms": {
       "Create-company": {
         "Create": "Create Company",

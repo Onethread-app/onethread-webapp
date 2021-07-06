@@ -69,18 +69,12 @@ const NavbarTopComponent = (
     // props.getNotifications();
   };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   const compareChats = (a: any, b: any) => {
     if (a.message.createdAt < b.message.createdAt) return 1;
     else if (a.message.createdAt > b.message.createdAt) return -1;
     else return 0;
   };
 
-=======
->>>>>>> ab04cb3d (layout/home translated)
-=======
->>>>>>> 759b97e28dbde9a795f00ee216bda372de38392e
   const { t } = useTranslation();
 
   return (
