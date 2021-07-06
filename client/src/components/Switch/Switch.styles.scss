@@ -1,9 +1,9 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
-  margin: 0 7px;
+  width: 3.3em;
+  height: 1.95em;
+  margin: 0 0.7em;
   & input {
     opacity: 0;
     width: 0;
@@ -20,14 +20,14 @@
   bottom: 0;
   background-color: #ccc;
   transition: 0.4s;
-  border-radius: 34px;
+  border-radius: 3em;
   &:before {
     position: absolute;
     content: '';
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: 1.6em;
+    width: 1.6em;
+    left: 0.1em;
+    bottom: 0.2em;
     background-color: white;
     transition: 0.4s;
     border-radius: 50%;

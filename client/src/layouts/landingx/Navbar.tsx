@@ -48,7 +48,8 @@ return (
         <NavLink to="/">
           <img src={DarkLogo} alt="Onethread" />
         </NavLink>
-        <li>
+       <ul className="flex ml4">
+          <li>
           <a
             href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
             target="_blank"
@@ -59,6 +60,7 @@ return (
         <li>
           <NavLink to="/pricing">Pricing</NavLink>
         </li>
+       </ul>
       </ul>
       <ul className="flex">
         <li>
