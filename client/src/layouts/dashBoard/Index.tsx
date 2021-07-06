@@ -317,8 +317,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                 >
                                   {task.name}
                                 </span>{' '}
-                                from {task.boardId.name} has been
-                                marked as complete.
+                                from {task.boardId.name} 
+                                {t('app.company.Dashboard.Complete-notification')}
+                                {/* has been marked as complete. */}
                               </span>
                               {isMobileOnly ? null : (
                                 <span style={{ color: '#B4B4B4' }}>
@@ -338,7 +339,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         ))
                       ) : (
                         <Typography>
-                          None of the tasks have been marked as done.
+                          {t('app.company.Dashboard.Not-Marked')}
+                          {/* None of the tasks have been marked as done. */}
                         </Typography>
                       )}
                       {props.completedTasks.length >
@@ -467,7 +469,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         ),
                       )
                     ) : (
-                      <Typography>No Announcement</Typography>
+                      <Typography>{t('app.company.Dashboard.No-Announcement')}</Typography>
+                      // <Typography>No Announcement</Typography>
                     )}
                     {props.company.announce.length > 5 && (
                       <div className="flex flex-row items-end w-100 justify-end">

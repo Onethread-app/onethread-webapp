@@ -111,7 +111,8 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>Overview</small>
+                <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+                {/* <small style={{ color: 'inherit' }}>Overview</small> */}
               </NavLink>
               <NavLink
                 exact
@@ -136,7 +137,8 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>Room</small>
+                <small style={{ color: 'inherit' }}>{t('app.project.Project-rooms.Rooms')}</small>
+                {/* <small style={{ color: 'inherit' }}>Room</small> */}
               </NavLink>
               <NavLink
                 exact
@@ -149,6 +151,7 @@ const Index = (props: any) => {
                 style={{ color: 'darkGray' }}
               >
                 <small style={{ color: 'inherit' }}>Boards</small>
+                {/* <small style={{ color: 'inherit' }}>Boards</small> */}
               </NavLink>
               <NavLink
                 exact
@@ -174,7 +177,8 @@ const Index = (props: any) => {
                 style={{ color: 'darkGray' }}
               >
                 <small style={{ color: 'inherit' }}>
-                  Project Settings
+                  {t('app.company.Projects.Project-Settings')}
+                  {/* Project Settings */}
                 </small>
               </NavLink>
             </div>
@@ -183,7 +187,8 @@ const Index = (props: any) => {
           <div>
             <div>
               <h1>
-                Project name:{' '}
+                {t('app.company.Projects.Name')}:{' '}
+                {/* Project name:{' '} */}
                 <span style={{ fontWeight: 'normal' }}>{name}</span>
               </h1>
             </div>
@@ -198,9 +203,13 @@ const Index = (props: any) => {
                 // context="End date: "
                 data={dueDate ? dueDate : 'N/A'}
               />
-              <ProjectInfo context="Lead" data={lead} />
+              <ProjectInfo 
+              context={t('app.company.Projects.Lead')} 
+              // context="Lead" 
+              data={lead} />
               <ProjectInfo
-                context="Status"
+                context={t('app.company.Projects.Status')}
+                // context="Status"
                 data={status.replace(/-|\s/g, ' ')}
                 dataStyle={{
                   fontWeight: 'normal',
@@ -223,10 +232,11 @@ const Index = (props: any) => {
             <>
               {!tasks.length ? (
                 <div className="tc pt3">
-                  <h2>
+                  <h2>{t('app.company.Projects.Not-available')}</h2>
+                  {/* <h2>
                     No task available. Please, create some tasks in
                     board.
-                  </h2>
+                  </h2> */}
                 </div>
               ) : (
                 <>

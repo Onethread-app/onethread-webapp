@@ -30,7 +30,8 @@ const SharedFileComponent = (props: SharedFileComponentProps) => {
             });
           })
         ) : (
-          <h4 className="mv0 gray f5-ns f7">No files.</h4>
+          <h4 className="mv0 gray f5-ns f7">{t('app.project.Project-rooms.No-files')}</h4>
+          // <h4 className="mv0 gray f5-ns f7">No files.</h4>
         )}
       </div>
     </div>

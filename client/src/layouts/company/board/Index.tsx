@@ -104,6 +104,7 @@ const BoardCard = withRouter(
                   style={{ fontSize: '0.7rem' }}
                 >
                   Total Members
+                  {/* Total Members */}
                 </p>
                 <p className="fw8">
                   {board.members ? board.members.length : 0}
@@ -115,6 +116,7 @@ const BoardCard = withRouter(
                   style={{ fontSize: '0.7rem' }}
                 >
                   Remaining Tasks
+                  {/* Remaining Tasks */}
                 </p>
                 <p className="fw8">
                   {`${board.remainingTasks}/${board.totalTasks}`}
@@ -318,6 +320,7 @@ const TaskPageComponent = (
                 >
                   <option selected value="">
                     All
+                    {/* All */}
                   </option>
                   {props.company.departments
                     ? props.company.departments.map((d) => (

@@ -60,6 +60,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [deleteProjectDialog, setDeleteProjectDialog] = useState(
     false,
   );
+
+  const { t } = useTranslation();
+
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [showClearFilter, setShowClearFilter] = useState(false);
@@ -69,7 +72,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [filteredProjects, setFilteredProjects] = useState<any>([]); // projects after applying search
   const [currentProjects, setCurrentProjects] = useState<any>([]); // projects in current page
   const [selectedOption, setSelectedOption] = useState({
-    label: 'All',
+    label: `${t('app.company.Projects.Everything')}`,
+    // label: 'All',
     value: 'all',
   });
 
@@ -79,9 +83,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   ]);
   const [searchValue, setSearchValue] = useState('');
   const [itemsPerPage] = useState(15);
-
-  const { t } = useTranslation();
-
   const permissions = projectRules(props.role, props.optionalRole);
   const statusOptions = [
     { value: 'all', label:  `${t('app.company.Projects.Everything')}` },
@@ -452,14 +453,16 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                 <Menu className="pa2">
                                   <MenuItem
                                     className="pa1"
-                                    text="Update Project"
+                                    text={t('app.project.Project-preface.Update-Project')}
+                                    // text="Update Project"
                                     onClick={(e: any) =>
                                       checkRoleForChangeName()
                                     }
                                   />
                                   <MenuItem
                                     className="pa1 red"
-                                    text="Archive Project"
+                                    text={t('app.project.Project-preface.Archive-Project')}
+                                    // text="Archive Project"
                                     onClick={(e: any) =>
                                       checkRoleForArchiveProject(
                                         project._id,
@@ -522,7 +525,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                               className="f7 fw5 mr2"
                               style={{ marginTop: '1.5px' }}
                             >
-                              Remaining Tasks:{' '}
+                              {t('app.project.Project-preface.Remaining-Tasks')}:{' '}
+                              {/* Remaining Tasks:{' '} */}
                               {`${project.remainingTasks}/${project.totalTasks}`}
                             </span>
                           )}
@@ -531,7 +535,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             className="f7 fw5"
                             style={{ marginTop: '5px' }}
                           >
-                            Deadline:{' '}
+                            {t('app.project.Project-preface.Deadline')}:{' '}
+                            {/* Deadline:{' '} */}
                             {project.deadline
                               ? moment(project.deadline).format(
                                   'DD/MM/YYYY',
@@ -636,6 +641,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
             <div>
               {props.archiveProjectList.length > 0 && (
                 <h3 className="f3-ns f4">Archived Projects</h3>
+                // <h3 className="f3-ns f4">Archived Projects</h3>
               )}
               <div
                 style={{

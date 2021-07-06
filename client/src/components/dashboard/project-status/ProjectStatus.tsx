@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import './ProjectStatus.scss';
@@ -9,6 +10,7 @@ const fontColor = {
 
 const ProjectStatus = (props) => {
   const history = useHistory();
+  const { t } = useTranslation();
   return (
     <div
       className="project-status-content mb2 pointer"
@@ -23,7 +25,8 @@ const ProjectStatus = (props) => {
           {props.content}
         </div>
         <div style={fontColor} className="f5 f7">
-          Task Remaining
+          {t('app.company.Dashboard.Task-Remaining')}
+          {/* Task Remaining */}
           <span className="ml4">
             {props.remaining}/{props.total}
           </span>
