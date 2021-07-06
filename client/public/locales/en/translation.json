@@ -117,6 +117,7 @@
         "No-video-conference": "There's no existing Video Conference to show",
         "Click-a-button": "Simply click on 'Create Video Conference' button to create a new one"
       },
+
     "company": {
 
       "Dashboard": {
@@ -127,7 +128,9 @@
         "Number-of-associates": "Total Associates",
         "Update-of-task": "Latest Completed Task",
         "Complete-notification": "has been marked as completed",
+        "Not-Marked": "None of the tasks have been marked as done.",
         "Project-status": "Project Status",
+        "Task-Remaining": "Task Remaining",
         "Sales": "Sales",
         "Marketing": "Marketing",
         "Easy-english": "Easy English",
@@ -135,27 +138,40 @@
         "Us": "onethread",
         "Announce": "Company Announcement",
         "Create-Announcement": "Create Announcement",
+        "No-Announcement": "No Announcement",
         "Sender": "From"
       },
 
       "Projects": {
+        "Overview": "Overview",
+        "Name": "Project name",
+        "Project-Settings": "Project Settings",
         "My-projects": "My Projects",
+        "Completed-projects": "Completed Projects",
+        "No-completed-projects": "No completed projects",
+        "Pending Projects": "Pending Projects",
+        "No-pending-projects": "Pending Projects",
         "Everything": "All",
         "Running": "Ongoing",
         "Done": "Completed",
         "Future-work": "Not Started",
         "Beginning": "Starting date",
         "Finish": "End date",
-        "Find": "Search"
+        "Lead": "Lead",
+        "Status": "Status",
+        "Find": "Search",
+        "Not-available": "No task available. Please, create some tasks in board."
       },
 
       "Company-profile": {
         "Company-name": "Onethread",
+        "Company-profile": "Company Profile",
+        "Individual": "Individual Profile",
         "Total-Employee": "Total Employee",
         "Associates": "Total Partners",
         "Basic": "Basic Information",
         "Advanced": "Advanced Information",
-        "Name": "Company Name",
+        "Name": "Com4pany Name",
         "Type": "Company Type",
         "Address": "Company Address",
         "Mail-company": "Company Mail Address",
@@ -167,6 +183,11 @@
       },
 
       "Colleagues": {
+        "Colleagues": "Colleagues",
+        "Add-Colleagues": "Add Colleagues",
+        "Invite-Colleagues": "Invite Colleagues",
+        "Invited-Colleagues": "Invited Colleagues",
+        "No-pending": "No pending request",
         "Admins": "Admins",
         "Members": "Members",
         "Name": "Name",
@@ -174,6 +195,67 @@
         "Division": "Division",
         "Department": "Department",
         "Position": "Position"
+      },
+
+      "Partners":{
+        "Partners": "Partners",
+        "No-Partners": "You are not partnering with anyone yet.",
+        "Pending-partners": "Pending Partners",
+        "No-Pending": "No pending request available",
+        "External": "External Partners",
+        "No-associates": "No associates available"
+      },
+
+      "Settings":{
+        "Settings": "Settings",
+        "General": "General",
+        "Role-Permission": "Role Permission",
+        "Departments": "Departments",
+        "Subscription": "Subscription And Billing",
+        "Expired": "Your Subscription has expired",
+        "Expired-text": "To keep using Onethread without interruption you need to pay your dues.",
+        "Change-Name": "Change Company Name"
+      },
+
+      "Role-Permissions":{
+        "Permission-1": "Create/Update/Delete Company Announcement",
+        "Permission-2": "Edit Basic/Advanced Information of Profile",
+        "Permission-3": "Archive Projects",
+        "Permission-4": "Add/Delete Project Moderator",
+        "Permission-5": "Message Associates",
+        "Permission-6": "Add/Accept/Reject Requests from Companies to be Associates",
+        "Permission-7": "Accept/Reject Project Request from Associates"
+      },
+
+      "Departments":{
+        "Departments": "Departments",
+        "Add-department": "Add Department",
+        "No-departments": "No Departments"
+      },
+
+      "Subscription-And-Billing":{
+        "Subscription": "Subscription And Billing",
+        "Current": "Current Subscription Plan",
+        "Payment-date": "Payment Due Date",
+        "Payment-history": "Payment History",
+        "No-Payment": "No Payments Has Been Made",
+        "Change": "Change",
+        "View-history": "View all history",
+        "Invoice": "Invoice No.",
+        "Date": "Date",
+        "Status": "Payment Status",
+        "Amount": "Amount"
+      },
+
+      "Feedback":{
+        "Feedback": "Feedback",
+        "Optional": " Please help us understand your rating by answering the following questions (Optional):",
+        "Opinion-1": {"Number":"1. ", "text": "On a scale of 1-10, how likely are you to recommend our product to a friend/colleague?"} ,
+        "Opinion-2": {"Number":"2. ", "text": "What feature can we improve?"} ,
+        "Opinion-3": {"Number":"3. ", "text": "What feature was useful?"} ,
+        "Opinion-4": {"Number":"4. ", "text": "What feature do you wish we could provide?"},
+        "Clear": "Clear",
+        "Submit": "Submit"
       }
     },
     "project": {
@@ -183,18 +265,28 @@
         "Outline": "Project Outline",
         "Media": "Shared Files",
         "Upload": "Upload Files",
-        "Team": "Project Members"
+        "Team": "Project Members",
+        "Deadline": "Deadline",
+        "Remaining-Tasks": "Remaining Tasks",
+        "Update-Project": "Update Project",
+        "Archive-Project": "Archive Project"
       },
 
       "Project-rooms": {
         "Rooms": "Rooms",
         "Find-room": "Search for rooms",
-        "Select-room": "Please, select a room !!"
+        "Select-room": "Please, select a room !!",
+        "Highlighted-Discussions": "Highlighted Discussions",
+        "No-discussions": "No discussions.",
+        "No-files": "No files."
       },
 
       "Project-boards": {
         "Board": "Boards",
         "My-boards": "My Boards",
+        "Add-Column": "Add New Column",
+        "Create-Board": "Create New Board",
+        "Add-task": "Add Task",
         "Criteria": "Filter by"
       },
 
@@ -208,7 +300,9 @@
         "Division": "Division",
         "Department": "Department",
         "Position": "Position",
-        "Co-partner": "Project Associates"
+        "Co-partner": "Project Associates",
+        "No-Teammates": "No Teammates",
+        "No-Moderators": "No Moderators"
       },
 
       "Project-settings": {
@@ -230,6 +324,7 @@
     },
     "user": {
       "Personal-profile": {
+        "Profile": "Profile",
         "Cover": "Change Cover",
         "About": "About",
         "Skills": "Skills",

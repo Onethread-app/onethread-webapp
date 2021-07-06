@@ -116,7 +116,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
               </span>
             ) : (
               <Tooltip
-                content={<p className="mb0">Individual Profile</p>}
+                content={<p className="mb0">{t('app.company.Company-profile.Individual')}</p>}
+                // content={<p className="mb0">Individual Profile</p>}
                 position="right"
               >
                 <span className="ml3 pa1 bg-white">
@@ -139,7 +140,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   color: 'inherit',
                 }}
               >
-                Profile
+                {t('app.user.Personal-profile.Profile')}
+                {/* Profile */}
               </span>
             )}
           </NavLink>
@@ -307,7 +309,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Overview</p>}
+                      content={<p className="mb0">{t('app.company.Projects.Overview')}</p>}
+                      // content={<p className="mb0">Overview</p>}
                       position="right"
                     >
                       <span className="pl3">
@@ -325,7 +328,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
-                      Overview
+                      {t('app.company.Projects.Overview')}
+                      {/* Overview */}
                     </span>
                   )}
                 </NavLink>
@@ -531,7 +535,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   ) : (
                     <Tooltip
                       content={
-                        <p className="mb0">Project Settings</p>
+                        <p className="mb0">{t('app.company.Projects.Project-Settings')}</p>
+                        // <p className="mb0">Project Settings</p>
                       }
                       position="right"
                     >
@@ -550,7 +555,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
-                      Project Settings
+                      {t('app.company.Projects.Project-Settings')}
+                      {/* Project Settings */}
                     </span>
                   )}
                 </NavLink>
@@ -580,7 +586,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">Company Profile</p>}
+                    content={<p className="mb0">{t('app.company.Company-profile.Company-profile')}</p>}
+                    // content={<p className="mb0">Company Profile</p>}
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -601,7 +608,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     className="outline-0 bp3-large pl4"
                     style={{ color: 'inherit' }}
                   >
-                    Profile
+                    {t('app.company.Company-profile.Company-profile')}
+                    {/*Company Profile */}
                   </span>
                 )}
               </NavLink>
@@ -630,7 +638,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">Colleagues</p>}
+                    content={<p className="mb0">{t('app.company.Colleagues.Colleagues')}</p>}
+                    // content={<p className="mb0">Colleagues</p>}
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -651,7 +660,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     className="outline-0 bp3-large pl4"
                     style={{ color: 'inherit' }}
                   >
-                    Colleagues
+                    {t('app.company.Colleagues.Colleagues')}
+                    {/* Colleagues */}
                   </span>
                 )}
               </NavLink>
@@ -679,7 +689,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">Partners</p>}
+                    content={<p className="mb0">{t('app.company.Partners.Partners')}</p>}
+                    // content={<p className="mb0">Partners</p>}
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -700,7 +711,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     className="outline-0 bp3-large pl4"
                     style={{ color: 'inherit' }}
                   >
-                    Partners
+                    {t('app.company.Partners.Partners')}
+                    {/* Partners */}
                   </span>
                 )}
               </NavLink>
@@ -728,7 +740,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">Settings</p>}
+                    content={<p className="mb0">{t('app.company.Settings.Settings')}</p>}
+                    // content={<p className="mb0">Settings</p>}
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -749,7 +762,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     className="outline-0 bp3-large pl4"
                     style={{ color: 'inherit' }}
                   >
-                    Settings
+                    {t('app.company.Settings.Settings')}
                   </span>
                 )}
               </NavLink>
@@ -778,7 +791,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">Feedback</p>}
+                    content={<p className="mb0">{t('app.company.Feedback.Feedback')}</p>}
+                    // content={<p className="mb0">Feedback</p>}
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -799,7 +813,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     className="outline-0 bp3-large pl4"
                     style={{ color: 'inherit' }}
                   >
-                    Feedback
+                    {t('app.company.Feedback.Feedback')}
+                    {/* Feedback */}
                   </span>
                 )}
               </NavLink>

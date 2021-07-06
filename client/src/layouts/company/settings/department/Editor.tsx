@@ -6,6 +6,7 @@ import { Form, Field } from 'react-final-form';
 import { checkError, maxValue } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
+import { useTranslation } from 'react-i18next';
 
 interface DepartmentEditorProps {
   setShowDialog: (val: boolean) => void;
@@ -26,6 +27,8 @@ const DepartmentEditorComponent = (
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <Form
       onSubmit={onSubmit}
@@ -41,7 +44,8 @@ const DepartmentEditorComponent = (
       }) => (
         <form className="ph4 pv2" onSubmit={handleSubmit}>
           <h1 className="f5 lh-copy tigrow-lightBlue">
-            Add Departments
+            {t('app.company.Departments.Add-department')}
+            {/* Add Departments */}
           </h1>
           <div className="mw9 center mb2">
             <SubmitError errorMessage={submitError} />
@@ -53,7 +57,8 @@ const DepartmentEditorComponent = (
               <div className={`${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <InputGroupFieldWithError
                   id="name"
-                  placeHolder="Add Department"
+                  placeHolder={t('app.company.Departments.Add-department')}
+                  // placeHolder="Add Department"
                   className={`bb ${
                     checkError(meta) ? 'b--red' : 'b--lightBlue'
                   }`}

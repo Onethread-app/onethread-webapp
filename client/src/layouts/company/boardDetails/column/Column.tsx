@@ -24,6 +24,7 @@ import {
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { createTask } from 'stores/board/Actions';
 import { RightSidebar } from 'components/RightSidebar';
+import { useTranslation } from 'react-i18next';
 
 interface ColumnProps {
   key: string;
@@ -59,6 +60,8 @@ const ColumnComponent = (props: ColumnInternalProps) => {
     }
     return;
   };
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -146,7 +149,8 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                           outline: 'none',
                           color: 'white',
                         }}
-                        text="Add Task"
+                        text={t('app.project.Project-boards.Add-task')}
+                        // text="Add Task"
                         fill={true}
                         onClick={() =>
                           setShowTaskInput(!showTaskInput)
