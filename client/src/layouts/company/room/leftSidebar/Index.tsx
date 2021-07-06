@@ -37,6 +37,8 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 
   const { t } = useTranslation();
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div

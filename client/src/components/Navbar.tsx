@@ -70,6 +70,7 @@ const NavbarTopComponent = (
   };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   const compareChats = (a: any, b: any) => {
     if (a.message.createdAt < b.message.createdAt) return 1;
     else if (a.message.createdAt > b.message.createdAt) return -1;
@@ -78,6 +79,8 @@ const NavbarTopComponent = (
 
 =======
 >>>>>>> ab04cb3d (layout/home translated)
+=======
+>>>>>>> 759b97e28dbde9a795f00ee216bda372de38392e
   const { t } = useTranslation();
 
   return (
@@ -222,11 +225,7 @@ const NavbarTopComponent = (
                     props.type === 'home' ? 'white' : 'dark-gray',
                 }}
                 // text="My Companies"
-<<<<<<< HEAD
                 text={t('app.homepage.My-Companies')}
-=======
-                text= {t('app.homepage.My-Companies')}
->>>>>>> ab04cb3d (layout/home translated)
               />
             }
           />
