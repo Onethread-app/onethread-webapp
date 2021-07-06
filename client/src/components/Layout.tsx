@@ -52,6 +52,7 @@ import { Navbar } from '@blueprintjs/core';
 import { NavbarIndividual } from './NavbarIndividual';
 import { companyPermit } from 'stores/UtilsActions';
 import { CURRENT_ROOM } from 'stores/room/Types';
+import { useTranslation } from 'react-i18next';
 
 const load = async (
   reactRouterMatch: match,
@@ -258,6 +259,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   const [leftOpen, setLeftOpen] = useState(true);
   const [scrollTop, setScrollTop] = React.useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   return (
     <div
@@ -291,7 +293,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
               localStorage.removeItem('tigrow_real_id');
             }}
           >
-            Sign in
+            {t('landing.login.sign-in-form.sign-in-button')}
+            {/* Sign in */}
           </Link>
         </p>
       ) : (
@@ -456,7 +459,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
-                              Profile
+                              {t('app.user.Personal-profile.Profile')}
+                              {/* Profile */}
                             </small>
                           </NavLink>
                           <NavLink
@@ -478,7 +482,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
-                              Dashboard
+                              {t('app.company.Dashboard.Headline')}
+                              {/* Dashboard */}
                             </small>
                           </NavLink>
                           <NavLink
@@ -500,7 +505,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
-                              Project
+                              {t('app.homepage.Projects')}
+                              {/* Project */}
                             </small>
                           </NavLink>
                           <NavLink
@@ -522,7 +528,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
-                              Colleagues
+                              {t('app.company.Colleagues.Colleagues')}
+                              {/* Colleagues */}
                             </small>
                           </NavLink>
                           <NavLink
@@ -544,7 +551,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
-                              Partners
+                              {t('app.company.Partners.Partners')}
+                              {/* Partners */}
                             </small>
                           </NavLink>
                           {companyPermit(props.company.role) &&
@@ -568,7 +576,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                                   />
                                 </span>
                                 <small style={{ color: 'inherit' }}>
-                                  Settings
+                                  {t('app.company.Settings.Settings')}
+                                  {/* Settings */}
                                 </small>
                               </NavLink>
                             )}
@@ -591,7 +600,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
-                              Feedback
+                              {t('app.company.Feedback.Feedback')}
+                              {/* Feedback */}
                             </small>
                           </NavLink>
                         </Navbar>

@@ -174,7 +174,8 @@ const { t } = useTranslation();
 
   return (
     <>
-      <NavbarCompany title="My Colleagues" />
+      <NavbarCompany title={t('app.company.Colleagues.Colleagues')} />
+      {/* <NavbarCompany title="My Colleagues" /> */}
       <div className="ph5-ns ph3 pb5 pt5 pt0-ns">
         <div className="flex justify-between items-center">
           {isMobileOnly ? undefined : (

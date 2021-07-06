@@ -31,7 +31,8 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
 
   return (
     <>
-      <NavbarCompany title="My Associates" />
+      <NavbarCompany title={t('app.company.Partners.Partners')} />
+      {/* <NavbarCompany title="My Associates" /> */}
       <div className="ph4 w-100">
         <Tabs id="associatesTab" className="mt5 mt0-ns">
           <Tab
