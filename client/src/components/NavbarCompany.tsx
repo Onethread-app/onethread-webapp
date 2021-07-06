@@ -18,6 +18,7 @@ import { IChat, IRoom } from 'stores/room/Reducer';
 import ChatIcon from '@material-ui/icons/Chat';
 import { fetchRooms, fetchChats } from '../stores/room/Actions';
 import ChatListItem from './chat/ChatListItem';
+import { compareChats } from './Navbar';
 
 interface NavbarProps {
   title: string;
@@ -106,9 +107,11 @@ const NavbarCompanyComponent = (
                       className="pa3 overflow-y-auto"
                     >
                       {props.chats && props.chats.length ? (
-                        props.chats.map((chat: IChat, index) => (
-                          <ChatListItem chat={chat} key={index} />
-                        ))
+                        props.chats
+                          .sort(compareChats)
+                          .map((chat: IChat, index) => (
+                            <ChatListItem chat={chat} key={index} />
+                          ))
                       ) : (
                         <p className="ph2">No room To Show</p>
                       )}

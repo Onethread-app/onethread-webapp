@@ -51,6 +51,12 @@ interface NavbarTopInternalProps {
   currentRoom: IRoom;
 }
 
+export const compareChats = (a: any, b: any) => {
+  if (a.message.createdAt < b.message.createdAt) return 1;
+  else if (a.message.createdAt > b.message.createdAt) return -1;
+  else return 0;
+};
+
 const NavbarTopComponent = (
   props: NavbarTopInternalProps & RouteComponentProps,
 ) => {
@@ -67,12 +73,6 @@ const NavbarTopComponent = (
   const handleSeenNotifications = async () => {
     props.seen !== 0 && (await props.seenNotification());
     // props.getNotifications();
-  };
-
-  const compareChats = (a: any, b: any) => {
-    if (a.message.createdAt < b.message.createdAt) return 1;
-    else if (a.message.createdAt > b.message.createdAt) return -1;
-    else return 0;
   };
 
   const { t } = useTranslation();
