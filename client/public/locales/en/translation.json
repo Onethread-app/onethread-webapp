@@ -358,8 +358,10 @@
       },
 
       "User-settings": {
+        "Home": "Home",
         "Profile": "Profile Settings",
-        "Password": "Change Password"
+        "Password": "Change Password",
+        "Logout": "Logout"
       }
     },
     "forms": {

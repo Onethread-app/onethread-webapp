@@ -30,7 +30,8 @@ const _ProjectPage = (props: any) => {
 
   return (
     <>
-      <NavbarCompany title="My Projects" />
+      <NavbarCompany title={t('app.company.Projects.My-projects')} />
+      {/* <NavbarCompany title="My Projects" /> */}
       <div className="ph5-ns ph4 pt5 pt0-ns">
         <Tabs id="TabsExample">
           <Tab

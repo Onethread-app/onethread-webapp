@@ -122,7 +122,8 @@ const SettingsPagComponent = (
 
   return (
     <>
-      <NavbarCompany title="My Settings" />
+      <NavbarCompany title={t('app.company.Settings.Settings')} />
+      {/* <NavbarCompany title="My Settings" /> */}
       <div className="fl w-100 pl4-ns pr2-ns ph3 pb4 mt5 mt0-ns">
         <div className="fl w-100">
           {isMobileOnly ? undefined : (

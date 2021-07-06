@@ -154,7 +154,8 @@ export const AssociateListComponent = (
                   </Card>
                 ))
               ) : (
-                <p>No associates available</p>
+                <p>{t('app.company.Partners.No-associates')}</p>
+                // <p>No associates available</p>
               )}
             </div>
           </MobileOnlyView>

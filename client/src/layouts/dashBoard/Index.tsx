@@ -186,7 +186,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     <>
       {loading === false ? (
         <>
-          <NavbarCompany title="My Dashboard" />
+          <NavbarCompany title={t('app.company.Dashboard.Headline')} />
+          {/* <NavbarCompany title="My Dashboard" /> */}
           <div className="w-90 center mh2 mt4-l mt5 pb5 pb0-l">
             <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
                {t('app.company.Dashboard.Headline')}
