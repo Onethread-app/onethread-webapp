@@ -19,7 +19,8 @@ import { TaskPage } from 'layouts/company/task';
 import { DashboardView } from 'layouts/dashBoard/Index';
 import { EmailVerificationPage } from 'layouts/emailVerification/Index';
 import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
-import { HomePageNew } from 'layouts/home/Index';
+// import { HomePageNew } from 'layouts/home/Index';
+import HomePage from 'layouts/home/Index';
 import NewLanding from 'layouts/landingx/Index';
 import { ResetPasswordPage } from 'layouts/resetPassword/Index';
 import { SignInPage } from 'layouts/signin/Index';
@@ -221,7 +222,7 @@ const App = () => {
       <PrivateRoute
         path="/:username/home"
         exact={false}
-        component={HomePageNew}
+        component={HomePage}
       />
       <PrivateRoute
         path="/:username/settings"
