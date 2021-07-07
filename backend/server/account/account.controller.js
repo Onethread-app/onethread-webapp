@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const Account = require('./account.model');
 const { Member } = require('../company/member/member.model');
+const {Team} = require('../team-member/team.model');
 const {
   PendingMember,
 } = require('../company/member/pendingMember.model');
@@ -260,14 +261,15 @@ const getAccount = async (req, res, next) => {
       count++;
     }
     let compilation= ((count/12)*100).toFixed(2);
-    userInfo ={...userInfo._doc, "complete": compilation};
+    let teamNumber = await Team.find({account: req.user._id}).countDocuments();
+    userInfo ={...userInfo._doc, "complete": compilation, "teamNumber": teamNumber};
     return sendJSONresponse(res, 200, {
       success: true,
       user: userInfo,
 
     });
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Account: ${error}`);
     next(error);
   }
 };
@@ -286,7 +288,33 @@ const getAccount = async (req, res, next) => {
 //     console.log(err);
 //     next(err);
 //   });
-
+const userDailyProgress = async(req,res, next)=>{
+  try {
+    let startToday = new Date();
+    startToday.setHours(0,0,0,0);
+    let endToday = new Date();
+    endToday.setHours(23,59,59,999);
+    const taskList = await Task.find({"dueDate": {$gte: startToday, $lt: endToday},status:{$ne: 'done'}});
+    let taskId = taskList.map(e=>e._id);
+    const assignTaskNumber = await TaskAssign.find({taskId: taskId, assignedPerson: req.user._id}).countDocuments();
+    console.log(assignTaskNumber);
+    const doneTaskList = await Task.find({"dueDate": {$gte: startToday, $lt: endToday},status: 'done'});
+    taskId = doneTaskList.map(e=>e._id);
+    const completeNumber = await TaskAssign.find({taskId: taskId, assignedPerson: req.user._id}).countDocuments();
+    console.log(completeNumber);
+    let dailyProgress =0;
+    if(assignTaskNumber === 0){
+      dailyProgress = 100
+    }else{
+      dailyProgress = parseInt(((completeNumber/assignTaskNumber)*100).toFixed(2));
+    }
+    
+    return sendJSONresponse(res, 200, dailyProgress);
+  } catch (error) {
+    logger.error(`Account: ${error}`);
+    next(error);
+  }
+}
 const skillArea = async (req, res, next) => {
   try {
     const user = await Account.findOne({
@@ -862,4 +890,5 @@ module.exports = {
   userTaskList,
   userDueTask,
   userUpcomingTask,
+  userDailyProgress
 };
