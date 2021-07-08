@@ -67,6 +67,12 @@ const Menu = ({ setOpen }) => {
         </span>
         <ul className="flex flex-column items-center justify-center w-100 h-100">
           <li>
+            <Switch
+              isToggle={isToggle}
+              onToggle={() => handleToggle(!isToggle)}
+            />
+          </li>
+          <li>
             <a
               href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
               target="_blank"
@@ -81,10 +87,13 @@ const Menu = ({ setOpen }) => {
             {/* <NavLink to="/pricing">Pricing</NavLink> */}
           </li>
           <li>
-            <Switch
-              isToggle={isToggle}
-              onToggle={() => handleToggle(!isToggle)}
-            />
+            <a
+              href="https://blog.onethread.app/"
+              rel="noreferrer"
+            >
+              {t('app.Navbar.Blog')}
+              {/* Blog */}
+            </a>
           </li>
           <li>
             <NavLink to="/signin">{t('app.Navbar.Login')}</NavLink>

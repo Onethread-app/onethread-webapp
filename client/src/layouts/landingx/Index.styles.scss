@@ -8,19 +8,19 @@
     position: sticky;
     top: 0;
     color: #303052;
-    padding: 0 50px 0 50px;
+    padding: 0.5rem 6.8rem;
     z-index: 4;
 
     ul {
       list-style-type: none;
-
+      margin-bottom: 0;
+      padding-left: 0;
       li {
         font-family: 'Lato', sans-serif;
         font-size: 18px;
         padding: 10px;
         line-height: 22px;
         text-align: center;
-
         &:hover {
           cursor: pointer;
         }
@@ -30,6 +30,9 @@
           text-decoration: none;
         }
       }
+    }
+    .navbar-ml {
+      margin-left: 6rem;
     }
   }
 
@@ -161,7 +164,7 @@
       line-height: 43px;
     }
   }
- 
+
   .third-section {
     background: #fff;
     color: #000;
