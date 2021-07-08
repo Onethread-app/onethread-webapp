@@ -25,6 +25,7 @@ import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { createTask } from 'stores/board/Actions';
 import { RightSidebar } from 'components/RightSidebar';
 import { useTranslation } from 'react-i18next';
+import { isMobileOnly } from 'react-device-detect';
 
 interface ColumnProps {
   key: string;
@@ -104,60 +105,56 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                       </h3>
                     }
                   />
-                  {props.company &&
-                     
-                      <Popover
-                        className="w-10"
-                        content={
-                          <Menu>
-                            <MenuItem
-                              text="Edit"
-                              onClick={(e: any) =>
-                                setShowColumnFormDialog(true)
-                              } // TODO change ui
-                            />
-                          </Menu>
-                        }
-                        target={
-                          <Button
-                            style={{
-                              transform: 'rotate(90deg)',
-                              OTransform: 'rotate(90deg)',
-                              msTransform: 'rotate(90deg)',
-                              WebkitTransform: 'rotate(90deg)',
-                            }}
-                            icon="more"
-                            minimal={true}
+                  {props.company && (
+                    <Popover
+                      className="w-10"
+                      content={
+                        <Menu>
+                          <MenuItem
+                            text="Edit"
+                            onClick={(e: any) =>
+                              setShowColumnFormDialog(true)
+                            } // TODO change ui
                           />
-                        }
-                      />
-                    }
-                </div>
-                {props.company &&
-                  (
-                    <div
-                      className="overflow-hidden ph2 pt2"
-                      style={{
-                        background: '#F6F6F6',
-                        borderRadius: '5px 5px 0 0',
-                      }}
-                    >
-                      <Button
-                        className="grow h2 mb2 pointer bp3-minimal"
-                        style={{
-                          background: '#3F61C5',
-                          outline: 'none',
-                          color: 'white',
-                        }}
-                        text={t('app.project.Project-boards.Add-task')}
-                        // text="Add Task"
-                        fill={true}
-                        onClick={() =>
-                          setShowTaskInput(!showTaskInput)
-                        }
-                      />
-                    </div>
+                        </Menu>
+                      }
+                      target={
+                        <Button
+                          style={{
+                            transform: 'rotate(90deg)',
+                            OTransform: 'rotate(90deg)',
+                            msTransform: 'rotate(90deg)',
+                            WebkitTransform: 'rotate(90deg)',
+                          }}
+                          icon="more"
+                          minimal={true}
+                        />
+                      }
+                    />
                   )}
+                </div>
+                {props.company && (
+                  <div
+                    className="overflow-hidden ph2 pt2"
+                    style={{
+                      background: '#F6F6F6',
+                      borderRadius: '5px 5px 0 0',
+                    }}
+                  >
+                    <Button
+                      className="grow h2 mb2 pointer bp3-minimal"
+                      style={{
+                        background: '#3F61C5',
+                        outline: 'none',
+                        color: 'white',
+                      }}
+                      text={t('app.project.Project-boards.Add-task')}
+                      // text="Add Task"
+                      fill={true}
+                      onClick={() => setShowTaskInput(!showTaskInput)}
+                    />
+                  </div>
+                )}
                 <div>
                   {showTaskInput && (
                     <div className="overflow-hidden">
@@ -237,10 +234,11 @@ const ColumnComponent = (props: ColumnInternalProps) => {
               </div>
 
               <div
-                className="h-100 mb1 overflow-y-auto"
+                className="h-100 overflow-y-auto"
                 style={{
                   background: '#F6F6F6',
                   borderRadius: '0 0 5px 5px',
+                  marginBottom: isMobileOnly ? '2.5rem' : '.5rem',
                 }}
               >
                 <div className="flex-grow-1 flex flex-column h-100">

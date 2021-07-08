@@ -1,8 +1,8 @@
-import axios from 'axios';
-import Switch from 'components/Switch/Switch';
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { getLocation } from 'helpers/utils';
+import Switch from 'components/Switch/Switch';
 import DarkLogo from 'resources/images/onethread-logo-dark.png';
 
 const Navbar = () => {
@@ -14,14 +14,12 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const getCountry = async () => {
-      const data = await axios.get(
-        'https://extreme-ip-lookup.com/json/',
-      );
-      return data;
-    };
-    getCountry().then((data) => {
+    getLocation().then((data) => {
       const country = data.data.country;
+
+      localStorage.setItem('city', data.data.city);
+      localStorage.setItem('country', country);
+
       if (country === 'Bangladesh') {
         changeLanguage('bn');
         setIsToggle(true);

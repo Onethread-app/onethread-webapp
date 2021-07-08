@@ -117,7 +117,6 @@ const getUpcomingTasks = async (req) => {
     oneWeek.setDate(oneWeek.getDate() + 7);
     const upcomingTask = await Task.find({
       dueDate: { $gte: tomorrow, $lte: oneWeek },
-      status: { $ne: 'done' },
     }).sort({ createdAt: -1 });
     taskId = upcomingTask.map((e) => e._id);
     const assignToUserUpcoming = await TaskAssign.find({

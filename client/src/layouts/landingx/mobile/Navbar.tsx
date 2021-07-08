@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import CloseIcon from '@material-ui/icons/Close';
@@ -7,6 +6,7 @@ import DarkLogo from 'resources/images/onethread-logo-dark.png';
 import { ReactComponent as Hamburger } from 'resources/navigation-menu.svg';
 import Switch from '../../../components/Switch/Switch';
 import { useTranslation } from 'react-i18next';
+import { getLocation } from 'helpers/utils';
 
 const Menu = ({ setOpen }) => {
   const handleClose = () => {
@@ -26,14 +26,12 @@ const Menu = ({ setOpen }) => {
   };
 
   useEffect(() => {
-    const getCountry = async () => {
-      const data = await axios.get(
-        'https://extreme-ip-lookup.com/json/',
-      );
-      return data;
-    };
-    getCountry().then((data) => {
+    getLocation().then((data) => {
       const country = data.data.country;
+
+      localStorage.setItem('city', data.data.city);
+      localStorage.setItem('country', country);
+
       if (country === 'Bangladesh') {
         changeLanguage('bn');
         setIsToggle(true);
