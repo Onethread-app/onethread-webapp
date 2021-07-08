@@ -2,19 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 
 // import AddIcon from '@material-ui/icons/Add';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Pagination from '@material-ui/lab/Pagination';
 
 import TaskItem from './TaskItem';
 
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
+import { sortTasks } from 'helpers/utils';
 
 const Tasks = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState(1);
   const [filterOption, setFilterOption] = useState(1);
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<any>([]);
+  const [tasksToShow, setTasksToShow] = useState<any>([]);
   const [todaysTasks, setTodaysTasks] = useState<any>([]);
   const [upcomingTasks, setUpcomingTasks] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
   useEffect(() => {
     const getTasks = async () => {
@@ -35,16 +42,16 @@ const Tasks = () => {
   useEffect(() => {
     if (loading === false) {
       if (selectedTab === 1 && filterOption === 1) {
-        setTasks(todaysTasks.assignToUser);
+        setTasks(sortTasks(todaysTasks.assignToUser));
       }
       if (selectedTab === 1 && filterOption === 2) {
-        setTasks(todaysTasks.assignByUser);
+        setTasks(sortTasks(todaysTasks.assignByUser));
       }
       if (selectedTab === 2 && filterOption === 1) {
-        setTasks(upcomingTasks.assignToUser);
+        setTasks(sortTasks(upcomingTasks.assignToUser));
       }
       if (selectedTab === 2 && filterOption === 2) {
-        setTasks(upcomingTasks.assignByUser);
+        setTasks(sortTasks(upcomingTasks.assignByUser));
       }
     }
   }, [
@@ -54,6 +61,22 @@ const Tasks = () => {
     selectedTab,
     loading,
   ]);
+
+  useEffect(() => {
+    if (tasks.length > 0) {
+      setTotalPage(Math.ceil(tasks.length / itemsPerPage));
+    }
+  }, [itemsPerPage, tasks]);
+
+  useEffect(() => {
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    setTasksToShow(tasks.slice(indexOfFirstItem, indexOfLastItem));
+  }, [currentPage, itemsPerPage, tasks]);
+
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <div className="tasks">
@@ -145,15 +168,40 @@ const Tasks = () => {
             Status
           </div>
         </div>
-        {tasks.length > 0 ? (
-          tasks.map(
-            (task, index) =>
-              task && (
-                <TaskItem task={task} index={index} key={index} />
-              ),
-          )
-        ) : (
-          <div className="w-100 tc gray mt2">No Task</div>
+        <div style={{ height: '265px' }}>
+          {loading ? (
+            <div className="flex justify-center mt2 w-100">
+              <CircularProgress
+                style={{ color: 'rgba(0, 0, 0, 0.1)' }}
+                size={26}
+              />
+            </div>
+          ) : tasksToShow.length > 0 ? (
+            tasksToShow.map(
+              (task, index) =>
+                task && (
+                  <TaskItem
+                    task={task}
+                    index={tasks.indexOf(task)}
+                    key={index}
+                  />
+                ),
+            )
+          ) : (
+            <div className="w-100 tc gray mt2">
+              Create some task in board!
+            </div>
+          )}
+        </div>
+        {tasks.length > itemsPerPage && (
+          <div className="flex justify-center mt2 w-100">
+            <Pagination
+              count={totalPage}
+              onChange={handleChange}
+              siblingCount={1}
+              size={isMobileOnly ? 'small' : 'medium'}
+            />
+          </div>
         )}
       </div>
     </div>

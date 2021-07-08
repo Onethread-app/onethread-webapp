@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import Clock from 'components/clock/Clock';
+import { getLocation } from 'helpers/utils';
 
 interface IWeather {
   userFirstName: string;
@@ -23,7 +24,11 @@ const Weather = (props: IWeather) => {
   const [today] = React.useState(String(new Date().getDate()));
 
   const getWeatherData = async () => {
-    const url = `//api.openweathermap.org/data/2.5/weather?q=dhaka&units=metric&appid=668d583e0514e2243454322c367390ee`;
+    const locationData = await getLocation();
+    const cityName = locationData.data.city;
+    const url = `//api.openweathermap.org/data/2.5/weather?q=${
+      weatherData.city ?? cityName
+    }&units=metric&appid=668d583e0514e2243454322c367390ee`;
 
     const data = await axios.get(url);
 
@@ -75,7 +80,7 @@ const Weather = (props: IWeather) => {
         getWeatherData();
       }
     } else {
-      storeLastSavedTime();
+      getWeatherData();
     }
     if (currentHour < String(12)) {
       setGreeting('Good Morning');
