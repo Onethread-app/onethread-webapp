@@ -157,8 +157,8 @@
         "Future-work": "ভবিষ্যত কাজ",
         "Beginning": "শুরু",
         "Finish": "সমাপ্ত",
-        "Lead": "লিড",
-        "Status": "স্থিতি",
+        "Lead": "প্রোজেক্ট পরিচালক",
+        "Status": "অবস্থা",
         "Find": "খুঁজুন",
         "Not-available": "কোন কাজ লিপিবদ্ধ নেই। দয়া করে বোর্ডে কিছু কাজ তৈরি করুন।"
       },
@@ -199,6 +199,7 @@
 
       "Partners":{
         "Partners": "অংশীদার",
+        "Add-Partners": "অংশীদারদের যোগ করুন",
         "No-Partners": "আপনি এখনও কারও সাথে অংশীদারি করছেন না।",
         "Pending-partners": "বিচারাধীন অংশীদার",
         "No-Pending": "কোন বিচারাধীন অনুরোধ নেই",
@@ -286,12 +287,34 @@
         "My-boards": "আমার বোর্ডসমূহ",
         "Add-Column": "নতুন কলাম যুক্ত করুন",
         "Create-Board": "নতুন বোর্ড তৈরি করুন",
+        "Total-Members": "মোট সদস্য",
+        "Remaining-Tasks": "কাজ বাকি",
         "Add-task": "টাস্ক যোগ করুন",
-        "Criteria": "পর্যায়ক্রম"
+        "Criteria": "পর্যায়ক্রম",
+        "All": "সব",
+        "Deliverable": "হস্তান্তরযোগ্য",
+        "Resource-Assign": "রিসোর্স অ্যাসাইন",
+        "Table-Board": "বোর্ড",
+        "Priority": "অগ্রাধিকার",
+        "Status": "অবস্থা",
+        "End": "শেষ",
+        "Description": "বিবরণ",
+        "No-description": "বিবরণ এখনও দেওয়া হয়নি",
+        "Due-Date": "নির্দিষ্ট তারিখ",
+        "No-date": "তারিখ নির্ধারণ করা হয়নি",
+        "Write-comment": "মন্তব্য লিখুন",
+        "Activity": "কার্যক্রম",
+        "Choose-Priority": "অগ্রাধিকার নির্ধারণ করুন",
+        "Subtask": "সাবটাস্ক",
+        "Add-Subtask": "এড সাবটাস্ক",
+        "Attach-Files": "ফাইল সংযুক্ত করুন",
+        "Members": "সদস্যগণ",
+        "Assign-Members": "সদস্য নিয়োগ করুন"
       },
 
       "Project-teammates": {
         "Team-members": "সকল সদস্যবৃন্দ",
+        "Add-Teammates": "সদস্য যোগ করুন",
         "Admins": "অ্যাডমিন",
         "Moderators": "প্রজেক্ট মডারেটর",
         "Teammates": "প্রজেক্টের সদস্যবৃন্দ",
@@ -308,6 +331,7 @@
       "Project-settings": {
         "Moderator": "প্রজেক্ট মডারেটর",
         "General": "সাধারণ",
+        "Permission": "অনুমতি",
         "Update-archive": "আরকাইভ প্রজেক্ট হালনাগাদ করুন",
         "Preface": "প্রজেক্টের সারমর্ম",
         "Update-preface": "প্রজেক্টের সারমর্ম হালনাগাদ",

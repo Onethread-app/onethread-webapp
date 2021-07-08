@@ -18,6 +18,7 @@ import moment from 'moment';
 import { ICompany } from 'stores/company/Reducer';
 import TaskFiles from './Files/TaskFiles';
 import TaskFilesAttach from './Files/TaskFilesAttach';
+import { useTranslation } from 'react-i18next';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
@@ -57,6 +58,8 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
     setDatePopover(false);
     setMembersPopover(false);
   };
+
+  const { t } = useTranslation();
 
   return (
     <div className="fl w-100">
@@ -198,7 +201,8 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                         src={dueDate}
                         alt=""
                       />
-                      <p className="pl3 f7">Due Date</p>
+                      <p className="pl3 f7">{t('app.project.Project-boards.Due-Date')}</p>
+                      {/* <p className="pl3 f7">Due Date</p> */}
                     </div>
                   }
                 />
@@ -221,7 +225,8 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                       src={attachFiles}
                       alt=""
                     />
-                    <p className="pl3 f7">Attach Files</p>
+                    <p className="pl3 f7">{t('app.project.Project-boards.Attach-Files')}</p>
+                    {/* <p className="pl3 f7">Attach Files</p> */}
                   </div>
                 }
               />
@@ -251,7 +256,8 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                         src={addMembers}
                         alt=""
                       />
-                      <p className="pl3 f7">Members</p>
+                      <p className="pl3 f7">{t('app.project.Project-boards.Members')}</p>
+                      {/* <p className="pl3 f7">Members</p> */}
                     </div>
                   }
                 />
@@ -285,7 +291,8 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                         src={priority}
                         alt=""
                       />
-                      <p className="pl3 f7">Priority</p>
+                      <p className="pl3 f7">{t('app.project.Project-boards.Priority')}</p>
+                      {/* <p className="pl3 f7">Priority</p> */}
                     </div>
                   }
                 />

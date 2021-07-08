@@ -18,7 +18,8 @@ const ProjectSettingsPageComponent = (props: any) => {
   return (
     <>
       <MobileView>
-        <NavbarCompany title="Project Settings" />
+        <NavbarCompany title={t('app.company.Projects.Project-Settings')} />
+        {/* <NavbarCompany title="Project Settings" /> */}
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -27,7 +28,7 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.Projects.Overview')}</small>
+            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
             {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
@@ -78,21 +79,24 @@ const ProjectSettingsPageComponent = (props: any) => {
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
-              Project Settings
+              {t('app.company.Projects.Project-Settings')}
+              {/* Project Settings */}
             </small>
           </NavLink>
         </div>
       </MobileView>
       <div className="bg-white pa5-ns ph3 mb6">
         {isMobileOnly ? undefined : (
-          <h3 className="f3 ma0">Project Settings</h3>
+          <h3 className="f3 ma0">{t('app.company.Projects.Project-Settings')}</h3>
+          // <h3 className="f3 ma0">Project Settings</h3>
         )}
         <h3 className="f5 mv4">{t('app.project.Project-settings.Moderator')}</h3>
         {/* <h3 className="f5 mv4">Project Moderator</h3> */}
         <Tabs id="TabsExample" vertical={true}>
           <Tab
             id="general"
-            title="Permission"
+            title={t('app.project.Project-settings.Permission')}
+            // title="Permission"
             panel={<GeneralPage onSubmit={onSubmit} />}
             className="outline-0 w-100"
           />

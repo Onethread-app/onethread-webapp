@@ -99,7 +99,8 @@ const Index = (props: any) => {
       ) : (
         <>
           <MobileView>
-            <NavbarCompany title="Overview" />
+            <NavbarCompany title={t('app.company.Projects.Overview')} />
+            {/* <NavbarCompany title="Overview" /> */}
             <div className="flex justify-between mt5">
               <NavLink
                 exact
@@ -150,7 +151,7 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>Boards</small>
+                <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
                 {/* <small style={{ color: 'inherit' }}>Boards</small> */}
               </NavLink>
               <NavLink

@@ -105,7 +105,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Overview</small>
+            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact
@@ -170,7 +171,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
-              Project Settings
+              {t('app.company.Projects.Project-Settings')}
+              {/* Project Settings */}
             </small>
           </NavLink>
         </div>
@@ -191,7 +193,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               }}
               onClick={() => setShowDialog(!showDialog)}
             >
-              Add Teammates
+              {t('app.project.Project-teammates.Add-Teammates')}
+              {/* Add Teammates */}
             </Button>
             {props.projectList &&
               props.projectList.map((project) =>
@@ -210,7 +213,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                         setShowAssociateDialog(!showAssociateDialog)
                       }
                     >
-                      Add Partners
+                      {t('app.company.Partners.Add-Partners')}
+                      {/* Add Partners */}
                     </Button>
                   ) : undefined
                 ) : undefined,

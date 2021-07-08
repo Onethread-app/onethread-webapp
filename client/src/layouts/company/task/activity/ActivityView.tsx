@@ -8,6 +8,7 @@ import { Loading } from 'components/Loading';
 import { Icomment } from 'stores/comment/Reducer';
 import moment from 'moment';
 import { isMobileOnly } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
 
 interface IActivityViewInternalProps {
   commentList: Icomment[];
@@ -28,10 +29,13 @@ export const ActivityViewPageComponent = (
     getCommentsApi();
   }, [props.currentTaskId]);
 
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-column h-100 pl2 mb5 mb0-ns">
       <div className="pl3">
-        <h1 className="f5 fw7 lh-title black">Activity</h1>
+        <h1 className="f5 fw7 lh-title black">{t('app.project.Project-boards.Activity')}</h1>
+        {/* <h1 className="f5 fw7 lh-title black">Activity</h1> */}
       </div>
 
       <div

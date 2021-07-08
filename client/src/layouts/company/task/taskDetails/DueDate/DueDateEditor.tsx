@@ -8,6 +8,7 @@ import { IconNames } from '@blueprintjs/icons';
 import { updateTask } from 'stores/board/Actions';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
+import { useTranslation } from 'react-i18next';
 
 interface IDueDateFormProps {
   setDatePopover: (val: boolean) => void;
@@ -23,6 +24,8 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
       await props.setDatePopover(false);
     }
   };
+
+  const { t } = useTranslation();
 
   return (
     <Form
@@ -62,7 +65,8 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                     display: 'inline-block',
                   }}
                 >
-                  Due Date
+                  {t('app.project.Project-boards.Due-Date')}
+                  {/* Due Date */}
                 </label>
                 <DateInput
                   formatDate={(date: Date) =>

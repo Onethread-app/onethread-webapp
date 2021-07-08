@@ -14,6 +14,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { priorityColor } from 'stores/UtilsActions';
 
 const StyledTableCell = withStyles((theme: Theme) =>
@@ -108,37 +109,37 @@ function stableSort<T>(
   return stabilizedThis.map((el) => el[0]);
 }
 
-interface HeadCell {
-  id: keyof Data;
-  label: string;
-}
+// interface HeadCell {
+//   id: keyof Data;
+//   label: string;
+// }
 
-const headCells: HeadCell[] = [
-  {
-    id: 'name',
-    label: 'Deliverable',
-  },
-  {
-    id: 'assign',
-    label: 'Resource Assign',
-  },
-  {
-    id: 'boardName',
-    label: 'Board',
-  },
-  {
-    id: 'priority',
-    label: 'Priority',
-  },
-  {
-    id: 'status',
-    label: 'Status',
-  },
-  {
-    id: 'dueDate',
-    label: 'End',
-  },
-];
+// const headCells: HeadCell[] = [
+//   {
+//     id: 'name',
+//     label: 'Deliverable',
+//   },
+//   {
+//     id: 'assign',
+//     label: 'Resource Assign',
+//   },
+//   {
+//     id: 'boardName',
+//     label: 'Board',
+//   },
+//   {
+//     id: 'priority',
+//     label: 'Priority',
+//   },
+//   {
+//     id: 'status',
+//     label: 'Status',
+//   },
+//   {
+//     id: 'dueDate',
+//     label: 'End',
+//   },
+// ];
 
 interface EnhancedTableProps {
   classes: ReturnType<typeof useStyles>;
@@ -162,6 +163,46 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   ) => {
     onRequestSort(event, property);
   };
+
+interface HeadCell {
+  id: keyof Data;
+  label: string;
+}
+
+const { t } = useTranslation();
+
+const headCells: HeadCell[] = [
+  {
+    id: 'name',
+    label: `${t('app.project.Project-boards.Deliverable')}`,
+    // label: 'Deliverable',
+  },
+  {
+    id: 'assign',
+    label: `${t('app.project.Project-boards.Resource-Assign')}`,
+    // label: 'Resource Assign',
+  },
+  {
+    id: 'boardName',
+    label: `${t('app.project.Project-boards.Board')}`,
+    // label: 'Board',
+  },
+  {
+    id: 'priority',
+    label: `${t('app.project.Project-boards.Priority')}`,
+    // label: 'Priority',
+  },
+  {
+    id: 'status',
+    label: `${t('app.project.Project-boards.Status')}`,
+    // label: 'Status',
+  },
+  {
+    id: 'dueDate',
+    label: `${t('app.project.Project-boards.End')}`,
+    // label: 'End',
+  },
+];
 
   return (
     <TableHead>

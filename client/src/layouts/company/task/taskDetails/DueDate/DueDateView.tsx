@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 interface DueDateViewComponentInternalProps {
   dueDate?: Date;
@@ -9,15 +10,20 @@ interface DueDateViewComponentInternalProps {
 export const DueDateViewComponent = (
   props: DueDateViewComponentInternalProps,
 ) => {
+
+  const { t } = useTranslation();
+
   return (
     <>
       <div style={{ height: '20px' }}>
-        <h1 className="f6">Due Date</h1>
+        <h1 className="f6">{t('app.project.Project-boards.Due-Date')}</h1>
+        {/* <h1 className="f6">Due Date</h1> */}
       </div>
       {props.dueDate ? (
         <p>{moment(props.dueDate).format('MMM Do YYYY')}</p>
       ) : (
-        <p>Days has not been set</p>
+        <p>{t('app.project.Project-boards.No-date')}</p>
+        // <p>Days has not been set</p>
       )}
     </>
   );

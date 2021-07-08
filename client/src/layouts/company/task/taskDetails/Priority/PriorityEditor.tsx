@@ -8,6 +8,7 @@ import { priorityColor } from 'stores/UtilsActions';
 import { connect } from 'react-redux';
 import { updateTask } from 'stores/board/Actions';
 import { ITask } from 'stores/board/Reducer';
+import { useTranslation } from 'react-i18next';
 
 interface IPriorityEditorProps {
   setPriorityPopover: (val: boolean) => void;
@@ -27,6 +28,8 @@ export const PriorityEditorComponent = (
   };
 
   const [labelColor, setLabelColor] = useState(props.colorCode);
+
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -59,7 +62,8 @@ export const PriorityEditorComponent = (
                 name="priority"
                 render={({ input, meta }) => (
                   <div className="mb3">
-                    <h3 className="f5 mt0">Choose Priority</h3>
+                    <h3 className="f5 mt0">{t('app.project.Project-boards.Choose-Priority')}</h3>
+                    {/* <h3 className="f5 mt0">Choose Priority</h3> */}
                     <div className="mt4">
                       {priorityColor.map((color) => (
                         <div className="pr2" key={color.code}>
