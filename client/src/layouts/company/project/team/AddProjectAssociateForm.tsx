@@ -11,6 +11,7 @@ import { tigrowApi } from 'config';
 import { ICompany } from 'stores/company/Reducer';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEqual } from 'lodash';
+import { useTranslation } from 'react-i18next';
 interface ProjectAssociateProps {
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;
@@ -125,10 +126,13 @@ const AddProjectAssociateFormComponent = (
     { value: 15, label: '11-15' },
   ];
 
+  const { t } = useTranslation();  
+
   return (
     <div className="pa3">
       <div className="w-100">
-        <h1 className="f5 tigrow-darkBlue">Add Partners</h1>
+        <h1 className="f5 tigrow-darkBlue">{t('app.company.Partners.Add-Partners')}</h1>
+        {/* <h1 className="f5 tigrow-darkBlue">Add Partners</h1> */}
         <SuggestField
           onChange={(query: string) => {
             setSearchAssociate(query);

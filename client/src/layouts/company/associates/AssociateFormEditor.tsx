@@ -11,6 +11,7 @@ import { server } from 'config';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEmpty, map } from 'lodash';
 import { ICompany } from 'stores/company/Reducer';
+import { useTranslation } from 'react-i18next';
 
 interface AddAssociateEditorProps {
   company: ICompany;
@@ -54,10 +55,13 @@ const AssociateFormEditorComponent = (
     setAssociates(result);
   }, [result]);
 
+  const { t } = useTranslation();
+
   return (
     <div className="pa3 mt5 mt0-ns">
       <div className=" w-100">
-        <h1 className="f5 tigrow-lightBlue">Add Partners</h1>
+        <h1 className="f5 tigrow-lightBlue">{t('app.company.Partners.Add-Partners')}</h1>
+        {/* <h1 className="f5 tigrow-lightBlue">Add Partners</h1> */}
         <SuggestField
           onChange={(value: string) => {
             setQuery(value);

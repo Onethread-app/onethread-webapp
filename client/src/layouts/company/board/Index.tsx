@@ -50,7 +50,10 @@ interface IBoardListViewInternalProps extends IBoardCardComponent {
 }
 
 const BoardCard = withRouter(
-  (props: IBoardCardComponent & RouteComponentProps) => (
+  (props: IBoardCardComponent & RouteComponentProps) => {
+  const { t } = useTranslation();
+
+  return(
     <>
       {props.boardList.map((board) => (
         <div className="pa2">
@@ -103,7 +106,7 @@ const BoardCard = withRouter(
                   className="mb0 ws-break"
                   style={{ fontSize: '0.7rem' }}
                 >
-                  Total Members
+                  {t('app.project.Project-boards.Total-Members')}
                   {/* Total Members */}
                 </p>
                 <p className="fw8">
@@ -115,7 +118,7 @@ const BoardCard = withRouter(
                   className="mb0 ws-break"
                   style={{ fontSize: '0.7rem' }}
                 >
-                  Remaining Tasks
+                  {t('app.project.Project-boards.Remaining-Tasks')}
                   {/* Remaining Tasks */}
                 </p>
                 <p className="fw8">
@@ -127,7 +130,7 @@ const BoardCard = withRouter(
         </div>
       ))}
     </>
-  ),
+  )},
 );
 
 const TaskPageComponent = (
@@ -226,7 +229,8 @@ const TaskPageComponent = (
   return (
     <>
       <MobileView>
-        <NavbarCompany title="Board" />
+        <NavbarCompany title={t('app.project.Project-boards.Board')} />
+        {/* <NavbarCompany title="Board" /> */}
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -235,7 +239,8 @@ const TaskPageComponent = (
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Overview</small>
+            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact
@@ -285,7 +290,8 @@ const TaskPageComponent = (
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
-              Project Settings
+              {t('app.company.Projects.Project-Settings')}
+              {/* Project Settings */}
             </small>
           </NavLink>
         </div>
@@ -319,7 +325,7 @@ const TaskPageComponent = (
                   }}
                 >
                   <option selected value="">
-                    All
+                    {t('app.project.Project-boards.All')}
                     {/* All */}
                   </option>
                   {props.company.departments

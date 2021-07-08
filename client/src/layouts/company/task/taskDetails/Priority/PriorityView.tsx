@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { find } from 'lodash';
 import { priorityColor } from 'stores/UtilsActions';
+import { useTranslation } from 'react-i18next';
 
 interface PriorityViewComponentInternalProps {
   priority?: number;
@@ -10,10 +11,14 @@ interface PriorityViewComponentInternalProps {
 export const PriorityViewComponent = (
   props: PriorityViewComponentInternalProps,
 ) => {
+
+  const { t } = useTranslation();
+
   return (
     <>
       <div style={{ height: '20px' }}>
-        <h1 className="f6">Priority</h1>
+        <h1 className="f6">{t('app.project.Project-boards.Priority')}</h1>
+        {/* <h1 className="f6">Priority</h1> */}
       </div>
       {props.priority! > -1 && (
         <p

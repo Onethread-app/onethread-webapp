@@ -6,6 +6,7 @@ import { ITask } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import Linkify from 'react-linkify';
 import { componentDecorator } from 'helpers/LinkifyHelper';
+import { useTranslation } from 'react-i18next';
 
 interface TaskDescriptionViewInternalProps {
   description?: ITask['description'];
@@ -18,6 +19,9 @@ export const TaskDescriptionViewComponent = (
   const [editDescriptionDialog, setEditDescriptionDialog] = useState(
     false,
   );
+
+  const { t } = useTranslation();
+
   return (
     <>
       <div
@@ -25,7 +29,8 @@ export const TaskDescriptionViewComponent = (
         style={{ height: '30px' }}
       >
         <div>
-          <h1 className="f6">Description</h1>
+          <h1 className="f6">{t('app.project.Project-boards.Description')}</h1>
+          {/* <h1 className="f6">Description</h1> */}
         </div>
         <div className="pr2" style={{ paddingTop: '10px' }}>
           {props.company ? (
@@ -64,7 +69,8 @@ export const TaskDescriptionViewComponent = (
           </p>
         </Linkify>
       ) : (
-        <p className="pr2">Description has not been given yet</p>
+        <p className="pr2">{t('app.project.Project-boards.No-description')}</p>
+        // <p className="pr2">Description has not been given yet</p>
       )}
     </>
   );

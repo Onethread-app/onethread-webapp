@@ -24,6 +24,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
 import SubTaskMemberIcon from './SubTaskMemberIcon';
+import { useTranslation } from 'react-i18next';
 
 interface ISubTaskViewInternalProps {
   subTaskList: ISubTask[];
@@ -63,13 +64,16 @@ export const SubTaskViewPageComponent = (
     setMembersPopover({ _id: id, open: !membersPopover.open });
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       {props.loading === false ? (
         <div className="fl w-100">
           <div className="mt3">
             <div className="flex">
-              <h1 className="f6 flex-auto">Subtask</h1>
+              <h1 className="f6 flex-auto">{t('app.project.Project-boards.Subtask')}</h1>
+              {/* <h1 className="f6 flex-auto">Subtask</h1> */}
               {props.subTaskList.length > 0 && (
                 <h1 className="f6 blue">
                   {Math.floor(
@@ -97,7 +101,8 @@ export const SubTaskViewPageComponent = (
               {!showSubtaskForm && (
                 <Button
                   type="submit"
-                  text="Add SubTask"
+                  text={t('app.project.Project-boards.Add-Subtask')}
+                  // text="Add SubTask"
                   className="grow h2 pointer dib mb3"
                   style={{
                     background: '#3F61C5',

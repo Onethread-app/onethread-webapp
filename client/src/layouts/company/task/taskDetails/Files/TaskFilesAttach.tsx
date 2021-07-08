@@ -9,6 +9,7 @@ import {
   taskFileUpload,
 } from 'stores/board/Actions';
 import { ITask } from 'stores/board/Reducer';
+import { useTranslation } from 'react-i18next';
 
 interface ITaskFilesAttachProps {
   setFilePopover: Dispatch<SetStateAction<boolean>>;
@@ -108,6 +109,8 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
     }
   }, [props.uploadingTaskFile, props.errorOnUploadingTaskFile]);
 
+  const { t } = useTranslation();
+
   return (
     <div className="pa3 cf bg-white flex flex-column">
       <div className="flex justify-end">
@@ -118,7 +121,8 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
           onClick={(e: any) => props.setFilePopover(false)}
         />
       </div>
-      <h1 className="f5">Attach Files</h1>
+      <h1 className="f5">{t('app.project.Project-boards.Attach-Files')}</h1>
+      {/* <h1 className="f5">Attach Files</h1> */}
       <FileInput
         text={imageName.name ? imageName.name : 'Choose file...'}
         onInputChange={(e) => imageChangeHandler(e)}

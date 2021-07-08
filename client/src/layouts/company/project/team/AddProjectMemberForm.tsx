@@ -9,6 +9,7 @@ import { Button, Tag } from '@blueprintjs/core';
 import { addProjectTeams } from 'stores/project/Actions';
 import { tigrowApi } from 'config';
 import { isEmpty, isEqual } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 interface ProjectTeamMembersProps {
   showDialog: boolean;
@@ -78,10 +79,13 @@ const AddProjectMemberFormComponent = (
     }
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <div className="pa3">
       <div className="w-100">
-        <h1 className="f5 tigrow-darkBlue">Add Teammates</h1>
+        <h1 className="f5 tigrow-darkBlue">{t('app.project.Project-teammates.Add-Teammates')}</h1>
+        {/* <h1 className="f5 tigrow-darkBlue">Add Teammates</h1> */}
         <SuggestField
           items={suggestedMembers}
           selectedItems={selectedTeamMember}

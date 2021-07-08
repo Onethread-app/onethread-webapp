@@ -75,7 +75,8 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Overview</small>
+            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact
@@ -125,7 +126,8 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
-              Project Settings
+              {t('app.company.Projects.Project-Settings')}
+              {/* Project Settings */}
             </small>
           </NavLink>
         </div>

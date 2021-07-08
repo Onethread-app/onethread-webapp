@@ -17,6 +17,7 @@ import {
 } from 'stores/taskMembers/Action';
 import { tigrowApi } from 'config';
 import { IProject } from 'stores/project/Reducer';
+import { useTranslation } from 'react-i18next';
 
 interface IMembersFormProps {
   setMembersPopover: (val: boolean) => void;
@@ -66,6 +67,8 @@ export const AssignedMembersEditorComponent = (
     setTeamMembers(result);
   }, [result]);
 
+  const { t } = useTranslation();
+
   return (
     <Form
       onSubmit={onSubmit}
@@ -98,7 +101,8 @@ export const AssignedMembersEditorComponent = (
                 <div className="fl w-100 pb2">
                   <div className="mb1">
                     <p className="fw5" style={{ fontSize: '.8rem' }}>
-                      Assign Members
+                      {t('app.project.Project-boards.Assign-Members')}
+                      {/* Assign Members */}
                     </p>
                   </div>
                   <SuggestField

@@ -10,6 +10,7 @@ import { createComment } from 'stores/comment/Actions';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Icomment } from 'stores/comment/Reducer';
+import { useTranslation } from 'react-i18next';
 
 interface ICommentReplyInternalProps {
   createComment: (text: Icomment['text']) => any;
@@ -24,6 +25,9 @@ export const ActivityEditorPageComponent = (
       values.text = '';
     }
   };
+
+  const { t } = useTranslation();
+
   return (
     <div className="w-100">
       <Form
@@ -57,7 +61,8 @@ export const ActivityEditorPageComponent = (
                       value={input.value}
                       onChange={input.onChange}
                       className="br2"
-                      placeHolder="Write comment"
+                      placeHolder={t('app.project.Project-boards.Write-comment')}
+                      // placeHolder="Write comment"
                       style={{
                         height: '40px',
                         background: '#D4D4D47A',

@@ -199,6 +199,7 @@
 
       "Partners":{
         "Partners": "Partners",
+        "Add-Partners": "Add Partners",
         "No-Partners": "You are not partnering with anyone yet.",
         "Pending-partners": "Pending Partners",
         "No-Pending": "No pending request available",
@@ -286,12 +287,34 @@
         "My-boards": "My Boards",
         "Add-Column": "Add New Column",
         "Create-Board": "Create New Board",
+        "Total-Members": "Total Members",
+        "Remaining-Tasks": "Remaining Tasks",
         "Add-task": "Add Task",
-        "Criteria": "Filter by"
+        "Criteria": "Filter by",
+        "All": "All",
+        "Deliverable": "Deliverable",
+        "Resource-Assign": "Resource Assign",
+        "Table-Board": "Board",
+        "Priority": "Priority",
+        "Status": "Status",
+        "End": "End",
+        "Description": "Description",
+        "No-description": "Description has not been given yet",
+        "Due-Date": "Due Date",
+        "No-date": "Days has not been set",
+        "Write-comment": "Write comment",
+        "Activity": "Activity",
+        "Choose-Priority": "Choose Priority",
+        "Subtask": "Subtask",
+        "Add-Subtask": "Add Subtask",
+        "Attach-Files": "Attach Files",
+        "Members": "Members",
+        "Assign-Members": "Assign Members"
       },
 
       "Project-teammates": {
         "Team-members": "Teammates",
+        "Add-Teammates": "Add Teammates",
         "Admins": "Admins",
         "Moderators": "Project Moderators",
         "Teammates": "Project Teammates",
@@ -308,6 +331,7 @@
       "Project-settings": {
         "Moderator": "Project Moderator",
         "General": "General",
+        "Permission": "Permission",
         "Update-archive": "Update Archive Project",
         "Preface": "Project Preface",
         "Update-preface": "Update info's in Project Preface",
