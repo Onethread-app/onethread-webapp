@@ -28,7 +28,7 @@ const Tasks = () => {
       const headers = tokenConfig();
       if ((headers.headers as any).Authorization) {
         const response = await tigrowApi.get(
-          `accounts/task-list`,
+          `accounts/task-list?date=${new Date()}`,
           headers,
         );
         setTodaysTasks(response.data.todaysTasks);

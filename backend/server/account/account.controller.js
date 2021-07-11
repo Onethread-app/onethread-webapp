@@ -68,12 +68,16 @@ const options = [
     path: 'account',
     select: '_id firstName lastName',
   },
+  {
+    path: 'assignedPerson',
+    select: '_id firstName lastName',
+  },
 ];
 
 // get today's tasks for user
 const getTodaysTask = async (req) => {
   try {
-    let startToday = new Date();
+    let startToday = new Date(req.query.date);
     startToday.setHours(0, 0, 0, 0);
     let endToday = new Date();
     endToday.setHours(23, 59, 59, 999);
