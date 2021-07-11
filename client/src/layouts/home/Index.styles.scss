@@ -218,6 +218,9 @@
           font-weight: 500;
           font-size: 13px;
           line-height: 19px;
+          height: 19px;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         p {
