@@ -672,13 +672,18 @@ const { t } = useTranslation();
                         {/* Sign up */}
                         {t('landing.sign-up.sign-up-form.sign-up-button')}
                       </Button>
-                      <NavLink
+                      <span className="fw9 dt center pt4-ns pt2">{t('landing.sign-up.sign-up-form.account-exist')} 
+                      {' '} <NavLink to="/signin">
+                        {t('landing.login.sign-in-form.sign-in-text')}
+                        {/* Sign in */}
+                      </NavLink>
+                      </span>
+                      {/* <NavLink
                         className="fw9 dt center tigrow-lightBlue pt4-ns pt2"
                         to="/signin"
                       >
-                        {/* Already have an account? */}
                         {t('landing.sign-up.sign-up-form.account-exist')}
-                      </NavLink>
+                      </NavLink> */}
                     </div>
                   </form>
                 </>

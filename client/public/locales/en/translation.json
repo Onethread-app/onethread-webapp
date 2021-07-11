@@ -112,7 +112,7 @@
         "first-name": "First Name",
         "last-name": "Last Name",
         "birthday": "Birth Date",
-        "your-email": "contact@onethread.app",
+        "your-email": "Email",
         "password": "Password",
         "confirmation": "Comfirm Password",
         "sign-up-button": "Sign up",
@@ -198,7 +198,7 @@
         "Associates": "Total Partners",
         "Basic": "Basic Information",
         "Advanced": "Advanced Information",
-        "Name": "Com4pany Name",
+        "Name": "Company Name",
         "Type": "Company Type",
         "Address": "Company Address",
         "Mail-company": "Company Mail Address",
@@ -424,7 +424,8 @@
         "Home": "Home",
         "Profile": "Profile Settings",
         "Password": "Change Password",
-        "Logout": "Logout"
+        "Logout": "Logout",
+        "Language-Settings": "Language Settings"
       }
     },
     "Navbar": {
