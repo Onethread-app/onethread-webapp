@@ -49,7 +49,7 @@ const Navbar = () => {
         <NavLink to="/">
           <img src={DarkLogo} alt="Onethread" />
         </NavLink>
-        <ul className="flex ml4">
+        <ul className="flex navbar-ml">
           <li>
             <a
               href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
@@ -63,6 +63,15 @@ const Navbar = () => {
           <li>
             <NavLink to="/pricing">{t('app.Navbar.Pricing')}</NavLink>
             {/* <NavLink to="/pricing">Pricing</NavLink> */}
+          </li>
+          <li>
+            <a
+              href="https://blog.onethread.app/"
+              rel="noreferrer"
+            >
+              {t('app.Navbar.Blog')}
+              {/* Blog */}
+            </a>
           </li>
         </ul>
       </ul>
