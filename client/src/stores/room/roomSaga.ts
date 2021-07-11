@@ -2,7 +2,7 @@ import { all, call, put, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 import {
   room,
-  LOADING_ROOM,
+  // LOADING_ROOM,
   ALL_MESSAGE_RECEIVED,
   RoomActionTypes,
   CURRENT_ROOM,
@@ -42,7 +42,9 @@ import {
   updateLastSeenFailure,
   updateLastSeenSuccess,
 } from './Actions';
-import handleError from 'helpers/HandleSagaErrors';
+import handleError, {
+  returnErrorText,
+} from 'helpers/HandleSagaErrors';
 import { getProjectId } from 'stores/project/Selector';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
@@ -52,9 +54,7 @@ function* createRoom({ payload }) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      // const company = yield select(getCompanyId);
       const project = yield select(getProjectId);
-      yield put({ type: LOADING_ROOM });
       const response = yield tigrowApi.post(
         `rooms?pid=${project}`,
         {
@@ -73,12 +73,14 @@ function* createRoom({ payload }) {
       yield roomSubscribe(response.data.room._id);
     }
   } catch (error) {
+    yield put(createRoomFailure(returnErrorText(error)));
+    // yield put(createRoomFailure(error));
+    handleError(error, (errorMessage: any) => {
+      createRoomFailure(errorMessage);
+    });
     yield put({
       type: room.RESPONSE_STATUS_CODE,
       payload: error.response.status,
-    });
-    handleError(error, async (errorMessage: any) => {
-      await createRoomFailure(errorMessage);
     });
   }
 }

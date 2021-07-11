@@ -44,8 +44,7 @@ const CreateFormComponent: React.FC<any> = (
     if (
       submitted === true &&
       props.creatingRoom === false &&
-      props.errorOnRoomCreate === '' &&
-      props.roomLoading === false
+      props.errorOnRoomCreate === ''
     ) {
       const query = new URLSearchParams(location.search);
       const view =
@@ -60,6 +59,7 @@ const CreateFormComponent: React.FC<any> = (
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.creatingRoom]);
+
   return (
     <Form
       onSubmit={onSubmit}

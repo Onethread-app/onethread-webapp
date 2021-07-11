@@ -2,14 +2,26 @@
   "landing": {
     "homepage": {
       "main-header": {
-        "heading": {"first-part":"Collaborate with people on projects","second-part":"with the click of a button"},
-        "sub-heading": {"first-part":"Onethread" ,"second-part":"is a project management tool built from the ground up for multi-team collaboration among startups, agencies and NGOs."},
+        "heading": {
+          "first-part": "Collaborate with people on projects",
+          "second-part": "with the click of a button"
+        },
+        "sub-heading": {
+          "first-part": "Onethread",
+          "second-part": "is a project management tool built from the ground up for multi-team collaboration among startups, agencies and NGOs."
+        },
         "Sign-Up button": "Create Unlimited Projects For Free"
       },
 
       "second-section": {
-        "unified-text":{ "first-part":"We spend 23% more time in external projects for", "second-part":" lack of a unified tool"},
-        "unified-heading":{ "first-part":"Onethread", "second-part":"lets you efficiently organize all your projects and communicate with everyone involved in a single platform"},
+        "unified-text": {
+          "first-part": "We spend 23% more time in external projects for",
+          "second-part": " lack of a unified tool"
+        },
+        "unified-heading": {
+          "first-part": "Onethread",
+          "second-part": "lets you efficiently organize all your projects and communicate with everyone involved in a single platform"
+        },
         "messages": "Keep your work and personal inboxes separate",
         "project-dashboard": "Task assignment, one-click approvals and project folders",
         "reports": "No more asking “what’s done”. You already know it!",
@@ -24,11 +36,18 @@
       },
 
       "teams": {
-        "listoftheusers":{"first-part": "Teams large & small are using Onethread to", "second-part": "3x their output in half the time."}
+        "listoftheusers": {
+          "first-part": "Teams large & small are using Onethread to",
+          "second-part": "3x their output in half the time."
+        }
       },
 
       "product-details": {
-        "header1": {"first-part":"Everything " ,"second-part":"a project manager dreamed of, ", "third-part": "in one single package."},
+        "header1": {
+          "first-part": "Everything ",
+          "second-part": "a project manager dreamed of, ",
+          "third-part": "in one single package."
+        },
         "header2": "Never lose track of a project again.",
         "subheader2": "Each project gets a separate space with chat threads, tasks and files, powered by an intelligent search engine.",
         "header3": "Communicate with anyone in your project",
@@ -40,7 +59,10 @@
       },
 
       "footer": {
-        "headline": {"first-part": "Change how you manage external stakeholders. ","second-part": "Start today."},
+        "headline": {
+          "first-part": "Change how you manage external stakeholders. ",
+          "second-part": "Start today."
+        },
         "content": "Sign up with your email below to use Onethread for free while in beta. The private beta is just the beginning, but we want you to be a part of it!",
         "createbutton": "Create Your First Project",
         "features": "features",
@@ -100,30 +122,35 @@
   },
 
   "app": {
-     "homepage": {
-        "My-Companies": "My Companies",
-        "Work-place": "Places You Work",
-        "Company-name": "Onethread",
-        "Position": "Role: ",
-        "Create-company": "Create a Company",
-        "Projects": "Projects",
-        "Search": "Search input",
-        "New-project": "Start a New Project",
-        "Project-name": "Name",
-        "Project-type": "Type",
-        "Project-lead": "Lead",
-        "Video-conferences": "Video Conferences",
-        "Create-conference": "Create a Video Conference",
-        "No-video-conference": "There's no existing Video Conference to show",
-        "Click-a-button": "Simply click on 'Create Video Conference' button to create a new one"
-      },
+    "homepage": {
+      "My-Companies": "My Companies",
+      "Work-place": "Places You Work",
+      "Company-name": "Onethread",
+      "Position": "Role: ",
+      "Create-company": "Create a Company",
+      "Projects": "Projects",
+      "Search": "Search input",
+      "New-project": "Start a New Project",
+      "Project-name": "Name",
+      "Project-type": "Type",
+      "Project-lead": "Lead",
+      "Video-conferences": "Video Conferences",
+      "Create-conference": "Create a Video Conference",
+      "No-video-conference": "There's no existing Video Conference to show",
+      "Click-a-button": "Simply click on 'Create Video Conference' button to create a new one"
+    },
 
     "company": {
-
       "Dashboard": {
         "Headline": "Dashboard",
-        "Ongoing-projects": {"first-part": "Running", "second-part": "Projects"},
-        "Finished-projects": {"first-part": "Completed", "second-part":"Projects"},
+        "Ongoing-projects": {
+          "first-part": "Running",
+          "second-part": "Projects"
+        },
+        "Finished-projects": {
+          "first-part": "Completed",
+          "second-part": "Projects"
+        },
         "Number-of-employees": "Total Employees",
         "Number-of-associates": "Total Associates",
         "Update-of-task": "Latest Completed Task",
@@ -165,7 +192,7 @@
 
       "Company-profile": {
         "Company-name": "Onethread",
-        "Company-profile": "Company Profile",
+        "Company-profile": "Company",
         "Individual": "Individual Profile",
         "Total-Employee": "Total Employee",
         "Associates": "Total Partners",
@@ -197,7 +224,7 @@
         "Position": "Position"
       },
 
-      "Partners":{
+      "Partners": {
         "Partners": "Partners",
         "Add-Partners": "Add Partners",
         "No-Partners": "You are not partnering with anyone yet.",
@@ -207,7 +234,7 @@
         "No-associates": "No associates available"
       },
 
-      "Settings":{
+      "Settings": {
         "Settings": "Settings",
         "General": "General",
         "Role-Permission": "Role Permission",
@@ -218,7 +245,7 @@
         "Change-Name": "Change Company Name"
       },
 
-      "Role-Permissions":{
+      "Role-Permissions": {
         "Permission-1": "Create/Update/Delete Company Announcement",
         "Permission-2": "Edit Basic/Advanced Information of Profile",
         "Permission-3": "Archive Projects",
@@ -228,13 +255,13 @@
         "Permission-7": "Accept/Reject Project Request from Associates"
       },
 
-      "Departments":{
+      "Departments": {
         "Departments": "Departments",
         "Add-department": "Add Department",
         "No-departments": "No Departments"
       },
 
-      "Subscription-And-Billing":{
+      "Subscription-And-Billing": {
         "Subscription": "Subscription And Billing",
         "Current": "Current Subscription Plan",
         "Payment-date": "Payment Due Date",
@@ -248,13 +275,25 @@
         "Amount": "Amount"
       },
 
-      "Feedback":{
+      "Feedback": {
         "Feedback": "Feedback",
         "Optional": " Please help us understand your rating by answering the following questions (Optional):",
-        "Opinion-1": {"Number":"1. ", "text": "On a scale of 1-10, how likely are you to recommend our product to a friend/colleague?"} ,
-        "Opinion-2": {"Number":"2. ", "text": "What feature can we improve?"} ,
-        "Opinion-3": {"Number":"3. ", "text": "What feature was useful?"} ,
-        "Opinion-4": {"Number":"4. ", "text": "What feature do you wish we could provide?"},
+        "Opinion-1": {
+          "Number": "1. ",
+          "text": "On a scale of 1-10, how likely are you to recommend our product to a friend/colleague?"
+        },
+        "Opinion-2": {
+          "Number": "2. ",
+          "text": "What feature can we improve?"
+        },
+        "Opinion-3": {
+          "Number": "3. ",
+          "text": "What feature was useful?"
+        },
+        "Opinion-4": {
+          "Number": "4. ",
+          "text": "What feature do you wish we could provide?"
+        },
         "Clear": "Clear",
         "Submit": "Submit"
       }
@@ -388,8 +427,8 @@
         "Logout": "Logout"
       }
     },
-   "Navbar":{
-      "How-It-Works":"How It Works",
+    "Navbar": {
+      "How-It-Works": "How It Works",
       "Pricing": "Pricing",
       "Login": "Login",
       "SignUp": "SignUp"
