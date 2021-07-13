@@ -425,7 +425,16 @@
         "Profile": "প্রোফাইল সেটিংস",
         "Password": "পাসওয়ার্ড পরিবর্তন",
         "Logout": "লগ আউট",
-        "Language-Settings": "ভাষা পরিবর্তন"
+        "Language-Settings": "ভাষা পরিবর্তন",
+        "Report-Issue": "সমস্যার রিপোর্ট করুন",
+        "Select-type": "দয়া করে রিপোর্টের প্রকার নির্বাচন করুন (আবশ্যক)",
+        "Tittle": "শিরোনাম",
+        "Details": "বিস্তারিত",
+        "Add-Screenshot-Video": "স্ক্রিনশট যুক্ত করুন",
+        "Choose-file": "আপনার ফাইল নির্বাচন করুন",
+        "Cancel": "বাতিল",
+        "Submit": "জমা দিন",
+        "Required": "এইটি পূরণ করা আবশ্যক"
       }
     },
     "Navbar": {
