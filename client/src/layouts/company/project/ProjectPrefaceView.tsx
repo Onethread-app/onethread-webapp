@@ -11,7 +11,7 @@ import { projectRules } from './settings/projectrules';
 import { NavLink } from 'react-router-dom';
 import { MobileView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
 
 interface ProjectPrefaceProps {
@@ -41,7 +41,7 @@ export const ProjectPrefaceViewComponent = (
   return (
     <>
       <MobileView>
-        <NavbarCompany title="Project" />
+        <Navbar type="company" />
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -53,7 +53,9 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.company.Projects.Overview')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
@@ -66,7 +68,9 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-preface.Intro')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
@@ -79,7 +83,9 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-rooms.Rooms')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-rooms.Rooms')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
@@ -92,7 +98,9 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-boards.Board')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
@@ -105,7 +113,9 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-teammates.Team-members')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
@@ -125,7 +135,9 @@ export const ProjectPrefaceViewComponent = (
           </NavLink>
         </div>
       </MobileView>
-      <h1 className="f3 ph5-ns ph4">{t('app.project.Project-preface.Intro')}</h1>
+      <h1 className="f3 ph5-ns ph4">
+        {t('app.project.Project-preface.Intro')}
+      </h1>
       {/* <h1 className="f3 ph5-ns ph4">Preface</h1> */}
       <div className="flex-ns w-100 ph4-ns">
         <div className="h-auto w-70-ns ph4">
@@ -144,7 +156,9 @@ export const ProjectPrefaceViewComponent = (
         </div>
         <div className="w-30-ns pa4 pb5">
           <div>
-            <h1 className="f6">{t('app.project.Project-preface.Media')}</h1>
+            <h1 className="f6">
+              {t('app.project.Project-preface.Media')}
+            </h1>
             {/* <h1 className="f6">Shared Files</h1> */}
             {props.files.map((file: any) => (
               <div className="flex items-center justify-between">
@@ -224,9 +238,11 @@ export const ProjectPrefaceViewComponent = (
                     </h1>
                     <h1 className="f7 fw4 black mv1">
                       {member.role === 'projectModerator'
-                        ? `${t('app.project.Project-settings.Moderator')}`
-                         /*? 'Project Moderator'*/
-                        : capitalizeFirstLetter(member.role)}
+                        ? `${t(
+                            'app.project.Project-settings.Moderator',
+                          )}`
+                        : /*? 'Project Moderator'*/
+                          capitalizeFirstLetter(member.role)}
                     </h1>
                   </div>
                 </article>

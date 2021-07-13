@@ -28,7 +28,7 @@ import {
   ADD_TOTAL_MEMBER,
 } from 'stores/company/Types';
 import moment from 'moment';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import tick from '../../resources/images/tick.svg';
 import { isMobileOnly } from 'react-device-detect';
 import { orderBy } from 'lodash';
@@ -186,11 +186,10 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     <>
       {loading === false ? (
         <>
-          <NavbarCompany title={t('app.company.Dashboard.Headline')} />
-          {/* <NavbarCompany title="My Dashboard" /> */}
+          {isMobileOnly && <Navbar type="company" />}
           <div className="w-90 center mh2 mt4-l mt5 pb5 pb0-l">
             <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
-               {t('app.company.Dashboard.Headline')}
+              {t('app.company.Dashboard.Headline')}
               {/* Dashboard */}
             </h3>
             <div className="flex flex-row-ns flex-column">
@@ -203,7 +202,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 <Card className="w-100 pa2 mb3-ns mb3 shadow-2 br3 totalInfoCard h4-ns">
                   <TotalInfo
                     type="employee"
-                    content={t('app.company.Dashboard.Number-of-employees')}
+                    content={t(
+                      'app.company.Dashboard.Number-of-employees',
+                    )}
                     // content="Total Employees"
                     count={dashboard.totalEmployee}
                   />
@@ -211,7 +212,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 <Card className="w-100 pa2 mb3-ns mb3 shadow-2 br3 totalInfoCard h4-ns">
                   <TotalInfo
                     type="associates"
-                    content={t('app.company.Dashboard.Number-of-associates')}
+                    content={t(
+                      'app.company.Dashboard.Number-of-associates',
+                    )}
                     // content="Total Partners"
                     count={dashboard.totalAssociates}
                   />
@@ -219,7 +222,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               </div>
             </div>
             <div>
-            <div className="mt5 mb4 pb0-ns flex flex-row-ns flex-column">
+              <div className="mt5 mb4 pb0-ns flex flex-row-ns flex-column">
                 <div className="ma3" style={{ flex: '1' }}>
                   <h3
                     className="f3-ns f5"
@@ -280,7 +283,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     className="f3-ns f5"
                     style={{ color: '#3484F0' }}
                   >
-                   {t('app.company.Dashboard.Update-of-task')}
+                    {t('app.company.Dashboard.Update-of-task')}
                     {/* Latest Completed Tasks */}
                   </h3>
                   <div className="flex-ns justify-between">
@@ -309,33 +312,33 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                   {task.project.name}
                                 </span>
                                 <span
-                                className="fw6"
-                                style={{ color: '#656565' }}
-                              >
-                                <span
-                                  className="ttc"
-                                  style={{ color: '#3484F0' }}
+                                  className="fw6"
+                                  style={{ color: '#656565' }}
                                 >
-                                  {task.name}
-                                </span>{' '}
-                                from {task.boardId.name} 
-                                {t('app.company.Dashboard.Complete-notification')}
-                                {/* has been marked as complete. */}
-                              </span>
-                              {isMobileOnly ? null : (
-                                <span style={{ color: '#B4B4B4' }}>
-                                  {moment(task.updatedAt).fromNow()}
+                                  <span
+                                    className="ttc"
+                                    style={{ color: '#3484F0' }}
+                                  >
+                                    {task.name}
+                                  </span>{' '}
+                                  from {task.boardId.name}
+                                  {t(
+                                    'app.company.Dashboard.Complete-notification',
+                                  )}
+                                  {/* has been marked as complete. */}
                                 </span>
-                              )}
+                                {isMobileOnly ? null : (
+                                  <span style={{ color: '#B4B4B4' }}>
+                                    {moment(task.updatedAt).fromNow()}
+                                  </span>
+                                )}
                                 {isMobileOnly ? (
                                   <span style={{ color: '#B4B4B4' }}>
                                     {moment(task.updatedAt).fromNow()}
                                   </span>
                                 ) : null}
                               </div>
-                        
                             </div>
-                            
                           </div>
                         ))
                       ) : (
@@ -391,7 +394,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     style={{ color: '#3484F0' }}
                     className="justify-center f3-ns f5"
                   >
-                   {t('app.company.Dashboard.Announce')}
+                    {t('app.company.Dashboard.Announce')}
                     {/* Company Announcements */}
                   </h3>
 
@@ -416,7 +419,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         />
                       </span>
                       <span className="ml2-ns">
-                        {t('app.company.Dashboard.Create-Announcement')}
+                        {t(
+                          'app.company.Dashboard.Create-Announcement',
+                        )}
                         {/* Create Announcement */}
                       </span>
                     </button>
@@ -470,7 +475,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         ),
                       )
                     ) : (
-                      <Typography>{t('app.company.Dashboard.No-Announcement')}</Typography>
+                      <Typography>
+                        {t('app.company.Dashboard.No-Announcement')}
+                      </Typography>
                       // <Typography>No Announcement</Typography>
                     )}
                     {props.company.announce.length > 5 && (
@@ -512,7 +519,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                   </Card>
                 )}
               </div>
-              
             </div>
           </div>
         </>

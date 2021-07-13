@@ -3,17 +3,13 @@ import React from 'react';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 
 import FeedbackForm from 'components/feedback/FeedbackForm';
-import { NavbarCompany } from 'components/NavbarCompany';
-import { useTranslation } from 'react-i18next';
+import Navbar from 'components/navbar/Navbar';
 
 const Feedback = () => {
-  const { t } = useTranslation();
-
   return (
     <>
       <MobileView>
-        <NavbarCompany title={t('app.company.Feedback.Feedback')} />
-        {/* <NavbarCompany title="Feedback" /> */}
+        <Navbar type="company" />
       </MobileView>
       <div
         className={`flex flex-column w-100 pl4-ns pr2-ns ph3 pb4 mt5 mt0-ns ${

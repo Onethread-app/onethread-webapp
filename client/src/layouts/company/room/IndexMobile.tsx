@@ -14,7 +14,7 @@ import {
   getRoleForProject,
 } from '../../../stores/project/Actions';
 import Pusher from 'pusher-js';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import { ICompany } from 'stores/company/Reducer';
 import { useTranslation } from 'react-i18next';
 
@@ -62,7 +62,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
 
   return (
     <>
-      <NavbarCompany title="Rooms" />
+      <Navbar type="company" />
       {!(view && view === 'mobile') && (
         <div className="flex justify-between mt5">
           <NavLink
@@ -75,7 +75,9 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.company.Projects.Overview')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
@@ -85,7 +87,9 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-preface.Intro')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
@@ -95,7 +99,9 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-rooms.Rooms')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-rooms.Rooms')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
@@ -105,7 +111,9 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-boards.Board')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
@@ -115,7 +123,9 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-teammates.Team-members')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink

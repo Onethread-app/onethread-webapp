@@ -1,5 +1,3 @@
-import { Tab, Tabs } from '@blueprintjs/core';
-import { NavbarCompany } from 'components/NavbarCompany';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -8,6 +6,9 @@ import { setProjectAccessForUser } from 'stores/project/Actions';
 import { CompletedProjects } from './CompletedProjects';
 import { MyProject } from './MyProjects';
 import { PendingProjectRequest } from './request/Index';
+import { Tab, Tabs } from '@blueprintjs/core';
+import Navbar from 'components/navbar/Navbar';
+import { isMobileOnly } from 'react-device-detect';
 
 const _ProjectPage = (props: any) => {
   React.useEffect(() => {
@@ -30,8 +31,7 @@ const _ProjectPage = (props: any) => {
 
   return (
     <>
-      <NavbarCompany title={t('app.company.Projects.My-projects')} />
-      {/* <NavbarCompany title="My Projects" /> */}
+      {isMobileOnly && <Navbar type="company" />}
       <div className="ph5-ns ph4 pt5 pt0-ns">
         <Tabs id="TabsExample">
           <Tab

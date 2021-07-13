@@ -4,9 +4,10 @@ import { AssociateList } from './AssociateList';
 import { PendingAssociateList } from './PendingAssociateList';
 import { connect } from 'react-redux';
 import { User } from 'stores/user/Reducer';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import { ICompany } from 'stores/company/Reducer';
 import { useTranslation } from 'react-i18next';
+import { isMobileOnly } from 'react-device-detect';
 
 interface AssociatesPageProps {
   user: User;
@@ -31,8 +32,7 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
 
   return (
     <>
-      <NavbarCompany title={t('app.company.Partners.Partners')} />
-      {/* <NavbarCompany title="My Associates" /> */}
+      {isMobileOnly && <Navbar type="company" />}
       <div className="ph4 w-100">
         <Tabs id="associatesTab" className="mt5 mt0-ns">
           <Tab

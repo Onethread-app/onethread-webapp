@@ -21,7 +21,7 @@ import addIcon from '../../../resources/images/addIcon.png';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import { User } from 'stores/user/Reducer';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
 
 interface IBoardCardComponent {
@@ -51,86 +51,87 @@ interface IBoardListViewInternalProps extends IBoardCardComponent {
 
 const BoardCard = withRouter(
   (props: IBoardCardComponent & RouteComponentProps) => {
-  const { t } = useTranslation();
+    const { t } = useTranslation();
 
-  return(
-    <>
-      {props.boardList.map((board) => (
-        <div className="pa2">
-          <Card
-            className="h-100"
-            interactive={true}
-            elevation={Elevation.TWO}
-            onClick={async (e) => {
-              e.preventDefault();
-              await props.getSelectedBoard(board._id);
-              props.setSingleBoardLoading(true);
-            }}
-            style={{ paddingLeft: '0px', paddingBottom: '0px' }}
-          >
-            <div
-              className="flex"
-              style={{
-                borderLeft: `5px solid 
+    return (
+      <>
+        {props.boardList.map((board) => (
+          <div className="pa2">
+            <Card
+              className="h-100"
+              interactive={true}
+              elevation={Elevation.TWO}
+              onClick={async (e) => {
+                e.preventDefault();
+                await props.getSelectedBoard(board._id);
+                props.setSingleBoardLoading(true);
+              }}
+              style={{ paddingLeft: '0px', paddingBottom: '0px' }}
+            >
+              <div
+                className="flex"
+                style={{
+                  borderLeft: `5px solid 
 							${
                 find(Color, ['code', board.color])
                   ? find(Color, ['code', board.color])!.value
                   : 'white'
               }`, // TODO use dictionary
-                paddingLeft: '20px',
-                marginLeft: '-2px',
-                borderRadius: '3px',
-              }}
-            >
-              <h3
-                className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
-                style={{
-                  height: '2.5rem',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
+                  paddingLeft: '20px',
+                  marginLeft: '-2px',
+                  borderRadius: '3px',
                 }}
               >
-                {board.name}
-              </h3>
-            </div>
-            <div
-              className="flex pt3 pr3"
-              style={{
-                justifyContent: 'space-between',
-                paddingLeft: '20px',
-              }}
-            >
-              <div>
-                <p
-                  className="mb0 ws-break"
-                  style={{ fontSize: '0.7rem' }}
+                <h3
+                  className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
+                  style={{
+                    height: '2.5rem',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                  }}
                 >
-                  {t('app.project.Project-boards.Total-Members')}
-                  {/* Total Members */}
-                </p>
-                <p className="fw8">
-                  {board.members ? board.members.length : 0}
-                </p>
+                  {board.name}
+                </h3>
               </div>
-              <div>
-                <p
-                  className="mb0 ws-break"
-                  style={{ fontSize: '0.7rem' }}
-                >
-                  {t('app.project.Project-boards.Remaining-Tasks')}
-                  {/* Remaining Tasks */}
-                </p>
-                <p className="fw8">
-                  {`${board.remainingTasks}/${board.totalTasks}`}
-                </p>
+              <div
+                className="flex pt3 pr3"
+                style={{
+                  justifyContent: 'space-between',
+                  paddingLeft: '20px',
+                }}
+              >
+                <div>
+                  <p
+                    className="mb0 ws-break"
+                    style={{ fontSize: '0.7rem' }}
+                  >
+                    {t('app.project.Project-boards.Total-Members')}
+                    {/* Total Members */}
+                  </p>
+                  <p className="fw8">
+                    {board.members ? board.members.length : 0}
+                  </p>
+                </div>
+                <div>
+                  <p
+                    className="mb0 ws-break"
+                    style={{ fontSize: '0.7rem' }}
+                  >
+                    {t('app.project.Project-boards.Remaining-Tasks')}
+                    {/* Remaining Tasks */}
+                  </p>
+                  <p className="fw8">
+                    {`${board.remainingTasks}/${board.totalTasks}`}
+                  </p>
+                </div>
               </div>
-            </div>
-          </Card>
-        </div>
-      ))}
-    </>
-  )},
+            </Card>
+          </div>
+        ))}
+      </>
+    );
+  },
 );
 
 const TaskPageComponent = (
@@ -229,8 +230,7 @@ const TaskPageComponent = (
   return (
     <>
       <MobileView>
-        <NavbarCompany title={t('app.project.Project-boards.Board')} />
-        {/* <NavbarCompany title="Board" /> */}
+        {isMobileOnly && <Navbar type="company" />}
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -239,7 +239,9 @@ const TaskPageComponent = (
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.company.Projects.Overview')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
@@ -249,7 +251,9 @@ const TaskPageComponent = (
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-preface.Intro')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
@@ -269,7 +273,9 @@ const TaskPageComponent = (
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-boards.Board')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
@@ -279,7 +285,9 @@ const TaskPageComponent = (
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-teammates.Team-members')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
@@ -341,7 +349,7 @@ const TaskPageComponent = (
             className="pl2 mt3"
             style={{ color: '#6B6B6B', fontSize: '18px' }}
           >
-           {t('app.project.Project-boards.My-boards')}
+            {t('app.project.Project-boards.My-boards')}
             {/* My Boards */}
           </p>
           <div className="overflow-auto">
