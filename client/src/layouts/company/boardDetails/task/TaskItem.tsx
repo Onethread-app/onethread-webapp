@@ -1,6 +1,6 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { TaskBoard, ITask } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
@@ -38,24 +38,39 @@ interface TaskItemInternalProps extends TaskItemProps {
   deletingTask: boolean;
   errorOnTaskDelete: string;
   projectId: string;
+  fetchingTask: boolean;
+  taskError: string;
 }
 
-const TaskItemComponent = (
-  props: TaskItemInternalProps & RouteComponentProps,
-) => {
+const TaskItemComponent = (props: TaskItemInternalProps) => {
+  const [loadingSingleTask, setLoadingSingleTask] = React.useState(
+    false,
+  );
   const [showTaskEditDialog, setShowTaskEditDialog] = React.useState(
     false,
   );
+  const history = useHistory();
 
-  const handleClick = async () => {
-    if (props.task._id) {
-      await props.getSelectedTaskDetails(props.task._id);
-
-      props.history.push(
+  React.useEffect(() => {
+    if (
+      loadingSingleTask === true &&
+      props.fetchingTask === false &&
+      props.taskError === ''
+    ) {
+      setLoadingSingleTask(false);
+      history.push(
         `/company/${props.company!.uniqueName}/project/${
           props.projectId
         }/board/${props.currentBoard!._id}/task/${props.task._id}`,
       );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingSingleTask, props.fetchingTask, props.taskError]);
+
+  const handleClick = () => {
+    if (props.task._id) {
+      props.getSelectedTaskDetails(props.task._id);
+      setLoadingSingleTask(true);
     }
   };
 
@@ -300,6 +315,8 @@ const TaskItemComponent = (
 const mapStateToProps = (state: any) => {
   return {
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+    fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
+    taskError: state.boardIndexReducer.boardReducer.taskError,
     deletingTask: state.boardIndexReducer.boardReducer.deletingTask,
     errorOnTaskDelete:
       state.boardIndexReducer.boardReducer.errorOnTaskDelete,
@@ -314,4 +331,4 @@ const mapStateToProps = (state: any) => {
 export const TaskItem = connect(mapStateToProps, {
   getSelectedTaskDetails,
   deleteTask,
-})(withRouter(TaskItemComponent));
+})(TaskItemComponent);

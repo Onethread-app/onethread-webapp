@@ -135,6 +135,9 @@ const MessageItemComponent = (props: MessageItemProps) => {
             className={`highlighted-icon ph3 ${
               props.message.discussion ? 'flex' : 'dn'
             }`}
+            style={{
+              flexShrink: 0,
+            }}
           >
             <img
               className="pointer"

@@ -12,6 +12,7 @@ import searchIcon from './../../../../resources/images/search.svg';
 import { isMobileOnly } from 'react-device-detect';
 import { room } from 'stores/room/Types';
 import { useTranslation } from 'react-i18next';
+import { Loading } from 'components/Loading';
 
 interface RoomSideBarComponentProps {
   projectRole?: string;
@@ -23,6 +24,7 @@ interface RoomSideBarInternalProps
   extends RoomSideBarComponentProps,
     RouteComponentProps {
   clearRoomError: () => void;
+  gettingRooms: boolean;
 }
 const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
   const [showDialog, setShowDialog] = useState(false);
@@ -43,27 +45,27 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
         }`}
       >
         <div className="flex justify-between items-center ph3-ns">
-          <h3 className="tigrow-darkGray">{t('app.project.Project-rooms.Rooms')}</h3>
+          <h3 className="tigrow-darkGray">
+            {t('app.project.Project-rooms.Rooms')}
+          </h3>
           {/* <h3 className="tigrow-darkGray">Rooms</h3> */}
-          {props.projectRole &&
-            props.optionalRole &&
-           (
-              <span
-                className="bp3-icon grow pointer"
-                onClick={() => {
-                  setShowDialog(!showDialog);
-                  dispatch({ type: room.CLEAR_STATUS_CODE });
-                }}
-              >
-                <img
-                  src={createIcon}
-                  width="30px"
-                  height="30px"
-                  color="#3F61C5"
-                  alt=""
-                />
-              </span>
-            )}
+          {props.projectRole && props.optionalRole && (
+            <span
+              className="bp3-icon grow pointer"
+              onClick={() => {
+                setShowDialog(!showDialog);
+                dispatch({ type: room.CLEAR_STATUS_CODE });
+              }}
+            >
+              <img
+                src={createIcon}
+                width="30px"
+                height="30px"
+                color="#3F61C5"
+                alt=""
+              />
+            </span>
+          )}
         </div>
         <div className="flex items-center ph3-ns relative">
           <InputGroupField
@@ -94,7 +96,16 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
         </div>
         <div className="flex-grow-1 overflow-y-auto">
           {props.isOpen || isMobileOnly ? (
-            <RoomList search={searchKeyword} />
+            props.gettingRooms ? (
+              <div className="flex h-100 h-50-ns items-center justify-center">
+                <Loading />
+              </div>
+            ) : (
+              <RoomList
+                search={searchKeyword}
+                gettingRooms={props.gettingRooms}
+              />
+            )
           ) : null}
         </div>
       </div>
@@ -123,6 +134,7 @@ const mapStateToProps = (state: any) => {
       state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.project &&
       state.projectReducer.projectRole.projects.project.optionalRole,
+    gettingRooms: state.roomReducer.gettingRooms,
   };
 };
 

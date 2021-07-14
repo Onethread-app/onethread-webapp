@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { getCompanyDetails } from 'stores/company/Actions';
 // import { History } from 'history';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { User, ICompanyByUser } from 'stores/user/Reducer';
 import { Loading } from 'components/Loading';
-import { getNotifications } from '../../stores/notifications/Action';
 // import { isCompanyLoading } from 'stores/company/Selector';
 
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
@@ -24,18 +23,23 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   user: User;
   getCompanyDetails: (companyName: string) => void;
   getAllCompaniesByUserId: (userId: string) => void;
-  getNotifications: () => void;
   isCompanyLoading: boolean;
+  gettingCompanyDetails: boolean;
+  errorOnGettingCompanyDetails: string;
 }
 
 export const ListViewComponent = (
-  props: CompanyListViewInternalProps & RouteComponentProps,
+  props: CompanyListViewInternalProps,
 ) => {
   const [loading, setLoading] = useState(true);
+  const [gettingDetails, setGettingDetails] = useState(false);
+  const [companyName, setCompanyName] = useState('');
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     props.getAllCompaniesByUserId(props.user._id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -43,6 +47,30 @@ export const ListViewComponent = (
       setLoading(false);
     }
   }, [props.isCompanyLoading]);
+
+  useEffect(() => {
+    if (
+      gettingDetails === true &&
+      props.gettingCompanyDetails === false &&
+      props.errorOnGettingCompanyDetails === ''
+    ) {
+      dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
+      setGettingDetails(false);
+      history.push(`/company/${companyName}/dashboard`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    gettingDetails,
+    props.gettingCompanyDetails,
+    props.errorOnGettingCompanyDetails,
+  ]);
+
+  const handleClick = (name: string) => {
+    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    props.getCompanyDetails(name);
+    setCompanyName(name);
+    setGettingDetails(true);
+  };
 
   const { t } = useTranslation();
 
@@ -67,22 +95,7 @@ export const ListViewComponent = (
                       ? 'bg-black-10'
                       : ''
                   } mt2 pointer bp3-popover-dismiss`}
-                  onClick={async () => {
-                    props.getNotifications();
-                    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
-                    await props.getCompanyDetails(
-                      c.company.uniqueName,
-                    );
-                    if (props.isCompanyLoading === false) {
-                      props.history.push(
-                        `/company/${c.company.uniqueName}/dashboard`,
-                      );
-                      dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
-                    }
-                    // else{
-                    //   props.history.push(`/notFound`);
-                    // }
-                  }}
+                  onClick={() => handleClick(c.company.uniqueName)}
                 >
                   <div className="flex justify-between">
                     <img
@@ -126,11 +139,13 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     currentCompany: state.companyReducer.currentCompany._id,
     isCompanyLoading: state.companyReducer.loading,
+    gettingCompanyDetails: state.companyReducer.gettingCompanyDetails,
+    errorOnGettingCompanyDetails:
+      state.companyReducer.errorOnGettingCompanyDetails,
   };
 };
 
 export const CompanyListView = connect(mapStateToProps, {
   getCompanyDetails,
   getAllCompaniesByUserId,
-  getNotifications,
-})(withRouter(ListViewComponent));
+})(ListViewComponent);

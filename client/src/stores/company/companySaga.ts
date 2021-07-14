@@ -60,6 +60,7 @@ import {
   clearCompanyError,
   updateCompanyLoading,
 } from './Actions';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import {
   CLEAR_ROOMS_REDUCER_STATE,
@@ -105,6 +106,7 @@ export function* createCompanyAsync({ companyData }: any) {
 export function* getCompanyDetailsAsync({ payload }: any) {
   try {
     if (payload) {
+      yield put(showLoading());
       const headers = tokenConfig();
       yield put(clearCompanyError());
 
@@ -138,6 +140,8 @@ export function* getCompanyDetailsAsync({ payload }: any) {
 
       yield put(getCompanyDetailsFailure(error.message));
     }
+  } finally {
+    yield put(hideLoading());
   }
 }
 

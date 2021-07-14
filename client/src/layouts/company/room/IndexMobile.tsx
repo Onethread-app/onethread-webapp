@@ -40,14 +40,11 @@ interface RoomPageComponentProps extends RouteComponentProps {
 const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
   const query = new URLSearchParams(props.location.search);
   const view = query.get('view');
-  const load = async (_getRooms: any) => {
-    await _getRooms();
-  };
 
   // get all rooms
   useEffect(() => {
     if (props.companyId && props.projectId) {
-      load(props.getRooms);
+      props.getRooms();
     }
   }, [props.companyId, props.projectId]);
 
