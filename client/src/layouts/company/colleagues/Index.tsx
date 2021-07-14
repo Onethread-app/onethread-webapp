@@ -34,7 +34,7 @@ import { isEqual, upperFirst, chunk } from 'lodash';
 import { User } from 'stores/user/Reducer';
 import { IProjectTeam } from 'stores/project/Reducer';
 import { isMobileOnly } from 'react-device-detect';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import { InviteColleagueView } from './InviteColleagueView';
 import { inviteColleagueInBulkSuccess } from '../../../stores/company/Actions';
 import { useTranslation } from 'react-i18next';
@@ -170,16 +170,17 @@ const ColleaguesPageComponent = (props: Colleagues) => {
     }
   }, [props.company.pendingMembers]);
 
-const { t } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>
-      <NavbarCompany title={t('app.company.Colleagues.Colleagues')} />
-      {/* <NavbarCompany title="My Colleagues" /> */}
+      {isMobileOnly && <Navbar type="company" />}
       <div className="ph5-ns ph3 pb5 pt5 pt0-ns">
         <div className="flex justify-between items-center">
           {isMobileOnly ? undefined : (
-            <h1 className="tigrow-lightGray-1">{t('app.company.Colleagues.Colleagues')}</h1>
+            <h1 className="tigrow-lightGray-1">
+              {t('app.company.Colleagues.Colleagues')}
+            </h1>
             // <h1 className="tigrow-lightGray-1">Colleagues</h1>
           )}
           {companyPermit(props.company.role) ? (
@@ -217,20 +218,30 @@ const { t } = useTranslation();
         </div>
 
         {/* Admins list starts */}
-        <h1 className="f4 mb0 tigrow-lightGray-1">{t('app.company.Colleagues.Admins')}</h1>
+        <h1 className="f4 mb0 tigrow-lightGray-1">
+          {t('app.company.Colleagues.Admins')}
+        </h1>
         {/* <h1 className="f4 mb0 tigrow-lightGray-1">Admins</h1> */}
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
-              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Name')}</th>
+              <th style={{ width: '25%' }}>
+                {t('app.company.Colleagues.Name')}
+              </th>
               {/* <th style={{ width: '25%' }}>Name</th> */}
-              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Email')}</th>
+              <th style={{ width: '25%' }}>
+                {t('app.company.Colleagues.Email')}
+              </th>
               {/* <th style={{ width: '25%' }}>Email</th> */}
               {/* <th style={{ width: '20%' }}>Contact No</th> */}
-              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Division')}</th>
+              <th style={{ width: '25%' }}>
+                {t('app.company.Colleagues.Division')}
+              </th>
               {/* <th style={{ width: '25%' }}>Division</th> */}
               {/* <th style={{ width: '20%' }}>Department</th> */}
-              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Position')}</th>
+              <th style={{ width: '25%' }}>
+                {t('app.company.Colleagues.Position')}
+              </th>
               {/* <th style={{ width: '25%' }}>Position</th> */}
               <th></th>
             </tr>
@@ -276,7 +287,7 @@ const { t } = useTranslation();
                     </span>
                   </td>
                   {/* <td> */}
-                    {/* <span className="mr2-ns mr1 f7 f6-ns">
+                  {/* <span className="mr2-ns mr1 f7 f6-ns">
                       {member.account ? member.account.contactNo : null}
                     </span> */}
                   {/* </td> */}
@@ -394,20 +405,30 @@ const { t } = useTranslation();
         </HTMLTable>
         {/* Admins list ends */}
         {/* members list starts */}
-        <h1 className="f4 mb0 tigrow-lightGray-1">{t('app.company.Colleagues.Members')}</h1>
+        <h1 className="f4 mb0 tigrow-lightGray-1">
+          {t('app.company.Colleagues.Members')}
+        </h1>
         {/* <h1 className="f4 mb0 tigrow-lightGray-1">Members</h1> */}
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
-              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Name')}</th>
+              <th style={{ width: '25%' }}>
+                {t('app.company.Colleagues.Name')}
+              </th>
               {/* <th style={{ width: '25%' }}>Name</th> */}
-              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Email')}</th>
+              <th style={{ width: '25%' }}>
+                {t('app.company.Colleagues.Email')}
+              </th>
               {/* <th style={{ width: '25%' }}>Email</th> */}
               {/* <th style={{ width: '20%' }}>Contact No</th> */}
-              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Division')}</th>
+              <th style={{ width: '25%' }}>
+                {t('app.company.Colleagues.Division')}
+              </th>
               {/* <th style={{ width: '25%' }}>Division</th> */}
               {/* <th style={{ width: '20%' }}>Department</th> */}
-              <th style={{ width: '25%' }}>{t('app.company.Colleagues.Position')}</th>
+              <th style={{ width: '25%' }}>
+                {t('app.company.Colleagues.Position')}
+              </th>
               {/* <th style={{ width: '25%' }}>Position</th> */}
               <th></th>
             </tr>
@@ -598,7 +619,9 @@ const { t } = useTranslation();
               ) : (
                 <tbody>
                   <tr>
-                    <td colSpan={3}>{t('app.company.Colleagues.No-pending')}</td>
+                    <td colSpan={3}>
+                      {t('app.company.Colleagues.No-pending')}
+                    </td>
                     {/* <td colSpan={3}>No pending request</td> */}
                   </tr>
                 </tbody>

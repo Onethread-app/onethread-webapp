@@ -5,9 +5,10 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import { AdvancedInfo } from './AdvancedInfoView';
 import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import { ICompany } from 'stores/company/Reducer';
 import { useTranslation } from 'react-i18next';
+import { isMobileOnly } from 'react-device-detect';
 
 interface ProfilePageProps {
   user: User;
@@ -32,10 +33,9 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
 
   return (
     <>
-      <NavbarCompany title={t('app.company.Company-profile.Company-profile')} />
-      {/* <NavbarCompany title="Company Profile" /> */}
+      {isMobileOnly && <Navbar type="company" />}
       <div className="w-100 pa4-ns pa2 mt5 mt0-ns">
-        <CoverPhoto type="company"/>
+        <CoverPhoto type="company" />
         <Tabs id="TabsExample" className="mt6-ns mt5 ph5-ns ph3">
           <Tab
             id="basic_info"

@@ -28,7 +28,7 @@ import { isEmpty, upperFirst, isEqual } from 'lodash';
 import { Associate } from 'stores/associate/Reducer';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
 
 interface TeamMember {
@@ -92,8 +92,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
   return (
     <>
       <MobileView>
-        <NavbarCompany title={t('app.project.Project-teammates.Team-members')} />
-        {/* <NavbarCompany title="Teammates" /> */}
+        <Navbar type="company" />
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -105,7 +104,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.company.Projects.Overview')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
@@ -118,7 +119,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-preface.Intro')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
@@ -131,7 +134,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-rooms.Rooms')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-rooms.Rooms')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
@@ -144,7 +149,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-boards.Board')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
@@ -157,7 +164,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-teammates.Team-members')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
@@ -180,7 +189,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
       <div className="ph5-ns ph3 pv4">
         <div className="flex justify-between items-center">
           {isMobileOnly ? undefined : (
-            <h1 className="f3">{t('app.project.Project-teammates.Team-members')}</h1>
+            <h1 className="f3">
+              {t('app.project.Project-teammates.Team-members')}
+            </h1>
             // <h1 className="f3">Teammates</h1>
           )}
           <div>
@@ -222,7 +233,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           </div>
         </div>
         {/* Admins list starts */}
-        <h1 className="f4 mt4">{t('app.project.Project-teammates.Admins')}</h1>
+        <h1 className="f4 mt4">
+          {t('app.project.Project-teammates.Admins')}
+        </h1>
         {/* <h1 className="f4 mt4">Admins</h1> */}
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
@@ -316,7 +329,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         {/* Admins list ends */}
 
         {/* Project Moderators list starts */}
-        <h1 className="f4 mt4">{t('app.project.Project-teammates.Moderators')}</h1>
+        <h1 className="f4 mt4">
+          {t('app.project.Project-teammates.Moderators')}
+        </h1>
         {/* <h1 className="f4 mt4">Project Moderators</h1> */}
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
@@ -415,7 +430,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               ))
             ) : (
               <tr>
-                <td colSpan={5}>{t('app.project.Project-teammates.No-Moderators')}</td>
+                <td colSpan={5}>
+                  {t('app.project.Project-teammates.No-Moderators')}
+                </td>
                 {/* <td colSpan={5}>No Moderators</td> */}
               </tr>
             )}
@@ -425,7 +442,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 
         {/* Project Teammates list starts */}
         <div className="flex items-center justify-between mt4">
-          <h1 className="f4">{t('app.project.Project-teammates.Teammates')}</h1>
+          <h1 className="f4">
+            {t('app.project.Project-teammates.Teammates')}
+          </h1>
           {/* <h1 className="f4">Project Teammates</h1> */}
         </div>
         <HTMLTable className="w-100 mv3" striped={true}>
@@ -512,13 +531,17 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               ))
             ) : (
               <tr>
-                <td colSpan={5}>{t('app.project.Project-teammates.No-Teammates')}</td>
+                <td colSpan={5}>
+                  {t('app.project.Project-teammates.No-Teammates')}
+                </td>
                 {/* <td colSpan={5}>No Teammates</td> */}
               </tr>
             )}
           </tbody>
         </HTMLTable>
-        <h1 className="f4 mv4">{t('app.company.Partners.External')}</h1>
+        <h1 className="f4 mv4">
+          {t('app.company.Partners.External')}
+        </h1>
         {/* <h1 className="f4 mv4">External Partners</h1> */}
         <AssociateList />
       </div>

@@ -10,7 +10,7 @@ import { companySubscriber } from 'helpers/notification/subscribers';
 import { readNotification } from '../../../stores/notifications/Action';
 import { getNotifications } from '../../../stores/notifications/Action';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import Subscriptions from './subscriptions/Index';
 import Modal from 'react-modal';
 import ErrorText from './ErrorText';
@@ -122,12 +122,13 @@ const SettingsPagComponent = (
 
   return (
     <>
-      <NavbarCompany title={t('app.company.Settings.Settings')} />
-      {/* <NavbarCompany title="My Settings" /> */}
+      {isMobileOnly && <Navbar type="company" />}
       <div className="fl w-100 pl4-ns pr2-ns ph3 pb4 mt5 mt0-ns">
         <div className="fl w-100">
           {isMobileOnly ? undefined : (
-            <h3 className="f3 b">{t('app.company.Settings.Settings')}</h3>
+            <h3 className="f3 b">
+              {t('app.company.Settings.Settings')}
+            </h3>
             // <h3 className="f3 b">Settings</h3>
           )}
         </div>

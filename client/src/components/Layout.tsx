@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { NavbarTop } from 'components/Navbar';
+// import { NavbarTop } from 'components/Navbar';
+import NavbarTop from 'components/navbar/Navbar';
 import { Sidebar } from 'components/Sidebar';
 import { useState, useEffect } from 'react';
 import { Loading } from './Loading';
@@ -49,7 +50,7 @@ import {
   isMobileOnly,
 } from 'react-device-detect';
 import { Navbar } from '@blueprintjs/core';
-import { NavbarIndividual } from './NavbarIndividual';
+// import { NavbarIndividual } from './NavbarIndividual';
 import { companyPermit } from 'stores/UtilsActions';
 import { CURRENT_ROOM } from 'stores/room/Types';
 import { useTranslation } from 'react-i18next';
@@ -128,7 +129,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     view: 'default',
     roomId: '',
   });
-  const [showMenu, setShowMenu] = useState(false);
+  // const [showMenu, setShowMenu] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -607,10 +608,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                         </Navbar>
                       )
                     ) : (
-                      <NavbarIndividual
-                        showDialog={showMenu}
-                        setShowDialog={setShowMenu}
-                      />
+                      <NavbarTop type="home" />
                     )}
                   </div>
                 </div>

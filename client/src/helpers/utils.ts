@@ -28,3 +28,9 @@ export const sortTasks = (tasks: any) => {
   });
   return sortedTasks;
 };
+
+export const compareChats = (a: any, b: any) => {
+  if (a.message.createdAt < b.message.createdAt) return 1;
+  else if (a.message.createdAt > b.message.createdAt) return -1;
+  else return 0;
+};

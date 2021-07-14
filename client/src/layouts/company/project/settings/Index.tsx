@@ -5,7 +5,7 @@ import { GeneralPage } from './General';
 import { updateProjectRole } from '../../../../stores/project/Actions';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
 
 const ProjectSettingsPageComponent = (props: any) => {
@@ -18,8 +18,7 @@ const ProjectSettingsPageComponent = (props: any) => {
   return (
     <>
       <MobileView>
-        <NavbarCompany title={t('app.company.Projects.Project-Settings')} />
-        {/* <NavbarCompany title="Project Settings" /> */}
+        <Navbar type="company" />
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -28,7 +27,9 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.company.Projects.Overview')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
@@ -38,7 +39,9 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-preface.Intro')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
@@ -48,7 +51,9 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-rooms.Rooms')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-rooms.Rooms')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
@@ -58,7 +63,9 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-boards.Board')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
@@ -68,7 +75,9 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+            <small style={{ color: 'inherit' }}>
+              {t('app.project.Project-teammates.Team-members')}
+            </small>
             {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
@@ -87,10 +96,14 @@ const ProjectSettingsPageComponent = (props: any) => {
       </MobileView>
       <div className="bg-white pa5-ns ph3 mb6">
         {isMobileOnly ? undefined : (
-          <h3 className="f3 ma0">{t('app.company.Projects.Project-Settings')}</h3>
+          <h3 className="f3 ma0">
+            {t('app.company.Projects.Project-Settings')}
+          </h3>
           // <h3 className="f3 ma0">Project Settings</h3>
         )}
-        <h3 className="f5 mv4">{t('app.project.Project-settings.Moderator')}</h3>
+        <h3 className="f5 mv4">
+          {t('app.project.Project-settings.Moderator')}
+        </h3>
         {/* <h3 className="f5 mv4">Project Moderator</h3> */}
         <Tabs id="TabsExample" vertical={true}>
           <Tab

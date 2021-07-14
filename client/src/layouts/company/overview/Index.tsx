@@ -10,7 +10,7 @@ import { MobileView, isMobileOnly } from 'react-device-detect';
 import { withRouter } from 'react-router';
 
 import { connect } from 'react-redux';
-import { NavbarCompany } from 'components/NavbarCompany';
+import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
 
 const ProjectInfo = ({
@@ -28,7 +28,7 @@ const ProjectInfo = ({
         ...containerStyle,
       }}
     >
-      {context}: {' '}
+      {context}:{' '}
       <span
         style={{ fontWeight: 'normal', ...dataStyle }}
         className={dataClassName}
@@ -99,8 +99,7 @@ const Index = (props: any) => {
       ) : (
         <>
           <MobileView>
-            <NavbarCompany title={t('app.company.Projects.Overview')} />
-            {/* <NavbarCompany title="Overview" /> */}
+            <Navbar type="company" />
             <div className="flex justify-between mt5">
               <NavLink
                 exact
@@ -112,7 +111,9 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+                <small style={{ color: 'inherit' }}>
+                  {t('app.company.Projects.Overview')}
+                </small>
                 {/* <small style={{ color: 'inherit' }}>Overview</small> */}
               </NavLink>
               <NavLink
@@ -125,7 +126,9 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+                <small style={{ color: 'inherit' }}>
+                  {t('app.project.Project-preface.Intro')}
+                </small>
                 {/* <small style={{ color: 'inherit' }}>Preface</small> */}
               </NavLink>
               <NavLink
@@ -138,7 +141,9 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>{t('app.project.Project-rooms.Rooms')}</small>
+                <small style={{ color: 'inherit' }}>
+                  {t('app.project.Project-rooms.Rooms')}
+                </small>
                 {/* <small style={{ color: 'inherit' }}>Room</small> */}
               </NavLink>
               <NavLink
@@ -151,7 +156,9 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
+                <small style={{ color: 'inherit' }}>
+                  {t('app.project.Project-boards.Board')}
+                </small>
                 {/* <small style={{ color: 'inherit' }}>Boards</small> */}
               </NavLink>
               <NavLink
@@ -164,7 +171,9 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+                <small style={{ color: 'inherit' }}>
+                  {t('app.project.Project-teammates.Team-members')}
+                </small>
                 {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
               </NavLink>
               <NavLink
@@ -204,10 +213,11 @@ const Index = (props: any) => {
                 // context="End date: "
                 data={dueDate ? dueDate : 'N/A'}
               />
-              <ProjectInfo 
-              context={t('app.company.Projects.Lead')} 
-              // context="Lead" 
-              data={lead} />
+              <ProjectInfo
+                context={t('app.company.Projects.Lead')}
+                // context="Lead"
+                data={lead}
+              />
               <ProjectInfo
                 context={t('app.company.Projects.Status')}
                 // context="Status"
