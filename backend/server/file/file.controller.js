@@ -367,6 +367,48 @@ const removeFileInTask = async (req, res, next) => {
     next(error);
   }
 };
+
+const reportImage = async (req, res, next) => {
+  const file = req.file;
+  const userID = req.user._id;
+  const fileRename = fileName(userID, file.originalname);
+  const params = {
+    Bucket: config.bucketName,
+    Key: `${userID}/${fileRename}`,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+    ACL: 'public-read',
+  };
+  await s3bucket
+    .upload(params)
+    .promise()
+    .then(async (data) => {
+      logger.info(`File Successfully upload to S3`);
+      const newFile = {
+        link: data.Location,
+        s3Key: data.Key,
+        account: userID,
+        type: params.ContentType,
+        imageType: req.query.imageType,
+      };
+      const file = new File(newFile);
+      file
+        .save()
+        .then(async (data) => {
+          logger.info('File Link successfully save to Database');
+          return sendJSONresponse(res, 200, data);
+        })
+        .catch((error) => {
+          logger.error(`File: ${error}`);
+          next(error);
+        });
+    })
+    .catch((err) => {
+      logger.error(`File: ${err}`);
+      next(err);
+    });
+};
+
 module.exports = {
   profilePicture,
   companyLogo,
@@ -374,4 +416,5 @@ module.exports = {
   fileInProject,
   fileInTask,
   removeFileInTask,
+  reportImage
 };

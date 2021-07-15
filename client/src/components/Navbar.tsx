@@ -32,6 +32,7 @@ import { IRoom, IChat } from '../stores/room/Reducer';
 import logo from 'resources/images/onethread-text.png';
 import ChatListItem from 'components/chat/ChatListItem';
 import { useTranslation } from 'react-i18next';
+import ReportForm from 'layouts/company/ReportForm';
 
 interface NavbarTopInternalProps {
   user: User;
@@ -61,7 +62,7 @@ const NavbarTopComponent = (
   props: NavbarTopInternalProps & RouteComponentProps,
 ) => {
   const [showDialog, setShowDialog] = useState(false);
-
+  const [showButtonReport, setShowButtonReport] = useState(false);
   useEffect(() => {
     props.getNotifications();
     companySubscriber(props.companyId);
@@ -269,6 +270,15 @@ const NavbarTopComponent = (
                 </Button>
                 <Button
                   className="bp3-minimal outline-0 bp3-popover-dismiss"
+                  onClick={(e: any) => setShowButtonReport(true)}
+                  icon="issue"
+                  alignText="left"
+                >
+                  {t('app.user.User-settings.Report-Issue')}
+                  {/* Report issue */}
+                </Button>
+                <Button
+                  className="bp3-minimal outline-0 bp3-popover-dismiss"
                   onClick={(e: any) =>
                     props.logoutAction(props.history)
                   }
@@ -308,6 +318,18 @@ const NavbarTopComponent = (
         >
           <div>
             <CompanySignupForm setShowDialog={setShowDialog} />
+          </div>
+        </Dialog>
+      )}
+      {showButtonReport && (
+        <Dialog
+          onClose={() => setShowButtonReport(!showButtonReport)}
+          isOpen={showButtonReport}
+          style={{ background: '#fff' }}
+          canOutsideClickClose={false}
+        >
+          <div>
+            <ReportForm setShowButtonReport={setShowButtonReport} />
           </div>
         </Dialog>
       )}

@@ -15,6 +15,7 @@ import user from './../../resources/images/profilePhoto.svg';
 import { NavLink } from 'react-router-dom';
 import { logoutAction } from 'stores/auth/Actions';
 import { useTranslation } from 'react-i18next';
+import ReportForm from './ReportForm';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -37,7 +38,7 @@ export const ListViewComponent = (
 ) => {
   const [loading, setLoading] = useState(true);
   const [showButton, setShowButton] = useState(false);
-
+  const [showButtonReport, setShowButtonReport] = useState(false);
   useEffect(() => {
     if (loading === true) {
       props.getAllCompaniesByUserId(props.user._id);
@@ -116,6 +117,15 @@ export const ListViewComponent = (
           {t('app.user.User-settings.Home')}
           {/* Home */}
         </NavLink>
+        <Button
+          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
+          onClick={(e: any) => setShowButtonReport(true)}
+          icon="issue"
+          alignText="left"
+        >
+          {t('app.user.User-settings.Report-Issue')}
+          {/* Report issue */}
+        </Button>
         <Button
           className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
           onClick={(e: any) => props.logoutAction(props.history)}
@@ -212,6 +222,22 @@ export const ListViewComponent = (
         >
           <div>
             <CompanySignupForm setShowDialog={props.setShowDialog} />
+          </div>
+        </Dialog>
+      )}
+      {showButtonReport && (
+        <Dialog
+          onClose={() => setShowButtonReport(!showButtonReport)}
+          isOpen={showButtonReport}
+          style={{
+            background: '#fff',
+            marginLeft: '0.5rem',
+            marginRight: '0.5rem',
+          }}
+          canOutsideClickClose={false}
+        >
+          <div>
+            <ReportForm setShowButtonReport={setShowButtonReport} />
           </div>
         </Dialog>
       )}

@@ -425,7 +425,16 @@
         "Profile": "Profile Settings",
         "Password": "Change Password",
         "Logout": "Logout",
-        "Language-Settings": "Language Settings"
+        "Language-Settings": "Language Settings",
+        "Report-Issue": "Report A Issue",
+        "Select-type": "Please select a type (Required)",
+        "Tittle": "Tittle",
+        "Details": "Details",
+        "Add-Screenshot-Video": "Add a Screenshot",
+        "Choose-file": "choose your file",
+        "Cancel": "Cancel",
+        "Submit": "Submit",
+        "Required": "This filed is required"
       }
     },
     "Navbar": {

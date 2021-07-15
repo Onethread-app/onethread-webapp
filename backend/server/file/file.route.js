@@ -21,6 +21,13 @@ router.post(
   fileCtrl.profilePicture,
 );
 
+router.post(
+  '/upload/reportImage',
+  upload.single('file'),
+  authorization,
+  fileCtrl.reportImage,
+);
+
 // router.get('/show-file', fileCtrl.displayProPic);
 router.post(
   '/:companyId/upload',
