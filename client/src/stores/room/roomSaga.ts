@@ -42,6 +42,7 @@ import {
   updateLastSeenFailure,
   updateLastSeenSuccess,
 } from './Actions';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import handleError, {
   returnErrorText,
 } from 'helpers/HandleSagaErrors';
@@ -87,6 +88,7 @@ function* createRoom({ payload }) {
 
 function* getRooms() {
   try {
+    yield put(showLoading());
     const projectId = yield select(getProjectId);
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
@@ -104,11 +106,14 @@ function* getRooms() {
     handleError(error, async (errorMessage: any) => {
       await getRoomsFailure(errorMessage);
     });
+  } finally {
+    yield put(hideLoading());
   }
 }
 
 function* getRoomMembers({ payload }) {
   try {
+    yield put(showLoading());
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
@@ -121,6 +126,8 @@ function* getRoomMembers({ payload }) {
     handleError(error, async (errorMessage: any) => {
       await getRoomMembersFailure(errorMessage);
     });
+  } finally {
+    yield put(hideLoading());
   }
 }
 
@@ -169,6 +176,7 @@ function* sendRoomMessage({ payload }) {
 
 function* getRoomMessages({ roomId, limit, skip }) {
   try {
+    yield put(showLoading());
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
@@ -186,6 +194,8 @@ function* getRoomMessages({ roomId, limit, skip }) {
     handleError(error, async (errorMessage: any) => {
       await getRoomMessagesFailure(errorMessage);
     });
+  } finally {
+    yield put(hideLoading());
   }
 }
 
@@ -237,6 +247,7 @@ function* archiveRoom(action) {
 
 function* getRoomSharedFiles({ roomId, limit, skip }) {
   try {
+    yield put(showLoading());
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
@@ -249,11 +260,14 @@ function* getRoomSharedFiles({ roomId, limit, skip }) {
     handleError(error, async (errorMessage: any) => {
       await getRoomSharedFilesFailure(errorMessage);
     });
+  } finally {
+    yield put(hideLoading());
   }
 }
 
 function* getRoomDiscussions({ roomId, limit, skip }) {
   try {
+    yield put(showLoading());
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
@@ -266,6 +280,8 @@ function* getRoomDiscussions({ roomId, limit, skip }) {
     handleError(error, async (errorMessage: any) => {
       await getRoomDiscussionsFailure(errorMessage);
     });
+  } finally {
+    yield put(hideLoading());
   }
 }
 

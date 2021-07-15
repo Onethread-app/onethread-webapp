@@ -46,6 +46,7 @@ interface IBoardListViewInternalProps extends IBoardCardComponent {
   user: User;
   project: any;
   fetchingBoards: boolean;
+  boardError: string;
   departmentNameLoading: boolean;
 }
 
@@ -149,23 +150,33 @@ const TaskPageComponent = (
   }, []);
 
   useEffect(() => {
-    Promise.all([
-      props.getAllBoards(),
-      props.getAllDepartments(),
-    ]).then(() => {
-      if (
-        props.fetchingBoards === false &&
-        props.departmentNameLoading === false
-      ) {
-        setLoading(false);
-      }
-    });
+    if (props.project._id) {
+      props.getAllBoards();
+      props.getAllDepartments();
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.project._id]);
 
   useEffect(() => {
-    const forwardToGeneral = async () => {
-      await props.getSelectedBoard(props.boardList[0]._id);
+    if (
+      loading === true &&
+      props.fetchingBoards === false &&
+      props.departmentNameLoading === false &&
+      props.boardError === ''
+    ) {
+      setLoading(false);
+    }
+  }, [
+    loading,
+    props.boardError,
+    props.departmentNameLoading,
+    props.fetchingBoards,
+  ]);
+
+  useEffect(() => {
+    const forwardToGeneral = () => {
+      props.getSelectedBoard(props.boardList[0]._id);
       setSingleBoardLoading(true);
     };
     if (
@@ -177,7 +188,7 @@ const TaskPageComponent = (
       forwardToGeneral();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.boardList]);
+  }, [props.boardList, loading]);
 
   useEffect(() => {
     if (
@@ -192,7 +203,12 @@ const TaskPageComponent = (
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.fetchingBoard]);
+  }, [
+    props.fetchingBoard,
+    singleBoardLoading,
+    props.errorOnFetchingBoard,
+    props.currentBoard._id,
+  ]);
 
   const [department, setDepartment] = useState('');
   const boards = props.boardList.filter(
@@ -466,6 +482,7 @@ const mapStateToProps = (state: any) => {
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
     fetchingBoards:
       state.boardIndexReducer.boardReducer.fetchingBoards,
+    boardError: state.boardIndexReducer.boardReducer.boardError,
     fetchingBoard: state.boardIndexReducer.boardReducer.fetchingBoard,
     errorOnFetchingBoard:
       state.boardIndexReducer.boardReducer.errorOnFetchingBoard,

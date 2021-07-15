@@ -116,8 +116,8 @@ export const BoardReducer = (state = InitialState, action: any) => {
     case BoardActionTypes.GET_ALL_BOARDS_START:
       return {
         ...state,
-        fetchingBoards: true,
         boardError: '',
+        fetchingBoards: true,
       };
     case BoardActionTypes.GET_ALL_BOARDS_SUCCESS:
       return {
@@ -290,6 +290,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
     case BoardActionTypes.SELECT_TASK_START:
       return {
         ...state,
+        taskError: '',
         fetchingTask: true,
       };
     case BoardActionTypes.SELECT_TASK_SUCCESS:

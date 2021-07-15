@@ -91,11 +91,13 @@ const initialState = {
   projectFileOpen: false,
   projectList: [],
   projectLoading: false,
+  gettingAllProjects: false,
   singleProjectLoading: false,
   addTeamMemberLoading: false,
   unarchivingProject: false,
   updatingProject: false,
   error: '',
+  errorOnGettingAllProjects: '',
   errorOnUnarchive: '',
   errorOnUpdatingProject: '',
   errorOnSingleProjectLoading: '',
@@ -119,7 +121,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.PROJECT_PREFACE_DES_UP_START:
     case ProjectActionTypes.ARCHIVE_PROJECT_START:
     case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_START:
-    case ProjectActionTypes.GET_ALL_PROJECTS_START:
     case ProjectActionTypes.CREATE_PROJECT_START:
       return {
         ...state,
@@ -155,7 +156,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.PROJECT_PREFACE_DES_UP_FAILURE:
     case ProjectActionTypes.ARCHIVE_PROJECT_FAILURE:
     case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_FAILURE:
-    case ProjectActionTypes.GET_ALL_PROJECTS_FAILURE:
     case ProjectActionTypes.CREATE_PROJECT_FAILURE:
       return {
         ...state,
@@ -207,11 +207,23 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         addTeamMemberLoading: false,
       };
+    case ProjectActionTypes.GET_ALL_PROJECTS_START:
+      return {
+        ...state,
+        errorOnGettingAllProjects: '',
+        gettingAllProjects: true,
+      };
     case ProjectActionTypes.GET_ALL_PROJECTS_SUCCESS:
       return {
         ...state,
         allProjects: action.payload,
-        projectLoading: false,
+        errorOnGettingAllProjects: false,
+      };
+    case ProjectActionTypes.GET_ALL_PROJECTS_FAILURE:
+      return {
+        ...state,
+        errorOnGettingAllProjects: action.payload,
+        gettingAllProjects: false,
       };
     case ProjectActionTypes.GET_ARCHIVED_PROJECTS_SUCCESS:
       return {

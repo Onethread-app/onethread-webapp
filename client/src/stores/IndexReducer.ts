@@ -16,6 +16,8 @@ import { LandingReducer } from './landing/Reducer';
 import { CommentReducer } from './comment/Reducer';
 import { TaskMembersReducer } from './taskMembers/Reducer';
 
+import { loadingBarReducer } from 'react-redux-loading-bar';
+
 export interface AppState {
   layoutReducer: any;
   roomReducer: any;
@@ -50,4 +52,5 @@ export const rootReducer = combineReducers({
   landingReducer: LandingReducer,
   commentReducer: CommentReducer,
   taskMembersReducer: TaskMembersReducer,
+  loadingBar: loadingBarReducer,
 });

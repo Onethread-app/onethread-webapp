@@ -64,6 +64,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const { t } = useTranslation();
 
   const [open, setOpen] = useState(false);
+  const [singleProjectLoading, setSingleProjectLoading] = useState(
+    false,
+  );
+  const [singlePid, setSinglePid] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [showClearFilter, setShowClearFilter] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
@@ -85,10 +89,22 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [itemsPerPage] = useState(15);
   const permissions = projectRules(props.role, props.optionalRole);
   const statusOptions = [
-    { value: 'all', label:  `${t('app.company.Projects.Everything')}` },
-    { value: 'ongoing', label:  `${t('app.company.Projects.Running')}` },
-    { value: 'completed', label:  `${t('app.company.Projects.Done')}` },
-    { value: 'not-started', label:  `${t('app.company.Projects.Future-work')}` },
+    {
+      value: 'all',
+      label: `${t('app.company.Projects.Everything')}`,
+    },
+    {
+      value: 'ongoing',
+      label: `${t('app.company.Projects.Running')}`,
+    },
+    {
+      value: 'completed',
+      label: `${t('app.company.Projects.Done')}`,
+    },
+    {
+      value: 'not-started',
+      label: `${t('app.company.Projects.Future-work')}`,
+    },
     // { value: 'extended', label: 'Extended' },
   ];
   // const statusOptions = [
@@ -199,19 +215,36 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     }
   }, [range, selectedOption]);
 
+  useEffect(() => {
+    if (
+      singleProjectLoading === true &&
+      props.singleProjectLoading === false &&
+      props.errorOnSingleProjectLoading === ''
+    ) {
+      setSingleProjectLoading(false);
+      props.history.push(
+        `/company/${props.company.uniqueName}/project/${singlePid}/overview`,
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    singleProjectLoading,
+    props.singleProjectLoading,
+    props.errorOnSingleProjectLoading,
+  ]);
+
   const projectArchive = async (pid: string) => {
     await props.archiveProject(pid);
     props.getAllProjects();
     props.getProjectArchive();
   };
 
-  const singleProjectOnClick = async (pid: string) => {
-    await props.getSingleProject(pid);
-    await props.getRoleForProject(pid);
-    await props.setCurrentProjectId(pid);
-    props.history.push(
-      `/company/${props.company.uniqueName}/project/${pid}/overview`,
-    );
+  const singleProjectOnClick = (pid: string) => {
+    props.getSingleProject(pid);
+    props.getRoleForProject(pid);
+    props.setCurrentProjectId(pid);
+    setSinglePid(pid);
+    setSingleProjectLoading(true);
   };
 
   const getProjectRole = async (pid: string) => {
@@ -453,7 +486,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                 <Menu className="pa2">
                                   <MenuItem
                                     className="pa1"
-                                    text={t('app.project.Project-preface.Update-Project')}
+                                    text={t(
+                                      'app.project.Project-preface.Update-Project',
+                                    )}
                                     // text="Update Project"
                                     onClick={(e: any) =>
                                       checkRoleForChangeName()
@@ -461,7 +496,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                   />
                                   <MenuItem
                                     className="pa1 red"
-                                    text={t('app.project.Project-preface.Archive-Project')}
+                                    text={t(
+                                      'app.project.Project-preface.Archive-Project',
+                                    )}
                                     // text="Archive Project"
                                     onClick={(e: any) =>
                                       checkRoleForArchiveProject(
@@ -525,18 +562,19 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                               className="f7 fw5 mr2"
                               style={{ marginTop: '1.5px' }}
                             >
-                              {t('app.project.Project-preface.Remaining-Tasks')}:{' '}
-                              {/* Remaining Tasks:{' '} */}
+                              {t(
+                                'app.project.Project-preface.Remaining-Tasks',
+                              )}
+                              : {/* Remaining Tasks:{' '} */}
                               {`${project.remainingTasks}/${project.totalTasks}`}
                             </span>
                           )}
 
-                          <p
-                            className="f7 fw5"
-                            style={{ marginTop: '5px' }}
-                          >
-                            {t('app.project.Project-preface.Deadline')}:{' '}
-                            {/* Deadline:{' '} */}
+                          <p className="f7 fw5">
+                            {t(
+                              'app.project.Project-preface.Deadline',
+                            )}
+                            : {/* Deadline:{' '} */}
                             {project.deadline
                               ? moment(project.deadline).format(
                                   'DD/MM/YYYY',
@@ -855,6 +893,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
 
 const mapStateToProps = (state: any) => ({
   projects: state.projectReducer.allProjects,
+  errorOnSingleProjectLoading:
+    state.projectReducer.errorOnSingleProjectLoading,
+  singleProjectLoading: state.projectReducer.singleProjectLoading,
   archiveProjectList: state.projectReducer.allArchive,
   company: state.companyReducer.currentCompany,
   companyRooms: state.roomReducer.companyRooms,

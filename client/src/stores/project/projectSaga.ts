@@ -66,6 +66,7 @@ import {
   getProjectArchive,
   updateProjectLoading,
 } from './Actions';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getCompanyId } from 'stores/company/Selector';
 import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
 import {
@@ -123,6 +124,7 @@ export function* createProjectAsync({ payload }: any) {
 
 export function* getAllProjectsAsync() {
   try {
+    yield put(showLoading());
     const headers = tokenConfig();
     const companyId = yield select(getCompanyId);
     if ((headers as any).headers.Authorization) {
@@ -146,6 +148,8 @@ export function* getAllProjectsAsync() {
 
       yield put(getAllProjectsFailure(error.message));
     }
+  } finally {
+    yield put(hideLoading());
   }
 }
 
@@ -310,6 +314,7 @@ export function* updateProjectAsync({
 export function* getSingleProjectAsync({ payload }: any) {
   try {
     if (payload) {
+      yield put(showLoading());
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = yield tigrowApi.get(
@@ -348,6 +353,8 @@ export function* getSingleProjectAsync({ payload }: any) {
 
       yield put(getSingleProjectFailure(error.message));
     }
+  } finally {
+    yield put(hideLoading());
   }
 }
 
@@ -827,10 +834,12 @@ export function* getProjectsIndividualAsync() {
     const headers = tokenConfig();
     const list = yield select(getUserCompanyList);
     if ((headers as any).headers.Authorization) {
+      // eslint-disable-next-line array-callback-return
       yield list.map((l: any) => {
         tigrowApi
           .get(`projects/project-list/${l._id}`, headers)
           .then((res) => {
+            // eslint-disable-next-line array-callback-return
             res.data.map((m: any) => {
               call(getProjectsIndividualSuccess, m.project);
             });

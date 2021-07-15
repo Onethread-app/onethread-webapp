@@ -8,6 +8,7 @@ interface IRoomListComponentProps {
   currentRoom?: IRoomReducer['currentRoom'];
   rooms?: IRoom[];
   search: string;
+  gettingRooms: boolean;
 }
 
 export const RoomListComponent = (props: IRoomListComponentProps) => {
@@ -24,7 +25,9 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
     <>
       <main className="mw6" id="roomList">
         <ul className="list pa0 mh2-ns">
-          {props.rooms && props.rooms.length ? (
+          {props.gettingRooms === false &&
+          props.rooms &&
+          props.rooms.length ? (
             props.search ? (
               props.rooms
                 .filter(

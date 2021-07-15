@@ -129,11 +129,13 @@ const InitialState = {
   loadingCompletedTasks: false,
   completedTaskserror: '',
   loading: false,
+  gettingCompanyDetails: false,
   logoLoading: false,
   changeCompanyNameLoading: false,
   departmentNameLoading: false,
   designationLoading: false,
   error: '',
+  errorOnGettingCompanyDetails: '',
   errorOnCreatingCompany: '',
   colleagueInviteSuccess: false,
   colleagueError: '',
@@ -158,7 +160,6 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CompanyActionTypes.DELETE_TEAM_MEMBER_START:
     case CompanyActionTypes.ADD_TEAM_MEMBER_START:
     case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_START:
-    case CompanyActionTypes.GET_COMPANY_DETAILS_START:
       return {
         ...state,
         loading: true,
@@ -174,12 +175,10 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CompanyActionTypes.CHANGE_COMPANY_OPTIONAL_ROLE_FAILURE:
     case CompanyActionTypes.CHANGE_MEMBER_ROLE_FAILURE:
     case CompanyActionTypes.CHANGE_COMPANY_LOGO_FAILURE:
-    case CompanyActionTypes.EDIT_DESIGNATION_FAILURE:
     case CompanyActionTypes.GET_ALL_COMPANY_PENDING_MEMBERS_FAILURE:
     case CompanyActionTypes.DELETE_TEAM_MEMBER_FAILURE:
     case CompanyActionTypes.ADD_TEAM_MEMBER_FAILURE:
     case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_FAILURE:
-    case CompanyActionTypes.GET_COMPANY_DETAILS_FAILURE:
       return {
         ...state,
         error: action.payload,
@@ -203,12 +202,24 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         errorOnCreatingCompany: action.payload,
         creatingCompany: false,
       };
+    case CompanyActionTypes.GET_COMPANY_DETAILS_START:
+      return {
+        ...state,
+        errorOnGettingCompanyDetails: '',
+        gettingCompanyDetails: true,
+      };
+
     case CompanyActionTypes.GET_COMPANY_DETAILS_SUCCESS:
       return {
         ...state,
         currentCompany: action.payload,
-        error: '',
-        loading: false,
+        gettingCompanyDetails: false,
+      };
+    case CompanyActionTypes.GET_COMPANY_DETAILS_FAILURE:
+      return {
+        ...state,
+        errorOnGettingCompanyDetails: action.payload,
+        gettingCompanyDetails: false,
       };
     case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_SUCCESS:
       return {

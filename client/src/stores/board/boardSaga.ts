@@ -42,6 +42,7 @@ import {
   updateBoardNameFailure,
   updateBoardNameSuccess,
 } from './Actions';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
 import {
@@ -92,6 +93,7 @@ export function* createBoard({ payload }: any) {
 
 export function* getAllBoardsAsync() {
   try {
+    yield put(showLoading());
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
     if (projectId) {
@@ -119,11 +121,14 @@ export function* getAllBoardsAsync() {
 
       yield put(getAllBoardsFailure(error.message));
     }
+  } finally {
+    yield put(hideLoading());
   }
 }
 
 export function* getSelectedBoard({ payload }: any) {
   try {
+    yield put(showLoading());
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
     if (projectId) {
@@ -151,6 +156,8 @@ export function* getSelectedBoard({ payload }: any) {
 
       yield put(getSelectedBoardFailure(error.message));
     }
+  } finally {
+    yield put(hideLoading());
   }
 }
 
@@ -381,6 +388,7 @@ export function* addTeamMembersIntoBoard({ members, boardId }: any) {
 
 export function* getSelectedTaskDetailsAsync({ payload }: any) {
   try {
+    yield put(showLoading());
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
     if (projectId) {
@@ -423,6 +431,8 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
 
       yield put(getSelectedTaskDetailsFailure(error.message));
     }
+  } finally {
+    yield put(hideLoading());
   }
 }
 
