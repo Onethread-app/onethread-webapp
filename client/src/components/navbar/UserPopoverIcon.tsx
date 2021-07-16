@@ -11,6 +11,7 @@ import {
   Drawer,
   Popover,
   Position,
+  Dialog,
 } from '@blueprintjs/core';
 
 import UserIcon from 'resources/images/profilePhoto.svg';
@@ -18,6 +19,7 @@ import UserIcon from 'resources/images/profilePhoto.svg';
 import { logoutAction } from 'stores/auth/Actions';
 import { User } from 'stores/user/Reducer';
 import { MobileListView } from 'layouts/company/MobileListView';
+import ReportForm from 'components/ReportForm';
 
 interface IUserPopoverIcon {
   user: User;
@@ -26,6 +28,9 @@ interface IUserPopoverIcon {
 
 const UserPopoverIcon = (props: IUserPopoverIcon) => {
   const [showDialog, setShowDialog] = React.useState(false);
+  const [showButtonReport, setShowButtonReport] = React.useState(
+    false,
+  );
   const history = useHistory();
   const { t } = useTranslation();
 
@@ -92,6 +97,15 @@ const UserPopoverIcon = (props: IUserPopoverIcon) => {
               </Button>
               <Button
                 className="bp3-minimal outline-0 bp3-popover-dismiss"
+                onClick={(e: any) => setShowButtonReport(true)}
+                icon="issue"
+                alignText="left"
+              >
+                {t('app.user.User-settings.Report-Issue')}
+                {/* Report issue */}
+              </Button>
+              <Button
+                className="bp3-minimal outline-0 bp3-popover-dismiss"
                 onClick={(e: any) => props.logoutAction(history)}
                 icon="log-in"
                 alignText="left"
@@ -132,6 +146,18 @@ const UserPopoverIcon = (props: IUserPopoverIcon) => {
             />
           </div>
         </Drawer>
+      )}
+      {showButtonReport && (
+        <Dialog
+          onClose={() => setShowButtonReport(!showButtonReport)}
+          isOpen={showButtonReport}
+          style={{ background: '#fff' }}
+          canOutsideClickClose={false}
+        >
+          <div>
+            <ReportForm setShowButtonReport={setShowButtonReport} />
+          </div>
+        </Dialog>
       )}
     </>
   );

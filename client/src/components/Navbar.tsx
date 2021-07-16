@@ -32,7 +32,7 @@ import { IRoom, IChat } from '../stores/room/Reducer';
 import logo from 'resources/images/onethread-text.png';
 import ChatListItem from 'components/chat/ChatListItem';
 import { useTranslation } from 'react-i18next';
-import ReportForm from 'layouts/company/ReportForm';
+import ReportForm from 'components/ReportForm';
 
 interface NavbarTopInternalProps {
   user: User;

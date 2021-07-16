@@ -8,6 +8,7 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import { Spinner } from '@blueprintjs/core';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -21,6 +22,7 @@ const ReportForm = (props: {
   const { t } = useTranslation();
   const classes = useStyles();
   const [showSnackbar, setShowSnackbar] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState({
     status: 0,
     message: '',
@@ -97,6 +99,7 @@ const ReportForm = (props: {
     if (values.issueType === '') {
       setRequired(`${t('app.user.User-settings.Required')}`);
     } else {
+      setLoading(true);
       const headers = tokenConfig();
       const response = await tigrowApi.post(
         'reports/',
@@ -111,7 +114,7 @@ const ReportForm = (props: {
         setShowSnackbar(true);
         setTimeout(() => {
           props.setShowButtonReport(false);
-        }, 2100);
+        }, 2000);
       }
     }
   };
@@ -229,7 +232,11 @@ const ReportForm = (props: {
             }}
             className="bp3-button w4 grow h2 pointer"
           >
-            {t('app.user.User-settings.Submit')}
+            {loading ? (
+              <Spinner size={15} />
+            ) : (
+              `${t('app.user.User-settings.Submit')}`
+            )}
             {/* Submit */}
           </button>
         </div>
