@@ -15,7 +15,7 @@ import user from './../../resources/images/profilePhoto.svg';
 import { NavLink } from 'react-router-dom';
 import { logoutAction } from 'stores/auth/Actions';
 import { useTranslation } from 'react-i18next';
-import ReportForm from './ReportForm';
+import ReportForm from '../../components/ReportForm';
 
 interface CompanyListViewProps {
   showDialog: boolean;
