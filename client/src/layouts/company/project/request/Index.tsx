@@ -46,83 +46,84 @@ const ProjectRequestComponent = (
   return (
     <div>
       {loading === false ? (
-        props.PendingProjects && props.PendingProjects.length > 0 ?
-        props.PendingProjects.map((pending) => (
-          <main className="">
-            <article className="dt w-100 pv4 mt2">
-              <div className="dtc w2 w3-ns v-mid">
-                <img
-                  style={{ height: '40px' }}
-                  src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/files-and-folders.svg"
-                  className="db h2 h3-ns"
-                />
-              </div>
-              <div className="dtc v-mid pl3 mw6">
-                <h1 className="f5 black mv0">
-                  {pending.company.name}
-                </h1>
-                <h1 className="f6 f5-ns fw6 lh-title black mt3 mb0">
-                  {pending.project.name}
-                </h1>
-                <h2 className="f6 fw4 mt0 mb0 black-60">
-                  {pending.project.description}
-                </h2>
-              </div>
-              <div className="dtc v-mid">
-                <form className="w-100 tr">
-                  <Button
-                    className="w4 grow h2 pointer bp3-minimal mr4"
-                    style={{
-                      border: '1px solid silver',
-                      outline: 'none',
-                    }}
-                    type="submit"
-                    loading={rejectLoading}
-                    onClick={async () => {
-                      setRejectLoading(true);
-                      await props.rejectPendingProject(
-                        pending.project._id,
-                      );
-                      setRejectLoading(false);
-                    }}
-                  >
-                    Reject
-                  </Button>
-                  <Button
-                    className="w4 grow h2 pointer"
-                    style={{
-                      background: '#3F61C5',
-                      outline: 'none',
-                      color: 'white',
-                      border: 'none',
-                    }}
-                    type="submit"
-                    loading={acceptLoading}
-                    onClick={async (e: any) => {
-                      e.preventDefault();
-                      setAcceptLoading(true);
-                      await props.acceptPendingProject(
-                        pending
-                      );
-                      setAcceptLoading(false);
-                    }}
-                  >
-                    Accept
-                  </Button>
-                </form>
-              </div>
-            </article>
-            <Divider />
-          </main>
-        ))
-        :
-        (
-          <h1 className="f5 fw4">{t('app.company.Projects.No-pending-projects')}</h1>
+        props.PendingProjects && props.PendingProjects.length > 0 ? (
+          props.PendingProjects.map((pending) => (
+            <main className="">
+              <article className="dt w-100 pv4 mt2">
+                <div className="dtc w2 w3-ns v-mid">
+                  <img
+                    style={{ height: '40px' }}
+                    src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/files-and-folders.svg"
+                    className="db h2 h3-ns"
+                  />
+                </div>
+                <div className="dtc v-mid pl3 mw6">
+                  <h1 className="f5 black mv0">
+                    {pending.company.name}
+                  </h1>
+                  <h1 className="f6 f5-ns fw6 lh-title black mt3 mb0">
+                    {pending.project.name}
+                  </h1>
+                  <h2 className="f6 fw4 mt0 mb0 black-60">
+                    {pending.project.description}
+                  </h2>
+                </div>
+                <div className="dtc v-mid">
+                  <form className="w-100 tr">
+                    <Button
+                      className="w4 grow h2 pointer bp3-minimal mr4"
+                      style={{
+                        border: '1px solid silver',
+                        outline: 'none',
+                      }}
+                      type="submit"
+                      loading={rejectLoading}
+                      onClick={async () => {
+                        setRejectLoading(true);
+                        await props.rejectPendingProject(
+                          pending.project._id,
+                        );
+                        setRejectLoading(false);
+                      }}
+                    >
+                      Reject
+                    </Button>
+                    <Button
+                      className="w4 grow h2 pointer"
+                      style={{
+                        background: '#3F61C5',
+                        outline: 'none',
+                        color: 'white',
+                        border: 'none',
+                      }}
+                      type="submit"
+                      loading={acceptLoading}
+                      onClick={async (e: any) => {
+                        e.preventDefault();
+                        setAcceptLoading(true);
+                        await props.acceptPendingProject(pending);
+                        setAcceptLoading(false);
+                      }}
+                    >
+                      Accept
+                    </Button>
+                  </form>
+                </div>
+              </article>
+              <Divider />
+            </main>
+          ))
+        ) : (
+          <div className="flex flex-column relative">
+            <h1 className="f5 fw4 tc mt4 mb5">
+              {t('app.company.Projects.No-pending-projects')}
+            </h1>
+          </div>
           // <h1 className="f5 fw4">No pending Projects</h1>
         )
       ) : (
-          <Loading />
-        )}
+        <Loading />
+      )}
     </div>
   );
 };

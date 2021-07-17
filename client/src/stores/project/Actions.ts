@@ -72,6 +72,21 @@ export const unarchiveProjectFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
+export const deleteProject = (pid: string) => ({
+  type: ProjectActionTypes.DELETE_PROJECT_START,
+  payload: pid,
+});
+
+export const deleteProjectSuccess = (response: any) => ({
+  type: ProjectActionTypes.DELETE_PROJECT_SUCCESS,
+  payload: response,
+});
+
+export const deleteProjectFailure = (errorMessage: any) => ({
+  type: ProjectActionTypes.DELETE_PROJECT_FAILURE,
+  payload: errorMessage,
+});
+
 export const getProjectArchive = () => ({
   type: ProjectActionTypes.GET_ARCHIVED_PROJECTS_START,
 });

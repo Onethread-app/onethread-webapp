@@ -9,6 +9,7 @@ import { PendingProjectRequest } from './request/Index';
 import { Tab, Tabs } from '@blueprintjs/core';
 import Navbar from 'components/navbar/Navbar';
 import { isMobileOnly } from 'react-device-detect';
+import ArchivedProjects from './ArchivedProjects';
 
 const _ProjectPage = (props: any) => {
   React.useEffect(() => {
@@ -48,6 +49,14 @@ const _ProjectPage = (props: any) => {
             panel={<CompletedProjects />}
             className="outline-0 mt4-ns mt2"
           />
+          {props.companyRole !== 'employee' && (
+            <Tab
+              id="ArchivedProjects"
+              title={t('app.company.Projects.Archived-projects')}
+              panel={<ArchivedProjects />}
+              className="outline-0 mt4-ns mt2"
+            />
+          )}
           {props.companyRole !== 'employee' && (
             <Tab
               id="PendingProject"

@@ -10,10 +10,10 @@ import {
 import { CircularProgress, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import { RightSidebar } from 'components/RightSidebar';
+import NoProjectsFound from 'NoProjectsFound';
 import { find, orderBy } from 'lodash';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { getAllAssociates } from 'stores/associate/Actions';
@@ -147,15 +147,6 @@ const CompletedProjectsComponent = (
       setCurrentProjectPage(currentProjectPage - 1);
     }
   };
-
-  const { t } = useTranslation();
-
-  const noProjectsFound = (
-    <div className={'tc mt4 mb5'}>
-      <h1 style={{ color: '#34495E' }}>{t('app.company.Projects.No-completed-projects')}</h1>
-      {/* <h1 style={{ color: '#34495E' }}>No completed projects</h1> */}
-    </div>
-  );
 
   return (
     <>
@@ -300,8 +291,7 @@ const CompletedProjectsComponent = (
                             className="f7 fw5"
                             style={{ marginTop: '10px' }}
                           >
-                            Deadline:{' '}
-                            {/* Deadline:{' '} */}
+                            Deadline: {/* Deadline:{' '} */}
                             {project.deadline
                               ? moment(project.deadline).format(
                                   'DD/MM/YYYY',
@@ -335,7 +325,7 @@ const CompletedProjectsComponent = (
                   </div>
                 ))
               ) : (
-                noProjectsFound
+                <NoProjectsFound />
               )}
             </div>
             {projectsLoaded === true &&
@@ -402,6 +392,7 @@ const CompletedProjectsComponent = (
                   boxShadow: '0px 6px 6px #00000029',
                   borderRadius: '50%',
                 }}
+                alt=""
               />
             </div>
           )}

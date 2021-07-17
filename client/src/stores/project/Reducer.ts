@@ -96,11 +96,13 @@ const initialState = {
   addTeamMemberLoading: false,
   unarchivingProject: false,
   updatingProject: false,
+  deletingProject: false,
   error: '',
   errorOnGettingAllProjects: '',
   errorOnUnarchive: '',
   errorOnUpdatingProject: '',
   errorOnSingleProjectLoading: '',
+  errorOnDeletingProject: '',
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -195,6 +197,32 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         unarchivingProject: false,
         errorOnUnarchive: action.payload,
+      };
+    case ProjectActionTypes.DELETE_PROJECT_START:
+      return {
+        ...state,
+        deletingProject: true,
+        errorOnDeletingProject: '',
+      };
+    case ProjectActionTypes.DELETE_PROJECT_SUCCESS:
+      // console.log(
+      //   action.payload,
+      //   state.allArchive.filter(
+      //     (arch: any) => arch._id !== String(action.paylaod),
+      //   ),
+      // );
+      return {
+        ...state,
+        allArchive: state.allArchive.filter(
+          (arch: any) => arch._id !== String(action.paylaod),
+        ),
+        deletingProject: false,
+      };
+    case ProjectActionTypes.DELETE_PROJECT_FAILURE:
+      return {
+        ...state,
+        errorOnDeletingProject: action.payload,
+        deletingProject: false,
       };
     case ProjectActionTypes.ADD_PROJECT_TEAMS_START:
       return {
