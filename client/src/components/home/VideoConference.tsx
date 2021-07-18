@@ -1,10 +1,8 @@
 import React from 'react';
+
 import { isMobileOnly } from 'react-device-detect';
-
 import { Dialog } from '@blueprintjs/core';
-
 import LinkGeneratorPopup from 'components/conference/LinkGeneratorPopup';
-
 import Conference from 'resources/svg/Conference.svg';
 
 const VideoConference = () => {

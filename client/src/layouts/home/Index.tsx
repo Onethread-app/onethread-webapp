@@ -7,6 +7,7 @@ import Profile from 'components/home/Profile';
 import Weather from 'components/home/Weather';
 import ProfileProgress from 'components/home/ProfileProgress';
 import DueTasks from 'components/home/DueTasks';
+import ProjectLists from 'components/home/projectLists';
 
 import './Index.styles.scss';
 
@@ -29,6 +30,7 @@ const index = () => {
   ) : (
     <div className="home-container">
       <div>
+        <ProjectLists />
         <VideoConference />
         <DueTasks />
       </div>

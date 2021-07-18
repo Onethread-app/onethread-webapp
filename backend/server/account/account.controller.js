@@ -113,12 +113,12 @@ const getTodaysTask = async (req) => {
 };
 
 // get upcoming tasks for user
-const getUpcomingTasks = async (req) => {
+const getUpcomingTasks = async (req, From, nextNdays) => {
   try {
     let tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate());
+    tomorrow.setDate(tomorrow.getDate() + From);
     let oneWeek = new Date();
-    oneWeek.setDate(oneWeek.getDate() + 7);
+    oneWeek.setDate(oneWeek.getDate() + nextNdays);
     const upcomingTask = await Task.find({
       dueDate: { $gte: tomorrow, $lte: oneWeek },
     }).sort({ createdAt: -1 });
@@ -907,8 +907,9 @@ const inviteSignup = async (req, res, next) => {
 const userTaskList = async (req, res, next) => {
   try {
     const todaysTasks = await getTodaysTask(req);
-    const upcomingTasks = await getUpcomingTasks(req);
-    const userTask = { todaysTasks, upcomingTasks };
+    const tomorrowTasks = await getUpcomingTasks(req, 1, 1);
+    const upcomingTasks = await getUpcomingTasks(req, 1, 15);
+    const userTask = { todaysTasks, tomorrowTasks, upcomingTasks };
     return sendJSONresponse(res, 200, userTask);
   } catch (error) {
     logger.error(`Account: ${error}`);
