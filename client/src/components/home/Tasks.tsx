@@ -72,6 +72,7 @@ const Tasks = () => {
   };
 
   const mdfy = (task) => {
+    console.log({ task });
     return task.map((t, i) => ({
       no: i + 1,
       taskName: t.taskId.name,
