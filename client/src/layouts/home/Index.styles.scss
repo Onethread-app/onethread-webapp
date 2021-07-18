@@ -160,6 +160,7 @@
     flex-direction: column;
     gap: 15px;
     padding: 30px;
+    padding-bottom: 0;
 
     &-filter {
       h5 {
@@ -316,4 +317,16 @@
       }
     }
   }
+}
+
+@mixin boxModel() {
+  flex-grow: 1.4;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-lists {
+  @include boxModel();
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
 import moment from 'moment';
@@ -12,6 +12,7 @@ interface ITaskItem {
 }
 const TaskItem = (props: ITaskItem) => {
   const [loading, setLoading] = React.useState(true);
+  const [assignee, setAssignee] = useState<any | null>(null);
   const [task, setTask] = React.useState({
     _id: '',
     name: '',
@@ -34,6 +35,15 @@ const TaskItem = (props: ITaskItem) => {
         status,
         _id,
       } = props.task.taskId;
+
+      const { assignedPerson, account } = props.task;
+      const assignedPersonId = assignedPerson._id.toString();
+      const accountId = account._id.toString();
+      if (assignedPersonId === accountId) setAssignee(null);
+      else {
+        const name = `${assignedPerson.firstName} ${assignedPerson.lastName}`;
+        setAssignee(name);
+      }
       setTask({
         _id,
         name,
@@ -90,6 +100,11 @@ const TaskItem = (props: ITaskItem) => {
         <h3>{task.name}</h3>
         <p>{task.projectName}</p>
       </div>
+      {assignee && (
+        <div>
+          <p>{assignee}</p>
+        </div>
+      )}
       <div
         className={`${
           isMobileOnly ? 'dn' : props.mini ? 'dn' : 'deadline w-15 tc'

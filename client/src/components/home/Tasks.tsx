@@ -1,27 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { isMobileOnly } from 'react-device-detect';
-
-// import AddIcon from '@material-ui/icons/Add';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Pagination from '@material-ui/lab/Pagination';
-
-import TaskItem from './TaskItem';
-
 import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
 import { sortTasks } from 'helpers/utils';
+import React, { useEffect, useState } from 'react';
+import { tokenConfig } from 'stores/UtilsActions';
+import Table from './TaskTable';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+type Order = 'asc' | 'desc';
+interface Data {
+  no: string;
+  taskName: string;
+  assignee: string;
+  deadline: string;
+  status: string;
+}
 
 const Tasks = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState(1);
   const [filterOption, setFilterOption] = useState(1);
   const [tasks, setTasks] = useState<any>([]);
-  const [tasksToShow, setTasksToShow] = useState<any>([]);
   const [todaysTasks, setTodaysTasks] = useState<any>([]);
   const [upcomingTasks, setUpcomingTasks] = useState<any>([]);
-  const [totalPage, setTotalPage] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+
+  const [order, setOrder] = React.useState<Order>('asc');
+  const [orderBy, setOrderBy] = React.useState<keyof Data>(
+    'deadline',
+  );
+  const [selected, setSelected] = React.useState<string[]>([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   useEffect(() => {
     const getTasks = async () => {
@@ -39,19 +46,55 @@ const Tasks = () => {
     getTasks();
   }, []);
 
+  const ISOformat = (time) => {
+    if (!time) return null;
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const [day, month, year] = new Date(time)
+      .toISOString()
+      .split('T')[0]
+      .split('-')
+      .reverse()
+      .map((d) => parseInt(d));
+    return `${monthNames[month - 1]} ${day}, ${year}`;
+  };
+
+  const mdfy = (task) => {
+    return task.map((t, i) => ({
+      no: i + 1,
+      taskName: t.taskId.name,
+      assignee:
+        t.assignedPerson.firstName + ' ' + t.assignedPerson.lastName,
+      deadline: ISOformat(t.taskId.dueDate),
+      status: t.taskId.status,
+    }));
+  };
+
   useEffect(() => {
     if (loading === false) {
       if (selectedTab === 1 && filterOption === 1) {
-        setTasks(sortTasks(todaysTasks.assignToUser));
+        setTasks(mdfy(sortTasks(todaysTasks.assignToUser)));
       }
       if (selectedTab === 1 && filterOption === 2) {
-        setTasks(sortTasks(todaysTasks.assignByUser));
+        setTasks(mdfy(sortTasks(todaysTasks.assignByUser)));
       }
       if (selectedTab === 2 && filterOption === 1) {
-        setTasks(sortTasks(upcomingTasks.assignToUser));
+        setTasks(mdfy(sortTasks(upcomingTasks.assignToUser)));
       }
       if (selectedTab === 2 && filterOption === 2) {
-        setTasks(sortTasks(upcomingTasks.assignByUser));
+        setTasks(mdfy(sortTasks(upcomingTasks.assignByUser)));
       }
     }
   }, [
@@ -61,22 +104,6 @@ const Tasks = () => {
     selectedTab,
     loading,
   ]);
-
-  useEffect(() => {
-    if (tasks.length > 0) {
-      setTotalPage(Math.ceil(tasks.length / itemsPerPage));
-    }
-  }, [itemsPerPage, tasks]);
-
-  useEffect(() => {
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    setTasksToShow(tasks.slice(indexOfFirstItem, indexOfLastItem));
-  }, [currentPage, itemsPerPage, tasks]);
-
-  const handleChange = (event, value) => {
-    setCurrentPage(value);
-  };
 
   return (
     <div className="tasks">
@@ -123,7 +150,10 @@ const Tasks = () => {
               </span>
             </div>
           </div>
-          <div className="flex items-center">
+          <div
+            className="flex items-center"
+            style={{ paddingTop: '.4rem' }}
+          >
             <p
               className={`${filterOption === 1 ? 'active' : ''}`}
               onClick={() => setFilterOption(1)}
@@ -153,54 +183,33 @@ const Tasks = () => {
             </p>
           </div>
         </div>
-        {/* <div>
-          <AddIcon className="pointer" />
-        </div> */}
       </div>
       <div className="tasks-list w-100">
-        <div className="header flex w-100">
-          <div className={'w-10'}>No.</div>
-          <div className="w-60">Task Name</div>
-          <div className={`${isMobileOnly ? 'dn' : 'w-15 tc'}`}>
-            Deadline
-          </div>
-          <div className={`${isMobileOnly ? 'w-30' : 'w-15'} tc`}>
-            Status
-          </div>
-        </div>
-        <div style={{ height: '265px' }}>
-          {loading ? (
-            <div className="flex justify-center mt2 w-100">
-              <CircularProgress
-                style={{ color: 'rgba(0, 0, 0, 0.1)' }}
-                size={26}
-              />
-            </div>
-          ) : tasksToShow.length > 0 ? (
-            tasksToShow.map(
-              (task, index) =>
-                task && (
-                  <TaskItem
-                    task={task}
-                    index={tasks.indexOf(task)}
-                    key={index}
-                  />
-                ),
-            )
-          ) : (
-            <div className="w-100 tc gray mt2">
-              Create some task in board!
-            </div>
-          )}
-        </div>
-        {tasks.length > itemsPerPage && (
+        {loading ? (
           <div className="flex justify-center mt2 w-100">
-            <Pagination
-              count={totalPage}
-              onChange={handleChange}
-              siblingCount={1}
-              size={isMobileOnly ? 'small' : 'medium'}
+            <CircularProgress
+              style={{ color: 'rgb(48, 48, 83)' }}
+              size={26}
             />
+          </div>
+        ) : tasks.length > 0 ? (
+          <Table
+            order={order}
+            setOrder={setOrder}
+            orderBy={orderBy}
+            setOrderBy={setOrderBy}
+            selected={selected}
+            setSelected={setSelected}
+            page={page}
+            setPage={setPage}
+            rowsPerPage={rowsPerPage}
+            setRowsPerPage={setRowsPerPage}
+            tasks={tasks}
+            assignedByUser={filterOption === 2 ? true : false}
+          />
+        ) : (
+          <div className="w-100 tc gray mt2">
+            Create some task in board!
           </div>
         )}
       </div>
