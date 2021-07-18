@@ -115,12 +115,14 @@ const BoardCard = withRouter(
                     <Menu className="pa2">
                       <MenuItem
                         className="pa1 red"
-                        text="Update Board"
+                        text={t('app.project.Project-boards.Update-Board')}
+                        // text="Update Board"
                         onClick={() => props.handleUpdate(board)}
                       />
                       <MenuItem
                         className="pa1 red"
-                        text="Delete Board"
+                        text={t('app.project.Project-boards.Delete-Board')}
+                        // text="Delete Board"
                         onClick={() =>
                           props.handleDialogChange(board._id)
                         }
@@ -579,9 +581,14 @@ const TaskPageComponent = (
           className="w-100 ba bw1 br2 pa3"
           style={{ borderColor: '#F55B7F' }}
         >
-          <h4 style={{ marginBottom: 13 }}>Delete Board</h4>
+          <h4 style={{ marginBottom: 13 }}>
+            {/* Delete Board */}
+            {t('app.project.Project-boards.Delete-Board')}
+          </h4>
+          {/* <h4 style={{ marginBottom: 13 }}>Delete Board</h4> */}
           <p style={{ marginBottom: 10 }}>
-            Are you sure you want to delete this board?
+            {t('app.project.Project-boards.Delete-text')}
+            {/* Are you sure you want to delete this board? */}
           </p>
           <ButtonGroup
             minimal={true}
@@ -592,14 +599,16 @@ const TaskPageComponent = (
               intent="danger"
               onClick={() => handleDeleteDialog(dialogBoardId)}
             >
-              Yes. Delete
+              {t('app.project.Project-boards.Yes-delete')}
+              {/* Yes. Delete */}
             </Button>
             <Button
               icon="undo"
               onClick={() => handleDialogChange()}
               intent="primary"
             >
-              No. Keep it
+              {t('app.project.Project-boards.Keep')}
+              {/* No. Keep it */}
             </Button>
           </ButtonGroup>
         </div>

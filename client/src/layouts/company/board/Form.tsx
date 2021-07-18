@@ -9,6 +9,7 @@ import {
 import { isEqual } from 'lodash';
 import React, { useState } from 'react';
 import { Field, Form } from 'react-final-form';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { clearCurrentBoard, createBoard } from 'stores/board/Actions';
@@ -42,10 +43,13 @@ const FormComponent = (props: {
 
   const [labelColor, setLabelColor] = useState(null as any);
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="pl3" style={{ marginTop: '6rem' }}>
-        <h3>Create Board</h3>
+        <h3>{t('app.project.Project-boards.Create-Board')}</h3>
+        {/* <h3>Create Board</h3> */}
       </div>
       <Form
         onSubmit={onSubmit}
@@ -80,7 +84,8 @@ const FormComponent = (props: {
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      label="Board Name (Required)"
+                      label={t('app.project.Project-boards.Board-Name')}
+                      // label="Board Name (Required)"
                       autoFocus={true}
                     />
                   </div>
@@ -94,7 +99,8 @@ const FormComponent = (props: {
                       className="fw5 mb3"
                       style={{ fontSize: '.8rem' }}
                     >
-                      Label
+                      {t('app.project.Project-boards.Label')}
+                      {/* Label */}
                     </p>
                     <div className="flex">
                       {Color.map((color) => (
@@ -140,7 +146,8 @@ const FormComponent = (props: {
                   type="submit"
                   disabled={submitting || pristine}
                 >
-                  Create
+                  {t('app.project.Project-boards.Create')}
+                  {/* Create */}
                 </Button>
                 <Button
                   className="w4 grow h2 pointer"
@@ -156,7 +163,8 @@ const FormComponent = (props: {
                     }
                   }}
                 >
-                  cancel
+                  {t('app.project.Project-boards.cancel')}
+                  {/* cancel */}
                 </Button>
               </div>
             </div>
