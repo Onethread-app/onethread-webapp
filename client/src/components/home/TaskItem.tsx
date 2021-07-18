@@ -35,7 +35,7 @@ const TaskItem = (props: ITaskItem) => {
         status,
         _id,
       } = props.task.taskId;
-      console.log(props.task);
+
       const { assignedPerson, account } = props.task;
       const assignedPersonId = assignedPerson._id.toString();
       const accountId = account._id.toString();
@@ -63,7 +63,7 @@ const TaskItem = (props: ITaskItem) => {
       `/company/${task.companyName}/project/${task.projectId}/board/${task.boardId}/task/${task._id}`,
     );
   };
-  console.log({ assignee });
+
   return loading ? (
     <div className="task-item w-100">
       <LinearProgress />
