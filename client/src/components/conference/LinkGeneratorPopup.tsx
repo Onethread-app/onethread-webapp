@@ -152,9 +152,10 @@ const LinkGeneratorPopup = () => {
         </LinkBox>
       </div>
       {errorMessage && <div className="mt2">{errorMessage}</div>}
+      
       {conferenceLink && (
-        <div className="mt2 w-60 tc">
-          <a href={conferenceLink} target="_blank" rel="noreferrer">
+        <div className="mt2 w-55">Link:
+           <a href={conferenceLink} target="_blank" rel="noreferrer">
             {conferenceLink}
           </a>
         </div>

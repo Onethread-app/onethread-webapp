@@ -17,10 +17,10 @@ const index = () => {
         <Tasks />
       </div>
       <div>
-        <ProfileProgress />
+        <DueTasks />
       </div>
       <div>
-        <DueTasks />
+        <ProfileProgress />
       </div>
       <div>
         <VideoConference />

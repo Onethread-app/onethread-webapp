@@ -76,7 +76,7 @@
       p {
         color: #a4a4a4;
         font-weight: 500;
-        font-size: 8.27242px;
+        font-size: 10px;
         line-height: 12px;
         cursor: pointer;
       }
@@ -84,7 +84,7 @@
 
     h3 {
       font-weight: 500;
-      font-size: 14.329px;
+      font-size: 20px;
       line-height: 21px;
       color: #121212;
     }
@@ -92,7 +92,7 @@
     .active {
       transition: all 0.5s;
       color: #000;
-      text-decoration-line: underline;
+      text-decoration-line: none;
     }
 
     .divider {
@@ -164,7 +164,7 @@
     &-filter {
       h5 {
         font-weight: 500;
-        font-size: 14.5px;
+        font-size: 20px;
         line-height: 21px;
         color: #a4a4a4;
         cursor: pointer;
@@ -173,7 +173,7 @@
       p {
         color: #a4a4a4;
         font-weight: 500;
-        font-size: 8.27242px;
+        font-size: 15px;
         line-height: 12px;
         cursor: pointer;
       }
@@ -193,7 +193,7 @@
       .active {
         transition: all 0.5s;
         color: #000;
-        text-decoration-line: underline;
+        text-decoration-line: none;
       }
     }
 
