@@ -16,7 +16,7 @@ const TaskSchema = new mongoose.Schema(
     status: {
       type: String,
       trim: true,
-      required: true
+      required: true,
     },
     priority: {
       type: Number,
@@ -36,10 +36,12 @@ const TaskSchema = new mongoose.Schema(
     dueDate: {
       type: Date,
     },
-    file: [{
-      type: [Schema.Types.ObjectId],
-      ref: 'File',
-    }],
+    file: [
+      {
+        type: [Schema.Types.ObjectId],
+        ref: 'File',
+      },
+    ],
     columnId: {
       type: Schema.Types.ObjectId,
       ref: 'BoardColumn',
@@ -49,6 +51,10 @@ const TaskSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: 'Board',
       required: true,
+    },
+    removed: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true },

@@ -23,16 +23,9 @@ const getTasksNumbers = async (boardId) => {
   return { taskNumbers, doneTasks };
 };
 
-const createBoard = async (
-  name,
-  project,
-  department,
-  color,
-  account,
-) => {
+const createBoard = async (name, project, color, account) => {
   const board = new Board({
     name,
-    department: department && department,
     color: color ? color : 0,
     account,
     project,
@@ -161,13 +154,57 @@ const create = async (req, res, next) => {
     const createdBoard = await createBoard(
       req.body.name,
       req.query.pid,
-      req.body.department,
       req.body.color,
       req.user._id,
     );
     return res.status(201).json(createdBoard);
   } catch (error) {
     logger.error(`Board create: ${error}`);
+    next(error);
+  }
+};
+
+const deleteBoard = async (req, res, next) => {
+  try {
+    const { boardId } = req.body;
+    const query = { boardId, removed: false };
+
+    let tasks = await Task.find(query);
+    for (let index = 0; index < tasks.length; index++) {
+      tasks[index].removed = true;
+      await tasks[index].save();
+    }
+
+    const boardCols = await BoardColumn.find(query);
+    for (let index = 0; index < boardCols.length; index++) {
+      boardCols[index].removed = true;
+      await boardCols[index].save();
+    }
+
+    const board = await Board.findByIdAndUpdate(
+      { _id: boardId },
+      { $set: { removed: true } },
+      { safe: true, upsert: true, new: true },
+    );
+    return sendJSONresponse(res, 200, board);
+  } catch (error) {
+    logger.error(`Board create: ${error}`);
+    next(error);
+  }
+};
+
+const updateBoard = async (req, res, next) => {
+  try {
+    const { name, color, boardId } = req.body;
+    const board = await Board.findByIdAndUpdate(
+      { _id: boardId },
+      { $set: { name, color } },
+      { safe: true, upsert: true, new: true },
+    );
+
+    return sendJSONresponse(res, 200, board);
+  } catch (error) {
+    logger.error(`Board update: ${error}`);
     next(error);
   }
 };
@@ -236,6 +273,7 @@ const list = async (req, res, next) => {
 
   await Board.find({
     project: req.query.pid,
+    removed: false,
   })
     .select('_id name color department members')
     .sort({ createdAt: -1 })
@@ -314,4 +352,6 @@ module.exports = {
   createBoard,
   addToBoard,
   updateName,
+  deleteBoard,
+  updateBoard,
 };

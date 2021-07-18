@@ -1,33 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { TaskBoard } from 'stores/board/Reducer';
-import { ICompany } from 'stores/company/Reducer';
-import { Color } from 'stores/UtilsActions';
-import { Card, Elevation, HTMLSelect } from '@blueprintjs/core';
-import { Loading } from 'components/Loading';
-import { connect } from 'react-redux';
 import {
+  Button,
+  ButtonGroup,
+  Card,
+  Dialog,
+  Elevation,
+  HTMLSelect,
+  Menu,
+  MenuItem,
+  Popover,
+} from '@blueprintjs/core';
+import Axios from 'axios';
+import { Loading } from 'components/Loading';
+import { NavbarCompany } from 'components/NavbarCompany';
+import { RightSidebar } from 'components/RightSidebar';
+import { server } from 'config';
+import { find } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { isMobileOnly, MobileView } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import {
+  clearCurrentBoard,
   getAllBoards,
   getSelectedBoard,
-  clearCurrentBoard,
 } from 'stores/board/Actions';
+import { TaskBoard } from 'stores/board/Reducer';
 import { getAllDepartments } from 'stores/company/Actions';
-import { FormBoard } from './Form';
-import { RightSidebar } from 'components/RightSidebar';
-import { find } from 'lodash';
-import { projectRules } from '../project/settings/projectrules';
-
-import addIcon from '../../../resources/images/addIcon.png';
-import { MobileView, isMobileOnly } from 'react-device-detect';
-import { NavLink } from 'react-router-dom';
+import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
-import Navbar from 'components/navbar/Navbar';
-import { useTranslation } from 'react-i18next';
+import { Color, tokenConfig } from 'stores/UtilsActions';
+import addIcon from '../../../resources/images/addIcon.png';
+import { projectRules } from '../project/settings/projectrules';
+import { FormBoard } from './Form';
+import { UpdateFormBoard } from './UpdateForm';
 
 interface IBoardCardComponent {
   boardList: TaskBoard[];
   company: ICompany;
   getSelectedBoard: (boardId: any) => void;
+  handleDialogChange: (boardId: any) => void;
+  handleUpdate: (boardId) => void;
   currentBoard: TaskBoard;
   errorOnFetchingBoard: string;
   fetchingBoard: boolean;
@@ -41,6 +55,8 @@ interface IBoardListViewInternalProps extends IBoardCardComponent {
   getAllBoards: () => void;
   getAllDepartments: () => void;
   clearCurrentBoard: () => void;
+  handleDialogChange: (boardId: any) => void;
+  handleUpdate: (boardId) => void;
   role: string;
   optionalRole: any;
   user: User;
@@ -53,7 +69,6 @@ interface IBoardListViewInternalProps extends IBoardCardComponent {
 const BoardCard = withRouter(
   (props: IBoardCardComponent & RouteComponentProps) => {
     const { t } = useTranslation();
-
     return (
       <>
         {props.boardList.map((board) => (
@@ -62,11 +77,6 @@ const BoardCard = withRouter(
               className="h-100"
               interactive={true}
               elevation={Elevation.TWO}
-              onClick={async (e) => {
-                e.preventDefault();
-                await props.getSelectedBoard(board._id);
-                props.setSingleBoardLoading(true);
-              }}
               style={{ paddingLeft: '0px', paddingBottom: '0px' }}
             >
               <div
@@ -84,16 +94,53 @@ const BoardCard = withRouter(
                 }}
               >
                 <h3
-                  className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
+                  className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
                   style={{
                     height: '2.5rem',
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical',
                   }}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await props.getSelectedBoard(board._id);
+                    props.setSingleBoardLoading(true);
+                  }}
                 >
                   {board.name}
                 </h3>
+                <Popover
+                  className="w-10"
+                  content={
+                    <Menu className="pa2">
+                      <MenuItem
+                        className="pa1 red"
+                        text="Update Board"
+                        onClick={() => props.handleUpdate(board)}
+                      />
+                      <MenuItem
+                        className="pa1 red"
+                        text="Delete Board"
+                        onClick={() =>
+                          props.handleDialogChange(board._id)
+                        }
+                      />
+                    </Menu>
+                  }
+                  target={
+                    <Button
+                      style={{
+                        transform: 'rotate(90deg)',
+                        OTransform: 'rotate(90deg)',
+                        msTransform: 'rotate(90deg)',
+                        WebkitTransform: 'rotate(90deg)',
+                      }}
+                      icon="more"
+                      minimal={true}
+                      className="outline-0"
+                    />
+                  }
+                />
               </div>
               <div
                 className="flex pt3 pr3"
@@ -141,8 +188,56 @@ const TaskPageComponent = (
   const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(
     false,
   );
+  const [updTaskBoardDialog, setUpdTaskBoardDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [singleBoardLoading, setSingleBoardLoading] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
+  const [dialogBoardId, setDialogBoardId] = useState(null);
+  const [selectedBoard, setSelectedBoard] = useState(null);
+
+  const permissions = projectRules(props.role, props.optionalRole);
+
+  const handleUpdate = (board) => {
+    setSelectedBoard(board);
+    setUpdTaskBoardDialog(!updTaskBoardDialog);
+  };
+  const handleDialogChange = (bid = null) => {
+    if (showDialog) setDialogBoardId(null);
+    else setDialogBoardId(bid);
+
+    setShowDialog((prev) => !prev);
+  };
+
+  const getAllBoardsAndDepts = async () => {
+    Promise.all([
+      props.getAllBoards(),
+      props.getAllDepartments(),
+    ]).then(() => {
+      if (
+        props.fetchingBoards === false &&
+        props.departmentNameLoading === false
+      ) {
+        setLoading(false);
+      }
+    });
+  };
+
+  const handleDeleteDialog = async (bid) => {
+    setDialogBoardId(null);
+    setShowDialog((prev) => !prev);
+    if (permissions.grantAll) {
+      const headers = tokenConfig();
+      try {
+        await Axios.post(
+          `${server}/boards/delete`,
+          { boardId: bid },
+          headers,
+        );
+        props.clearCurrentBoard();
+        getAllBoardsAndDepts();
+      } catch (e) {}
+    }
+  };
 
   useEffect(() => {
     props.clearCurrentBoard();
@@ -150,11 +245,7 @@ const TaskPageComponent = (
   }, []);
 
   useEffect(() => {
-    if (props.project._id) {
-      props.getAllBoards();
-      props.getAllDepartments();
-    }
-
+    getAllBoardsAndDepts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.project._id]);
 
@@ -215,8 +306,6 @@ const TaskPageComponent = (
     (board) => board.department === department,
   );
 
-  const permissions = projectRules(props.role, props.optionalRole);
-
   const noBoardsFound = (
     <div
       onClick={() => setShowTaskBoardDialog(true)}
@@ -246,7 +335,10 @@ const TaskPageComponent = (
   return (
     <>
       <MobileView>
-        {isMobileOnly && <Navbar type="company" />}
+        <NavbarCompany
+          title={t('app.project.Project-boards.Board')}
+        />
+        {/* <NavbarCompany title="Board" /> */}
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -394,6 +486,8 @@ const TaskPageComponent = (
                         props.singleProjectLoading
                       }
                       setSingleBoardLoading={setSingleBoardLoading}
+                      handleDialogChange={handleDialogChange}
+                      handleUpdate={handleUpdate}
                     />
                   ) : (
                     <BoardCard
@@ -409,6 +503,8 @@ const TaskPageComponent = (
                         props.singleProjectLoading
                       }
                       setSingleBoardLoading={setSingleBoardLoading}
+                      handleDialogChange={handleDialogChange}
+                      handleUpdate={handleUpdate}
                     />
                   )}
                 </div>
@@ -458,9 +554,56 @@ const TaskPageComponent = (
                 />
               </RightSidebar>
             )}
+
+            {updTaskBoardDialog && (
+              <RightSidebar
+                onClose={() =>
+                  setShowTaskBoardDialog(!updTaskBoardDialog)
+                }
+              >
+                <UpdateFormBoard
+                  setShowTaskBoardDialog={setUpdTaskBoardDialog}
+                  selectedBoard={selectedBoard}
+                />
+              </RightSidebar>
+            )}
           </div>
         </div>
       </div>
+      <Dialog
+        isOpen={showDialog}
+        style={{ paddingBottom: '0' }}
+        canOutsideClickClose={true}
+      >
+        <div
+          className="w-100 ba bw1 br2 pa3"
+          style={{ borderColor: '#F55B7F' }}
+        >
+          <h4 style={{ marginBottom: 13 }}>Delete Board</h4>
+          <p style={{ marginBottom: 10 }}>
+            Are you sure you want to delete this board?
+          </p>
+          <ButtonGroup
+            minimal={true}
+            style={{ display: 'flex', flexDirection: 'row-reverse' }}
+          >
+            <Button
+              icon="trash"
+              intent="danger"
+              onClick={() => handleDeleteDialog(dialogBoardId)}
+            >
+              Yes. Delete
+            </Button>
+            <Button
+              icon="undo"
+              onClick={() => handleDialogChange()}
+              intent="primary"
+            >
+              No. Keep it
+            </Button>
+          </ButtonGroup>
+        </div>
+      </Dialog>
     </>
   );
 };
@@ -490,8 +633,8 @@ const mapStateToProps = (state: any) => {
 };
 
 export const BoardPage = connect(mapStateToProps, {
-  getAllBoards,
   getSelectedBoard,
+  getAllBoards,
   getAllDepartments,
   clearCurrentBoard,
 })(withRouter(TaskPageComponent));

@@ -570,7 +570,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             </span>
                           )}
 
-                          <p className="f7 fw5">
+                          <p
+                            className="f7 fw5"
+                            style={{ marginTop: '5px' }}
+                          >
                             {t(
                               'app.project.Project-preface.Deadline',
                             )}

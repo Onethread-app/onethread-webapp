@@ -13,7 +13,6 @@ const idSchema = {
 
 const schema = {
   name: Joi.string(),
-  department: idSchema.id,
   color: Joi.number(),
   project: idSchema.id,
   columns: Joi.array().items(idSchema.id),
@@ -26,11 +25,16 @@ module.exports = {
   createBoard: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
-      department: schema.department,
       color: schema.color,
     }),
     query: Joi.object().keys({
       pid: schema.project,
+    }),
+  }),
+
+  deleteBoard: Joi.object().keys({
+    body: Joi.object().keys({
+      boardId: schema.boardId.required(),
     }),
   }),
   getAllBoards: Joi.object().keys({
@@ -52,6 +56,13 @@ module.exports = {
     }),
     params: Joi.object().keys({
       boardId: schema.boardId,
+    }),
+  }),
+  updateFields: Joi.object().keys({
+    body: Joi.object().keys({
+      name: schema.name,
+      color: schema.color,
+      boardId: schema.boardId.required(),
     }),
   }),
 };
