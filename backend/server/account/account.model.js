@@ -43,7 +43,6 @@ const accountsSchema = new mongoose.Schema(
     },
     birthDate: {
       type: Date,
-      required: true,
     },
     hash: String,
     salt: String,

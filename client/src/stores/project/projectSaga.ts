@@ -65,6 +65,8 @@ import {
   unarchiveProjectSuccess,
   getProjectArchive,
   updateProjectLoading,
+  deleteProjectFailure,
+  deleteProjectSuccess,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getCompanyId } from 'stores/company/Selector';
@@ -84,7 +86,9 @@ import {
   clearCurrentBoard,
   getAllBoards,
 } from 'stores/board/Actions';
-import handleError from 'helpers/HandleSagaErrors';
+import handleError, {
+  returnErrorText,
+} from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -242,8 +246,31 @@ export function* unarchiveProjectAsync({ payload }: any) {
   }
 }
 
+export function* deleteProjectAsync({ payload }: any) {
+  try {
+    yield put(showLoading());
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.delete(
+        `/projects/delete-project?pid=${payload}`,
+        headers,
+      );
+      yield all([
+        put(deleteProjectSuccess(payload)),
+        put(getAllProjects()),
+        put(getProjectArchive()),
+      ]);
+    }
+  } catch (error) {
+    yield put(deleteProjectFailure(returnErrorText(error)));
+  } finally {
+    yield put(hideLoading());
+  }
+}
+
 export function* getArchivedProjectsAsync() {
   try {
+    yield put(showLoading());
     const headers = tokenConfig();
     const companyId = yield select(getCompanyId);
     if ((headers as any).headers.Authorization) {
@@ -267,6 +294,8 @@ export function* getArchivedProjectsAsync() {
 
       yield put(getProjectArchiveFailure(error.message));
     }
+  } finally {
+    yield put(hideLoading());
   }
 }
 
@@ -903,6 +932,13 @@ export function* onUnarchiveProject() {
   );
 }
 
+export function* onDeleteProject() {
+  yield takeEvery(
+    ProjectActionTypes.DELETE_PROJECT_START,
+    deleteProjectAsync,
+  );
+}
+
 export function* onGetProjectArchive() {
   yield takeLatest(
     ProjectActionTypes.GET_ARCHIVED_PROJECTS_START,
@@ -1036,6 +1072,7 @@ export default function* projectSaga() {
     call(onCreateProjectInCompany),
     call(onArchiveProject),
     call(onUnarchiveProject),
+    call(onDeleteProject),
     call(onGetProjectArchive),
     call(onUpdateProjectName),
     call(onGetSingleProject),

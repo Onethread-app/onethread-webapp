@@ -64,8 +64,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
       validate={(values: any) => {
         const errors = {} as any;
         if (isEqual(values.email, values.secondaryEmail)) {
-          errors.secondaryEmail =
-            'You can\'t use same Primary Email and Secondary Email';
+          errors.secondaryEmail = `You can't use same Primary Email and Secondary Email`;
         }
         // if (values.contactNo && values.contactNo.length !== 11) {
         //   errors.contactNo = 'Not more or less than 11 character';
@@ -111,7 +110,9 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             validate={values.secondaryEmail ? isEmail : undefined}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>{t('app.user.Personal-profile.Secondaty')}</label>
+                <label>
+                  {t('app.user.Personal-profile.Secondaty')}
+                </label>
                 {/* <label>Secondary Email</label> */}
                 <InputGroupFieldWithError
                   id="secondaryEmail"
@@ -160,7 +161,9 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             validate={maxValue(120)}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>{t('app.user.Personal-profile.Address')}</label>
+                <label>
+                  {t('app.user.Personal-profile.Address')}
+                </label>
                 {/* <label>Address</label> */}
                 <InputGroupFieldWithError
                   id="location"
@@ -207,7 +210,9 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             name="birthDate"
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>{t('app.user.Personal-profile.Date-of-birth')}</label>
+                <label>
+                  {t('app.user.Personal-profile.Date-of-birth')}
+                </label>
                 <DateInput
                   className="bg-white"
                   formatDate={(date: Date) =>
@@ -224,9 +229,9 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                   popoverProps={{
                     targetClassName: 'w-100 bg-white br2',
                   }}
-                  minDate={new Date('1800-01-01')}
+                  minDate={new Date('1930-01-01')}
                   maxDate={maxBirthDate()}
-                  disabled={true}
+                  disabled={false}
                 />
                 {checkError(meta) && (
                   <small className="mv3" style={{ color: 'red' }}>
@@ -262,7 +267,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             )}
           />
           <div className="flex justify-end">
-          <Button
+            <Button
               className="w4 grow h2 pointer mr3"
               style={{
                 background: '#3F61C5',
@@ -290,7 +295,6 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             >
               cancel
             </Button>
-          
           </div>
         </form>
       )}

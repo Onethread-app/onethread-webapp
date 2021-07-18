@@ -28,8 +28,6 @@ import eyeClose from './../../resources/images/eyeClose.png';
 import backgroundImage from './../../resources/images/Bg-png.png';
 
 import { SubmitError } from 'components/final-form/SubmitError';
-import { DateInput } from '@blueprintjs/datetime';
-import moment from 'moment';
 // import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 // import { allCountryList } from './countryCode';
@@ -53,9 +51,6 @@ export const SignUpPageComponent = (
   props: SignUpPageInternalProps & RouteComponentProps,
 ) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(
-    false,
-  );
   const [email, setEmail] = useState('');
   const [invited, setInvited] = useState(false);
   // const [countryCode] = useState('+880');
@@ -121,9 +116,6 @@ const { t } = useTranslation();
               initialValues={{ email: email ? email : '' }}
               validate={(values: any) => {
                 const errors = {} as any;
-                if (values.password !== values.confirmPassword) {
-                  errors.confirmPassword = 'Password does not match';
-                }
                 return errors;
               }}
               render={({
@@ -325,7 +317,7 @@ const { t } = useTranslation();
                         </div>
                       </div> */}
                       <div>
-                        <Field<string>
+                        {/* <Field<string>
                           name="birthDate"
                           validate={required}
                           render={({ input, meta }) => (
@@ -386,7 +378,7 @@ const { t } = useTranslation();
                               )}
                             </div>
                           )}
-                        />
+                        /> */}
                       </div>
 
                       <div>
@@ -558,92 +550,6 @@ const { t } = useTranslation();
                                   }}
                                   // placeHolder="Password"
                                   placeHolder={t('landing.sign-up.sign-up-form.password')}
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                />
-                              </div>
-                            )}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <div>
-                          <Field<string>
-                            name="confirmPassword"
-                            validate={composeValidators(required)}
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
-                                  checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
-                                } fieldWidth`}
-                              >
-                                <InputGroupFieldWithError
-                                  id="confirmPassword"
-                                  className={`bw1 pb2 br0 bb ${
-                                    checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  autoFocus={true}
-                                  type={`${
-                                    showConfirmPassword
-                                      ? 'text'
-                                      : 'password'
-                                  }`}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      <Icon
-                                        icon="lock"
-                                        style={{ color: '#3F61C5' }}
-                                      />
-                                    </span>
-                                  }
-                                  rightElement={
-                                    <span
-                                      className="bp3-icon"
-                                      style={{
-                                        paddingTop: '10px',
-                                        paddingRight: '5px',
-                                        cursor: 'pointer',
-                                      }}
-                                    >
-                                      <img
-                                        title={
-                                          showConfirmPassword
-                                            ? `Don't show password`
-                                            : 'Show password'
-                                        }
-                                        onClick={() =>
-                                          setShowConfirmPassword(
-                                            !showConfirmPassword,
-                                          )
-                                        }
-                                        src={
-                                          showConfirmPassword
-                                            ? eyeClose
-                                            : eyeIcon
-                                        }
-                                        style={{
-                                          width: '15px',
-                                          height: '15px',
-                                          color: '#3F61C5',
-                                        }}
-                                      />
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
-                                  }}
-                                  // placeHolder="Confirm Password"
-                                  placeHolder={t('landing.sign-up.sign-up-form.confirmation')}
                                   error={
                                     checkError(meta) &&
                                     (meta.error || meta.submitError)

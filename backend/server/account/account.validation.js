@@ -44,10 +44,7 @@ module.exports = {
       lastName: schema.lastName,
       email: schema.email,
       password: schema.password,
-      confirmPassword: Joi.string()
-        .valid(Joi.ref('password'))
-        .required(),
-      birthDate: schema.birthDate.required(),
+      birthDate: schema.birthDate,
       isAccountVerified: schema.isAccountVerified.required(),
       // contactNo: schema.contactNo,
       // .regex(/^(\+?(880)[0-9]{10})$/)

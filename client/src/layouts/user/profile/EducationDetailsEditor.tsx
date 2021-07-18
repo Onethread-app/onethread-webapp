@@ -3,7 +3,6 @@ import { DateInput } from '@blueprintjs/datetime';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { Checkbox, TextArea, Button } from '@blueprintjs/core';
-import { useSelector } from 'react-redux';
 import {
   required,
   checkError,
@@ -30,10 +29,6 @@ interface IEduFormInternalProps extends IEduFormProps {
 }
 
 const EducationFormComponent = (props: IEduFormInternalProps) => {
-  const birthDate = useSelector(
-    (state: any) => state.userReducer.user.birthDate,
-  );
-
   const onSubmit = async (values: any) => {
     let response;
     if (values.currentlyStudy) {
@@ -142,7 +137,9 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             validate={composeValidators(required, maxValue(32))}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>{t('app.user.User-Education.Institution')}</label>
+                <label>
+                  {t('app.user.User-Education.Institution')}
+                </label>
                 {/* <label>Institution Name</label> */}
                 <InputGroupFieldWithError
                   id="institutionName"
@@ -165,7 +162,9 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             validate={required}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>{t('app.user.User-Education.Start-year')}</label>
+                <label>
+                  {t('app.user.User-Education.Start-year')}
+                </label>
                 {/* <label>Start Year</label> */}
                 <DateInput
                   formatDate={(date: Date) =>
@@ -185,7 +184,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                   popoverProps={{
                     targetClassName: 'w-100',
                   }}
-                  minDate={new Date(birthDate)}
+                  minDate={new Date('1970-01-01')}
                   maxDate={
                     values.endingYear
                       ? new Date(values.endingYear)
@@ -249,7 +248,9 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             name="eduDescription"
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>{t('app.user.User-Education.Description')}</label>
+                <label>
+                  {t('app.user.User-Education.Description')}
+                </label>
                 {/* <label>Description</label> */}
                 <TextArea
                   id="eduDescription"
@@ -299,7 +300,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             )}
           />
           <div className="flex justify-end">
-          <Button
+            <Button
               className="w4 grow h2 pointer mr3"
               style={{
                 background: '#3F61C5',
@@ -327,7 +328,6 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             >
               cancel
             </Button>
-            
           </div>
         </form>
       )}

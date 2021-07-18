@@ -8,8 +8,6 @@ import {
   MenuItem,
   Icon,
   Elevation,
-  Dialog,
-  ButtonGroup,
 } from '@blueprintjs/core';
 
 import {
@@ -29,7 +27,6 @@ import { UpdateProject } from './ChangeProjectName';
 import { find, orderBy } from 'lodash';
 import {
   Color,
-  tokenConfig,
   unreadMessageNotification,
 } from 'stores/UtilsActions';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -37,8 +34,6 @@ import { getAllDepartments } from '../../../stores/company/Actions';
 import {
   getAllProjects,
   archiveProject,
-  unarchiveProject,
-  getProjectArchive,
   getSingleProject,
   setCurrentProjectId,
   getRoleForProject,
@@ -47,17 +42,11 @@ import { getAllAssociates } from 'stores/associate/Actions';
 import { projectRules } from './settings/projectrules';
 
 import './MyProjects.scss';
-import Axios from 'axios';
-import { server } from 'config';
 import { useTranslation } from 'react-i18next';
 
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
-  const [deleteProjectIndex, setDeleteProjectIndex] = useState(null);
   const [showProjectDialog, setShowProjectDialog] = useState(false);
   const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(
-    false,
-  );
-  const [deleteProjectDialog, setDeleteProjectDialog] = useState(
     false,
   );
 
@@ -124,7 +113,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
       setProjectsLoaded(true);
       if (props.company.role !== 'employee') {
         props.getAllDepartments();
-        props.getProjectArchive();
         props.getAllAssociates();
       }
     }
@@ -236,7 +224,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const projectArchive = async (pid: string) => {
     await props.archiveProject(pid);
     props.getAllProjects();
-    props.getProjectArchive();
   };
 
   const singleProjectOnClick = (pid: string) => {
@@ -265,13 +252,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
       : permissions.projectModerator.includes('updateProjectPreface')
       ? projectArchive(projectId)
       : setOpen(true);
-  };
-  const checkRoleForUnarchiveProject = (projectId: string) => {
-    permissions.grantAll
-      ? props.unarchiveProject(projectId)
-      : permissions.projectModerator.includes(
-          'updateProjectPreface',
-        ) && props.unarchiveProject(projectId);
   };
 
   const nextProjectsPage = (e: any) => {
@@ -308,34 +288,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     setSelectedOption({ value: 'all', label: 'All' });
     setAllProjects(orderBy(props.projects, ['createdAt'], ['desc']));
     setShowClearFilter(false);
-  };
-
-  const handleDelete = async (pid: any) => {
-    if (
-      permissions.grantAll ||
-      permissions.projectModerator.includes('updateProjectPreface')
-    ) {
-      const headers = tokenConfig();
-      try {
-        await Axios.delete(
-          `${server}/projects/delete-project?pid=${pid}`,
-          headers,
-        );
-        props.getAllProjects();
-        props.getProjectArchive();
-        setDeleteProjectIndex(null);
-        setDeleteProjectDialog(false);
-      } catch (e) {
-        setDeleteProjectIndex(null);
-        setDeleteProjectDialog(false);
-        // console.log(e.response.data);
-      }
-    }
-  };
-
-  const handleDialogBox = async (pid) => {
-    setDeleteProjectIndex(pid);
-    setDeleteProjectDialog(true);
   };
 
   const noProjectsFound = (
@@ -680,145 +632,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
           </div>
           {props.company.role !== 'employee' && (
             <div>
-              {props.archiveProjectList.length > 0 && (
-                <h3 className="f3-ns f4">Archived Projects</h3>
-                // <h3 className="f3-ns f4">Archived Projects</h3>
-              )}
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns:
-                    'repeat(auto-fit, minmax(200px, 265px))',
-                  gridTemplateRows: 'repeat(2, 135px)',
-                  gridGap: '10px 10px',
-                }}
-              >
-                {props.archiveProjectList.map((archProject: any) => (
-                  <div className="pa1" key={archProject._id}>
-                    <Card
-                      className="h-100"
-                      interactive={true}
-                      style={{
-                        paddingLeft: '0px',
-                        paddingBottom: '0px',
-                      }}
-                    >
-                      <div
-                        className=""
-                        style={{
-                          borderLeft: `5px solid 
-                      ${
-                        find(Color, ['code', archProject.color])
-                          ? find(Color, ['code', archProject.color])!
-                              .value
-                          : 'red'
-                      }`,
-                          // TODO use dictionary
-                          // borderLeft: '5px solid red',
-                          paddingLeft: '20px',
-                          marginLeft: '-2px',
-                          borderRadius: '3px',
-                        }}
-                      >
-                        <div className="flex">
-                          <h3
-                            className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
-                            style={{
-                              whiteSpace: 'nowrap',
-                              textOverflow: 'ellipsis',
-                              width: '220px',
-                            }}
-                          >
-                            {archProject.name}
-                          </h3>
-                          {permissions.grantAll && (
-                            <Popover
-                              className="w-10"
-                              content={
-                                <Menu className="pa2">
-                                  <MenuItem
-                                    className="pa1 red"
-                                    text="Restore Project"
-                                    onClick={() =>
-                                      checkRoleForUnarchiveProject(
-                                        archProject._id,
-                                      )
-                                    }
-                                  />
-                                  <MenuItem
-                                    className="pa1 red"
-                                    text="Delete Project"
-                                    onClick={() =>
-                                      handleDialogBox(archProject._id)
-                                    }
-                                  />
-                                </Menu>
-                              }
-                              target={
-                                <Button
-                                  style={{
-                                    transform: 'rotate(90deg)',
-                                    OTransform: 'rotate(90deg)',
-                                    msTransform: 'rotate(90deg)',
-                                    WebkitTransform: 'rotate(90deg)',
-                                  }}
-                                  icon="more"
-                                  minimal={true}
-                                  className="outline-0"
-                                />
-                              }
-                            />
-                          )}
-                        </div>
-                        <div className="flex flex-column items-start mt2">
-                          <span
-                            className={`bp3-tag modifier ${
-                              archProject.status === 'not-started'
-                                ? 'bg-blue'
-                                : archProject.status === 'ongoing'
-                                ? 'bg-orange'
-                                : 'bg-green'
-                            }`}
-                          >
-                            {archProject.status.replace(/-|\s/g, ' ')}
-                          </span>
-
-                          <p
-                            className="f7 fw5"
-                            style={{ marginTop: '10px' }}
-                          >
-                            Deadline:{' '}
-                            {archProject.deadline
-                              ? moment(archProject.deadline).format(
-                                  'DD/MM/YYYY',
-                                )
-                              : 'Not Set'}
-                          </p>
-                        </div>
-
-                        <h3
-                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
-                          style={{
-                            whiteSpace: 'nowrap',
-                            textOverflow: 'ellipsis',
-                            width: '220px',
-                          }}
-                        >
-                          {archProject.departments.map((dep: any) => (
-                            <label style={{ paddingLeft: '2px' }}>
-                              {dep.name}
-                            </label>
-                          ))}
-                        </h3>
-                      </div>
-                    </Card>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {props.company.role !== 'employee' && (
-            <div>
               <img
                 onClick={() =>
                   setShowProjectDialog(!showProjectDialog)
@@ -853,43 +666,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
           You are not allowed to do this change!
         </MuiAlert>
       </Snackbar>
-
-      <Dialog
-        isOpen={deleteProjectDialog}
-        style={{ paddingBottom: '0' }}
-        canOutsideClickClose={true}
-      >
-        <div
-          className="w-100 ba bw1 br2 pa3"
-          style={{ borderColor: '#F55B7F' }}
-        >
-          <h4 style={{ marginBottom: 13 }}>Delete Project</h4>
-          <p style={{ marginBottom: 10 }}>
-            Are you sure you want to delete this project?
-          </p>
-          <ButtonGroup
-            minimal={true}
-            style={{ display: 'flex', flexDirection: 'row-reverse' }}
-          >
-            <Button
-              icon="trash"
-              intent="danger"
-              onClick={() => handleDelete(deleteProjectIndex)}
-            >
-              Yes. Delete
-            </Button>
-            <Button
-              icon="undo"
-              onClick={() => {
-                setDeleteProjectDialog(false);
-              }}
-              intent="primary"
-            >
-              No. Keep it
-            </Button>
-          </ButtonGroup>
-        </div>
-      </Dialog>
     </>
   );
 };
@@ -918,8 +694,6 @@ export const MyProject = connect(mapStateToProps, {
   getAllProjects,
   getAllDepartments,
   archiveProject,
-  unarchiveProject,
-  getProjectArchive,
   getSingleProject,
   setCurrentProjectId,
   getAllAssociates,

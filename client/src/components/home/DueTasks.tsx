@@ -76,14 +76,14 @@ const DueTasks = () => {
             className={`${filterOption === 1 ? 'active' : ''}`}
             onClick={() => setFilterOption(1)}
           >
-            Assigned to me {assignedToMe.length > 0 && '*'}
+            Assigned to me {assignedToMe.length > 0}
           </p>
           <span className="divider-small">|</span>
           <p
             className={`${filterOption === 2 ? 'active' : ''}`}
             onClick={() => setFilterOption(2)}
           >
-            Assigned by me {assignedByMe.length > 0 && '*'}
+            Assigned by me {assignedByMe.length > 0}
           </p>
         </div>
       </div>

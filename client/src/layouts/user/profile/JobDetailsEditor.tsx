@@ -2,8 +2,6 @@ import React from 'react';
 import { DateInput } from '@blueprintjs/datetime';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { Checkbox, TextArea, Button } from '@blueprintjs/core';
-import { useSelector } from 'react-redux';
-import moment from 'moment';
 import {
   addJobExperienceAction,
   editJobExperienceAction,
@@ -30,10 +28,6 @@ interface IJobFormInternalProps extends IJobFormProps {
 }
 
 const JobFormComponent = (props: IJobFormInternalProps) => {
-  const birthDate = useSelector(
-    (state: any) => state.userReducer.user.birthDate,
-  );
-
   const onSubmit = async (values: any) => {
     let response;
     if (values.currentlyWork) {
@@ -150,7 +144,9 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
-                  <label>{t('app.user.User-job.Position-name')}</label>
+                  <label>
+                    {t('app.user.User-job.Position-name')}
+                  </label>
                   {/* <label>Position Name</label> */}
                   <InputGroupFieldWithError
                     id="positionName"
@@ -192,9 +188,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                     popoverProps={{
                       targetClassName: 'w-100',
                     }}
-                    minDate={moment(birthDate)
-                      .add(10, 'years')
-                      .toDate()}
+                    minDate={new Date('1970-01-01')}
                     maxDate={
                       values.endingYear
                         ? new Date(values.endingYear)
@@ -315,7 +309,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
               )}
             />
             <div className="flex justify-end">
-            <Button
+              <Button
                 className="w4 grow h2 pointer mr3"
                 style={{
                   background: '#3F61C5',
@@ -343,7 +337,6 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
               >
                 cancel
               </Button>
-          
             </div>
           </form>
         )}
