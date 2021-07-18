@@ -29,6 +29,30 @@ router
     boardCtrl.create,
   );
 
+router.route('/update').post(
+  authorization,
+  // projectCtrl.authorizeProjectRole(
+  //   'all',
+  //   'admin',
+  //   'projectModerator',
+  //   'member',
+  // ),
+  SchemaValidator(boardSchema.updateFields),
+  boardCtrl.updateBoard,
+);
+
+router.route('/delete').post(
+  authorization,
+  // projectCtrl.authorizeProjectRole(
+  //   'all',
+  //   'admin',
+  //   'projectModerator',
+  //   'member',
+  // ),
+  SchemaValidator(boardSchema.deleteBoard),
+  boardCtrl.deleteBoard,
+);
+
 router
   .route('/boardProject')
   .get(

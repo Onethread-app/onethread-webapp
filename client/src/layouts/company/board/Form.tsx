@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { Form, Field } from 'react-final-form';
-import { isEqual } from 'lodash';
 import { Button, Icon } from '@blueprintjs/core';
+import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 import {
   checkError,
-  required,
   composeValidators,
   maxValue,
+  required,
 } from 'components/final-form/utils';
-import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
-import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
-import { Color } from 'stores/UtilsActions';
-import { createBoard, clearCurrentBoard } from 'stores/board/Actions';
+import { isEqual } from 'lodash';
+import React, { useState } from 'react';
+import { Field, Form } from 'react-final-form';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { clearCurrentBoard, createBoard } from 'stores/board/Actions';
 import { TaskBoard } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { IProject } from 'stores/project/Reducer';
+import { Color } from 'stores/UtilsActions';
 
 const FormComponent = (props: {
   setShowTaskBoardDialog?: (val: boolean) => void;
@@ -83,32 +82,6 @@ const FormComponent = (props: {
                       }
                       label="Board Name (Required)"
                       autoFocus={true}
-                    />
-                  </div>
-                )}
-              />
-              <Field<string>
-                name="department"
-                render={({ input, meta }) => (
-                  <div
-                    className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
-                  >
-                    <DropdownFieldErrorWithLabel
-                      id={input.name}
-                      selectedValue={input.value}
-                      options={
-                        props.departments &&
-                        props.departments.length > 0
-                          ? props.departments
-                          : ([] as any)
-                      }
-                      onChange={input.onChange}
-                      error={
-                        checkError(meta) &&
-                        (meta.error || meta.submitError)
-                      }
-                      label="Department"
-                      className="bn"
                     />
                   </div>
                 )}
