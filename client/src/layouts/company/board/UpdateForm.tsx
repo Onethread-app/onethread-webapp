@@ -20,6 +20,7 @@ import { IProject } from 'stores/project/Reducer';
 import { getAllDepartments } from 'stores/company/Actions';
 import { Color, tokenConfig } from 'stores/UtilsActions';
 import { getAllBoards } from 'stores/board/Actions';
+import { useTranslation } from 'react-i18next';
 
 const UpdateFormComponent = (props: {
   getAllBoards: () => void;
@@ -51,10 +52,13 @@ const UpdateFormComponent = (props: {
 
   const [labelColor, setLabelColor] = useState(selectedBoard.color);
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="pl3" style={{ marginTop: '6rem' }}>
-        <h3>Update Board</h3>
+        <h3>{t('app.project.Project-boards.Update-Board')}</h3>
+        {/* <h3>Update Board</h3> */}
       </div>
       <Form
         onSubmit={onSubmit}
@@ -93,7 +97,8 @@ const UpdateFormComponent = (props: {
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      label="Board Name (Required)"
+                      label={t('app.project.Project-boards.Board-Name')}
+                      // label="Board Name (Required)"
                       autoFocus={true}
                     />
                   </div>
@@ -107,7 +112,8 @@ const UpdateFormComponent = (props: {
                       className="fw5 mb3"
                       style={{ fontSize: '.8rem' }}
                     >
-                      Label
+                      {t('app.project.Project-boards.Label')}
+                      {/* Label */}
                     </p>
                     <div className="flex">
                       {Color.map((color) => (
@@ -153,7 +159,8 @@ const UpdateFormComponent = (props: {
                   type="submit"
                   disabled={submitting || pristine}
                 >
-                  Update
+                  {t('app.project.Project-boards.Update')}
+                  {/* Update */}
                 </Button>
                 <Button
                   className="w4 grow h2 pointer"
@@ -169,7 +176,8 @@ const UpdateFormComponent = (props: {
                     }
                   }}
                 >
-                  cancel
+                  {t('app.project.Project-boards.cancel')}
+                  {/* cancel */}
                 </Button>
               </div>
             </div>

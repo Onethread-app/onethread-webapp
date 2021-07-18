@@ -349,7 +349,17 @@
         "Add-Subtask": "Add Subtask",
         "Attach-Files": "Attach Files",
         "Members": "Members",
-        "Assign-Members": "Assign Members"
+        "Assign-Members": "Assign Members",
+        "Delete-Board": "Delete Board",
+        "Delete-text": "Are you sure you want to delete this board?",
+        "Yes-delete": "Yes. Delete",
+        "Keep": "No. Keep it",
+        "Update-Board": "Update Board",
+        "Label": "Label",
+        "Update": "Update",
+        "cancel": "cancel",
+        "Board-Name": "Board Name (Required)",
+        "Create": "Create"
       },
 
       "Project-teammates": {
