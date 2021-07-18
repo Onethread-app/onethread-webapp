@@ -99,11 +99,10 @@ export function* createProjectAsync({ payload }: any) {
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,
-        companyId: payload.company,
+        companyId: payload.companyId,
       };
-
       yield tigrowApi.post(
-        `projects/${payload.company}/create-project`,
+        `projects/${payload.companyId}/create-project`,
         reqBody,
         headers,
       );
@@ -160,7 +159,9 @@ export function* getAllProjectsAsync() {
 export function* createProjectInCompanyAsync({ payload }: any) {
   try {
     const headers = tokenConfig();
-    const companyId = yield select(getCompanyId);
+    const companyId = payload.companyId
+      ? payload.companyId
+      : yield select(getCompanyId);
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,

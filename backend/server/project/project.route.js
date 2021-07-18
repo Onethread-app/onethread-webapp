@@ -10,7 +10,6 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 const subCtrl = require('../subscription/subscription.controller');
 
-
 router
   .route('/change-title')
   .put(
@@ -220,6 +219,10 @@ router
 router
   .route('/overview')
   .get(authorization, projectCtrl.projectOverview);
+
+router
+  .route('/list/overview')
+  .get(authorization, projectCtrl.getListOverview);
 
 router
   .route('/delete-project')

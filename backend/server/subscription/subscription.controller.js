@@ -97,7 +97,7 @@ const subscriptionExpireCheck = () => {
   return async (req, res, next) => {
     try {
       const subscribe = await Subscription.find({
-        company: req.headers.companyid,
+        company: req.headers.companyid || req.body.companyId,
         isActive: true,
       }).sort({ _id: -1 });
       if (!subscribe) {
