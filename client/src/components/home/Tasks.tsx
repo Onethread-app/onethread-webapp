@@ -79,6 +79,7 @@ const Tasks = () => {
         t.assignedPerson.firstName + ' ' + t.assignedPerson.lastName,
       deadline: ISOformat(t.taskId.dueDate),
       status: t.taskId.status,
+      redirectTo: `/company/${t.taskId.project.company.uniqueName}/project/${t.taskId.project._id}/board/${t.taskId.boardId._id}/task/${t.taskId._id}`,
     }));
   };
 
