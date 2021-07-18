@@ -72,6 +72,7 @@ const Tasks = () => {
   };
 
   const mdfy = (task) => {
+    console.log({ task });
     return task.map((t, i) => ({
       no: i + 1,
       taskName: t.taskId.name,
@@ -79,6 +80,7 @@ const Tasks = () => {
         t.assignedPerson.firstName + ' ' + t.assignedPerson.lastName,
       deadline: ISOformat(t.taskId.dueDate),
       status: t.taskId.status,
+      redirectTo: `/company/${t.taskId.project.company.uniqueName}/project/${t.taskId.project._id}/board/${t.taskId.boardId._id}/task/${t.taskId._id}`,
     }));
   };
 

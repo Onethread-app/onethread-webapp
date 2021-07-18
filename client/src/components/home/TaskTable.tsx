@@ -14,6 +14,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import React from 'react';
 
+import { useHistory } from 'react-router-dom';
+
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -42,6 +44,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundColor: '#fefefe',
+      cursor: 'pointer',
       // boxShadow: '1px 1px solid black
     },
   }),
@@ -231,7 +234,9 @@ const AppTable = ({
   setRowsPerPage,
   tasks,
   assignedByUser,
+  ...otherProps
 }) => {
+  const history = useHistory();
   const classes = useStyles();
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -302,6 +307,9 @@ const AppTable = ({
                     tabIndex={-1}
                     key={row.no}
                     style={{ borderRadius: 10 }}
+                    onClick={() =>
+                      history.push(row.redirectTo.toString())
+                    }
                   >
                     <StyledTableCell
                       component="th"
