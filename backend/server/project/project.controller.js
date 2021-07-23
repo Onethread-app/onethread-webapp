@@ -98,7 +98,6 @@ const createNewProjectForCompany = async (req, res, next) => {
       name: req.body.name,
       concernedAdmin: member.account,
       account: req.user._id,
-      departments: req.body.departments,
       deadline: req.body.deadline,
       color: req.body.color,
       company: req.headers.companyid,
@@ -121,8 +120,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         await createBoard(
           'General',
           project._id,
-          undefined,
-          undefined,
+          req.body.color,
           req.user._id,
         );
         logger.info(`General Board Created`);
@@ -176,9 +174,7 @@ const createNewProjectFromHome = async (req, res, next) => {
       logger.info(`project create for ${req.params.companyId}`);
       const board = await createBoard(
         'General',
-        project._id,
-        undefined,
-        undefined,
+        1,
         req.user._id,
       );
       logger.info(`General board created for ${project._id}`);
