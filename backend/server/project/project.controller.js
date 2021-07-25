@@ -173,11 +173,7 @@ const createNewProjectFromHome = async (req, res, next) => {
       });
       await project.save();
       logger.info(`project create for ${req.params.companyId}`);
-      const board = await createBoard(
-        'General',
-        1,
-        req.user._id,
-      );
+      const board = await createBoard('General', 1, req.user._id);
       logger.info(`General board created for ${project._id}`);
 
       const room = await createRoom(
@@ -224,20 +220,26 @@ const getListOverview = async (req, res, next) => {
     const userId = '60a269f51041a41e90cadf2f';
     const members = await Member.find({
       account: userId,
+      removed: false,
     });
     const projectList = [];
     for (let member of members) {
       const memberId = member._id;
       const companyId = member.company;
-      const projects = await Project.find({ company: companyId });
+      const projects = await Project.find({
+        company: companyId,
+        hasDeleted: false,
+      });
       for (let project of projects) {
         const projectId = project._id;
         const projectName = project.name;
         const teamMember = await Team.find({
           member: memberId,
           project: projectId,
+          removed: false,
         });
         if (teamMember) {
+          // TODO: Company unique name
           projectList.push({
             _id: projectId,
             name: projectName,
@@ -246,7 +248,6 @@ const getListOverview = async (req, res, next) => {
       }
     }
     return res.json({ projectList });
-    // http://localhost:3000/company/sakibaa/project/60fd455313d77b38a8a6393b/overview
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);
