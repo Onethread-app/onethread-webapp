@@ -218,6 +218,41 @@ const createNewProjectFromHome = async (req, res, next) => {
     next(error);
   }
 };
+
+const getListOverview = async (req, res, next) => {
+  try {
+    const userId = '60a269f51041a41e90cadf2f';
+    const members = await Member.find({
+      account: userId,
+    });
+    const projectList = [];
+    for (let member of members) {
+      const memberId = member._id;
+      const companyId = member.company;
+      const projects = await Project.find({ company: companyId });
+      for (let project of projects) {
+        const projectId = project._id;
+        const projectName = project.name;
+        const teamMember = await Team.find({
+          member: memberId,
+          project: projectId,
+        });
+        if (teamMember) {
+          projectList.push({
+            _id: projectId,
+            name: projectName,
+          });
+        }
+      }
+    }
+    return res.json({ projectList });
+    // http://localhost:3000/company/sakibaa/project/60fd455313d77b38a8a6393b/overview
+  } catch (error) {
+    logger.error(`Project: ${error}`);
+    next(error);
+  }
+};
+
 // add associate in a project
 const addAssociateInProject = async (req, res, next) => {
   try {
@@ -1113,4 +1148,5 @@ module.exports = {
   projectListForMember,
   projectOverview,
   deleteProject,
+  getListOverview,
 };

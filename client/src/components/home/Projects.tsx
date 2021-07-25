@@ -15,7 +15,10 @@ const Projects = () => {
           </div>
         </div>
         <div>
-          <button onClick={() => setShowDialog(true)}>
+          <button
+            onClick={() => setShowDialog(true)}
+            style={{ fontSize: 15.5 }}
+          >
             Create Project
           </button>
         </div>
