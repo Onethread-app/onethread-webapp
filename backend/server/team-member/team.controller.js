@@ -34,6 +34,54 @@ const changeRole = async (req, res, next) => {
   }
 };
 
+// project team members
+
+const projectTeamMembers = async (pid) => {
+  const limit = 50;
+  const skip = 0;
+
+  const members = await Team.find({
+    $and: [{ project: pid }, { removed: false }],
+  })
+    .sort({ createdAt: 1 })
+    .skip(+skip)
+    .limit(+limit)
+    .select('role')
+    .populate([
+      {
+        path: 'member',
+        select: '_id account designations',
+        populate: [
+          {
+            path: 'account',
+            select: '_id name firstName lastName email profileImage',
+          },
+          {
+            path: 'designations',
+            select: 'division department position',
+            populate: [{ path: 'department', select: 'name' }],
+          },
+        ],
+      },
+      {
+        path: 'project',
+        select: 'company associate',
+        populate: [
+          {
+            path: 'associate',
+            select: 'associateCompany company',
+            populate: {
+              path: 'associateCompany company',
+              select: '_id name type _id name type',
+            },
+          },
+        ],
+      },
+    ]);
+
+  return members;
+};
+
 // add team member
 const addTeamMember = async (req, res, next) => {
   // Check for JSON
@@ -182,46 +230,8 @@ const addTeamMember = async (req, res, next) => {
 // get all members in a project
 const list = async (req, res, next) => {
   try {
-    const { limit = 50, skip = 0, pid } = req.query;
-    const members = await Team.find({
-      $and: [{ project: pid }, { removed: false }],
-    })
-      .sort({ createdAt: 1 })
-      .skip(+skip)
-      .limit(+limit)
-      .select('role')
-      .populate([
-        {
-          path: 'member',
-          select: '_id account designations',
-          populate: [
-            {
-              path: 'account',
-              select: '_id name firstName lastName email',
-            },
-            {
-              path: 'designations',
-              select: 'division department position',
-              populate: [{ path: 'department', select: 'name' }],
-            },
-          ],
-        },
-        {
-          path: 'project',
-          select: 'company associate',
-          populate: [
-            {
-              path: 'associate',
-              select: 'associateCompany company',
-              populate: {
-                path: 'associateCompany company',
-                select: '_id name type _id name type',
-              },
-            },
-          ],
-        },
-      ]);
-
+    const { pid } = req.query;
+    const members = await projectTeamMembers(pid);
     return sendJSONresponse(res, 200, {
       memberList: members,
     });
@@ -331,6 +341,7 @@ const searchTeamMember = async (req, res, next) => {
 
 module.exports = {
   addTeamMember,
+  projectTeamMembers,
   list,
   getMember,
   getMemberLoad,
