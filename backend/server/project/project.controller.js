@@ -86,7 +86,7 @@ const createNewProjectForCompany = async (req, res, next) => {
   try {
     const member = await Member.findOne({
       account: req.user._id,
-      company: req.headers.companyid,
+      company: req.headers.companyid || req.body.companyId,
       removed: false,
     });
     if (!member) {
@@ -100,7 +100,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       account: req.user._id,
       deadline: req.body.deadline,
       color: req.body.color,
-      company: req.headers.companyid,
+      company: req.headers.companyid || req.body.companyId,
       description: '',
       outline: '',
     });
@@ -125,14 +125,14 @@ const createNewProjectForCompany = async (req, res, next) => {
         );
         logger.info(`General Board Created`);
         const room = await createRoom(
-          req.headers.companyid,
+          req.headers.companyid || req.body.companyId,
           project._id,
           req.user._id,
           'General',
         );
         logger.info(`General Room Created`);
         await createRoomMember(
-          req.headers.companyid,
+          req.headers.companyid || req.body.companyId,
           project._id,
           member.account,
           room._id,
@@ -150,6 +150,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         next(error);
       });
   } catch (error) {
+    console.log(error);
     logger.error(`Project: ${error}`);
     next(error);
   }

@@ -96,14 +96,15 @@ const takeLatest: any = Eff.takeLatest;
 export function* createProjectAsync({ payload }: any) {
   try {
     const headers = tokenConfig();
+    console.log(payload.companyId);
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,
-        companyId: payload.company,
+        companyId: payload.companyId,
       };
-
+      console.log(reqBody);
       yield tigrowApi.post(
-        `projects/${payload.company}/create-project`,
+        `projects/${payload.companyId}/create-project`,
         reqBody,
         headers,
       );
@@ -160,7 +161,9 @@ export function* getAllProjectsAsync() {
 export function* createProjectInCompanyAsync({ payload }: any) {
   try {
     const headers = tokenConfig();
-    const companyId = yield select(getCompanyId);
+    const companyId = payload.companyId
+      ? payload.companyId
+      : yield select(getCompanyId);
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,
