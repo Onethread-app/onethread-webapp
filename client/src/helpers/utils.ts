@@ -34,3 +34,19 @@ export const compareChats = (a: any, b: any) => {
   else if (a.message.createdAt > b.message.createdAt) return -1;
   else return 0;
 };
+
+export const sortProjectsByDeadline = (projects: any) => {
+  // console.log(projects);
+  projects.sort((a: any, b: any) => {
+    console.log(a.deadline, b.deadline);
+    return a.deadline - b.deadline;
+  });
+};
+
+export const sortProjectsByStatus = (projects: any) => {
+  // console.log(projects);
+};
+
+export const sortProjectsByTasksRemaining = (projects: any) => {
+  // console.log(projects);
+};
