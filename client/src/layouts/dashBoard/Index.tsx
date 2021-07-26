@@ -33,6 +33,7 @@ import tick from '../../resources/images/tick.svg';
 import { isMobileOnly } from 'react-device-detect';
 import { orderBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 interface DashBoardViewProps {
   user: User;
@@ -81,6 +82,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
       const headers = tokenConfig();
 
       if (props.company._id) {
+        dispatch(showLoading());
         await tigrowApi
           .get(`company/${props.company._id}/dashboard`, headers)
           .then((response) => {
@@ -93,12 +95,14 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               payload: response.data.data.totalEmployee,
             });
             setDashboard(response.data.data);
+            dispatch(hideLoading());
             props.setSubscriptionNotExpire();
             props.getLatestCompletedTasks();
             props.getCompanyAnnouncement();
             setLoading(false);
           })
           .catch(async (err) => {
+            dispatch(hideLoading());
             setLoading(false);
             if (err.response.data.status === 403) {
               await props.setSubscriptionExpire();
