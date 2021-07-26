@@ -34,7 +34,7 @@ router
     projectCtrl.createNewProjectForCompany,
   );
 router
-  .route('/:companyId/create-project')
+  .route('/create-project')
   .post(
     authorization,
     schemaValidator(projectValidation.createProjectFromHome),

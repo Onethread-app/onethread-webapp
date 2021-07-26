@@ -11,7 +11,6 @@ import { Loading } from 'components/Loading';
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
-import { useTranslation } from 'react-i18next';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -72,8 +71,6 @@ export const ListViewComponent = (
     setGettingDetails(true);
   };
 
-  const { t } = useTranslation();
-
   return (
     <>
       <div
@@ -122,13 +119,6 @@ export const ListViewComponent = (
           )
         ) : undefined}
       </div>
-      <button
-        onClick={() => props.setShowDialog(!props.showDialog)}
-        className="b--none w-100 mt3 br2 grow ph5 pointer pv2 white outline-0 bg-tigrowLightBlue bp3-popover-dismiss"
-      >
-        {t('app.forms.Create-company.Create')}
-        {/* Create Company */}
-      </button>
     </>
   );
 };

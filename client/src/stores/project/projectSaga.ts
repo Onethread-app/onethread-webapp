@@ -169,7 +169,11 @@ export function* createProjectInCompanyAsync({ payload }: any) {
         deadline: payload.deadline ? payload.deadline : undefined,
         companyId,
       };
-      yield tigrowApi.post(`projects/create`, reqBody, headers);
+      yield tigrowApi.post(
+        `projects/create-project`,
+        reqBody,
+        headers,
+      );
       yield all([
         put(createProjectInCompanySuccess()),
         put(getAllProjects()),

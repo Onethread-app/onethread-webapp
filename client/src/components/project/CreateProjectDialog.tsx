@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import Select from 'react-select';
 import styled from 'styled-components';
+import _ from 'lodash';
 
 import { DateInput } from '@blueprintjs/datetime';
 import { Color } from 'stores/UtilsActions';
 import { Icon } from '@blueprintjs/core';
+import CreatableSelect from 'react-select/creatable';
 
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { createProjectInCompany } from 'stores/project/Actions';
 import { ICompanyByUser, User } from 'stores/user/Reducer';
+import {
+  createCompanyAction,
+  clearErrorOnCompanyCreate,
+} from 'stores/company/Actions';
 
 const CONTAINER = styled.div`
   form {
@@ -80,6 +85,14 @@ interface ICreateProjectDialog {
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
   getAllCompaniesByUserId: (id: string) => void;
   createProjectInCompany: (val: {}) => void;
+
+  createCompanyAction: (val: any) => void;
+  clearErrorOnCompanyCreate: () => void;
+  companyName: string;
+  creatingCompany: boolean;
+  errorOnCreatingCompany: string;
+  currentCompany: any;
+  projectList: () => void;
 }
 
 const CreateProjectDialog = (props: ICreateProjectDialog) => {
@@ -91,6 +104,8 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
     { value: string; label: string }[]
   >([]);
   const [creating, setCreating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [newCompanyInfo, setNewCompanyInfo] = useState<any>({});
 
   const handleDateChange = (date: Date | null) => {
     setDeadline(date);
@@ -100,8 +115,17 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
     setName(e.target.value);
   };
 
-  const handleCompanyChange = (selected: any) => {
-    setCompanyId(selected.value);
+  const handleCompanyChange = async (selected: any) => {
+    setNewCompanyInfo({});
+    if (selected.__isNew__) {
+      setNewCompanyInfo(selected);
+      await props.createCompanyAction({
+        name: selected.value,
+      });
+    } else {
+      setCompanyId(selected.value);
+    }
+    setErrorMessage('');
   };
 
   useEffect(() => {
@@ -130,17 +154,35 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creating, props.projectLoading]);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const payload = {
+    const payload = _.pickBy({
       name,
       companyId,
       deadline,
       color: labelColor,
-    };
-    props.createProjectInCompany(payload);
-    setCreating(true);
+    });
+
+    if (!payload.companyId) {
+      setErrorMessage('Company name is invalid');
+    } else if (!payload.name) {
+      setErrorMessage('Project name is required');
+    } else {
+      props.createProjectInCompany(payload);
+      setCreating(true);
+      props.projectList();
+    }
   };
+
+  useEffect(() => {
+    if (newCompanyInfo.__isNew__ && props.currentCompany._id) {
+      if (props.currentCompany.name === newCompanyInfo.value) {
+        setCompanyId(props.currentCompany._id);
+      } else {
+        setErrorMessage('Company name is invalid');
+      }
+    }
+  }, [newCompanyInfo, props.currentCompany]);
 
   return (
     <CONTAINER className="flex flex-column items-center justify-center h-100">
@@ -149,12 +191,26 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
         onSubmit={handleSubmit}
         style={{ width: '100%', padding: '2rem 15%' }}
       >
-        <Select
+        {errorMessage && (
+          <div
+            style={{
+              marginBottom: 0,
+              paddingBottom: 5,
+            }}
+          >
+            <span style={{ color: 'red' }}>*{errorMessage}</span>
+          </div>
+        )}
+        <CreatableSelect
           placeholder="Select a company (Required)"
           id={'companies'}
           options={options}
           onChange={handleCompanyChange}
-        ></Select>
+          formatCreateLabel={(userInput) =>
+            `Create company: ${userInput}`
+          }
+        ></CreatableSelect>
+
         <TEXTINPUT
           type="text"
           name="project-name"
@@ -238,9 +294,15 @@ const mapStateToProps = (state: any) => ({
   companies: state.userReducer.user.companies,
   user: state.userReducer.user,
   projectLoading: state.projectReducer.projectLoading,
+  companyName: state.companyReducer.currentCompany.uniqueName,
+  currentCompany: state.companyReducer.currentCompany,
+  creatingCompany: state.companyReducer.creatingCompany,
+  errorOnCreatingCompany: state.companyReducer.errorOnCreatingCompany,
 });
 
 export default connect(mapStateToProps, {
   getAllCompaniesByUserId,
   createProjectInCompany,
+  createCompanyAction,
+  clearErrorOnCompanyCreate,
 })(CreateProjectDialog);
