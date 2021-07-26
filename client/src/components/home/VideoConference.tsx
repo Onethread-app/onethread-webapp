@@ -3,7 +3,8 @@ import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { Dialog } from '@blueprintjs/core';
 import LinkGeneratorPopup from 'components/conference/LinkGeneratorPopup';
-import Conference from 'resources/svg/Conference.svg';
+
+// import Conference from 'resources/svg/Conference.svg';
 
 const VideoConference = () => {
   const [showDialog, setShowDialog] = React.useState(false);
@@ -15,14 +16,14 @@ const VideoConference = () => {
           <p>Make Your Team align</p>
         </div>
       </div>
-      <div>
+      {/* <div>
         <img
           src={Conference}
           alt="conference"
           className="pointer"
           onClick={() => setShowDialog(true)}
         />
-      </div>
+      </div> */}
       <div>
         <button onClick={() => setShowDialog(true)}>
           Create link

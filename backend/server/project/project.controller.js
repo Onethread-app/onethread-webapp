@@ -86,7 +86,7 @@ const createNewProjectForCompany = async (req, res, next) => {
   try {
     const member = await Member.findOne({
       account: req.user._id,
-      company: req.headers.companyid,
+      company: req.headers.companyid || req.body.companyId,
       removed: false,
     });
     if (!member) {
@@ -100,7 +100,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       account: req.user._id,
       deadline: req.body.deadline,
       color: req.body.color,
-      company: req.headers.companyid,
+      company: req.headers.companyid || req.body.companyId,
       description: '',
       outline: '',
     });
@@ -125,14 +125,14 @@ const createNewProjectForCompany = async (req, res, next) => {
         );
         logger.info(`General Board Created`);
         const room = await createRoom(
-          req.headers.companyid,
+          req.headers.companyid || req.body.companyId,
           project._id,
           req.user._id,
           'General',
         );
         logger.info(`General Room Created`);
         await createRoomMember(
-          req.headers.companyid,
+          req.headers.companyid || req.body.companyId,
           project._id,
           member.account,
           room._id,
@@ -150,6 +150,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         next(error);
       });
   } catch (error) {
+    console.log(error);
     logger.error(`Project: ${error}`);
     next(error);
   }
@@ -172,11 +173,7 @@ const createNewProjectFromHome = async (req, res, next) => {
       });
       await project.save();
       logger.info(`project create for ${req.params.companyId}`);
-      const board = await createBoard(
-        'General',
-        1,
-        req.user._id,
-      );
+      const board = await createBoard('General', 1, req.user._id);
       logger.info(`General board created for ${project._id}`);
 
       const room = await createRoom(
@@ -217,6 +214,52 @@ const createNewProjectFromHome = async (req, res, next) => {
     next(error);
   }
 };
+
+const getListOverview = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const members = await Member.find({
+      account: userId,
+      removed: false,
+    });
+    const projectList = [];
+    for (let member of members) {
+      const memberId = member._id;
+      const companyId = member.company;
+      const projects = await Project.find({
+        company: companyId,
+        hasDeleted: false,
+      }).populate('company', '_id uniqueName');
+      for (let project of projects) {
+        const projectId = project._id;
+        const projectName = project.name;
+        const companyUniqueName = project.company.uniqueName;
+        const projectCreationTime = project.createdAt;
+        const teamMember = await Team.find({
+          member: memberId,
+          project: projectId,
+          removed: false,
+        });
+        if (teamMember) {
+          projectList.push({
+            _id: projectId,
+            name: projectName,
+            companyUniqueName: companyUniqueName,
+            createdAt: projectCreationTime,
+          });
+        }
+      }
+    }
+    projectList.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    );
+    return res.json({ projectList });
+  } catch (error) {
+    logger.error(`Project: ${error}`);
+    next(error);
+  }
+};
+
 // add associate in a project
 const addAssociateInProject = async (req, res, next) => {
   try {
@@ -1018,10 +1061,15 @@ const projectOverview = async (req, res, next) => {
           path: 'concernedAdmin',
           select: '_id firstName lastName profileImage',
         },
+        {
+          path: 'company',
+          select: 'uniqueName',
+        },
       ])
       .select('name status deadline concernedAdmin createdAt');
     let response = {
       project: {
+        _id: projectId,
         name: nameWordCapitalize(project.name),
         status: nameWordCapitalize(project.status),
         dueDate: ISOformat(project.dueDate),
@@ -1033,6 +1081,7 @@ const projectOverview = async (req, res, next) => {
             )
           : null,
         startingDate: ISOformat(project.createdAt),
+        companyUniqueName: project.company.uniqueName,
       },
     };
     response.tasks = [];
@@ -1045,7 +1094,7 @@ const projectOverview = async (req, res, next) => {
         },
         {
           path: 'boardId',
-          select: 'name',
+          select: '_id name',
         },
       ]);
     for (let i = 0; i < tasks.length; i++) {
@@ -1056,6 +1105,7 @@ const projectOverview = async (req, res, next) => {
         status: nameWordCapitalize(task.status),
         dueDate: ISOformat(task.dueDate),
         priority: task.priority,
+        boardId: task.boardId._id,
       };
       let assignedTo = await TaskAssign.findOne({
         taskId: task._id,
@@ -1112,4 +1162,5 @@ module.exports = {
   projectListForMember,
   projectOverview,
   deleteProject,
+  getListOverview,
 };

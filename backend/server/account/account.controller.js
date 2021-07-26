@@ -99,7 +99,6 @@ const getTodaysTask = async (req) => {
       .sort({ createdAt: -1 })
       .select('taskId')
       .populate(options);
-
     const userTask = {
       assignToUser: [...assignToUserToday],
       assignByUser: [...assignByUserToday],
@@ -113,16 +112,21 @@ const getTodaysTask = async (req) => {
 };
 
 // get upcoming tasks for user
-const getUpcomingTasks = async (req, From, nextNdays) => {
+const getUpcomingTasks = async (req, dayFrom, dayTo) => {
   try {
     let tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + From);
+    tomorrow.setDate(tomorrow.getDate() + dayFrom);
+    tomorrow.setHours(0, 0, 0, 0);
+
     let oneWeek = new Date();
-    oneWeek.setDate(oneWeek.getDate() + nextNdays);
+    oneWeek.setDate(oneWeek.getDate() + dayTo);
+    oneWeek.setHours(23, 59, 59, 999);
+
     const upcomingTask = await Task.find({
       dueDate: { $gte: tomorrow, $lte: oneWeek },
     }).sort({ createdAt: -1 });
     taskId = upcomingTask.map((e) => e._id);
+
     const assignToUserUpcoming = await TaskAssign.find({
       taskId: taskId,
       assignedPerson: req.user._id,
@@ -907,9 +911,12 @@ const inviteSignup = async (req, res, next) => {
 const userTaskList = async (req, res, next) => {
   try {
     const todaysTasks = await getTodaysTask(req);
-    const tomorrowTasks = await getUpcomingTasks(req, 1, 1);
-    const upcomingTasks = await getUpcomingTasks(req, 1, 15);
+    const tomorrowTasks = await getUpcomingTasks(req, 1, 1); // next 1 day
+    const upcomingTasks = await getUpcomingTasks(req, 1, 15); // next 15 days
     const userTask = { todaysTasks, tomorrowTasks, upcomingTasks };
+    console.log(
+      JSON.stringify({ todaysTasks, tomorrowTasks, upcomingTasks }),
+    );
     return sendJSONresponse(res, 200, userTask);
   } catch (error) {
     logger.error(`Account: ${error}`);
