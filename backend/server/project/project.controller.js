@@ -1061,10 +1061,15 @@ const projectOverview = async (req, res, next) => {
           path: 'concernedAdmin',
           select: '_id firstName lastName profileImage',
         },
+        {
+          path: 'company',
+          select: 'uniqueName',
+        },
       ])
       .select('name status deadline concernedAdmin createdAt');
     let response = {
       project: {
+        _id: projectId,
         name: nameWordCapitalize(project.name),
         status: nameWordCapitalize(project.status),
         dueDate: ISOformat(project.dueDate),
@@ -1076,6 +1081,7 @@ const projectOverview = async (req, res, next) => {
             )
           : null,
         startingDate: ISOformat(project.createdAt),
+        companyUniqueName: project.company.uniqueName,
       },
     };
     response.tasks = [];
@@ -1088,7 +1094,7 @@ const projectOverview = async (req, res, next) => {
         },
         {
           path: 'boardId',
-          select: 'name',
+          select: '_id name',
         },
       ]);
     for (let i = 0; i < tasks.length; i++) {
@@ -1099,6 +1105,7 @@ const projectOverview = async (req, res, next) => {
         status: nameWordCapitalize(task.status),
         dueDate: ISOformat(task.dueDate),
         priority: task.priority,
+        boardId: task.boardId._id,
       };
       let assignedTo = await TaskAssign.findOne({
         taskId: task._id,

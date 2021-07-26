@@ -25,6 +25,7 @@ const ProjectInfo = ({
       style={{
         fontSize: 18.5,
         fontWeight: 'bold',
+        paddingBottom: 4,
         ...containerStyle,
       }}
     >
@@ -64,6 +65,7 @@ const Index = (props: any) => {
   const [selected, setSelected] = React.useState<string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [companyUnqName, setCompanyUnqName] = React.useState('');
 
   const { projectId } = useParams<{ projectId: string }>();
 
@@ -74,15 +76,13 @@ const Index = (props: any) => {
     Axios.get(`${server}projects/overview?pid=${projectId}`, headers)
       .then((res) => {
         const { project } = res.data.response;
-
         setName(project.name);
         setDueDate(project.dueDate);
         setStatus(project.status.toLowerCase());
         setLead(project.lead);
         setStartingDate(project.startingDate);
-
+        setCompanyUnqName(project.companyUniqueName);
         setTasks(res.data.response.tasks);
-
         setIsLoading(false);
       })
       .catch((err) => {
@@ -196,13 +196,11 @@ const Index = (props: any) => {
 
           <div>
             <div>
-              <h1>
-                {t('app.company.Projects.Name')}:{' '}
-                {/* Project name:{' '} */}
-                <span style={{ fontWeight: 'normal' }}>{name}</span>
-              </h1>
-            </div>
-            <div>
+              <ProjectInfo
+                context={t('app.company.Projects.Name')}
+                // context="Starting date: "
+                data={name}
+              />
               <ProjectInfo
                 context={t('app.company.Projects.Beginning')}
                 // context="Starting date: "
@@ -263,6 +261,8 @@ const Index = (props: any) => {
                     rowsPerPage={rowsPerPage}
                     setRowsPerPage={setRowsPerPage}
                     tasks={tasks}
+                    companyUnqName={companyUnqName}
+                    projectId={projectId}
                   />
                 </>
               )}

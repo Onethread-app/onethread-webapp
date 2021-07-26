@@ -6,10 +6,10 @@ import CreateProjectDialog from 'components/project/CreateProjectDialog';
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
 import { CircularProgress } from '@material-ui/core';
-
-// import TextField from '@material-ui/core/TextField';
+import { useHistory } from 'react-router-dom';
 
 const Projects = () => {
+  const history = useHistory();
   const [isLoading, setIsLoading] = React.useState(true);
   const [searchInput, setSearchInput] = React.useState('');
   const [showDialog, setShowDialog] = React.useState(false);
@@ -94,6 +94,11 @@ const Projects = () => {
                     cursor: 'pointer',
                     color: '#333',
                   }}
+                  onClick={() =>
+                    history.push(
+                      `/company/${p.companyUniqueName}/project/${p._id}/overview`,
+                    )
+                  }
                 >
                   <span
                     style={{
