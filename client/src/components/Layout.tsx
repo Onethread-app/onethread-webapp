@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { Loading } from './Loading';
 import { connect, useDispatch } from 'react-redux';
 import { User } from 'stores/user/Reducer';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty, isEqual, isNil } from 'lodash';
 import {
   withRouter,
   RouteComponentProps,
@@ -171,38 +171,60 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   }, [props.rooms, location.search]);
 
   useEffect(() => {
+    const { path } = props.match;
+    const { cname } = props.match.params as any;
+
     if (
-      (props.match.params as any).cname &&
-      (props.match.params as any).cname !== props.company.uniqueName
+      path.includes('cname') &&
+      (isNil(cname) === true || cname === 'undefined')
     ) {
+      props.history.push(`/notFound`);
+    }
+    if (cname && cname !== props.company.uniqueName) {
       updateCompanyReducer();
     }
   }, [props.match, props.company.uniqueName]);
 
   useEffect(() => {
+    const { path } = props.match;
+    const { projectId } = props.match.params as any;
     if (
-      (props.match.params as any).projectId &&
-      (props.match.params as any).projectId !== props.project._id
+      path.includes('projectId') &&
+      (isNil(projectId) === true || projectId === 'undefined')
     ) {
+      props.history.push(`/notFound`);
+    }
+    if (projectId && projectId !== props.project._id) {
       updateProjectReducer();
     }
   }, [props.match, props.company._id, props.project._id]);
 
   useEffect(() => {
+    const { path } = props.match;
+    const { boardId } = props.match.params as any;
     if (
-      (props.match.params as any).boardId &&
-      (props.match.params as any).boardId !== props.boardId
+      path.includes('boardId') &&
+      (isNil(boardId) === true || boardId === 'undefined')
     ) {
+      props.history.push(`/notFound`);
+    }
+    if (boardId && boardId !== props.boardId) {
       updateBoardReducer();
     }
     props.fetchRooms();
   }, [props.match, props.project._id, props.boardId]);
 
   useEffect(() => {
+    const { path } = props.match;
+    const { taskId } = props.match.params as any;
     if (
-      (props.match.params as any).taskId &&
-      (props.match.params as any).taskId !== props.taskId
+      path.includes('taskId') &&
+      (isNil(taskId) === true || taskId === 'undefined')
     ) {
+      props.history.push(`/notFound`);
+    }
+
+    if (taskId && taskId !== props.taskId) {
       updateTaskReducer();
     }
   }, [props.match, props.project._id, props.boardId, props.taskId]);
