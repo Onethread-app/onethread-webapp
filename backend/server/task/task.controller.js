@@ -28,6 +28,21 @@ const {
 } = require('../helpers/jsonResponse');
 const { Team } = require('../team-member/team.model');
 
+const getTaskMembers = async (taskId) => {
+  const taskMembers = await TaskAssign.find({
+    taskId,
+  })
+    .select('_id assignedPerson')
+    .populate([
+      {
+        path: 'assignedPerson',
+        select: '_id firstName lastName profileImage',
+      },
+    ])
+    .exec();
+  return taskMembers;
+};
+
 const load = (req, res, next, id) => {
   Task.findById(id)
     .populate('account', '_id firstName lastName')
@@ -84,7 +99,7 @@ const create = async (req, res, next) => {
 
       column.tasks.push(createdTask._id);
       await column.save();
-  
+
       await Project.findByIdAndUpdate(
         { _id: req.query.pid },
         {
@@ -111,7 +126,7 @@ const create = async (req, res, next) => {
           name: req.user.name,
           pusherSock: req.headers.clientid,
         },
-      )
+      );
       return sendJSONresponse(res, 201, responseData);
     } else {
       sendErrorResponse(res, 400, 'ValidationError', {
@@ -444,8 +459,8 @@ const dragTask = async (req, res, next) => {
         pusherSock: req.headers.clientid,
       },
       req.body.sourceColumnId,
-      req.body.destinationColumnId
-      )
+      req.body.destinationColumnId,
+    );
 
     const responseData = {
       sourceColumn: {
@@ -475,6 +490,7 @@ module.exports = {
   load,
   dragTask,
   addMember,
+  getTaskMembers,
   getMembers,
   deleteMember,
   suggestMember,

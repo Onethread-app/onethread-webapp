@@ -110,7 +110,7 @@ const { t } = useTranslation();
         style={{ backgroundColor: 'white' }}
       >
         <div className="v-mid dtc">
-          <div className="w-two-thirds-l w-90-m center">
+          <div className="w-two-thirds-l w-100 center">
             <Form
               onSubmit={onSubmit}
               initialValues={{ email: email ? email : '' }}
@@ -131,11 +131,11 @@ const { t } = useTranslation();
                 <>
                   {/* <h1 className="pl3-ns">Sign Up</h1> */}
                   <h1 className="pl3-ns">{t('landing.sign-up.sign-up-form.sign-up-text')}</h1>
-                  <form className="dt fl cf" onSubmit={handleSubmit}>
-                    <div className="mw9 center ph3-ns v-mid dtc">
+                  <form onSubmit={handleSubmit}>
+                    <div className="mw7 center ph3-ns v-mid">
                       <SubmitError errorMessage={submitError} />
-                      <div className="flex pt3 justify-content">
-                        <div>
+                     
+                      <div>
                           <Field<string>
                             name="firstName"
                             validate={composeValidators(
@@ -184,6 +184,7 @@ const { t } = useTranslation();
                             )}
                           />
                         </div>
+                        <div>
                         <Field<string>
                           name="lastName"
                           validate={composeValidators(
@@ -191,8 +192,13 @@ const { t } = useTranslation();
                             maxValue(32),
                           )}
                           render={({ input, meta }) => (
-                            <div className="ml3">
-                              <div>
+                            <div
+                                className={` ${
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
+                                }`}
+                              >
                                 <InputGroupFieldWithError
                                   id="lastName"
                                   className={`bw1 pb2 br0 bb ${
@@ -203,9 +209,18 @@ const { t } = useTranslation();
                                   value={input.value}
                                   onChange={input.onChange}
                                   autoFocus={true}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <Icon
+                                        icon="mugshot"
+                                        style={{ color: '#3F61C5' }}
+                                      />
+                                    </span>
+                                  }
                                   style={{
                                     boxShadow: 'none',
                                     fontSize: '18px',
+                                    paddingLeft: '40px',
                                   }}
                                   // placeHolder="Last Name"
                                   placeHolder={t('landing.sign-up.sign-up-form.last-name')}
@@ -214,11 +229,11 @@ const { t } = useTranslation();
                                     (meta.error || meta.submitError)
                                   }
                                 />
-                              </div>
+                              
                             </div>
                           )}
                         />
-                      </div>
+                        </div>
 
                       {/* <div className={`flex justify-content`}>
                         <div style={{ width: '90px' }}>

@@ -6,7 +6,12 @@ const { Member } = require('./member/member.model');
 const Plan = require('../plan/plan.model');
 const { createSlug } = require('../helpers/SlugCreator');
 const Task = require('../task/task.model');
+const SubTask = require('../task/subtask/subtask.model');
 const Boardcolumn = require('../boardColumn/boardColumn.model');
+const { getTaskMembers } = require('../task/task.controller');
+const {
+  projectTeamMembers,
+} = require('../team-member/team.controller');
 const {
   triggerNotification,
 } = require('../services/webpush.services');
@@ -414,8 +419,12 @@ const authorizeUser = (functionalRole, ...userRoles) => {
     try {
       const member = await Member.findOne({
         account: req.user._id,
-        company: req.headers.companyid || req.params.companyId, //apatoto pore name or id hobe
+        company:
+          req.headers.companyid ||
+          req.params.companyId ||
+          req.body.companyId, //apatoto pore name or id hobe
       }).exec();
+      console.log(member);
       if (
         !member ||
         (functionalRole === 'all' && !userRoles.includes(member.role))
@@ -587,36 +596,94 @@ const dashBoard = async (req, res, next) => {
       removed: false,
       isRejected: false,
     }).countDocuments();
-    let projectCompilation = [];
+    // let projectCompilation = [];
+    let taskCompilation = [];
     let projectList = await Project.find({
       $or: [{ company: companyId }, { associate: companyId }],
       removed: false,
-    }).select('_id name');
+      hasDeleted: false,
+    }).select('_id name status deadline');
     let i;
+
     for (i = 0; i < projectList.length; i++) {
-      let projectName = projectList[i].name;
-      const taskNumbers = await Task.find({
+      const tasks = await Task.find({
         project: { $in: projectList[i]._id },
-      }).countDocuments();
-      const doneTask = await Task.find({
-        $and: [
-          { project: { $in: projectList[i]._id }, status: 'done' },
-        ],
-      }).countDocuments();
-      let projectObj = {};
-      projectObj._id = projectList[i]._id;
-      projectObj.name = projectName;
-      projectObj.taskNumbers = taskNumbers;
-      projectObj.doneTask = doneTask;
-      projectCompilation.push(projectObj);
+      })
+        .select('_id name status dueDate project boardId')
+        .populate({
+          path: 'project',
+          select: '_id name',
+          populate: [
+            {
+              path: 'company',
+              select: '_id uniqueName',
+            },
+          ],
+        });
+
+      tasks.map(async (task) => {
+        let modifiedTask = {};
+        const totalSubtasks = await SubTask.find({
+          taskId: task._id,
+        }).countDocuments();
+        const doneSubtasks = await SubTask.find({
+          $and: [{ taskId: task._id, done: true }],
+        }).countDocuments();
+
+        const taskMembers = await getTaskMembers(task._id);
+        const members = taskMembers.map((tMember) => {
+          return tMember.assignedPerson;
+        });
+
+        modifiedTask._id = task._id;
+        modifiedTask.name = task.name;
+        modifiedTask.status = task.status;
+        modifiedTask.dueDate = task.dueDate;
+        modifiedTask.members = members;
+        modifiedTask.boardId = task.boardId;
+        modifiedTask.project = {
+          _id: task.project._id,
+          name: task.project.name,
+        };
+        modifiedTask.company = {
+          _id: task.project.company._id,
+          uniqueName: task.project.company.uniqueName,
+        };
+        modifiedTask.doneSubtasks = doneSubtasks;
+        modifiedTask.totalSubtasks = totalSubtasks;
+
+        taskCompilation.push(modifiedTask);
+      });
+
+      // let projectName = projectList[i].name;
+      // const members = await projectTeamMembers(projectList[i]._id);
+      // const taskNumbers = await Task.find({
+      //   project: { $in: projectList[i]._id },
+      // }).countDocuments();
+      // const doneTask = await Task.find({
+      //   $and: [
+      //     { project: { $in: projectList[i]._id }, status: 'done' },
+      //   ],
+      // }).countDocuments();
+      // let projectObj = {};
+      // projectObj._id = projectList[i]._id;
+      // projectObj.name = projectName;
+      // projectObj.status = projectList[i].status;
+      // projectObj.deadline = projectList[i].deadline;
+      // projectObj.members = members;
+      // projectObj.taskNumbers = taskNumbers;
+      // projectObj.doneTask = doneTask;
+      // projectCompilation.push(projectObj);
     }
+
     return sendJSONresponse(res, 200, {
       success: true,
       data: {
         totalProject,
         totalEmployee,
         totalAssociates,
-        projectCompilation,
+        // projectCompilation,
+        taskCompilation,
       },
     });
   } catch (error) {

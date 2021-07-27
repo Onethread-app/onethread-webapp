@@ -16,6 +16,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { priorityColor } from 'stores/UtilsActions';
+import { useHistory } from 'react-router-dom';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -164,45 +165,45 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort(event, property);
   };
 
-interface HeadCell {
-  id: keyof Data;
-  label: string;
-}
+  interface HeadCell {
+    id: keyof Data;
+    label: string;
+  }
 
-const { t } = useTranslation();
+  const { t } = useTranslation();
 
-const headCells: HeadCell[] = [
-  {
-    id: 'name',
-    label: `${t('app.project.Project-boards.Deliverable')}`,
-    // label: 'Deliverable',
-  },
-  {
-    id: 'assign',
-    label: `${t('app.project.Project-boards.Resource-Assign')}`,
-    // label: 'Resource Assign',
-  },
-  {
-    id: 'boardName',
-    label: `${t('app.project.Project-boards.Board')}`,
-    // label: 'Board',
-  },
-  {
-    id: 'priority',
-    label: `${t('app.project.Project-boards.Priority')}`,
-    // label: 'Priority',
-  },
-  {
-    id: 'status',
-    label: `${t('app.project.Project-boards.Status')}`,
-    // label: 'Status',
-  },
-  {
-    id: 'dueDate',
-    label: `${t('app.project.Project-boards.End')}`,
-    // label: 'End',
-  },
-];
+  const headCells: HeadCell[] = [
+    {
+      id: 'name',
+      label: `${t('app.project.Project-boards.Deliverable')}`,
+      // label: 'Deliverable',
+    },
+    {
+      id: 'assign',
+      label: `${t('app.project.Project-boards.Resource-Assign')}`,
+      // label: 'Resource Assign',
+    },
+    {
+      id: 'boardName',
+      label: `${t('app.project.Project-boards.Board')}`,
+      // label: 'Board',
+    },
+    {
+      id: 'priority',
+      label: `${t('app.project.Project-boards.Priority')}`,
+      // label: 'Priority',
+    },
+    {
+      id: 'status',
+      label: `${t('app.project.Project-boards.Status')}`,
+      // label: 'Status',
+    },
+    {
+      id: 'dueDate',
+      label: `${t('app.project.Project-boards.End')}`,
+      // label: 'End',
+    },
+  ];
 
   return (
     <TableHead>
@@ -266,7 +267,10 @@ const AppTable = ({
   rowsPerPage,
   setRowsPerPage,
   tasks,
+  companyUnqName,
+  projectId,
 }) => {
+  let history = useHistory();
   const classes = useStyles();
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -336,6 +340,12 @@ const AppTable = ({
                       role="checkbox"
                       tabIndex={-1}
                       key={row.name}
+                      onClick={() => {
+                        history.push(
+                          `/company/${companyUnqName}/project/${projectId}/board/${row.boardId}/task/${row.taskId}`,
+                        );
+                      }}
+                      style={{ cursor: 'pointer' }}
                     >
                       <StyledTableCell
                         component="th"

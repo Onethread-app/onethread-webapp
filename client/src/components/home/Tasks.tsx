@@ -18,9 +18,12 @@ const Tasks = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState(1);
   const [filterOption, setFilterOption] = useState(1);
+
   const [tasks, setTasks] = useState<any>([]);
   const [todaysTasks, setTodaysTasks] = useState<any>([]);
+  const [tomorrowTasks, setTomorrowTasks] = useState<any>([]);
   const [upcomingTasks, setUpcomingTasks] = useState<any>([]);
+  const [dueTasks, setDueTasks] = useState<any>([]);
 
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>(
@@ -39,7 +42,9 @@ const Tasks = () => {
           headers,
         );
         setTodaysTasks(response.data.todaysTasks);
+        setTomorrowTasks(response.data.tomorrowTasks);
         setUpcomingTasks(response.data.upcomingTasks);
+        setDueTasks(response.data.dueTasks);
         setLoading(false);
       }
     };
@@ -72,9 +77,7 @@ const Tasks = () => {
   };
 
   const mdfy = (task) => {
-    console.log({ task });
-    return task.map((t, i) => ({
-      no: i + 1,
+    let taskList = task.map((t, i) => ({
       taskName: t.taskId.name,
       assignee:
         t.assignedPerson.firstName + ' ' + t.assignedPerson.lastName,
@@ -82,6 +85,13 @@ const Tasks = () => {
       status: t.taskId.status,
       redirectTo: `/company/${t.taskId.project.company.uniqueName}/project/${t.taskId.project._id}/board/${t.taskId.boardId._id}/task/${t.taskId._id}`,
     }));
+    taskList.sort((a, b) => {
+      const aTime: any = new Date(a.deadline);
+      const bTime: any = new Date(b.deadline);
+      return aTime - bTime;
+    });
+    taskList = taskList.map((t, i) => ({ no: i + 1, ...t }));
+    return taskList;
   };
 
   useEffect(() => {
@@ -93,19 +103,56 @@ const Tasks = () => {
         setTasks(mdfy(sortTasks(todaysTasks.assignByUser)));
       }
       if (selectedTab === 2 && filterOption === 1) {
-        setTasks(mdfy(sortTasks(upcomingTasks.assignToUser)));
+        setTasks(mdfy(sortTasks(tomorrowTasks.assignToUser)));
       }
       if (selectedTab === 2 && filterOption === 2) {
+        setTasks(mdfy(sortTasks(tomorrowTasks.assignByUser)));
+      }
+      if (selectedTab === 3 && filterOption === 1) {
+        setTasks(mdfy(sortTasks(upcomingTasks.assignToUser)));
+      }
+      if (selectedTab === 3 && filterOption === 2) {
         setTasks(mdfy(sortTasks(upcomingTasks.assignByUser)));
+      }
+      if (selectedTab === 4 && filterOption === 1) {
+        setTasks(mdfy(sortTasks(dueTasks.assignToUser)));
+      }
+      if (selectedTab === 4 && filterOption === 2) {
+        setTasks(mdfy(sortTasks(dueTasks.assignByUser)));
       }
     }
   }, [
     todaysTasks,
+    tomorrowTasks,
     upcomingTasks,
+    dueTasks,
     filterOption,
     selectedTab,
     loading,
   ]);
+
+  const showStar = (assignTo) => {
+    const select = assignTo ? 'assignToUser' : 'assignByUser';
+    if (selectedTab === 1) {
+      return (
+        todaysTasks[select] && todaysTasks[select].length > 0 && '*'
+      );
+    } else if (selectedTab === 2) {
+      return (
+        tomorrowTasks[select] &&
+        tomorrowTasks[select].length > 0 &&
+        '*'
+      );
+    } else if (selectedTab === 3) {
+      return (
+        upcomingTasks[select] &&
+        upcomingTasks[select].length > 0 &&
+        '*'
+      );
+    } else {
+      return dueTasks[select] && dueTasks[select].length > 0 && '*';
+    }
+  };
 
   return (
     <div className="tasks">
@@ -140,7 +187,7 @@ const Tasks = () => {
               }}
             >
               <h5 className={`${selectedTab === 2 ? 'active' : ''}`}>
-                Upcoming
+                Tomorrow
               </h5>
               <span
                 style={{
@@ -148,40 +195,66 @@ const Tasks = () => {
                   margin: '0 .25rem',
                 }}
               >
+                ({tomorrowTasks.totalTasks})
+              </span>
+            </div>
+            <span className="divider">|</span>
+            <div
+              className="flex items-center"
+              onClick={() => {
+                setSelectedTab(3);
+                setFilterOption(1);
+              }}
+            >
+              <h5 className={`${selectedTab === 3 ? 'active' : ''}`}>
+                Upcoming
+              </h5>
+              <span
+                style={{
+                  color: selectedTab === 3 ? '#000' : '#a4a4a4',
+                  margin: '0 .25rem',
+                }}
+              >
                 ({upcomingTasks.totalTasks})
+              </span>
+            </div>
+            <span className="divider">|</span>
+            <div
+              className="flex items-center"
+              onClick={() => {
+                setSelectedTab(4);
+                setFilterOption(1);
+              }}
+            >
+              <h5 className={`${selectedTab === 4 ? 'active' : ''}`}>
+                Due Tasks
+              </h5>
+              <span
+                style={{
+                  color: selectedTab === 4 ? '#000' : '#a4a4a4',
+                  margin: '0 .25rem',
+                }}
+              >
+                ({dueTasks.totalTasks})
               </span>
             </div>
           </div>
           <div
             className="flex items-center"
-            style={{ paddingTop: '.4rem' }}
+            style={{ paddingTop: '.7rem' }}
           >
             <p
               className={`${filterOption === 1 ? 'active' : ''}`}
               onClick={() => setFilterOption(1)}
             >
-              Assigned to me{' '}
-              {selectedTab === 1
-                ? todaysTasks.assignToUser &&
-                  todaysTasks.assignToUser.length > 0 &&
-                  '*'
-                : upcomingTasks.assignToUser &&
-                  upcomingTasks.assignToUser.length > 0 &&
-                  '*'}
+              Assigned to me {showStar(true)}
             </p>
-            <span className="divider-small">|</span>
+            <span className="divider">|</span>
             <p
               className={`${filterOption === 2 ? 'active' : ''}`}
               onClick={() => setFilterOption(2)}
             >
-              Assigned by me{' '}
-              {selectedTab === 1
-                ? todaysTasks.assignByUser &&
-                  todaysTasks.assignByUser.length > 0 &&
-                  '*'
-                : upcomingTasks.assignByUser &&
-                  upcomingTasks.assignByUser.length > 0 &&
-                  '*'}
+              Assigned by me {showStar(false)}
             </p>
           </div>
         </div>

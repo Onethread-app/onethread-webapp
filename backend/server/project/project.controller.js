@@ -86,7 +86,7 @@ const createNewProjectForCompany = async (req, res, next) => {
   try {
     const member = await Member.findOne({
       account: req.user._id,
-      company: req.headers.companyid,
+      company: req.headers.companyid || req.body.companyId,
       removed: false,
     });
     if (!member) {
@@ -98,10 +98,9 @@ const createNewProjectForCompany = async (req, res, next) => {
       name: req.body.name,
       concernedAdmin: member.account,
       account: req.user._id,
-      departments: req.body.departments,
       deadline: req.body.deadline,
       color: req.body.color,
-      company: req.headers.companyid,
+      company: req.headers.companyid || req.body.companyId,
       description: '',
       outline: '',
     });
@@ -121,20 +120,93 @@ const createNewProjectForCompany = async (req, res, next) => {
         await createBoard(
           'General',
           project._id,
-          undefined,
-          undefined,
+          req.body.color,
           req.user._id,
         );
         logger.info(`General Board Created`);
         const room = await createRoom(
-          req.headers.companyid,
+          req.headers.companyid || req.body.companyId,
           project._id,
           req.user._id,
           'General',
         );
         logger.info(`General Room Created`);
         await createRoomMember(
-          req.headers.companyid,
+          req.headers.companyid || req.body.companyId,
+          project._id,
+          member.account,
+          room._id,
+          team._id,
+        );
+        logger.info(`General Room Member Created`);
+        return sendJSONresponse(res, 201, {
+          success: true,
+          message: 'New project created',
+          project,
+        });
+      })
+      .catch((error) => {
+        logger.error(`Project: ${error}`);
+        next(error);
+      });
+  } catch (error) {
+    console.log(error);
+    logger.error(`Project: ${error}`);
+    next(error);
+  }
+};
+
+const createNewProjectFromHome = async (req, res, next) => {
+  try {
+    const member = await Member.findOne({
+      account: req.user._id,
+      company: req.body.companyId,
+      removed: false,
+    });
+    if (!member) {
+      return sendErrorResponse(res, 404, 'MemberNotFoundError', {
+        message: 'You are not added in company',
+      });
+    }
+    const project = new Project({
+      name: req.body.name,
+      concernedAdmin: member.account,
+      account: req.user._id,
+      deadline: req.body.deadline,
+      color: req.body.color,
+      company: req.body.companyId,
+      description: '',
+      outline: '',
+    });
+    await project
+      .save()
+      .then(async (project) => {
+        logger.info(`new project created`);
+        const team = await teamCreate(
+          member.account,
+          member._id,
+          project._id,
+          'admin',
+        );
+        logger.info(
+          `${member.account} added into project id: ${project._id}`,
+        );
+        await createBoard(
+          'General',
+          project._id,
+          req.body.color,
+          req.user._id,
+        );
+        logger.info(`General Board Created`);
+        const room = await createRoom(
+          req.body.companyId,
+          project._id,
+          req.user._id,
+          'General',
+        );
+        logger.info(`General Room Created`);
+        await createRoomMember(
+          req.body.companyId,
           project._id,
           member.account,
           room._id,
@@ -157,70 +229,41 @@ const createNewProjectForCompany = async (req, res, next) => {
   }
 };
 
-const createNewProjectFromHome = async (req, res, next) => {
+const getListOverview = async (req, res, next) => {
   try {
-    const memberId = await Member.findOne({
+    const memberList = await Member.find({
       account: req.user._id,
-      company: req.params.companyId,
-    }).select('role account');
-    if (memberId.role === 'admin' || memberId.role === 'superAdmin') {
-      const project = new Project({
-        name: req.body.name,
-        concernedAdmin: req.user._id,
-        account: req.user._id,
-        company: req.params.companyId,
-        description: '',
-        outline: '',
-      });
-      await project.save();
-      logger.info(`project create for ${req.params.companyId}`);
-      const board = await createBoard(
-        'General',
-        project._id,
-        undefined,
-        undefined,
-        req.user._id,
-      );
-      logger.info(`General board created for ${project._id}`);
+      removed: false,
+    })
+      .select('_id company')
+      .populate('company', 'uniqueName');
 
-      const room = await createRoom(
-        req.params.companyId,
-        project._id,
-        req.user._id,
-        'General',
-      );
-      logger.info(`General room created for ${project._id}`);
+    const projectList = [];
+    for (let member of memberList) {
+      const teamMembers = await Team.find({
+        member: member._id,
+        removed: false,
+      }).populate('project', '_id name uniqueName createdAt');
 
-      const team = await teamCreate(
-        memberId.account,
-        memberId._id,
-        project._id,
-        'admin',
-      );
-      logger.info(`Team created for ${project._id}`);
-      logger.info(`${memberId.account} admin here`);
-
-      await createRoomMember(
-        req.params.companyId,
-        project._id,
-        memberId.account,
-        room._id,
-        team._id,
-      );
-      logger.info(
-        `${memberId.account} has been added to general room.`,
-      );
-      return sendJSONresponse(res, 201, project);
-    } else {
-      return sendErrorResponse(res, 403, 'PermissionError', {
-        message: `You are not authorized to create project`,
-      });
+      for (let teamMember of teamMembers) {
+        projectList.push({
+          _id: teamMember.project._id,
+          name: teamMember.project.name,
+          companyUniqueName: member.company.uniqueName,
+          createdAt: teamMember.createdAt,
+        });
+      }
     }
+    projectList.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    );
+    return res.json({ projectList });
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);
   }
 };
+
 // add associate in a project
 const addAssociateInProject = async (req, res, next) => {
   try {
@@ -1022,10 +1065,15 @@ const projectOverview = async (req, res, next) => {
           path: 'concernedAdmin',
           select: '_id firstName lastName profileImage',
         },
+        {
+          path: 'company',
+          select: 'uniqueName',
+        },
       ])
       .select('name status deadline concernedAdmin createdAt');
     let response = {
       project: {
+        _id: projectId,
         name: nameWordCapitalize(project.name),
         status: nameWordCapitalize(project.status),
         dueDate: ISOformat(project.dueDate),
@@ -1037,6 +1085,7 @@ const projectOverview = async (req, res, next) => {
             )
           : null,
         startingDate: ISOformat(project.createdAt),
+        companyUniqueName: project.company.uniqueName,
       },
     };
     response.tasks = [];
@@ -1049,7 +1098,7 @@ const projectOverview = async (req, res, next) => {
         },
         {
           path: 'boardId',
-          select: 'name',
+          select: '_id name',
         },
       ]);
     for (let i = 0; i < tasks.length; i++) {
@@ -1060,6 +1109,7 @@ const projectOverview = async (req, res, next) => {
         status: nameWordCapitalize(task.status),
         dueDate: ISOformat(task.dueDate),
         priority: task.priority,
+        boardId: task.boardId._id,
       };
       let assignedTo = await TaskAssign.findOne({
         taskId: task._id,
@@ -1116,4 +1166,5 @@ module.exports = {
   projectListForMember,
   projectOverview,
   deleteProject,
+  getListOverview,
 };

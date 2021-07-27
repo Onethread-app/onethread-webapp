@@ -43,6 +43,7 @@ import { projectRules } from './settings/projectrules';
 
 import './MyProjects.scss';
 import { useTranslation } from 'react-i18next';
+import StatusTag from 'components/project/StatusTag';
 
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
@@ -497,17 +498,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           style={{ paddingLeft: '25px' }}
                         >
                           <div className="flex items-center justify-between w-100">
-                            <span
-                              className={`bp3-tag modifier ${
-                                project.status === 'not-started'
-                                  ? 'bg-blue'
-                                  : project.status === 'ongoing'
-                                  ? 'bg-orange'
-                                  : 'bg-green'
-                              }`}
-                            >
-                              {project.status.replace(/-|\s/g, ' ')}
-                            </span>
+                            <StatusTag status={project.status} />
                           </div>
                           {project.status !== 'not-started' && (
                             <span

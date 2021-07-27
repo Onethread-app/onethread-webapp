@@ -6,8 +6,7 @@ import Tasks from 'components/home/Tasks';
 import Profile from 'components/home/Profile';
 import Weather from 'components/home/Weather';
 import ProfileProgress from 'components/home/ProfileProgress';
-import DueTasks from 'components/home/DueTasks';
-import ProjectLists from 'components/home/projectLists';
+import Projects from 'components/home/Projects';
 
 import './Index.styles.scss';
 
@@ -16,9 +15,6 @@ const index = () => {
     <div className="home-container">
       <div>
         <Tasks />
-      </div>
-      <div>
-        <DueTasks />
       </div>
       <div>
         <ProfileProgress />
@@ -30,9 +26,8 @@ const index = () => {
   ) : (
     <div className="home-container">
       <div>
-        <ProjectLists />
+        <Projects />
         <VideoConference />
-        <DueTasks />
       </div>
       <div>
         <Weather />
