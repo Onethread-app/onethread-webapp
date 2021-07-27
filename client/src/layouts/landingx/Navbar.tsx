@@ -65,10 +65,7 @@ const Navbar = () => {
             {/* <NavLink to="/pricing">Pricing</NavLink> */}
           </li>
           <li>
-            <a
-              href="https://blog.onethread.app/"
-              rel="noreferrer"
-            >
+            <a href="https://blog.onethread.app/" rel="noreferrer">
               {t('app.Navbar.Blog')}
               {/* Blog */}
             </a>
