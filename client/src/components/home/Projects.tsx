@@ -25,6 +25,7 @@ const Projects = () => {
   };
 
   const getProjectLists = async () => {
+    setIsLoading(true);
     const headers = tokenConfig();
     if ((headers.headers as any).Authorization) {
       const response = await tigrowApi.get(
@@ -134,7 +135,10 @@ const Projects = () => {
             borderRadius: '10px',
           }}
         >
-          <CreateProjectDialog setShowDialog={setShowDialog} />
+          <CreateProjectDialog
+            setShowDialog={setShowDialog}
+            projectList={getProjectLists}
+          />
         </Dialog>
       )}
     </>

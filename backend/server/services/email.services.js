@@ -154,6 +154,7 @@ module.exports.contactSaleMail = async (email, subject, message) => {
       /* required */
       CcAddresses: [
         'contact@onethread.app',
+        'orvi@onethread.app'
         /* more items */
       ],
       ToAddresses: [
@@ -193,6 +194,7 @@ module.exports.contactSaleMail = async (email, subject, message) => {
       logger.info(data.MessageId);
     })
     .catch((err) => {
+      console.log(err)
       logger.error(err, err.stack);
     });
 };

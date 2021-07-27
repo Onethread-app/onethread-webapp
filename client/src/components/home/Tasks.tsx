@@ -18,10 +18,12 @@ const Tasks = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState(1);
   const [filterOption, setFilterOption] = useState(1);
+
   const [tasks, setTasks] = useState<any>([]);
   const [todaysTasks, setTodaysTasks] = useState<any>([]);
   const [tomorrowTasks, setTomorrowTasks] = useState<any>([]);
   const [upcomingTasks, setUpcomingTasks] = useState<any>([]);
+  const [dueTasks, setDueTasks] = useState<any>([]);
 
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Data>(
@@ -42,6 +44,7 @@ const Tasks = () => {
         setTodaysTasks(response.data.todaysTasks);
         setTomorrowTasks(response.data.tomorrowTasks);
         setUpcomingTasks(response.data.upcomingTasks);
+        setDueTasks(response.data.dueTasks);
         setLoading(false);
       }
     };
@@ -111,11 +114,18 @@ const Tasks = () => {
       if (selectedTab === 3 && filterOption === 2) {
         setTasks(mdfy(sortTasks(upcomingTasks.assignByUser)));
       }
+      if (selectedTab === 4 && filterOption === 1) {
+        setTasks(mdfy(sortTasks(dueTasks.assignToUser)));
+      }
+      if (selectedTab === 4 && filterOption === 2) {
+        setTasks(mdfy(sortTasks(dueTasks.assignByUser)));
+      }
     }
   }, [
     todaysTasks,
     tomorrowTasks,
     upcomingTasks,
+    dueTasks,
     filterOption,
     selectedTab,
     loading,
@@ -133,12 +143,14 @@ const Tasks = () => {
         tomorrowTasks[select].length > 0 &&
         '*'
       );
-    } else {
+    } else if (selectedTab === 3) {
       return (
         upcomingTasks[select] &&
         upcomingTasks[select].length > 0 &&
         '*'
       );
+    } else {
+      return dueTasks[select] && dueTasks[select].length > 0 && '*';
     }
   };
 
@@ -204,6 +216,26 @@ const Tasks = () => {
                 }}
               >
                 ({upcomingTasks.totalTasks})
+              </span>
+            </div>
+            <span className="divider">|</span>
+            <div
+              className="flex items-center"
+              onClick={() => {
+                setSelectedTab(4);
+                setFilterOption(1);
+              }}
+            >
+              <h5 className={`${selectedTab === 4 ? 'active' : ''}`}>
+                Due Tasks
+              </h5>
+              <span
+                style={{
+                  color: selectedTab === 4 ? '#000' : '#a4a4a4',
+                  margin: '0 .25rem',
+                }}
+              >
+                ({dueTasks.totalTasks})
               </span>
             </div>
           </div>

@@ -49,7 +49,9 @@ module.exports = {
   createProjectFromHome: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
-      companyId: schema.company,
+      companyId: schema.company.required(),
+      deadline: schema.deadline,
+      color: schema.color,
     }),
   }),
   addAssociate: Joi.object().keys({

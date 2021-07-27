@@ -19,12 +19,12 @@ const sendMail = async (req, res, next) => {
       message: message,
     });
     await contact.save();
-    contactSaleMail(contact.email, contact.subject, contact.message);
+    await contactSaleMail(contact.email, contact.subject, contact.message);
     return sendJSONresponse(res, 201, {
       message: 'Email Sent Successfully',
     });
   } catch (error) {
-    sendErrorResponse();
+    console.log(error);
     logger.error(`${error}`);
     next(error);
   }
