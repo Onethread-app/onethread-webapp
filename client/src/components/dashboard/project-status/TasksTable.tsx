@@ -20,7 +20,7 @@ import MemberIcon from 'components/member/MemberIcon';
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650,
+    minWidth: 450,
   },
   container: {
     maxHeight: 440,
@@ -28,6 +28,18 @@ const useStyles = makeStyles({
   head: {
     color: '#65676d',
     fontSize: '1.1rem !important',
+    textAlign: 'center',
+  },
+  name: {
+    maxWidth: 120,
+    color: '#65676d',
+    fontSize: '1.1rem !important',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
+  textCenter: {
+    textAlign: 'center',
   },
   row: {
     transition: 'all 0.25s ease-in',
@@ -120,17 +132,11 @@ const TasksTable = (props: ITasksTable) => {
         >
           <TableHead>
             <TableRow>
-              <TableCell className={classes.head}>Name</TableCell>
-              <TableCell className={classes.head} align="right">
-                Members
-              </TableCell>
-              <TableCell className={classes.head} align="right">
-                Status
-              </TableCell>
-              <TableCell className={classes.head} align="right">
-                Due Date
-              </TableCell>
-              <TableCell className={classes.head} align="right">
+              <TableCell className={classes.name}>Name</TableCell>
+              <TableCell className={classes.head}>Members</TableCell>
+              <TableCell className={classes.head}>Status</TableCell>
+              <TableCell className={classes.head}>Due Date</TableCell>
+              <TableCell className={classes.head}>
                 Subtasks Remaining
               </TableCell>
             </TableRow>
@@ -148,11 +154,15 @@ const TasksTable = (props: ITasksTable) => {
                     onClick={() => handleRowClick(data)}
                     className={classes.row}
                   >
-                    <TableCell component="th" scope="row">
+                    <TableCell
+                      className={classes.name}
+                      component="th"
+                      scope="row"
+                    >
                       {data.name}
                     </TableCell>
-                    <TableCell align="right">
-                      <div className="flex items-center justify-end">
+                    <TableCell>
+                      <div className="flex items-center justify-center">
                         {data.members.map((member: any) => (
                           <MemberIcon
                             name={`${member.firstName} ${member.lastName}`}
@@ -162,15 +172,29 @@ const TasksTable = (props: ITasksTable) => {
                         ))}
                       </div>
                     </TableCell>
-                    <TableCell align="right">{data.status}</TableCell>
-                    <TableCell align="right">
+                    <TableCell className={classes.textCenter}>
+                      <span
+                        className="bp3-tag ttc"
+                        style={{
+                          background:
+                            data.status === 'done'
+                              ? '#2EB67D'
+                              : data.status === 'in-progress'
+                              ? '#08A0F7'
+                              : '#FFA800',
+                        }}
+                      >
+                        {data.status.replace(/-|\s/g, ' ')}
+                      </span>
+                    </TableCell>
+                    <TableCell className={classes.textCenter}>
                       {data.dueDate
                         ? moment(data.dueDate).format('DD/MM/YYYY')
                         : 'Not Set'}
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell>
                       <div className="flex items-center">
-                        <div className="w-80">
+                        <div className="w-70 mr3">
                           <BorderLinearProgress
                             variant="determinate"
                             value={
