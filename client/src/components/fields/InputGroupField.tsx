@@ -93,9 +93,9 @@ export const InputGroupFieldWithLabel = (
     inline={props.inline}
     intent={props.error ? Intent.DANGER : Intent.NONE}
     label={
-      <p className="fw5" style={{ fontSize: '.8rem' }}>
+      <div className="fw5" style={{ fontSize: '.8rem' }}>
         {props.label}
-      </p>
+      </div>
     }
     helperText={props.error ? props.error : props.helperText}
     labelFor={props.id}

@@ -13,13 +13,28 @@ export interface IFile {
   s3Key: string;
 }
 
+export interface ITaskMember {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  profileImage?: string;
+}
+
+export interface IBoardMember {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  profileImage?: string;
+  name: string;
+}
+
 export interface TaskBoard {
   _id: string;
   name: string;
   department: string;
   color: string;
-  columns?: IColumn[];
-  members?: Object[];
+  columns: IColumn[];
+  members: IBoardMember[];
   totalTasks: number;
   remainingTasks: number;
 }
@@ -32,13 +47,15 @@ export interface ITask {
   currentColumnName: string;
   createdAt: Date;
   createdBy: string;
-  status?: {};
-  assignedMembers?: Object[];
+  status: string;
+  assignedMembers?: ITaskMember[];
   dueDate?: Date;
-  priority?: number;
+  priority: number;
   file?: IFile[];
   comments?: Object[];
   column?: IColumn;
+  boardId?: string;
+  activityCount?: number;
 }
 
 export interface IBoard {
@@ -61,6 +78,7 @@ const InitialState = {
   },
   currentTask: {},
   creatingBoard: false,
+  creatingTask: false,
   fetchingBoards: false,
   fetchingBoard: false,
   fetchingColumn: false,
@@ -77,6 +95,7 @@ const InitialState = {
   boardColumnError: '',
   boardTaskError: '',
   taskError: '',
+  errorOnCreatingTask: '',
   errorOnUpdatingBoardName: '',
   errorOnFetchingBoard: '',
   errorOnTaskDelete: '',
@@ -243,7 +262,8 @@ export const BoardReducer = (state = InitialState, action: any) => {
     case BoardActionTypes.CREATE_TASK_START:
       return {
         ...state,
-        fetchingTask: true,
+        creatingTask: true,
+        errorOnCreatingTask: '',
       };
     case BoardActionTypes.CREATE_TASK_SUCCESS:
       return {
@@ -260,13 +280,13 @@ export const BoardReducer = (state = InitialState, action: any) => {
                 : column,
           ),
         },
-        fetchingTask: false,
+        creatingTask: false,
       };
     case BoardActionTypes.CREATE_TASK_FAILURE:
       return {
         ...state,
-        boardTaskError: action.payload,
-        fetchingTask: false,
+        errorOnCreatingTask: action.payload,
+        creatingTask: false,
       };
     case BoardActionTypes.DRAG_AND_DROP_TASK_START:
       return {
