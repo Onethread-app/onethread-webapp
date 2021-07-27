@@ -1,11 +1,13 @@
 import { User } from 'stores/user/Reducer';
 import React, { useState, useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
-import { Card, Dialog } from '@blueprintjs/core';
-import { AnnouncementEditor } from './announcementEditor';
+import { Card } from '@blueprintjs/core';
+// import { Card, Dialog } from '@blueprintjs/core';
+// import { AnnouncementEditor } from './announcementEditor';
 import { tigrowApi } from 'config';
 import { ICompany } from 'stores/company/Reducer';
-import { tokenConfig, companyPermit } from 'stores/UtilsActions';
+import { tokenConfig } from 'stores/UtilsActions';
+// import { tokenConfig, companyPermit } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import {
   getCompanyAnnouncement,
@@ -21,7 +23,7 @@ import DashboardSummery from 'components/dashboard/dashboard-summary/DashboardSu
 import TotalInfo from 'components/dashboard/total-info/TotalInfo';
 import ProjectStatus from 'components/dashboard/project-status/ProjectStatus';
 // import Progressbar from 'components/dashboard/progressbar/Progressbar';
-import CompanyAnnouncements from 'components/dashboard/company-announcements/CompanyAnnouncements';
+// import CompanyAnnouncements from 'components/dashboard/company-announcements/CompanyAnnouncements';
 // import firebase from '../../firebase';
 import {
   ADD_TOTAL_ASSOCIATE,
@@ -34,6 +36,8 @@ import { isMobileOnly } from 'react-device-detect';
 import { orderBy } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
+import CompanyAnnouncementsList from 'components/dashboard/company-announcements-list/CompanyAnnouncementsList';
+// import CompanyAnnouncementItem from 'components/dashboard/company-announcements-new/CompanyAnnouncementItem';
 
 interface DashBoardViewProps {
   user: User;
@@ -62,19 +66,19 @@ interface latestTask {
 }
 
 const DashboardViewComponent = (props: DashBoardViewProps) => {
-  const [
-    showAnnouncementDialog,
-    setShowAnnouncementDialog,
-  ] = useState(false);
+  // const [
+  //   showAnnouncementDialog,
+  //   setShowAnnouncementDialog,
+  // ] = useState(false);
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(Object);
   const [currentTaskPage, setCurrentTaskPage] = useState(1);
-  const [
-    currentAnnouncementPage,
-    setCurrentAnnouncementPage,
-  ] = useState(1);
+  // const [
+  //   currentAnnouncementPage,
+  //   setCurrentAnnouncementPage,
+  // ] = useState(1);
   const [taskItemsPerPage] = useState(5);
-  const [announcementItemsPerPage] = useState(5);
+  // const [announcementItemsPerPage] = useState(5);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -136,22 +140,22 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     indexOfLastTask,
   );
 
-  const indexOfLastAnnouncement =
-    currentAnnouncementPage * announcementItemsPerPage;
-  const indexOfFirstAnnouncement =
-    indexOfLastAnnouncement - announcementItemsPerPage;
-  let currentAnnouncements: any;
-  if (props.company.announce) {
-    const allAnnouncements = orderBy(
-      props.company.announce,
-      ['createdAt'],
-      ['desc'],
-    );
-    currentAnnouncements = allAnnouncements.slice(
-      indexOfFirstAnnouncement,
-      indexOfLastAnnouncement,
-    );
-  }
+  // const indexOfLastAnnouncement =
+  //   currentAnnouncementPage * announcementItemsPerPage;
+  // const indexOfFirstAnnouncement =
+  //   indexOfLastAnnouncement - announcementItemsPerPage;
+  // let currentAnnouncements: any;
+  // if (props.company.announce) {
+  //   const allAnnouncements = orderBy(
+  //     props.company.announce,
+  //     ['createdAt'],
+  //     ['desc'],
+  //   );
+  //   currentAnnouncements = allAnnouncements.slice(
+  //     indexOfFirstAnnouncement,
+  //     indexOfLastAnnouncement,
+  //   );
+  // }
 
   const nextTaskPage = (e) => {
     e.preventDefault();
@@ -163,30 +167,29 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     setCurrentTaskPage(currentTaskPage - 1);
   };
 
-  const nextAnnouncementPage = (e) => {
-    e.preventDefault();
-    setCurrentAnnouncementPage(currentAnnouncementPage + 1);
-  };
+  // const nextAnnouncementPage = (e) => {
+  //   e.preventDefault();
+  //   setCurrentAnnouncementPage(currentAnnouncementPage + 1);
+  // };
 
-  const prevAnnouncementPage = (e) => {
-    e.preventDefault();
-    setCurrentAnnouncementPage(currentAnnouncementPage - 1);
-  };
+  // const prevAnnouncementPage = (e) => {
+  //   e.preventDefault();
+  //   setCurrentAnnouncementPage(currentAnnouncementPage - 1);
+  // };
 
-  const designationMap = {
-    director: 'Director',
-    cxo: 'CXO',
-    seniorManager: 'Senior Manager',
-    middleManager: 'Middle Manager',
-    operationalEmployee: 'Operational Employee',
-  };
+  // const designationMap = {
+  //   director: 'Director',
+  //   cxo: 'CXO',
+  //   seniorManager: 'Senior Manager',
+  //   middleManager: 'Middle Manager',
+  //   operationalEmployee: 'Operational Employee',
+  // };
 
   // const width = {
   //   width: '100%',
   // };
 
   const { t } = useTranslation();
-
   return (
     <>
       {loading === false ? (
@@ -236,14 +239,15 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 className="flex flex-row-ns flex-column-reverse w-100 items-start mt5 mb4 pb0-ns"
                 style={{ gap: '1.5rem' }}
               >
-                <div className="w-50-ns w-100">
+                {/* // */}
+                {/* <Card className="w-50-ns w-100">
                   <div className="flex justify-between items-center">
                     <h3
                       style={{ color: '#3484F0' }}
                       className="justify-center f3-ns f5"
                     >
                       {t('app.company.Dashboard.Announce')}
-                      {/* Company Announcements */}
+                      Company Announcements
                     </h3>
 
                     {companyPermit(props.company.role) && (
@@ -270,20 +274,20 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                           {t(
                             'app.company.Dashboard.Create-Announcement',
                           )}
-                          {/* Create Announcement */}
+                          Create Announcement
                         </span>
                       </button>
                     )}
                   </div>
                   {props.company.announce && (
-                    <Card
-                      className="w-100-l w-100 pa4 shadow-1 br2 mt2"
+                    <div
+                      className="w-100-l w-100 pa3 shadow-1 br2 mt2"
                       style={{ borderLeft: '10px solid #3484F0' }}
                     >
                       {props.company.announce.length > 0 ? (
                         currentAnnouncements.map(
                           (announcement: any) => (
-                            <CompanyAnnouncements
+                            <CompanyAnnouncementItem
                               divison={
                                 announcement.memberId &&
                                 announcement.memberId.designations
@@ -326,7 +330,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         <Typography>
                           {t('app.company.Dashboard.No-Announcement')}
                         </Typography>
-                        // <Typography>No Announcement</Typography>
+                         // <Typography>No Announcement</Typography>
                       )}
                       {props.company.announce.length > 5 && (
                         <div className="flex flex-row items-end w-100 justify-end">
@@ -364,9 +368,12 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                           </div>
                         </div>
                       )}
-                    </Card>
+                    </div>
                   )}
-                </div>
+                </Card> */}
+
+                <CompanyAnnouncementsList company={props.company} />
+                {/* // */}
                 <div className="w-50-ns w-100">
                   <h3
                     className="f3-ns f5"
@@ -486,7 +493,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
       ) : (
         <Loading />
       )}
-      {showAnnouncementDialog && (
+      {/* {showAnnouncementDialog && (
         <Dialog
           onClose={() =>
             setShowAnnouncementDialog(!showAnnouncementDialog)
@@ -502,7 +509,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
             />
           </div>
         </Dialog>
-      )}
+      )} */}
     </>
   );
 };
