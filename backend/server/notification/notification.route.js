@@ -25,7 +25,7 @@ router
   .get(authorization, notificationCtrl.read);
 
 router
-  .route('/seen/:companyId')
+  .route('/seen')
   .get(authorization, notificationCtrl.seen);
 
 module.exports = router;
