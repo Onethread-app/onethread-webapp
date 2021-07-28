@@ -77,7 +77,7 @@ router
     subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.editCertification),
-    companyCtrl.editCertification
+    companyCtrl.editCertification,
   );
 router.route('/:companyId/parentorg').put(
   authorization,
@@ -125,8 +125,6 @@ router
     companyCtrl.allNoticesForCompany,
   );
 
-// 		);
-
 router
   .route('/:companyId/dashboard')
   .get(
@@ -142,7 +140,7 @@ router
     authorization,
     subCtrl.subscriptionExpireCheck(),
     companyCtrl.latestCompletedTasks,
-  )
+  );
 
 // companies list for individual user
 router
