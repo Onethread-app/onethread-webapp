@@ -1,102 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-// import {
-//   sortProjectsByDeadline,
-//   sortProjectsByStatus,
-//   sortProjectsByTasksRemaining,
-// } from 'helpers/utils';
-// import { Typography } from '@material-ui/core';
-// import ProjectItem from './ProjectItem';
 import './ProjectStatus.scss';
 import TasksTable from './TasksTable';
 
 interface IProjectStatus {
   tasks: any;
 }
+interface Data {
+  taskname: string;
+  projectname: string;
+  priority: number;
+  members: string;
+  dueDate: string;
+  status: string;
+  subtask: number;
+  randomField: string;
+}
+
+type Order = 'asc' | 'desc';
 
 const ProjectStatus = (props: IProjectStatus) => {
-  const [tasksToShow, setTasksToShow] = useState<any>();
+  const [order, setOrder] = React.useState<Order>('asc');
+  const [orderBy, setOrderBy] = React.useState<keyof Data>(
+    'randomField',
+  );
+  const [selected, setSelected] = React.useState<string[]>([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setTasksToShow(props.tasks);
-  }, [props.tasks]);
-
-  // const handleSortByDeadline = () => {
-  //   sortProjectsByDeadline(props.projects);
-  // };
-  // const handleSortByStatus = () => {
-  //   sortProjectsByStatus(props.projects);
-  // };
-  // const handleSortByTasksRemaining = () => {
-  //   sortProjectsByTasksRemaining(props.projects);
-  // };
+  const mTask = props.tasks.map((task) => ({
+    taskname: task.name,
+    projectname: task.project.name,
+    members: task.members,
+    status: task.status,
+    dueDate: task.dueDate ? task.dueDate : `December 31, 1970`,
+    doneSubtasks: task.doneSubtasks,
+    totalSubtasks: task.totalSubtasks,
+    boardId: task.boardId,
+    companyUniqueName: task.company.uniqueName,
+    projectId: task.project._id,
+    taskId: task._id,
+    priority: task.priority,
+    remainingSubtask: task.totalSubtasks - task.doneSubtasks,
+  }));
 
   return (
     <div className="project-status mb5">
       <div className="flex justify-between mb3">
-        <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
+        <h3
+          className="f3-ns f5"
+          style={{
+            color: '#3484F0',
+          }}
+        >
           {t('app.company.Dashboard.Project-status')}
         </h3>
-        {/* <div className="sort flex items-center pv2 ph3">
-          <p>
-            Sort By{' '}
-            <span className="pointer" onClick={handleSortByDeadline}>
-              Deadline
-            </span>
-          </p>
-          <p>
-            Sort By{' '}
-            <span className="pointer" onClick={handleSortByStatus}>
-              Status
-            </span>
-          </p>
-          <p>
-            Sort By{' '}
-            <span
-              className="pointer"
-              onClick={handleSortByTasksRemaining}
-            >
-              Task Remaining
-            </span>
-          </p>
-        </div> */}
       </div>
       <div className="projects-list w-100">
-        <TasksTable tasks={tasksToShow} />
-        {/* <div className="projects-list-header flex w-100">
-          <div className="projects-list-header-no">
-            <h3 className="f5-ns f6 fw7">No.</h3>
-          </div>
-          <div className="projects-list-header-name">
-            <h3 className="f5-ns f6 fw7">Name</h3>
-          </div>
-          <div className="projects-list-header-members">
-            <h3 className="f5-ns f6 fw7">Members</h3>
-          </div>
-          <div className="projects-list-header-status">
-            <h3 className="f5-ns f6 fw7">Status</h3>
-          </div>
-          <div className="projects-list-header-deadline">
-            <h3 className="f5-ns f6 fw7">Deadline</h3>
-          </div>
-          <div className="projects-list-header-task">
-            <h3 className="f5-ns f6 fw7">Task Remaining</h3>
-          </div>
-        </div>
-        <div className="projects-list-items w-100">
-          {projectsToShow ? (
-            projectsToShow.map((project: any, index: number) => (
-              <ProjectItem
-                project={project}
-                index={index}
-                key={index}
-              />
-            ))
-          ) : (
-            <Typography>No Projects</Typography>
-          )}
-        </div> */}
+        <TasksTable
+          order={order}
+          setOrder={setOrder}
+          orderBy={orderBy}
+          setOrderBy={setOrderBy}
+          selected={selected}
+          setSelected={setSelected}
+          page={page}
+          setPage={setPage}
+          rowsPerPage={rowsPerPage}
+          setRowsPerPage={setRowsPerPage}
+          tasks={mTask}
+        />
       </div>
     </div>
   );
