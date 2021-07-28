@@ -602,7 +602,7 @@ module.exports.addTeamMateIntoRoomNotification = async (
   }
 };
 module.exports.list = async (req, res, next) => {
-  const { limit = 50, skip = 0, companyId } = req.query;
+  const { limit = 50, skip = 0} = req.query;
 
   try {
     let unseenCount = await UserNotification.find({
@@ -627,6 +627,7 @@ module.exports.list = async (req, res, next) => {
 
     let notificationFound = await UserNotification.find({
       account: req.user._id,
+      seen: false,
     })
       .populate(options)
       .sort({ createdAt: -1 })
@@ -646,34 +647,8 @@ module.exports.list = async (req, res, next) => {
 };
 
 module.exports.seen = async (req, res, next) => {
-  let result = await UserNotification.aggregate([
-    { $match: { account: new ObjectId(req.user._id) } },
-
-    {
-      $lookup: {
-        from: 'notifications',
-        localField: 'notification',
-        foreignField: '_id',
-        as: 'notification',
-      },
-    },
-    {
-      $unwind: {
-        path: '$notification',
-      },
-    },
-    {
-      $match: {
-        'notification.company': new ObjectId(req.params.companyId),
-      },
-    },
-  ]);
-  let seenNoti = result.map((c) => {
-    return c._id;
-  });
-
   await UserNotification.updateMany(
-    { _id: { $in: seenNoti } },
+    { account: req.user._id},
     { $set: { seen: true } },
   )
     .exec()
@@ -759,12 +734,14 @@ module.exports.test = async (req, res, next) => {
 };
 
 module.exports.read = async (req, res, next) => {
-  await UserNotification.updateOne(
+  console.log(req.params.userNotificationId);
+  await UserNotification.findByIdAndUpdate(
     {
-      notification: req.params.userNotificationId,
+      _id: req.params.userNotificationId,
       account: req.user._id,
     }, //notUserNotification
     { $set: { read: true } },
+    {upsert: true, new: true}
   )
     .exec()
     .then((result) => {
@@ -772,7 +749,7 @@ module.exports.read = async (req, res, next) => {
       return sendJSONresponse(res, 200, { read: true });
     })
     .catch((e) => {
-      logger.log(`${e}`);
+      logger.log(`Notification: ${e}`);
       next(e);
     });
 };

@@ -67,12 +67,12 @@ function* readNotification(action) {
 }
 function* seenNotification() {
   try {
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
+    // const selectCompanyId = (state) =>
+    //   state.companyReducer.currentCompany._id;
     const headers = tokenConfig();
-    const companyId = yield select(selectCompanyId);
+    // const companyId = yield select(selectCompanyId);
     if ((headers as any).headers.Authorization) {
-      yield tigrowApi.get(`notifications/seen/${companyId}`, headers);
+      yield tigrowApi.get(`notifications/seen`, headers);
     }
     // put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
   } catch (error) {
