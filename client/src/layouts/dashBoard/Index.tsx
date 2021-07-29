@@ -229,7 +229,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               </div>
             </div> */}
             <div>
-              <div className="mt5 pb0-ns">
+              <div className="mt4 pb0-ns">
                 {dashboard.taskCompilation && (
                   <ProjectStatus
                     tasks={dashboard.taskCompilation}
