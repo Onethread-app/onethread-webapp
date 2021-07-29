@@ -7,7 +7,6 @@ import { isMobileOnly, MobileOnlyView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
 import { companySubscriber } from 'helpers/notification/subscribers';
-import { readNotification } from '../../../stores/notifications/Action';
 import { getNotifications } from '../../../stores/notifications/Action';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Navbar from 'components/navbar/Navbar';
@@ -33,7 +32,6 @@ interface SettingsPageProps {
   notifications: any;
   read: number;
   companyId: string;
-  readNotification: any;
   getNotifications: any;
   companyRole: string;
   subscriptiontExpired: boolean;
@@ -116,7 +114,7 @@ const SettingsPagComponent = (
   }
   React.useEffect(() => {
     setSuccess(props.subscriptiontExpired);
-  }, []);
+  }, [props.subscriptiontExpired]);
 
   const { t } = useTranslation();
 
@@ -221,6 +219,5 @@ const mapStateToProps = (state: any) => {
 };
 export const SettingsPage = connect(mapStateToProps, {
   companySubscriber,
-  readNotification,
   getNotifications,
 })(withRouter(SettingsPagComponent));

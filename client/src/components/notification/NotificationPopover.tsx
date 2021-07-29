@@ -69,7 +69,7 @@ const NotificationPopover = (props: INotificationPopover) => {
   }, [lastNotificationElement]);
 
   const onCLickNotification = async (sNotification: any) => {
-    await props.readNotification(sNotification.notification._id);
+    props.readNotification(sNotification.notification._id);
     const url = await notificationType[
       sNotification.notification.type
     ].path(sNotification.notification);
