@@ -92,7 +92,6 @@ module.exports.notifyToBoardMembers = async (
 module.exports.notifyToTaskMember = async (
   senderName,
   company,
-  pid,
   taskId,
   adminUser,
   member
@@ -101,8 +100,7 @@ module.exports.notifyToTaskMember = async (
     let senderFullName = await Account.findById({
       _id: senderName,
     }).select('firstName lastName');
-    let task = await Task.findById({_id: taskId}).select('name');
-    let subtaskId = await Subtask.findOne({taskId: taskId}).select('_id');
+    let task = await Task.findById({_id: taskId}).select('name').select('boardId project');
     let notifications = {
       type: 'subtask',
       text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
@@ -110,10 +108,11 @@ module.exports.notifyToTaskMember = async (
       )} sent a note in task ${task.name} `,
       account: adminUser._id,
       company: company,
-      project: pid,
+      project: task.project,
       task: taskId,
-      subtask: subtaskId._id,
+      board: task.boardId
     };
+    
     notifications = await Notification.create(notifications);
     await UserNotification.create({
       notification: notifications._id,
@@ -121,6 +120,7 @@ module.exports.notifyToTaskMember = async (
     });
     await triggerUnreadNotifications(member);
   } catch (error) {
+    console.log(error)
     logger.error(`Notifications: ${error}`);
   }
 }
@@ -624,10 +624,8 @@ module.exports.list = async (req, res, next) => {
         ],
       },
     ];
-
     let notificationFound = await UserNotification.find({
       account: req.user._id,
-      seen: false,
     })
       .populate(options)
       .sort({ createdAt: -1 })
@@ -635,7 +633,7 @@ module.exports.list = async (req, res, next) => {
       .limit(+limit)
       .exec();
   
-    // console.log(notificationResult);
+    console.log(notificationFound[0]);
     return sendJSONresponse(res, 200, {
       result: notificationFound,
       unseenCount: unseenCount,
