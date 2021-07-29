@@ -43,9 +43,7 @@ import {
   updateLastSeenSuccess,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import handleError, {
-  returnErrorText,
-} from 'helpers/HandleSagaErrors';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 import { getProjectId } from 'stores/project/Selector';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
@@ -75,10 +73,6 @@ function* createRoom({ payload }) {
     }
   } catch (error) {
     yield put(createRoomFailure(returnErrorText(error)));
-    // yield put(createRoomFailure(error));
-    handleError(error, (errorMessage: any) => {
-      createRoomFailure(errorMessage);
-    });
     yield put({
       type: room.RESPONSE_STATUS_CODE,
       payload: error.response.status,
@@ -103,9 +97,7 @@ function* getRooms() {
       });
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await getRoomsFailure(errorMessage);
-    });
+    yield put(getRoomsFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -123,9 +115,7 @@ function* getRoomMembers({ payload }) {
       yield put(getRoomMembersSuccess(response.data.members));
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await getRoomMembersFailure(errorMessage);
-    });
+    yield put(getRoomMembersFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -150,9 +140,7 @@ function* addRoomMembers({ data, selectedRoomMember }) {
       });
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await addRoomMembersFailure(errorMessage);
-    });
+    yield put(addRoomMembersFailure(returnErrorText(error)));
     yield put({
       type: room.RESPONSE_STATUS_CODE,
       payload: error.response.status,
@@ -168,9 +156,7 @@ function* sendRoomMessage({ payload }) {
       yield put(sendRoomMessageSuccess());
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await sendRoomMessageFailure(errorMessage);
-    });
+    yield put(sendRoomMessageFailure(returnErrorText(error)));
   }
 }
 
@@ -191,9 +177,7 @@ function* getRoomMessages({ roomId, limit, skip }) {
       );
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await getRoomMessagesFailure(errorMessage);
-    });
+    yield put(getRoomMessagesFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -211,9 +195,7 @@ function* fileUploadAction(action) {
       yield put(fileUploadActionSuccess(response.data.newFile));
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await fileUploadActionFailure(errorMessage);
-    });
+    yield put(fileUploadActionFailure(returnErrorText(error)));
   }
 }
 
@@ -239,9 +221,7 @@ function* archiveRoom(action) {
       }
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await archiveRoomFailure(errorMessage);
-    });
+    yield put(archiveRoomFailure(returnErrorText(error)));
   }
 }
 
@@ -257,9 +237,7 @@ function* getRoomSharedFiles({ roomId, limit, skip }) {
       yield put(getRoomSharedFilesSuccess(response.data.files));
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await getRoomSharedFilesFailure(errorMessage);
-    });
+    yield put(getRoomSharedFilesFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -277,9 +255,7 @@ function* getRoomDiscussions({ roomId, limit, skip }) {
       yield put(getRoomDiscussionsSuccess(response.data.discussion));
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await getRoomDiscussionsFailure(errorMessage);
-    });
+    yield put(getRoomDiscussionsFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -309,9 +285,7 @@ function* toggleDiscussions({ messageId, data }) {
         : yield put(removeRoomDiscussion(responseData));
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await toggleDiscussionRoomFailure(errorMessage);
-    });
+    yield put(toggleDiscussionRoomFailure(returnErrorText(error)));
   }
 }
 
@@ -329,9 +303,7 @@ function* updateLastSeen({ roomId }) {
       }
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await updateLastSeenFailure(errorMessage);
-    });
+    yield put(updateLastSeenFailure(returnErrorText(error)));
   }
 }
 
@@ -360,9 +332,7 @@ function* fetchRooms() {
       }
     } else yield put(fetchRoomsFailure('No Project Id'));
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await fetchRoomsFailure(errorMessage);
-    });
+    yield put(fetchRoomsFailure(returnErrorText(error)));
   }
 }
 
@@ -374,9 +344,7 @@ function* fetchChatsAsync() {
       yield put(fetchChatsSuccess(response.data.rooms));
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await fetchChatsFailure(errorMessage);
-    });
+    yield put(fetchChatsFailure(returnErrorText(error)));
   }
 }
 

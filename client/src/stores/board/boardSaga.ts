@@ -41,6 +41,7 @@ import {
   updateTaskLoading,
   updateBoardNameFailure,
   updateBoardNameSuccess,
+  dragAndDropTaskFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
@@ -50,7 +51,7 @@ import {
   getCurrentTask,
   selectColumnName,
 } from './Selector';
-import handleError from 'helpers/HandleSagaErrors';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -75,19 +76,7 @@ export function* createBoard({ payload }: any) {
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(createBoardFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        createBoardFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(createBoardFailure(error.message));
-    }
+    yield put(createBoardFailure(returnErrorText(error)));
   }
 }
 
@@ -108,19 +97,7 @@ export function* getAllBoardsAsync() {
       yield put(getAllBoardsFailure('Project ID not found'));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getAllBoardsFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getAllBoardsFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getAllBoardsFailure(error.message));
-    }
+    yield put(getAllBoardsFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -143,19 +120,7 @@ export function* getSelectedBoard({ payload }: any) {
       yield put(updateBoardLoading(false));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getSelectedBoardFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getSelectedBoardFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getSelectedBoardFailure(error.message));
-    }
+    yield put(getSelectedBoardFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -183,9 +148,7 @@ export function* updateBoardNameAsync({ payload }: any) {
       } else yield put(updateBoardNameFailure('Same Name'));
     } else yield put(updateBoardNameFailure('No Name Included'));
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await updateBoardNameFailure(errorMessage);
-    });
+    yield put(updateBoardNameFailure(returnErrorText(error)));
   }
 }
 
@@ -205,19 +168,7 @@ export function* createColumn({ payload }: any) {
     );
     yield put(createColumnSuccess(response.data));
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(createBoardFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        createBoardFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(createBoardFailure(error.message));
-    }
+    yield put(createBoardFailure(returnErrorText(error)));
   }
 }
 
@@ -237,19 +188,7 @@ export function* updateColumn({ payload }: any) {
       }
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(updateColumnFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        updateColumnFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(updateColumnFailure(error.message));
-    }
+    yield put(updateColumnFailure(returnErrorText(error)));
   }
 }
 
@@ -276,19 +215,7 @@ export function* createTask({ payload }: any) {
       yield put(createTaskSuccess(responseValue));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(createTaskFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        createTaskFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(createTaskFailure(error.message));
-    }
+    yield put(createTaskFailure(returnErrorText(error)));
   }
 }
 
@@ -354,6 +281,7 @@ export function* dragAndDrop({
       },
       timeout: 300000,
     });
+    yield put(dragAndDropTaskFailure(returnErrorText(error)));
   }
 }
 
@@ -370,19 +298,7 @@ export function* addTeamMembersIntoBoard({ members, boardId }: any) {
       yield put(addTeamMembersIntoBoardSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(addTeamMembersIntoBoardFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        addTeamMembersIntoBoardFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(addTeamMembersIntoBoardFailure(error.message));
-    }
+    yield put(addTeamMembersIntoBoardFailure(returnErrorText(error)));
   }
 }
 
@@ -418,19 +334,7 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
       yield put(updateTaskLoading(false));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getSelectedTaskDetailsFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getSelectedTaskDetailsFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getSelectedTaskDetailsFailure(error.message));
-    }
+    yield put(getSelectedTaskDetailsFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -465,7 +369,7 @@ export function* updateTask({ payload }: any) {
     }
   } catch (error) {
     errorMessgeHandler(error);
-    yield put(updateTaskFailure(error.message));
+    yield put(updateTaskFailure(returnErrorText(error)));
   }
 }
 
@@ -491,9 +395,7 @@ export function* taskFileUploadAsync({ payload }: any) {
       ]);
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await taskFileUploadFailure(errorMessage);
-    });
+    yield put(taskFileUploadFailure(returnErrorText(error)));
   }
 }
 
@@ -512,9 +414,7 @@ export function* taskFileDeleteAsync({ payload }: any) {
       ]);
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await taskFileDeleteFailure(errorMessage);
-    });
+    yield put(taskFileDeleteFailure(returnErrorText(error)));
   }
 }
 
@@ -537,9 +437,7 @@ export function* deleteTaskAsync({ payload }: any) {
       }
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await deleteTaskFailure(errorMessage);
-    });
+    yield put(deleteTaskFailure(returnErrorText(error)));
   }
 }
 

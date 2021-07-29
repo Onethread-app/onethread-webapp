@@ -18,6 +18,8 @@ import {
   selectAssociateSuccess,
   selectAssociateFailure,
 } from './Actions';
+import { getProjectAssociatesFailure } from 'stores/project/Actions';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
@@ -50,10 +52,10 @@ function* addAssociate(action: IAddAssociateAction) {
       return response;
     } else {
       // tslint:disable-next-line: no-console
-      
     }
   } catch (error) {
-    yield put({ type: associate.SEND_REQUEST_ERROR, error });
+    const errorText = returnErrorText(error);
+    yield put({ type: associate.SEND_REQUEST_ERROR, errorText });
   }
 }
 
@@ -64,7 +66,6 @@ function* getAllAssociates() {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const companyId = yield select(selectCompanyId);
-      
       const response = yield tigrowApi.get(
         `associate/${companyId}`,
         headers,
@@ -88,7 +89,11 @@ function* getAllAssociates() {
       });
     }
   } catch (error) {
-    yield put({ type: associate.GET_ASSOCIATE_FAIL, error });
+    const errorText = returnErrorText(error);
+    yield put({
+      type: associate.GET_ASSOCIATE_FAIL,
+      errorText,
+    });
   }
 }
 
@@ -108,14 +113,7 @@ function* getProjectAssociates() {
       });
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      
-    } else {
-      // tslint:disable-next-line: no-console
-      
-      // return error.response;
-    }
+    yield put(getProjectAssociatesFailure(returnErrorText(error)));
   }
 }
 
@@ -152,10 +150,8 @@ function* getAllPendingAssociates() {
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      
     } else {
       // tslint:disable-next-line: no-console
-      
       // return error.response;
     }
   }
@@ -210,6 +206,7 @@ function* acceptPendingAssociate(action: {
     yield put({ type: associate.ACCEPT_ASSOCIATE_REQUEST_FAIL });
   }
 }
+
 function* rejectPendingAssociate(action: {
   type: String;
   associateID: String;
@@ -251,7 +248,7 @@ function* rejectPendingAssociate(action: {
   }
 }
 
-function* getSelectedAssociate({payload}: any) {
+function* getSelectedAssociate({ payload }: any) {
   try {
     const headers = tokenConfig();
     const selectCompanyId = (state) =>
@@ -265,14 +262,7 @@ function* getSelectedAssociate({payload}: any) {
       yield put(selectAssociateSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      // tslint:disable-next-line: no-console
-      
-    } else {
-      // tslint:disable-next-line: no-console
-      
-      yield put(selectAssociateFailure(error.message));
-    }
+    yield put(selectAssociateFailure(returnErrorText(error)));
   }
 }
 

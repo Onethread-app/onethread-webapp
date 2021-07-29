@@ -82,9 +82,7 @@ import {
   clearCurrentBoard,
   getAllBoards,
 } from 'stores/board/Actions';
-import handleError, {
-  returnErrorText,
-} from 'helpers/HandleSagaErrors';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -105,19 +103,7 @@ export function* createProjectAsync({ payload }: any) {
       yield all([put(createProjectSuccess()), put(getAllProjects())]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(createProjectFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        createProjectFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(createProjectFailure(error.message));
-    }
+    yield put(createProjectFailure(returnErrorText(error)));
   }
 }
 
@@ -134,19 +120,7 @@ export function* getAllProjectsAsync() {
       yield put(getAllProjectsSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getAllProjectsFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getAllProjectsFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getAllProjectsFailure(error.message));
-    }
+    yield put(getAllProjectsFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -176,19 +150,7 @@ export function* createProjectInCompanyAsync({ payload }: any) {
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(createProjectInCompanyFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        createProjectInCompanyFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(createProjectInCompanyFailure(error.message));
-    }
+    yield put(createProjectInCompanyFailure(returnErrorText(error)));
   }
 }
 
@@ -208,19 +170,7 @@ export function* archiveProjectAsync({ payload }: any) {
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(archiveProjectFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        archiveProjectFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(archiveProjectFailure(error.message));
-    }
+    yield put(archiveProjectFailure(returnErrorText(error)));
   }
 }
 
@@ -241,9 +191,7 @@ export function* unarchiveProjectAsync({ payload }: any) {
       ]);
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await unarchiveProjectFailure(errorMessage);
-    });
+    yield put(unarchiveProjectFailure(returnErrorText(error)));
   }
 }
 
@@ -282,19 +230,7 @@ export function* getArchivedProjectsAsync() {
       yield put(getProjectArchiveSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getProjectArchiveFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getProjectArchiveFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getProjectArchiveFailure(error.message));
-    }
+    yield put(getProjectArchiveFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -325,19 +261,7 @@ export function* updateProjectAsync({
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(updateProjectFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        updateProjectFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(updateProjectFailure(error.message));
-    }
+    yield put(updateProjectFailure(returnErrorText(error)));
   }
 }
 
@@ -367,24 +291,10 @@ export function* getSingleProjectAsync({ payload }: any) {
       yield put(updateProjectLoading(false));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getSingleProjectFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getSingleProjectFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else if (error.response.status === 403) {
-      yield all([
-        put(setProjectAccessForUser(false)),
-        put(getSingleProjectFailure(error.message)),
-      ]);
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getSingleProjectFailure(error.message));
-    }
+    yield all([
+      put(setProjectAccessForUser(false)),
+      put(getSingleProjectFailure(returnErrorText(error))),
+    ]);
   } finally {
     yield put(hideLoading());
   }
@@ -408,23 +318,9 @@ export function* projectPrefaceDescriptionUpdateAsync({
       yield put(projectPrefaceDescriptionUpdateSuccess());
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(
-        projectPrefaceDescriptionUpdateFailure('Network Error'),
-      );
-    } else if (error.response.status === 401) {
-      yield put(
-        projectPrefaceDescriptionUpdateFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(
-        projectPrefaceDescriptionUpdateFailure(error.message),
-      );
-    }
+    yield put(
+      projectPrefaceDescriptionUpdateFailure(returnErrorText(error)),
+    );
   }
 }
 
@@ -446,19 +342,9 @@ export function* projectPrefaceOutlineUpdateAsync({
       yield put(projectPrefaceOutlineUpdateSuccess());
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(projectPrefaceOutlineUpdateFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        projectPrefaceOutlineUpdateFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(projectPrefaceOutlineUpdateFailure(error.message));
-    }
+    yield put(
+      projectPrefaceOutlineUpdateFailure(returnErrorText(error)),
+    );
   }
 }
 
@@ -479,19 +365,7 @@ export function* projectFileUploadAsync({ file, pid }: any) {
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(projectFileUploadFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        projectFileUploadFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(projectFileUploadFailure(error.message));
-    }
+    yield put(projectFileUploadFailure(returnErrorText(error)));
   }
 }
 
@@ -508,19 +382,7 @@ export function* getAllPendingProjectsAsync() {
       yield put(getAllPendingProjectsSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getAllPendingProjectsFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getAllPendingProjectsFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getAllPendingProjectsFailure(error.message));
-    }
+    yield put(getAllPendingProjectsFailure(returnErrorText(error)));
   }
 }
 
@@ -561,19 +423,7 @@ export function* acceptPendingProjectAsync({ pending }: any) {
       }
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(acceptPendingProjectFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        acceptPendingProjectFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(acceptPendingProjectFailure(error.message));
-    }
+    yield put(acceptPendingProjectFailure(returnErrorText(error)));
   }
 }
 
@@ -606,19 +456,7 @@ export function* rejectPendingProjectAsync({ projectId }: any) {
       }
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(rejectPendingProjectFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        rejectPendingProjectFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(rejectPendingProjectFailure(error.message));
-    }
+    yield put(rejectPendingProjectFailure(returnErrorText(error)));
   }
 }
 
@@ -642,19 +480,7 @@ export function* updateProjectRoleAsync({ optionalRole }: any) {
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(updateProjectRoleFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        updateProjectRoleFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(updateProjectRoleFailure(error.message));
-    }
+    yield put(updateProjectRoleFailure(returnErrorText(error)));
   }
 }
 
@@ -670,19 +496,7 @@ export function* getRoleForProjectAsync({ projectId }: any) {
       yield put(getRoleForProjectSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getRoleForProjectFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getRoleForProjectFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getRoleForProjectFailure(error.message));
-    }
+    yield put(getRoleForProjectFailure(returnErrorText(error)));
   }
 }
 
@@ -698,19 +512,7 @@ export function* getProjectTeamsAsync() {
       yield put(getProjectTeamsSuccess(response.data.memberList));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getProjectTeamsFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getProjectTeamsFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getProjectTeamsFailure(error.message));
-    }
+    yield put(getProjectTeamsFailure(returnErrorText(error)));
   }
 }
 
@@ -732,18 +534,7 @@ export function* addProjectTeamsAsync({ data }: any) {
       }
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(addProjectTeamsFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        addProjectTeamsFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-      yield put(addProjectTeamsFailure(error.message));
-    }
+    yield put(addProjectTeamsFailure(returnErrorText(error)));
   }
 }
 
@@ -762,19 +553,7 @@ export function* getProjectAssociatesAsync() {
       yield put(getProjectAssociatesSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getProjectAssociatesFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getProjectAssociatesFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getProjectAssociatesFailure(error.message));
-    }
+    yield put(getProjectAssociatesFailure(returnErrorText(error)));
   }
 }
 
@@ -797,19 +576,7 @@ export function* addProjectAssociateAsync({ data }: any) {
       }
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(addProjectAssociateFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        addProjectAssociateFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(addProjectAssociateFailure(error.message));
-    }
+    yield put(addProjectAssociateFailure(returnErrorText(error)));
   }
 }
 
@@ -842,19 +609,7 @@ export function* changeProjectMemberRoleAsync({
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(changeProjectMemberRoleFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        changeProjectMemberRoleFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(changeProjectMemberRoleFailure(error.message));
-    }
+    yield put(changeProjectMemberRoleFailure(returnErrorText(error)));
   }
 }
 
@@ -879,19 +634,7 @@ export function* getProjectsIndividualAsync() {
       });
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getProjectsIndividualFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getProjectsIndividualFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getProjectsIndividualFailure(error.message));
-    }
+    yield put(getProjectsIndividualFailure(returnErrorText(error)));
   }
 }
 

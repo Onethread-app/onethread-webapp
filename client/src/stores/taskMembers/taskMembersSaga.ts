@@ -2,7 +2,7 @@ import { all, put, call, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty } from 'lodash';
 import {
   ASSIGN_MEMBER_START,
   DELETE_MEMBER_START,
@@ -17,6 +17,7 @@ import {
   addTaskMemberSuccess,
   addTaskMemberFailure,
 } from './Action';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeLatest: any = Eff.takeLatest;
 
@@ -66,7 +67,7 @@ export function* addTaskMemberAsync({ payload }: any) {
     }
     return addTaskMemberFailure(response);
   } catch (error) {
-    return addTaskMemberFailure(error);
+    return addTaskMemberFailure(returnErrorText(error));
   }
 }
 
@@ -122,18 +123,7 @@ export function* getAllMembersAsync() {
       );
     }
   } catch (error) {
-    yield put(getAllMembersFailure(error));
-    if (isEqual(error.message, 'Network Error')) {
-      yield put(getAllMembersFailure('Network error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getAllMembersFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      yield put(getAllMembersFailure(error.response));
-    }
+    yield put(getAllMembersFailure(returnErrorText(error)));
   }
 }
 
@@ -154,15 +144,7 @@ export function* deleteMemberAsync({ memberId }: any) {
       yield put(deleteMemberSuccess(memberId));
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      yield put(deleteMemberFailure('Network error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        deleteMemberFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    }
+    yield put(deleteMemberFailure(returnErrorText(error)));
   }
 }
 

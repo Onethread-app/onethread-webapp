@@ -5,6 +5,7 @@ import { NOTIFICATION } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 import { isEqual } from 'lodash';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
@@ -40,7 +41,11 @@ function* getNotifications() {
       return response.data;
     }
   } catch (error) {
-    put({ type: NOTIFICATION.GET_NOTIFICATIONS_FAIL, error });
+    const errorText = returnErrorText(error);
+    yield put({
+      type: NOTIFICATION.GET_NOTIFICATIONS_FAIL,
+      errorText,
+    });
   }
 }
 
@@ -56,10 +61,9 @@ function* readNotification(action) {
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      
     } else {
       // tslint:disable-next-line: no-console
-      
+
       put({ type: NOTIFICATION.READ_NOTIFICATION_FAIL });
       // return error.response;
     }
@@ -78,10 +82,9 @@ function* seenNotification() {
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      
     } else {
       // tslint:disable-next-line: no-console
-      
+
       put({ type: NOTIFICATION.SEEN_NOTIFICATION_FAIL });
       // return error.response;
     }
@@ -111,10 +114,9 @@ function* webPushNotification(action) {
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      
     } else {
       // tslint:disable-next-line: no-console
-      
+
       put({ type: NOTIFICATION.SEEN_NOTIFICATION_FAIL });
       // return error.response;
     }

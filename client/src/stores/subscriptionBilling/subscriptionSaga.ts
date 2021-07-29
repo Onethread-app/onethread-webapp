@@ -6,10 +6,13 @@ import { subscription } from './Type';
 import {
   checkCouponValidityFailure,
   checkCouponValiditySuccess,
+  getCurrentSubscriptionFailure,
+  getCurrentSubscriptionSuccess,
   getTotalMembersFailure,
   getTotalMembersSuccess,
   setSubscriptionExpire,
 } from './Actions';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 // const takeLatest: any = Eff.takeLatest;
@@ -68,17 +71,14 @@ function* getCurrentSubscription() {
         `subscriptions/${companyId}`,
         headers,
       );
-      yield put({
-        type: subscription.GET_CURRENT_SUBSCRIPTION_SUCCESS,
-        payload: response.data,
-      });
+      yield put(getCurrentSubscriptionSuccess(response.data));
       const today = new Date().toISOString();
       if (response.data.expireAt < today) {
         yield put(setSubscriptionExpire());
       }
     }
   } catch (error) {
-    // console.log(error);
+    yield put(getCurrentSubscriptionFailure(returnErrorText(error)));
   }
 }
 
@@ -91,7 +91,11 @@ function* checkCouponValidityAsync({ payload }: any) {
     );
     response.data.data
       ? response.data.data.isUsed
-        ? yield put(checkCouponValidityFailure('Coupon has already been used'))
+        ? yield put(
+            checkCouponValidityFailure(
+              'Coupon has already been used',
+            ),
+          )
         : yield put(
             checkCouponValiditySuccess({
               validity: true,
@@ -100,7 +104,7 @@ function* checkCouponValidityAsync({ payload }: any) {
           )
       : yield put(checkCouponValidityFailure('No Data Found'));
   } catch (error) {
-    yield put(checkCouponValidityFailure(error.message));
+    yield put(checkCouponValidityFailure(returnErrorText(error)));
   }
 }
 
@@ -115,7 +119,7 @@ export function* getTotalMembersAsync() {
       yield put(getTotalMembersSuccess(response.data));
     }
   } catch (error) {
-    yield put(getTotalMembersFailure(error.message));
+    yield put(getTotalMembersFailure(returnErrorText(error)));
   }
 }
 

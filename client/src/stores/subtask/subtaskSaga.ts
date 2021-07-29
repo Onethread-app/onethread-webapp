@@ -10,7 +10,7 @@ import {
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 
-import handleError from 'helpers/HandleSagaErrors';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 import { errorMessgeHandler } from 'components/final-form/utils';
 
 import { SubtaskActionTypes } from './Types';
@@ -56,9 +56,7 @@ function* createSubtaskAsync({ payload }: any) {
     }
   } catch (error) {
     errorMessgeHandler(error);
-    handleError(error, async (errorMessage: any) => {
-      await createSubTaskFailure(errorMessage);
-    });
+    yield put(createSubTaskFailure(returnErrorText(error)));
   }
 }
 
@@ -83,9 +81,7 @@ function* getAllSubTaskAsync() {
       );
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await getAllSubTaskFailure(errorMessage);
-    });
+    yield put(getAllSubTaskFailure(returnErrorText(error)));
   }
 }
 
@@ -109,9 +105,7 @@ function* updateSubTaskAsync({ payload }: any) {
     }
   } catch (error) {
     errorMessgeHandler(error);
-    handleError(error, async (errorMessage: any) => {
-      await updateSubTaskFailure(errorMessage);
-    });
+    yield put(updateSubTaskFailure(returnErrorText(error)));
   }
 }
 
@@ -133,9 +127,7 @@ function* addSubTaskMemberAsync({ payload }: any) {
       yield put(addSubTaskMemberSuccess(response.data));
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await addSubTaskMemberFailure(errorMessage);
-    });
+    yield put(addSubTaskMemberFailure(returnErrorText(error)));
   }
 }
 
@@ -153,9 +145,7 @@ function* deleteSubTaskMemberAsync({ payload }: any) {
       yield put(deleteSubTaskMemberSuccess(response.data));
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await deleteSubTaskMemberFailure(errorMessage);
-    });
+    yield put(deleteSubTaskMemberFailure(returnErrorText(error)));
   }
 }
 
@@ -172,9 +162,7 @@ function* deleteSubTaskAsync({ payload }: any) {
       yield put(deleteSubTaskSuccess(payload._id));
     }
   } catch (error) {
-    handleError(error, async (errorMessage: any) => {
-      await deleteSubTaskFailure(errorMessage);
-    });
+    yield put(deleteSubTaskFailure(returnErrorText(error)));
   }
 }
 
