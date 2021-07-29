@@ -19,8 +19,8 @@ import {
   setSubscriptionNotExpire,
   getCurrentSubscription,
 } from '../../stores/subscriptionBilling/Actions';
-import DashboardSummery from 'components/dashboard/dashboard-summary/DashboardSummary';
-import TotalInfo from 'components/dashboard/total-info/TotalInfo';
+// import DashboardSummery from 'components/dashboard/dashboard-summary/DashboardSummary';
+// import TotalInfo from 'components/dashboard/total-info/TotalInfo';
 import ProjectStatus from 'components/dashboard/project-status/ProjectStatus';
 // import Progressbar from 'components/dashboard/progressbar/Progressbar';
 // import CompanyAnnouncements from 'components/dashboard/company-announcements/CompanyAnnouncements';
@@ -73,6 +73,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(Object);
   const [currentTaskPage, setCurrentTaskPage] = useState(1);
+
   // const [
   //   currentAnnouncementPage,
   //   setCurrentAnnouncementPage,
@@ -98,7 +99,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               type: ADD_TOTAL_MEMBER,
               payload: response.data.data.totalEmployee,
             });
-            // console.log(response.data.data);
             setDashboard(response.data.data);
             dispatch(hideLoading());
             props.setSubscriptionNotExpire();
@@ -196,11 +196,10 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
         <>
           {isMobileOnly && <Navbar type="company" />}
           <div className="w-90 center mh2 mt4-l mt5 pb5 pb0-l">
-            <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
+            {/* <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
               {t('app.company.Dashboard.Headline')}
-              {/* Dashboard */}
             </h3>
-            <div className="flex flex-row-ns flex-column">
+             <div className="flex flex-row-ns flex-column">
               <div className="fl w-80-l w-100 mr4-ns mb-0-ns mb4">
                 <Card className="w-100 pa2 shadow-2 br3">
                   <DashboardSummery stat={dashboard} />
@@ -228,11 +227,14 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                   />
                 </Card>
               </div>
-            </div>
+            </div> */}
             <div>
               <div className="mt5 pb0-ns">
                 {dashboard.taskCompilation && (
-                  <ProjectStatus tasks={dashboard.taskCompilation} />
+                  <ProjectStatus
+                    tasks={dashboard.taskCompilation}
+                    dashboard={dashboard}
+                  />
                 )}
               </div>
               <div
