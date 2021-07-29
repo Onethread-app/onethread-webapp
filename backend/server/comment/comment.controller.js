@@ -30,7 +30,6 @@ const create = async (req, res, next) => {
     account: req.user._id,
     taskId: req.body.taskId,
   });
-
   comment
     .save()
     .then(async result => {
@@ -38,6 +37,7 @@ const create = async (req, res, next) => {
                               .select('assignedPerson')
                               .populate('assignedPerson taskId', '_id account');
       let memberList =[];
+      // TO-do: can combine both logic??
       if( taskMembers !== null || taskMembers.length > 0){
         let taskAssignMembers=taskMembers.map(task => task.assignedPerson);
         memberList = taskAssignMembers.map(task=> task._id.toString());
@@ -53,6 +53,9 @@ const create = async (req, res, next) => {
           
         }
       }
+      if(taskMembers.length === 0){
+        return sendJSONresponse(res, 201, result);
+      }
       memberList.push(taskMembers[0].taskId.account.toString());
       memberList = memberList.filter(onlyUnique);
       memberList.map(async member=>{
@@ -60,7 +63,6 @@ const create = async (req, res, next) => {
           await notifyToTaskMember(
             req.user._id,
             req.headers.companyid,
-            req.query.pid,
             req.body.taskId,
             {
               _id: req.user._id,
@@ -75,6 +77,7 @@ const create = async (req, res, next) => {
       return sendJSONresponse(res, 201, result);
     })
     .catch(error =>{
+      console.log(error);
       logger.error(`comment: ${error}`);
       next(error);
     })
