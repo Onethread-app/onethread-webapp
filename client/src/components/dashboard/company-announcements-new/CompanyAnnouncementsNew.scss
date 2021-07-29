@@ -1,11 +1,31 @@
 .secondary-font-color {
-  color: #b7b7b7;
+  color: #8d8d8d;
 }
 
 .content-color {
-  color: #656565;
+  color: #000000;
 }
 
-.icon img {
-  min-width: 1.8rem;
+.icon {
+  & img {
+    max-width: 1.8rem;
+  }
+}
+
+.content-wrapper {
+  & h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 20px;
+  }
+  & p {
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 21.6px;
+  }
+  & span {
+    font-weight: 400;
+    font-size: 0.95rem;
+    line-height: 18px;
+  }
 }

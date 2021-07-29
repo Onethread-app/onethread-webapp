@@ -39,6 +39,7 @@ const CompanyAnnouncementsList = (props: any) => {
       indexOfLastAnnouncement,
     );
   }
+
   const nextAnnouncementPage = (e) => {
     e.preventDefault();
     setCurrentAnnouncementPage(currentAnnouncementPage + 1);
@@ -47,6 +48,14 @@ const CompanyAnnouncementsList = (props: any) => {
   const prevAnnouncementPage = (e) => {
     e.preventDefault();
     setCurrentAnnouncementPage(currentAnnouncementPage - 1);
+  };
+
+  const designationMap = {
+    director: 'Director',
+    cxo: 'CXO',
+    seniorManager: 'Senior Manager',
+    middleManager: 'Middle Manager',
+    operationalEmployee: 'Operational Employee',
   };
 
   const { t } = useTranslation();
@@ -96,6 +105,31 @@ const CompanyAnnouncementsList = (props: any) => {
                   date={moment(announcement.createdAt).calendar()}
                   content={announcement.text}
                   key={announcement._id}
+                  divison={
+                    announcement.memberId &&
+                    announcement.memberId.designations.length > 0
+                      ? designationMap[
+                          announcement.memberId.designations[0]
+                            .division
+                        ]
+                      : announcement.memberId.role
+                  }
+                  firstName={
+                    announcement.memberId.account
+                      ? announcement.memberId.account.firstName
+                      : null
+                  }
+                  lastName={
+                    announcement.memberId.account
+                      ? announcement.memberId.account.lastName
+                      : null
+                  }
+                  position={
+                    announcement.memberId &&
+                    announcement.memberId.designations.length > 0
+                      ? announcement.memberId.designations[0].position
+                      : announcement.memberId.role
+                  }
                 />
               ))
             ) : (
