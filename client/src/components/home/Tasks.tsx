@@ -1,9 +1,14 @@
+import React, { useEffect, useState } from 'react';
+import { isMobileOnly } from 'react-device-detect';
+import Select from 'react-select';
+
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import { tigrowApi } from 'config';
 import { sortTasks } from 'helpers/utils';
-import React, { useEffect, useState } from 'react';
 import { tokenConfig } from 'stores/UtilsActions';
+
 import Table from './TaskTable';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 type Order = 'asc' | 'desc';
 interface Data {
@@ -32,6 +37,15 @@ const Tasks = () => {
   const [selected, setSelected] = React.useState<string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [selectedTabOptions, setSelectedTabOptions] = useState([
+    { value: 1, label: 'Today' },
+    { value: 2, label: 'Tomorrow' },
+    { value: 3, label: 'Upcoming' },
+    { value: 4, label: 'Due Tasks' },
+  ]);
+  const [selectedTabOnSelect, setSelectedTabOnSelect] = useState(
+    selectedTabOptions[0],
+  );
 
   useEffect(() => {
     const getTasks = async () => {
@@ -45,11 +59,40 @@ const Tasks = () => {
         setTomorrowTasks(response.data.tomorrowTasks);
         setUpcomingTasks(response.data.upcomingTasks);
         setDueTasks(response.data.dueTasks);
+        setSelectedTabOptions((prevState) => {
+          return prevState.map((option) => {
+            if (option.value === 1) {
+              return {
+                value: option.value,
+                label: `${option.label} (${response.data.todaysTasks.totalTasks})`,
+              };
+            } else if (option.value === 2) {
+              return {
+                value: option.value,
+                label: `${option.label} (${response.data.tomorrowTasks.totalTasks})`,
+              };
+            } else if (option.value === 3) {
+              return {
+                value: option.value,
+                label: `${option.label} (${response.data.upcomingTasks.totalTasks})`,
+              };
+            } else {
+              return {
+                value: option.value,
+                label: `${option.label} (${response.data.dueTasks.totalTasks})`,
+              };
+            }
+          });
+        });
         setLoading(false);
       }
     };
     getTasks();
   }, []);
+
+  useEffect(() => {
+    setSelectedTabOnSelect(selectedTabOptions[0]);
+  }, [selectedTabOptions]);
 
   const ISOformat = (time) => {
     if (!time) return null;
@@ -131,6 +174,10 @@ const Tasks = () => {
     loading,
   ]);
 
+  useEffect(() => {
+    setSelectedTab(selectedTabOnSelect.value);
+  }, [selectedTabOnSelect]);
+
   const showStar = (assignTo) => {
     const select = assignTo ? 'assignToUser' : 'assignByUser';
     if (selectedTab === 1) {
@@ -154,91 +201,118 @@ const Tasks = () => {
     }
   };
 
+  const handleSelectChange = (selectedOptionOnSelect) => {
+    setSelectedTabOnSelect(selectedOptionOnSelect);
+  };
+
   return (
     <div className="tasks">
-      <div className="tasks-filter flex items-center justify-between">
+      <div
+        className={`tasks-filter flex items-center  ${
+          isMobileOnly ? 'justify-center' : 'justify-start'
+        }`}
+      >
         <div className="flex flex-column">
-          <div className="flex items-center">
-            <div
-              className="flex items-center"
-              onClick={() => {
-                setSelectedTab(1);
-                setFilterOption(1);
-              }}
-            >
-              <h5 className={`${selectedTab === 1 ? 'active' : ''}`}>
-                Today
-              </h5>
-              <span
-                style={{
-                  color: selectedTab === 1 ? '#000' : '#a4a4a4',
-                  margin: '0 .25rem',
+          {isMobileOnly ? (
+            <Select
+              defaultValue={selectedTabOptions[0]}
+              value={selectedTabOnSelect}
+              options={selectedTabOptions}
+              onChange={handleSelectChange}
+              isSearchable={false}
+              isClearable={false}
+            />
+          ) : (
+            <div className="flex items-center">
+              <div
+                className="flex items-center"
+                onClick={() => {
+                  setSelectedTab(1);
+                  setFilterOption(1);
                 }}
               >
-                ({todaysTasks.totalTasks})
-              </span>
-            </div>
-            <span className="divider">|</span>
-            <div
-              className="flex items-center"
-              onClick={() => {
-                setSelectedTab(2);
-                setFilterOption(1);
-              }}
-            >
-              <h5 className={`${selectedTab === 2 ? 'active' : ''}`}>
-                Tomorrow
-              </h5>
-              <span
-                style={{
-                  color: selectedTab === 2 ? '#000' : '#a4a4a4',
-                  margin: '0 .25rem',
+                <h5
+                  className={`${selectedTab === 1 ? 'active' : ''}`}
+                >
+                  Today
+                </h5>
+                <span
+                  style={{
+                    color: selectedTab === 1 ? '#000' : '#a4a4a4',
+                    margin: '0 .25rem',
+                  }}
+                >
+                  ({todaysTasks.totalTasks})
+                </span>
+              </div>
+              <span className="divider">|</span>
+              <div
+                className="flex items-center"
+                onClick={() => {
+                  setSelectedTab(2);
+                  setFilterOption(1);
                 }}
               >
-                ({tomorrowTasks.totalTasks})
-              </span>
-            </div>
-            <span className="divider">|</span>
-            <div
-              className="flex items-center"
-              onClick={() => {
-                setSelectedTab(3);
-                setFilterOption(1);
-              }}
-            >
-              <h5 className={`${selectedTab === 3 ? 'active' : ''}`}>
-                Upcoming
-              </h5>
-              <span
-                style={{
-                  color: selectedTab === 3 ? '#000' : '#a4a4a4',
-                  margin: '0 .25rem',
+                <h5
+                  className={`${selectedTab === 2 ? 'active' : ''}`}
+                >
+                  Tomorrow
+                </h5>
+                <span
+                  style={{
+                    color: selectedTab === 2 ? '#000' : '#a4a4a4',
+                    margin: '0 .25rem',
+                  }}
+                >
+                  ({tomorrowTasks.totalTasks})
+                </span>
+              </div>
+              <span className="divider">|</span>
+              <div
+                className="flex items-center"
+                onClick={() => {
+                  setSelectedTab(3);
+                  setFilterOption(1);
                 }}
               >
-                ({upcomingTasks.totalTasks})
-              </span>
-            </div>
-            <span className="divider">|</span>
-            <div
-              className="flex items-center"
-              onClick={() => {
-                setSelectedTab(4);
-                setFilterOption(1);
-              }}
-            >
-              <h5 className={`${selectedTab === 4 ? 'active' : ''}`}>
-                Due Tasks
-              </h5>
-              <span
-                style={{
-                  color: selectedTab === 4 ? '#000' : '#a4a4a4',
-                  margin: '0 .25rem',
+                <h5
+                  className={`${selectedTab === 3 ? 'active' : ''}`}
+                >
+                  Upcoming
+                </h5>
+                <span
+                  style={{
+                    color: selectedTab === 3 ? '#000' : '#a4a4a4',
+                    margin: '0 .25rem',
+                  }}
+                >
+                  ({upcomingTasks.totalTasks})
+                </span>
+              </div>
+              <span className="divider">|</span>
+              <div
+                className="flex items-center"
+                onClick={() => {
+                  setSelectedTab(4);
+                  setFilterOption(1);
                 }}
               >
-                ({dueTasks.totalTasks})
-              </span>
+                <h5
+                  className={`${selectedTab === 4 ? 'active' : ''}`}
+                >
+                  Due Tasks
+                </h5>
+                <span
+                  style={{
+                    color: selectedTab === 4 ? '#000' : '#a4a4a4',
+                    margin: '0 .25rem',
+                  }}
+                >
+                  ({dueTasks.totalTasks})
+                </span>
+              </div>
             </div>
-          </div>
+          )}
           <div
             className="flex items-center"
             style={{ paddingTop: '.7rem' }}
