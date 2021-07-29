@@ -605,6 +605,11 @@ const dashBoard = async (req, res, next) => {
     }).select('_id name status deadline');
     let i;
 
+    let completedProjects = projectList.filter(
+      (p) => p.status === 'completed',
+    ).length;
+    let runningProjects = projectList.length - completedProjects;
+
     for (i = 0; i < projectList.length; i++) {
       const tasks = await Task.find({
         project: { $in: projectList[i]._id },
@@ -658,6 +663,26 @@ const dashBoard = async (req, res, next) => {
         taskCompilation.push(modifiedTask);
       });
     }
+
+    // let projectName = projectList[i].name;
+    // const members = await projectTeamMembers(projectList[i]._id);
+    // const taskNumbers = await Task.find({
+    //   project: { $in: projectList[i]._id },
+    // }).countDocuments();
+    // const doneTask = await Task.find({
+    //   $and: [
+    //     { project: { $in: projectList[i]._id }, status: 'done' },
+    //   ],
+    // }).countDocuments();
+    // let projectObj = {};
+    // projectObj._id = projectList[i]._id;
+    // projectObj.name = projectName;
+    // projectObj.status = projectList[i].status;
+    // projectObj.deadline = projectList[i].deadline;
+    // projectObj.members = members;
+    // projectObj.taskNumbers = taskNumbers;
+    // projectObj.doneTask = doneTask;
+    // projectCompilation.push(projectObj);
     taskCompilation.sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
     );
@@ -667,6 +692,8 @@ const dashBoard = async (req, res, next) => {
         totalProject,
         totalEmployee,
         totalAssociates,
+        completedProjects,
+        runningProjects,
         // projectCompilation,
         taskCompilation,
       },
