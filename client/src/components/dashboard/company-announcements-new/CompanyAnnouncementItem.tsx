@@ -1,6 +1,7 @@
 import React from 'react';
 import './CompanyAnnouncementsNew.scss';
 import Linkify from 'react-linkify';
+import { upperFirst } from 'lodash';
 import { componentDecorator } from 'helpers/LinkifyHelper';
 import icon from '../../../resources/images/icons/announcement.png';
 
@@ -10,12 +11,26 @@ const CompanyAnnouncementItem = (props) => {
       <div className="icon">
         <img src={icon} alt="announcement" />
       </div>
-      <div className="content-wrapper content-color pl3 pb2">
+      <div className="content-wrapper content-color pl3 pb1">
+        <div className="heading mb1">
+          {props.divison === props.position ? (
+            <h3>
+              From {upperFirst(props.firstName)}{' '}
+              {upperFirst(props.lastName)} - {props.divison}
+            </h3>
+          ) : (
+            <h3>
+              From {upperFirst(props.firstName)}{' '}
+              {upperFirst(props.lastName)} - {props.divison} -{' '}
+              {props.position}
+            </h3>
+          )}
+        </div>
         <Linkify componentDecorator={componentDecorator}>
-          {props.content}
+          <p>{props.content}</p>
         </Linkify>
         <div className="date secondary-font-color mt2">
-          {props.date}
+          <span>{props.date}</span>
         </div>
       </div>
     </div>
