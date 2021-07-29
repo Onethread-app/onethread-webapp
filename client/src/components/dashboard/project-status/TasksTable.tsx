@@ -18,6 +18,7 @@ import MemberIcon from 'components/member/MemberIcon';
 
 import { useHistory } from 'react-router-dom';
 import { priorityColor } from 'stores/UtilsActions';
+import { useTranslation } from 'react-i18next';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -162,34 +163,43 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     label: string;
   }
 
+  const { t } = useTranslation();
+
   const headCells: HeadCell[] = [
     {
       id: 'taskname',
-      label: `Task name`,
+      label: `${t('app.project.Tasks.Task-name')}`,
+      // label: `Task name`,
     },
     {
       id: 'projectname',
-      label: `Project name`,
+      label: `${t('app.project.Tasks.Project-name')}`,
+      // label: `Project name`,
     },
     {
       id: 'members',
-      label: `Assignee`,
+      label: `${t('app.project.Tasks.Assignee')}`,
+      // label: `Assignee`,
     },
     {
       id: 'priority',
-      label: `Priority`,
+      label: `${t('app.project.Tasks.Priority')}`,
+      // label: `Priority`,
     },
     {
       id: 'status',
-      label: `Status`,
+      label: `${t('app.project.Tasks.Status')}`,
+      // label: `Status`,
     },
     {
       id: 'dueDate',
-      label: `Due date`,
+      label: `${t('app.project.Tasks.Due-date')}`,
+      // label: `Due date`,
     },
     {
       id: 'subtask',
-      label: 'Subtask',
+      label: `${t('app.project.Tasks.Subtask')}`,
+      // label: 'Subtask',
     },
   ];
 

@@ -5,6 +5,7 @@ import './ProjectStatus.scss';
 import TasksTable from './TasksTable';
 import MultiSelectComponent from './MultiSelectComponent';
 import { priorityColor } from 'stores/UtilsActions';
+import { useTranslation } from 'react-i18next';
 
 interface IProjectStatus {
   tasks: any;
@@ -182,6 +183,8 @@ const ProjectStatus = (props: IProjectStatus) => {
     selectedAssignee,
   ]);
 
+  const { t } = useTranslation();
+
   return (
     <div className="project-status mb5">
       <div className="mb3 text-center">
@@ -193,39 +196,36 @@ const ProjectStatus = (props: IProjectStatus) => {
             textAlign: 'center',
           }}
         >
-          Task Status
+          {t('app.project.Tasks.Task-Status')}
+          {/* Task Status */}
         </h3>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          paddingBottom: 10,
-          fontWeight: 'bold',
-          color: '#333',
-        }}
-      >
-        <div style={{ display: 'flex' }}>
+      <div className="status-bar">
+        <div className="status-count">
           <p style={{ paddingRight: 20 }}>
-            Total tasks: {mTask.length}
+            {t('app.project.Tasks.Total-tasks')}: {mTask.length}
           </p>
-          <p>Remaining tasks: {mTask.length - doneTasks}</p>
-          <p></p>
+          {/* <p style={{ paddingRight: 20 }}>Total tasks: {mTask.length}</p> */}
+          <p>
+            {t('app.project.Tasks.Remaining-tasks')}:{' '}
+            {mTask.length - doneTasks}
+          </p>
+          {/* <p>Remaining tasks: {mTask.length - doneTasks}</p> */}
         </div>
-        <div style={{ display: 'flex' }}>
+        <div className="status-count">
           <p style={{ paddingRight: 20 }}>
-            Running projects: {dashboard.runningProjects}
+            {t('app.project.Tasks.Running-projects')}:{' '}
+            {dashboard.runningProjects}
           </p>
-          <p>Completed projects: {dashboard.completedProjects}</p>
-          <p></p>
+          {/* <p style={{ paddingRight: 20 }}>Running projects: {dashboard.runningProjects}</p> */}
+          <p>
+            {t('app.project.Tasks.Completed-projects')}:{' '}
+            {dashboard.completedProjects}
+          </p>
+          {/* <p>Completed projects: {dashboard.completedProjects}</p> */}
         </div>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flex: 1,
-        }}
-      >
+      <div className="task-filters">
         <Form
           onSubmit={onSubmit}
           render={({
@@ -242,7 +242,8 @@ const ProjectStatus = (props: IProjectStatus) => {
               <div style={filterSpacing}>
                 <MultiSelectComponent
                   container={uniqueStatus}
-                  placeholder={'Filter by status'}
+                  placeholder={t('app.project.Tasks.Filter-status')}
+                  // placeholder={'Filter by status'}
                   selected={selectedStatus}
                   setSelected={setSelectedStatus}
                 />
@@ -250,7 +251,8 @@ const ProjectStatus = (props: IProjectStatus) => {
               <div style={filterSpacing}>
                 <MultiSelectComponent
                   container={uniquePriority}
-                  placeholder={'Filter by priority'}
+                  placeholder={t('app.project.Tasks.Filter-priority')}
+                  // placeholder={'Filter by priority'}
                   selected={selectedPriority}
                   setSelected={setSelectedPriority}
                 />
@@ -258,7 +260,8 @@ const ProjectStatus = (props: IProjectStatus) => {
               <div style={filterSpacing}>
                 <MultiSelectComponent
                   container={uniqueProject}
-                  placeholder={'Filter by projects'}
+                  placeholder={t('app.project.Tasks.Filter-projects')}
+                  // placeholder={'Filter by projects'}
                   selected={selectedProjects}
                   setSelected={setSelectedProjects}
                 />
@@ -266,12 +269,14 @@ const ProjectStatus = (props: IProjectStatus) => {
               <div style={filterSpacing}>
                 <MultiSelectComponent
                   container={uniqueMembers}
-                  placeholder={'Filter by Assignee'}
+                  placeholder={t('app.project.Tasks.Filter-assignee')}
+                  // placeholder={'Filter by Assignee'}
                   selected={selectedAssignee}
                   setSelected={setSelectedAssignee}
                 />
               </div>
               <div
+                className="task-filter-last"
                 style={{
                   paddingBottom: 5,
                   width: '100%',
@@ -284,7 +289,10 @@ const ProjectStatus = (props: IProjectStatus) => {
                       formatDate={(date: Date) =>
                         date.toLocaleDateString()
                       }
-                      placeholder="Filter by Due date"
+                      placeholder={t(
+                        'app.project.Tasks.Filter-Duedate',
+                      )}
+                      // placeholder="Filter by Due date"
                       parseDate={(str: string) => new Date(str)}
                       onChange={input.onChange}
                       canClearSelection={false}
