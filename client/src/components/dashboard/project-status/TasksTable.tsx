@@ -13,12 +13,15 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import React from 'react';
+import React, { useState } from 'react';
 import MemberIcon from 'components/member/MemberIcon';
 
 import { useHistory } from 'react-router-dom';
-import { priorityColor } from 'stores/UtilsActions';
+import { priorityColor, tokenConfig } from 'stores/UtilsActions';
 import { useTranslation } from 'react-i18next';
+import Axios from 'axios';
+import { server } from 'config';
+import AlertDialogSlide from './PermissionModal';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -263,6 +266,8 @@ const AppTable = ({
   tasks,
   ...otherProps
 }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleClickOpen = () => setModalOpen((p) => !p);
   const history = useHistory();
   const classes = useStyles();
 
@@ -319,9 +324,34 @@ const AppTable = ({
     );
   };
 
+  const redirectTo = async (row) => {
+    const headers = tokenConfig();
+    console.log(headers);
+    if ((headers as any).headers.Authorization) {
+      try {
+        await Axios.get(
+          `${server}projects?pid=${row.projectId}`,
+          headers,
+        );
+        history.push(
+          `/company/${row.companyUniqueName}/project/${row.projectId}/board/${row.boardId}/task/${row.taskId}`,
+        );
+      } catch (e) {
+        console.error(e);
+        if (e.response.data.status === 403) {
+          setModalOpen(true);
+        }
+      }
+    }
+  };
+
   return (
     <>
       <div className={classes.root} style={{ paddingTop: 5 }}>
+        <AlertDialogSlide
+          open={modalOpen}
+          handleClickOpen={handleClickOpen}
+        />
         <TableContainer>
           <Table
             aria-labelledby="tableTitle"
@@ -356,11 +386,7 @@ const AppTable = ({
                         borderRadius: 10,
                         border: '1px solid #eee',
                       }}
-                      onClick={() =>
-                        history.push(
-                          `/company/${row.companyUniqueName}/project/${row.projectId}/board/${row.boardId}/task/${row.taskId}`,
-                        )
-                      }
+                      onClick={() => redirectTo(row)}
                     >
                       <StyledTableCell
                         component="th"

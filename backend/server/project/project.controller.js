@@ -980,9 +980,7 @@ const getProjectIndividual = async (req, res, next) => {
       $and: [
         { account: req.params.account },
         { project: req.query.pid },
-        {
-          removed: false,
-        },
+        { removed: false },
       ],
     })
       .select('-_id project role')
