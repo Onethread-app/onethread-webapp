@@ -24,6 +24,7 @@ const {
   createRoom,
   createRoomMember,
 } = require('../room/room.controller');
+const { ISOformat } = require('../helpers/DateFormat');
 
 const isPidExist = async (pid) => {
   let checkExist = await Project.findOne(
@@ -979,9 +980,7 @@ const getProjectIndividual = async (req, res, next) => {
       $and: [
         { account: req.params.account },
         { project: req.query.pid },
-        {
-          removed: false,
-        },
+        { removed: false },
       ],
     })
       .select('-_id project role')
@@ -1030,31 +1029,6 @@ const nameWordCapitalize = (name) =>
     .split(' ')
     .map((t) => t[0].toUpperCase() + t.slice(1))
     .join(' ');
-
-const ISOformat = (time) => {
-  if (!time) return null;
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-  const [day, month, year] = new Date(time)
-    .toISOString()
-    .split('T')[0]
-    .split('-')
-    .reverse()
-    .map((d) => parseInt(d));
-  return `${monthNames[month - 1]} ${day}, ${year}`;
-};
 
 const projectOverview = async (req, res, next) => {
   try {

@@ -15,6 +15,7 @@ const {
 const {
   triggerNotification,
 } = require('../services/webpush.services');
+const { ISOformat } = require('../helpers/DateFormat');
 
 const {
   Subscription,
@@ -424,7 +425,6 @@ const authorizeUser = (functionalRole, ...userRoles) => {
           req.params.companyId ||
           req.body.companyId, //apatoto pore name or id hobe
       }).exec();
-      console.log(member);
       if (
         !member ||
         (functionalRole === 'all' && !userRoles.includes(member.role))
@@ -605,11 +605,18 @@ const dashBoard = async (req, res, next) => {
     }).select('_id name status deadline');
     let i;
 
+    let completedProjects = projectList.filter(
+      (p) => p.status === 'completed',
+    ).length;
+    let runningProjects = projectList.length - completedProjects;
+
     for (i = 0; i < projectList.length; i++) {
       const tasks = await Task.find({
         project: { $in: projectList[i]._id },
       })
-        .select('_id name status dueDate project boardId')
+        .select(
+          '_id name status dueDate project boardId priority createdAt',
+        )
         .populate({
           path: 'project',
           select: '_id name',
@@ -638,9 +645,11 @@ const dashBoard = async (req, res, next) => {
         modifiedTask._id = task._id;
         modifiedTask.name = task.name;
         modifiedTask.status = task.status;
-        modifiedTask.dueDate = task.dueDate;
+        modifiedTask.dueDate = ISOformat(task.dueDate);
         modifiedTask.members = members;
         modifiedTask.boardId = task.boardId;
+        modifiedTask.priority = task.priority;
+        modifiedTask.createdAt = task.createdAt;
         modifiedTask.project = {
           _id: task.project._id,
           name: task.project.name,
@@ -651,37 +660,40 @@ const dashBoard = async (req, res, next) => {
         };
         modifiedTask.doneSubtasks = doneSubtasks;
         modifiedTask.totalSubtasks = totalSubtasks;
-
         taskCompilation.push(modifiedTask);
       });
-
-      // let projectName = projectList[i].name;
-      // const members = await projectTeamMembers(projectList[i]._id);
-      // const taskNumbers = await Task.find({
-      //   project: { $in: projectList[i]._id },
-      // }).countDocuments();
-      // const doneTask = await Task.find({
-      //   $and: [
-      //     { project: { $in: projectList[i]._id }, status: 'done' },
-      //   ],
-      // }).countDocuments();
-      // let projectObj = {};
-      // projectObj._id = projectList[i]._id;
-      // projectObj.name = projectName;
-      // projectObj.status = projectList[i].status;
-      // projectObj.deadline = projectList[i].deadline;
-      // projectObj.members = members;
-      // projectObj.taskNumbers = taskNumbers;
-      // projectObj.doneTask = doneTask;
-      // projectCompilation.push(projectObj);
     }
 
+    // let projectName = projectList[i].name;
+    // const members = await projectTeamMembers(projectList[i]._id);
+    // const taskNumbers = await Task.find({
+    //   project: { $in: projectList[i]._id },
+    // }).countDocuments();
+    // const doneTask = await Task.find({
+    //   $and: [
+    //     { project: { $in: projectList[i]._id }, status: 'done' },
+    //   ],
+    // }).countDocuments();
+    // let projectObj = {};
+    // projectObj._id = projectList[i]._id;
+    // projectObj.name = projectName;
+    // projectObj.status = projectList[i].status;
+    // projectObj.deadline = projectList[i].deadline;
+    // projectObj.members = members;
+    // projectObj.taskNumbers = taskNumbers;
+    // projectObj.doneTask = doneTask;
+    // projectCompilation.push(projectObj);
+    taskCompilation.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    );
     return sendJSONresponse(res, 200, {
       success: true,
       data: {
         totalProject,
         totalEmployee,
         totalAssociates,
+        completedProjects,
+        runningProjects,
         // projectCompilation,
         taskCompilation,
       },

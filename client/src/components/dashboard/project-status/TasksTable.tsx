@@ -1,5 +1,4 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { LinearProgress } from '@material-ui/core';
 import {
   createStyles,
   makeStyles,
@@ -11,62 +10,61 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import moment from 'moment';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import React, { useState } from 'react';
 import MemberIcon from 'components/member/MemberIcon';
-// import TablePagination from '@material-ui/core/TablePagination';
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 450,
-  },
-  container: {
-    maxHeight: 440,
-  },
-  head: {
-    color: '#65676d',
-    fontSize: '1.1rem !important',
-    textAlign: 'center',
-  },
-  name: {
-    maxWidth: 120,
-    color: '#65676d',
-    fontSize: '1.1rem !important',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  },
-  textCenter: {
-    textAlign: 'center',
-  },
-  row: {
-    transition: 'all 0.25s ease-in',
-    '&:hover': {
-      background: 'rgba(0,0,0,0.1)',
+import { useHistory } from 'react-router-dom';
+import { priorityColor, tokenConfig } from 'stores/UtilsActions';
+import { useTranslation } from 'react-i18next';
+import Axios from 'axios';
+import { server } from 'config';
+import AlertDialogSlide from './PermissionModal';
+
+const StyledTableCell = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '&:first-child': { paddingRight: 5 },
+      '&:last-child': { paddingRight: 5 },
+    },
+    head: { color: 'black' },
+    body: { fontSize: 14 },
+  }),
+)(TableCell);
+
+const StyledTableRow = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      backgroundColor: '#fefefe',
       cursor: 'pointer',
     },
-  },
-});
+  }),
+)(TableRow);
 
-// function createData(
-//   name: string,
-//   calories: number,
-//   fat: number,
-//   carbs: number,
-//   protein: number,
-// ) {
-//   return { name, calories, fat, carbs, protein };
-// }
-
-// const rows = [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-// ];
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+    },
+    paper: {
+      width: '100%',
+      marginBottom: theme.spacing(2),
+    },
+    visuallyHidden: {
+      border: 0,
+      clip: 'rect(0 0 0 0)',
+      height: 1,
+      margin: -1,
+      overflow: 'hidden',
+      padding: 0,
+      position: 'absolute',
+      top: 20,
+      width: 1,
+    },
+  }),
+);
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
@@ -77,7 +75,7 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
     colorPrimary: {
       backgroundColor:
         theme.palette.grey[
-          theme.palette.type === 'light' ? 200 : 700
+          theme.palette.type === 'light' ? 300 : 700
         ],
     },
     bar: {
@@ -87,143 +85,437 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
   }),
 )(LinearProgress);
 
-interface ITasksTable {
-  tasks: any;
+interface Data {
+  taskname: string;
+  projectname: string;
+  priority: number;
+  members: string;
+  dueDate: string;
+  status: string;
+  subtask: number;
 }
 
-const TasksTable = (props: ITasksTable) => {
-  const [tasks, setTasks] = React.useState<any>();
-  // const [page, setPage] = React.useState(0);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  // const handleChangePage = (event: unknown, newPage: number) => {
-  //   setPage(newPage);
-  // };
-
-  // const handleChangeRowsPerPage = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  // ) => {
-  //   setRowsPerPage(+event.target.value);
-  //   setPage(0);
-  // };
-
-  const classes = useStyles();
-  const history = useHistory();
-
-  React.useEffect(() => {
-    if (props.tasks) {
-      setTasks(props.tasks);
-    }
-  }, [props.tasks]);
-
-  const handleRowClick = (data: any) => {
-    history.push(
-      `/company/${data.company.uniqueName}/project/${data.project._id}/board/${data.boardId}/task/${data._id}`,
+function descendingComparator(a, b, orderBy) {
+  if (orderBy === 'dueDate') {
+    return (
+      new Date(b[orderBy]).valueOf() - new Date(a[orderBy]).valueOf()
     );
+  }
+  if (orderBy === 'subtask') {
+    return b['remainingSubtask'] - a['remainingSubtask'];
+  }
+  if (b[orderBy] < a[orderBy]) return -1;
+  if (b[orderBy] > a[orderBy]) return 1;
+  return 0;
+}
+
+type Order = 'asc' | 'desc';
+
+function getComparator<Key extends keyof any>(
+  order: Order,
+  orderBy: Key,
+): (
+  a: { [key in Key]: number | string },
+  b: { [key in Key]: number | string },
+) => number {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort<T>(
+  array: T[],
+  comparator: (a: T, b: T) => number,
+) {
+  const stabilizedThis = array.map(
+    (el, index) => [el, index] as [T, number],
+  );
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+interface EnhancedTableProps {
+  classes: ReturnType<typeof useStyles>;
+  numSelected: number;
+  onRequestSort: (
+    event: React.MouseEvent<unknown>,
+    property: keyof Data,
+  ) => void;
+  onSelectAllClick: (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => void;
+  order: Order;
+  orderBy: string;
+  rowCount: number;
+}
+
+function EnhancedTableHead(props: EnhancedTableProps) {
+  const { classes, order, orderBy, onRequestSort } = props;
+  const createSortHandler = (property: keyof Data) => (
+    event: React.MouseEvent<unknown>,
+  ) => {
+    onRequestSort(event, property);
+  };
+
+  interface HeadCell {
+    id: keyof Data;
+    label: string;
+  }
+
+  const { t } = useTranslation();
+
+  const headCells: HeadCell[] = [
+    {
+      id: 'taskname',
+      label: `${t('app.project.Tasks.Task-name')}`,
+      // label: `Task name`,
+    },
+    {
+      id: 'projectname',
+      label: `${t('app.project.Tasks.Project-name')}`,
+      // label: `Project name`,
+    },
+    {
+      id: 'members',
+      label: `${t('app.project.Tasks.Assignee')}`,
+      // label: `Assignee`,
+    },
+    {
+      id: 'priority',
+      label: `${t('app.project.Tasks.Priority')}`,
+      // label: `Priority`,
+    },
+    {
+      id: 'status',
+      label: `${t('app.project.Tasks.Status')}`,
+      // label: `Status`,
+    },
+    {
+      id: 'dueDate',
+      label: `${t('app.project.Tasks.Due-date')}`,
+      // label: `Due date`,
+    },
+    {
+      id: 'subtask',
+      label: `${t('app.project.Tasks.Subtask')}`,
+      // label: 'Subtask',
+    },
+  ];
+
+  return (
+    <TableHead>
+      <TableRow
+        style={{
+          background: '#fafafa',
+          border: '1px solid #eee',
+          borderBottomColor: 'transparent',
+        }}
+      >
+        {headCells.map((headCell, index) => (
+          <StyledTableCell
+            key={headCell.id}
+            align={index === 0 ? 'center' : 'left'}
+            padding={'default'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
+            >
+              <p
+                style={{
+                  fontSize: 15,
+                  color: '#333',
+                  fontWeight: 'bold',
+                }}
+              >
+                {headCell.label}
+              </p>
+              {orderBy === headCell.id &&
+              headCell.id === 'dueDate' ? (
+                <span className={classes.visuallyHidden}>
+                  {order === 'desc'
+                    ? 'sorted descending'
+                    : 'sorted ascending'}
+                </span>
+              ) : null}
+            </TableSortLabel>
+          </StyledTableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+}
+
+const AppTable = ({
+  order,
+  setOrder,
+  orderBy,
+  setOrderBy,
+  selected,
+  setSelected,
+  page,
+  setPage,
+  rowsPerPage,
+  setRowsPerPage,
+  tasks,
+  ...otherProps
+}) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleClickOpen = () => setModalOpen((p) => !p);
+  const history = useHistory();
+  const classes = useStyles();
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof Data,
+  ) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const handleSelectAllClick = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (event.target.checked) {
+      const newSelecteds = tasks.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const emptyRows =
+    rowsPerPage -
+    Math.min(rowsPerPage, tasks.length - page * rowsPerPage);
+
+  const PriorityButton = ({ value }) => {
+    const priorObject: any = priorityColor.find(
+      (p) => p.code === value,
+    );
+    return (
+      <span
+        className="ph2 pv1"
+        style={{
+          background: priorObject.value,
+          color: 'white',
+          borderRadius: 2,
+        }}
+      >
+        {priorObject.name}
+      </span>
+    );
+  };
+
+  const redirectTo = async (row) => {
+    const headers = tokenConfig();
+    console.log(headers);
+    if ((headers as any).headers.Authorization) {
+      try {
+        await Axios.get(
+          `${server}projects?pid=${row.projectId}`,
+          headers,
+        );
+        history.push(
+          `/company/${row.companyUniqueName}/project/${row.projectId}/board/${row.boardId}/task/${row.taskId}`,
+        );
+      } catch (e) {
+        console.error(e);
+        if (e.response.data.status === 403) {
+          setModalOpen(true);
+        }
+      }
+    }
   };
 
   return (
     <>
-      <TableContainer component={Paper} className={classes.container}>
-        <Table
-          className={classes.table}
-          stickyHeader
-          aria-label="task table"
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.name}>Name</TableCell>
-              <TableCell className={classes.head}>Members</TableCell>
-              <TableCell className={classes.head}>Status</TableCell>
-              <TableCell className={classes.head}>Due Date</TableCell>
-              <TableCell className={classes.head}>
-                Subtasks Remaining
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tasks &&
-              tasks
-                // .slice(
-                //   page * rowsPerPage,
-                //   page * rowsPerPage + rowsPerPage,
-                // )
-                .map((data: any) => (
-                  <TableRow
-                    key={data._id}
-                    onClick={() => handleRowClick(data)}
-                    className={classes.row}
-                  >
-                    <TableCell
-                      className={classes.name}
-                      component="th"
-                      scope="row"
+      <div className={classes.root} style={{ paddingTop: 5 }}>
+        <AlertDialogSlide
+          open={modalOpen}
+          handleClickOpen={handleClickOpen}
+        />
+        <TableContainer>
+          <Table
+            aria-labelledby="tableTitle"
+            size={'medium'}
+            aria-label="enhanced table"
+          >
+            <EnhancedTableHead
+              classes={classes}
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={tasks.length}
+            />
+            <TableBody>
+              {stableSort(tasks, getComparator(order, orderBy))
+                .slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage,
+                )
+                .map((row: any, index) => {
+                  const labelId = `enhanced-table-checkbox-${index}`;
+
+                  return (
+                    <StyledTableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row._id}
+                      style={{
+                        borderRadius: 10,
+                        border: '1px solid #eee',
+                      }}
+                      onClick={() => redirectTo(row)}
                     >
-                      {data.name}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-center">
-                        {data.members.map((member: any) => (
-                          <MemberIcon
-                            name={`${member.firstName} ${member.lastName}`}
-                            _id={member._id}
-                            profileImage={member.profileImage}
-                          />
-                        ))}
-                      </div>
-                    </TableCell>
-                    <TableCell className={classes.textCenter}>
-                      <span
-                        className="bp3-tag ttc"
+                      <StyledTableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                        align={'center'}
                         style={{
-                          background:
-                            data.status === 'done'
-                              ? '#2EB67D'
-                              : data.status === 'in-progress'
-                              ? '#08A0F7'
-                              : '#FFA800',
+                          maxWidth: 250,
+                          lineHeight: 1.5,
                         }}
                       >
-                        {data.status.replace(/-|\s/g, ' ')}
-                      </span>
-                    </TableCell>
-                    <TableCell className={classes.textCenter}>
-                      {data.dueDate
-                        ? moment(data.dueDate).format('DD/MM/YYYY')
-                        : 'Not Set'}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center">
-                        <div className="w-70 mr3">
-                          <BorderLinearProgress
-                            variant="determinate"
-                            value={
-                              (data.doneSubtasks * 100) /
-                              data.totalSubtasks
-                            }
-                          />
+                        <p
+                          style={{
+                            padding: 10,
+                            paddingLeft: 13,
+                            paddingRight: 13,
+                          }}
+                        >
+                          {row.taskname}
+                        </p>
+                      </StyledTableCell>
+                      <StyledTableCell style={{ maxWidth: 100 }}>
+                        {row.projectname}
+                      </StyledTableCell>
+
+                      <StyledTableCell
+                        align="center"
+                        style={{ maxWidth: 70 }}
+                      >
+                        {row.members.length ? (
+                          <div className="flex items-center justify-center">
+                            {row.members.map((member: any) => (
+                              <MemberIcon
+                                name={`${member.firstName} ${member.lastName}`}
+                                _id={member._id}
+                                profileImage={member.profileImage}
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          '-'
+                        )}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="left"
+                        style={{ maxWidth: 70 }}
+                      >
+                        <PriorityButton value={row.priority} />
+                      </StyledTableCell>
+
+                      <StyledTableCell align="left">
+                        <span
+                          className="bp3-tag ttc"
+                          style={{
+                            background:
+                              row.status === 'done'
+                                ? '#2EB67D'
+                                : row.status === 'in-progress'
+                                ? '#08A0F7'
+                                : '#FFA800',
+                            maxWidth: 100,
+                          }}
+                        >
+                          {row.status
+                            .toString()
+                            .replace(/-/g, ' ')
+                            .toUpperCase()}
+                        </span>
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="left"
+                        style={{ maxWidth: 70 }}
+                      >
+                        <span>
+                          {row.dueDate !== 'December 31, 1970'
+                            ? row.dueDate
+                            : 'Not Set'}
+                        </span>
+                      </StyledTableCell>
+                      <StyledTableCell style={{ minWidth: 150 }}>
+                        <div className="flex items-center">
+                          <div className="w-60">
+                            <BorderLinearProgress
+                              variant="determinate"
+                              value={
+                                (row.doneSubtasks * 100) /
+                                row.totalSubtasks
+                              }
+                            />
+                          </div>
+                          <span
+                            className="w-40"
+                            style={{
+                              paddingLeft: 10,
+                            }}
+                          >{`${
+                            row.totalSubtasks -
+                            parseInt(row.doneSubtasks)
+                          } / ${row.totalSubtasks}`}</span>
                         </div>
-                        <span className="w-20">{`${
-                          data.totalSubtasks - data.doneSubtasks
-                        } / ${data.totalSubtasks}`}</span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {/* <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data.length ?? 0}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      /> */}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: 53 * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5]}
+          component="div"
+          count={tasks.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+      </div>
     </>
   );
 };
 
-export default TasksTable;
+export default AppTable;

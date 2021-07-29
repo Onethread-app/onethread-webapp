@@ -394,6 +394,26 @@
         "Change-board": "বোর্ড তৈরি বা হালনাগাদ করুন",
         "Change-column": "কলাম তৈরি বা হালনাগাদ করুন",
         "Assigning": "বোর্ডের সদস্য নিয়োগ বা বাতিল করুন"
+      },
+
+      "Tasks": {
+        "Task-Status": "টাস্কের অবস্থা",
+        "Total-tasks": "মোট টাস্ক",
+        "Remaining-tasks": "বাকি টাস্ক",
+        "Running-projects": "চলমান প্রোজেক্টসমূহ",
+        "Completed-projects": "সমাপ্ত প্রোজেক্টসমূহ",
+        "Filter-status": "অবস্থা অনুসারে ফিল্টার করুন",
+        "Filter-priority": "অগ্রাধিকার অনুসারে ফিল্টার করুন",
+        "Filter-projects": "প্রোজেক্ট অনুসারে ফিল্টার করুন",
+        "Filter-assignee": "দায়িত্বরত অনুসারে ফিল্টার করুন",
+        "Filter-Duedate": "নির্দিষ্ট তারিখ অনুসারে ফিল্টার করুন",
+        "Task-name": "টাস্কের নাম",
+        "Project-name": "প্রোজেক্টের নাম",
+        "Assignee": "দায়িত্বরত",
+        "Priority": "অগ্রাধিকার",
+        "Status": "অবস্থা",
+        "Due-date": "নির্দিষ্ট তারিখ",
+        "Subtask": "সাবটাস্ক"
       }
     },
     "user": {
