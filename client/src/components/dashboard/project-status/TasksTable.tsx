@@ -337,7 +337,6 @@ const AppTable = ({
           `/company/${row.companyUniqueName}/project/${row.projectId}/board/${row.boardId}/task/${row.taskId}`,
         );
       } catch (e) {
-        console.error(e);
         if (e.response.data.status === 403) {
           setModalOpen(true);
         }
