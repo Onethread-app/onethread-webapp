@@ -126,7 +126,7 @@ const ProjectStatus = (props: IProjectStatus) => {
     for (let pc of priorityColor) {
       colorMapper[pc.name] = pc.code;
     }
-    let fTasks: any[] = [];
+    const fTasks: any[] = [];
     for (let task of allTasks) {
       // member
       let found = false;
