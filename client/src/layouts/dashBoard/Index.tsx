@@ -21,7 +21,7 @@ import {
 } from '../../stores/subscriptionBilling/Actions';
 // import DashboardSummery from 'components/dashboard/dashboard-summary/DashboardSummary';
 // import TotalInfo from 'components/dashboard/total-info/TotalInfo';
-import ProjectStatus from 'components/dashboard/project-status/ProjectStatus';
+import { ProjectStatus } from 'components/dashboard/project-status/ProjectStatus';
 // import Progressbar from 'components/dashboard/progressbar/Progressbar';
 // import CompanyAnnouncements from 'components/dashboard/company-announcements/CompanyAnnouncements';
 // import firebase from '../../firebase';
@@ -73,7 +73,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(Object);
   const [currentTaskPage, setCurrentTaskPage] = useState(1);
-
   // const [
   //   currentAnnouncementPage,
   //   setCurrentAnnouncementPage,
@@ -230,12 +229,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
             </div> */}
             <div>
               <div className="mt4 pb0-ns">
-                {dashboard.taskCompilation && (
-                  <ProjectStatus
-                    tasks={dashboard.taskCompilation}
-                    dashboard={dashboard}
-                  />
-                )}
+                {dashboard.taskCompilation && <ProjectStatus />}
               </div>
               <div
                 className="flex flex-row-ns flex-column-reverse w-100 items-start mt5 mb4 pb0-ns"
