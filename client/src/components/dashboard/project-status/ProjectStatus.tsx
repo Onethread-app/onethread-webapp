@@ -1,6 +1,6 @@
-import { DateInput } from '@blueprintjs/datetime';
+// import { DateInput } from '@blueprintjs/datetime';
 import React, { useEffect, useState } from 'react';
-import { Field, Form } from 'react-final-form';
+import { Form } from 'react-final-form';
 import './ProjectStatus.scss';
 import TasksTable from './TasksTable';
 import MultiSelectComponent from './MultiSelectComponent';
@@ -282,7 +282,7 @@ const ProjectStatus = (props: IProjectStatus) => {
                   width: '100%',
                 }}
               >
-                <Field<string>
+                {/* <Field<string>
                   name="dueDate"
                   render={({ input, meta }) => (
                     <DateInput
@@ -304,7 +304,7 @@ const ProjectStatus = (props: IProjectStatus) => {
                       }}
                     />
                   )}
-                />
+                /> */}
               </div>
             </>
           )}
