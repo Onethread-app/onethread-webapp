@@ -1,4 +1,5 @@
 // import { DateInput } from '@blueprintjs/datetime';
+<<<<<<< HEAD
 import { DateInput } from '@blueprintjs/datetime';
 import { CircularProgress } from '@material-ui/core';
 import { tigrowApi } from 'config';
@@ -24,6 +25,10 @@ import {
 import { priorityColor, tokenConfig } from 'stores/UtilsActions';
 import MultiSelectComponent from './MultiSelectComponent';
 // import { Field, Form } from 'react-final-form';
+=======
+import React, { useEffect, useState } from 'react';
+import { Form } from 'react-final-form';
+>>>>>>> automatic deploy
 import './ProjectStatus.scss';
 import TasksTable from './TasksTable';
 import { customStyles } from 'layouts/company/settings/Index';
@@ -396,6 +401,7 @@ const ProjectStatusComponent = (props) => {
                 }}
                 onClick={resetHandler}
               >
+<<<<<<< HEAD
                 Reset
               </button>
             </div>
@@ -417,6 +423,33 @@ const ProjectStatusComponent = (props) => {
                 tasks={fTasks}
               />
             </div>
+=======
+                {/* <Field<string>
+                  name="dueDate"
+                  render={({ input, meta }) => (
+                    <DateInput
+                      formatDate={(date: Date) =>
+                        date.toLocaleDateString()
+                      }
+                      placeholder={t(
+                        'app.project.Tasks.Filter-Duedate',
+                      )}
+                      // placeholder="Filter by Due date"
+                      parseDate={(str: string) => new Date(str)}
+                      onChange={input.onChange}
+                      canClearSelection={false}
+                      value={
+                        input.value ? new Date(input.value) : null
+                      }
+                      popoverProps={{
+                        targetClassName: 'w-100',
+                      }}
+                    />
+                  )}
+                /> */}
+              </div>
+            </>
+>>>>>>> automatic deploy
           )}
         </div>
       )}
