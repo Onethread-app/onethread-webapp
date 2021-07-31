@@ -68,6 +68,7 @@ const filterSpacing = {
 };
 
 const ProjectStatusComponent = (props) => {
+  const [isLoading, setIsLoading] = useState(true);
   // API Data
   const [allTasks, setTasks] = useState<any[]>([]);
   const [fTasks, setfTasks] = useState<any[]>([]);
@@ -95,69 +96,71 @@ const ProjectStatusComponent = (props) => {
 
   // Task
   const [completedTasks, setCompletedTasks] = useState(0);
+  async function getInfo() {
+    setIsLoading(true);
+    const headers = tokenConfig();
 
-  useEffect(() => {
-    async function getInfo() {
-      const headers = tokenConfig();
+    if (props.company._id) {
+      try {
+        const response = await tigrowApi.get(
+          `company/${props.company._id}/dashboard`,
+          headers,
+        );
+        const { data } = response.data;
+        const mTask = getModifiedTasks(data.taskCompilation);
+        setTasks(mTask);
+        setfTasks(mTask);
+        setRunnningProject(data.runningProjects);
+        setCompletedProject(data.completedProjects);
+        // unique project
+        setUniqueProject(getUniqueList(mTask, 'projectname'));
+        // unique status
+        setUniqueStatus(getUniqueList(mTask, 'status'));
+        // unique priority
+        let uniquePriorityT: any = getUniqueList(mTask, 'priority');
+        uniquePriorityT = uniquePriorityT.map((p) => {
+          const f = priorityColor.find((pc) => pc.code === p.label);
+          if (!f) return null;
+          return {
+            id: f.name,
+            label: f.name,
+          };
+        });
+        setUniquePriority(uniquePriorityT);
+        // Unique members
+        let uniqueMembersT: any[] = [];
+        const uniqueMembersMap = {};
 
-      if (props.company._id) {
-        try {
-          const response = await tigrowApi.get(
-            `company/${props.company._id}/dashboard`,
-            headers,
-          );
-          const { data } = response.data;
-          const mTask = getModifiedTasks(data.taskCompilation);
-          setTasks(mTask);
-          setfTasks(mTask);
-          setRunnningProject(data.runningProjects);
-          setCompletedProject(data.completedProjects);
-          // unique project
-          setUniqueProject(getUniqueList(mTask, 'projectname'));
-          // unique status
-          setUniqueStatus(getUniqueList(mTask, 'status'));
-          // unique priority
-          let uniquePriorityT: any = getUniqueList(mTask, 'priority');
-          uniquePriorityT = uniquePriorityT.map((p) => {
-            const f = priorityColor.find((pc) => pc.code === p.label);
-            if (!f) return null;
-            return {
-              id: f.name,
-              label: f.name,
-            };
-          });
-          setUniquePriority(uniquePriorityT);
-          // Unique members
-          let uniqueMembersT: any[] = [];
-          const uniqueMembersMap = {};
-
-          for (let task of mTask) {
-            if (task.members) {
-              const members = task.members.map(
-                (t) => `${t.firstName} ${t.lastName}`,
-              );
-              for (let member of members) {
-                if (uniqueMembersMap[member]) continue;
-                uniqueMembersMap[member] = true;
-                uniqueMembersT.push(member);
-              }
+        for (let task of mTask) {
+          if (task.members) {
+            const members = task.members.map(
+              (t) => `${t.firstName} ${t.lastName}`,
+            );
+            for (let member of members) {
+              if (uniqueMembersMap[member]) continue;
+              uniqueMembersMap[member] = true;
+              uniqueMembersT.push(member);
             }
           }
-          uniqueMembersT = uniqueMembersT.map((m) => ({
-            id: m,
-            label: m,
-          }));
-          setUniqueMembers(uniqueMembersT);
+        }
+        uniqueMembersT = uniqueMembersT.map((m) => ({
+          id: m,
+          label: m,
+        }));
+        setUniqueMembers(uniqueMembersT);
 
-          // Completed Tasks
-          setCompletedTasks(
-            mTask.filter((m) => m.status === 'done').length,
-          );
-        } catch (err) {}
-      }
+        // Completed Tasks
+        setCompletedTasks(
+          mTask.filter((m) => m.status === 'done').length,
+        );
+      } catch (err) {}
     }
+
+    setIsLoading(false);
+  }
+  useEffect(() => {
     getInfo();
-  }, []);
+  }, [props.company._id]);
 
   useEffect(() => {
     if (
@@ -246,7 +249,7 @@ const ProjectStatusComponent = (props) => {
           {t('app.project.Tasks.Task-Status')}
         </h3>
       </div>
-      {fTasks.length === 0 ? (
+      {isLoading ? (
         <div
           className="flex justify-center mt2 w-100"
           style={{ paddingTop: 25, paddingBottom: 30 }}
@@ -305,7 +308,7 @@ const ProjectStatusComponent = (props) => {
                 setSelected={setSelectedProjects}
               />
             </div>
-            <div style={filterSpacing}>
+            <div style={{ ...filterSpacing, paddingRight: 0 }}>
               <MultiSelectComponent
                 container={uniqueMembers}
                 placeholder={t('app.project.Tasks.Filter-assignee')}
