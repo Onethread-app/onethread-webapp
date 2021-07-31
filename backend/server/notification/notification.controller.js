@@ -626,7 +626,6 @@ module.exports.list = async (req, res, next) => {
     ];
     let notificationFound = await UserNotification.find({
       account: req.user._id,
-      seen: false,
     })
       .populate(options)
       .sort({ createdAt: -1 })
