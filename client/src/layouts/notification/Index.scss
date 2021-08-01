@@ -1,6 +1,9 @@
 .notification-page {
-  @media screen and (max-width: 768px) {
-    margin-top: 3.5rem;
+  height: 100%;
+
+  @media screen and (max-width: 1050px) {
+    margin-top: 3.6rem;
+    height: auto;
   }
 
   .notification-sidebar {
@@ -10,7 +13,7 @@
     border-radius: 6px;
     border-top-left-radius: 0;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1050px) {
       width: auto;
       margin: 0 1rem 1rem;
       border-left: 0.5px solid #bdbdbd;
@@ -23,12 +26,12 @@
       text-align: center;
       cursor: pointer;
 
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: 1050px) {
         border-radius: 6px;
       }
 
       &:first-child {
-        @media screen and (min-width: 768px) {
+        @media screen and (min-width: 1050px) {
           border-top-right-radius: 6px;
         }
       }
@@ -36,7 +39,7 @@
       &:not(:first-child) {
         margin: 0.1rem 0;
 
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 1050px) {
           margin: 0;
         }
       }
@@ -59,9 +62,20 @@
       border-right: none;
       padding: 0.5rem 1rem;
       cursor: pointer;
-
+      justify-content: space-between;
       &:hover {
         background: #97c8ff;
+      }
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    .notification-time {
+      float: right;
+    }
+    .notification-items {
+      > div {
+        display: block;
       }
     }
   }

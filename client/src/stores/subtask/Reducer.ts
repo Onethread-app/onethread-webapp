@@ -11,6 +11,7 @@ export interface ISubTask {
   _id?: string;
   name?: string;
   done?: boolean;
+  dueDate?: Date;
   assignedMembers?: [ISubtaskMember];
 }
 
@@ -79,6 +80,7 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         updatingSubTask: true,
+        errorOnUpdate: '',
       };
     case SubtaskActionTypes.UPDATE_SUBTASK_SUCCESS:
       return {
@@ -89,6 +91,7 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
                 ...subTask,
                 name: action.payload.name,
                 done: action.payload.done,
+                dueDate: action.payload.dueDate,
               }
             : subTask,
         ),

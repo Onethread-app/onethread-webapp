@@ -24,13 +24,10 @@ const NotificationItem = (props: INotificationItem) => {
   };
 
   return (
-    <div
-      className="flex items-center justify-between"
-      onClick={handleClick}
-    >
+    <div className="flex items-center" onClick={handleClick}>
       <div className="flex items-center">
         <img
-          src={     
+          src={
             notification.type
               ? notificationType[notification.type].img
               : 'https://via.placeholder.com/20'
@@ -46,7 +43,7 @@ const NotificationItem = (props: INotificationItem) => {
           {notification.text}
         </p>
       </div>
-      <span className="ml2 blue">
+      <span className="ml2 blue notification-time">
         {moment(props.notificationData.createdAt).fromNow()}
       </span>
     </div>

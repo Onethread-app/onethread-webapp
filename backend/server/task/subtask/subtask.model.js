@@ -17,6 +17,9 @@ const SubTaskSchema = new mongoose.Schema(
       ref: 'Account',
       required: true,
     },
+    dueDate: {
+      type: Date,
+    },
     taskId: {
       type: Schema.Types.ObjectId,
       ref: 'Task',

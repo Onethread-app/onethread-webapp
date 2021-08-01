@@ -96,6 +96,7 @@ function* updateSubTaskAsync({ payload }: any) {
     const reqBody = {
       name: payload.name,
       done: payload.done,
+      dueDate: payload.dueDate,
     };
 
     if ((headers as any).headers.Authorization) {

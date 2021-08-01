@@ -71,11 +71,7 @@ import {
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getCompanyId } from 'stores/company/Selector';
 import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
-import {
-  getCurrentProjectId,
-  getPendingProjects,
-  getProjectId,
-} from './Selector';
+import { getPendingProjects, getProjectId } from './Selector';
 import { IPendingProject } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
 import {
@@ -349,6 +345,12 @@ export function* getSingleProjectAsync({ payload }: any) {
   try {
     if (payload) {
       yield put(showLoading());
+      yield all([
+        put({
+          type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
+        }),
+        put(clearCurrentBoard()),
+      ]);
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = yield tigrowApi.get(
@@ -356,12 +358,8 @@ export function* getSingleProjectAsync({ payload }: any) {
           headers,
         );
         yield all([
-          put({
-            type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
-          }),
-          put(clearCurrentBoard()),
-          put(getRoleForProject(response.data._id)),
           put(getSingleProjectSuccess(response.data)),
+          put(getRoleForProject(response.data._id)),
           put(openProjectFIle(true)),
         ]);
       }
@@ -691,7 +689,7 @@ export function* getRoleForProjectAsync({ projectId }: any) {
 export function* getProjectTeamsAsync() {
   try {
     const headers = tokenConfig();
-    const pid = yield select(getCurrentProjectId);
+    const pid = yield select(getProjectId);
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
         `/teams/member-list?pid=${pid}`,
@@ -752,7 +750,7 @@ export function* addProjectTeamsAsync({ data }: any) {
 export function* getProjectAssociatesAsync() {
   try {
     const headers = tokenConfig();
-    const pid = yield select(getCurrentProjectId);
+    const pid = yield select(getProjectId);
     const companyId = yield select(getCompanyId);
     if ((headers as any).headers.Authorization) {
       // tslint:disable-next-line:no-string-literal

@@ -194,7 +194,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     ) {
       props.history.push(`/notFound`);
     }
-    if (projectId && projectId !== props.project._id) {
+    if (
+      props.company._id &&
+      projectId &&
+      projectId !== props.project._id
+    ) {
       updateProjectReducer();
     }
   }, [props.match, props.company._id, props.project._id]);
@@ -208,7 +212,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     ) {
       props.history.push(`/notFound`);
     }
-    if (boardId && boardId !== props.boardId) {
+    if (props.project._id && boardId && boardId !== props.boardId) {
       updateBoardReducer();
     }
     props.fetchRooms();
@@ -224,7 +228,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       props.history.push(`/notFound`);
     }
 
-    if (taskId && taskId !== props.taskId) {
+    if (
+      props.project._id &&
+      props.boardId &&
+      taskId &&
+      taskId !== props.taskId
+    ) {
       updateTaskReducer();
     }
   }, [props.match, props.project._id, props.boardId, props.taskId]);
