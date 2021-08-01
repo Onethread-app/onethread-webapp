@@ -583,21 +583,8 @@ const parentOrg = async (req, res, next) => {
 const dashBoard = async (req, res, next) => {
   try {
     const companyId = req.params.companyId;
-    const totalProject = await Project.find({
-      $or: [{ company: companyId }, { associate: companyId }],
-      removed: false,
-    }).countDocuments();
-    const totalEmployee = await Member.find({
-      company: companyId,
-    }).countDocuments();
-    const totalAssociates = await Associate.find({
-      $or: [{ company: companyId }, { associateCompany: companyId }],
-      isAccepted: true,
-      removed: false,
-      isRejected: false,
-    }).countDocuments();
-    // let projectCompilation = [];
     let taskCompilation = [];
+    // Query 1 [O(nProjects)]
     let projectList = await Project.find({
       $or: [{ company: companyId }, { associate: companyId }],
       removed: false,
@@ -609,8 +596,8 @@ const dashBoard = async (req, res, next) => {
       (p) => p.status === 'completed',
     ).length;
     let runningProjects = projectList.length - completedProjects;
-
     for (i = 0; i < projectList.length; i++) {
+      // Query 2 [O(nProjects * nTask)]
       const tasks = await Task.find({
         project: { $in: projectList[i]._id },
       })
@@ -663,38 +650,14 @@ const dashBoard = async (req, res, next) => {
         taskCompilation.push(modifiedTask);
       });
     }
-
-    // let projectName = projectList[i].name;
-    // const members = await projectTeamMembers(projectList[i]._id);
-    // const taskNumbers = await Task.find({
-    //   project: { $in: projectList[i]._id },
-    // }).countDocuments();
-    // const doneTask = await Task.find({
-    //   $and: [
-    //     { project: { $in: projectList[i]._id }, status: 'done' },
-    //   ],
-    // }).countDocuments();
-    // let projectObj = {};
-    // projectObj._id = projectList[i]._id;
-    // projectObj.name = projectName;
-    // projectObj.status = projectList[i].status;
-    // projectObj.deadline = projectList[i].deadline;
-    // projectObj.members = members;
-    // projectObj.taskNumbers = taskNumbers;
-    // projectObj.doneTask = doneTask;
-    // projectCompilation.push(projectObj);
     taskCompilation.sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
     );
     return sendJSONresponse(res, 200, {
       success: true,
       data: {
-        totalProject,
-        totalEmployee,
-        totalAssociates,
         completedProjects,
         runningProjects,
-        // projectCompilation,
         taskCompilation,
       },
     });

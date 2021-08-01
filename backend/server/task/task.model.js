@@ -60,4 +60,6 @@ const TaskSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+TaskSchema.index({ project: 1 }, { unique: true });
+
 module.exports = mongoose.model('Task', TaskSchema);
