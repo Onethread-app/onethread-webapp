@@ -77,7 +77,6 @@ const create = async (req, res, next) => {
       return sendJSONresponse(res, 201, result);
     })
     .catch(error =>{
-      console.log(error);
       logger.error(`comment: ${error}`);
       next(error);
     })

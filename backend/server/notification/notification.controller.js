@@ -133,7 +133,6 @@ module.exports.notifyToTaskMember = async (
     });
     await triggerUnreadNotifications(member);
   } catch (error) {
-    console.log(error);
     logger.error(`Notifications: ${error}`);
   }
 };
@@ -645,8 +644,6 @@ module.exports.list = async (req, res, next) => {
       .skip(+skip)
       .limit(+limit)
       .exec();
-
-    // console.log(notificationFound[0]);
     return sendJSONresponse(res, 200, {
       result: notificationFound,
       unseenCount: unseenCount,
@@ -745,7 +742,6 @@ module.exports.test = async (req, res, next) => {
 };
 
 module.exports.read = async (req, res, next) => {
-  console.log(req.params.userNotificationId);
   await UserNotification.findByIdAndUpdate(
     {
       _id: req.params.userNotificationId,
