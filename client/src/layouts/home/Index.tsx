@@ -4,8 +4,8 @@ import { isMobileOnly } from 'react-device-detect';
 import VideoConference from 'components/home/VideoConference';
 import Tasks from 'components/home/Tasks';
 import Profile from 'components/home/Profile';
-import Weather from 'components/home/Weather';
-import ProfileProgress from 'components/home/ProfileProgress';
+// import Weather from 'components/home/Weather';
+// import ProfileProgress from 'components/home/ProfileProgress';
 import Projects from 'components/home/Projects';
 
 import './Index.styles.scss';
@@ -22,9 +22,9 @@ const index = () => {
       <div>
         <VideoConference />
       </div>
-      <div>
+      {/* <div>
         <ProfileProgress />
-      </div>
+      </div> */}
     </div>
   ) : (
     <div className="home-container">
@@ -33,12 +33,12 @@ const index = () => {
         <VideoConference />
       </div>
       <div>
-        <Weather />
+        {/* <Weather /> */}
         <Tasks />
       </div>
       <div>
         <Profile />
-        <ProfileProgress />
+        {/* <ProfileProgress /> */}
       </div>
     </div>
   );

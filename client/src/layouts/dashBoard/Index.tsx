@@ -27,6 +27,7 @@ import {
 } from '../../stores/subscriptionBilling/Actions';
 // import CompanyAnnouncementItem from 'components/dashboard/company-announcements-new/CompanyAnnouncementItem';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
+import './Index.scss';
 
 interface DashBoardViewProps {
   user: User;
@@ -347,7 +348,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                             className="flex flex-row-ns flex-column mb2"
                             key={task._id}
                           >
-                            <div className="flex flex-row mb1">
+                            <div className="flex flex-row mb1 w-100">
                               <img
                                 src={tick}
                                 alt="tick"
@@ -357,33 +358,35 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                   width: '18px',
                                 }}
                               />
-                              <div className="w-100 flex flex-row justify-between">
-                                <span
-                                  className="fw6 mr3 ba b-light-gray br2 ph1"
-                                  style={{
-                                    color: '#BBBBBB',
-                                    height: 'fit-content',
-                                  }}
-                                >
-                                  {task.project.name}
-                                </span>
-                                <span
-                                  className="fw6"
-                                  style={{ color: '#656565' }}
-                                >
+                              <div className="w-100 flex flex-row lastest-completed-tasks">
+                                <div className="mr1">
                                   <span
-                                    className="ttc"
-                                    style={{ color: '#3484F0' }}
+                                    className="fw6 mr3 ba b-light-gray br2 ph1"
+                                    style={{
+                                      color: '#BBBBBB',
+                                      height: 'fit-content',
+                                    }}
                                   >
-                                    {task.name}
-                                  </span>{' '}
-                                  from {task.boardId.name}
-                                  {t(
-                                    'app.company.Dashboard.Complete-notification',
-                                  )}
-                                  {/* has been marked as complete. */}
-                                </span>
-                                {isMobileOnly ? null : (
+                                    {task.project.name}
+                                  </span>
+                                  <span
+                                    className="fw6"
+                                    style={{ color: '#656565' }}
+                                  >
+                                    <span
+                                      className="ttc"
+                                      style={{ color: '#3484F0' }}
+                                    >
+                                      {task.name}
+                                    </span>{' '}
+                                    from {task.boardId.name}
+                                    {t(
+                                      'app.company.Dashboard.Complete-notification',
+                                    )}
+                                    {/* has been marked as complete. */}
+                                  </span>
+                                </div>
+                                {/* {isMobileOnly ? null : (
                                   <span style={{ color: '#B4B4B4' }}>
                                     {moment(task.updatedAt).fromNow()}
                                   </span>
@@ -392,7 +395,10 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                   <span style={{ color: '#B4B4B4' }}>
                                     {moment(task.updatedAt).fromNow()}
                                   </span>
-                                ) : null}
+                                ) : null} */}
+                                <span style={{ color: '#B4B4B4' }}>
+                                  {moment(task.updatedAt).fromNow()}
+                                </span>
                               </div>
                             </div>
                           </div>
