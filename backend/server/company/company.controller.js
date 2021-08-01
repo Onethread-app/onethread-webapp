@@ -613,7 +613,7 @@ const dashBoard = async (req, res, next) => {
     for (i = 0; i < projectList.length; i++) {
       const tasks = await Task.find({
         project: { $in: projectList[i]._id },
-      })
+      }).sort({priority:0})
         .select(
           '_id name status dueDate project boardId priority createdAt',
         )

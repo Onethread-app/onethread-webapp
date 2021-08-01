@@ -61,7 +61,7 @@ module.exports.sendEmailForResetPassword = async (
 
   return transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      return next(err);
+      logger.error(' Message send to failed ' + err);
     }
     logger.info(`send reset password mail to user successfully`);
     return info;
@@ -135,7 +135,7 @@ module.exports.sendInviteColleague = async (
 
   return transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      return next(err);
+      logger.error(' Message send to failed ' + err);
     }
     logger.info(`send company invitation mail to users successfully`);
     return info;
