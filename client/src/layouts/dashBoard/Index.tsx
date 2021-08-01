@@ -1,43 +1,32 @@
-import { User } from 'stores/user/Reducer';
-import React, { useState, useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
 import { Card } from '@blueprintjs/core';
-// import { Card, Dialog } from '@blueprintjs/core';
-// import { AnnouncementEditor } from './announcementEditor';
-import { tigrowApi } from 'config';
-import { ICompany } from 'stores/company/Reducer';
-import { tokenConfig } from 'stores/UtilsActions';
+import Typography from '@material-ui/core/Typography';
+import CompanyAnnouncementsList from 'components/dashboard/company-announcements-list/CompanyAnnouncementsList';
+// import DashboardSummery from 'components/dashboard/dashboard-summary/DashboardSummary';
+// import TotalInfo from 'components/dashboard/total-info/TotalInfo';
+import { ProjectStatus } from 'components/dashboard/project-status/ProjectStatus';
 // import { tokenConfig, companyPermit } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
+import Navbar from 'components/navbar/Navbar';
+import { orderBy } from 'lodash';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { isMobileOnly } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { connect, useDispatch } from 'react-redux';
 import {
   getCompanyAnnouncement,
   getLatestCompletedTasks,
 } from 'stores/company/Actions';
-import Typography from '@material-ui/core/Typography';
+import { ICompany } from 'stores/company/Reducer';
+import { User } from 'stores/user/Reducer';
+import tick from '../../resources/images/tick.svg';
 import {
+  getCurrentSubscription,
   setSubscriptionExpire,
   setSubscriptionNotExpire,
-  getCurrentSubscription,
 } from '../../stores/subscriptionBilling/Actions';
-// import DashboardSummery from 'components/dashboard/dashboard-summary/DashboardSummary';
-// import TotalInfo from 'components/dashboard/total-info/TotalInfo';
-import { ProjectStatus } from 'components/dashboard/project-status/ProjectStatus';
-// import Progressbar from 'components/dashboard/progressbar/Progressbar';
-// import CompanyAnnouncements from 'components/dashboard/company-announcements/CompanyAnnouncements';
-// import firebase from '../../firebase';
-import {
-  ADD_TOTAL_ASSOCIATE,
-  ADD_TOTAL_MEMBER,
-} from 'stores/company/Types';
-import moment from 'moment';
-import Navbar from 'components/navbar/Navbar';
-import tick from '../../resources/images/tick.svg';
-import { isMobileOnly } from 'react-device-detect';
-import { orderBy } from 'lodash';
-import { useTranslation } from 'react-i18next';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import CompanyAnnouncementsList from 'components/dashboard/company-announcements-list/CompanyAnnouncementsList';
 // import CompanyAnnouncementItem from 'components/dashboard/company-announcements-new/CompanyAnnouncementItem';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 interface DashBoardViewProps {
   user: User;
@@ -66,67 +55,12 @@ interface latestTask {
 }
 
 const DashboardViewComponent = (props: DashBoardViewProps) => {
-  // const [
-  //   showAnnouncementDialog,
-  //   setShowAnnouncementDialog,
-  // ] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [dashboard, setDashboard] = useState(Object);
   const [currentTaskPage, setCurrentTaskPage] = useState(1);
-  // const [
-  //   currentAnnouncementPage,
-  //   setCurrentAnnouncementPage,
-  // ] = useState(1);
   const [taskItemsPerPage] = useState(5);
-  // const [announcementItemsPerPage] = useState(5);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    async function getAPI() {
-      const headers = tokenConfig();
-
-      if (props.company._id) {
-        dispatch(showLoading());
-        await tigrowApi
-          .get(`company/${props.company._id}/dashboard`, headers)
-          .then((response) => {
-            dispatch({
-              type: ADD_TOTAL_ASSOCIATE,
-              payload: response.data.data.totalAssociates,
-            });
-            dispatch({
-              type: ADD_TOTAL_MEMBER,
-              payload: response.data.data.totalEmployee,
-            });
-            setDashboard(response.data.data);
-            dispatch(hideLoading());
-            props.setSubscriptionNotExpire();
-            props.getLatestCompletedTasks();
-            props.getCompanyAnnouncement();
-            setLoading(false);
-          })
-          .catch(async (err) => {
-            dispatch(hideLoading());
-            setLoading(false);
-            if (err.response.data.status === 403) {
-              await props.setSubscriptionExpire();
-              await props.getCurrentSubscription();
-              props.company.role === 'superAdmin'
-                ? window.location.replace(
-                    `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
-                  )
-                : window.location.replace(
-                    `${window.location.origin}/${props.user.name}/home`,
-                  );
-            }
-          });
-      }
-    }
-    getAPI();
-  }, [props.company._id]);
-
   const indexOfLastTask = currentTaskPage * taskItemsPerPage;
   const indexOfFirstTask = indexOfLastTask - taskItemsPerPage;
+  const dispatch = useDispatch();
 
   const allTasks = orderBy(
     props.completedTasks,
@@ -155,6 +89,33 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   //     indexOfLastAnnouncement,
   //   );
   // }
+  const getDashboardInfo = async () => {
+    try {
+      dispatch(showLoading());
+      props.setSubscriptionNotExpire();
+      props.getLatestCompletedTasks();
+      props.getCompanyAnnouncement();
+      dispatch(hideLoading());
+      setLoading(false);
+    } catch (err) {
+      dispatch(hideLoading());
+      setLoading(false);
+      if (err.response.data.status === 403) {
+        await props.setSubscriptionExpire();
+        await props.getCurrentSubscription();
+        props.company.role === 'superAdmin'
+          ? window.location.replace(
+              `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+            )
+          : window.location.replace(
+              `${window.location.origin}/${props.user.name}/home`,
+            );
+      }
+    }
+  };
+  useEffect(() => {
+    getDashboardInfo();
+  }, [props.company._id]);
 
   const nextTaskPage = (e) => {
     e.preventDefault();
@@ -229,7 +190,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
             </div> */}
             <div>
               <div className="mt4 pb0-ns">
-                {dashboard.taskCompilation && <ProjectStatus />}
+                <ProjectStatus />
               </div>
               <div
                 className="flex flex-row-ns flex-column-reverse w-100 items-start mt5 mb4 pb0-ns"

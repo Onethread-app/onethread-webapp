@@ -77,7 +77,7 @@ const ProjectStatusComponent = (props) => {
 
   // Material UI Table State
   const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof Data>('randomField');
+  const [orderBy, setOrderBy] = useState<keyof Data>('priority');
   const [selected, setSelected] = useState<any[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -95,7 +95,9 @@ const ProjectStatusComponent = (props) => {
   const [uniqueMembers, setUniqueMembers] = useState<any[]>([]);
 
   // Task
-  const [completedTasks, setCompletedTasks] = useState(0);
+  const [totalTasks, setTotalTasks] = useState(0);
+  const [remainingTasks, setRemainingTasks] = useState(0);
+
   async function getInfo() {
     setIsLoading(true);
     const headers = tokenConfig();
@@ -148,14 +150,20 @@ const ProjectStatusComponent = (props) => {
           label: m,
         }));
         setUniqueMembers(uniqueMembersT);
-
-        // Completed Tasks
-        setCompletedTasks(
-          mTask.filter((m) => m.status === 'done').length,
-        );
-      } catch (err) {}
+      } catch (err) {
+        if (err.response.data.status === 403) {
+          await props.setSubscriptionExpire();
+          await props.getCurrentSubscription();
+          props.company.role === 'superAdmin'
+            ? window.location.replace(
+                `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+              )
+            : window.location.replace(
+                `${window.location.origin}/${props.user.name}/home`,
+              );
+        }
+      }
     }
-
     setIsLoading(false);
   }
   useEffect(() => {
@@ -178,51 +186,49 @@ const ProjectStatusComponent = (props) => {
     const fTaskList: any[] = [];
     for (let task of allTasks) {
       let found = false;
+      let takeThis = true;
       // member
-      for (let member of task.members) {
-        const memberName = `${member.firstName} ${member.lastName}`;
-        let res = selectedAssignee.find(
-          (s) => s.label === memberName,
-        );
-        if (res) {
-          found = true;
-          break;
+      if (selectedAssignee.length > 0) {
+        for (let member of task.members) {
+          const memberName = `${member.firstName} ${member.lastName}`;
+          let res = selectedAssignee.find(
+            (s) => s.label === memberName,
+          );
+          if (res) {
+            found = true;
+            break;
+          }
         }
+        if (!found) takeThis = false;
       }
-      if (found) {
-        fTaskList.push(task);
-        continue;
-      }
-
       // projectName
-      found = selectedProjects.find(
-        (p) => p.label === task.projectname,
-      );
-      if (found) {
-        fTaskList.push(task);
-        continue;
+      if (selectedProjects.length > 0) {
+        found = selectedProjects.find(
+          (p) => p.label === task.projectname,
+        );
+        if (!found) takeThis = false;
       }
-
       // priority
-      found = selectedPriority.find(
-        (p) =>
-          colorMapper[p.label].toString() ===
-          task.priority.toString(),
-      );
-      if (found) {
-        fTaskList.push(task);
-        continue;
+      if (selectedPriority.length > 0) {
+        found = selectedPriority.find(
+          (p) =>
+            colorMapper[p.label].toString() ===
+            task.priority.toString(),
+        );
+        if (!found) takeThis = false;
       }
 
       // status
-      found = selectedStatus.find(
-        (p) =>
-          p.label.split(' ').join('-').toLowerCase() === task.status,
-      );
-      if (found) {
-        fTaskList.push(task);
-        continue;
+      if (selectedStatus.length > 0) {
+        found = selectedStatus.find(
+          (p) =>
+            p.label.split(' ').join('-').toLowerCase() ===
+            task.status,
+        );
+        if (!found) takeThis = false;
       }
+
+      if (takeThis) fTaskList.push(task);
     }
 
     setfTasks(fTaskList);
@@ -232,6 +238,26 @@ const ProjectStatusComponent = (props) => {
     selectedProjects,
     selectedAssignee,
   ]);
+
+  useEffect(() => {
+    setTotalTasks(fTasks.length);
+    setRemainingTasks(
+      fTasks.filter((m) => m.status !== 'done').length,
+    );
+  }, [fTasks]);
+
+  const resetHandler = () => {
+    setSelectedStatus([]);
+    setSelectedPriority([]);
+    setSelectedProjects([]);
+    setSelectedAssignee([]);
+  };
+  const didYouFilter = !(
+    selectedStatus.length === 0 &&
+    selectedAssignee.length === 0 &&
+    selectedPriority.length === 0 &&
+    selectedProjects.length === 0
+  );
 
   const { t } = useTranslation();
 
@@ -264,12 +290,11 @@ const ProjectStatusComponent = (props) => {
           <div className="status-bar">
             <div className="status-count">
               <p style={{ paddingRight: 20 }}>
-                {t('app.project.Tasks.Total-tasks')}:{' '}
-                {allTasks.length}
+                {t('app.project.Tasks.Total-tasks')}: {totalTasks}
               </p>
               <p>
                 {t('app.project.Tasks.Remaining-tasks')}:{' '}
-                {allTasks.length - completedTasks}
+                {remainingTasks}
               </p>
             </div>
             <div className="status-count">
@@ -317,6 +342,23 @@ const ProjectStatusComponent = (props) => {
               />
             </div>
           </div>
+          {didYouFilter && (
+            <div style={{ textAlign: 'right' }}>
+              <button
+                className="w4 grow h2 pointer"
+                style={{
+                  background: 'rgb(52, 132, 240)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 3,
+                }}
+                onClick={resetHandler}
+              >
+                Reset
+              </button>
+            </div>
+          )}
+
           {fTasks.length > 0 && (
             <div className="projects-list w-100">
               <TasksTable
