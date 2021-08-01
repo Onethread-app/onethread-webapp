@@ -1,0 +1,9 @@
+.lastest-completed-tasks {
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 900px) {
+  .lastest-completed-tasks {
+    display: block;
+  }
+}
