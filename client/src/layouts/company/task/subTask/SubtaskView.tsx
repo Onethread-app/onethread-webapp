@@ -8,6 +8,7 @@ import {
 } from '@blueprintjs/core';
 import { SubTaskCreator, SubTaskDelete } from './SubTaskEditor';
 import AddSubtaskMember from './AddMember';
+import DueDateEditor from './DueDateEditor';
 import { ISubTask } from 'stores/subtask/Reducer';
 import {
   deleteSubTaskMember,
@@ -25,6 +26,7 @@ import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
 import SubTaskMemberIcon from './SubTaskMemberIcon';
 import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 
 interface ISubTaskViewInternalProps {
   subTaskList: ISubTask[];
@@ -50,6 +52,10 @@ export const SubTaskViewPageComponent = (
     _id: '',
     open: false,
   });
+  const [dueDatePopover, setDueDatePopover] = useState({
+    _id: '',
+    open: false,
+  });
 
   useEffect(() => {
     async function getAPI() {
@@ -64,6 +70,10 @@ export const SubTaskViewPageComponent = (
     setMembersPopover({ _id: id, open: !membersPopover.open });
   };
 
+  const toggleDueDatePopover = (id: string) => {
+    setDueDatePopover({ _id: id, open: !dueDatePopover.open });
+  };
+
   const { t } = useTranslation();
 
   return (
@@ -72,7 +82,9 @@ export const SubTaskViewPageComponent = (
         <div className="fl w-100">
           <div className="mt3">
             <div className="flex">
-              <h1 className="f6 flex-auto">{t('app.project.Project-boards.Subtask')}</h1>
+              <h1 className="f6 flex-auto">
+                {t('app.project.Project-boards.Subtask')}
+              </h1>
               {/* <h1 className="f6 flex-auto">Subtask</h1> */}
               {props.subTaskList.length > 0 && (
                 <h1 className="f6 blue">
@@ -149,6 +161,7 @@ export const SubTaskViewPageComponent = (
                           textDecoration: subTask.done
                             ? 'line-through'
                             : 'none',
+                          minWidth: '220px',
                         }}
                         onChange={(event: any) => {
                           const subtaskData = {
@@ -159,7 +172,15 @@ export const SubTaskViewPageComponent = (
                         }}
                       />
                       <div className="flex">
-                        <div className="mr3">
+                        <div
+                          className={
+                            subTask.assignedMembers &&
+                            subTask.assignedMembers?.length > 0
+                              ? 'mr3 flex'
+                              : 'dn'
+                          }
+                          style={{ width: 'max-content' }}
+                        >
                           {subTask.assignedMembers &&
                             subTask.assignedMembers.map(
                               (subMember) => (
@@ -180,6 +201,30 @@ export const SubTaskViewPageComponent = (
                                 />
                               ),
                             )}
+                        </div>
+                        <div
+                          className={
+                            subTask.dueDate
+                              ? ' flex items-start mr3'
+                              : 'dn'
+                          }
+                          style={{ width: 'max-content' }}
+                        >
+                          <span
+                            className="bp3-tag"
+                            style={{
+                              backgroundColor:
+                                moment() > moment(subTask.dueDate)
+                                  ? 'red'
+                                  : 'lightsteelblue',
+                              color:
+                                moment() > moment(subTask.dueDate)
+                                  ? '#fff'
+                                  : 'inherit',
+                            }}
+                          >
+                            {moment(subTask.dueDate).fromNow()}
+                          </span>
                         </div>
                         <div>
                           {props.company ? (
@@ -220,6 +265,43 @@ export const SubTaskViewPageComponent = (
                               }
                             />
                           ) : undefined}
+                        </div>
+                        <div>
+                          <Popover
+                            isOpen={
+                              dueDatePopover._id === subTask._id &&
+                              dueDatePopover.open
+                            }
+                            position="right"
+                            content={
+                              <div className="pa3 cf bg-white">
+                                <div>
+                                  <DueDateEditor
+                                    setDueDatePopover={
+                                      setDueDatePopover
+                                    }
+                                    dueDate={subTask.dueDate}
+                                    subTask={subTask}
+                                  />
+                                </div>
+                              </div>
+                            }
+                            target={
+                              <Icon
+                                className="fr mv3 pointer mr4 mv0"
+                                style={{
+                                  marginTop: 0,
+                                  color: 'lightsteelblue',
+                                }}
+                                icon="calendar"
+                                onClick={() => {
+                                  toggleDueDatePopover(
+                                    subTask._id ? subTask._id : '',
+                                  );
+                                }}
+                              />
+                            }
+                          />
                         </div>
                         <div>
                           <Icon
