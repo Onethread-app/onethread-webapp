@@ -48,10 +48,6 @@ interface TeamMember {
   projectList: Array<{ _id: string; company: string }>;
 }
 
-const load = async (_getProjectTeams: () => void) => {
-  await _getProjectTeams();
-};
-
 const ProjectTeamPageComponent = (props: TeamMember) => {
   const [showDialog, setShowDialog] = useState(false);
   const [showAssociateDialog, setShowAssociateDialog] = useState(
@@ -64,8 +60,10 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
   const [teamList, setTeamList] = useState<IProjectTeam[]>([]);
 
   useEffect(() => {
-    load(props.getProjectTeams);
-  }, []);
+    if (props.project._id) {
+      props.getProjectTeams();
+    }
+  }, [props.project._id]);
 
   useEffect(() => {
     if (props.teams.length) {
