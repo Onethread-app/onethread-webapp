@@ -91,7 +91,7 @@ export const ListViewComponent = (
                     props.currentCompany === c.company._id
                       ? 'bg-black-10'
                       : ''
-                  } mt2 pointer bp3-popover-dismiss`}
+                  } mt2 mr2 pointer bp3-popover-dismiss`}
                   onClick={() => handleClick(c.company.uniqueName)}
                 >
                   <div className="flex justify-between">
