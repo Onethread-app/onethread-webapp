@@ -20,7 +20,7 @@ interface IDueDateFormProps {
 export const DueDateEditorComponent = (props: IDueDateFormProps) => {
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
-    if ( response && !props.updatingTask ) {
+    if (response && !props.updatingTask) {
       await props.setDatePopover(false);
     }
   };
@@ -81,7 +81,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                     targetClassName: 'w-100',
                   }}
                   minDate={
-                    new Date() > new Date(props.dueDate)
+                    props.dueDate
                       ? new Date(props.dueDate)
                       : new Date()
                   }

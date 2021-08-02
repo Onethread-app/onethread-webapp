@@ -90,7 +90,7 @@ const list = async (req, res, next) => {
     const subtasks = await SubTask.find({
       taskId: taskId,
     })
-      .select('_id name done assignedMembers')
+      .select('_id name done assignedMembers dueDate')
       .populate([
         {
           path: 'assignedMembers',

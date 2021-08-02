@@ -151,7 +151,6 @@ const createNewProjectForCompany = async (req, res, next) => {
         next(error);
       });
   } catch (error) {
-    console.log(error);
     logger.error(`Project: ${error}`);
     next(error);
   }

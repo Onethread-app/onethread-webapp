@@ -92,7 +92,7 @@ const NotificationPage = (props: INotificationPage) => {
     <div
       className={`notification-page flex ${
         isMobileOnly ? 'flex-column' : 'flex-row'
-      } w-100 h-100`}
+      } w-100`}
     >
       <NotificationSidebar
         activeTab={activeTab}

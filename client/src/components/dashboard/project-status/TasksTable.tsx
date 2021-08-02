@@ -326,7 +326,6 @@ const AppTable = ({
 
   const redirectTo = async (row) => {
     const headers = tokenConfig();
-    console.log(headers);
     if ((headers as any).headers.Authorization) {
       try {
         await Axios.get(
@@ -337,7 +336,6 @@ const AppTable = ({
           `/company/${row.companyUniqueName}/project/${row.projectId}/board/${row.boardId}/task/${row.taskId}`,
         );
       } catch (e) {
-        console.error(e);
         if (e.response.data.status === 403) {
           setModalOpen(true);
         }
@@ -428,7 +426,7 @@ const AppTable = ({
                             ))}
                           </div>
                         ) : (
-                          '-'
+                          'Unassigned'
                         )}
                       </StyledTableCell>
                       <StyledTableCell
@@ -468,26 +466,31 @@ const AppTable = ({
                         </span>
                       </StyledTableCell>
                       <StyledTableCell style={{ minWidth: 150 }}>
-                        <div className="flex items-center">
-                          <div className="w-60">
-                            <BorderLinearProgress
-                              variant="determinate"
-                              value={
-                                (row.doneSubtasks * 100) /
-                                row.totalSubtasks
-                              }
-                            />
+                        {parseInt(row.doneSubtasks) +
+                          parseInt(row.totalSubtasks) ===
+                        0 ? (
+                          <p>No subtask</p>
+                        ) : (
+                          <div className="flex items-center">
+                            <div className="w-60">
+                              <BorderLinearProgress
+                                variant="determinate"
+                                value={
+                                  (row.doneSubtasks * 100) /
+                                  row.totalSubtasks
+                                }
+                              />
+                            </div>
+                            <span
+                              className="w-40"
+                              style={{
+                                paddingLeft: 10,
+                              }}
+                            >{`${parseInt(row.doneSubtasks)} / ${
+                              row.totalSubtasks
+                            }`}</span>
                           </div>
-                          <span
-                            className="w-40"
-                            style={{
-                              paddingLeft: 10,
-                            }}
-                          >{`${
-                            row.totalSubtasks -
-                            parseInt(row.doneSubtasks)
-                          } / ${row.totalSubtasks}`}</span>
-                        </div>
+                        )}
                       </StyledTableCell>
                     </StyledTableRow>
                   );

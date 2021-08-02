@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   Alignment,
 } from '@blueprintjs/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
 import { connect } from 'react-redux';
 import {
@@ -36,8 +37,8 @@ import { IProjectTeam } from 'stores/project/Reducer';
 import { isMobileOnly } from 'react-device-detect';
 import Navbar from 'components/navbar/Navbar';
 import { InviteColleagueView } from './InviteColleagueView';
-import { inviteColleagueInBulkSuccess } from '../../../stores/company/Actions';
 import { useTranslation } from 'react-i18next';
+import { Snackbar } from '@material-ui/core';
 
 interface Colleagues {
   company: ICompany;
@@ -54,8 +55,9 @@ interface Colleagues {
   deleteCompanyMember: (memberId: string) => void;
   inviteColleagueInBulk: (emails: any) => void;
   companyLoading: boolean;
-  inviteColleagueInBulkSuccess: () => void;
   subscriptiontExpired: boolean;
+  invitingColleague: boolean;
+  errorOnInvitingColleague: string;
 }
 
 const load = async (
@@ -112,6 +114,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
     showDialogForInviteColleague,
     setshowDialogForInviteColleague,
   ] = useState(false);
+  const [showSnackbar, setShowSnackbar] = React.useState(false);
   const [editMember, setEditMember] = useState<
     ICompanyMembers | undefined
   >(undefined);
@@ -123,22 +126,20 @@ const ColleaguesPageComponent = (props: Colleagues) => {
     ICompanyPendingMembers[][]
   >([]);
 
-  const setInviteDialogue = () => {
-    setshowDialogForInviteColleague(!showDialogForInviteColleague);
-  };
-
   useEffect(() => {
-    load(props.getCompanyMembers, props.getCompanyPendingMembers);
-    if (props.subscriptiontExpired) {
-      props.company.role === 'superAdmin'
-        ? window.location.replace(
-            `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
-          )
-        : window.location.replace(
-            `${window.location.origin}/${props.user.name}/home`,
-          );
+    if (props.company._id) {
+      load(props.getCompanyMembers, props.getCompanyPendingMembers);
+      if (props.subscriptiontExpired) {
+        props.company.role === 'superAdmin'
+          ? window.location.replace(
+              `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+            )
+          : window.location.replace(
+              `${window.location.origin}/${props.user.name}/home`,
+            );
+      }
     }
-  }, []);
+  }, [props.company._id]);
 
   useEffect(() => {
     if (
@@ -168,7 +169,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
     ) {
       setPendingList(chunk(props.company.pendingMembers, 4));
     }
-  }, [props.company.pendingMembers]);
+  }, [props.company]);
 
   const { t } = useTranslation();
 
@@ -631,7 +632,23 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         ) : undefined}
         {/* pending list ends */}
       </div>
-
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setShowSnackbar(false)}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <MuiAlert severity="success">
+          {props.errorOnInvitingColleague === ''
+            ? `
+            Invitation Successfully Sent To Join ${props.company.name}
+            `
+            : `${props.errorOnInvitingColleague}`}
+        </MuiAlert>
+      </Snackbar>
       {showDialog && (
         <Dialog
           onClose={() => setShowDialog(!showDialog)}
@@ -659,12 +676,12 @@ const ColleaguesPageComponent = (props: Colleagues) => {
           className="ma2"
         >
           <InviteColleagueView
-            colleagueInviteSuccess={
-              props.inviteColleagueInBulkSuccess
-            }
             inviteColleagueInBulk={props.inviteColleagueInBulk}
-            setshowDialogForInviteColleague={setInviteDialogue}
+            setshowDialogForInviteColleague={
+              setshowDialogForInviteColleague
+            }
             currentCompany={props.company.name}
+            setShowSnackbar={setShowSnackbar}
           />
         </Dialog>
       )}
@@ -715,6 +732,9 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
+    invitingColleague: state.companyReducer.invitingColleague,
+    errorOnInvitingColleague:
+      state.companyReducer.errorOnInvitingColleague,
   };
 };
 
@@ -727,5 +747,4 @@ export const ColleaguesPage = connect(mapStateToProps, {
   getCompanyPendingMembers,
   deleteCompanyMember,
   inviteColleagueInBulk,
-  inviteColleagueInBulkSuccess,
 })(ColleaguesPageComponent);

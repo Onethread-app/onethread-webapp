@@ -83,8 +83,9 @@ export interface ICompany {
   products: Entity[];
   totalMember: number;
   totalAssociate: number;
-  colleagueInviteSuccess: boolean;
   colleagueError: string;
+  invitingColleague: boolean;
+  errorOnInvitingColleague: string;
 }
 
 export interface ICompanyResponse {
@@ -134,10 +135,11 @@ const InitialState = {
   changeCompanyNameLoading: false,
   departmentNameLoading: false,
   designationLoading: false,
+  invitingColleague: false,
   error: '',
   errorOnGettingCompanyDetails: '',
   errorOnCreatingCompany: '',
-  colleagueInviteSuccess: false,
+  errorOnInvitingColleague: '',
   colleagueError: '',
 };
 
@@ -145,7 +147,6 @@ export const CompanyReducer = (state = InitialState, action: any) => {
   switch (action.type) {
     case COMPANY_REDUCER_LOADING:
     case COMPANY_REDUCER_LOADING_FALSE:
-    case CompanyActionTypes.COLLEAGUE_INVITE_START:
     case CompanyActionTypes.GET_ALL_PRODUCT_START:
     case CompanyActionTypes.ADD_COMPANY_ANNOUNCEMENT_START:
     case CompanyActionTypes.GET_ALL_COMPANY_ANNOUNCEMENT_START:
@@ -165,7 +166,6 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         loading: true,
         error: '',
       };
-    case CompanyActionTypes.COLLEAGUE_INVITE_FAILURE:
     case CompanyActionTypes.GET_ALL_PRODUCT_FAILURE:
     case CompanyActionTypes.ADD_COMPANY_ANNOUNCEMENT_FAILURE:
     case CompanyActionTypes.GET_ALL_COMPANY_ANNOUNCEMENT_FAILURE:
@@ -485,12 +485,22 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         },
         loading: false,
       };
-
+    case CompanyActionTypes.COLLEAGUE_INVITE_START:
+      return {
+        ...state,
+        invitingColleague: true,
+        errorOnInvitingColleague: '',
+      };
     case CompanyActionTypes.COLLEAGUE_INVITE_SUCCESS:
       return {
         ...state,
-        colleagueInviteSuccess: true,
-        loading: false,
+        invitingColleague: false,
+      };
+    case CompanyActionTypes.COLLEAGUE_INVITE_FAILURE:
+      return {
+        ...state,
+        errorOnInvitingColleague: action.payload,
+        invitingColleague: false,
       };
     case CompanyActionTypes.GET_LATEST_COMPLETED_TASK_START:
       return {

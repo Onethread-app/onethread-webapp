@@ -52,21 +52,32 @@ module.exports.notifyToBoardMembers = async (
   taskId,
   adminUser,
   sourceColumnId,
-  destinationColumnId
+  destinationColumnId,
 ) => {
   try {
     let senderFullName = await Account.findById({
       _id: senderName,
     }).select('firstName lastName');
-    let task = await Task.findById({_id: taskId}).select('name boardId project');
-    let boardMember = await Board.findOne({_id: task.boardId, project: task.project}).select('members');
-    let sourceColumnName = await BoardColumn.findOne({_id: sourceColumnId}).select('name');
-    let destName = await BoardColumn.findOne({_id: destinationColumnId}).select('name');
+    let task = await Task.findById({ _id: taskId }).select(
+      'name boardId project',
+    );
+    let boardMember = await Board.findOne({
+      _id: task.boardId,
+      project: task.project,
+    }).select('members');
+    let sourceColumnName = await BoardColumn.findOne({
+      _id: sourceColumnId,
+    }).select('name');
+    let destName = await BoardColumn.findOne({
+      _id: destinationColumnId,
+    }).select('name');
     let notifications = {
       type: 'subtask',
       text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
         senderFullName.lastName,
-      )} move task ${task.name} from ${sourceColumnName.name} to ${destName.name}`,
+      )} move task ${task.name} from ${sourceColumnName.name} to ${
+        destName.name
+      }`,
       account: adminUser._id,
       company: company,
       project: task.project,
@@ -75,8 +86,8 @@ module.exports.notifyToBoardMembers = async (
       fromColumn: sourceColumnId,
       toColumn: destinationColumnId,
     };
-    boardMember.members.forEach(async e=>{
-      if(e.toString() !== senderName){
+    boardMember.members.forEach(async (e) => {
+      if (e.toString() !== senderName) {
         notifications = await Notification.create(notifications);
         await UserNotification.create({
           notification: notifications._id,
@@ -88,19 +99,21 @@ module.exports.notifyToBoardMembers = async (
   } catch (error) {
     logger.error(`Notifications: ${error}`);
   }
-}
+};
 module.exports.notifyToTaskMember = async (
   senderName,
   company,
   taskId,
   adminUser,
-  member
-) =>{
+  member,
+) => {
   try {
     let senderFullName = await Account.findById({
       _id: senderName,
     }).select('firstName lastName');
-    let task = await Task.findById({_id: taskId}).select('name').select('boardId project');
+    let task = await Task.findById({ _id: taskId })
+      .select('name')
+      .select('boardId project');
     let notifications = {
       type: 'subtask',
       text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
@@ -110,9 +123,9 @@ module.exports.notifyToTaskMember = async (
       company: company,
       project: task.project,
       task: taskId,
-      board: task.boardId
+      board: task.boardId,
     };
-    
+
     notifications = await Notification.create(notifications);
     await UserNotification.create({
       notification: notifications._id,
@@ -120,10 +133,9 @@ module.exports.notifyToTaskMember = async (
     });
     await triggerUnreadNotifications(member);
   } catch (error) {
-    console.log(error)
     logger.error(`Notifications: ${error}`);
   }
-}
+};
 
 module.exports.sendNotificationToProjectTeamMates = async (
   senderName,
@@ -602,13 +614,13 @@ module.exports.addTeamMateIntoRoomNotification = async (
   }
 };
 module.exports.list = async (req, res, next) => {
-  const { limit = 50, skip = 0} = req.query;
+  const { limit = 50, skip = 0 } = req.query;
 
   try {
     let unseenCount = await UserNotification.find({
       account: req.user._id,
       seen: false,
-      read: false
+      read: false,
     }).countDocuments();
 
     const options = [
@@ -626,15 +638,12 @@ module.exports.list = async (req, res, next) => {
     ];
     let notificationFound = await UserNotification.find({
       account: req.user._id,
-      seen: false,
     })
       .populate(options)
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
       .exec();
-  
-    console.log(notificationFound[0]);
     return sendJSONresponse(res, 200, {
       result: notificationFound,
       unseenCount: unseenCount,
@@ -647,7 +656,7 @@ module.exports.list = async (req, res, next) => {
 
 module.exports.seen = async (req, res, next) => {
   await UserNotification.updateMany(
-    { account: req.user._id},
+    { account: req.user._id },
     { $set: { seen: true } },
   )
     .exec()
@@ -733,14 +742,13 @@ module.exports.test = async (req, res, next) => {
 };
 
 module.exports.read = async (req, res, next) => {
-  console.log(req.params.userNotificationId);
   await UserNotification.findByIdAndUpdate(
     {
       _id: req.params.userNotificationId,
       account: req.user._id,
     }, //notUserNotification
     { $set: { read: true } },
-    {upsert: true, new: true}
+    { upsert: true, new: true },
   )
     .exec()
     .then((result) => {
