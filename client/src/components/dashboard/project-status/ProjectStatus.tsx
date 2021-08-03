@@ -1,4 +1,5 @@
 // import { DateInput } from '@blueprintjs/datetime';
+import { DateInput } from '@blueprintjs/datetime';
 import { CircularProgress } from '@material-ui/core';
 import { tigrowApi } from 'config';
 import React, { useEffect, useState } from 'react';
@@ -98,6 +99,9 @@ const ProjectStatusComponent = (props) => {
   const [totalTasks, setTotalTasks] = useState(0);
   const [remainingTasks, setRemainingTasks] = useState(0);
 
+  // Date time
+  const [date, setDate] = useState<any>(null);
+
   async function getInfo() {
     setIsLoading(true);
     const headers = tokenConfig();
@@ -175,7 +179,8 @@ const ProjectStatusComponent = (props) => {
       selectedStatus.length === 0 &&
       selectedAssignee.length === 0 &&
       selectedPriority.length === 0 &&
-      selectedProjects.length === 0
+      selectedProjects.length === 0 &&
+      !date
     ) {
       setfTasks(allTasks);
       return;
@@ -227,6 +232,15 @@ const ProjectStatusComponent = (props) => {
         );
         if (!found) takeThis = false;
       }
+      const formattedDate = (p) => new Date(p).toLocaleDateString();
+      // Date
+      if (date) {
+        found = false;
+        if (task.dueDate !== 'December 31, 1970') {
+          found = formattedDate(task.dueDate) === formattedDate(date);
+        }
+        if (!found) takeThis = false;
+      }
 
       if (takeThis) fTaskList.push(task);
     }
@@ -237,6 +251,7 @@ const ProjectStatusComponent = (props) => {
     selectedPriority,
     selectedProjects,
     selectedAssignee,
+    date,
   ]);
 
   useEffect(() => {
@@ -251,6 +266,7 @@ const ProjectStatusComponent = (props) => {
     setSelectedPriority([]);
     setSelectedProjects([]);
     setSelectedAssignee([]);
+    setDate(null);
   };
   const didYouFilter = !(
     selectedStatus.length === 0 &&
@@ -333,12 +349,26 @@ const ProjectStatusComponent = (props) => {
                 setSelected={setSelectedProjects}
               />
             </div>
-            <div style={{ ...filterSpacing, paddingRight: 0 }}>
+            <div style={filterSpacing}>
               <MultiSelectComponent
                 container={uniqueMembers}
                 placeholder={t('app.project.Tasks.Filter-assignee')}
                 selected={selectedAssignee}
                 setSelected={setSelectedAssignee}
+              />
+            </div>
+            <div style={{ ...filterSpacing, paddingRight: 0 }}>
+              <DateInput
+                formatDate={(date: Date) => date.toLocaleDateString()}
+                placeholder={t('app.project.Tasks.Filter-Duedate')}
+                parseDate={(str: string) => new Date(str)}
+                onChange={(selectedDate) => setDate(selectedDate)}
+                canClearSelection={false}
+                value={date}
+                popoverProps={{
+                  targetClassName: 'w-100',
+                }}
+                defaultValue={new Date(Date.now())}
               />
             </div>
           </div>

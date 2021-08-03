@@ -12,7 +12,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   getCompanyAnnouncement,
   getLatestCompletedTasks,
@@ -25,9 +25,6 @@ import {
   setSubscriptionExpire,
   setSubscriptionNotExpire,
 } from '../../stores/subscriptionBilling/Actions';
-// import CompanyAnnouncementItem from 'components/dashboard/company-announcements-new/CompanyAnnouncementItem';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import './Index.scss';
 
 interface DashBoardViewProps {
   user: User;
@@ -61,7 +58,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [taskItemsPerPage] = useState(5);
   const indexOfLastTask = currentTaskPage * taskItemsPerPage;
   const indexOfFirstTask = indexOfLastTask - taskItemsPerPage;
-  const dispatch = useDispatch();
 
   const allTasks = orderBy(
     props.completedTasks,
@@ -92,14 +88,11 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   // }
   const getDashboardInfo = async () => {
     try {
-      dispatch(showLoading());
       props.setSubscriptionNotExpire();
       props.getLatestCompletedTasks();
       props.getCompanyAnnouncement();
-      dispatch(hideLoading());
       setLoading(false);
     } catch (err) {
-      dispatch(hideLoading());
       setLoading(false);
       if (err.response.data.status === 403) {
         await props.setSubscriptionExpire();
