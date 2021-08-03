@@ -14,6 +14,7 @@ const initialState = {
   totalMembers: 0,
   gettingMembers: false,
   gettingMembersError: '',
+  errorOnGettingCurrentSubscription: '',
 };
 export const SubscriptionReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -32,7 +33,11 @@ export const SubscriptionReducer = (state = initialState, action) => {
         ...state,
         currentSubscriptions: action.payload,
       };
-
+    case subscription.GET_CURRENT_SUBSCRIPTION_FAILURE:
+      return {
+        ...state,
+        errorOnGettingCurrentSubscription: action.payload,
+      };
     case subscription.CREATE_SUBSCRIPTION_SUCESS:
       return {
         ...state,

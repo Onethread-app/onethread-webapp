@@ -10,6 +10,16 @@ export const getCurrentSubscription = () => ({
   type: subscription.GET_CURRENT_SUBSCRIPTION,
 });
 
+export const getCurrentSubscriptionSuccess = (response: any) => ({
+  type: subscription.GET_CURRENT_SUBSCRIPTION_SUCCESS,
+  payload: response,
+});
+
+export const getCurrentSubscriptionFailure = (errorMessage: any) => ({
+  type: subscription.GET_CURRENT_SUBSCRIPTION_FAILURE,
+  payload: errorMessage,
+});
+
 export const createSubscription = (subscriptionId) => ({
   type: subscription.CREATE_SUBSCRIPTION_SUCESS,
   payload: subscriptionId,
@@ -28,7 +38,7 @@ export const setExpireMassage = () => ({
 
 export const checkCouponValidity = (coupon: any) => ({
   type: subscription.CHECK_COUPON_VALIDITY_START,
-  payload: coupon
+  payload: coupon,
 });
 
 export const checkCouponValiditySuccess = (response: any) => ({

@@ -8,10 +8,11 @@ import {
   saveContactFormSuccess,
   saveContactFormFailure,
 } from './Actions';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeLatest: any = Eff.takeLatest;
 
-function* savingContactForm( {payload}: any ) {
+function* savingContactForm({ payload }: any) {
   try {
     const response = yield tigrowApi.post(
       `contact/contact-sale`,
@@ -19,7 +20,7 @@ function* savingContactForm( {payload}: any ) {
     );
     yield put(saveContactFormSuccess(response.status));
   } catch (error) {
-    yield put(saveContactFormFailure(error));
+    yield put(saveContactFormFailure(returnErrorText(error)));
   }
 }
 

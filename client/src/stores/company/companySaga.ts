@@ -59,6 +59,7 @@ import {
   getAllDepartments,
   clearCompanyError,
   updateCompanyLoading,
+  companyOptionalRoleFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
@@ -73,6 +74,7 @@ import {
 } from './Selector';
 import { Toaster } from '@blueprintjs/core';
 import { getAllProjects } from 'stores/project/Actions';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -93,13 +95,7 @@ export function* createCompanyAsync({ companyData }: any) {
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(createCompanyActionFailure('Network error'));
-    } else if (error.response.status === 409) {
-      yield put(createCompanyActionFailure('Duplicate Company Name'));
-    } else {
-      // tslint:disable-next-line: no-console
-    }
+    yield put(createCompanyActionFailure(returnErrorText(error)));
   }
 }
 
@@ -127,19 +123,7 @@ export function* getCompanyDetailsAsync({ payload }: any) {
       yield put(updateCompanyLoading(false));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getCompanyDetailsFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getCompanyDetailsFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getCompanyDetailsFailure(error.message));
-    }
+    yield put(getCompanyDetailsFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
   }
@@ -157,19 +141,7 @@ export function* getCompanyMembersAsync() {
       yield put(getCompanyMembersSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getCompanyMembersFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getCompanyMembersFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getCompanyMembersFailure(error.message));
-    }
+    yield put(getCompanyMembersFailure(returnErrorText(error)));
   }
 }
 
@@ -189,19 +161,7 @@ export function* addTeamMembersAsync({
       yield put(addTeamMembersSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(addTeamMembersFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        addTeamMembersFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(addTeamMembersFailure(error.message));
-    }
+    yield put(addTeamMembersFailure(returnErrorText(error)));
   }
 }
 
@@ -217,19 +177,7 @@ export function* deleteCompanyMemberAsync({ payload }: any) {
       yield put(deleteCompanyMemberSuccess(payload));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(deleteCompanyMemberFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        deleteCompanyMemberFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(deleteCompanyMemberFailure(error.message));
-    }
+    yield put(deleteCompanyMemberFailure(returnErrorText(error)));
   }
 }
 
@@ -249,19 +197,7 @@ export function* addDepartmentAsync({ name }: any) {
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(addDepartmentFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        addDepartmentFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(addDepartmentFailure(error.message));
-    }
+    yield put(addDepartmentFailure(returnErrorText(error)));
   }
 }
 
@@ -277,19 +213,7 @@ export function* getAllDepartmentsAsync() {
       yield put(getAllDepartmentsSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getAllDepartmentsFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getAllDepartmentsFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getAllDepartmentsFailure(error.message));
-    }
+    yield put(getAllDepartmentsFailure(returnErrorText(error)));
   }
 }
 
@@ -304,19 +228,7 @@ export function* editCompanyInfoAsync({ payload }: any) {
     );
     yield put(editCompanyInfoActionSuccess(payload));
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(editCompanyInfoActionFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        editCompanyInfoActionFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(editCompanyInfoActionFailure(error.message));
-    }
+    yield put(editCompanyInfoActionFailure(returnErrorText(error)));
   }
 }
 
@@ -333,19 +245,7 @@ export function* changeCompanyNameAsync({ payload }: any) {
       yield put(changeCompanyNameSuccess(response.data.company));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(changeCompanyNameFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        changeCompanyNameFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(changeCompanyNameFailure(error.message));
-    }
+    yield put(changeCompanyNameFailure(returnErrorText(error)));
   }
 }
 
@@ -379,19 +279,7 @@ export function* uploadCompanyLogoAsync({
       }
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(companyLogoUploadActionFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        companyLogoUploadActionFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(companyLogoUploadActionFailure(error.message));
-    }
+    yield put(companyLogoUploadActionFailure(returnErrorText(error)));
   }
 }
 
@@ -408,19 +296,7 @@ export function* addDesignationAsync({ values, memberId }: any) {
       yield put(addDesignationSuccess());
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(addDesignationFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        addDesignationFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(addDesignationFailure(error.message));
-    }
+    yield put(addDesignationFailure(returnErrorText(error)));
   }
 }
 
@@ -437,19 +313,7 @@ export function* editDesignationAsync({ values, memberId }: any) {
       yield put(editDesignationSuccess());
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(editDesignationFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        editDesignationFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(editDesignationFailure(error.message));
-    }
+    yield put(editDesignationFailure(returnErrorText(error)));
   }
 }
 
@@ -468,19 +332,7 @@ export function* changeMemberRoleAsync({ values, memberId }: any) {
       );
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(changeMemberRoleFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        changeMemberRoleFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(changeMemberRoleFailure(error.message));
-    }
+    yield put(changeMemberRoleFailure(returnErrorText(error)));
   }
 }
 
@@ -504,30 +356,7 @@ export function* changeCompanyOptionalRoleAsync({ payload }: any) {
       }
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      Toaster.create().show({
-        message: 'Network is disconnected.',
-        action: {
-          icon: 'refresh',
-          className: 'bp3-intent-warning b',
-          onClick: () => {
-            window.location.reload(false);
-          },
-          text: 'Reload',
-        },
-        timeout: 300000,
-      });
-      yield put(changeMemberRoleFailure('Network Error'));
-    } else {
-      Toaster.create().show({
-        message: error.response.data.errors[0].message,
-        intent: 'danger',
-        timeout: 300000,
-      });
-      // tslint:disable-next-line: no-console
-
-      yield put(changeMemberRoleFailure(error.message));
-    }
+    yield put(companyOptionalRoleFailure(returnErrorText(error)));
   }
 }
 
@@ -545,19 +374,9 @@ export function* getCompanyPendingMembersAsync({ limit, skip }: any) {
       );
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getCompanyPendingMembersFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getCompanyPendingMembersFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getCompanyPendingMembersFailure(error.message));
-    }
+    yield put(
+      getCompanyPendingMembersFailure(returnErrorText(error)),
+    );
   }
 }
 
@@ -574,19 +393,7 @@ export function* addCertificateAsync({ payload }: any) {
       yield put(addCertificateSuccess(response.data.certificate));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(addCertificateFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        addCertificateFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(addCertificateFailure(error.message));
-    }
+    yield put(addCertificateFailure(returnErrorText(error)));
   }
 }
 
@@ -604,19 +411,7 @@ export function* addOrganizationAsync({ payload }: any) {
       yield put(addOrganizationSuccess(payload.parentcom));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(addOrganizationFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        addOrganizationFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(addOrganizationFailure(error.message));
-    }
+    yield put(addOrganizationFailure(returnErrorText(error)));
   }
 }
 
@@ -637,19 +432,7 @@ export function* editOrganizationAsync({ organization, ind }: any) {
       );
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(editOrganizationFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        editOrganizationFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(editOrganizationFailure(error.message));
-    }
+    yield put(editOrganizationFailure(returnErrorText(error)));
   }
 }
 
@@ -667,19 +450,7 @@ export function* getAllCompanyAnnouncementAsync() {
       );
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getCompanyAnnouncementFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getCompanyAnnouncementFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getCompanyAnnouncementFailure(error.message));
-    }
+    yield put(getCompanyAnnouncementFailure(returnErrorText(error)));
   }
 }
 
@@ -702,19 +473,7 @@ export function* addAnnouncementAsync({ payload }: any) {
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(addAnnouncementFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        addAnnouncementFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(addAnnouncementFailure(error.message));
-    }
+    yield put(addAnnouncementFailure(returnErrorText(error)));
   }
 }
 
@@ -730,19 +489,7 @@ export function* getAllProductAsync() {
       yield put(getAllProductSuccess(response.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getAllProductFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getAllProductFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getAllProductFailure(error.message));
-    }
+    yield put(getAllProductFailure(returnErrorText(error)));
   }
 }
 
@@ -765,19 +512,7 @@ export function* inviteColleagueInBulkAsync({ payload }: any) {
       }
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(inviteColleagueInBulkFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        inviteColleagueInBulkFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(inviteColleagueInBulkFailure(error.message));
-    }
+    yield put(inviteColleagueInBulkFailure(returnErrorText(error)));
   }
 }
 
@@ -798,19 +533,7 @@ export function* editCertificateAsync({ certificate, id }: any) {
       ]);
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(editCertificateFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        editCertificateFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(editCertificateFailure(error.message));
-    }
+    yield put(editCertificateFailure(returnErrorText(error)));
   }
 }
 
@@ -826,19 +549,7 @@ export function* getLatestCompletedTasksAsync() {
       yield put(getLatestCompletedTasksSuccess(response.data.data));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getLatestCompletedTasksFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getLatestCompletedTasksFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-
-      yield put(getLatestCompletedTasksFailure(error.message));
-    }
+    yield put(getLatestCompletedTasksFailure(returnErrorText(error)));
   }
 }
 

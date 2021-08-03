@@ -15,6 +15,7 @@ import {
   getAllCommentsFailure,
   getAllCommentsSuccess,
 } from './Actions';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -63,19 +64,7 @@ export function* getAllComments() {
       yield put(getAllCommentsFailure('No Task ID'));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(getAllCommentsFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        getAllCommentsFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-      
-      yield put(getAllCommentsFailure(error.message));
-    }
+    yield put(getAllCommentsFailure(returnErrorText(error)));
   }
 }
 
@@ -109,19 +98,7 @@ export function* createComment({ text }: any) {
       yield put(createCommentSuccess(responseData));
     }
   } catch (error) {
-    if (error.message === 'Network Error') {
-      yield put(createCommentFailure('Network Error'));
-    } else if (error.response.status === 401) {
-      yield put(
-        createCommentFailure(
-          'Unauthorized user. Please enter valid email and password.',
-        ),
-      );
-    } else {
-      // tslint:disable-next-line: no-console
-      
-      yield put(createCommentFailure(error.message));
-    }
+    yield put(createCommentFailure(returnErrorText(error)));
   }
 }
 
