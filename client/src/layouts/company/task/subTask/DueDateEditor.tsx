@@ -1,13 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
 import { DateInput } from '@blueprintjs/datetime';
 import { Button, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-
 import { updateSubTask } from 'stores/subtask/Actions';
 import { ISubTask } from 'stores/subtask/Reducer';
 
@@ -27,6 +25,15 @@ interface IDueDateFormProps {
 
 const DueDateEditor = (props: IDueDateFormProps) => {
   const [loading, setLoading] = React.useState(false);
+  const [disable, setDisable] = React.useState(false);
+
+  const handleInputChange = (e) => {
+    if (e <= new Date()) {
+      setDisable(true);
+    } else {
+      setDisable(false);
+    }
+  };
 
   const onSubmit = (values: any) => {
     setLoading(true);
@@ -95,17 +102,16 @@ const DueDateEditor = (props: IDueDateFormProps) => {
                   }
                   placeholder="Select a date"
                   parseDate={(str: string) => new Date(str)}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleInputChange(e);
+                  }}
                   canClearSelection={false}
                   value={input.value ? new Date(input.value) : null}
                   popoverProps={{
                     targetClassName: 'w-100',
                   }}
-                  minDate={
-                    props.dueDate
-                      ? new Date(props.dueDate)
-                      : new Date()
-                  }
+                  minDate={new Date()}
                 />
                 {checkError(meta) && (
                   <small className="mv3" style={{ color: 'red' }}>
@@ -115,6 +121,9 @@ const DueDateEditor = (props: IDueDateFormProps) => {
               </div>
             )}
           />
+          {disable && (
+            <p style={{ color: 'red' }}>Due date can't be in past</p>
+          )}
           <div className="fr">
             <Button
               className="grow pointer white bp3-minimal w4 mt2"
@@ -125,7 +134,7 @@ const DueDateEditor = (props: IDueDateFormProps) => {
               }}
               loading={submitting}
               type="submit"
-              disabled={submitting || pristine}
+              disabled={submitting || pristine || disable}
             >
               Submit
             </Button>
