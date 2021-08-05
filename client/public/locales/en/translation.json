@@ -297,6 +297,61 @@
         },
         "Clear": "Clear",
         "Submit": "Submit"
+      },
+      "Pricing": {
+        "Start-Free": "Start For Free",
+        "Quotation": "Contact Us for Quotation",
+        "startup-discount": "On 40% discount",
+        "save-up-text": {
+          "first-part": "Save up to 50%",
+          "second-part": "per user compared to ClickUp"
+        },
+        "free": {
+          "name": "Free Forever",
+          "option-1": "Up to 5 users",
+          "option-2": "Unlimited Organizations",
+          "option-3": "Unlimited Projects",
+          "option-4": "Unlimited Task",
+          "option-5": "Unlimited Discussion Rooms",
+          "option-6": "Unlimited File sharing",
+          "option-7": "Notice Board for Company Announcements",
+          "option-8": "Dashboard for both organization & project",
+          "option-9": "Access Level Control",
+          "price": "$ 0"
+        },
+        "startup": {
+          "name": "Startup Package",
+          "option-1": "3-months Free Trial",
+          "option-2": "6-50 users",
+          "option-3": "Unlimited Organizations",
+          "option-4": "Unlimited Projects",
+          "option-5": "Unlimited Task",
+          "option-6": "Unlimited Discussion Rooms",
+          "option-7": "Unlimited File sharing",
+          "option-8": "Access Level Control",
+          "option-9": "Notice Board for Company Announcements",
+          "option-10": "Dashboard for both organization & project",
+          "option-11": "Early Access to New Features",
+          "price": "$ 1.49 user/mon"
+        },
+        "enterprise": {
+          "name": "Enterprise Package",
+          "option-1": "3-months Free Trial",
+          "option-2": "In-House Training for Employees",
+          "option-3": "Dedicated Customer Manager",
+          "option-4": "Unlimited Organizations",
+          "option-5": "Unlimited Projects",
+          "option-6": "Unlimited Task",
+          "option-7": "Unlimited Discussion Rooms",
+          "option-8": "Unlimited File sharing",
+          "option-9": "Access Level Control",
+          "option-10": "Notice Board for Company Announcements",
+          "option-11": "Dashboard for both organization & project",
+          "option-12": "Early Access to New Features"
+        },
+        "Why-Onethread": "Why Choose Onethread?",
+        "Features": "Features",
+        "Available-on": "Available on"
       }
     },
     "project": {
