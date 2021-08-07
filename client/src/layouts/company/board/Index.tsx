@@ -428,7 +428,7 @@ const TaskPageComponent = (
                 {t('app.project.Project-boards.Criteria')}
                 {/* Filter By */}
               </p>
-              <div className="mt2" style={{ width: '200px' }}>
+              {/* <div className="mt2" style={{ width: '200px' }}>
                 <HTMLSelect
                   fill={true}
                   minimal={true}
@@ -445,14 +445,14 @@ const TaskPageComponent = (
                   <option selected value="">
                     {t('app.project.Project-boards.All')}
                     {/* All */}
-                  </option>
+                  {/* </option>
                   {props.company.departments
                     ? props.company.departments.map((d) => (
                         <option value={d._id}>{d.name}</option>
                       ))
                     : undefined}
                 </HTMLSelect>
-              </div>
+              </div> */}
             </div>
           </div>
           <p
