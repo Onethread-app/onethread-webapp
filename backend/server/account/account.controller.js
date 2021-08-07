@@ -77,6 +77,7 @@ const options = [
 // get today's tasks for user
 const getTodaysTask = async (req) => {
   try {
+    console.log(req.query.date);
     let startToday = new Date(req.query.date);
     startToday.setHours(0, 0, 0, 0);
     let endToday = new Date();

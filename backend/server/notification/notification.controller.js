@@ -46,6 +46,63 @@ module.exports.userTokenFCM = async (req, res, next) => {
     });
 };
 
+module.exports.createCompanyRoleNotification = async (
+  company,
+  adminUser,
+  text,
+  type,
+) => {
+  //sendCompanyNotification(company, adminUser, usersNotification);
+  try {
+    let members = await Member.find({
+      $or: [{ role: 'superAdmin' }, { role: 'admin' }],
+      company: company,
+    });
+
+    members = members.filter(
+      (m) => m.account.toString() !== adminUser._id.toString(),
+    );
+    let notification = {};
+    if (type === 'task') {
+      notification = new Notification({
+        type: type,
+        text: text,
+        account: adminUser._id,
+        company: company._id,
+        task: company.task,
+        board: company.board,
+        project: company.project,
+      });
+    } else {
+      notification = new Notification({
+        type: type,
+        text: text,
+        account: adminUser._id,
+        company: company,
+      });
+    }
+
+    let usersNotification = members.map((m) => {
+      return {
+        notification: notification._id,
+        account: m.account,
+      };
+    });
+
+    let companyRoleReciver = ['superAdmin', 'admin'];
+    sendCompanyRoleNotification(
+      company._id,
+      companyRoleReciver,
+      adminUser,
+      notification,
+    );
+
+    await notification.save();
+    await UserNotification.create(usersNotification);
+  } catch (error) {
+    logger.error(`${error}`);
+  }
+};
 module.exports.notifyToBoardMembers = async (
   senderName,
   company,
