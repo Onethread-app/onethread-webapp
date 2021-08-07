@@ -1,0 +1,65 @@
+[
+  {
+    "feature": "Affordable Company Pricing",
+    "onethread": "$1.49/user/month",
+    "slack": "$6.67/user/month",
+    "clickUp": "$9/user/month",
+    "asana": "$10.99/user/month",
+    "jira": "$7/user/month",
+    "trello": "$10/user/month"
+  },
+  {
+    "feature": "Task Management",
+    "onethread": "yes",
+    "slack": "no",
+    "clickUp": "yes",
+    "asana": "yes",
+    "jira": "yes",
+    "trello": "yes"
+  },
+  {
+    "feature": "Messaging",
+    "onethread": "yes",
+    "slack": "yes",
+    "clickUp": "yes",
+    "asana": "no",
+    "jira": "yes",
+    "trello": "no"
+  },
+  {
+    "feature": "Video Calls",
+    "onethread": "yes",
+    "slack": "yes",
+    "clickUp": "no",
+    "asana": "no",
+    "jira": "no",
+    "trello": "no"
+  },
+  {
+    "feature": "Multi-company collaboration",
+    "onethread": "yes",
+    "slack": "no",
+    "clickUp": "no",
+    "asana": "no",
+    "jira": "no",
+    "trello": "no"
+  },
+  {
+    "feature": "File Storage",
+    "onethread": "yes",
+    "slack": "yes",
+    "clickUp": "yes",
+    "asana": "yes",
+    "jira": "yes",
+    "trello": "yes"
+  },
+  {
+    "feature": "Easy to use",
+    "onethread": "yes",
+    "slack": "yes",
+    "clickUp": "no",
+    "asana": "yes",
+    "jira": "no",
+    "trello": "yes"
+  }
+]

@@ -2,29 +2,29 @@
   background: #ffffff;
   box-shadow: 0px 4px 6px 4px rgba(0, 0, 0, 0.25);
   border-radius: 15px;
-  padding: 2rem;
+  border: none;
+  padding: 1rem;
   width: 392px;
-  height: 759px;
-  margin: 0 55px;
+  margin: 0 20px;
   transition: border 0.3s;
-  border: 2px solid rgba(52, 132, 240, 0);
+  overflow: hidden;
+  position: relative;
 
   @media screen and (max-width: 1024px) {
-    margin: 0 25px;
+    margin: 25px 25px;
     width: 300px;
   }
 
   @media screen and (max-width: 768px) {
     margin: 25px 0;
+    .pricing-card-startup {
+      transform: none;
+    }
   }
 
   @media screen and (max-width: 500px) {
     width: 85%;
     margin: 25px 0;
-  }
-
-  &:hover {
-    border: 2px solid rgba(52, 132, 240, 1);
   }
 
   &-divider {
@@ -38,13 +38,11 @@
     text-align: center;
 
     &-name {
-      height: 74px;
       font-weight: 800;
       font-size: 30px;
       line-height: 37px;
       color: #3484f0;
-      max-width: 200px;
-      margin: 0 0 1.5rem 0;
+      margin: 1.3rem 0rem 1.5rem 0rem;
     }
 
     &-price {
@@ -55,9 +53,10 @@
     }
   }
   &-options {
-    font-weight: 300;
-    font-size: 12px;
+    font-weight: 450;
+    font-size: 14px;
     line-height: 14px;
+    min-height: 400px;
   }
 
   .contact-us-text {
@@ -65,4 +64,60 @@
       color: #3484f0;
     }
   }
+}
+
+.pricing-card-startup {
+  transform: translateY(-40px);
+  @media screen and (max-width: 1024px) {
+    transform: none;
+  }
+}
+
+.start-button {
+  min-width: 266.55px;
+  background: transparent;
+  border-radius: 10px;
+  padding: 1.15rem 2.4rem;
+  border: 2px solid rgb(52, 132, 240);
+  color: rgb(52, 132, 240);
+  text-align: center;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  cursor: pointer;
+  &:hover {
+    background: rgb(52, 132, 240);
+    color: #ffffff;
+  }
+}
+
+.start-button-startup {
+  min-width: 266.55px;
+  background: transparent;
+  border-radius: 10px;
+  border: none;
+  padding: 1.15rem 2.4rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  cursor: pointer;
+  background: rgb(52, 132, 240);
+  color: #ffffff;
+}
+
+.pricing-plan-badge {
+  position: absolute;
+  width: 185px;
+  top: -34px;
+  left: calc(100% - 130px);
+  padding: 9px 0 7px;
+  font-size: 14px;
+  color: #fff;
+  background: rgb(52, 132, 240);
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.5px;
+  transform-origin: left bottom;
+  transform: rotate(45deg);
 }
