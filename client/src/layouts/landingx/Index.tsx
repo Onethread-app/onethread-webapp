@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 
@@ -30,9 +30,14 @@ import ProjectPng from 'resources/images/project.png';
 import MeetingPng from 'resources/images/meeting.png';
 import TasksPng from 'resources/images/tasks.png';
 import IntegrationsPng from 'resources/images/integrations.png';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
+import whatsapp from '../../resources/images/icons/whatsapp.png';
+import chatIcon from '../../resources/images/icons/chat.png';
+import { APP_ID, PAGE_ID, WHATSAPP_URL } from 'config';
 
 const NewLanding = () => {
   const { t } = useTranslation();
+  const [showChat, setShowChat] = useState(false);
 
   return isMobileOnly ? (
     <MobileIndex />
@@ -41,8 +46,11 @@ const NewLanding = () => {
       <Navbar />
       <section className="main-header w-100 relative flex flex-column items-center">
         <h2 className="heading tc">
-          {t('landing.homepage.main-header.heading.first-part')}<br/>
-           <span style={{ color: '#3484F0' }}>{t('landing.homepage.main-header.heading.second-part')}</span>
+          {t('landing.homepage.main-header.heading.first-part')}
+          <br />
+          <span style={{ color: '#3484F0' }}>
+            {t('landing.homepage.main-header.heading.second-part')}
+          </span>
           {/* Collaborate with people on projects <br />
           <span style={{ color: '#3484F0' }}>
             with the click of a button
@@ -81,7 +89,7 @@ const NewLanding = () => {
                 <img src={DashboardIcon} alt="" />
                 <p>
                   <span className="b">Messages: </span>
-                    {t('landing.homepage.second-section.messages')}
+                  {t('landing.homepage.second-section.messages')}
                   {/* Keep your work and personal inboxes separate */}
                 </p>
               </div>
@@ -97,8 +105,8 @@ const NewLanding = () => {
                 <img src={ReportIcon} alt="" />
                 <p>
                   <span className="b">Reports: </span>
-                    {t('landing.homepage.second-section.reports')}
-                   {/* No more asking “what’s done”. You already know it! */}
+                  {t('landing.homepage.second-section.reports')}
+                  {/* No more asking “what’s done”. You already know it! */}
                 </p>
               </div>
             </div>
@@ -121,9 +129,13 @@ const NewLanding = () => {
             <img src={MailGif} alt="MailGif" />
           </div>
           <div className="upper-content">
-            <h3>{t('landing.homepage.third-section.upper-content')}</h3>
+            <h3>
+              {t('landing.homepage.third-section.upper-content')}
+            </h3>
             {/* <h3>No more deadly email loops.</h3> */}
-            <p>{t('landing.homepage.third-section.main-upper-content')}</p>
+            <p>
+              {t('landing.homepage.third-section.main-upper-content')}
+            </p>
             {/* <p>
               Forward that very long email chain to your project’s
               private email address. We got the rest covered.
@@ -132,9 +144,13 @@ const NewLanding = () => {
         </div>
         <div className="lower flex items-center justify-around">
           <div className="lower-content">
-            <h3>{t('landing.homepage.third-section.lower-content')}</h3>
+            <h3>
+              {t('landing.homepage.third-section.lower-content')}
+            </h3>
             {/* <h3>Real-time task overview</h3> */}
-            <p>{t('landing.homepage.third-section.main-lower-content')}</p>
+            <p>
+              {t('landing.homepage.third-section.main-lower-content')}
+            </p>
             {/* <p>
               Our tasks panel is built to provide real-time charts and
               tables to make sure you are aligned with everything
@@ -147,7 +163,8 @@ const NewLanding = () => {
       </section>
       <section className="teams flex flex-column items-center w-100">
         <h1 className="tc w-100">
-          {t('landing.homepage.teams.listoftheusers.first-part')}<br />
+          {t('landing.homepage.teams.listoftheusers.first-part')}
+          <br />
           {t('landing.homepage.teams.listoftheusers.second-part')}
         </h1>
         {/* <h1 className="tc w-100">
@@ -180,7 +197,9 @@ const NewLanding = () => {
             <div className="contents">
               <h3>{t('landing.homepage.product-details.header2')}</h3>
               {/* <h3>Never lose track of a project again</h3> */}
-              <p>{t('landing.homepage.product-details.subheader2')}</p>
+              <p>
+                {t('landing.homepage.product-details.subheader2')}
+              </p>
               {/* <p>
                 Each project gets a separate space with chat threads,
                 tasks and files, powered by an intelligent search
@@ -199,7 +218,9 @@ const NewLanding = () => {
             <div className="contents">
               <h3>{t('landing.homepage.product-details.header3')}</h3>
               {/* <h3>Communicate with anyone in your project</h3> */}
-              <p>{t('landing.homepage.product-details.subheader3')}</p>
+              <p>
+                {t('landing.homepage.product-details.subheader3')}
+              </p>
               {/* <p>
                 Direct messages and group messages, as well as
                 audio-video calls. Oh, we have Zoom, Meet and Teams
@@ -218,7 +239,9 @@ const NewLanding = () => {
             <div className="contents">
               <h3>{t('landing.homepage.product-details.header4')}</h3>
               {/* <h3>Manage all tasks from a single dashboard</h3> */}
-              <p>{t('landing.homepage.product-details.subheader4')}</p>
+              <p>
+                {t('landing.homepage.product-details.subheader4')}
+              </p>
               {/* <p>
                 Create and manage tasks in projects, assign team
                 members, and view them however you like
@@ -236,7 +259,9 @@ const NewLanding = () => {
             <div className="contents">
               <h3>{t('landing.homepage.product-details.header5')}</h3>
               {/* <h3>Work with your favorite tools</h3> */}
-              <p>{t('landing.homepage.product-details.subheader5')}</p>
+              <p>
+                {t('landing.homepage.product-details.subheader5')}
+              </p>
               {/* <p>
                 With 500+ integrations, onethread plays nicely with
                 all the tools that we love and use
@@ -257,7 +282,9 @@ const NewLanding = () => {
           <img src={Logo} alt="onethread" />
           <h3>
             {t('landing.homepage.footer.headline.first-part')}{' '}
-            <span style={{ color: '#252546' }}>{t('landing.homepage.footer.headline.second-part')}</span>
+            <span style={{ color: '#252546' }}>
+              {t('landing.homepage.footer.headline.second-part')}
+            </span>
           </h3>
           {/* <h3>
             Change how you manage external stakeholders.{' '}
@@ -270,7 +297,7 @@ const NewLanding = () => {
             we want you to be a part of it!
           </p> */}
           <OTButton to="/signup" white bold>
-           {t('landing.homepage.footer.createbutton')}
+            {t('landing.homepage.footer.createbutton')}
           </OTButton>
           {/* <OTButton to="/signup" white bold>
             Create Your First Project For Free
@@ -284,6 +311,22 @@ const NewLanding = () => {
           </h1>
         </div> */}
       </section>
+      {showChat && (
+        <>
+          <div className="whatsapp-web">
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+              <img src={whatsapp} alt="whatsapp" />
+            </a>
+          </div>
+          <MessengerCustomerChat pageId={PAGE_ID} appId={APP_ID} />
+        </>
+      )}
+      <div
+        className="toggole-icon-web"
+        onClick={() => setShowChat(!showChat)}
+      >
+        <img src={chatIcon} alt="icon" />
+      </div>
     </div>
   );
 };
