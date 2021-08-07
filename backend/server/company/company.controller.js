@@ -596,60 +596,62 @@ const dashBoard = async (req, res, next) => {
       (p) => p.status === 'completed',
     ).length;
     let runningProjects = projectList.length - completedProjects;
-    for (i = 0; i < projectList.length; i++) {
-      // Query 2 [O(nProjects * nTask)]
-      const tasks = await Task.find({
-        project: { $in: projectList[i]._id },
-      }).sort({priority:0})
-        .select(
-          '_id name status dueDate project boardId priority createdAt',
-        )
-        .populate({
-          path: 'project',
-          select: '_id name',
-          populate: [
-            {
-              path: 'company',
-              select: '_id uniqueName',
-            },
-          ],
-        });
+    const allProjectIds = projectList.map((p) => p._id);
 
-      tasks.map(async (task) => {
-        let modifiedTask = {};
-        const totalSubtasks = await SubTask.find({
-          taskId: task._id,
-        }).countDocuments();
-        const doneSubtasks = await SubTask.find({
-          $and: [{ taskId: task._id, done: true }],
-        }).countDocuments();
-
-        const taskMembers = await getTaskMembers(task._id);
-        const members = taskMembers.map((tMember) => {
-          return tMember.assignedPerson;
-        });
-
-        modifiedTask._id = task._id;
-        modifiedTask.name = task.name;
-        modifiedTask.status = task.status;
-        modifiedTask.dueDate = ISOformat(task.dueDate);
-        modifiedTask.members = members;
-        modifiedTask.boardId = task.boardId;
-        modifiedTask.priority = task.priority;
-        modifiedTask.createdAt = task.createdAt;
-        modifiedTask.project = {
-          _id: task.project._id,
-          name: task.project.name,
-        };
-        modifiedTask.company = {
-          _id: task.project.company._id,
-          uniqueName: task.project.company.uniqueName,
-        };
-        modifiedTask.doneSubtasks = doneSubtasks;
-        modifiedTask.totalSubtasks = totalSubtasks;
-        taskCompilation.push(modifiedTask);
+    const tasks = await Task.find({
+      project: { $in: allProjectIds },
+    })
+      .sort({ priority: 0 })
+      .select(
+        '_id name status dueDate project boardId priority createdAt',
+      )
+      .populate({
+        path: 'project',
+        select: '_id name',
+        populate: [
+          {
+            path: 'company',
+            select: '_id uniqueName',
+          },
+        ],
       });
+
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i];
+      let modifiedTask = {};
+      const totalSubtasks = await SubTask.find({
+        taskId: task._id,
+      }).countDocuments();
+      const doneSubtasks = await SubTask.find({
+        $and: [{ taskId: task._id, done: true }],
+      }).countDocuments();
+
+      const taskMembers = await getTaskMembers(task._id);
+      const members = taskMembers.map((tMember) => {
+        return tMember.assignedPerson;
+      });
+
+      modifiedTask._id = task._id;
+      modifiedTask.name = task.name;
+      modifiedTask.status = task.status;
+      modifiedTask.dueDate = ISOformat(task.dueDate);
+      modifiedTask.members = members;
+      modifiedTask.boardId = task.boardId;
+      modifiedTask.priority = task.priority;
+      modifiedTask.createdAt = task.createdAt;
+      modifiedTask.project = {
+        _id: task.project._id,
+        name: task.project.name,
+      };
+      modifiedTask.company = {
+        _id: task.project.company._id,
+        uniqueName: task.project.company.uniqueName,
+      };
+      modifiedTask.doneSubtasks = doneSubtasks;
+      modifiedTask.totalSubtasks = totalSubtasks;
+      taskCompilation.push(modifiedTask);
     }
+
     taskCompilation.sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
     );
