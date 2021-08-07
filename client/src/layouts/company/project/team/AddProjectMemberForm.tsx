@@ -8,7 +8,7 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { Button, Tag } from '@blueprintjs/core';
 import { addProjectTeams } from 'stores/project/Actions';
 import { tigrowApi } from 'config';
-import { isEmpty, isEqual } from 'lodash';
+import { isNil, isEqual } from 'lodash';
 import { useTranslation } from 'react-i18next';
 
 interface ProjectTeamMembersProps {
@@ -57,34 +57,33 @@ const AddProjectMemberFormComponent = (
         setSuggestedMembers(formatResponse);
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
-        
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     }
   };
 
   useEffect(() => {
     if (
-      isEmpty(props.projectId) === false &&
-      isEmpty(props.companyId) === false
+      isNil(props.projectId) === false &&
+      isNil(props.companyId) === false
     ) {
       getSuggestionsForRoomMembers();
     }
-  }, []);
+  }, [props.projectId, props.companyId]);
 
   const { t } = useTranslation();
 
   return (
     <div className="pa3">
       <div className="w-100">
-        <h1 className="f5 tigrow-darkBlue">{t('app.project.Project-teammates.Add-Teammates')}</h1>
+        <h1 className="f5 tigrow-darkBlue">
+          {t('app.project.Project-teammates.Add-Teammates')}
+        </h1>
         {/* <h1 className="f5 tigrow-darkBlue">Add Teammates</h1> */}
         <SuggestField
           items={suggestedMembers}
@@ -143,10 +142,7 @@ const AddProjectMemberFormComponent = (
               }),
             };
 
-            await props.addProjectTeams(
-              data,
-              selectedTeamMember,
-            );
+            await props.addProjectTeams(data, selectedTeamMember);
 
             if (props.setShowDialog && props.isLoading === false) {
               props.setShowDialog(!props.showDialog);
@@ -163,7 +159,7 @@ const AddProjectMemberFormComponent = (
 const mapStateToProps = (state: any) => {
   return {
     companyId: state.companyReducer.currentCompany._id,
-    projectId: state.projectReducer.pid,
+    projectId: state.projectReducer.projectDetails._id,
     isLoading: state.projectReducer.addTeamMemberLoading,
   };
 };
