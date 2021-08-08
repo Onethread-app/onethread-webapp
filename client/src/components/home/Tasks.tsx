@@ -8,7 +8,9 @@ import { tigrowApi } from 'config';
 import { sortTasks } from 'helpers/utils';
 import { tokenConfig } from 'stores/UtilsActions';
 
-import Table from './TaskTable';
+// import Table from './TaskTable';
+import Table from './TasksTable2';
+import CollapsibleTable from './Collapsible-table';
 
 type Order = 'asc' | 'desc';
 interface Data {
@@ -342,20 +344,23 @@ const Tasks = () => {
             />
           </div>
         ) : tasks.length > 0 ? (
-          <Table
-            order={order}
-            setOrder={setOrder}
-            orderBy={orderBy}
-            setOrderBy={setOrderBy}
-            selected={selected}
-            setSelected={setSelected}
-            page={page}
-            setPage={setPage}
-            rowsPerPage={rowsPerPage}
-            setRowsPerPage={setRowsPerPage}
-            tasks={tasks}
-            assignedByUser={filterOption === 2 ? true : false}
-          />
+          <>
+            <Table
+              order={order}
+              setOrder={setOrder}
+              orderBy={orderBy}
+              setOrderBy={setOrderBy}
+              selected={selected}
+              setSelected={setSelected}
+              page={page}
+              setPage={setPage}
+              rowsPerPage={rowsPerPage}
+              setRowsPerPage={setRowsPerPage}
+              tasks={tasks}
+              assignedByUser={filterOption === 2 ? true : false}
+            />
+            <CollapsibleTable />
+          </>
         ) : (
           <div className="w-100 tc gray mt2">
             Create some task in board!
@@ -367,3 +372,17 @@ const Tasks = () => {
 };
 
 export default Tasks;
+// <Table
+//   order={order}
+//   setOrder={setOrder}
+//   orderBy={orderBy}
+//   setOrderBy={setOrderBy}
+//   selected={selected}
+//   setSelected={setSelected}
+//   page={page}
+//   setPage={setPage}
+//   rowsPerPage={rowsPerPage}
+//   setRowsPerPage={setRowsPerPage}
+//   tasks={tasks}
+//   assignedByUser={filterOption === 2 ? true : false}
+// />
