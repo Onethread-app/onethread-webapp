@@ -2,13 +2,19 @@ import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
-import { DateInput } from '@blueprintjs/datetime';
+// import { DateInput } from '@blueprintjs/datetime';
 import { Button, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { updateTask } from 'stores/board/Actions';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
 import { useTranslation } from 'react-i18next';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+import '../../task.scss';
 
 interface IDueDateFormProps {
   setDatePopover: (val: boolean) => void;
@@ -18,6 +24,16 @@ interface IDueDateFormProps {
 }
 
 export const DueDateEditorComponent = (props: IDueDateFormProps) => {
+  const [disable, setDisable] = React.useState(false);
+
+  const handleInputChange = (e) => {
+    if (e <= new Date()) {
+      setDisable(true);
+    } else {
+      setDisable(false);
+    }
+  };
+
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
     if (response && !props.updatingTask) {
@@ -62,30 +78,48 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                 <label
                   style={{
                     marginBottom: '5px',
-                    display: 'inline-block',
+                    display: 'block',
                   }}
                 >
                   {t('app.project.Project-boards.Due-Date')}
                   {/* Due Date */}
                 </label>
-                <DateInput
+                {/* <DateInput
                   formatDate={(date: Date) =>
                     date.toLocaleDateString()
                   }
                   placeholder="Select a date"
                   parseDate={(str: string) => new Date(str)}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleInputChange(e);
+                  }}
                   canClearSelection={false}
                   value={input.value ? new Date(input.value) : null}
                   popoverProps={{
                     targetClassName: 'w-100',
                   }}
-                  minDate={
-                    props.dueDate
-                      ? new Date(props.dueDate)
-                      : new Date()
-                  }
-                />
+                  minDate={new Date()}
+                /> */}
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    value={input.value ? new Date(input.value) : null}
+                    onChange={(e) => {
+                      input.onChange(e);
+                      handleInputChange(e);
+                    }}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                    minDate={new Date()}
+                    className="due-date-input"
+                    placeholder={t('app.project.Project-boards.Select-date')}
+                  />
+                </MuiPickersUtilsProvider>
                 {checkError(meta) && (
                   <small className="mv3" style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
@@ -94,6 +128,11 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
               </div>
             )}
           />
+          {disable && (
+            <p style={{ color: 'red' }}>
+              {t('app.project.Project-boards.Due-date-text')}
+            </p>
+          )}
           <div className="fr">
             <Button
               className="grow pointer white bp3-minimal w4 mt2"
@@ -104,7 +143,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
               }}
               loading={submitting}
               type="submit"
-              disabled={submitting || pristine}
+              disabled={submitting || pristine || disable}
             >
               Submit
             </Button>

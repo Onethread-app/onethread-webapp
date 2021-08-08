@@ -3,11 +3,18 @@ import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
-import { DateInput } from '@blueprintjs/datetime';
+// import { DateInput } from '@blueprintjs/datetime';
 import { Button, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { updateSubTask } from 'stores/subtask/Actions';
 import { ISubTask } from 'stores/subtask/Reducer';
+import { useTranslation } from 'react-i18next';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+import '../task.scss';
 
 interface IDueDateFormProps {
   setDueDatePopover: React.Dispatch<
@@ -54,6 +61,8 @@ const DueDateEditor = (props: IDueDateFormProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, props.updatingSubTask, props.errorOnUpdate]);
 
+  const { t } = useTranslation();
+
   return (
     <Form
       onSubmit={onSubmit}
@@ -87,16 +96,17 @@ const DueDateEditor = (props: IDueDateFormProps) => {
           <Field<string>
             name="dueDate"
             render={({ input, meta }) => (
-              <div className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}>
+              <div className={`${checkError(meta) ? 'mb3' : 'mb2'}`}>
                 <label
                   style={{
                     marginBottom: '5px',
-                    display: 'inline-block',
+                    display: 'block',
                   }}
                 >
-                  Due Date
+                  {/* Due Date */}
+                  {t('app.project.Project-boards.Due-Date')}
                 </label>
-                <DateInput
+                {/* <DateInput
                   formatDate={(date: Date) =>
                     date.toLocaleDateString()
                   }
@@ -112,7 +122,26 @@ const DueDateEditor = (props: IDueDateFormProps) => {
                     targetClassName: 'w-100',
                   }}
                   minDate={new Date()}
-                />
+                /> */}
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    value={input.value ? new Date(input.value) : null}
+                    onChange={(e) => {
+                      input.onChange(e);
+                      handleInputChange(e);
+                    }}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                    minDate={new Date()}
+                    className="due-date-input"
+                    placeholder={t('app.project.Project-boards.Select-date')}
+                  />
+                </MuiPickersUtilsProvider>
                 {checkError(meta) && (
                   <small className="mv3" style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
@@ -122,7 +151,9 @@ const DueDateEditor = (props: IDueDateFormProps) => {
             )}
           />
           {disable && (
-            <p style={{ color: 'red' }}>Due date can't be in past</p>
+            <p style={{ color: 'red' }}>
+              {t('app.project.Project-boards.Due-date-text')}
+            </p>
           )}
           <div className="fr">
             <Button
