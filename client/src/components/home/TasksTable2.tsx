@@ -20,7 +20,139 @@ import { useHistory } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
+//
 
+// function Row(props) {
+//   const { row ,labelId; assignedByUser} = props;
+//   const [open, setOpen] = React.useState(false);
+//   // const classes = useRowStyles();
+
+//   const history = useHistory();
+//   return (
+//     <React.Fragment>
+//       <StyledTableRow
+//         hover
+//         role="checkbox"
+//         tabIndex={-1}
+//         key={row.no}
+//         style={{ borderRadius: 10 }}
+//         // onClick={() =>
+//         //   history.push(row.redirectTo.toString())
+//         // }
+//       >
+//         <StyledTableCell
+//           component="th"
+//           id={labelId}
+//           scope="row"
+//           padding="none"
+//           align={'center'}
+//         >
+//           <IconButton
+//             aria-label="expand row"
+//             size="small"
+//             onClick={() => setOpen(!open)}
+//           >
+//             {open ? (
+//               <KeyboardArrowUpIcon />
+//             ) : (
+//               <KeyboardArrowDownIcon />
+//             )}
+//           </IconButton>
+//           {row.no}
+//         </StyledTableCell>
+//         <StyledTableCell
+//           onClick={() => history.push(row.redirectTo.toString())}
+//           align="center"
+//         >
+//           {row.taskName ? row.taskName : '-'}
+//         </StyledTableCell>
+//         {assignedByUser && (
+//           <StyledTableCell
+//             align="center"
+//             onClick={() => history.push(row.redirectTo.toString())}
+//           >
+//             {row.assignee}
+//           </StyledTableCell>
+//         )}
+//         <StyledTableCell
+//           align="center"
+//           onClick={() => history.push(row.redirectTo.toString())}
+//         >
+//           <span>{row.deadline}</span>
+//         </StyledTableCell>
+//         <StyledTableCell
+//           align="center"
+//           onClick={() => history.push(row.redirectTo.toString())}
+//         >
+//           <span
+//             className="bp3-tag ttc"
+//             style={{
+//               background:
+//                 row.status === 'done'
+//                   ? '#2EB67D'
+//                   : row.status === 'in-progress'
+//                   ? '#08A0F7'
+//                   : '#FFA800',
+//             }}
+//           >
+//             {row.status.toString().replace(/-/g, ' ').toUpperCase()}
+//           </span>
+//         </StyledTableCell>
+//       </StyledTableRow>
+//       <TableRow>
+//         <TableCell
+//           style={{ paddingBottom: 0, paddingTop: 0 }}
+//           colSpan={6}
+//         >
+//           <Collapse in={open} timeout="auto" unmountOnExit>
+//             <Box margin={1}>
+//               <Typography variant="h6" gutterBottom component="div">
+//                 Subtask
+//               </Typography>
+//               <Table size="small" aria-label="purchases">
+//                 <TableHead>
+//                   <TableRow>
+//                     <TableCell align="center">Name</TableCell>
+//                     <TableCell align="center">Assignee</TableCell>
+//                     <TableCell align="center">Deadline</TableCell>
+//                   </TableRow>
+//                 </TableHead>
+//                 <TableBody>
+//                   {/* {row.history.map((historyRow) => ( */}
+//                   <TableRow
+//                     onClick={() =>
+//                       history.push(row.redirectTo.toString())
+//                     }
+//                   >
+//                     <TableCell
+//                       component="th"
+//                       scope="row"
+//                       align="center"
+//                     >
+//                       {/* {historyRow.date} */}
+//                       test
+//                     </TableCell>
+//                     <TableCell align="center">
+//                       {/* {historyRow.customerId}  */}
+//                       sajit
+//                     </TableCell>
+//                     <TableCell align="center">
+//                       {/* {historyRow.amount} */}
+//                       August 7, 2021
+//                     </TableCell>
+//                   </TableRow>
+//                   {/* ))} */}
+//                 </TableBody>
+//               </Table>
+//             </Box>
+//           </Collapse>
+//         </TableCell>
+//       </TableRow>
+//     </React.Fragment>
+//   );
+// }
+
+///
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -309,7 +441,6 @@ const AppTable = ({
               )
               .map((row, index) => {
                 const labelId = `enhanced-table-checkbox-${index}`;
-
                 return (
                   <React.Fragment>
                     <StyledTableRow
@@ -351,14 +482,29 @@ const AppTable = ({
                         {row.taskName ? row.taskName : '-'}
                       </StyledTableCell>
                       {assignedByUser && (
-                        <StyledTableCell align="center">
+                        <StyledTableCell
+                          align="center"
+                          onClick={() =>
+                            history.push(row.redirectTo.toString())
+                          }
+                        >
                           {row.assignee}
                         </StyledTableCell>
                       )}
-                      <StyledTableCell align="center">
+                      <StyledTableCell
+                        align="center"
+                        onClick={() =>
+                          history.push(row.redirectTo.toString())
+                        }
+                      >
                         <span>{row.deadline}</span>
                       </StyledTableCell>
-                      <StyledTableCell align="center">
+                      <StyledTableCell
+                        align="center"
+                        onClick={() =>
+                          history.push(row.redirectTo.toString())
+                        }
+                      >
                         <span
                           className="bp3-tag ttc"
                           style={{
@@ -401,30 +547,41 @@ const AppTable = ({
                             >
                               <TableHead>
                                 <TableRow>
-                                  <TableCell>Name</TableCell>
-                                  <TableCell>Customer</TableCell>
-                                  <TableCell align="right">
+                                  <TableCell align="center">
+                                    Name
+                                  </TableCell>
+                                  <TableCell align="center">
                                     Assignee
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    Deadline
                                   </TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
                                 {/* {row.history.map((historyRow) => ( */}
-                                <TableRow>
+                                <TableRow
+                                  onClick={() =>
+                                    history.push(
+                                      row.redirectTo.toString(),
+                                    )
+                                  }
+                                >
                                   <TableCell
                                     component="th"
                                     scope="row"
+                                    align="center"
                                   >
                                     {/* {historyRow.date} */}
-                                    15
+                                    test
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell align="center">
                                     {/* {historyRow.customerId}  */}
-                                    15
+                                    sajit
                                   </TableCell>
-                                  <TableCell align="right">
+                                  <TableCell align="center">
                                     {/* {historyRow.amount} */}
-                                    151
+                                    August 7, 2021
                                   </TableCell>
                                 </TableRow>
                                 {/* ))} */}

@@ -10,7 +10,7 @@ import { tokenConfig } from 'stores/UtilsActions';
 
 // import Table from './TaskTable';
 import Table from './TasksTable2';
-import CollapsibleTable from './Collapsible-table';
+// import CollapsibleTable from './Collapsible-table';
 
 type Order = 'asc' | 'desc';
 interface Data {
@@ -359,7 +359,7 @@ const Tasks = () => {
               tasks={tasks}
               assignedByUser={filterOption === 2 ? true : false}
             />
-            <CollapsibleTable />
+            {/* <CollapsibleTable /> */}
           </>
         ) : (
           <div className="w-100 tc gray mt2">
