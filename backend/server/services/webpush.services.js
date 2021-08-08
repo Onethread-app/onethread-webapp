@@ -4,7 +4,7 @@ const { ServiceError } = require('../helpers/APIError');
 const webpush = require('web-push');
 const config = require('../../config/config');
 const UserNotificationModel = require('../notification/userNotification.model');
-const {UserMessage} = require('../message/userMessage.model');
+const { UserMessage } = require('../message/userMessage.model');
 const Account = require('../account/account.model');
 const publicVapidKey = config.vapidPublicKey;
 const privateVapidKey = config.vapidPrivateKey;
@@ -75,7 +75,7 @@ const triggerUnreadNotifications = async (memberId) => {
   const username = accInf.name;
   const numOfUnreadNotif = await UserNotificationModel.find({
     account: memberId,
-    read: false
+    read: false,
   }).countDocuments();
   let message = `You have 1 unread notification`;
   if (numOfUnreadNotif > 1) {
@@ -150,7 +150,6 @@ const triggerUnreadMessages = async (memberId) => {
 
   await triggerMessage(memberId, dataToSend);
 };
-
 
 module.exports = {
   webpush,

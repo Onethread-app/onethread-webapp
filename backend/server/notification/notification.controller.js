@@ -14,6 +14,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const UserNotification = require('./userNotification.model');
 const _ = require('lodash');
 const {
+  triggerNotification,
   triggerUnreadNotifications,
 } = require('../services/webpush.services');
 const {
@@ -816,4 +817,14 @@ module.exports.read = async (req, res, next) => {
       logger.log(`Notification: ${e}`);
       next(e);
     });
+};
+
+module.exports.webpushAdminPanel = async (req, res, next) => {
+  try {
+    const { memberId, dataToSend } = req.body;
+    await triggerNotification(memberId, dataToSend);
+    return res.json({ success: true });
+  } catch (err) {
+    return res.json({ err });
+  }
 };
