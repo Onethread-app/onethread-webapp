@@ -40,6 +40,19 @@ router
   );
 
 router
+  .route('/suggest-member')
+  .get(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    taskCtrl.suggestMemberForCreatingTask,
+  );
+
+router
   .route('/:taskId')
   .get(
     authorization,

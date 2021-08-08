@@ -3,7 +3,8 @@ import { Layout } from 'components/Layout';
 import { AssociatesDetailsView } from 'layouts/company/associateDetails/Index';
 import { AssociatesPage } from 'layouts/company/associates/Index';
 import { BoardPage } from 'layouts/company/board/Index';
-import { BoardDetailsView } from 'layouts/company/boardDetails/Index';
+// import { BoardDetailsView } from 'layouts/company/boardDetails/Index';
+import BoardDetails from 'components/board/BoardDetails';
 import { ColleaguesPage } from 'layouts/company/colleagues/Index';
 import { FeedPage } from 'layouts/company/feed/Index';
 import { OverviewPage } from 'layouts/company/overview/Index';
@@ -267,7 +268,7 @@ const App = () => {
       <PrivateRoute
         path="/company/:cname/project/:projectId/board/:boardId"
         exact={true}
-        component={BoardDetailsView}
+        component={BoardDetails}
       />
       <PrivateRoute
         path="/company/:cname/project/:projectId/board/:boardId/task/:taskId"

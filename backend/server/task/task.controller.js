@@ -43,6 +43,119 @@ const getTaskMembers = async (taskId) => {
   return taskMembers;
 };
 
+const addMemberToTask = async (
+  assignmembers,
+  taskId,
+  boardId,
+  req,
+) => {
+  const requestedMembers = assignmembers;
+
+  //get current task board to check members in board
+
+  const currentTaskBoard = await Board.findOne({
+    _id: boardId,
+  });
+
+  //convert current taskboard members to check the difference between them
+
+  const Members = currentTaskBoard.members.map((member) =>
+    member.toString(),
+  );
+
+  //new members who are  not in baord
+
+  const newBoardmember = _.difference(requestedMembers, Members);
+
+  //new members to add in task
+
+  const newMembers = requestedMembers.map((memberId) => {
+    return {
+      taskId: taskId,
+      account: req.user._id,
+      assignedPerson: memberId,
+    };
+  });
+
+  //check the difference's
+  //if new member who is already in board , just add in task
+  //others add them in board first
+
+  if (_.isEmpty(newBoardmember)) {
+    await TaskAssign.insertMany(newMembers);
+    const members = await TaskAssign.find({
+      taskId,
+      assignedPerson: {
+        $in: requestedMembers,
+      },
+    })
+      .select('_id assignedPerson account')
+      .populate([
+        {
+          path: 'assignedPerson account',
+          select: '_id firstName lastName profileImage',
+        },
+      ])
+      .exec();
+
+    members.map(async (e) => {
+      if (req.user._id !== e.assignedPerson._id) {
+        await taskAssignNotificationToUsers(
+          req.user._id,
+          req.headers.companyid,
+          e._id,
+          e.assignedPerson._id,
+          {
+            _id: req.user._id,
+            name: req.user.name,
+            pusherSock: req.headers.clientid,
+          },
+        );
+        await triggerUnreadNotifications(e.assignedPerson._id);
+      }
+    });
+    return members;
+  } else {
+    await Board.updateOne(
+      { _id: boardId },
+      { $addToSet: { members: newBoardmember } },
+      { safe: true, upsert: true, new: true },
+    );
+
+    await TaskAssign.insertMany(newMembers);
+    const members = await TaskAssign.find({
+      taskId,
+      assignedPerson: {
+        $in: requestedMembers,
+      },
+    })
+      .select('_id assignedPerson account')
+      .populate([
+        {
+          path: 'assignedPerson account',
+          select: '_id firstName lastName profileImage',
+        },
+      ])
+      .exec();
+    members.map(async (e) => {
+      if (req.user._id !== e.assignedPerson._id) {
+        await taskAssignNotificationToUsers(
+          req.user._id,
+          req.headers.companyid,
+          e._id,
+          e.assignedPerson._id,
+          {
+            _id: req.user._id,
+            name: req.user.name,
+            pusherSock: req.headers.clientid,
+          },
+        );
+      }
+    });
+    return members;
+  }
+};
+
 const load = (req, res, next, id) => {
   Task.findById(id)
     .populate('account', '_id firstName lastName')
@@ -82,8 +195,17 @@ const create = async (req, res, next) => {
         columnId: columnId,
         boardId: boardId,
         project: pid,
+        priority: req.body.priority,
+        dueDate: req.body.dueDate,
       });
       const createdTask = await task.save();
+
+      const members = await addMemberToTask(
+        req.body.assignmembers,
+        createdTask._id,
+        boardId,
+        req,
+      );
 
       // TODO: should use update function
       const column = await BoardColumn.findOne({
@@ -112,6 +234,9 @@ const create = async (req, res, next) => {
         name: createdTask.name,
         description: createdTask.description,
         dueDate: createdTask.dueDate,
+        priority: createdTask.priority,
+        status: createdTask.status,
+        assignedMembers: members,
       };
       logger.info(`Task column create`);
       await sendNotificationToProjectTeamMates(
@@ -281,6 +406,22 @@ const addMember = async (req, res, next) => {
     }
   } catch (error) {
     logger.error(`Task: ${error}`);
+    next(error);
+  }
+};
+
+const suggestMemberForCreatingTask = async (req, res, next) => {
+  try {
+    let projectMembers = await Team.find({
+      project: req.query.pid,
+    })
+      .select('_id account')
+      .populate('account', '_id name')
+      .exec();
+    let members = projectMembers.map((m) => m.account);
+    return sendJSONresponse(res, 200, members);
+  } catch (error) {
+    logger.info(`Task Member: ${error}`);
     next(error);
   }
 };
@@ -493,5 +634,6 @@ module.exports = {
   getTaskMembers,
   getMembers,
   deleteMember,
+  suggestMemberForCreatingTask,
   suggestMember,
 };

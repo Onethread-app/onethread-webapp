@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
 * {
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
@@ -30,13 +32,13 @@ body {
   color: rgb(74, 73, 73);
 }
 .bg-tigrowLightBlue {
-  background-color: #3F61C5;
+  background-color: #3f61c5;
 }
 .bg-tigrow-darkBlue {
-  background-color: #3F61C5;
+  background-color: #3f61c5;
 }
 .bg-tigrowNewDarkBlue {
-  background-color: #3F61C5;
+  background-color: #3f61c5;
 }
 .bg-tigrowLightestBlue {
   background-color: #6ed8d844;
@@ -45,14 +47,14 @@ body {
   background-color: #f5f6fa;
 }
 .bg-tigrowDarkBlue {
-  background-color: #3F61C5;
+  background-color: #3f61c5;
 }
 .bg-tigrow {
   background-color: #f5f6fa;
 }
 
 .b--lightBlue {
-  border-color: #3F61C5;
+  border-color: #3f61c5;
 }
 .b--tigrow-darkBlue {
   border-color: #3b5998;
@@ -67,7 +69,7 @@ body {
 }
 
 .tigrow-lightBlue {
-  color: #3F61C5;
+  color: #3f61c5;
 }
 .tigrow-darkGray {
   color: #555555;
@@ -172,24 +174,24 @@ a:hover {
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
-  border-radius: 10px;
-  background-color: #3F61C5;
+  border-radius: 30px;
+  background-color: #3484f0;
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 10px;
-  background: rgb(196, 240, 240);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.87);
   border: 1px solid #ccc;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: rgb(13, 189, 189);
+  border-radius: 30px;
+  background: #3484f0;
   border: 1px solid #ccc;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3F61C5;
+  background: #3f61c5;
 }
 
 .ml5-tigrow {
@@ -304,7 +306,7 @@ a:hover {
 
 /*************************************/
 .vertical-timeline::before {
-  background: #3F61C5 !important;
+  background: #3f61c5 !important;
   z-index: 1;
 }
 .vertical-timeline-element-date {
@@ -314,7 +316,7 @@ a:hover {
   width: 20px !important;
   height: 20px !important;
   margin-left: -10px !important;
-  background-color: #3F61C5 !important;
+  background-color: #3f61c5 !important;
 }
 .vertical-timeline--two-columns
   .vertical-timeline-element-content
@@ -324,7 +326,7 @@ a:hover {
 .vertical-timeline-element-content {
   box-shadow: none !important;
   border: 1px solid #ddd;
-  border-left: 3px solid #3F61C5;
+  border-left: 3px solid #3f61c5;
   margin-top: 40px;
 }
 .vertical-timeline-element-content-arrow {
@@ -510,7 +512,7 @@ a:hover {
   }
 }
 
-.companyCoverButton{
+.companyCoverButton {
   margin-top: 265px;
   margin-right: 45px;
 }

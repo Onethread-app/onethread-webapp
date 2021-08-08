@@ -253,6 +253,8 @@ export function* dragAndDrop({
           const index = column.tasks!.findIndex(
             (task) => task._id === taskId,
           );
+          column.tasks![index].status = status;
+          column.tasks![index].columnId = destinationColumnId;
           addedTask = column.tasks!.slice(index, index + 1)[0];
           column.tasks!.splice(index, 1);
         }

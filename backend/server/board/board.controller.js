@@ -1,6 +1,8 @@
 const Board = require('./board.model');
 const BoardColumn = require('./../boardColumn/boardColumn.model');
 const Task = require('../task/task.model');
+const TaskAssign = require('../task/taskAssign.model');
+const Comment = require('../comment/comment.model');
 const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
 const {
@@ -73,7 +75,7 @@ const addToBoard = async (boardID, memberID) => {
 
 const load = (req, res, next, id) => {
   Board.findById(id)
-    .populate('members', '_id name')
+    .populate('members', '_id firstName lastName profileImage name')
     .exec()
     .then(async (result) => {
       if (result.project.toString() === req.query.pid) {
@@ -126,14 +128,46 @@ const get = async (req, res, next) => {
   try {
     let newBoardObj = req.board;
     const { columns } = newBoardObj;
-    const tasks = await Task.find({
+    let tasks = await Task.find({
       boardId: req.board._id,
       project: req.query.pid,
     })
       .select(
-        '_id name color description dueDate columnId boardId project',
+        '_id status name color priority description dueDate columnId boardId project',
       )
-      .exec();
+      .exec()
+      .then((result) => {
+        let mTasks = Promise.all(
+          result.map(async (res) => {
+            let mTask;
+            const tMembers = await TaskAssign.find({
+              taskId: res._id,
+            })
+              .select('_id assignedPerson')
+              .populate([
+                {
+                  path: 'assignedPerson',
+                  select: '_id firstName lastName profileImage',
+                },
+              ])
+              .exec();
+            const assignedPersons = tMembers.map(
+              (mem) => mem.assignedPerson,
+            );
+            const activityCount = await Comment.find({
+              taskId: res._id,
+            }).countDocuments();
+            mTask = {
+              ...res._doc,
+              assignedMembers: assignedPersons,
+              activityCount,
+            };
+            return mTask;
+          }),
+        );
+
+        return mTasks;
+      });
 
     columns.forEach((col) => {
       for (let i = 0; i < tasks.length; i++) {
