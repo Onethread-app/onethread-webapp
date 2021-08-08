@@ -414,7 +414,9 @@
         "Update": "Update",
         "cancel": "cancel",
         "Board-Name": "Board Name (Required)",
-        "Create": "Create"
+        "Create": "Create",
+        "Due-date-text": "Due date can't be in past",
+        "Select-date": "Select a date"
       },
 
       "Project-teammates": {
