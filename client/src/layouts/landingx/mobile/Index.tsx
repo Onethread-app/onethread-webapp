@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import MobileNavbar from './Navbar';
 import MainFooter from './MainFooter';
@@ -28,15 +28,18 @@ import MeetingPng from 'resources/images/meeting.png';
 import TasksPng from 'resources/images/tasks.png';
 import IntegrationsPng from 'resources/images/integrations.png';
 import { useTranslation } from 'react-i18next';
-
+import MessengerCustomerChat from 'react-messenger-customer-chat';
+import whatsapp from '../../../resources/images/icons/whatsapp.png';
+import chatIcon from '../../../resources/images/icons/chat.png';
+import { APP_ID, PAGE_ID, WHATSAPP_URL } from 'config';
 // // import ProjectPng from 'resources/images/project.png';
 // import MeetingPng from 'resources/images/meeting.png';
 // import TasksPng from 'resources/images/tasks.png';
 // import IntegrationsPng from 'resources/images/integrations.png';
 
 const MobileIndex = () => {
-
-const { t } = useTranslation();
+  const { t } = useTranslation();
+  const [showChat, setShowChat] = useState(false);
 
   return (
     <div className="landing-m w-100">
@@ -58,7 +61,7 @@ const { t } = useTranslation();
           among startups, agencies and NGOs. */}
         </h3>
         <OTButton to="/signup">
-           {t('landing.homepage.main-header.Sign-Up button')}
+          {t('landing.homepage.main-header.Sign-Up button')}
           {/* Create Unlimited Projects For Free */}
         </OTButton>
       </section>
@@ -83,7 +86,7 @@ const { t } = useTranslation();
                 <img src={DashboardIcon} alt="" />
                 <p>
                   <span className="b mr1">Messages: </span>
-                    {t('landing.homepage.second-section.messages')}
+                  {t('landing.homepage.second-section.messages')}
                   {/* Keep your work and personal inboxes separate */}
                 </p>
               </div>
@@ -100,7 +103,7 @@ const { t } = useTranslation();
                 <img src={ReportIcon} alt="" />
                 <p>
                   <span className="b mr1">Reports: </span>
-                    {t('landing.homepage.second-section.reports')}
+                  {t('landing.homepage.second-section.reports')}
                   {/* No more asking “what’s done”. You already know it! */}
                 </p>
               </div>
@@ -119,7 +122,9 @@ const { t } = useTranslation();
         </div>
         <div className="contents flex flex-column items-center justify-center mb4">
           <h3>{t('landing.homepage.third-section.upper-content')}</h3>
-          <p>{t('landing.homepage.third-section.main-upper-content')}</p>
+          <p>
+            {t('landing.homepage.third-section.main-upper-content')}
+          </p>
           {/* <h3>No more deadly email loops.</h3>
           <p>
             Forward that very long email chain to your project’s
@@ -131,7 +136,9 @@ const { t } = useTranslation();
         </div>
         <div className="contents flex flex-column items-center justify-center">
           <h3>{t('landing.homepage.third-section.lower-content')}</h3>
-          <p>{t('landing.homepage.third-section.main-lower-content')}</p>
+          <p>
+            {t('landing.homepage.third-section.main-lower-content')}
+          </p>
           {/* <h3>Real-time task overview</h3>
           <p>
             Our tasks panel is built to provide real-time charts and
@@ -195,7 +202,9 @@ const { t } = useTranslation();
             </div>
             <div className="option-content">
               <h3>{t('landing.homepage.product-details.header2')}</h3>
-              <p>{t('landing.homepage.product-details.subheader2')}</p>
+              <p>
+                {t('landing.homepage.product-details.subheader2')}
+              </p>
               {/* <h3>Never lose track of a project again</h3>
               <p>
                 Each project gets a separate space with chat threads,
@@ -214,7 +223,9 @@ const { t } = useTranslation();
             </div>
             <div className="option-content">
               <h3>{t('landing.homepage.product-details.header3')}</h3>
-              <p>{t('landing.homepage.product-details.subheader3')}</p>
+              <p>
+                {t('landing.homepage.product-details.subheader3')}
+              </p>
               {/* <h3>Communicate with anyone in your project</h3>
               <p>
                 Direct messages and group messages, as well as
@@ -233,7 +244,9 @@ const { t } = useTranslation();
             </div>
             <div className="option-content">
               <h3>{t('landing.homepage.product-details.header4')}</h3>
-              <p>{t('landing.homepage.product-details.subheader4')}</p>
+              <p>
+                {t('landing.homepage.product-details.subheader4')}
+              </p>
               {/* <h3>Manage all tasks from a single dashboard</h3>
               <p>
                 Create and manage tasks in projects, assign team
@@ -251,7 +264,9 @@ const { t } = useTranslation();
             </div>
             <div className="option-content">
               <h3>{t('landing.homepage.product-details.header5')}</h3>
-              <p>{t('landing.homepage.product-details.subheader5')}</p>
+              <p>
+                {t('landing.homepage.product-details.subheader5')}
+              </p>
               {/* <h3>Work with your favorite tools</h3>
               <p>
                 With 500+ integrations, onethread plays nicely with
@@ -264,6 +279,22 @@ const { t } = useTranslation();
       <section className="footer flex flex-column items-center justify-center w-100 tc">
         <MainFooter />
       </section>
+      {showChat && (
+        <>
+          <div className="whatsapp-web">
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+              <img src={whatsapp} alt="whatsapp" />
+            </a>
+          </div>
+          <MessengerCustomerChat pageId={PAGE_ID} appId={APP_ID} />
+        </>
+      )}
+      <div
+        className="toggole-icon-mobile"
+        onClick={() => setShowChat(!showChat)}
+      >
+        <img src={chatIcon} alt="icon" />
+      </div>
     </div>
   );
 };

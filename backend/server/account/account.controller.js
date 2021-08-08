@@ -35,8 +35,8 @@ const {
   savePushSubscription,
   removePushSubscription,
 } = require('../services/webpush.services');
-const { Tasks } = require('elasticsearch');
 const Task = require('../task/task.model');
+const SubTask = require('../task/subtask/subtask.model');
 const TaskAssign = require('../task/taskAssign.model');
 
 const options = [
@@ -74,84 +74,101 @@ const options = [
   },
 ];
 
-// get today's tasks for user
-const getTodaysTask = async (req) => {
-  try {
-    let startToday = new Date(req.query.date);
-    startToday.setHours(0, 0, 0, 0);
-    let endToday = new Date();
-    endToday.setHours(23, 59, 59, 999);
-    const taskList = await Task.find({
-      dueDate: { $gte: startToday, $lt: endToday },
-    }).sort({ createdAt: -1 });
-    let taskId = taskList.map((e) => e._id);
-    const assignToUserToday = await TaskAssign.find({
-      taskId: taskId,
-      assignedPerson: req.user._id,
-    })
-      .select('taskId')
-      .populate(options);
-    const assignByUserToday = await TaskAssign.find({
-      taskId: taskId,
-      account: req.user._id,
-      assignedPerson: { $nin: { _id: req.user._id } },
-    })
-      .sort({ createdAt: -1 })
-      .select('taskId')
-      .populate(options);
-    const userTask = {
-      assignToUser: [...assignToUserToday],
-      assignByUser: [...assignByUserToday],
-      totalTasks: assignToUserToday.length + assignByUserToday.length,
-    };
-    return userTask;
-  } catch (error) {
-    logger.error(`Account: ${error}`);
-    next(error);
-  }
+const getSubtasks = async (taskId) => {
+  return SubTask.find({ taskId })
+    .sort('-createdAt')
+    .select('_id name done dueDate assignedMembers')
+    .populate({
+      path: 'assignedMembers',
+      select: '_id name done dueDate assignedMembers',
+      populate: [
+        {
+          path: 'assignedMembers',
+          select: '_id name profileImage',
+        },
+      ],
+    });
 };
 
-// get upcoming tasks for user
-const getUpcomingTasks = async (req, dayFrom, dayTo) => {
-  try {
-    let tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + dayFrom);
-    tomorrow.setHours(0, 0, 0, 0);
+const getAssignedInfo = async (userId, taskId) => {
+  const assignToUser = await TaskAssign.find({
+    taskId: taskId,
+    assignedPerson: userId,
+  })
+    .select('taskId')
+    .populate(options);
 
-    let oneWeek = new Date();
-    oneWeek.setDate(oneWeek.getDate() + dayTo);
-    oneWeek.setHours(23, 59, 59, 999);
-
-    const upcomingTask = await Task.find({
-      dueDate: { $gte: tomorrow, $lte: oneWeek },
-    }).sort({ createdAt: -1 });
-    taskId = upcomingTask.map((e) => e._id);
-
-    const assignToUserUpcoming = await TaskAssign.find({
-      taskId: taskId,
-      assignedPerson: req.user._id,
-    })
-      .select('taskId')
-      .populate(options);
-    const assignByUserUpcoming = await TaskAssign.find({
-      taskId: taskId,
-      account: req.user._id,
-      assignedPerson: { $nin: { _id: req.user._id } },
-    })
-      .sort({ createdAt: -1 })
-      .select('taskId')
-      .populate(options);
-    const userTask = {
-      assignToUser: [...assignToUserUpcoming],
-      assignByUser: [...assignByUserUpcoming],
-      totalTasks:
-        assignToUserUpcoming.length + assignByUserUpcoming.length,
-    };
-    return userTask;
-  } catch (error) {
-    logger.error(`Account: ${error}`);
-    next(error);
+  for (let i = 0; i < assignToUser.length; i++) {
+    assignToUser[i] = assignToUser[i].toJSON();
+    assignToUser[i].subTasks = await getSubtasks(
+      assignToUser[i].taskId._id,
+    );
   }
+
+  const assignByUser = await TaskAssign.find({
+    taskId: taskId,
+    account: userId,
+    assignedPerson: { $nin: { _id: userId } },
+  })
+    .sort({ createdAt: -1 })
+    .select('taskId')
+    .populate(options);
+
+  for (let i = 0; i < assignByUser.length; i++) {
+    assignByUser[i] = assignByUser[i].toJSON();
+    assignByUser[i].subTasks = await getSubtasks(
+      assignByUser[i].taskId._id,
+    );
+  }
+
+  return [assignToUser, assignByUser];
+};
+
+// GET today/upcoming tasks for user
+const getListOfTasks = async (userId, dayFrom = 0, dayTo = 0) => {
+  let startDate = new Date();
+  startDate.setDate(startDate.getDate() + dayFrom);
+  startDate.setHours(0, 0, 0, 0);
+
+  let endDate = new Date();
+  endDate.setDate(endDate.getDate() + dayTo);
+  endDate.setHours(23, 59, 59, 999);
+
+  const taskLists = await Task.find({
+    dueDate: { $gte: startDate, $lte: endDate },
+  }).sort('-createdAt');
+  taskId = taskLists.map((e) => e._id);
+
+  const [assignToUser, assignByUser] = await getAssignedInfo(
+    userId,
+    taskId,
+  );
+
+  return {
+    assignToUser,
+    assignByUser,
+    totalTasks: assignToUser.length + assignByUser.length,
+  };
+};
+
+const getDueTasks = async (userId) => {
+  const taskList = await Task.find({
+    dueDate: { $lte: new Date() },
+    status: { $ne: 'done' },
+  }).sort({ createdAt: -1 });
+
+  let taskId = taskList.map((e) => e._id);
+
+  const [assignToUser, assignByUser] = await getAssignedInfo(
+    userId,
+    taskId,
+  );
+
+  return {
+    assignToUser,
+    assignByUser,
+    totalTasks: assignToUser.length + assignByUser.length,
+  };
 };
 
 // create a new account for individual users
@@ -384,7 +401,6 @@ const getAccount = async (req, res, next) => {
 //     });
 //   })
 //   .catch(err => {
-//     console.log(err);
 //     next(err);
 //   });
 const userDailyProgress = async (req, res, next) => {
@@ -908,41 +924,13 @@ const inviteSignup = async (req, res, next) => {
   }
 };
 
-const getDueTasks = async (req) => {
-  const taskList = await Task.find({
-    dueDate: { $lte: new Date() },
-    status: { $ne: 'done' },
-  }).sort({ createdAt: -1 });
-
-  let taskId = taskList.map((e) => e._id);
-  const assignToUserToday = await TaskAssign.find({
-    taskId: taskId,
-    assignedPerson: req.user._id,
-  })
-    .select('taskId')
-    .populate(options);
-  const assignByUserToday = await TaskAssign.find({
-    taskId: taskId,
-    account: req.user._id,
-    assignedPerson: { $nin: { _id: req.user._id } },
-  })
-    .sort({ createdAt: -1 })
-    .select('taskId')
-    .populate(options);
-  const userTask = {
-    assignToUser: [...assignToUserToday],
-    assignByUser: [...assignByUserToday],
-    totalTasks: assignToUserToday.length + assignByUserToday.length,
-  };
-  return userTask;
-};
-
 const userTaskList = async (req, res, next) => {
   try {
-    const todaysTasks = await getTodaysTask(req);
-    const tomorrowTasks = await getUpcomingTasks(req, 1, 1); // next 1 day
-    const upcomingTasks = await getUpcomingTasks(req, 1, 15); // next 15 days
-    const dueTasks = await getDueTasks(req);
+    const userId = req.user._id;
+    const todaysTasks = await getListOfTasks(userId);
+    const tomorrowTasks = await getListOfTasks(userId, 1, 1);
+    const upcomingTasks = await getListOfTasks(userId, 2, 16); // next 15 days
+    const dueTasks = await getDueTasks(userId);
 
     const userTask = {
       todaysTasks,

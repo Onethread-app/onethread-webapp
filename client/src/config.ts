@@ -19,8 +19,8 @@ export const NOTIFICATION_KEY =
   process.env.REACT_APP_PUSHER_CHANNEL_KEY;
 export const NOTIFICATION_CLUSTER =
   process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER;
-export const VAPID_PUBLIC_KEY = 
- process.env.REACT_APP_VAPID_PUBLIC_KEY;
+export const VAPID_PUBLIC_KEY =
+  process.env.REACT_APP_VAPID_PUBLIC_KEY;
 export const tigrowApi = axios.create({
   baseURL: server,
 });
@@ -28,3 +28,7 @@ export const tigrowApi = axios.create({
 export const tigrowAdminApi = axios.create({
   baseURL: adminServer,
 });
+
+export const PAGE_ID = process.env.REACT_APP_PAGE_ID;
+export const APP_ID = process.env.REACT_APP_APP_ID;
+export const WHATSAPP_URL = process.env.REACT_APP_WHATSAPP_URL;
