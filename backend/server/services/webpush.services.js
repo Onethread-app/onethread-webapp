@@ -50,6 +50,7 @@ const triggerNotification = async (memberId, dataToSend) => {
           JSON.stringify(dataToSend),
         );
       } catch (err) {
+        console.error(err);
         if (err.statusCode === 404 || err.statusCode === 410) {
           await removePushSubscription(subscriptions[i]._id);
         } else {
