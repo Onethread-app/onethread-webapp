@@ -13,146 +13,199 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { useHistory } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
-//
 
-// function Row(props) {
-//   const { row ,labelId; assignedByUser} = props;
-//   const [open, setOpen] = React.useState(false);
-//   // const classes = useRowStyles();
+function Row(props) {
+  const { row, index, assignedByUser } = props;
+  const [open, setOpen] = React.useState(false);
+  const labelId = `enhanced-table-checkbox-${index}`;
+  const history = useHistory();
+  console.log('row', row);
+  return (
+    <React.Fragment>
+      <StyledTableRow
+        hover
+        role="checkbox"
+        tabIndex={-1}
+        key={row.no}
+        style={{ borderRadius: 10 }}
+      >
+        <StyledTableCell
+          component="th"
+          id={labelId}
+          scope="row"
+          padding="none"
+          align={'center'}
+        >
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? (
+              <KeyboardArrowUpIcon />
+            ) : (
+              <KeyboardArrowDownIcon />
+            )}
+          </IconButton>
+          {row.no}
+        </StyledTableCell>
+        <StyledTableCell
+          onClick={() => history.push(row.redirectTo.toString())}
+          align="center"
+        >
+          {row.taskName ? row.taskName : '-'}
+        </StyledTableCell>
+        {assignedByUser && (
+          <StyledTableCell
+            align="center"
+            onClick={() => history.push(row.redirectTo.toString())}
+          >
+            {row.assignee}
+          </StyledTableCell>
+        )}
+        <StyledTableCell
+          align="center"
+          onClick={() => history.push(row.redirectTo.toString())}
+        >
+          <span>{row.deadline}</span>
+        </StyledTableCell>
+        <StyledTableCell
+          align="center"
+          onClick={() => history.push(row.redirectTo.toString())}
+        >
+          <span
+            className="bp3-tag ttc"
+            style={{
+              background:
+                row.status === 'done'
+                  ? '#2EB67D'
+                  : row.status === 'in-progress'
+                  ? '#08A0F7'
+                  : '#FFA800',
+            }}
+          >
+            {row.status.toString().replace(/-/g, ' ').toUpperCase()}
+          </span>
+        </StyledTableCell>
+      </StyledTableRow>
+      <TableRow>
+        <TableCell
+          style={{
+            paddingBottom: 0,
+            paddingTop: 0,
+          }}
+          colSpan={6}
+        >
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              {row.subTasks.length > 0 ? (
+                <>
+                  <p
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 'bold',
+                      color: '#666',
+                    }}
+                  >
+                    Subtask
+                  </p>
+                  <Table size="small" aria-label="purchases">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center">
+                          <p
+                            style={{
+                              fontSize: 11.5,
+                              color: '#666',
+                            }}
+                          >
+                            Name
+                          </p>
+                        </TableCell>
+                        <TableCell align="center">
+                          <p
+                            style={{
+                              fontSize: 11.5,
+                              color: '#666',
+                            }}
+                          >
+                            Assignee
+                          </p>
+                        </TableCell>
+                        <TableCell align="center">
+                          <p
+                            style={{
+                              fontSize: 11.5,
+                              color: '#666',
+                            }}
+                          >
+                            Status
+                          </p>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {row.subTasks.map((subTask) => (
+                        <TableRow
+                          onClick={() =>
+                            history.push(row.redirectTo.toString())
+                          }
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            align="center"
+                          >
+                            {subTask.name}
+                          </TableCell>
+                          <TableCell align="center">
+                            {subTask.assignedMembers.length > 0
+                              ? subTask.assignedMembers[0].name
+                              : 'Not assigned'}
+                          </TableCell>
+                          <TableCell align="center">
+                            <span
+                              className="bp3-tag ttc"
+                              style={{
+                                background:
+                                  subTask.done === true
+                                    ? '#2EB67D'
+                                    : '#FFA800',
+                              }}
+                            >
+                              {subTask.done === false
+                                ? 'Not Done'
+                                : 'Done'}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </>
+              ) : (
+                <p
+                  style={{ paddingLeft: '4rem', fontWeight: 'bold' }}
+                >
+                  No sub task
+                </p>
+              )}
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
 
-//   const history = useHistory();
-//   return (
-//     <React.Fragment>
-//       <StyledTableRow
-//         hover
-//         role="checkbox"
-//         tabIndex={-1}
-//         key={row.no}
-//         style={{ borderRadius: 10 }}
-//         // onClick={() =>
-//         //   history.push(row.redirectTo.toString())
-//         // }
-//       >
-//         <StyledTableCell
-//           component="th"
-//           id={labelId}
-//           scope="row"
-//           padding="none"
-//           align={'center'}
-//         >
-//           <IconButton
-//             aria-label="expand row"
-//             size="small"
-//             onClick={() => setOpen(!open)}
-//           >
-//             {open ? (
-//               <KeyboardArrowUpIcon />
-//             ) : (
-//               <KeyboardArrowDownIcon />
-//             )}
-//           </IconButton>
-//           {row.no}
-//         </StyledTableCell>
-//         <StyledTableCell
-//           onClick={() => history.push(row.redirectTo.toString())}
-//           align="center"
-//         >
-//           {row.taskName ? row.taskName : '-'}
-//         </StyledTableCell>
-//         {assignedByUser && (
-//           <StyledTableCell
-//             align="center"
-//             onClick={() => history.push(row.redirectTo.toString())}
-//           >
-//             {row.assignee}
-//           </StyledTableCell>
-//         )}
-//         <StyledTableCell
-//           align="center"
-//           onClick={() => history.push(row.redirectTo.toString())}
-//         >
-//           <span>{row.deadline}</span>
-//         </StyledTableCell>
-//         <StyledTableCell
-//           align="center"
-//           onClick={() => history.push(row.redirectTo.toString())}
-//         >
-//           <span
-//             className="bp3-tag ttc"
-//             style={{
-//               background:
-//                 row.status === 'done'
-//                   ? '#2EB67D'
-//                   : row.status === 'in-progress'
-//                   ? '#08A0F7'
-//                   : '#FFA800',
-//             }}
-//           >
-//             {row.status.toString().replace(/-/g, ' ').toUpperCase()}
-//           </span>
-//         </StyledTableCell>
-//       </StyledTableRow>
-//       <TableRow>
-//         <TableCell
-//           style={{ paddingBottom: 0, paddingTop: 0 }}
-//           colSpan={6}
-//         >
-//           <Collapse in={open} timeout="auto" unmountOnExit>
-//             <Box margin={1}>
-//               <Typography variant="h6" gutterBottom component="div">
-//                 Subtask
-//               </Typography>
-//               <Table size="small" aria-label="purchases">
-//                 <TableHead>
-//                   <TableRow>
-//                     <TableCell align="center">Name</TableCell>
-//                     <TableCell align="center">Assignee</TableCell>
-//                     <TableCell align="center">Deadline</TableCell>
-//                   </TableRow>
-//                 </TableHead>
-//                 <TableBody>
-//                   {/* {row.history.map((historyRow) => ( */}
-//                   <TableRow
-//                     onClick={() =>
-//                       history.push(row.redirectTo.toString())
-//                     }
-//                   >
-//                     <TableCell
-//                       component="th"
-//                       scope="row"
-//                       align="center"
-//                     >
-//                       {/* {historyRow.date} */}
-//                       test
-//                     </TableCell>
-//                     <TableCell align="center">
-//                       {/* {historyRow.customerId}  */}
-//                       sajit
-//                     </TableCell>
-//                     <TableCell align="center">
-//                       {/* {historyRow.amount} */}
-//                       August 7, 2021
-//                     </TableCell>
-//                   </TableRow>
-//                   {/* ))} */}
-//                 </TableBody>
-//               </Table>
-//             </Box>
-//           </Collapse>
-//         </TableCell>
-//       </TableRow>
-//     </React.Fragment>
-//   );
-// }
-
-///
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -376,7 +429,6 @@ const AppTable = ({
   assignedByUser,
   ...otherProps
 }) => {
-  const history = useHistory();
   const classes = useStyles();
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -409,8 +461,6 @@ const AppTable = ({
     setPage(0);
   };
 
-  const [open, setOpen] = React.useState(false);
-
   const emptyRows =
     rowsPerPage -
     Math.min(rowsPerPage, tasks.length - page * rowsPerPage);
@@ -440,158 +490,12 @@ const AppTable = ({
                 page * rowsPerPage + rowsPerPage,
               )
               .map((row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`;
                 return (
-                  <React.Fragment>
-                    <StyledTableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.no}
-                      style={{ borderRadius: 10 }}
-                      // onClick={() =>
-                      //   history.push(row.redirectTo.toString())
-                      // }
-                    >
-                      <StyledTableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        align={'center'}
-                      >
-                        <IconButton
-                          aria-label="expand row"
-                          size="small"
-                          onClick={() => setOpen(!open)}
-                        >
-                          {open ? (
-                            <KeyboardArrowUpIcon />
-                          ) : (
-                            <KeyboardArrowDownIcon />
-                          )}
-                        </IconButton>
-                        {row.no}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        onClick={() =>
-                          history.push(row.redirectTo.toString())
-                        }
-                        align="center"
-                      >
-                        {row.taskName ? row.taskName : '-'}
-                      </StyledTableCell>
-                      {assignedByUser && (
-                        <StyledTableCell
-                          align="center"
-                          onClick={() =>
-                            history.push(row.redirectTo.toString())
-                          }
-                        >
-                          {row.assignee}
-                        </StyledTableCell>
-                      )}
-                      <StyledTableCell
-                        align="center"
-                        onClick={() =>
-                          history.push(row.redirectTo.toString())
-                        }
-                      >
-                        <span>{row.deadline}</span>
-                      </StyledTableCell>
-                      <StyledTableCell
-                        align="center"
-                        onClick={() =>
-                          history.push(row.redirectTo.toString())
-                        }
-                      >
-                        <span
-                          className="bp3-tag ttc"
-                          style={{
-                            background:
-                              row.status === 'done'
-                                ? '#2EB67D'
-                                : row.status === 'in-progress'
-                                ? '#08A0F7'
-                                : '#FFA800',
-                          }}
-                        >
-                          {row.status
-                            .toString()
-                            .replace(/-/g, ' ')
-                            .toUpperCase()}
-                        </span>
-                      </StyledTableCell>
-                    </StyledTableRow>
-                    <TableRow>
-                      <TableCell
-                        style={{ paddingBottom: 0, paddingTop: 0 }}
-                        colSpan={6}
-                      >
-                        <Collapse
-                          in={open}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          <Box margin={1}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              component="div"
-                            >
-                              Subtask
-                            </Typography>
-                            <Table
-                              size="small"
-                              aria-label="purchases"
-                            >
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell align="center">
-                                    Name
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    Assignee
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    Deadline
-                                  </TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {/* {row.history.map((historyRow) => ( */}
-                                <TableRow
-                                  onClick={() =>
-                                    history.push(
-                                      row.redirectTo.toString(),
-                                    )
-                                  }
-                                >
-                                  <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                  >
-                                    {/* {historyRow.date} */}
-                                    test
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {/* {historyRow.customerId}  */}
-                                    sajit
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {/* {historyRow.amount} */}
-                                    August 7, 2021
-                                  </TableCell>
-                                </TableRow>
-                                {/* ))} */}
-                              </TableBody>
-                            </Table>
-                          </Box>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
-                  </React.Fragment>
+                  <Row
+                    row={row}
+                    index={index}
+                    assignedByUser={assignedByUser}
+                  />
                 );
               })}
             {emptyRows > 0 && (

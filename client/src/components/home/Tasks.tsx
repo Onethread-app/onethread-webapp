@@ -10,7 +10,6 @@ import { tokenConfig } from 'stores/UtilsActions';
 
 // import Table from './TaskTable';
 import Table from './TasksTable2';
-// import CollapsibleTable from './Collapsible-table';
 
 type Order = 'asc' | 'desc';
 interface Data {
@@ -129,6 +128,7 @@ const Tasks = () => {
       deadline: ISOformat(t.taskId.dueDate),
       status: t.taskId.status,
       redirectTo: `/company/${t.taskId.project.company.uniqueName}/project/${t.taskId.project._id}/board/${t.taskId.boardId._id}/task/${t.taskId._id}`,
+      subTasks: t.subTasks,
     }));
     taskList.sort((a, b) => {
       const aTime: any = new Date(a.deadline);
@@ -359,7 +359,6 @@ const Tasks = () => {
               tasks={tasks}
               assignedByUser={filterOption === 2 ? true : false}
             />
-            {/* <CollapsibleTable /> */}
           </>
         ) : (
           <div className="w-100 tc gray mt2">
@@ -372,17 +371,3 @@ const Tasks = () => {
 };
 
 export default Tasks;
-// <Table
-//   order={order}
-//   setOrder={setOrder}
-//   orderBy={orderBy}
-//   setOrderBy={setOrderBy}
-//   selected={selected}
-//   setSelected={setSelected}
-//   page={page}
-//   setPage={setPage}
-//   rowsPerPage={rowsPerPage}
-//   setRowsPerPage={setRowsPerPage}
-//   tasks={tasks}
-//   assignedByUser={filterOption === 2 ? true : false}
-// />
