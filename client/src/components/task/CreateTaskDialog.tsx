@@ -62,6 +62,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
   );
   const [selectedOption, setSelectedOption] = useState(options[2]);
   const [creatingTask, setCreatingTask] = useState(false);
+  const [error, setError] = useState(false);
   const [errorText, setErrorText] = useState('');
 
   const userRequestFactory = async (userName: string) => {
@@ -102,15 +103,22 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
   };
 
   const onSubmit = (values) => {
-    const modifiedTask = {
-      ...values,
-      priority: selectedOption.value,
-      boardId: props.currentBoardId,
-      columnId: props.columnId,
-    };
-    props.createTask(modifiedTask);
-    setCreatingTask(true);
+    if (username) {
+      const modifiedTask = {
+        ...values,
+        priority: selectedOption.value,
+        boardId: props.currentBoardId,
+        columnId: props.columnId,
+      };
+      props.createTask(modifiedTask);
+      setCreatingTask(true);
+    } else setError(true);
   };
+
+  useEffect(() => {
+    setError(false);
+  }, [username]);
+
   return (
     <Container>
       <h3 className="tc fw5 f4">Create Task</h3>
@@ -159,6 +167,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
               />
               <Field<string>
                 name="dueDate"
+                validate={required}
                 render={({ input, meta }) => (
                   <div className={`mb3`}>
                     <label
@@ -223,6 +232,11 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         }}
                         multipleItemSelect={true}
                       />
+                      <small
+                        style={{ color: 'red', margin: '1rem 0rem' }}
+                      >
+                        {error && 'Required'}
+                      </small>
                     </div>
                     {selectedTeamMember.length > 0 && (
                       <div className="w-100">
