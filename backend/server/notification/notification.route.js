@@ -24,8 +24,6 @@ router
   .route('/read/:userNotificationId')
   .get(authorization, notificationCtrl.read);
 
-router
-  .route('/seen')
-  .get(authorization, notificationCtrl.seen);
+router.route('/seen').get(authorization, notificationCtrl.seen);
 
 module.exports = router;

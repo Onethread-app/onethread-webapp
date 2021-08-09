@@ -19,7 +19,7 @@ const esclient = new elasticsearch.Client({
     username: 'elastic',
     password: 'changeme',
   },
-  requestTimeout: 60000
+  requestTimeout: 60000,
 });
 
 async function checkConnection() {
@@ -243,7 +243,6 @@ async function createCompany(index, mapping, model) {
   }
 }
 
-
 async function createAssociate(index, mapping, model) {
   try {
     if (await esclient.indices.exists({ index })) {
@@ -255,8 +254,6 @@ async function createAssociate(index, mapping, model) {
       );
     }
 
-    
-
     await esclient.indices.create({
       index: index,
       body: mapping,
@@ -266,8 +263,8 @@ async function createAssociate(index, mapping, model) {
 
     const dataset = await model.find({}).populate({
       path: 'company associateCompany',
-      select: '_id name'
-    })
+      select: '_id name',
+    });
 
     if (!isEmpty(dataset)) {
       dataset.forEach((data) => {
@@ -279,7 +276,7 @@ async function createAssociate(index, mapping, model) {
           company_id: data.company._id,
           associateCompany_id: data.associateCompany._id,
           companyName: data.company.name,
-          associateCompanyName: data.associateCompany.name
+          associateCompanyName: data.associateCompany.name,
         });
       });
       await esclient.bulk({ body: bulk });
@@ -337,15 +334,14 @@ function deleteDocument(indexName, indexType, body) {
   });
 }
 
-
 const associateMapping = {
   mappings: {
     properties: {
-        mongo_id : { "type": "text"},
-        company_id: { "type": "text"},
-        companyName : { "type": "text"},
-        associateCompany_id : { "type": "text"},
-        associateCompanyName : { "type": "text"}
+      mongo_id: { type: 'text' },
+      company_id: { type: 'text' },
+      companyName: { type: 'text' },
+      associateCompany_id: { type: 'text' },
+      associateCompanyName: { type: 'text' },
     },
   },
 };
@@ -438,7 +434,7 @@ module.exports = {
   companyMappnig,
   associateMapping,
   associateIndex,
-  createAssociate
+  createAssociate,
 };
 
 // function createMessages(index,model,mapping, structure){

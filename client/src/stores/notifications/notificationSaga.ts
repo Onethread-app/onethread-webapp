@@ -52,7 +52,10 @@ function* getNotifications() {
 function* readNotification(action) {
   try {
     const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
+    if (
+      (headers as any).headers.Authorization &&
+      action.notificationId
+    ) {
       yield tigrowApi.get(
         `notifications/read/${action.notificationId}`,
         headers,
