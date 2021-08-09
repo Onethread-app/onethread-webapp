@@ -34,13 +34,15 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
     <>
       <div className="pr6">
         <div className="flex-ns justify-between pv3">
-          <h1 className="f6 lh-copy">{t('app.company.Departments.Departments')}</h1>
+          <h1 className="f6 lh-copy">
+            {t('app.company.Departments.Departments')}
+          </h1>
           {/* <h1 className="f6 lh-copy">Departments</h1> */}
           <Button
             type="submit"
             className="grow pointer addDepartment h2"
             style={{
-              background: '#3F61C5',
+              background: '#34b3e9',
               outline: 'none',
               color: 'white',
             }}

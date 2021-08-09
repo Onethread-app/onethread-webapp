@@ -130,7 +130,7 @@ export const SignUpPageComponent = (
               }) => (
                 <>
                   {/* <h1 className="pl3-ns">Sign Up</h1> */}
-                  <h1 className="pl3-ns">
+                  <h1 className="pl3-ns tigrow-lightBlue">
                     {t('landing.sign-up.sign-up-form.sign-up-text')}
                   </h1>
                   <form onSubmit={handleSubmit}>
@@ -166,7 +166,7 @@ export const SignUpPageComponent = (
                                   <span className="bp3-icon">
                                     <Icon
                                       icon="mugshot"
-                                      style={{ color: '#3F61C5' }}
+                                      style={{ color: '#34b3e9' }}
                                     />
                                   </span>
                                 }
@@ -217,7 +217,7 @@ export const SignUpPageComponent = (
                                   <span className="bp3-icon">
                                     <Icon
                                       icon="mugshot"
-                                      style={{ color: '#3F61C5' }}
+                                      style={{ color: '#34b3e9' }}
                                     />
                                   </span>
                                 }
@@ -359,7 +359,7 @@ export const SignUpPageComponent = (
                                   <Icon
                                     icon="calendar"
                                     className="pl2"
-                                    style={{ color: '#3F61C5' }}
+                                    style={{ color: '#34b3e9' }}
                                   />
                                 </div>
                                 <DateInput
@@ -431,7 +431,7 @@ export const SignUpPageComponent = (
                                     <span className="bp3-icon">
                                       <Icon
                                         icon="envelope"
-                                        style={{ color: '#3F61C5' }}
+                                        style={{ color: '#34b3e9' }}
                                       />
                                     </span>
                                   }
@@ -489,7 +489,7 @@ export const SignUpPageComponent = (
                                     <span className="bp3-icon">
                                       <Icon
                                         icon="lock"
-                                        style={{ color: '#3F61C5' }}
+                                        style={{ color: '#34b3e9' }}
                                       />
                                     </span>
                                   }
@@ -521,7 +521,7 @@ export const SignUpPageComponent = (
                                         style={{
                                           width: '15px',
                                           height: '15px',
-                                          color: '#3F61C5',
+                                          color: '#34b3e9',
                                           right: '10px',
                                         }}
                                       />
@@ -535,7 +535,7 @@ export const SignUpPageComponent = (
                                             src={questionIcon}
                                             width="20px"
                                             height="20px"
-                                            color="#3F61C5"
+                                            color="#34b3e9"
                                           />
                                         </Tooltip> */}
                                       <span
@@ -587,7 +587,7 @@ export const SignUpPageComponent = (
                       <Button
                         className="grow h2 pointer white bp3-minimal w4 btnWidth"
                         style={{
-                          background: '#3F61C5',
+                          background: '#34b3e9',
                           outline: 'none',
                           color: 'white',
                           width: '100%',

@@ -42,7 +42,9 @@ const GeneralPageComponent = (props: IProjectRole) => {
             <div className="mb3">
               <SubmitError errorMessage={submitError} />
             </div>
-            <p className="b f5 mb3">{t('app.project.Project-settings.General')}</p>
+            <p className="b f5 mb3">
+              {t('app.project.Project-settings.General')}
+            </p>
             {/* <p className="b f5 mb3">General</p> */}
             <div className="mb3 ml2">
               <Field<string>
@@ -68,7 +70,9 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
             </div>
-            <p className="b f5 mb3">{t('app.project.Project-settings.Preface')}</p>
+            <p className="b f5 mb3">
+              {t('app.project.Project-settings.Preface')}
+            </p>
             {/* <p className="b f5 mb3">Project Preface</p> */}
             <div className="mb3 ml2">
               <Field<string>
@@ -116,7 +120,9 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
             </div>
-            <p className="b f5 mb3">{t('app.project.Project-settings.Rooms')}</p>
+            <p className="b f5 mb3">
+              {t('app.project.Project-settings.Rooms')}
+            </p>
             {/* <p className="b f5 mb3">Rooms</p> */}
             <div className="mb3 ml2">
               <Field<string>
@@ -186,7 +192,9 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
             </div>
-            <p className="b f5 mb3">{t('app.project.Project-settings.Board')}</p>
+            <p className="b f5 mb3">
+              {t('app.project.Project-settings.Board')}
+            </p>
             {/* <p className="b f5 mb3">Board</p> */}
             <div className="mb3 ml2">
               <Field<string>
@@ -274,7 +282,7 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 <Button
                   className="w4 grow h2 pointer"
                   style={{
-                    background: '#3F61C5',
+                    background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}

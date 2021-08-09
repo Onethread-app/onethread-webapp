@@ -151,7 +151,7 @@ const UpdateFormComponent = (props: {
                 <Button
                   className="grow pointer white bp3-minimal w4 mr3"
                   style={{
-                    background: '#3F61C5',
+                    background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
@@ -167,8 +167,8 @@ const UpdateFormComponent = (props: {
                   style={{
                     background: '#fff',
                     outline: 'none',
-                    border: '1px solid #3F61C5',
-                    color: '#3F61C5',
+                    border: '1px solid #34b3e9',
+                    color: '#34b3e9',
                   }}
                   onClick={(e: any) => {
                     if (props.setShowTaskBoardDialog) {

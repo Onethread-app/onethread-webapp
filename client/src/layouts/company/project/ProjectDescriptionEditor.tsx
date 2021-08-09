@@ -96,7 +96,7 @@ export const ProjectDescriptionEditorComponent = (
                 />
                 <Button
                   type="submit"
-                  style={{ background: '#3F61C5' }}
+                  style={{ background: '#34b3e9' }}
                   loading={submitting}
                   icon={
                     <Icon

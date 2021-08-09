@@ -173,7 +173,7 @@ export const SignInPageComponent = (
               }) => (
                 <>
                   {/* <h1 className="pl3">Sign In</h1> */}
-                  <h1 className="pl3">
+                  <h1 className="pl3 tigrow-lightBlue">
                     {t('landing.login.sign-in-form.sign-in-text')}
                   </h1>
                   <form
@@ -211,7 +211,7 @@ export const SignInPageComponent = (
                                   <span className="bp3-icon">
                                     <Icon
                                       icon="envelope"
-                                      style={{ color: '#3F61C5' }}
+                                      style={{ color: '#34b3e9' }}
                                     />
                                   </span>
                                 }
@@ -263,7 +263,7 @@ export const SignInPageComponent = (
                                   <span className="bp3-icon">
                                     <Icon
                                       icon="lock"
-                                      style={{ color: '#3F61C5' }}
+                                      style={{ color: '#34b3e9' }}
                                     />
                                   </span>
                                 }
@@ -293,7 +293,7 @@ export const SignInPageComponent = (
                                       style={{
                                         width: '15px',
                                         height: '15px',
-                                        color: '#3F61C5',
+                                        color: '#34b3e9',
                                       }}
                                     />
                                   </span>
@@ -321,7 +321,7 @@ export const SignInPageComponent = (
                     <Button
                       className="grow h2 pointer white bp3-minimal w4"
                       style={{
-                        background: '#3F61C5',
+                        background: '#34b3e9',
                         outline: 'none',
                         color: 'white',
                         width: '100%',
@@ -362,8 +362,8 @@ export const SignInPageComponent = (
                         style={{
                           background: '#fff',
                           outline: 'none',
-                          border: '2px solid #3F61C5',
-                          color: '#3F61C5',
+                          border: '2px solid #34b3e9',
+                          color: '#34b3e9',
                           fontSize: '18px',
                           padding: '10px 0px',
                         }}

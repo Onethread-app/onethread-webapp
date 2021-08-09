@@ -1,0 +1,11 @@
+.colleagues-top-area {
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 740px) {
+    display: block;
+    .search-bar {
+      margin-bottom: 0.5rem;
+    }
+  }
+}

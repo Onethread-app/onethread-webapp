@@ -312,7 +312,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
               <Button
                 className="w4 grow h2 pointer mr3"
                 style={{
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -327,8 +327,8 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                 style={{
                   background: '#fff',
                   outline: 'none',
-                  border: '1px solid #3F61C5',
-                  color: '#3F61C5',
+                  border: '1px solid #34b3e9',
+                  color: '#34b3e9',
                 }}
                 onClick={(e: any) => {
                   e.preventDefault();

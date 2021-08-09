@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  HTMLTable,
-  Dialog,
-  Popover,
-  Position,
-  Icon,
-  ButtonGroup,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, HTMLTable, Dialog } from '@blueprintjs/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
 import { connect } from 'react-redux';
@@ -29,9 +20,7 @@ import {
 } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
 import { companyPermit } from 'stores/UtilsActions';
-import { AddDesignationForm } from 'layouts/company/colleagues/AddDesignationForm';
-import { EditDesignationForm } from 'layouts/company/colleagues/EditDesignationForm';
-import { isEqual, upperFirst, chunk } from 'lodash';
+import { upperFirst, chunk } from 'lodash';
 import { User } from 'stores/user/Reducer';
 import { IProjectTeam } from 'stores/project/Reducer';
 import { isMobileOnly } from 'react-device-detect';
@@ -39,6 +28,9 @@ import Navbar from 'components/navbar/Navbar';
 import { InviteColleagueView } from './InviteColleagueView';
 import { useTranslation } from 'react-i18next';
 import { Snackbar } from '@material-ui/core';
+import MemberTable from '../../../components/MemberTable/MemberTable';
+import SearchOption from 'components/SearchOption/SearchOption';
+import './Index.scss';
 
 interface Colleagues {
   company: ICompany;
@@ -67,14 +59,6 @@ const load = async (
   await _getCompanyMembers();
   await _getCompanyPendingMembers();
 };
-
-const divisions = [
-  { _id: 'director', name: 'Director' },
-  { _id: 'cxo', name: 'CXO' },
-  { _id: 'seniorManager', name: 'Senior Manager' },
-  { _id: 'middleManager', name: 'Middle Manager' },
-  { _id: 'operationalEmployee', name: 'Operational Employee' },
-];
 
 export const getDivisionName = {
   director: 'Director',
@@ -107,24 +91,27 @@ export const showDepartment = (
 };
 
 const ColleaguesPageComponent = (props: Colleagues) => {
+  const { t } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
-  const [showDialogAdd, setShowDialogAdd] = useState(false);
-  const [showDialogEdit, setShowDialogEdit] = useState(false);
   const [
     showDialogForInviteColleague,
     setshowDialogForInviteColleague,
   ] = useState(false);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
-  const [editMember, setEditMember] = useState<
-    ICompanyMembers | undefined
-  >(undefined);
-  const [membersList, setMembersList] = useState<ICompanyMembers[]>(
-    [],
-  );
-  const [adminsList, setAdminsList] = useState<ICompanyMembers[]>([]);
   const [pendingList, setPendingList] = useState<
     ICompanyPendingMembers[][]
   >([]);
+
+  const [members, setMembers] = React.useState<ICompanyMembers[]>([]);
+  const [colleaguesList, setColleaguesList] = React.useState<any[]>(
+    [],
+  );
+
+  const [rows, setRows] = React.useState<any[]>(colleaguesList);
+
+  useEffect(() => {
+    setRows(colleaguesList);
+  }, [colleaguesList]);
 
   useEffect(() => {
     if (props.company._id) {
@@ -147,17 +134,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
       props.company.members &&
       props.company.members.length
     ) {
-      const a: ICompanyMembers[] = [];
-      const b: ICompanyMembers[] = [];
-      props.company.members.forEach((m) => {
-        if (companyPermit(m.role)) {
-          a.push(m);
-        } else {
-          b.push(m);
-        }
-      });
-      setAdminsList(a);
-      setMembersList(b);
+      setMembers(props.company.members);
     }
   }, [props.company.members]);
 
@@ -171,427 +148,98 @@ const ColleaguesPageComponent = (props: Colleagues) => {
     }
   }, [props.company]);
 
-  const { t } = useTranslation();
+  useEffect(() => {
+    let colleaguesList = members.map((m: any, i) => ({
+      id: m._id,
+      name: `${upperFirst(m.account.firstName)}${' '}${upperFirst(
+        m.account.lastName,
+      )}`,
+      accountId: m.account._id,
+      profileImage: m.account.profileImage
+        ? m.account.profileImage
+        : null,
+      email: m.account.email,
+      division: `${
+        m.designations.length > 0 &&
+        getDivisionName[m.designations[0].division]
+      }`,
+      position: `${
+        m.designations.length > 0 && m.designations[0].position
+      }`,
+      role: m.role,
+      designations: m.designations,
+      m: m,
+    }));
+    setColleaguesList(colleaguesList);
+  }, [members]);
 
   return (
     <>
       {isMobileOnly && <Navbar type="company" />}
-      <div className="ph5-ns ph3 pb5 pt5 pt0-ns">
-        <div className="flex justify-between items-center">
+      <div
+        className="ph5-ns ph3 pb5 pt5 pt0-ns h-100"
+        style={{ background: '#E5E5E5' }}
+      >
+        <div
+          className="flex justify-between items-center mt2"
+          style={{ borderBottom: '2px solid #E0E0E0' }}
+        >
           {isMobileOnly ? undefined : (
             <h1 className="tigrow-lightGray-1">
-              {t('app.company.Colleagues.Colleagues')}
+              {t('app.company.Colleagues.Colleagues')} (
+              {members.length})
             </h1>
             // <h1 className="tigrow-lightGray-1">Colleagues</h1>
           )}
-          {companyPermit(props.company.role) ? (
-            <div>
-              <Button
-                className="grow fr h2 pointer white bp3-minimal "
-                style={{
-                  background: '#3F61C5',
-                  outline: 'none',
-                  color: 'white',
-                }}
-                onClick={() => setShowDialog(!showDialog)}
-              >
-                {t('app.company.Colleagues.Add-Colleagues')}
-                {/* Add Colleagues */}
-              </Button>
-              <Button
-                className="grow fr h2 pointer white bp3-minimal mr2"
-                style={{
-                  background: '#3F61C5',
-                  outline: 'none',
-                  color: 'white',
-                }}
-                onClick={() =>
-                  setshowDialogForInviteColleague(
-                    !showDialogForInviteColleague,
-                  )
-                }
-              >
-                {t('app.company.Colleagues.Invite-Colleagues')}
-                {/* Invite Colleagues */}
-              </Button>
-            </div>
-          ) : undefined}
+          <div className="colleagues-top-area">
+            <SearchOption
+              list={colleaguesList}
+              rows={rows}
+              setRows={setRows}
+            />
+            {companyPermit(props.company.role) ? (
+              <div>
+                <Button
+                  className="grow fr h2 pointer white bp3-minimal ml2 mb1"
+                  style={{
+                    background: '#08A0F7',
+                    outline: 'none',
+                    color: 'white',
+                  }}
+                  onClick={() => setShowDialog(!showDialog)}
+                >
+                  {t('app.company.Colleagues.Add-Colleagues')}
+                  {/* Add Colleagues */}
+                </Button>
+                <Button
+                  className="grow fr h2 pointer white bp3-minimal ml2 mb1"
+                  style={{
+                    background: '#08A0F7',
+                    outline: 'none',
+                    color: 'white',
+                  }}
+                  onClick={() =>
+                    setshowDialogForInviteColleague(
+                      !showDialogForInviteColleague,
+                    )
+                  }
+                >
+                  {t('app.company.Colleagues.Invite-Colleagues')}
+                  {/* Invite Colleagues */}
+                </Button>
+              </div>
+            ) : undefined}
+          </div>
         </div>
 
-        {/* Admins list starts */}
-        <h1 className="f4 mb0 tigrow-lightGray-1">
-          {t('app.company.Colleagues.Admins')}
-        </h1>
-        {/* <h1 className="f4 mb0 tigrow-lightGray-1">Admins</h1> */}
-        <HTMLTable className="w-100 mv3" striped={true}>
-          <thead>
-            <tr>
-              <th style={{ width: '25%' }}>
-                {t('app.company.Colleagues.Name')}
-              </th>
-              {/* <th style={{ width: '25%' }}>Name</th> */}
-              <th style={{ width: '25%' }}>
-                {t('app.company.Colleagues.Email')}
-              </th>
-              {/* <th style={{ width: '25%' }}>Email</th> */}
-              {/* <th style={{ width: '20%' }}>Contact No</th> */}
-              <th style={{ width: '25%' }}>
-                {t('app.company.Colleagues.Division')}
-              </th>
-              {/* <th style={{ width: '25%' }}>Division</th> */}
-              {/* <th style={{ width: '20%' }}>Department</th> */}
-              <th style={{ width: '25%' }}>
-                {t('app.company.Colleagues.Position')}
-              </th>
-              {/* <th style={{ width: '25%' }}>Position</th> */}
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {props.companyLoading ? (
-              <Loading />
-            ) : adminsList.length ? (
-              // tslint:disable-next-line: no-shadowed-variable
-              adminsList.map((member) => (
-                <tr className="hide-child" key={member._id}>
-                  <td className="flex items-center">
-                    <span className="mr2-ns mr1 f7 f6-ns">
-                      <td
-                        style={{
-                          width: '24%',
-                          boxShadow: 'none',
-                          background: 'inherit',
-                          padding: '0',
-                        }}
-                      >
-                        {member.account &&
-                          `${upperFirst(
-                            member.account.firstName,
-                          )} ${upperFirst(member.account.lastName)}`}
-                      </td>
-                    </span>
-                    {companyPermit(member.role) ? (
-                      member.role === 'superAdmin' ? (
-                        <Icon
-                          icon="star"
-                          iconSize={15}
-                          style={{ color: 'rgb(228, 162, 0)' }}
-                        />
-                      ) : (
-                        <Icon icon="star" iconSize={15} />
-                      )
-                    ) : null}
-                  </td>
-                  <td>
-                    <span className="mr2-ns mr1 f7 f6-ns">
-                      {member.account ? member.account.email : null}
-                    </span>
-                  </td>
-                  {/* <td> */}
-                  {/* <span className="mr2-ns mr1 f7 f6-ns">
-                      {member.account ? member.account.contactNo : null}
-                    </span> */}
-                  {/* </td> */}
-                  <td className="f7 f6-ns">
-                    {member.designations.length
-                      ? getDivisionName[
-                          member.designations[0].division
-                        ]
-                      : null}
-                  </td>
-                  {/* <td>
-                    <small className="f7 f6-ns">
-                      {showDepartment(member)}
-                    </small>
-                  </td> */}
-                  <td>
-                    {member.designations.length ? (
-                      <small className="f7 f6-ns">
-                        {member.designations[0].position}
-                      </small>
-                    ) : null}
-                  </td>
-                  {/* Popover starts */}
-                  <td>
-                    {companyPermit(props.company.role) ||
-                    isEqual(member.account._id, props.user._id) ? (
-                      <Popover
-                        className="fr"
-                        position={Position.BOTTOM}
-                        popoverClassName="bp3-popover-content-sizing bg-white"
-                        content={
-                          <ButtonGroup
-                            alignText={Alignment.LEFT}
-                            className="bp3-minimal bp3-vertical bp3-fill"
-                          >
-                            {member.designations &&
-                            member.designations.length ? (
-                              <Button
-                                className="outline-0 bp3-large bp3-popover-dismiss"
-                                onClick={async () => {
-                                  setEditMember(member);
-                                  await props.getAllDepartments();
-                                  setShowDialogEdit(!showDialogEdit);
-                                }}
-                              >
-                                <span>Edit Designation</span>
-                              </Button>
-                            ) : (
-                              <Button
-                                className="outline-0 bp3-large bp3-popover-dismiss"
-                                onClick={async () => {
-                                  setEditMember(member);
-                                  await props.getAllDepartments();
-                                  setShowDialogAdd(!showDialogAdd);
-                                }}
-                              >
-                                <span>Add Designation</span>
-                              </Button>
-                            )}
-                            {companyPermit(props.company.role) &&
-                            isEqual(member.role, 'superAdmin') ===
-                              false
-                              ? isEqual(member.role, 'admin') === true
-                                ? props.company.role ===
-                                    'superAdmin' && (
-                                    <Button
-                                      className="outline-0 bp3-large bp3-popover-dismiss"
-                                      onClick={async () => {
-                                        await props.changeMemberRole(
-                                          { role: 'employee' },
-                                          member._id,
-                                        );
-                                      }}
-                                    >
-                                      <span className="red">
-                                        Remove from Admin
-                                      </span>
-                                    </Button>
-                                  )
-                                : props.company.role ===
-                                    'superAdmin' && (
-                                    <Button
-                                      className="outline-0 bp3-large bp3-popover-dismiss"
-                                      onClick={async () => {
-                                        await props.changeMemberRole(
-                                          { role: 'admin' },
-                                          member._id,
-                                        );
-                                      }}
-                                    >
-                                      <span>Make Admin</span>
-                                    </Button>
-                                  )
-                              : null}
-                          </ButtonGroup>
-                        }
-                        target={
-                          <Icon
-                            className=" pointer"
-                            icon="drag-handle-vertical"
-                          />
-                        }
-                      />
-                    ) : undefined}
-                    {/* Popover ends */}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5}>No admins</td>
-              </tr>
-            )}
-          </tbody>
-        </HTMLTable>
-        {/* Admins list ends */}
-        {/* members list starts */}
-        <h1 className="f4 mb0 tigrow-lightGray-1">
-          {t('app.company.Colleagues.Members')}
-        </h1>
-        {/* <h1 className="f4 mb0 tigrow-lightGray-1">Members</h1> */}
-        <HTMLTable className="w-100 mv3" striped={true}>
-          <thead>
-            <tr>
-              <th style={{ width: '25%' }}>
-                {t('app.company.Colleagues.Name')}
-              </th>
-              {/* <th style={{ width: '25%' }}>Name</th> */}
-              <th style={{ width: '25%' }}>
-                {t('app.company.Colleagues.Email')}
-              </th>
-              {/* <th style={{ width: '25%' }}>Email</th> */}
-              {/* <th style={{ width: '20%' }}>Contact No</th> */}
-              <th style={{ width: '25%' }}>
-                {t('app.company.Colleagues.Division')}
-              </th>
-              {/* <th style={{ width: '25%' }}>Division</th> */}
-              {/* <th style={{ width: '20%' }}>Department</th> */}
-              <th style={{ width: '25%' }}>
-                {t('app.company.Colleagues.Position')}
-              </th>
-              {/* <th style={{ width: '25%' }}>Position</th> */}
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {props.companyLoading ? (
-              <Loading />
-            ) : membersList.length ? (
-              // tslint:disable-next-line: no-shadowed-variable
-              membersList.map((member) => (
-                // TODO Separate this <tr> into a component
-                <tr className="hide-child" key={member._id}>
-                  <td>
-                    <span className="mr2-ns mr1 f7 f6-ns">
-                      {member.account &&
-                        `${upperFirst(
-                          member.account.firstName,
-                        )} ${upperFirst(member.account.lastName)}`}
-                    </span>
-                    {companyPermit(member.role) ? (
-                      member.role === 'superAdmin' ? (
-                        <Icon
-                          icon="star"
-                          iconSize={15}
-                          style={{ color: 'rgb(228, 162, 0)' }}
-                        />
-                      ) : (
-                        <Icon iconSize={15} icon="star" />
-                      )
-                    ) : null}
-                  </td>
-                  <td>
-                    <span className="mr2-ns mr1 f7 f6-ns">
-                      {member.account ? member.account.email : null}
-                    </span>
-                  </td>
-                  <td className="f7 f6-ns">
-                    {member.designations.length
-                      ? getDivisionName[
-                          member.designations[0].division
-                        ]
-                      : null}
-                  </td>
-                  {/* <td>
-                    <small className="f7 f6-ns">
-                      {showDepartment(member)}
-                    </small>
-                  </td> */}
-                  <td>
-                    {member.designations.length ? (
-                      <small className="f6-ns f7">
-                        {member.designations[0].position}
-                      </small>
-                    ) : null}
-                  </td>
-                  {/* Popover starts */}
-                  <td>
-                    {companyPermit(props.company.role) ||
-                    isEqual(member.account._id, props.user._id) ? (
-                      <Popover
-                        className="fr"
-                        position={Position.BOTTOM}
-                        popoverClassName="bp3-popover-content-sizing bg-white"
-                        content={
-                          <ButtonGroup
-                            alignText={Alignment.LEFT}
-                            className="bp3-minimal bp3-vertical bp3-fill"
-                          >
-                            {member.designations &&
-                            member.designations.length ? (
-                              <Button
-                                className="outline-0 bp3-large bp3-popover-dismiss"
-                                onClick={async () => {
-                                  setEditMember(member);
-                                  await props.getAllDepartments();
-                                  setShowDialogEdit(!showDialogEdit);
-                                }}
-                              >
-                                <span>Edit Designation</span>
-                              </Button>
-                            ) : (
-                              <Button
-                                className="outline-0 bp3-large bp3-popover-dismiss"
-                                onClick={async () => {
-                                  setEditMember(member);
-                                  await props.getAllDepartments();
-                                  setShowDialogAdd(!showDialogAdd);
-                                }}
-                              >
-                                <span>Add Designation</span>
-                              </Button>
-                            )}
-                            {companyPermit(props.company.role) &&
-                            isEqual(member.role, 'superAdmin') ===
-                              false
-                              ? isEqual(member.role, 'admin') === true
-                                ? props.company.role ===
-                                    'superAdmin' && (
-                                    <Button
-                                      className="outline-0 bp3-large bp3-popover-dismiss"
-                                      onClick={async () => {
-                                        await props.changeMemberRole(
-                                          { role: 'employee' },
-                                          member._id,
-                                        );
-                                      }}
-                                    >
-                                      <span className="red">
-                                        Remove from Admin
-                                      </span>
-                                    </Button>
-                                  )
-                                : props.company.role ===
-                                    'superAdmin' && (
-                                    <Button
-                                      className="outline-0 bp3-large bp3-popover-dismiss"
-                                      onClick={async () => {
-                                        await props.changeMemberRole(
-                                          { role: 'admin' },
-                                          member._id,
-                                        );
-                                      }}
-                                    >
-                                      <span>Make Admin</span>
-                                    </Button>
-                                  )
-                              : null}
-                            {/* {companyPermit(props.company.role) ? (
-                                <Button
-                                  className='outline-0 bp3-large bp3-popover-dismiss'
-                                  onClick={async () => {
-                                    await props.changeMemberRole(
-                                      { role: 'employee' },
-                                      member._id
-                                    );
-                                  }}
-                                >
-                                  <span className='red'>Remove from Admin</span>
-                                </Button>
-                              ) : null} */}
-                          </ButtonGroup>
-                        }
-                        target={
-                          <Icon
-                            className=" pointer"
-                            icon="drag-handle-vertical"
-                          />
-                        }
-                      />
-                    ) : undefined}
-                    {/* Popover ends */}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5}>No members</td>
-              </tr>
-            )}
-          </tbody>
-        </HTMLTable>
-        {/* members list ends */}
+        {colleaguesList.length && (
+          <MemberTable
+            type={'colleagues'}
+            props={props}
+            rows={rows}
+          />
+        )}
+
         {/* pending list starts */}
         {companyPermit(props.company.role) ? (
           <>
@@ -605,10 +253,14 @@ const ColleaguesPageComponent = (props: Colleagues) => {
               ) : pendingList.length ? (
                 // tslint:disable-next-line: no-shadowed-variable
                 pendingList.map((chunkMembers, i1) => (
-                  <tbody>
+                  <tbody className="bg-white">
                     {chunkMembers.map((member) => (
                       <tr className="hide-child" key={i1}>
-                        <td>
+                        <td
+                          style={{
+                            borderBottom: '1px solid #E8E8E8',
+                          }}
+                        >
                           <span className="mr2 f7 f6-ns">
                             {member.email}
                           </span>
@@ -682,42 +334,6 @@ const ColleaguesPageComponent = (props: Colleagues) => {
             }
             currentCompany={props.company.name}
             setShowSnackbar={setShowSnackbar}
-          />
-        </Dialog>
-      )}
-      {showDialogAdd && (
-        <Dialog
-          onClose={() => setShowDialogAdd(!showDialogAdd)}
-          isOpen={showDialogAdd}
-          style={{ background: '#fff' }}
-          className="ma2"
-        >
-          <AddDesignationForm
-            addDesignation={props.addDesignation}
-            getCompanyMembers={props.getCompanyMembers}
-            member={editMember}
-            divisions={divisions}
-            departments={props.company.departments}
-            setShowDialogAdd={(e) => setShowDialogAdd(!showDialogAdd)}
-          />
-        </Dialog>
-      )}
-      {showDialogEdit && (
-        <Dialog
-          onClose={() => setShowDialogEdit(!showDialogEdit)}
-          isOpen={showDialogEdit}
-          style={{ background: '#fff' }}
-          className="ma2"
-        >
-          <EditDesignationForm
-            editDesignation={props.editDesignation}
-            getCompanyMembers={props.getCompanyMembers}
-            member={editMember}
-            divisions={divisions}
-            departments={props.company.departments}
-            setShowDialogEdit={(e) =>
-              setShowDialogEdit(!showDialogEdit)
-            }
           />
         </Dialog>
       )}

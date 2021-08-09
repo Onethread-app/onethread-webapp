@@ -102,7 +102,7 @@ const BoardPageComponent = (props: any) => {
                 <Button
                   className="w4 grow h2 pointer"
                   style={{
-                    background: '#3F61C5',
+                    background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
