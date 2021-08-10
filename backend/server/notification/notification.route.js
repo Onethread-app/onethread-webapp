@@ -9,10 +9,6 @@ const {
 // router.route('/:companyId').get(authorization, notificationCtrl.list);
 router.route('/get').get(authorization, notificationCtrl.list);
 
-router
-  .route('/webpush')
-  .post(authorization, notificationCtrl.userTokenFCM);
-
 // router
 // .route('/test/:companyId')
 // .get(

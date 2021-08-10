@@ -4,7 +4,6 @@ import {
   Card,
   Dialog,
   Elevation,
-  HTMLSelect,
   Menu,
   MenuItem,
   Popover,
@@ -303,7 +302,7 @@ const TaskPageComponent = (
     props.currentBoard._id,
   ]);
 
-  const [department, setDepartment] = useState('');
+  const [department] = useState('');
   const boards = props.boardList.filter(
     (board) => board.department === department,
   );
@@ -423,37 +422,7 @@ const TaskPageComponent = (
                 {/* Board */}
               </h3>
             )}
-            <div className="flex">
-              <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
-                {t('app.project.Project-boards.Criteria')}
-                {/* Filter By */}
-              </p>
-              <div className="mt2" style={{ width: '200px' }}>
-                <HTMLSelect
-                  fill={true}
-                  minimal={true}
-                  onChange={(event: any) => {
-                    setDepartment(event.currentTarget.value);
-                  }}
-                  style={{
-                    outline: 'none',
-                    border: '1px solid #E1E1E1',
-                    fontWeight: 600,
-                    textAlignLast: 'center',
-                  }}
-                >
-                  <option selected value="">
-                    {t('app.project.Project-boards.All')}
-                    {/* All */}
-                  </option>
-                  {props.company.departments
-                    ? props.company.departments.map((d) => (
-                        <option value={d._id}>{d.name}</option>
-                      ))
-                    : undefined}
-                </HTMLSelect>
-              </div>
-            </div>
+            
           </div>
           <p
             className="pl2 mt3"

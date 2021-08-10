@@ -19,32 +19,12 @@ const {
 const {
   sendCompanyRoleNotification,
   sendCompanyAndProjectNotification,
-  sendCompanyNotification,
 } = require('../services/notification.services');
 const logger = require('../../config/winston');
 const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
-
-const { adminFirebase } = require('./../services/firebase.services');
-
-module.exports.userTokenFCM = async (req, res, next) => {
-  let topic = `${req.body.company}-${req.body.role}`;
-  adminFirebase
-    .messaging()
-    .subscribeToTopic(req.body.token, topic)
-    .then(function (response) {
-      // See the MessagingTopicManagementResponse reference documentation
-      // for the contents of response.
-      //console.log('Successfully subscribed to topic:', response);
-      return res.status(200).json({ message: 'success' });
-    })
-    .catch(function (error) {
-      logger.error(`${error}`);
-      next(error);
-    });
-};
 
 module.exports.createCompanyRoleNotification = async (
   company,
@@ -725,77 +705,6 @@ module.exports.seen = async (req, res, next) => {
       logger.error(`${e}`);
       next(e);
     });
-};
-
-module.exports.test = async (req, res, next) => {
-  //  UserNotification.aggregate()
-  //   //.project('notification')
-  //   .match({'account' : new ObjectId(req.user._id)})
-  //   //.unwind('notification')
-  //   //.unwind('$notification.company')
-  //   //.match({'notification.company' : new ObjectId(req.params.companyId)})
-  //   .exec()
-  //   .then(result => {
-  //     console.log(result);
-  //     logger.info(`${result}`);
-  //     return sendJSONresponse(res, 200, result);
-  //   });
-  let count = await UserNotification.aggregate([
-    { $match: { account: new ObjectId(req.user._id) } },
-
-    {
-      $lookup: {
-        from: 'notifications',
-        localField: 'notification',
-        foreignField: '_id',
-        as: 'notification',
-      },
-    },
-    {
-      $unwind: {
-        path: '$notification',
-      },
-    },
-    {
-      $match: {
-        'notification.company': new ObjectId(req.params.companyId),
-      },
-    },
-    { $group: { _id: '$read', count: { $sum: 1 } } },
-  ]);
-
-  let resultCompany = await UserNotification.aggregate([
-    { $match: { account: new ObjectId(req.user._id) } },
-
-    {
-      $lookup: {
-        from: 'notifications',
-        localField: 'notification',
-        foreignField: '_id',
-        as: 'notification',
-      },
-    },
-    {
-      $unwind: {
-        path: '$notification',
-      },
-    },
-    {
-      $match: {
-        'notification.company': new ObjectId(req.params.companyId),
-      },
-    },
-    // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
-    //{ "$unwind": "$docs" },
-
-    { $limit: 5 },
-    { $skip: 0 },
-  ]);
-
-  return sendJSONresponse(res, 200, {
-    result: resultCompany,
-    unreadCount: count[1].count,
-  });
 };
 
 module.exports.read = async (req, res, next) => {

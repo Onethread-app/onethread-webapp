@@ -129,8 +129,8 @@ router
   .route('/:companyId/dashboard')
   .get(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     SchemaValidator(joiSchema.dashboard),
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.dashBoard,
   );
 
