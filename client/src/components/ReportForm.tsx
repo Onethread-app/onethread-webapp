@@ -214,8 +214,8 @@ const ReportForm = (props: {
             style={{
               background: '#fff',
               outline: 'none',
-              border: '1px solid #3F61C5',
-              color: '#3F61C5',
+              border: '1px solid #34b3e9',
+              color: '#34b3e9',
             }}
             className="bp3-button w4 grow h2 pointer mr3"
             onClick={() => props.setShowButtonReport(false)}
@@ -226,7 +226,7 @@ const ReportForm = (props: {
           <button
             type="submit"
             style={{
-              background: '#3F61C5',
+              background: '#34B3E9',
               outline: 'none',
               color: 'white',
             }}

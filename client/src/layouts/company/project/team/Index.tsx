@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  HTMLTable,
-  Popover,
-  Position,
-  Icon,
-  Dialog,
-  ButtonGroup,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
@@ -24,12 +15,15 @@ import {
   getDivisionName,
   showDepartment,
 } from 'layouts/company/colleagues/Index';
-import { isEmpty, upperFirst, isEqual } from 'lodash';
+import { upperFirst } from 'lodash';
 import { Associate } from 'stores/associate/Reducer';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
+import MemberTable from '../../../../components/MemberTable/MemberTable';
+import SearchOption from 'components/SearchOption/SearchOption';
+import './Index.scss';
 
 interface TeamMember {
   company: ICompany;
@@ -38,6 +32,7 @@ interface TeamMember {
   associates: Associate[];
   companyRole: string;
   projectRole: string;
+  list: IProjectTeam[];
   getProjectTeams: () => void;
   changeProjectMemberRole: (
     values: { role: string },
@@ -49,15 +44,17 @@ interface TeamMember {
 }
 
 const ProjectTeamPageComponent = (props: TeamMember) => {
+  const { t } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
   const [showAssociateDialog, setShowAssociateDialog] = useState(
     false,
   );
-  const [adminList, setAdminList] = useState<IProjectTeam[]>([]);
-  const [moderatorList, setModeratorList] = useState<IProjectTeam[]>(
-    [],
-  );
-  const [teamList, setTeamList] = useState<IProjectTeam[]>([]);
+  const [teammatesList, setTeammatesList] = useState<any[]>([]);
+  const [rows, setRows] = React.useState<any[]>(teammatesList);
+
+  useEffect(() => {
+    setRows(teammatesList);
+  }, [teammatesList]);
 
   useEffect(() => {
     if (props.project._id) {
@@ -66,26 +63,28 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
   }, [props.project._id]);
 
   useEffect(() => {
-    if (props.teams.length) {
-      const a: IProjectTeam[] = [];
-      const m: IProjectTeam[] = [];
-      const t: IProjectTeam[] = [];
-      props.teams.forEach((e) => {
-        if (e.role === 'admin') {
-          a.push(e);
-        } else if (e.role === 'projectModerator') {
-          m.push(e);
-        } else if (e.role === 'member') {
-          t.push(e);
-        }
-      });
-      setAdminList(a);
-      setModeratorList(m);
-      setTeamList(t);
-    }
+    let teammatesList = props.teams.map((m: any, i) => ({
+      name: `${upperFirst(
+        m.member.account.firstName,
+      )}${' '}${upperFirst(m.member.account.lastName)}`,
+      email: m.member.account.email,
+      profileImage: m.member.account.profileImage
+        ? m.member.account.profileImage
+        : null,
+      division: `${
+        m.member.designations.length > 0 &&
+        getDivisionName[m.member.designations[0].division]
+      }`,
+      department: `${showDepartment(m.member)}`,
+      position: `${
+        m.member.designations.length > 0 &&
+        m.member.designations[0].position
+      }`,
+      role: m.role,
+      member: m.member,
+    }));
+    setTeammatesList(teammatesList);
   }, [props.teams]);
-
-  const { t } = useTranslation();
 
   return (
     <>
@@ -97,7 +96,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
             activeStyle={{
-              background: '#3F61C5',
+              background: '#34b3e9',
               color: 'white',
             }}
             style={{ color: 'darkGray' }}
@@ -112,7 +111,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
             activeStyle={{
-              background: '#3F61C5',
+              background: '#34b3e9',
               color: 'white',
             }}
             style={{ color: 'darkGray' }}
@@ -127,7 +126,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
             activeStyle={{
-              background: '#3F61C5',
+              background: '#34b3e9',
               color: 'white',
             }}
             style={{ color: 'darkGray' }}
@@ -142,7 +141,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
             activeStyle={{
-              background: '#3F61C5',
+              background: '#34b3e9',
               color: 'white',
             }}
             style={{ color: 'darkGray' }}
@@ -157,7 +156,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
             activeStyle={{
-              background: '#3F61C5',
+              background: '#34b3e9',
               color: 'white',
             }}
             style={{ color: 'darkGray' }}
@@ -172,7 +171,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
             activeStyle={{
-              background: '#3F61C5',
+              background: '#34b3e9',
               color: 'white',
             }}
             style={{ color: 'darkGray' }}
@@ -184,21 +183,33 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           </NavLink>
         </div>
       </MobileView>
-      <div className="ph5-ns ph3 pv4">
-        <div className="flex justify-between items-center">
+      <div
+        className="ph5-ns ph3 pv4"
+        style={{ background: '#E5E5E5' }}
+      >
+        <div
+          className="flex justify-between items-center"
+          style={{ borderBottom: '2px solid #E0E0E0' }}
+        >
           {isMobileOnly ? undefined : (
             <h1 className="f3">
-              {t('app.project.Project-teammates.Team-members')}
+              {t('app.project.Project-teammates.Team-members')} (
+              {teammatesList.length})
             </h1>
             // <h1 className="f3">Teammates</h1>
           )}
-          <div>
+          <div className="teammates-top-area mb1">
+            <SearchOption
+              list={teammatesList}
+              rows={rows}
+              setRows={setRows}
+            />
             <Button
-              className="grow fr h2 pointer white bp3-minimal"
+              className="grow fr h2 pointer white bp3-minimal mr2 ml2 mb1"
               style={{
-                background: '#3F61C5',
+                background: '#34b3e9',
+                color: '#fff',
                 outline: 'none',
-                color: 'white',
               }}
               onClick={() => setShowDialog(!showDialog)}
             >
@@ -210,13 +221,11 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                 props.project._id === project._id ? (
                   project.company === props.company._id ? (
                     <Button
-                      className="grow fr h2 pointer white bp3-minimal mr2"
+                      className="grow fr h2 pointer white bp3-minimal mr2 mb1"
                       style={{
-                        background: 'none',
-                        border: '#3F61C5',
-                        borderWidth: 1,
-                        borderStyle: 'solid',
-                        color: '#3F61C5',
+                        background: '#34b3e9',
+                        color: '#fff',
+                        outline: 'none',
                       }}
                       onClick={() =>
                         setShowAssociateDialog(!showAssociateDialog)
@@ -230,313 +239,11 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               )}
           </div>
         </div>
-        {/* Admins list starts */}
-        <h1 className="f4 mt4">
-          {t('app.project.Project-teammates.Admins')}
-        </h1>
-        {/* <h1 className="f4 mt4">Admins</h1> */}
-        <HTMLTable className="w-100 mv3" striped={true}>
-          <thead>
-            <tr>
-              <th>{t('app.project.Project-teammates.Name')}</th>
-              <th>{t('app.project.Project-teammates.Email')}</th>
-              <th>{t('app.project.Project-teammates.Division')}</th>
-              <th>{t('app.project.Project-teammates.Department')}</th>
-              <th>{t('app.project.Project-teammates.Position')}</th>
-              {/* <th>Name</th>
-              <th>Email</th>
-              <th>Division</th>
-              <th>Department</th>
-              <th>Position</th> */}
-            </tr>
-          </thead>
-          <tbody>
-            {adminList.length ? (
-              adminList.map(({ _id, member }) => (
-                <tr key={_id}>
-                  <td style={{ width: '20%' }}>
-                    {member.account &&
-                      `${upperFirst(
-                        member.account.firstName,
-                      )} ${upperFirst(member.account.lastName)}`}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {member.account.email}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {member.designations.length
-                      ? getDivisionName[
-                          member.designations[0].division
-                        ]
-                      : null}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {showDepartment(member)}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {member.designations.length
-                      ? member.designations[0].position
-                      : null}
-                  </td>
-                  <td style={{ width: '4%' }}>
-                    {isEqual(props.companyRole, 'superAdmin') ||
-                    (!isEmpty(props.projectRole) &&
-                      isEqual(props.projectRole, 'admin')) ? (
-                      <Popover
-                        className="fr"
-                        position={Position.BOTTOM}
-                        popoverClassName="bp3-popover-content-sizing bg-white"
-                        content={
-                          <ButtonGroup
-                            alignText={Alignment.LEFT}
-                            className="bp3-minimal bp3-vertical bp3-fill"
-                          >
-                            <Button
-                              className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                              style={{ color: 'red' }}
-                              onClick={async () => {
-                                await props.changeProjectMemberRole(
-                                  { role: 'projectModerator' },
-                                  member._id,
-                                  member.account._id,
-                                );
-                              }}
-                            >
-                              <span>Remove from Admin</span>
-                            </Button>
-                          </ButtonGroup>
-                        }
-                        target={
-                          <Icon
-                            className=" pointer"
-                            icon="drag-handle-vertical"
-                          />
-                        }
-                      />
-                    ) : null}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5}>No admins</td>
-              </tr>
-            )}
-          </tbody>
-        </HTMLTable>
-        {/* Admins list ends */}
 
-        {/* Project Moderators list starts */}
-        <h1 className="f4 mt4">
-          {t('app.project.Project-teammates.Moderators')}
-        </h1>
-        {/* <h1 className="f4 mt4">Project Moderators</h1> */}
-        <HTMLTable className="w-100 mv3" striped={true}>
-          <thead>
-            <tr>
-              <th>{t('app.project.Project-teammates.Name')}</th>
-              <th>{t('app.project.Project-teammates.Email')}</th>
-              <th>{t('app.project.Project-teammates.Division')}</th>
-              <th>{t('app.project.Project-teammates.Department')}</th>
-              <th>{t('app.project.Project-teammates.Position')}</th>
-              {/* <th>Name</th>
-              <th>Email</th>
-              <th>Division</th>
-              <th>Department</th>
-              <th>Position</th> */}
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {moderatorList.length ? (
-              moderatorList.map(({ _id, member }) => (
-                <tr key={_id}>
-                  <td style={{ width: '20%' }}>
-                    {member.account &&
-                      `${upperFirst(
-                        member.account.firstName,
-                      )} ${upperFirst(member.account.lastName)}`}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {member.account ? member.account.email : null}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {member.designations.length
-                      ? getDivisionName[
-                          member.designations[0].division
-                        ]
-                      : null}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {showDepartment(member)}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {member.designations.length
-                      ? member.designations[0].position
-                      : null}
-                  </td>
-                  <td style={{ width: '4%' }}>
-                    {isEqual(props.companyRole, 'superAdmin') ||
-                    (!isEmpty(props.projectRole) &&
-                      isEqual(props.projectRole, 'admin')) ? (
-                      <Popover
-                        className="fr"
-                        position={Position.BOTTOM}
-                        popoverClassName="bp3-popover-content-sizing bg-white"
-                        content={
-                          <ButtonGroup
-                            alignText={Alignment.LEFT}
-                            className="bp3-minimal bp3-vertical bp3-fill"
-                          >
-                            <Button
-                              className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                              onClick={async () => {
-                                await props.changeProjectMemberRole(
-                                  { role: 'admin' },
-                                  member._id,
-                                  member.account._id,
-                                );
-                              }}
-                            >
-                              <span>Make Admin</span>
-                            </Button>
-                            <Button
-                              className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                              style={{ color: 'red' }}
-                              onClick={async () => {
-                                await props.changeProjectMemberRole(
-                                  { role: 'member' },
-                                  member._id,
-                                  member.account._id,
-                                );
-                              }}
-                            >
-                              <span>Remove from Moderator</span>
-                            </Button>
-                          </ButtonGroup>
-                        }
-                        target={
-                          <Icon
-                            className=" pointer"
-                            icon="drag-handle-vertical"
-                          />
-                        }
-                      />
-                    ) : null}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5}>
-                  {t('app.project.Project-teammates.No-Moderators')}
-                </td>
-                {/* <td colSpan={5}>No Moderators</td> */}
-              </tr>
-            )}
-          </tbody>
-        </HTMLTable>
-        {/* Project Moderators list ends */}
+        {/* new table */}
+        <MemberTable type={'teammates'} rows={rows} props={props} />
+        {/* new table */}
 
-        {/* Project Teammates list starts */}
-        <div className="flex items-center justify-between mt4">
-          <h1 className="f4">
-            {t('app.project.Project-teammates.Teammates')}
-          </h1>
-          {/* <h1 className="f4">Project Teammates</h1> */}
-        </div>
-        <HTMLTable className="w-100 mv3" striped={true}>
-          <thead>
-            <tr>
-              <th>{t('app.project.Project-teammates.Name')}</th>
-              <th>{t('app.project.Project-teammates.Email')}</th>
-              <th>{t('app.project.Project-teammates.Division')}</th>
-              <th>{t('app.project.Project-teammates.Department')}</th>
-              <th>{t('app.project.Project-teammates.Position')}</th>
-              {/* <th>Name</th>
-              <th>Email</th>
-              <th>Division</th>
-              <th>Department</th>
-              <th>Position</th> */}
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {teamList.length ? (
-              teamList.map(({ _id, member }) => (
-                <tr key={_id}>
-                  <td style={{ width: '20%' }}>
-                    {member.account &&
-                      `${upperFirst(
-                        member.account.firstName,
-                      )} ${upperFirst(member.account.lastName)}`}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {member.account ? member.account.email : null}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {member.designations.length
-                      ? getDivisionName[
-                          member.designations[0].division
-                        ]
-                      : null}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {showDepartment(member)}
-                  </td>
-                  <td style={{ width: '20%' }}>
-                    {member.designations.length
-                      ? member.designations[0].position
-                      : null}
-                  </td>
-                  <td style={{ width: '4%' }}>
-                    {isEqual(props.companyRole, 'superAdmin') ||
-                    (!isEmpty(props.projectRole) &&
-                      isEqual(props.projectRole, 'admin')) ? (
-                      <Popover
-                        className="fr"
-                        position={Position.BOTTOM}
-                        popoverClassName="bp3-popover-content-sizing bg-white"
-                        content={
-                          <ButtonGroup
-                            alignText={Alignment.LEFT}
-                            className="bp3-minimal bp3-vertical bp3-fill"
-                          >
-                            <Button
-                              className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                              onClick={async () => {
-                                await props.changeProjectMemberRole(
-                                  { role: 'projectModerator' },
-                                  member._id,
-                                  member.account._id,
-                                );
-                              }}
-                            >
-                              <span>Make Moderator</span>
-                            </Button>
-                          </ButtonGroup>
-                        }
-                        target={
-                          <Icon
-                            className=" pointer"
-                            icon="drag-handle-vertical"
-                          />
-                        }
-                      />
-                    ) : null}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5}>
-                  {t('app.project.Project-teammates.No-Teammates')}
-                </td>
-                {/* <td colSpan={5}>No Teammates</td> */}
-              </tr>
-            )}
-          </tbody>
-        </HTMLTable>
         <h1 className="f4 mv4">
           {t('app.company.Partners.External')}
         </h1>
@@ -595,3 +302,5 @@ export const ProjectTeamPage = connect(mapStateToProps, {
   getProjectTeams,
   changeProjectMemberRole,
 })(ProjectTeamPageComponent);
+
+export default ProjectTeamPage;

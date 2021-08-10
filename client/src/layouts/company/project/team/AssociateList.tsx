@@ -40,7 +40,10 @@ export const AssociateListComponent = (
 
   return (
     <div>
-      <div className="br3 bg-white cf flex w-100">
+      <div
+        className="br3 bg-white cf flex w-100"
+        style={{ background: '#E5E5E5' }}
+      >
         <div className="overflow-auto w-100">
           <CustomView condition={!isMobileOnly}>
             <div

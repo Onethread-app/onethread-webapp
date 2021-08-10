@@ -117,7 +117,7 @@ export const SubTaskViewPageComponent = (
                   // text="Add SubTask"
                   className="grow h2 pointer dib mb3"
                   style={{
-                    background: '#3F61C5',
+                    background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                     borderRadius: '0px',

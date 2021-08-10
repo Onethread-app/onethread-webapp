@@ -109,7 +109,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                   src={lockIcon}
                                   width="20px"
                                   height="20px"
-                                  color="#3F61C5"
+                                  color="#34b3e9"
                                 />
                               </span>
                             }
@@ -136,7 +136,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                     src={eyeIcon}
                                     width="15px"
                                     height="15px"
-                                    color="#3F61C5"
+                                    color="#34b3e9"
                                   />
                                 </span>
                                 <span
@@ -210,7 +210,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                   src={lockIcon}
                                   width="20px"
                                   height="20px"
-                                  color="#3F61C5"
+                                  color="#34b3e9"
                                 />
                               </span>
                             }
@@ -232,7 +232,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                   src={eyeIcon}
                                   width="15px"
                                   height="15px"
-                                  color="#3F61C5"
+                                  color="#34b3e9"
                                 />
                               </span>
                             }
@@ -255,7 +255,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                   <Button
                     className=" b--none w-100 fr grow h2 ph5 pointer pv2 white mb3"
                     style={{
-                      background: '#3F61C5',
+                      background: '#34b3e9',
                       outline: 'none',
                       color: 'white',
                     }}
@@ -275,3 +275,5 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
 };
 
 export const ResetPasswordPage = withRouter(ResetPasswordComponent);
+
+export default ResetPasswordPage;

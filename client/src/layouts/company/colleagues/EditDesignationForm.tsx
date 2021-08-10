@@ -4,7 +4,12 @@ import { ICompanyMembers } from 'stores/company/Reducer';
 import { Entity } from 'stores/UtilsActions';
 import { Form, Field } from 'react-final-form';
 import { IconNames } from '@blueprintjs/icons';
-import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
+import {
+  required,
+  checkError,
+  composeValidators,
+  maxValue,
+} from 'components/final-form/utils';
 import { Condition } from 'components/final-form/Condition';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { DropdownFieldWithError } from 'components/fields/DropdownField';
@@ -35,7 +40,7 @@ export const EditDesignationFormComponent = (
         values,
         props.member._id,
       );
-      if ( status && props.isLoading === false ) {
+      if (status && props.isLoading === false) {
         await props.getCompanyMembers();
         props.setShowDialogEdit(false);
       }
@@ -167,7 +172,7 @@ export const EditDesignationFormComponent = (
                   onChange={input.onChange}
                   leftIcon="id-number"
                   leftIconColor={`${
-                    checkError(meta) ? 'red' : '#3F61C5'
+                    checkError(meta) ? 'red' : '#34b3e9'
                   }`}
                   style={{ boxShadow: 'none' }}
                   error={
@@ -181,7 +186,7 @@ export const EditDesignationFormComponent = (
               <Button
                 className="grow h2 pointer white bp3-minimal w4 mt4"
                 style={{
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}

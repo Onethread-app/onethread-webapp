@@ -108,7 +108,7 @@ const BoardDetailsViewComponent = (
                 </button>
                 <button
                   className="mb0 mr2 pointer f5 f6-ns bn white br2 pa1"
-                  style={{ minWidth: '130px', background: '#3F61C5' }}
+                  style={{ minWidth: '130px', background: '#34b3e9' }}
                   onClick={() => setShowTaskBoardDialog(true)}
                 >
                   {t('app.project.Project-boards.Create-Board')}

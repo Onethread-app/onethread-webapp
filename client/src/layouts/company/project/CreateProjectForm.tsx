@@ -44,7 +44,7 @@ const FormComponent = (props: {
   associates: Associate[];
 }) => {
   const [labelColor, setLabelColor] = useState(null as any);
-  
+
   const [hasDeadline, setHasDeadline] = useState(false);
 
   const onSubmit = async (values: IProject) => {
@@ -114,7 +114,7 @@ const FormComponent = (props: {
                   </div>
                 )}
               />
-              
+
               <Switch
                 checked={hasDeadline}
                 label="Add Deadline"
@@ -135,7 +135,7 @@ const FormComponent = (props: {
                             <Icon
                               icon="calendar"
                               className="mr2"
-                              style={{ color: '#3F61C5' }}
+                              style={{ color: '#34b3e9' }}
                               iconSize={30}
                             />
                           </div>
@@ -219,7 +219,7 @@ const FormComponent = (props: {
                 <Button
                   className="w4 grow h2 pointer mr3"
                   style={{
-                    background: '#3F61C5',
+                    background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}

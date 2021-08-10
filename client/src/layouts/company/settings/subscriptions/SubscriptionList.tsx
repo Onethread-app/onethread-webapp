@@ -69,7 +69,14 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                       <Grid container spacing={3}>
                         <Grid item xs={6}>
                           <CardContent>
-                            <h3 style={{color: '#3F61C5', marginBottom: '0'}}>{subscription.name.toUpperCase()}</h3>
+                            <h3
+                              style={{
+                                color: '#34b3e9',
+                                marginBottom: '0',
+                              }}
+                            >
+                              {subscription.name.toUpperCase()}
+                            </h3>
                             <List dense={dense}>
                               <ListItem>
                                 <ListItemIcon>

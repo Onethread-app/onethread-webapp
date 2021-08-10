@@ -159,7 +159,7 @@ const list = async (req, res, next) => {
       .populate([
         {
           path: 'account',
-          select: '_id name firstName lastName email',
+          select: '_id name firstName lastName email profileImage',
         },
         {
           path: 'designations',

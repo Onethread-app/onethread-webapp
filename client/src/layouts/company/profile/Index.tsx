@@ -70,3 +70,5 @@ export const CompanyProfilePage = connect(
   mapStateToProps,
   null,
 )(CompanyProfilePageComponent);
+
+export default CompanyProfilePage;

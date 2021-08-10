@@ -1,48 +1,92 @@
-import { AutoLoginPage } from 'components/AutoLogin';
-import { Layout } from 'components/Layout';
-import { AssociatesDetailsView } from 'layouts/company/associateDetails/Index';
-import { AssociatesPage } from 'layouts/company/associates/Index';
-import { BoardPage } from 'layouts/company/board/Index';
-// import { BoardDetailsView } from 'layouts/company/boardDetails/Index';
-import BoardDetails from 'components/board/BoardDetails';
-import { ColleaguesPage } from 'layouts/company/colleagues/Index';
-import { FeedPage } from 'layouts/company/feed/Index';
-import { OverviewPage } from 'layouts/company/overview/Index';
-import { CompanyProfilePage } from 'layouts/company/profile/Index';
-import { ProjectPage } from 'layouts/company/project/Index';
-import { ProjectPrefaceView } from 'layouts/company/project/ProjectPrefaceView';
-import { ProjectSettingsPage } from 'layouts/company/project/settings/Index';
-import { ProjectTeamPage } from 'layouts/company/project/team/Index';
-import { RoomPage } from 'layouts/company/room/Index';
-import { RoomPageMobile } from 'layouts/company/room/IndexMobile';
-import { SettingsPage } from 'layouts/company/settings/Index';
-import { TaskPage } from 'layouts/company/task';
-import { DashboardView } from 'layouts/dashBoard/Index';
-import { EmailVerificationPage } from 'layouts/emailVerification/Index';
-import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
-// import { HomePageNew } from 'layouts/home/Index';
-import HomePage from 'layouts/home/Index';
-import NewLanding from 'layouts/landingx/Index';
-import { ResetPasswordPage } from 'layouts/resetPassword/Index';
-import { SignInPage } from 'layouts/signin/Index';
-import { SignupConfirmationPage } from 'layouts/signupConfirmation/Index';
-import { UserProfilePage } from 'layouts/user/profile/Index';
-import { ProfileSettingsPage } from 'layouts/user/settings/Index';
-import NotificationPage from 'layouts/notification/Index';
-import VideoConferences from 'layouts/videoConferences/pages/index/index';
-import Meeting from 'layouts/videoConferences/pages/meeting';
-import * as React from 'react';
-import { useEffect } from 'react';
-import { isMobileOnly } from 'react-device-detect';
-import ReactGA from 'react-ga';
-import { connect } from 'react-redux';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { withRouter } from 'react-router';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { isMobileOnly } from 'react-device-detect';
+import ReactGA from 'react-ga';
+
+import ErrorBoundary from 'components/error-boundary/ErrorBoundary';
+import SuspenseLoader from 'components/loader/SuspenseLoader';
+
 import { isAuthenticate } from 'stores/UtilsActions';
-import Success from './components/Success';
-import { SignUpPage } from './layouts/signup/Index';
-import PricingPage from 'layouts/landingx/Pricing';
-import Feedback from 'layouts/feedback/Feedback';
+
+const AutoLoginPage = lazy(() => import('components/AutoLogin'));
+const NewLanding = lazy(() => import('layouts/landingx/Index'));
+const SignInPage = lazy(() => import('layouts/signin/Index'));
+const SignUpPage = lazy(() => import('layouts/signup/Index'));
+const PricingPage = lazy(() => import('layouts/landingx/Pricing'));
+const EmailVerificationPage = lazy(() =>
+  import('layouts/emailVerification/Index'),
+);
+const ForgotPasswordPage = lazy(() =>
+  import('layouts/forgotPassword/Index'),
+);
+const ResetPasswordPage = lazy(() =>
+  import('layouts/resetPassword/Index'),
+);
+const SignupConfirmationPage = lazy(() =>
+  import('layouts/signupConfirmation/Index'),
+);
+const Layout = lazy(() => import('components/Layout'));
+const FeedPage = lazy(() => import('layouts/company/feed/Index'));
+const HomePage = lazy(() => import('layouts/home/Index'));
+const DashboardView = lazy(() => import('layouts/dashBoard/Index'));
+const ColleaguesPage = lazy(() =>
+  import('layouts/company/colleagues/Index'),
+);
+const BoardPage = lazy(() => import('layouts/company/board/Index'));
+const AssociatesDetailsView = lazy(() =>
+  import('layouts/company/associateDetails/Index'),
+);
+const OverviewPage = lazy(() =>
+  import('layouts/company/overview/Index'),
+);
+const AssociatesPage = lazy(() =>
+  import('layouts/company/associates/Index'),
+);
+const CompanyProfilePage = lazy(() =>
+  import('layouts/company/profile/Index'),
+);
+const ProjectPage = lazy(() =>
+  import('layouts/company/project/Index'),
+);
+const ProjectPrefaceView = lazy(() =>
+  import('layouts/company/project/ProjectPrefaceView'),
+);
+const ProjectSettingsPage = lazy(() =>
+  import('layouts/company/project/settings/Index'),
+);
+const ProjectTeamPage = lazy(() =>
+  import('layouts/company/project/team/Index'),
+);
+const RoomPage = lazy(() => import('layouts/company/room/Index'));
+const RoomPageMobile = lazy(() =>
+  import('layouts/company/room/IndexMobile'),
+);
+const SettingsPage = lazy(() =>
+  import('layouts/company/settings/Index'),
+);
+const BoardDetails = lazy(() =>
+  import('components/board/BoardDetails'),
+);
+const TaskPage = lazy(() => import('layouts/company/task'));
+const UserProfilePage = lazy(() =>
+  import('layouts/user/profile/Index'),
+);
+const ProfileSettingsPage = lazy(() =>
+  import('layouts/user/settings/Index'),
+);
+const NotificationPage = lazy(() =>
+  import('layouts/notification/Index'),
+);
+const VideoConferences = lazy(() =>
+  import('layouts/videoConferences/pages/index/index'),
+);
+const Meeting = lazy(() =>
+  import('layouts/videoConferences/pages/meeting'),
+);
+const Success = lazy(() => import('components/Success'));
+const Feedback = lazy(() => import('layouts/feedback/Feedback'));
 
 const PrivateRoute = (props: {
   component: any;
@@ -102,80 +146,82 @@ const NotFound = () => (
 
 const App = () => {
   return (
-    <Switch>
-      {!isAuthenticate() && (
-        <Route exact path="/" component={NewLanding} />
-      )}
-      <Route
-        exact
-        path="/signin"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <SignInPage />
-        }
-      />
-      <Route
-        exact
-        path="/signup"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
-        }
-      />
-      <Route
-        exact
-        path="/forgot-password"
-        render={() =>
-          isAuthenticate() ? (
-            <Redirect to="/" />
-          ) : (
-            <ForgotPasswordPage />
-          )
-        }
-      />
-      <Route
-        path="/reset-password/:token"
-        render={() =>
-          isAuthenticate() ? (
-            <Redirect to="/" />
-          ) : (
-            <ResetPasswordPage />
-          )
-        }
-      />
-      <Route
-        path="/verify-account/:token"
-        render={() =>
-          isAuthenticate() ? (
-            <Redirect to="/" />
-          ) : (
-            <EmailVerificationPage />
-          )
-        }
-      />
-      <Route
-        path="/signup-confirmation"
-        render={() =>
-          localStorage.getItem('email') ? (
-            <SignupConfirmationPage />
-          ) : (
-            <Redirect to="/signin" />
-          )
-        }
-      />
-      <Route
-        path="/notFound"
-        render={() =>
-          isAuthenticate() ? <NotFound /> : <Redirect to="/" />
-        }
-      />
-      <Route path="/autologin" render={() => <AutoLoginPage />} />
-      <Route
-        exact
-        path="/pricing"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
-        }
-      />
-      {/* <Route
+    <ErrorBoundary>
+      <Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          {!isAuthenticate() && (
+            <Route exact path="/" component={NewLanding} />
+          )}
+          <Route
+            exact
+            path="/signin"
+            render={() =>
+              isAuthenticate() ? <Redirect to="/" /> : <SignInPage />
+            }
+          />
+          <Route
+            exact
+            path="/signup"
+            render={() =>
+              isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
+            }
+          />
+          <Route
+            exact
+            path="/forgot-password"
+            render={() =>
+              isAuthenticate() ? (
+                <Redirect to="/" />
+              ) : (
+                <ForgotPasswordPage />
+              )
+            }
+          />
+          <Route
+            path="/reset-password/:token"
+            render={() =>
+              isAuthenticate() ? (
+                <Redirect to="/" />
+              ) : (
+                <ResetPasswordPage />
+              )
+            }
+          />
+          <Route
+            path="/verify-account/:token"
+            render={() =>
+              isAuthenticate() ? (
+                <Redirect to="/" />
+              ) : (
+                <EmailVerificationPage />
+              )
+            }
+          />
+          <Route
+            path="/signup-confirmation"
+            render={() =>
+              localStorage.getItem('email') ? (
+                <SignupConfirmationPage />
+              ) : (
+                <Redirect to="/signin" />
+              )
+            }
+          />
+          <Route
+            path="/notFound"
+            render={() =>
+              isAuthenticate() ? <NotFound /> : <Redirect to="/" />
+            }
+          />
+          <Route path="/autologin" render={() => <AutoLoginPage />} />
+          <Route
+            exact
+            path="/pricing"
+            render={() =>
+              isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
+            }
+          />
+          {/* <Route
           exact
           path="/work-from-home-solution"
           render={() =>
@@ -214,130 +260,132 @@ const App = () => {
             isAuthenticate() ? <Redirect to="/" /> : <ContactUsPage />
           }
         /> */}
-      <PrivateRoute exact path="/" component={Demo} />
-      <PrivateRoute
-        path="/:username"
-        exact={true}
-        component={UserProfilePage}
-      />
-      <PrivateRoute
-        path="/:username/home"
-        exact={false}
-        component={HomePage}
-      />
-      <PrivateRoute
-        path="/:username/settings"
-        exact={false}
-        component={ProfileSettingsPage}
-      />
-      <PrivateRoute
-        path="/:username/notifications"
-        exact={true}
-        component={NotificationPage}
-      />
-      <PrivateRoute
-        exact={true}
-        path="/company/:cname"
-        component={CompanyProfilePage}
-      />
-      <PrivateRoute
-        path="/company/:cname/feed"
-        exact={true}
-        component={FeedPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/feedback"
-        exact={true}
-        component={Feedback}
-      />
-      <PrivateRoute
-        path="/company/:cname/project/:projectId/room"
-        exact={true}
-        component={isMobileOnly ? RoomPageMobile : RoomPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/project/:projectId/board"
-        exact={true}
-        component={BoardPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/project/:projectId/overview"
-        exact={true}
-        component={OverviewPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/project/:projectId/board/:boardId"
-        exact={true}
-        component={BoardDetails}
-      />
-      <PrivateRoute
-        path="/company/:cname/project/:projectId/board/:boardId/task/:taskId"
-        exact={true}
-        component={TaskPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/colleague"
-        exact={true}
-        component={ColleaguesPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/settings"
-        exact={true}
-        component={SettingsPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/settings/payment/success"
-        exact={true}
-        component={Success}
-      />
-      <PrivateRoute
-        path="/company/:cname/dashboard"
-        exact={true}
-        component={DashboardView}
-      />
-      <PrivateRoute
-        path="/company/:cname/project"
-        exact={true}
-        component={ProjectPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/project/:projectId"
-        exact={true}
-        component={ProjectPrefaceView}
-      />
-      <PrivateRoute
-        path="/company/:cname/project/:projectId/team"
-        exact={true}
-        component={ProjectTeamPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/project/:projectId/settings"
-        exact={true}
-        component={ProjectSettingsPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/associates"
-        exact={true}
-        component={AssociatesPage}
-      />
-      <PrivateRoute
-        path="/company/:cname/associate/:associateId"
-        exact={true}
-        component={AssociatesDetailsView}
-      />
-      <PrivateRoute
-        path="/video/conferences"
-        exact={true}
-        component={VideoConferences}
-      />
+          <PrivateRoute exact path="/" component={Demo} />
+          <PrivateRoute
+            path="/:username"
+            exact={true}
+            component={UserProfilePage}
+          />
+          <PrivateRoute
+            path="/:username/home"
+            exact={false}
+            component={HomePage}
+          />
+          <PrivateRoute
+            path="/:username/settings"
+            exact={false}
+            component={ProfileSettingsPage}
+          />
+          <PrivateRoute
+            path="/:username/notifications"
+            exact={true}
+            component={NotificationPage}
+          />
+          <PrivateRoute
+            exact={true}
+            path="/company/:cname"
+            component={CompanyProfilePage}
+          />
+          <PrivateRoute
+            path="/company/:cname/feed"
+            exact={true}
+            component={FeedPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/feedback"
+            exact={true}
+            component={Feedback}
+          />
+          <PrivateRoute
+            path="/company/:cname/project/:projectId/room"
+            exact={true}
+            component={isMobileOnly ? RoomPageMobile : RoomPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/project/:projectId/board"
+            exact={true}
+            component={BoardPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/project/:projectId/overview"
+            exact={true}
+            component={OverviewPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/project/:projectId/board/:boardId"
+            exact={true}
+            component={BoardDetails}
+          />
+          <PrivateRoute
+            path="/company/:cname/project/:projectId/board/:boardId/task/:taskId"
+            exact={true}
+            component={TaskPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/colleague"
+            exact={true}
+            component={ColleaguesPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/settings"
+            exact={true}
+            component={SettingsPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/settings/payment/success"
+            exact={true}
+            component={Success}
+          />
+          <PrivateRoute
+            path="/company/:cname/dashboard"
+            exact={true}
+            component={DashboardView}
+          />
+          <PrivateRoute
+            path="/company/:cname/project"
+            exact={true}
+            component={ProjectPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/project/:projectId"
+            exact={true}
+            component={ProjectPrefaceView}
+          />
+          <PrivateRoute
+            path="/company/:cname/project/:projectId/team"
+            exact={true}
+            component={ProjectTeamPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/project/:projectId/settings"
+            exact={true}
+            component={ProjectSettingsPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/associates"
+            exact={true}
+            component={AssociatesPage}
+          />
+          <PrivateRoute
+            path="/company/:cname/associate/:associateId"
+            exact={true}
+            component={AssociatesDetailsView}
+          />
+          <PrivateRoute
+            path="/video/conferences"
+            exact={true}
+            component={VideoConferences}
+          />
 
-      <PrivateRoute
-        path="/vc/join"
-        exact={true}
-        component={Meeting}
-      />
-      <Route component={NoMatch} />
-    </Switch>
+          <PrivateRoute
+            path="/vc/join"
+            exact={true}
+            component={Meeting}
+          />
+          <Route component={NoMatch} />
+        </Switch>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 const mapStateToProps = (state: any) => {

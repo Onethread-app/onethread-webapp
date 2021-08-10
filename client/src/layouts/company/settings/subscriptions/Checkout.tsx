@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     color: 'white',
     fontSize: 14,
     padding: '6px 16px',
-    backgroundColor: '#3F61C5',
+    backgroundColor: '#34b3e9',
     textTransform: 'none',
     fontFamily: [
       '-apple-system',
@@ -62,7 +62,7 @@ const useStyles = makeStyles({
       '"Segoe UI Symbol"',
     ].join(','),
     '&:hover': {
-      backgroundColor: '#3F61C5',
+      backgroundColor: '#34b3e9',
     },
     '&:active': {
       backgroundColor: '#27CB53',
@@ -112,8 +112,8 @@ interface ICheckout {
       name: string;
       discountPercent: number;
     };
-    _id: string,
-    isUsed: boolean,
+    _id: string;
+    isUsed: boolean;
     updatedAt: string;
     createdAt: string;
   };
@@ -258,11 +258,11 @@ function _Checkout(props: ICheckout) {
     value === 'bangladesh' &&
       (props.coupon
         ? portWalletCheckout(
-          formValues,
-          finalAmount * 85,
-          props.plan._id,
-          props.companyName,
-          props.coupon._id,
+            formValues,
+            finalAmount * 85,
+            props.plan._id,
+            props.companyName,
+            props.coupon._id,
           )
         : portWalletCheckout(
             formValues,
@@ -354,7 +354,7 @@ function _Checkout(props: ICheckout) {
           <Grid xs={12} sm={6}>
             <div className="shadow-1 totalBill">
               <br />
-              <h4 className="b" style={{ color: '#3F61C5' }}>
+              <h4 className="b" style={{ color: '#34b3e9' }}>
                 Package Name
               </h4>
               <Grid justify="space-between" container>
@@ -383,7 +383,7 @@ function _Checkout(props: ICheckout) {
                 justify="space-between"
                 container
                 style={{
-                  backgroundColor: '#3F61C5',
+                  backgroundColor: '#34b3e9',
                   color: 'white',
                 }}
               >

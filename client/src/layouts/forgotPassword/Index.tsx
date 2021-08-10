@@ -86,7 +86,7 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
               <Button
                 className="grow pointer white bp3-minimal w-100 mt3"
                 style={{
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                   height: '42px',
@@ -148,3 +148,5 @@ export const ForgotPasswordPage = () => {
     <RouteToEmailConfirmation />
   );
 };
+
+export default ForgotPasswordPage;

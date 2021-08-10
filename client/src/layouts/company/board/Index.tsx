@@ -114,13 +114,17 @@ const BoardCard = withRouter(
                     <Menu className="pa2">
                       <MenuItem
                         className="pa1 red"
-                        text={t('app.project.Project-boards.Update-Board')}
+                        text={t(
+                          'app.project.Project-boards.Update-Board',
+                        )}
                         // text="Update Board"
                         onClick={() => props.handleUpdate(board)}
                       />
                       <MenuItem
                         className="pa1 red"
-                        text={t('app.project.Project-boards.Delete-Board')}
+                        text={t(
+                          'app.project.Project-boards.Delete-Board',
+                        )}
                         // text="Delete Board"
                         onClick={() =>
                           props.handleDialogChange(board._id)
@@ -345,7 +349,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
@@ -357,7 +361,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
@@ -369,7 +373,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Room</small>
@@ -379,7 +383,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
@@ -391,7 +395,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
@@ -403,7 +407,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
@@ -616,3 +620,5 @@ export const BoardPage = connect(mapStateToProps, {
   getAllDepartments,
   clearCurrentBoard,
 })(withRouter(TaskPageComponent));
+
+export default BoardPage;

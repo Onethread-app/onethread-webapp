@@ -268,3 +268,5 @@ export const RoomPage = connect(mapStateToProps, {
   setCurrentProjectId,
   getRoleForProject,
 })(withRouter(RoomPageComponent));
+
+export default RoomPage;

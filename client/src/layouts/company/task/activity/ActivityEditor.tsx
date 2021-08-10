@@ -21,7 +21,7 @@ export const ActivityEditorPageComponent = (
 ) => {
   const onSubmit = async (values: any) => {
     const response = await props.createComment(values.text);
-    if ( response && !props.isCreating ) {
+    if (response && !props.isCreating) {
       values.text = '';
     }
   };
@@ -81,7 +81,7 @@ export const ActivityEditorPageComponent = (
                   type="submit"
                   className="w-100"
                   style={{
-                    background: '#3F61C5',
+                    background: '#34b3e9',
                     color: '#ffffff',
                     height: '40px',
                   }}
@@ -168,7 +168,7 @@ export const ActivityEditor = connect(mapStateToProps, { createComment })(
 //                 <Button
 //                   className="grow pointer white bp3-minimal w4 mt2"
 //                   style={{
-//                     background: '#3F61C5',
+//                     background: '#34b3e9',
 //                     outline: 'none',
 //                     color: 'white',
 //                   }}

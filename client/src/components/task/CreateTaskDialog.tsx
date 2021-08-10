@@ -313,7 +313,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                 <Button
                   type="submit"
                   style={{
-                    background: '#3F61C5',
+                    background: '#34b3e9',
                     color: '#fff',
                     boxShadow: 'none',
                   }}

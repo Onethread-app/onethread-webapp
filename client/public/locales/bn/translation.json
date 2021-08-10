@@ -222,7 +222,8 @@
         "Email": "ইমেইল",
         "Division": "ডিভিশন",
         "Department": "বিভাগ",
-        "Position": "পদমর্যাদা"
+        "Position": "পদমর্যাদা",
+        "Role": "দায়িত্ব"
       },
 
       "Partners": {

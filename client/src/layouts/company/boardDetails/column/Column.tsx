@@ -144,7 +144,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     <Button
                       className="grow h2 mb2 pointer bp3-minimal"
                       style={{
-                        background: '#3F61C5',
+                        background: '#34b3e9',
                         outline: 'none',
                         color: 'white',
                       }}
@@ -204,7 +204,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                                 <Button
                                   className="mr2"
                                   type="submit"
-                                  style={{ background: '#3F61C5' }}
+                                  style={{ background: '#34b3e9' }}
                                   loading={submitting}
                                   icon={
                                     <Icon

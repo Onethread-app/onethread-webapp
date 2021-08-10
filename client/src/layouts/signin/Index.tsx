@@ -128,7 +128,9 @@ export const SignInPageComponent = (
               <img src={logo} alt="onethread" />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
-                {t('landing.login.about-one-thread-login.content-login')}
+              {t(
+                'landing.login.about-one-thread-login.content-login',
+              )}
             </h3>
             {/* <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
               Onethread is designed keeping in mind that Ease of
@@ -171,7 +173,9 @@ export const SignInPageComponent = (
               }) => (
                 <>
                   {/* <h1 className="pl3">Sign In</h1> */}
-                  <h1 className="pl3">{t('landing.login.sign-in-form.sign-in-text')}</h1>
+                  <h1 className="pl3 tigrow-lightBlue">
+                    {t('landing.login.sign-in-form.sign-in-text')}
+                  </h1>
                   <form
                     className="fl w-100 cf"
                     onSubmit={handleSubmit}
@@ -207,7 +211,7 @@ export const SignInPageComponent = (
                                   <span className="bp3-icon">
                                     <Icon
                                       icon="envelope"
-                                      style={{ color: '#3F61C5' }}
+                                      style={{ color: '#34b3e9' }}
                                     />
                                   </span>
                                 }
@@ -217,7 +221,9 @@ export const SignInPageComponent = (
                                   paddingLeft: '40px',
                                 }}
                                 // placeHolder="Email Address"
-                                placeHolder={t('landing.login.sign-in-form.email')}
+                                placeHolder={t(
+                                  'landing.login.sign-in-form.email',
+                                )}
                                 error={
                                   checkError(meta) &&
                                   (meta.error || meta.submitError)
@@ -257,7 +263,7 @@ export const SignInPageComponent = (
                                   <span className="bp3-icon">
                                     <Icon
                                       icon="lock"
-                                      style={{ color: '#3F61C5' }}
+                                      style={{ color: '#34b3e9' }}
                                     />
                                   </span>
                                 }
@@ -287,7 +293,7 @@ export const SignInPageComponent = (
                                       style={{
                                         width: '15px',
                                         height: '15px',
-                                        color: '#3F61C5',
+                                        color: '#34b3e9',
                                       }}
                                     />
                                   </span>
@@ -298,7 +304,9 @@ export const SignInPageComponent = (
                                   paddingLeft: '40px',
                                 }}
                                 // placeHolder="Password"
-                                placeHolder={t('landing.login.sign-in-form.password')}
+                                placeHolder={t(
+                                  'landing.login.sign-in-form.password',
+                                )}
                                 error={
                                   checkError(meta) &&
                                   (meta.error || meta.submitError)
@@ -313,7 +321,7 @@ export const SignInPageComponent = (
                     <Button
                       className="grow h2 pointer white bp3-minimal w4"
                       style={{
-                        background: '#3F61C5',
+                        background: '#34b3e9',
                         outline: 'none',
                         color: 'white',
                         width: '100%',
@@ -334,7 +342,9 @@ export const SignInPageComponent = (
                         to="/forgot-password"
                       >
                         {/* Forget Password? */}
-                        {t('landing.login.sign-in-form.forgot-password')}
+                        {t(
+                          'landing.login.sign-in-form.forgot-password',
+                        )}
                       </NavLink>
                     </div>
                     <div className="tc mv4">
@@ -343,7 +353,7 @@ export const SignInPageComponent = (
                         to="/signup"
                       >
                         {/* Don't have an account? */}
-                      {t('landing.login.sign-in-form.no-account')}
+                        {t('landing.login.sign-in-form.no-account')}
                       </NavLink>
                     </div>
                     <Link to="/signup">
@@ -352,14 +362,16 @@ export const SignInPageComponent = (
                         style={{
                           background: '#fff',
                           outline: 'none',
-                          border: '2px solid #3F61C5',
-                          color: '#3F61C5',
+                          border: '2px solid #34b3e9',
+                          color: '#34b3e9',
                           fontSize: '18px',
                           padding: '10px 0px',
                         }}
                       >
                         {/* Sign Up here */}
-                        {t('landing.login.sign-in-form.sign-up button')}
+                        {t(
+                          'landing.login.sign-in-form.sign-up button',
+                        )}
                       </Button>
                     </Link>
                   </form>
@@ -376,3 +388,5 @@ export const SignInPageComponent = (
 export const SignInPage = connect(null, { loginAction })(
   withRouter(SignInPageComponent),
 );
+
+export default SignInPage;

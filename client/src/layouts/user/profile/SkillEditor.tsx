@@ -37,15 +37,12 @@ export const SkillEdit = (props: SkillEditProps) => {
         ]);
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
-        
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     }
   };
@@ -113,7 +110,7 @@ export const SkillEdit = (props: SkillEditProps) => {
         </div>
         <div className="fl w-100 mt4">
           <div className="flex justify-end">
-          <Button
+            <Button
               type="submit"
               onClick={async (e: any) => {
                 e.preventDefault();
@@ -128,7 +125,7 @@ export const SkillEdit = (props: SkillEditProps) => {
               }}
               className="w4 grow h2 pointer mr3"
               style={{
-                background: '#3F61C5',
+                background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
@@ -144,13 +141,12 @@ export const SkillEdit = (props: SkillEditProps) => {
               style={{
                 background: '#fff',
                 outline: 'none',
-                border: '1px solid #3F61C5',
-                color: '#3F61C5',
+                border: '1px solid #34b3e9',
+                color: '#34b3e9',
               }}
             >
               cancel
             </Button>
-           
           </div>
         </div>
       </div>

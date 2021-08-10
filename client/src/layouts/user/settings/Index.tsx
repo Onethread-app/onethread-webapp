@@ -10,7 +10,6 @@ import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 
 export const ProfileSettingsComponent = () => {
-
   const [showDialog, setShowDialog] = useState(false);
   const { t } = useTranslation();
 
@@ -20,7 +19,7 @@ export const ProfileSettingsComponent = () => {
         type="submit"
         className="grow pointer outline-0 shadow-0-ns h2 changepass"
         style={{
-          background: '#3F61C5',
+          background: '#34b3e9',
           color: 'white',
         }}
         onClick={() => setShowDialog(true)}
@@ -62,11 +61,10 @@ export const LanguageSettingsComponent = () => {
     i18n.changeLanguage(lng);
   };
 
-  const [language, setLanguage] =useState('');
+  const [language, setLanguage] = useState('');
   const classes = useStyles();
 
   useEffect(() => {
-
     getLocation().then((data) => {
       const country = data.data.country;
 
@@ -74,10 +72,10 @@ export const LanguageSettingsComponent = () => {
       localStorage.setItem('country', country);
 
       if (country === 'Bangladesh') {
-        setLanguage('bn')
+        setLanguage('bn');
         changeLanguage('bn');
       } else {
-        setLanguage('en')
+        setLanguage('en');
         changeLanguage('en');
       }
     });
@@ -87,34 +85,33 @@ export const LanguageSettingsComponent = () => {
   const handleChange = (event) => {
     const value = event.target.value;
     if (value === 'bn') {
-      setLanguage('bn')
+      setLanguage('bn');
       changeLanguage('bn');
     }
     if (value === 'en') {
-      setLanguage('en')
+      setLanguage('en');
       changeLanguage('en');
     }
   };
 
   return (
-  <FormControl className={classes.formControl}>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={language}
-          onChange={handleChange}
-        >
-          <MenuItem value={'en'}>English</MenuItem>
-          <MenuItem value={'bn'}>বাংলা</MenuItem>
-        </Select>
-      </FormControl>
+    <FormControl className={classes.formControl}>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={language}
+        onChange={handleChange}
+      >
+        <MenuItem value={'en'}>English</MenuItem>
+        <MenuItem value={'bn'}>বাংলা</MenuItem>
+      </Select>
+    </FormControl>
   );
 };
 
-
 const ProfileSettingsPageComponent = () => {
   const { t } = useTranslation();
-  return(
+  return (
     <div className="bg-white mh4 mv5 br3 pa4-ns h-75 shadow-4-ns w-90-ns">
       <Tabs id="TabsExample" vertical={true}>
         <Tab
@@ -133,7 +130,7 @@ const ProfileSettingsPageComponent = () => {
         />
       </Tabs>
     </div>
-  )
+  );
 };
 
 // const ProfileSettingsPageComponent = () => (
@@ -154,3 +151,5 @@ export const ProfileSettingsPage = connect(
   null,
   null,
 )(ProfileSettingsPageComponent);
+
+export default ProfileSettingsPage;

@@ -60,7 +60,9 @@ const AssociateFormEditorComponent = (
   return (
     <div className="pa3 mt5 mt0-ns">
       <div className=" w-100">
-        <h1 className="f5 tigrow-lightBlue">{t('app.company.Partners.Add-Partners')}</h1>
+        <h1 className="f5 tigrow-lightBlue">
+          {t('app.company.Partners.Add-Partners')}
+        </h1>
         {/* <h1 className="f5 tigrow-lightBlue">Add Partners</h1> */}
         <SuggestField
           onChange={(value: string) => {
@@ -73,17 +75,17 @@ const AssociateFormEditorComponent = (
         <small className="white">{error}</small>
       </div>
       <div className="flex justify-end mt4">
-      <Button
+        <Button
           className="grow h2 pointer white bp3-minimal w4 mr3"
           style={
             isEmpty(selectedAssociate) === true
               ? {
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }
               : {
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }
@@ -108,8 +110,8 @@ const AssociateFormEditorComponent = (
           style={{
             background: '#fff',
             outline: 'none',
-            border: '1px solid #3F61C5',
-            color: '#3F61C5',
+            border: '1px solid #34b3e9',
+            color: '#34b3e9',
           }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >

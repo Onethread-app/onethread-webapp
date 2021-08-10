@@ -98,7 +98,7 @@ export const SubTaskCreatorComponent = (
               <div className="flex justify-end mt2">
                 <Button
                   type="submit"
-                  style={{ background: '#3F61C5' }}
+                  style={{ background: '#34b3e9' }}
                   loading={submitting}
                   icon={
                     <Icon
@@ -157,7 +157,7 @@ export const SubTaskDelete = (
               <Button
                 className="grow h2 pointer white bp3-minimal w4 mr3"
                 style={{
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -175,8 +175,8 @@ export const SubTaskDelete = (
                 style={{
                   background: '#fff',
                   outline: 'none',
-                  border: '1px solid #3F61C5',
-                  color: '#3F61C5',
+                  border: '1px solid #34b3e9',
+                  color: '#34b3e9',
                 }}
                 onClick={() => setDeletePopover(false)}
               >

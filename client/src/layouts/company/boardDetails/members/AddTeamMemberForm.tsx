@@ -57,7 +57,6 @@ const AddTeamMemberFormComponent = (
       if (isEqual(error.message, 'Network Error')) {
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     }
   };
@@ -97,7 +96,7 @@ const AddTeamMemberFormComponent = (
       </div>
       <div className="fl w-100">
         <div className="flex justify-end">
-        <Button
+          <Button
             type="submit"
             onClick={async (e: any) => {
               e.preventDefault();
@@ -121,7 +120,7 @@ const AddTeamMemberFormComponent = (
             style={
               selectedItems.length < 1 === false
                 ? {
-                    background: '#3F61C5',
+                    background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }
@@ -146,13 +145,12 @@ const AddTeamMemberFormComponent = (
             style={{
               background: '#fff',
               outline: 'none',
-              border: '2px solid #3F61C5',
-              color: '#3F61C5',
+              border: '2px solid #34b3e9',
+              color: '#34b3e9',
             }}
           >
             cancel
           </Button>
-       
         </div>
       </div>
     </div>
