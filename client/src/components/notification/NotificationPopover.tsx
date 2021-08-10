@@ -87,16 +87,17 @@ const NotificationPopover = (props: INotificationPopover) => {
         className="pv2 br4 overflow-y-auto"
       >
         {notificationToShow.length > 0 ? (
-          notificationToShow.map((sNotification: any, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                onCLickNotification(sNotification);
-              }}
-            >
-              {notificationToShow &&
-              notificationToShow.length === index + 1
-                ? sNotification.notification && (
+          notificationToShow.map(
+            (sNotification: any, index) =>
+              sNotification.notification && (
+                <div
+                  key={index}
+                  onClick={() => {
+                    onCLickNotification(sNotification);
+                  }}
+                >
+                  {notificationToShow &&
+                  notificationToShow.length === index + 1 ? (
                     <div ref={setLastNotificationElement}>
                       <Notification
                         type={sNotification.notification.type}
@@ -104,16 +105,16 @@ const NotificationPopover = (props: INotificationPopover) => {
                         read={sNotification.read}
                       />
                     </div>
-                  )
-                : sNotification.notification && (
+                  ) : (
                     <Notification
                       type={sNotification.notification.type}
                       text={sNotification.notification.text}
                       read={sNotification.read}
                     />
                   )}
-            </div>
-          ))
+                </div>
+              ),
+          )
         ) : (
           <h3
             style={{

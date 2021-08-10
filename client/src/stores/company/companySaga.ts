@@ -440,7 +440,7 @@ export function* getAllCompanyAnnouncementAsync() {
   try {
     const headers = tokenConfig();
     const companyId = yield select(getCompanyId);
-    if ((headers as any).headers.Authorization) {
+    if ((headers as any).headers.Authorization && companyId) {
       const response = yield tigrowApi.get(
         `company/${companyId}/announcements`,
         headers,
@@ -461,7 +461,7 @@ export function* addAnnouncementAsync({ payload }: any) {
     const announce = {
       text: payload,
     };
-    if ((headers as any).headers.Authorization) {
+    if ((headers as any).headers.Authorization && companyId) {
       yield tigrowApi.post(
         `company/${companyId}/announcements`,
         announce,
@@ -541,7 +541,7 @@ export function* getLatestCompletedTasksAsync() {
   try {
     const headers = tokenConfig();
     const companyId = yield select(getCompanyId);
-    if ((headers as any).headers.Authorization) {
+    if ((headers as any).headers.Authorization && companyId) {
       const response = yield tigrowApi.get(
         `company/${companyId}/latest-completed-tasks`,
         headers,
