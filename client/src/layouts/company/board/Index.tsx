@@ -115,13 +115,17 @@ const BoardCard = withRouter(
                     <Menu className="pa2">
                       <MenuItem
                         className="pa1 red"
-                        text={t('app.project.Project-boards.Update-Board')}
+                        text={t(
+                          'app.project.Project-boards.Update-Board',
+                        )}
                         // text="Update Board"
                         onClick={() => props.handleUpdate(board)}
                       />
                       <MenuItem
                         className="pa1 red"
-                        text={t('app.project.Project-boards.Delete-Board')}
+                        text={t(
+                          'app.project.Project-boards.Delete-Board',
+                        )}
                         // text="Delete Board"
                         onClick={() =>
                           props.handleDialogChange(board._id)
@@ -647,3 +651,5 @@ export const BoardPage = connect(mapStateToProps, {
   getAllDepartments,
   clearCurrentBoard,
 })(withRouter(TaskPageComponent));
+
+export default BoardPage;

@@ -700,3 +700,5 @@ export const Layout = connect(mapStateToProps, {
   getRoomMessages,
   getRoomSharedFiles,
 })(withRouter(LayoutComponent));
+
+export default Layout;

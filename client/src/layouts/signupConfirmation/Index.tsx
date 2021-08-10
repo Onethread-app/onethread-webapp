@@ -36,7 +36,8 @@ const SignupConfirmationPageComponent = () => {
             <img src={successfulEmailImage} />
           </p>
           <p className="tc">
-            We have sent an email with a confirmation link to <strong>{email}</strong>
+            We have sent an email with a confirmation link to{' '}
+            <strong>{email}</strong>
             <br />
             Please allow 5-10 minutes for this message to arrive.
             <br />
@@ -73,3 +74,5 @@ const SignupConfirmationPageComponent = () => {
 };
 
 export const SignupConfirmationPage = SignupConfirmationPageComponent;
+
+export default SignupConfirmationPage;

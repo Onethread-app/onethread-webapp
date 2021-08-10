@@ -58,7 +58,11 @@ const NewLanding = () => {
         </h2>
         <img src={MainLanding} alt="" />
         <h3 className="sub-heading tc">
-          <span className="b"> {t('landing.homepage.main-header.sub-heading.first-part')}</span> {t('landing.homepage.main-header.sub-heading.second-part')}
+          <span className="b">
+            {' '}
+            {t('landing.homepage.main-header.sub-heading.first-part')}
+          </span>{' '}
+          {t('landing.homepage.main-header.sub-heading.second-part')}
           {/* <span className="b">Onethread</span> is a project management
           tool built from the ground up for multi-team collaboration
           among startups, agencies and NGOs. */}
@@ -71,15 +75,27 @@ const NewLanding = () => {
       <section className="second-section w-100 flex relative">
         <div className="unified-tool flex items-center justify-around w-100">
           <div className="unified-tool-text">
-            {t('landing.homepage.second-section.unified-text.first-part')}{' '}
-            <span className="b">{t('landing.homepage.second-section.unified-text.second-part')}</span>
+            {t(
+              'landing.homepage.second-section.unified-text.first-part',
+            )}{' '}
+            <span className="b">
+              {t(
+                'landing.homepage.second-section.unified-text.second-part',
+              )}
+            </span>
             {/* We spend 23% more time in external projects for{' '}
             <span className="b">lack of a unified tool</span> */}
           </div>
           <div className="unified-tool-content flex flex-column justify-start">
             <h3 className="unified-tool-content-header">
-              <span className="b">{t('landing.homepage.second-section.unified-heading.first-part')} </span> 
-              {t('landing.homepage.second-section.unified-heading.second-part')}
+              <span className="b">
+                {t(
+                  'landing.homepage.second-section.unified-heading.first-part',
+                )}{' '}
+              </span>
+              {t(
+                'landing.homepage.second-section.unified-heading.second-part',
+              )}
               {/* <span className="b">Onethread</span> lets you
               efficiently organize all your projects and communicate
               with everyone involved in a single platform */}
@@ -96,8 +112,10 @@ const NewLanding = () => {
               <div className="flex items-center">
                 <img src={MessagesIcon} alt="" />
                 <p>
-                  <span className="b">Project dashboard: </span>   
-                    {t('landing.homepage.second-section.project-dashboard')}                
+                  <span className="b">Project dashboard: </span>
+                  {t(
+                    'landing.homepage.second-section.project-dashboard',
+                  )}
                   {/* Task assignment, one-click approvals and project folders. */}
                 </p>
               </div>
@@ -114,6 +132,7 @@ const NewLanding = () => {
               <a
                 href="https://www.linkedin.com/pulse/onethread-here-declutter-your-workspace-onethreadapp/"
                 target="_blank"
+                rel="noreferrer"
               >
                 {t('landing.homepage.second-section.unified-footer')}
                 {/* Read: Get rid of infinite email chains and WhatsApp
@@ -183,8 +202,16 @@ const NewLanding = () => {
         <div className="header flex flex-column items-center justify-center">
           <img src={CombinedLogo} alt="combination" />
           <h2>
-            <span style={{ color: '#3484f0' }}>{t('landing.homepage.product-details.header1.first-part')}</span>{t('landing.homepage.product-details.header1.second-part')} <br />
-          {t('landing.homepage.product-details.header1.third-part')}
+            <span style={{ color: '#3484f0' }}>
+              {t(
+                'landing.homepage.product-details.header1.first-part',
+              )}
+            </span>
+            {t(
+              'landing.homepage.product-details.header1.second-part',
+            )}{' '}
+            <br />
+            {t('landing.homepage.product-details.header1.third-part')}
           </h2>
           {/* <h2>
             <span style={{ color: '#3484f0' }}>Everything</span> a

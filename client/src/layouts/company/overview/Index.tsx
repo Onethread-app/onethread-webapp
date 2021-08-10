@@ -300,3 +300,5 @@ export const OverviewPage = connect(
   mapStateToProps,
   {},
 )(withRouter(Index));
+
+export default OverviewPage;

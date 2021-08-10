@@ -275,3 +275,5 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
 };
 
 export const ResetPasswordPage = withRouter(ResetPasswordComponent);
+
+export default ResetPasswordPage;

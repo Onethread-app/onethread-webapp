@@ -748,3 +748,5 @@ export const ColleaguesPage = connect(mapStateToProps, {
   deleteCompanyMember,
   inviteColleagueInBulk,
 })(ColleaguesPageComponent);
+
+export default ColleaguesPage;

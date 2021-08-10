@@ -19,7 +19,6 @@ interface UserProfilePageProps {
 const _UserProfilePage = (
   props: UserProfilePageProps & RouteComponentProps,
 ) => {
-
   const { t } = useTranslation();
 
   return (
@@ -78,3 +77,5 @@ export const UserProfilePage = connect(
   mapStateToProps,
   {},
 )(withRouter(_UserProfilePage));
+
+export default UserProfilePage;

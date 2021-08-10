@@ -148,3 +148,5 @@ export const ForgotPasswordPage = () => {
     <RouteToEmailConfirmation />
   );
 };
+
+export default ForgotPasswordPage;
