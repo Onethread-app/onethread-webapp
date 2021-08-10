@@ -243,15 +243,23 @@ const getListOverview = async (req, res, next) => {
       const teamMembers = await Team.find({
         member: member._id,
         removed: false,
-      }).populate('project', '_id name uniqueName createdAt');
+      }).populate(
+        'project',
+        '_id name uniqueName hasDeleted removed createdAt',
+      );
 
       for (let teamMember of teamMembers) {
-        projectList.push({
-          _id: teamMember.project._id,
-          name: teamMember.project.name,
-          companyUniqueName: member.company.uniqueName,
-          createdAt: teamMember.createdAt,
-        });
+        if (
+          !teamMember.project.hasDeleted &&
+          !teamMember.project.removed
+        ) {
+          projectList.push({
+            _id: teamMember.project._id,
+            name: teamMember.project.name,
+            companyUniqueName: member.company.uniqueName,
+            createdAt: teamMember.createdAt,
+          });
+        }
       }
     }
     projectList.sort(
