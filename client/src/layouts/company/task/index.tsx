@@ -67,3 +67,5 @@ export const TaskPage = connect(
   mapStateToProps,
   null,
 )(TaskPageComponent);
+
+export default TaskPage;

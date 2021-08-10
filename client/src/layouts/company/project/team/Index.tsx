@@ -595,3 +595,5 @@ export const ProjectTeamPage = connect(mapStateToProps, {
   getProjectTeams,
   changeProjectMemberRole,
 })(ProjectTeamPageComponent);
+
+export default ProjectTeamPage;

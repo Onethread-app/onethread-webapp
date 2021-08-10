@@ -77,3 +77,5 @@ const EmailVerificationComponent = (props: RouteComponentProps) => {
 export const EmailVerificationPage = withRouter(
   EmailVerificationComponent,
 );
+
+export default EmailVerificationPage;

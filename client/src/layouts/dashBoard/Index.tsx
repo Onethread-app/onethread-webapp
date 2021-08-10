@@ -487,3 +487,5 @@ export const DashboardView = connect(mapStateToProps, {
   getLatestCompletedTasks,
   getCurrentSubscription,
 })(DashboardViewComponent);
+
+export default DashboardView;

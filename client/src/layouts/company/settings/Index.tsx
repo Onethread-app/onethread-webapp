@@ -221,3 +221,5 @@ export const SettingsPage = connect(mapStateToProps, {
   companySubscriber,
   getNotifications,
 })(withRouter(SettingsPagComponent));
+
+export default SettingsPage;

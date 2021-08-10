@@ -288,3 +288,5 @@ export const ProjectPrefaceView = connect(
   mapStateToProps,
   null,
 )(ProjectPrefaceViewComponent);
+
+export default ProjectPrefaceView;

@@ -101,7 +101,7 @@ export const SignUpPageComponent = (
     }
   }, [props.location.search]);
 
-const { t } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <div className="cf ph2-ns">
@@ -130,61 +130,65 @@ const { t } = useTranslation();
               }) => (
                 <>
                   {/* <h1 className="pl3-ns">Sign Up</h1> */}
-                  <h1 className="pl3-ns">{t('landing.sign-up.sign-up-form.sign-up-text')}</h1>
+                  <h1 className="pl3-ns">
+                    {t('landing.sign-up.sign-up-form.sign-up-text')}
+                  </h1>
                   <form onSubmit={handleSubmit}>
                     <div className="mw7 center ph3-ns v-mid">
                       <SubmitError errorMessage={submitError} />
-                     
+
                       <div>
-                          <Field<string>
-                            name="firstName"
-                            validate={composeValidators(
-                              required,
-                              maxValue(32),
-                            )}
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
+                        <Field<string>
+                          name="firstName"
+                          validate={composeValidators(
+                            required,
+                            maxValue(32),
+                          )}
+                          render={({ input, meta }) => (
+                            <div
+                              className={` ${
+                                checkError(meta)
+                                  ? 'mb3-ns mb2'
+                                  : 'mb4-ns mb3'
+                              }`}
+                            >
+                              <InputGroupFieldWithError
+                                id="firstName"
+                                className={`bw1 pb2 br0 bb ${
                                   checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
+                                    ? 'b--red'
+                                    : 'b--lightBlue'
                                 }`}
-                              >
-                                <InputGroupFieldWithError
-                                  id="firstName"
-                                  className={`bw1 pb2 br0 bb ${
-                                    checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  autoFocus={true}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      <Icon
-                                        icon="mugshot"
-                                        style={{ color: '#3F61C5' }}
-                                      />
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
-                                  }}
-                                  // placeHolder="First Name"
-                                  placeHolder={t('landing.sign-up.sign-up-form.first-name')}
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                />
-                              </div>
-                            )}
-                          />
-                        </div>
-                        <div>
+                                value={input.value}
+                                onChange={input.onChange}
+                                autoFocus={true}
+                                leftIcon={
+                                  <span className="bp3-icon">
+                                    <Icon
+                                      icon="mugshot"
+                                      style={{ color: '#3F61C5' }}
+                                    />
+                                  </span>
+                                }
+                                style={{
+                                  boxShadow: 'none',
+                                  fontSize: '18px',
+                                  paddingLeft: '40px',
+                                }}
+                                // placeHolder="First Name"
+                                placeHolder={t(
+                                  'landing.sign-up.sign-up-form.first-name',
+                                )}
+                                error={
+                                  checkError(meta) &&
+                                  (meta.error || meta.submitError)
+                                }
+                              />
+                            </div>
+                          )}
+                        />
+                      </div>
+                      <div>
                         <Field<string>
                           name="lastName"
                           validate={composeValidators(
@@ -193,47 +197,48 @@ const { t } = useTranslation();
                           )}
                           render={({ input, meta }) => (
                             <div
-                                className={` ${
+                              className={` ${
+                                checkError(meta)
+                                  ? 'mb3-ns mb2'
+                                  : 'mb4-ns mb3'
+                              }`}
+                            >
+                              <InputGroupFieldWithError
+                                id="lastName"
+                                className={`bw1 pb2 br0 bb ${
                                   checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
+                                    ? 'b--red'
+                                    : 'b--lightBlue'
                                 }`}
-                              >
-                                <InputGroupFieldWithError
-                                  id="lastName"
-                                  className={`bw1 pb2 br0 bb ${
-                                    checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  autoFocus={true}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      <Icon
-                                        icon="mugshot"
-                                        style={{ color: '#3F61C5' }}
-                                      />
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
-                                  }}
-                                  // placeHolder="Last Name"
-                                  placeHolder={t('landing.sign-up.sign-up-form.last-name')}
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                />
-                              
+                                value={input.value}
+                                onChange={input.onChange}
+                                autoFocus={true}
+                                leftIcon={
+                                  <span className="bp3-icon">
+                                    <Icon
+                                      icon="mugshot"
+                                      style={{ color: '#3F61C5' }}
+                                    />
+                                  </span>
+                                }
+                                style={{
+                                  boxShadow: 'none',
+                                  fontSize: '18px',
+                                  paddingLeft: '40px',
+                                }}
+                                // placeHolder="Last Name"
+                                placeHolder={t(
+                                  'landing.sign-up.sign-up-form.last-name',
+                                )}
+                                error={
+                                  checkError(meta) &&
+                                  (meta.error || meta.submitError)
+                                }
+                              />
                             </div>
                           )}
                         />
-                        </div>
+                      </div>
 
                       {/* <div className={`flex justify-content`}>
                         <div style={{ width: '90px' }}>
@@ -436,7 +441,9 @@ const { t } = useTranslation();
                                     paddingLeft: '40px',
                                   }}
                                   // placeHolder="contact@onethread.app"
-                                  placeHolder={t('landing.sign-up.sign-up-form.your-email')}
+                                  placeHolder={t(
+                                    'landing.sign-up.sign-up-form.your-email',
+                                  )}
                                   error={
                                     checkError(meta) &&
                                     (meta.error || meta.submitError)
@@ -564,7 +571,9 @@ const { t } = useTranslation();
                                     paddingLeft: '40px',
                                   }}
                                   // placeHolder="Password"
-                                  placeHolder={t('landing.sign-up.sign-up-form.password')}
+                                  placeHolder={t(
+                                    'landing.sign-up.sign-up-form.password',
+                                  )}
                                   error={
                                     checkError(meta) &&
                                     (meta.error || meta.submitError)
@@ -591,13 +600,20 @@ const { t } = useTranslation();
                         disabled={submitting || pristine}
                       >
                         {/* Sign up */}
-                        {t('landing.sign-up.sign-up-form.sign-up-button')}
+                        {t(
+                          'landing.sign-up.sign-up-form.sign-up-button',
+                        )}
                       </Button>
-                      <span className="fw9 dt center pt4-ns pt2">{t('landing.sign-up.sign-up-form.account-exist')} 
-                      {' '} <NavLink to="/signin">
-                        {t('landing.login.sign-in-form.sign-in-text')}
-                        {/* Sign in */}
-                      </NavLink>
+                      <span className="fw9 dt center pt4-ns pt2">
+                        {t(
+                          'landing.sign-up.sign-up-form.account-exist',
+                        )}{' '}
+                        <NavLink to="/signin">
+                          {t(
+                            'landing.login.sign-in-form.sign-in-text',
+                          )}
+                          {/* Sign in */}
+                        </NavLink>
                       </span>
                       {/* <NavLink
                         className="fw9 dt center tigrow-lightBlue pt4-ns pt2"
@@ -631,7 +647,9 @@ const { t } = useTranslation();
               <img src={logo} alt="onethread" />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
-              {t('landing.sign-up.about-one-thread-sign-up.content-sign-up')}
+              {t(
+                'landing.sign-up.about-one-thread-sign-up.content-sign-up',
+              )}
             </h3>
             {/* <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
               Onethread is designed keeping in mind that Ease of
@@ -651,3 +669,5 @@ const { t } = useTranslation();
 export const SignUpPage = connect(null, { userSignupAction })(
   withRouter(SignUpPageComponent),
 );
+
+export default SignUpPage;

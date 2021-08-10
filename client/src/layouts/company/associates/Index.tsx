@@ -68,3 +68,5 @@ export const AssociatesPage = connect(
   mapStateToProps,
   null,
 )(AssociatesPageComponent);
+
+export default AssociatesPage;

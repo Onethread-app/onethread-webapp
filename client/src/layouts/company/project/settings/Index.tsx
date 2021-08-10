@@ -132,3 +132,5 @@ const mapStateToProps = (state: any) => {
 export const ProjectSettingsPage = connect(mapStateToProps, {
   updateProjectRole,
 })(ProjectSettingsPageComponent);
+
+export default ProjectSettingsPage;

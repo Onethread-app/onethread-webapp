@@ -109,3 +109,5 @@ const mapStateToProps = (state: any) => {
 export const AssociatesDetailsView = connect(mapStateToProps, {
   getSelectedAssociate,
 })(withRouter(AssociatesDetailsViewComponent));
+
+export default AssociatesDetailsView;
