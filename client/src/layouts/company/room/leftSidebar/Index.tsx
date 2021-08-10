@@ -61,7 +61,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
                 src={createIcon}
                 width="30px"
                 height="30px"
-                color="#3F61C5"
+                color="#34b3e9"
                 alt=""
               />
             </span>
@@ -90,7 +90,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
             style={{
               marginLeft: '10px',
             }}
-            color="#3F61C5"
+            color="#34b3e9"
             alt=""
           />
         </div>

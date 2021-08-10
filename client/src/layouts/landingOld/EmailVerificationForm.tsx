@@ -27,12 +27,10 @@ const EmailVerificationFormComponent = (
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
-        
       } else if (error.response.status === 409) {
         props.history.push('/signin?email=' + values.email);
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     }
   };
@@ -69,7 +67,7 @@ const EmailVerificationFormComponent = (
           <Button
             className="grow h2 pointer white bp3-minimal w5-ns w-100"
             style={{
-              background: '#3F61C5',
+              background: '#34b3e9',
               outline: 'none',
               color: 'white',
               borderRadius: '25px',

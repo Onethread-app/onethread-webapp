@@ -49,7 +49,7 @@ const GeneralViewComponent = (
                 text={t('app.company.Settings.Change-Name')}
                 // text="Change Company Name"
                 style={{
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   color: 'white',
                 }}
                 onClick={() => setShowDialog(true)}
@@ -93,7 +93,7 @@ const GeneralViewComponent = (
                     leftIconColor={`${
                       errors || props.errorCompanyName
                         ? 'red'
-                        : '#3F61C5'
+                        : '#34b3e9'
                     }`}
                     style={{
                       boxShadow: 'none',
@@ -122,11 +122,11 @@ const GeneralViewComponent = (
               </div>
             </div>
             <div className="flex justify-end">
-            <Button
+              <Button
                 type="submit"
                 className="w4 grow h2 pointer mr3"
                 style={{
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -157,8 +157,8 @@ const GeneralViewComponent = (
                 style={{
                   background: '#fff',
                   outline: 'none',
-                  border: '1px solid #3F61C5',
-                  color: '#3F61C5',
+                  border: '1px solid #34b3e9',
+                  color: '#34b3e9',
                 }}
                 onClick={(e: any) => {
                   e.preventDefault();
@@ -170,7 +170,6 @@ const GeneralViewComponent = (
               >
                 cancel
               </Button>
-
             </div>
           </form>
         </Dialog>
@@ -182,7 +181,8 @@ const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
     errorCompanyName: state.companyReducer.error,
-    changeCompanyNameLoading: state.companyReducer.changeCompanyNameLoading,
+    changeCompanyNameLoading:
+      state.companyReducer.changeCompanyNameLoading,
   };
 };
 

@@ -76,12 +76,12 @@ const AddColleaguesFormComponent = (
         return response.data;
       } else {
         // tslint:disable-next-line: no-console
-        
+
         return { status: false, message: 'Authorization Error' };
       }
     } catch (error) {
       // tslint:disable-next-line: no-console
-      
+
       return {
         status: false,
         message: isEqual(error.message, 'Network Error')
@@ -190,8 +190,8 @@ const AddColleaguesFormComponent = (
           style={{
             background: '#fff',
             outline: 'none',
-            border: '1px solid #3F61C5',
-            color: '#3F61C5',
+            border: '1px solid #34b3e9',
+            color: '#34b3e9',
           }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >
@@ -205,7 +205,7 @@ const AddColleaguesFormComponent = (
             selectedTeamMember.length + pendingTeamMembers.length <=
               20
               ? {
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }

@@ -2,11 +2,13 @@
 
 * {
   box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
+  /* font-family: 'Open Sans', sans-serif; */
+  font-family: 'Poppins', sans-serif;
   scroll-behavior: smooth;
 }
 body {
-  font-family: 'Open Sans', sans-serif;
+  /* font-family: 'Open Sans', sans-serif; */
+  font-family: 'Poppins', sans-serif;
 }
 .signinPageBackground {
   background-image: url(./resources/images/Bg-png.png);
@@ -32,13 +34,13 @@ body {
   color: rgb(74, 73, 73);
 }
 .bg-tigrowLightBlue {
-  background-color: #3f61c5;
+  background-color: #34b3e9;
 }
 .bg-tigrow-darkBlue {
-  background-color: #3f61c5;
+  background-color: #34b3e9;
 }
 .bg-tigrowNewDarkBlue {
-  background-color: #3f61c5;
+  background-color: #34b3e9;
 }
 .bg-tigrowLightestBlue {
   background-color: #6ed8d844;
@@ -47,17 +49,17 @@ body {
   background-color: #f5f6fa;
 }
 .bg-tigrowDarkBlue {
-  background-color: #3f61c5;
+  background-color: #34b3e9;
 }
 .bg-tigrow {
   background-color: #f5f6fa;
 }
 
 .b--lightBlue {
-  border-color: #3f61c5;
+  border-color: #34b3e9;
 }
 .b--tigrow-darkBlue {
-  border-color: #3b5998;
+  border-color: #34b3e9;
 }
 
 .b--tigrowLightGray-1 {
@@ -65,11 +67,11 @@ body {
 }
 
 .tigrow-darkBlue {
-  color: #3b5998;
+  color: #34b3e9;
 }
 
 .tigrow-lightBlue {
-  color: #3f61c5;
+  color: #34b3e9;
 }
 .tigrow-darkGray {
   color: #555555;

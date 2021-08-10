@@ -25,7 +25,9 @@ export const SkillViewComponent = (
 
   return (
     <>
-      <h1 className="f5 lh-copy">{t('app.user.Personal-profile.Skills')}</h1>
+      <h1 className="f5 lh-copy">
+        {t('app.user.Personal-profile.Skills')}
+      </h1>
       {/* <h1 className="f5 lh-copy">Skills</h1> */}
       <div className="dib">
         {props.user.skillArea && props.user.skillArea.length > 0 ? (
@@ -35,7 +37,7 @@ export const SkillViewComponent = (
                 <span
                   className="bp3-tag ma1 pv2 ph3 ws-break"
                   style={{
-                    backgroundColor: '#3F61C5',
+                    backgroundColor: '#34b3e9',
                     color: 'white',
                     fontSize: '15px',
                   }}
@@ -45,7 +47,7 @@ export const SkillViewComponent = (
                     className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
                     style={{
                       backgroundColor: 'white',
-                      color: '#3F61C5',
+                      color: '#34b3e9',
                       borderRadius: '30px',
                       paddingTop: '1px',
                     }}

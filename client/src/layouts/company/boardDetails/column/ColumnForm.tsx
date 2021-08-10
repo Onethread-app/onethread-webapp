@@ -11,7 +11,7 @@ import {
   checkError,
   composeValidators,
   maxValue,
-  checkTaskName
+  checkTaskName,
 } from 'components/final-form/utils';
 
 interface ColumnFormProps {
@@ -99,10 +99,10 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                 )}
               />
               <div className="fr">
-              <Button
+                <Button
                   className="grow pointer white bp3-minimal w4 mt2 mr3"
                   style={{
-                    background: '#3F61C5',
+                    background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
@@ -117,8 +117,8 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                   style={{
                     background: '#fff',
                     outline: 'none',
-                    border: '1px solid #3F61C5',
-                    color: '#3F61C5',
+                    border: '1px solid #34b3e9',
+                    color: '#34b3e9',
                   }}
                   onClick={(e: any) => {
                     if (props.setShowColumnFormDialog) {
@@ -128,7 +128,6 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                 >
                   cancel
                 </Button>
-             
               </div>
             </div>
           </form>

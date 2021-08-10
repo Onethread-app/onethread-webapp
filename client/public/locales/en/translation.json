@@ -222,7 +222,8 @@
         "Email": "Email",
         "Division": "Division",
         "Department": "Department",
-        "Position": "Position"
+        "Position": "Position",
+        "Role": "Role"
       },
 
       "Partners": {

@@ -2,7 +2,12 @@ import React from 'react';
 import { Icon, Button } from '@blueprintjs/core';
 import { Entity } from 'stores/UtilsActions';
 import { Form, Field } from 'react-final-form';
-import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
+import {
+  required,
+  checkError,
+  composeValidators,
+  maxValue,
+} from 'components/final-form/utils';
 import { IconNames } from '@blueprintjs/icons';
 import { Condition } from 'components/final-form/Condition';
 import { ICompanyMembers } from 'stores/company/Reducer';
@@ -18,7 +23,8 @@ interface AddDesignationFormProps {
   divisions: Entity[];
   departments: Entity[];
 }
-interface AddDesignationFormInternalProps extends AddDesignationFormProps {
+interface AddDesignationFormInternalProps
+  extends AddDesignationFormProps {
   isLoading: boolean;
 }
 
@@ -144,7 +150,7 @@ const AddDesignationFormComponent = (
                   onChange={input.onChange}
                   leftIcon="id-number"
                   leftIconColor={`${
-                    checkError(meta) ? 'red' : '#3F61C5'
+                    checkError(meta) ? 'red' : '#34b3e9'
                   }`}
                   style={{ boxShadow: 'none' }}
                   error={
@@ -158,7 +164,7 @@ const AddDesignationFormComponent = (
               <Button
                 className="grow h2 pointer white bp3-minimal w4 mt4"
                 style={{
-                  background: '#3F61C5',
+                  background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -182,4 +188,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const AddDesignationForm = connect(mapStateToProps)(AddDesignationFormComponent);
+export const AddDesignationForm = connect(mapStateToProps)(
+  AddDesignationFormComponent,
+);

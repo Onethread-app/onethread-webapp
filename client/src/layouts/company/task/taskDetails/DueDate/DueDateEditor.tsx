@@ -137,7 +137,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
             <Button
               className="grow pointer white bp3-minimal w4 mt2"
               style={{
-                background: '#3F61C5',
+                background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}

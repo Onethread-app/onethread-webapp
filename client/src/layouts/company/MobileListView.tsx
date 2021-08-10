@@ -51,7 +51,7 @@ export const ListViewComponent = (
   return (
     <>
       <div>
-        <div style={{ backgroundColor: '#3F61C5' }}>
+        <div style={{ backgroundColor: '#34b3e9' }}>
           <Icon
             icon="delete"
             iconSize={20}
@@ -88,7 +88,7 @@ export const ListViewComponent = (
         <NavLink
           exact
           className="w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2"
-          activeStyle={{ background: '#3F61C5', color: 'white' }}
+          activeStyle={{ background: '#34b3e9', color: 'white' }}
           style={{ color: 'black' }}
           to={`/${props.user.name}/settings`}
           onClick={() => props.setShowDialog(false)}
@@ -104,7 +104,7 @@ export const ListViewComponent = (
         <NavLink
           exact
           className="w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2"
-          activeStyle={{ background: '#3F61C5', color: 'white' }}
+          activeStyle={{ background: '#34b3e9', color: 'white' }}
           style={{ color: 'black' }}
           to={`/${props.user.name}/home`}
           onClick={() => props.setShowDialog(false)}

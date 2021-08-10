@@ -348,14 +348,14 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                         icon="refresh"
                         style={{
                           color: '#fff',
-                          background: '#3F61C5',
+                          background: '#34b3e9',
                         }}
                       />
                     }
                     onClick={handleClear}
                     style={{
                       height: '38px',
-                      background: '#3F61C5',
+                      background: '#34b3e9',
                     }}
                   />
                 )}
@@ -589,7 +589,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       style={{
                         color:
                           currentProjectPage > 1
-                            ? '#3F61C5'
+                            ? '#34b3e9'
                             : '#656565',
                       }}
                     />
@@ -613,7 +613,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           Math.ceil(
                             filteredProjects.length / itemsPerPage,
                           )
-                            ? '#3F61C5'
+                            ? '#34b3e9'
                             : '#656565',
                       }}
                     />
