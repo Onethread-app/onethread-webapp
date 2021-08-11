@@ -51,7 +51,8 @@ export const ListViewComponent = (
     if (
       gettingDetails === true &&
       props.gettingCompanyDetails === false &&
-      props.errorOnGettingCompanyDetails === ''
+      props.errorOnGettingCompanyDetails === '' &&
+      !!companyName
     ) {
       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
       setGettingDetails(false);
@@ -59,6 +60,7 @@ export const ListViewComponent = (
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    companyName,
     gettingDetails,
     props.gettingCompanyDetails,
     props.errorOnGettingCompanyDetails,

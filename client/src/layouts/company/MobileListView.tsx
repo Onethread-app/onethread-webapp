@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { connect, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { History } from 'history';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
@@ -16,6 +16,8 @@ import { NavLink } from 'react-router-dom';
 import { logoutAction } from 'stores/auth/Actions';
 import { useTranslation } from 'react-i18next';
 import ReportForm from '../../components/ReportForm';
+import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
+import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -25,28 +27,60 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   currentCompany: string;
   companies: ICompanyByUser[];
   user: User;
-  getCompanyDetails: (companyId: string, history: History) => void;
+  getCompanyDetails: (companyId: string) => void;
   getAllCompaniesByUserId: (userId: string) => void;
   getNotifications: (companyId: string) => void;
   logoutAction: (history: History) => void;
-  companyError: string;
-  isCompanyLoading: boolean;
+  gettingCompanyDetails: boolean;
+  errorOnGettingCompanyDetails: string;
 }
 
 export const ListViewComponent = (
-  props: CompanyListViewInternalProps & RouteComponentProps,
+  props: CompanyListViewInternalProps,
 ) => {
   const [loading, setLoading] = useState(true);
   const [showButton, setShowButton] = useState(false);
   const [showButtonReport, setShowButtonReport] = useState(false);
+  const [gettingDetails, setGettingDetails] = useState(false);
+  const [companyName, setCompanyName] = useState('');
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
   useEffect(() => {
     if (loading === true) {
       props.getAllCompaniesByUserId(props.user._id);
     }
     setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
-  const { t } = useTranslation();
+  useEffect(() => {
+    if (
+      gettingDetails === true &&
+      props.gettingCompanyDetails === false &&
+      props.errorOnGettingCompanyDetails === '' &&
+      !!companyName
+    ) {
+      dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
+      setGettingDetails(false);
+      history.push(`/company/${companyName}/dashboard`);
+      props.setShowDialog(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    companyName,
+    gettingDetails,
+    props.gettingCompanyDetails,
+    props.errorOnGettingCompanyDetails,
+  ]);
+
+  const handleClick = (name: string) => {
+    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    props.getCompanyDetails(name);
+    setCompanyName(name);
+    setGettingDetails(true);
+  };
 
   return (
     <>
@@ -61,7 +95,7 @@ export const ListViewComponent = (
           <Button
             className="bp3-minimal outline-0 bp3-popover-dismiss mt5"
             onClick={() => {
-              props.history.push(`/${props.user.name}`);
+              history.push(`/${props.user.name}`);
               props.setShowDialog(false);
             }}
           >
@@ -73,6 +107,7 @@ export const ListViewComponent = (
                     : user
                 }
                 className="db w2 h2 br-100 ba b--white-90 "
+                alt=""
               />
             </div>
             <div className="dtc v-mid pl3 pt2">
@@ -99,7 +134,6 @@ export const ListViewComponent = (
             style={{ color: '#787e8d' }}
           />
           {t('app.user.User-settings.Profile')}
-          {/* Profile Settings */}
         </NavLink>
         <NavLink
           exact
@@ -115,7 +149,6 @@ export const ListViewComponent = (
             style={{ color: '#787e8d' }}
           />
           {t('app.user.User-settings.Home')}
-          {/* Home */}
         </NavLink>
         <Button
           className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
@@ -124,19 +157,16 @@ export const ListViewComponent = (
           alignText="left"
         >
           {t('app.user.User-settings.Report-Issue')}
-          {/* Report issue */}
         </Button>
         <Button
           className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
-          onClick={(e: any) => props.logoutAction(props.history)}
+          onClick={(e: any) => props.logoutAction(history)}
           icon="log-in"
           alignText="left"
         >
           {t('app.user.User-settings.Logout')}
-          {/* Logout */}
         </Button>
         <h1 className="f7 ml3">{t('app.homepage.My-Companies')}</h1>
-        {/* <h1 className="f7 ml3">My Companies</h1> */}
         <div
           className="mw6 center overflow-y-auto pl2"
           style={{ maxHeight: '18rem' }}
@@ -155,25 +185,7 @@ export const ListViewComponent = (
                         ? 'bg-black-10'
                         : ''
                     } mt1 pointer bp3-popover-dismiss`}
-                    onClick={async () => {
-                      props.getNotifications(c.company._id);
-
-                      await props.getCompanyDetails(
-                        c.company.uniqueName,
-                        props.history,
-                      );
-
-                      if (
-                        props.isCompanyLoading === false &&
-                        props.companyError === ''
-                      ) {
-                        props.history.push(
-                          `/company/${c.company.uniqueName}/dashboard`,
-                        );
-
-                        props.setShowDialog(false);
-                      }
-                    }}
+                    onClick={() => handleClick(c.company.uniqueName)}
                   >
                     <div className="flex justify-between">
                       <img
@@ -250,8 +262,9 @@ const mapStateToProps = (state: any) => {
     companies: state.userReducer.user.companies,
     user: state.userReducer.user,
     currentCompany: state.companyReducer.currentCompany._id,
-    companyError: state.companyReducer.error,
-    isCompanyLoading: state.companyReducer.loading,
+    gettingCompanyDetails: state.companyReducer.gettingCompanyDetails,
+    errorOnGettingCompanyDetails:
+      state.companyReducer.errorOnGettingCompanyDetails,
   };
 };
 
@@ -260,4 +273,4 @@ export const MobileListView = connect(mapStateToProps, {
   getCompanyDetails,
   getAllCompaniesByUserId,
   getNotifications,
-})(withRouter(ListViewComponent));
+})(ListViewComponent);
