@@ -8,7 +8,7 @@ import icon from '../../../resources/images/icons/announcement.png';
 const CompanyAnnouncementItem = (props) => {
   return (
     <div className="company-announcements-status mb2 flex pa3">
-      <div className="icon">
+      <div className="icon pt1">
         <img src={icon} alt="announcement" />
       </div>
       <div className="content-wrapper content-color pl3 pb1">

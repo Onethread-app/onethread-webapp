@@ -5,7 +5,7 @@ import './SearchOption.scss';
 const SearchOption = ({ list, rows, setRows }: any) => {
   const [searched, setSearched] = React.useState<string>('');
   const requestSearch = (searchedVal: string) => {
-    if (searchedVal == '') {
+    if (searchedVal === '') {
       setRows(list);
     } else {
       if (rows) {

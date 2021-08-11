@@ -62,7 +62,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
   );
   const [selectedOption, setSelectedOption] = useState(options[2]);
   const [creatingTask, setCreatingTask] = useState(false);
-  const [error, setError] = useState(false);
+  const [assignedUserError, setAssignedUserError] = useState(false);
   const [errorText, setErrorText] = useState('');
 
   const userRequestFactory = async (userName: string) => {
@@ -103,7 +103,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
   };
 
   const onSubmit = (values) => {
-    if (username) {
+    if (selectedTeamMember.length) {
       const modifiedTask = {
         ...values,
         priority: selectedOption.value,
@@ -112,12 +112,14 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
       };
       props.createTask(modifiedTask);
       setCreatingTask(true);
-    } else setError(true);
+    } else setAssignedUserError(true);
   };
 
   useEffect(() => {
-    setError(false);
-  }, [username]);
+    if (selectedTeamMember.length) {
+      setAssignedUserError(false);
+    }
+  }, [selectedTeamMember]);
 
   return (
     <Container>
@@ -232,11 +234,16 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         }}
                         multipleItemSelect={true}
                       />
-                      <small
-                        style={{ color: 'red', margin: '1rem 0rem' }}
-                      >
-                        {error && 'Required'}
-                      </small>
+                      {assignedUserError && (
+                        <small
+                          style={{
+                            color: 'red',
+                            margin: '1rem 0rem',
+                          }}
+                        >
+                          Required
+                        </small>
+                      )}
                     </div>
                     {selectedTeamMember.length > 0 && (
                       <div className="w-100">
