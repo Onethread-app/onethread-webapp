@@ -57,10 +57,11 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [singleProjectLoading, setSingleProjectLoading] = useState(
     false,
   );
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  const [projectsLoaded, setProjectsLoaded] = useState(false);
   const [singlePid, setSinglePid] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [showClearFilter, setShowClearFilter] = useState(false);
-  const [projectsLoaded, setProjectsLoaded] = useState(false);
   const [currentProjectPage, setCurrentProjectPage] = useState(1);
   const [allProjects, setAllProjects] = useState<any>([]); // projects after first render or after applying filters
   const [filteredProjects, setFilteredProjects] = useState<any>([]); // projects after applying search
@@ -111,7 +112,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   useEffect(() => {
     async function loadProjects() {
       await props.getAllProjects();
-      setProjectsLoaded(true);
+      setLoadingProjects(true);
       if (props.company.role !== 'employee') {
         props.getAllDepartments();
         props.getAllAssociates();
@@ -120,6 +121,15 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
 
     loadProjects();
   }, []);
+
+  useEffect(() => {
+    if (
+      loadingProjects === true &&
+      props.gettingAllProjects === false
+    ) {
+      setProjectsLoaded(true);
+    }
+  }, [loadingProjects, props.gettingAllProjects]);
 
   useEffect(() => {
     setAllProjects(orderBy(props.projects, ['createdAt'], ['desc']));
@@ -384,11 +394,11 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                   : {}
               }
             >
-              {!projectsLoaded ? (
+              {projectsLoaded === false ? (
                 <CircularProgress />
               ) : filteredProjects.length > 0 ? (
                 currentProjects.map((project: any) => (
-                  <div className="pa1">
+                  <div className="pa1" key={project._id}>
                     <Card
                       key={project._id}
                       className="h-100"
@@ -621,7 +631,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                 </div>
               )}
           </div>
-          {props.company.role !== 'employee' && (
+          {projectsLoaded && props.company.role !== 'employee' && (
             <div>
               <img
                 onClick={() =>
@@ -666,6 +676,7 @@ const mapStateToProps = (state: any) => ({
   errorOnSingleProjectLoading:
     state.projectReducer.errorOnSingleProjectLoading,
   singleProjectLoading: state.projectReducer.singleProjectLoading,
+  gettingAllProjects: state.projectReducer.gettingAllProjects,
   archiveProjectList: state.projectReducer.allArchive,
   company: state.companyReducer.currentCompany,
   companyRooms: state.roomReducer.companyRooms,

@@ -245,7 +245,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         allProjects: action.payload,
-        errorOnGettingAllProjects: false,
+        gettingAllProjects: false,
       };
     case ProjectActionTypes.GET_ALL_PROJECTS_FAILURE:
       return {
