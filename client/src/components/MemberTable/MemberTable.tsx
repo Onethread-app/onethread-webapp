@@ -176,7 +176,10 @@ export default function MemberTable({ type, props, rows }) {
                         padding="none"
                         align={'left'}
                       >
-                        <div className="align-items flex">
+                        <div
+                          className="items-center flex"
+                          style={{ minWidth: '9rem' }}
+                        >
                           {row.profileImage === null ? (
                             <img
                               src={altImg}
@@ -211,10 +214,15 @@ export default function MemberTable({ type, props, rows }) {
                                     iconSize={15}
                                     style={{
                                       color: 'rgb(228, 162, 0)',
+                                      marginRight: '3px',
                                     }}
                                   />
                                 ) : (
-                                  <Icon icon="star" iconSize={15} />
+                                  <Icon
+                                    icon="star"
+                                    iconSize={15}
+                                    className="mr1"
+                                  />
                                 )
                               ) : null}
                             </>
@@ -274,7 +282,7 @@ export default function MemberTable({ type, props, rows }) {
                                   <Popover
                                     className="fr"
                                     position={Position.BOTTOM}
-                                    popoverClassName="bp3-popover-content-sizing bg-white"
+                                    popoverClassName="bp3-popover-content bg-white"
                                     content={
                                       <ButtonGroup
                                         alignText={Alignment.LEFT}
@@ -323,7 +331,7 @@ export default function MemberTable({ type, props, rows }) {
                                   <Popover
                                     className="fr"
                                     position={Position.BOTTOM}
-                                    popoverClassName="bp3-popover-content-sizing bg-white"
+                                    popoverClassName="bp3-popover-content bg-white"
                                     content={
                                       <ButtonGroup
                                         alignText={Alignment.LEFT}
@@ -381,7 +389,7 @@ export default function MemberTable({ type, props, rows }) {
                                   <Popover
                                     className="fr"
                                     position={Position.BOTTOM}
-                                    popoverClassName="bp3-popover-content-sizing bg-white"
+                                    popoverClassName="bp3-popover-content bg-white"
                                     content={
                                       <ButtonGroup
                                         alignText={Alignment.LEFT}
@@ -426,7 +434,7 @@ export default function MemberTable({ type, props, rows }) {
                               <Popover
                                 className="fr"
                                 position={Position.BOTTOM}
-                                popoverClassName="bp3-popover-content-sizing bg-white"
+                                popoverClassName="bp3-popover-content bg-white"
                                 content={
                                   <ButtonGroup
                                     alignText={Alignment.LEFT}

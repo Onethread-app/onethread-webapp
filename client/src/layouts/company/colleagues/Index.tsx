@@ -177,8 +177,8 @@ const ColleaguesPageComponent = (props: Colleagues) => {
     <>
       {isMobileOnly && <Navbar type="company" />}
       <div
-        className="ph5-ns ph3 pb5 pt5 pt0-ns h-100"
-        style={{ background: '#E5E5E5' }}
+        className="ph5-ns ph3 pb5 pt5 pt0-ns"
+        style={{ background: '#E5E5E5', minHeight: '100%' }}
       >
         <div
           className="flex justify-between items-center mt2"
