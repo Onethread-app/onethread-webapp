@@ -9,6 +9,21 @@ export const readNotification = (notificationId: String) => ({
   notificationId,
 });
 
+export const markAllAsRead = (list: string[]) => ({
+  type: NOTIFICATION.MARK_ALL_AS_READ_START,
+  payload: list,
+});
+
+export const markAllAsReadSuccess = (response: any) => ({
+  type: NOTIFICATION.MARK_ALL_AS_READ_SUCCESS,
+  payload: response,
+});
+
+export const markAllAsReadFailure = (errorMessage: any) => ({
+  type: NOTIFICATION.MARK_ALL_AS_READ_FAILURE,
+  payload: errorMessage,
+});
+
 export const seenNotification = () => ({
   type: NOTIFICATION.SEEN_NOTIFICATION,
 });
