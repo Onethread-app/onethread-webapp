@@ -1,4 +1,6 @@
 const express = require('express');
+const schemaValidator = require('../helpers/joiSchemaValidator');
+const notificationValidator = require('./notification.validation');
 const router = express.Router();
 
 const notificationCtrl = require('./notification.controller');
@@ -15,6 +17,14 @@ router.route('/get').get(authorization, notificationCtrl.list);
 //   authorization,
 //   notificationCtrl.test,
 // );
+
+router
+  .route('/markallread')
+  .put(
+    authorization,
+    schemaValidator(notificationValidator.markAllAsRead),
+    notificationCtrl.markAllAsRead,
+  );
 
 router
   .route('/read/:userNotificationId')

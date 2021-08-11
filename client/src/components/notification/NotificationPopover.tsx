@@ -11,6 +11,7 @@ import {
   readNotification,
   getNotifications,
   incrementPageNumber,
+  markAllAsRead,
 } from 'stores/notifications/Action';
 import { User } from 'stores/user/Reducer';
 
@@ -20,6 +21,7 @@ interface INotificationPopover {
   readNotification: (notificationId: any) => void;
   getNotifications: () => void;
   incrementPageNumber: () => void;
+  markAllAsRead: (list: string[]) => void;
 }
 
 const NotificationPopover = (props: INotificationPopover) => {
@@ -77,8 +79,23 @@ const NotificationPopover = (props: INotificationPopover) => {
     history.push(url);
   };
 
+  const handleAllRead = () => {
+    props.markAllAsRead(
+      notificationToShow.map((notification) => notification._id),
+    );
+  };
+
   return (
     <>
+      {notificationToShow.length > 0 && (
+        <p
+          className="pv2 mb0 ml-auto mr2 pointer dim"
+          style={{ width: 'fit-content', color: '#106ba3' }}
+          onClick={handleAllRead}
+        >
+          Mark all as read
+        </p>
+      )}
       <div
         style={{
           maxHeight: '300px',
@@ -145,4 +162,5 @@ export default connect(mapStateToProps, {
   readNotification,
   getNotifications,
   incrementPageNumber,
+  markAllAsRead,
 })(NotificationPopover);

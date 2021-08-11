@@ -59,7 +59,7 @@ const Projects = () => {
             My projects
           </h3>
         </div>
-        <div>
+        <div className="flex flex-column justify-center">
           <input
             type="text"
             className="search-project"

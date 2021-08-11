@@ -1,4 +1,4 @@
-import { all, put, select } from 'redux-saga/effects';
+import { all, call, put, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
 import { NOTIFICATION } from './Types';
@@ -6,6 +6,7 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 import { isEqual } from 'lodash';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { markAllAsReadFailure, markAllAsReadSuccess } from './Action';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
@@ -72,6 +73,26 @@ function* readNotification(action) {
     }
   }
 }
+
+function* markAllAsReadAsync({ payload }: any) {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.put(
+        `notifications/markallread`,
+        {
+          list: payload,
+        },
+        headers,
+      );
+
+      yield put(markAllAsReadSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(markAllAsReadFailure(returnErrorText(error)));
+  }
+}
+
 function* seenNotification() {
   try {
     // const selectCompanyId = (state) =>
@@ -126,6 +147,13 @@ function* webPushNotification(action) {
   }
 }
 
+export function* onMarkAllAsRead() {
+  yield takeLatest(
+    NOTIFICATION.MARK_ALL_AS_READ_START,
+    markAllAsReadAsync,
+  );
+}
+
 export default function* notificationSaga() {
   yield all([
     takeEvery(
@@ -135,5 +163,6 @@ export default function* notificationSaga() {
     takeLatest(NOTIFICATION.READ_NOTIFICATION, readNotification),
     takeLatest(NOTIFICATION.SEEN_NOTIFICATION, seenNotification),
     takeLatest(NOTIFICATION.WEB_PUSH_LOAD, webPushNotification),
+    call(onMarkAllAsRead),
   ]);
 }

@@ -726,3 +726,20 @@ module.exports.read = async (req, res, next) => {
       next(e);
     });
 };
+
+module.exports.markAllAsRead = async (req, res, next) => {
+  try {
+    await UserNotification.updateMany(
+      { _id: { $in: req.body.list } },
+      { $set: { read: true } },
+      { upsert: true, new: true },
+    ).exec();
+    const modifiedNotifications = await UserNotification.find({
+      _id: { $in: req.body.list },
+    }).exec();
+    return sendJSONresponse(res, 200, modifiedNotifications);
+  } catch (error) {
+    logger.info('Notification', error);
+    next(error);
+  }
+};

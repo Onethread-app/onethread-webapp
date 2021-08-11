@@ -32,7 +32,7 @@ const MemberListDialog = (props: IMemberListDialog) => {
   return (
     <Container>
       {props.members.map((member: IBoardMember | ITaskMember) => (
-        <MemberContainer>
+        <MemberContainer key={member._id}>
           <Avatar
             alt={`${member.firstName} ${member.lastName}`}
             src={member.profileImage ?? UserIcon}
