@@ -12,7 +12,7 @@ import moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
 import { ICompany } from 'stores/company/Reducer';
-import { projectRules } from './settings/projectrules';
+// import { projectRules } from './settings/projectrules';
 import { Color } from 'stores/UtilsActions';
 
 import {
@@ -45,15 +45,10 @@ const ArchivedProjects = (props: IArchivedProjects) => {
   ] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const permissions = projectRules(props.role, props.optionalRole);
+  // const permissions = projectRules(props.role, props.optionalRole);
 
   const checkRoleForUnarchiveProject = (projectId: string) => {
-    if (
-      permissions.grantAll ||
-      permissions.projectModerator.includes('updateProjectPreface')
-    ) {
-      props.unarchiveProject(projectId);
-    }
+    props.unarchiveProject(projectId);
   };
 
   const handleDialogBox = async (pid) => {
@@ -136,46 +131,45 @@ const ArchivedProjects = (props: IArchivedProjects) => {
                         >
                           {archProject.name}
                         </h3>
-                        {permissions.grantAll && (
-                          <Popover
-                            className="w-10"
-                            content={
-                              <Menu className="pa2">
-                                <MenuItem
-                                  className="pa1"
-                                  intent="primary"
-                                  text="Restore Project"
-                                  onClick={() =>
-                                    checkRoleForUnarchiveProject(
-                                      archProject._id,
-                                    )
-                                  }
-                                />
-                                <MenuItem
-                                  className="pa1"
-                                  intent="danger"
-                                  text="Delete Project"
-                                  onClick={() =>
-                                    handleDialogBox(archProject._id)
-                                  }
-                                />
-                              </Menu>
-                            }
-                            target={
-                              <Button
-                                style={{
-                                  transform: 'rotate(90deg)',
-                                  OTransform: 'rotate(90deg)',
-                                  msTransform: 'rotate(90deg)',
-                                  WebkitTransform: 'rotate(90deg)',
-                                }}
-                                icon="more"
-                                minimal={true}
-                                className="outline-0"
+
+                        <Popover
+                          className="w-10"
+                          content={
+                            <Menu className="pa2">
+                              <MenuItem
+                                className="pa1"
+                                intent="primary"
+                                text="Restore Project"
+                                onClick={() =>
+                                  checkRoleForUnarchiveProject(
+                                    archProject._id,
+                                  )
+                                }
                               />
-                            }
-                          />
-                        )}
+                              <MenuItem
+                                className="pa1"
+                                intent="danger"
+                                text="Delete Project"
+                                onClick={() =>
+                                  handleDialogBox(archProject._id)
+                                }
+                              />
+                            </Menu>
+                          }
+                          target={
+                            <Button
+                              style={{
+                                transform: 'rotate(90deg)',
+                                OTransform: 'rotate(90deg)',
+                                msTransform: 'rotate(90deg)',
+                                WebkitTransform: 'rotate(90deg)',
+                              }}
+                              icon="more"
+                              minimal={true}
+                              className="outline-0"
+                            />
+                          }
+                        />
                       </div>
                       <div className="flex flex-column items-start mt2">
                         <span
