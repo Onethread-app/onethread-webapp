@@ -20,6 +20,7 @@ const MultiSelectComponent = ({
       return [...prev.slice(0, index), ...prev.slice(index + 1)];
     });
   };
+  // console.log(container);
   return (
     <>
       <MultiSelect
@@ -33,6 +34,7 @@ const MultiSelectComponent = ({
             key={item.id}
             onClick={(e: any) => onItemSelect(item)}
             text={item.label}
+            className="ttc"
             intent={
               selected.find((si) => si.label === item.label)
                 ? Intent.PRIMARY
@@ -45,7 +47,9 @@ const MultiSelectComponent = ({
             }
           />
         )}
-        tagRenderer={(item) => <p> {item.label} </p>}
+        tagRenderer={(item) => (
+          <p className="ma0 white ttc"> {item.label} </p>
+        )}
         items={container}
         selectedItems={selected}
         onItemSelect={onItemSelect}

@@ -10,11 +10,11 @@ import {
 import { Icon } from '@blueprintjs/core';
 
 import Column from 'components/column/Column';
+import { RightSidebar } from 'components/RightSidebar';
+import { ColumnForm } from 'components/column/ColumnForm';
 
 import { dragAndDropTask, updateColumn } from 'stores/board/Actions';
 import { IColumn, TaskBoard } from 'stores/board/Reducer';
-import { ColumnForm } from 'layouts/company/boardDetails/column/ColumnForm';
-import { RightSidebar } from 'components/RightSidebar';
 
 const ColumnsContainerDiv = styled.div`
   gap: 1.25rem;
@@ -32,7 +32,6 @@ const AddColumnButton = styled.div`
   border-radius: 8px;
   cursor: pointer;
 `;
-
 interface IColumnsContainerInternalProps {
   columns: IColumn[];
   currentBoard: TaskBoard;
