@@ -24,7 +24,7 @@ const handleMarkAllRead = (state: any, list: any) => {
         notification._id === modifiedNotification._id,
     );
 
-    return found ? { ...notification, ...found } : notification;
+    return found ? { ...notification, read: true } : notification;
   });
 };
 
