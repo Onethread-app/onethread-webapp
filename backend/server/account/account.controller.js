@@ -77,7 +77,6 @@ const options = [
 // get today's tasks for user
 const getTodaysTask = async (req) => {
   try {
-    console.log(req.query.date);
     let startToday = new Date(req.query.date);
     startToday.setHours(0, 0, 0, 0);
     let endToday = new Date();
@@ -942,7 +941,7 @@ const userTaskList = async (req, res, next) => {
   try {
     const todaysTasks = await getTodaysTask(req);
     const tomorrowTasks = await getUpcomingTasks(req, 1, 1); // next 1 day
-    const upcomingTasks = await getUpcomingTasks(req, 1, 15); // next 15 days
+    const upcomingTasks = await getUpcomingTasks(req, 2, 16); // next 15 days
     const dueTasks = await getDueTasks(req);
 
     const userTask = {
