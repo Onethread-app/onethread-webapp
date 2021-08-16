@@ -6,7 +6,7 @@ import { CHANGE_ROOM } from 'stores/room/Types';
 import { RoomQueries, RoomPage } from '../Index';
 import { isMobileOnly } from 'react-device-detect';
 import { Drawer } from '@blueprintjs/core';
-
+import memberListIcon from './../../../../resources/images/member-list.svg';
 interface RoomListItemProps {
   room: IRoom;
   lastChild?: boolean;
@@ -99,7 +99,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
               {props.room.name[0]}
             </span>
           </div>
-          <div className="flex justify-around items-center">
+          <div className="flex justify-between items-center w-100">
             <h1
               className={`f6 mv0 break-word ${
                 props.active ? 'fw7' : 'fw4'
@@ -114,6 +114,20 @@ export const RoomListItem = (props: RoomListItemProps) => {
             >
               {props.room.name}
             </h1>
+            <div className="ma0 pointer dim flex items-center">
+              <img
+                className=""
+                src={memberListIcon}
+                width="20px"
+                height="20px"
+                style={{}}
+                color="#34b3e9"
+                alt=""
+              />
+              <span className="f5 ml2 fw7">
+                {props.room.memberCount}
+              </span>
+            </div>
             {unreadCount > 0 ? (
               <h6
                 className="bg-tigrowLightBlue white fw8 ma0 ml1"

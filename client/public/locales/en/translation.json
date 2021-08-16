@@ -358,6 +358,10 @@
     },
     "project": {
       "Project-preface": {
+        "My-projects": "My projects",
+        "Create-Project": "Create Project",
+        "Select-company": "Select a company (Required)",
+        "Project-Name": "Project Name (Required)",
         "Intro": "Preface",
         "Details": "Project Description",
         "Outline": "Project Outline",
@@ -367,7 +371,10 @@
         "Deadline": "Deadline",
         "Remaining-Tasks": "Remaining Tasks",
         "Update-Project": "Update Project",
-        "Archive-Project": "Archive Project"
+        "Archive-Project": "Archive Project",
+        "Label": "Label",
+        "Done": "Done",
+        "Cancel": "Cancel"
       },
 
       "Project-rooms": {
@@ -456,6 +463,15 @@
       },
 
       "Tasks": {
+        "Tasks": "Tasks",
+        "View": "View",
+        "List": "List",
+        "Board": "Board",
+        "Add-task": "Add new task",
+        "Task-Name": "Task Name",
+        "Activity": "Activity",
+        "Due-Date": "Due Date",
+        "Assigned-Member": "Assigned Member",
         "Task-Status": "Task Status",
         "Total-tasks": "Total tasks",
         "Remaining-tasks": "Remaining tasks",
@@ -477,6 +493,9 @@
     },
     "user": {
       "Personal-profile": {
+        "My-Profile": "My Profile",
+        "Completed": "Completed",
+        "Team": "Team",
         "Profile": "Profile",
         "Cover": "Change Cover",
         "About": "About",
@@ -551,6 +570,15 @@
         "Name": "Project Name (Required)",
         "Type": "Please Select a company"
       }
+    },
+    "Video-Conferences": {
+      "Video-Conferences": "Video Conferences",
+      "Make-Team-align": "Make Your Team align",
+      "Create-link": "Create link",
+      "Empowering-teams": "Empowering remote teams",
+      "Enter-name": "Enter team name and Create link",
+      "Enter-team-name": "Enter team name",
+      "Link": "Link"
     }
   }
 }

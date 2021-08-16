@@ -1,10 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-
 import { Button, Dialog, Popover, Position } from '@blueprintjs/core';
-
 import { CompanyListView } from 'layouts/company/ListView';
 import { CompanySignupForm } from 'layouts/company/Form';
+import './CompanyPopoverIcon.scss';
 
 interface ICompanyPopoverIcon {
   type: string;
@@ -12,13 +11,12 @@ interface ICompanyPopoverIcon {
 
 const CompanyPopoverIcon = (props: ICompanyPopoverIcon) => {
   const [showDialog, setShowDialog] = React.useState(false);
-
   const { t } = useTranslation();
 
   return (
     <>
       <Popover
-        popoverClassName="bp3-popover-content-sizing bg-white"
+        popoverClassName="bp3-popover-content-sizing bg-white padding-fix"
         position={Position.BOTTOM}
         content={
           <CompanyListView

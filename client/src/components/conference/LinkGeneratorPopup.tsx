@@ -4,10 +4,9 @@ import axios from 'axios';
 import { tokenConfig } from 'stores/UtilsActions';
 import { server } from 'config';
 import styled from 'styled-components';
-
 import Validator from 'layouts/videoConferences/utils/Validator';
-
 import Link from 'resources/svg/Link.svg';
+import { useTranslation } from 'react-i18next';
 
 const Container = styled.div`
   height: 100%;
@@ -84,6 +83,7 @@ const LinkGeneratorPopup = () => {
   const [conferenceLink, setConferenceLink] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isValid, setIsValid] = useState(false);
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setTeamName(e.target.value);
@@ -130,15 +130,18 @@ const LinkGeneratorPopup = () => {
 
   return (
     <Container className="flex flex-column items-center justify-center">
-      <H2>Empowering remote teams</H2>
-      <P>Enter team name and Create link</P>
+      <H2>{t('app.Video-Conferences.Empowering-teams')}</H2>
+      <P>{t('app.Video-Conferences.Enter-name')}</P>
+      {/* <H2>Empowering remote teams</H2>
+      <P>Enter team name and Create link</P> */}
       <div className="flex items-center justify-center mt2">
         <Input
           type="text"
           name="team"
           id="teaminput"
           autoFocus
-          placeholder="Enter team name"
+          placeholder={t('app.Video-Conferences.Enter-team-name')}
+          // placeholder="Enter team name"
           value={teamName}
           onKeyDown={handleKeyDown}
           onChange={handleChange}
@@ -152,10 +155,12 @@ const LinkGeneratorPopup = () => {
         </LinkBox>
       </div>
       {errorMessage && <div className="mt2">{errorMessage}</div>}
-      
+
       {conferenceLink && (
-        <div className="mt2 w-55">Link:
-           <a href={conferenceLink} target="_blank" rel="noreferrer">
+        <div className="mt2 w-55">
+          {/* Link: */}
+          {t('app.Video-Conferences.Link')}:{' '}
+          <a href={conferenceLink} target="_blank" rel="noreferrer">
             {conferenceLink}
           </a>
         </div>

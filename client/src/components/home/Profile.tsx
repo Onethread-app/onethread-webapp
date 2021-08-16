@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -16,7 +17,7 @@ interface IProfile {
 
 const Profile = (props: IProfile) => {
   const history = useHistory();
-
+  const { t } = useTranslation();
   return (
     <div className="profile">
       <div className="flex justify-between w-100">
@@ -25,9 +26,14 @@ const Profile = (props: IProfile) => {
             className="pointer"
             onClick={() => history.push(`/${props.userName}`)}
           >
-            My Profile
+            {t('app.user.Personal-profile.My-Profile')}
+            {/* My Profile */}
           </h3>
-          <p>{Math.round(props.complete)}% Completed</p>
+          <p>
+            {Math.round(props.complete)}%{' '}
+            {t('app.user.Personal-profile.Completed')}
+          </p>
+          {/* <p>{Math.round(props.complete)}% Completed</p> */}
         </div>
       </div>
       <div>
@@ -46,7 +52,9 @@ const Profile = (props: IProfile) => {
         <p>{props.position}</p>
       </div>
       <div className="team">
-        Team : {('0' + (props.teamNumber + 1)).slice(-2)}
+        {t('app.user.Personal-profile.Team')} :{' '}
+        {('0' + (props.teamNumber + 1)).slice(-2)}
+        {/* Team : {('0' + (props.teamNumber + 1)).slice(-2)} */}
       </div>
     </div>
   );

@@ -53,6 +53,7 @@ export interface IRoom {
   updatedAt: string;
   archive: boolean;
   removed: boolean;
+  memberCount: number;
 }
 
 export interface IChat {
@@ -214,6 +215,7 @@ const InitialState: IRoomReducer = {
     removed: false,
     createdAt: '',
     updatedAt: '',
+    memberCount: 0,
   },
   allMessages: false,
   messages: [],

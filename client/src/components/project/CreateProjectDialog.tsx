@@ -202,7 +202,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
           </div>
         )}
         <CreatableSelect
-          placeholder="Select a company (Required)"
+          placeholder="Create or Select a company"
           id={'companies'}
           options={options}
           onChange={handleCompanyChange}

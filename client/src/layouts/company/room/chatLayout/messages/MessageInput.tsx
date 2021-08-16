@@ -205,7 +205,7 @@ const CustomMentionEditor = (
             autoCapitalize="off"
             autoComplete="off"
             autoCorrect="off"
-            placeholder="Type your message and hit ENTER to send"
+            placeholder="Ask something or post an update"
           />
           <MentionSuggestions
             open={open}
