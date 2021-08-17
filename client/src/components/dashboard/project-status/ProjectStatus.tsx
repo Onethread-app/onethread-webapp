@@ -5,6 +5,8 @@ import { tigrowApi } from 'config';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import Modal from 'react-modal';
 import {
   getCompanyAnnouncement,
   getLatestCompletedTasks,
@@ -24,6 +26,8 @@ import MultiSelectComponent from './MultiSelectComponent';
 // import { Field, Form } from 'react-final-form';
 import './ProjectStatus.scss';
 import TasksTable from './TasksTable';
+import { customStyles } from 'layouts/company/settings/Index';
+import ErrorText from 'layouts/company/settings/ErrorText';
 
 interface Data {
   taskname: string;
@@ -101,6 +105,10 @@ const ProjectStatusComponent = (props) => {
 
   // Date time
   const [date, setDate] = useState<any>(null);
+  const [isSubscriptionExpired, setIsSubscriptionExpired] = useState(
+    false,
+  );
+  const history = useHistory();
 
   async function getInfo() {
     setIsLoading(true);
@@ -162,9 +170,7 @@ const ProjectStatusComponent = (props) => {
             ? window.location.replace(
                 `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
               )
-            : window.location.replace(
-                `${window.location.origin}/${props.user.name}/home`,
-              );
+            : setIsSubscriptionExpired(true);
         }
       }
     }
@@ -274,6 +280,12 @@ const ProjectStatusComponent = (props) => {
     selectedPriority.length === 0 &&
     selectedProjects.length === 0
   );
+
+  const closeModal = () => {
+    props.company.role === 'superAdmin'
+      ? history.push(`/company/${props.company.uniqueName}/settings/`)
+      : history.push(`/${props.user.name}/home`);
+  };
 
   const { t } = useTranslation();
 
@@ -407,6 +419,25 @@ const ProjectStatusComponent = (props) => {
             </div>
           )}
         </div>
+      )}
+      {isSubscriptionExpired && (
+        <Modal
+          isOpen={isSubscriptionExpired}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <ErrorText
+            closeModal={closeModal}
+            text={`${
+              props.company.role === 'superAdmin'
+                ? 'Your Subscription has expired'
+                : 'Your Subscription has expired, contact with Super Admin'
+            }`}
+            subtext="To keep using Onethread without interruption you need to pay your
+              dues."
+          />
+        </Modal>
       )}
     </div>
   );
