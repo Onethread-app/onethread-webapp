@@ -9,12 +9,16 @@ import Profile from 'components/home/Profile';
 import Projects from 'components/home/Projects';
 
 import './Index.styles.scss';
+import Subtasks from 'components/home/Subtasks';
 
 const index = () => {
   return isMobileOnly ? (
     <div className="home-container">
       <div>
         <Tasks />
+      </div>
+      <div>
+        <Subtasks />
       </div>
       <div>
         <Projects />
@@ -35,6 +39,7 @@ const index = () => {
       <div>
         {/* <Weather /> */}
         <Tasks />
+        <Subtasks />
       </div>
       <div>
         <Profile />

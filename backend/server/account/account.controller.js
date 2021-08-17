@@ -37,7 +37,11 @@ const {
 } = require('../services/webpush.services');
 const { Tasks } = require('elasticsearch');
 const Task = require('../task/task.model');
+const SubTask = require('../task/subtask/subtask.model');
 const TaskAssign = require('../task/taskAssign.model');
+const {
+  subtaskPopulateOptionsForUser,
+} = require('../helpers/PopulateOptions');
 
 const options = [
   {
@@ -992,6 +996,41 @@ const userDueTask = async (req, res, next) => {
     next(error);
   }
 };
+
+const userSubtasks = async (req, res, next) => {
+  try {
+    const subtasksAssignedToUser = await SubTask.find({
+      assignedMembers: { $in: { _id: req.user._id } },
+      done: false,
+    })
+      .select('_id taskId name dueDate')
+      .populate(subtaskPopulateOptionsForUser)
+      .exec();
+    sendJSONresponse(res, 200, subtasksAssignedToUser);
+  } catch (error) {
+    logger.error(`Subtask for users: ${error}`);
+    next(error);
+  }
+};
+
+const subtaskMarkAsDone = async (req, res, next) => {
+  try {
+    const subtask = await SubTask.findByIdAndUpdate(
+      { _id: req.params.subTaskId },
+      { done: req.body.done },
+      { new: true },
+    );
+    sendJSONresponse(res, 200, {
+      message: `Subtask ${subtask.name} marked as ${
+        req.body.done === true ? 'done' : 'not done'
+      }`,
+    });
+  } catch (error) {
+    logger.error(`Subtask: ${error}`);
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   resendEmail,
@@ -1008,6 +1047,8 @@ module.exports = {
   skillArea,
   inviteSignup,
   userTaskList,
+  userSubtasks,
+  subtaskMarkAsDone,
   userDueTask,
   userDailyProgress,
 };
