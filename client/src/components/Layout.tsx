@@ -212,7 +212,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     ) {
       props.history.push(`/notFound`);
     }
-    if (props.project._id && boardId && boardId !== props.boardId) {
+    if (
+      props.company._id &&
+      props.project._id &&
+      boardId &&
+      boardId !== props.boardId
+    ) {
       updateBoardReducer();
     }
     props.fetchRooms();
@@ -229,6 +234,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     }
 
     if (
+      props.company._id &&
       props.project._id &&
       props.boardId &&
       taskId &&

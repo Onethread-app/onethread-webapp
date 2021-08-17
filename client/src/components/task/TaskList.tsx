@@ -64,11 +64,17 @@ interface ITaskList {
 }
 
 const TaskList = (props: ITaskList) => {
-  const [todoColumnId] = React.useState(
-    props.currentBoard.columns.filter(
-      (col) => col.name.toLowerCase() === 'to do',
-    )[0]._id,
-  );
+  const [todoColumnId, setTodoColumnId] = React.useState('');
+
+  React.useEffect(() => {
+    if (props.currentBoard.columns.length > 0)
+      setTodoColumnId(
+        props.currentBoard.columns.filter(
+          (col) => col.name.toLowerCase() === 'to do',
+        )[0]._id,
+      );
+  }, [props.currentBoard]);
+
   return (
     <TaskListContainer>
       <ListHeader>

@@ -5,7 +5,7 @@ import Select from 'react-select';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { tigrowApi } from 'config';
-import { sortTasks } from 'helpers/utils';
+import { sortTasksByStatus } from 'helpers/utils';
 import { tokenConfig } from 'stores/UtilsActions';
 
 import Table from './TaskTable';
@@ -140,28 +140,28 @@ const Tasks = () => {
   useEffect(() => {
     if (loading === false) {
       if (selectedTab === 1 && filterOption === 1) {
-        setTasks(mdfy(sortTasks(todaysTasks.assignToUser)));
+        setTasks(mdfy(sortTasksByStatus(todaysTasks.assignToUser)));
       }
       if (selectedTab === 1 && filterOption === 2) {
-        setTasks(mdfy(sortTasks(todaysTasks.assignByUser)));
+        setTasks(mdfy(sortTasksByStatus(todaysTasks.assignByUser)));
       }
       if (selectedTab === 2 && filterOption === 1) {
-        setTasks(mdfy(sortTasks(tomorrowTasks.assignToUser)));
+        setTasks(mdfy(sortTasksByStatus(tomorrowTasks.assignToUser)));
       }
       if (selectedTab === 2 && filterOption === 2) {
-        setTasks(mdfy(sortTasks(tomorrowTasks.assignByUser)));
+        setTasks(mdfy(sortTasksByStatus(tomorrowTasks.assignByUser)));
       }
       if (selectedTab === 3 && filterOption === 1) {
-        setTasks(mdfy(sortTasks(upcomingTasks.assignToUser)));
+        setTasks(mdfy(sortTasksByStatus(upcomingTasks.assignToUser)));
       }
       if (selectedTab === 3 && filterOption === 2) {
-        setTasks(mdfy(sortTasks(upcomingTasks.assignByUser)));
+        setTasks(mdfy(sortTasksByStatus(upcomingTasks.assignByUser)));
       }
       if (selectedTab === 4 && filterOption === 1) {
-        setTasks(mdfy(sortTasks(dueTasks.assignToUser)));
+        setTasks(mdfy(sortTasksByStatus(dueTasks.assignToUser)));
       }
       if (selectedTab === 4 && filterOption === 2) {
-        setTasks(mdfy(sortTasks(dueTasks.assignByUser)));
+        setTasks(mdfy(sortTasksByStatus(dueTasks.assignByUser)));
       }
     }
   }, [

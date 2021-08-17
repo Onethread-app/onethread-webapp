@@ -1,5 +1,10 @@
 import { BoardActionTypes } from './Types';
-import { TaskBoard, ITask } from './Reducer';
+import {
+  TaskBoard,
+  ITask,
+  SortTasksBy,
+  IFilterUser,
+} from './Reducer';
 
 export interface ITaskDelete {
   taskId: string;
@@ -253,4 +258,14 @@ export const updateBoardLoading = (loading: boolean) => ({
 export const updateTaskLoading = (loading: boolean) => ({
   type: BoardActionTypes.UPDATE_TASK_LOADING,
   payload: loading,
+});
+
+export const setSortBy = (type: SortTasksBy) => ({
+  type: BoardActionTypes.SET_SORT_BY,
+  payload: type,
+});
+
+export const setFilerUsers = (list: IFilterUser[]) => ({
+  type: BoardActionTypes.SET_FILTER_USERS,
+  payload: list,
 });

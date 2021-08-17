@@ -80,7 +80,6 @@ const TaskPortion = styled.div`
 `;
 
 const TagSelect = styled.select`
-  appearance: none;
   background-color: ${(props) =>
     props.status === 'done'
       ? '#2EB67D'
@@ -94,6 +93,7 @@ const TagSelect = styled.select`
   padding: 0.2rem 0.5rem;
   margin: 0;
   width: auto;
+  max-width: 115px;
   font-family: inherit;
   font-size: inherit;
   cursor: inherit;
@@ -188,6 +188,7 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
         `/company/${props.uniqueCompanyName}/project/${props.projectId}/board/${task.boardId}/task/${task._id}`,
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, props.fetchingTask, props.taskError]);
 
   useEffect(() => {

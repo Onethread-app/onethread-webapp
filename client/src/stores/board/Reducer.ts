@@ -1,4 +1,8 @@
 import { BoardActionTypes } from './Types';
+import { toggleOrderOnSort } from './Utils';
+
+export type Order = 'asc' | 'desc';
+export type SortTasksBy = 'priority' | 'dueDate' | undefined;
 
 export interface IColumn {
   _id: string;
@@ -28,6 +32,11 @@ export interface IBoardMember {
   name: string;
 }
 
+export interface IFilterUser {
+  id: string;
+  label: string;
+}
+
 export interface TaskBoard {
   _id: string;
   name: string;
@@ -37,6 +46,9 @@ export interface TaskBoard {
   members: IBoardMember[];
   totalTasks: number;
   remainingTasks: number;
+  sortBy: SortTasksBy;
+  orderBy: Order;
+  filteredUsers: IFilterUser[];
 }
 
 export interface ITask {
@@ -75,6 +87,9 @@ const InitialState = {
     description: '',
     columns: [],
     members: [],
+    sortBy: undefined,
+    orderBy: 'asc' as const,
+    filteredUsers: [],
   },
   currentTask: {},
   creatingBoard: false,
@@ -511,6 +526,27 @@ export const BoardReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         fetchingTask: action.payload,
+      };
+    case BoardActionTypes.SET_SORT_BY:
+      return {
+        ...state,
+        currentBoard: {
+          ...state.currentBoard,
+          sortBy: action.payload,
+          orderBy: toggleOrderOnSort(
+            state.currentBoard.orderBy,
+            state.currentBoard.sortBy,
+            action.payload,
+          ),
+        },
+      };
+    case BoardActionTypes.SET_FILTER_USERS:
+      return {
+        ...state,
+        currentBoard: {
+          ...state.currentBoard,
+          filteredUsers: action.payload,
+        },
       };
     default:
       return state;

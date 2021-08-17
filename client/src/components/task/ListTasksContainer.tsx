@@ -1,14 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { isMobileOnly } from 'react-device-detect';
 
+import Pagination from '@material-ui/lab/Pagination';
 import useElementSize from 'helpers/hooks/useElementSize';
 
 import ListTaskItem from './ListTaskItem';
 
 import { ITask, TaskBoard } from 'stores/board/Reducer';
-import Pagination from '@material-ui/lab/Pagination';
-import { isMobileOnly } from 'react-device-detect';
+
+import {
+  sortTasksByDueDate,
+  sortTasksByPriority,
+} from 'helpers/utils';
 
 const TasksContainerDiv = styled.div`
   flex-grow: 1;
@@ -53,11 +58,60 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
   }, [containerSize, itemHeight]);
 
   useEffect(() => {
-    const colTasks = props.currentBoard.columns
-      .map((col) => col.tasks)
-      .flat();
-    setTasks(colTasks);
-  }, [props.currentBoard]);
+    if (props.currentBoard.sortBy === 'dueDate') {
+      setTasks(
+        sortTasksByDueDate([...tasks], props.currentBoard.orderBy),
+      );
+    } else if (props.currentBoard.sortBy === 'priority') {
+      setTasks(
+        sortTasksByPriority([...tasks], props.currentBoard.orderBy),
+      );
+    } else {
+      const colTasks = props.currentBoard.columns
+        .map((col) => col.tasks)
+        .flat();
+      setTasks(colTasks);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    props.currentBoard.sortBy,
+    props.currentBoard.orderBy,
+    props.currentBoard,
+  ]);
+
+  useEffect(() => {
+    if (
+      props.currentBoard.filteredUsers &&
+      props.currentBoard.filteredUsers.length > 0
+    ) {
+      const filteredTasks: ITask[] = [];
+      for (const task of props.currentBoard.columns
+        .map((col) => col.tasks)
+        .flat()) {
+        let found = false;
+        if (task?.assignedMembers) {
+          for (const member of task.assignedMembers) {
+            const res = props.currentBoard.filteredUsers.find(
+              (fUser) => fUser.id === member._id,
+            );
+            if (res) {
+              found = true;
+              break;
+            }
+          }
+          if (found) {
+            filteredTasks.push(task);
+          }
+        }
+      }
+      setTasks(filteredTasks);
+    } else {
+      const colTasks = props.currentBoard.columns
+        .map((col) => col.tasks)
+        .flat();
+      setTasks(colTasks);
+    }
+  }, [props.currentBoard.columns, props.currentBoard.filteredUsers]);
 
   useEffect(() => {
     if (tasks.length > 0) {

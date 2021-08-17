@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Droppable } from 'react-beautiful-dnd';
 
@@ -6,7 +7,11 @@ import ColumnTaskItem from 'components/task/ColumnTaskItem';
 
 import useWindowSize from 'helpers/hooks/useWindowSize';
 
-import { IColumn } from 'stores/board/Reducer';
+import { IColumn, ITask, TaskBoard } from 'stores/board/Reducer';
+import {
+  sortTasksByDueDate,
+  sortTasksByPriority,
+} from 'helpers/utils';
 
 const TasksContainerDiv = styled.div`
   gap: 0.75rem;
@@ -39,12 +44,63 @@ const TasksContainerDiv = styled.div`
   }
 `;
 
-interface ITasksContainer {
+interface ITasksContainerProps {
   column: IColumn;
 }
 
-const TasksContainer = (props: ITasksContainer) => {
+interface ITasksContainerInternalProps extends ITasksContainerProps {
+  currentBoard: TaskBoard;
+}
+
+const TasksContainer = (props: ITasksContainerInternalProps) => {
+  const [tasks, setTasks] = useState<ITask[]>([]);
   const windowSize = useWindowSize();
+
+  useEffect(() => {
+    if (props.currentBoard.sortBy === 'dueDate') {
+      setTasks(
+        sortTasksByDueDate([...tasks], props.currentBoard.orderBy),
+      );
+    } else if (props.currentBoard.sortBy === 'priority') {
+      setTasks(
+        sortTasksByPriority([...tasks], props.currentBoard.orderBy),
+      );
+    } else {
+      if (props.column.tasks) setTasks(props.column.tasks);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    props.column,
+    props.currentBoard.orderBy,
+    props.currentBoard.sortBy,
+  ]);
+
+  useEffect(() => {
+    if (props.currentBoard.filteredUsers!.length > 0) {
+      const filteredTasks: ITask[] = [];
+      for (const task of props.column.tasks!) {
+        let found = false;
+        if (task?.assignedMembers) {
+          for (const member of task.assignedMembers) {
+            const res = props.currentBoard.filteredUsers.find(
+              (fUser) => fUser.id === member._id,
+            );
+            if (res) {
+              found = true;
+              break;
+            }
+          }
+          if (found) {
+            filteredTasks.push(task);
+          }
+        }
+      }
+      setTasks(filteredTasks);
+    } else {
+      if (props.column.tasks) setTasks(props.column.tasks);
+    }
+  }, [props.currentBoard.filteredUsers]);
+
   return (
     <Droppable droppableId={props.column._id} type="task">
       {(provided, snapshot) => {
@@ -56,7 +112,7 @@ const TasksContainer = (props: ITasksContainer) => {
             {...provided.droppableProps}
             {...allowedProps}
           >
-            {props.column.tasks?.map((task, index) => (
+            {tasks.map((task, index) => (
               <ColumnTaskItem
                 task={task}
                 index={index}
@@ -70,4 +126,8 @@ const TasksContainer = (props: ITasksContainer) => {
   );
 };
 
-export default TasksContainer;
+const mapStateToProps = (state: any) => ({
+  currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+});
+
+export default connect(mapStateToProps)(TasksContainer);

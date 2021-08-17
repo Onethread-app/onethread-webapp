@@ -6,7 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
-import { sortTasks } from 'helpers/utils';
+import { sortTasksByStatus } from 'helpers/utils';
 import Pagination from '@material-ui/lab/Pagination';
 import { isMobileOnly } from 'react-device-detect';
 
@@ -29,8 +29,12 @@ const DueTasks = () => {
           `accounts/due-task`,
           headers,
         );
-        setAssignedToMe(sortTasks(response.data.assignToUserDue));
-        setAssignedByMe(sortTasks(response.data.assignByUserDue));
+        setAssignedToMe(
+          sortTasksByStatus(response.data.assignToUserDue),
+        );
+        setAssignedByMe(
+          sortTasksByStatus(response.data.assignByUserDue),
+        );
         setLoading(false);
       }
     };

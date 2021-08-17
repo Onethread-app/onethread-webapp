@@ -60,9 +60,11 @@ const Column = (props: IColumnProps) => {
             </ColumnHeader>
             <TasksContainer column={props.column} />
           </ColumnContainer>
-          {props.column.name.toLowerCase() !== 'done' && (
-            <CreateTaskButton columnId={props.column._id} />
-          )}
+          {props.column.name.toLowerCase() !== 'done' &&
+            props.column.name.toLowerCase().split(' ').join('-') !==
+              'in-progress' && (
+              <CreateTaskButton columnId={props.column._id} />
+            )}
         </div>
       )}
     </Draggable>

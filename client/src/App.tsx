@@ -67,7 +67,7 @@ const SettingsPage = lazy(() =>
   import('layouts/company/settings/Index'),
 );
 const BoardDetails = lazy(() =>
-  import('components/board/BoardDetails'),
+  import('layouts/company/boardDetails/BoardDetails'),
 );
 const TaskPage = lazy(() => import('layouts/company/task'));
 const UserProfilePage = lazy(() =>

@@ -13,7 +13,7 @@ const CreateTaskButtonDiv = styled.div`
   border: 1px dashed #cacaca;
   box-sizing: border-box;
   border-radius: 8px;
-  cursor: pointer;
+  cursor: ${(props) => (props.columnId ? 'pointer' : 'wait')};
 
   &:hover {
     background: #f1f1f1;
@@ -31,11 +31,14 @@ interface ICreateTaskButton {
 const CreateTaskButton = (props: ICreateTaskButton) => {
   const [showDialog, setShowDialog] = useState(false);
   const handleClick = () => {
-    setShowDialog(true);
+    if (props.columnId) setShowDialog(true);
   };
   return (
     <>
-      <CreateTaskButtonDiv onClick={handleClick}>
+      <CreateTaskButtonDiv
+        columnId={props.columnId}
+        onClick={handleClick}
+      >
         <Icon icon="plus" color="#34B3E9" className="mr2" />
         <p>Add new task</p>
       </CreateTaskButtonDiv>
