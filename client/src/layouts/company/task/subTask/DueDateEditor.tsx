@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
-// import { DateInput } from '@blueprintjs/datetime';
 import { Button, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { updateSubTask } from 'stores/subtask/Actions';
@@ -106,40 +105,24 @@ const DueDateEditor = (props: IDueDateFormProps) => {
                   {/* Due Date */}
                   {t('app.project.Project-boards.Due-Date')}
                 </label>
-                {/* <DateInput
-                  formatDate={(date: Date) =>
-                    date.toLocaleDateString()
-                  }
-                  placeholder="Select a date"
-                  parseDate={(str: string) => new Date(str)}
-                  onChange={(e) => {
-                    input.onChange(e);
-                    handleInputChange(e);
-                  }}
-                  canClearSelection={false}
-                  value={input.value ? new Date(input.value) : null}
-                  popoverProps={{
-                    targetClassName: 'w-100',
-                  }}
-                  minDate={new Date()}
-                /> */}
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
-                    format="MM/dd/yyyy"
                     margin="normal"
+                    id="date-picker-dialog"
+                    format="MM/dd/yyyy"
                     value={input.value ? new Date(input.value) : null}
                     onChange={(e) => {
                       input.onChange(e);
                       handleInputChange(e);
                     }}
+                    className="due-date-input"
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
                     }}
+                    placeholder={t(
+                      'app.project.Project-boards.Select-date',
+                    )}
                     minDate={new Date()}
-                    className="due-date-input"
-                    placeholder={t('app.project.Project-boards.Select-date')}
                   />
                 </MuiPickersUtilsProvider>
                 {checkError(meta) && (
