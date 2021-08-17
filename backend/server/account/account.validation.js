@@ -1,6 +1,20 @@
 // Reference: https://docs.google.com/document/d/1yGg5DUbqOrw1aCA5u1s2VCRL_dFu6LQOvbDLamgl9bM/edit#
 const Joi = require('@hapi/joi');
 
+const idSchema = {
+  id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .error((errors) => {
+      return {
+        message: 'Invalid ID',
+      };
+    }),
+};
+
+const subTaskId = Joi.object().keys({
+  subTaskId: idSchema.id.required(),
+});
+
 const schema = {
   firstName: Joi.string().trim().lowercase().min(2).max(32),
   lastName: Joi.string().required().lowercase().min(2).max(32),
@@ -97,5 +111,11 @@ module.exports = {
       refreshToken: schema.refreshToken,
       subscriptionId: schema.subscriptionId,
     }),
+  }),
+  subTaskMarkAsDone: Joi.object().keys({
+    body: Joi.object().keys({
+      done: Joi.boolean(),
+    }),
+    params: subTaskId,
   }),
 };

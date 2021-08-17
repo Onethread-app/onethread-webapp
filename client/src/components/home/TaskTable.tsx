@@ -20,6 +20,10 @@ const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     root: {
       borderBottom: 'none',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      maxWidth: '200px',
       // marginBottom: 10,
       '&:first-child': {
         paddingRight: 5,
@@ -355,7 +359,7 @@ const AppTable = ({
             {emptyRows > 0 && (
               <TableRow
                 style={{
-                  height: 53 * emptyRows,
+                  height: 53,
                 }}
               >
                 <TableCell colSpan={6} />
