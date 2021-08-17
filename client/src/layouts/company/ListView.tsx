@@ -11,6 +11,7 @@ import { Loading } from 'components/Loading';
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
+import { useTranslation } from 'react-i18next';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -72,7 +73,7 @@ export const ListViewComponent = (
     setCompanyName(name);
     setGettingDetails(true);
   };
-
+  const { t } = useTranslation();
   return (
     <>
       <div
@@ -119,7 +120,9 @@ export const ListViewComponent = (
                 </article>
               ),
           )
-        ) : undefined}
+        ) : (
+          <p>{t('app.homepage.No-Companies')}</p>
+        )}
       </div>
     </>
   );

@@ -124,6 +124,7 @@
   "app": {
     "homepage": {
       "My-Companies": "আমার প্রতিষ্ঠানসমূহ",
+      "No-Companies": "কোন প্রতিষ্ঠান নেই",
       "Work-place": "আপনার কর্মস্থল",
       "Company-name": "ওয়ানথ্রেড",
       "Position": "পদবি: ",
