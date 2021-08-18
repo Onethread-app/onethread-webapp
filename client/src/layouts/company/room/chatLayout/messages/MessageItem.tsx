@@ -27,14 +27,20 @@ interface MessageItemProps {
 const MessageItemComponent = (props: MessageItemProps) => {
   const user = useSelector((state: any) => state.userReducer.user);
   const currentUser = user._id === props.message.account._id;
+  const isBeforeToday = moment(props.message.createdAt).isBefore(
+    new Date(),
+    'day',
+  );
   return (
     <>
       {/* date & time */}
       {props.group.showPicAndName ? (
         <div className="flex justify-center items-center pv2">
-          <small className="tigrow-darkGray">
-            {moment(props.message.createdAt).format('MMM DD')}
-          </small>
+          {isBeforeToday === true && (
+            <small className="tigrow-darkGray">
+              {moment(props.message.createdAt).format('MMM DD')}
+            </small>
+          )}
         </div>
       ) : undefined}
 
@@ -43,39 +49,41 @@ const MessageItemComponent = (props: MessageItemProps) => {
         <article
           key={props.message._id}
           className={`db flex ml3 items-center mb1 
-        ${currentUser ? ' flex-row-reverse' : ''}`}
+        ${currentUser ? ' flex-row-reverse pr2' : ''}`}
         >
-          {currentUser ? undefined : (
-            <>
-              <img
-                src={
-                  props.message.account.profileImage
-                    ? props.message.account.profileImage
-                    : UserIcon
-                }
-                className="v-mid dib br-100"
-                alt="user"
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  objectFit: 'cover',
-                }}
-              />
-              <h5
-                className="mv0 ml2 mr2"
-                style={{
-                  textTransform: 'capitalize',
-                }}
-              >
-                {props.message.account.firstName +
-                  ' ' +
-                  props.message.account.lastName}
-              </h5>
-              <small className="tigrow-darkGray">
-                {moment(props.message.createdAt).format('h:m a')}
-              </small>
-            </>
-          )}
+          {/* {currentUser ? undefined : (
+            <> */}
+          <img
+            src={
+              props.message.account.profileImage
+                ? props.message.account.profileImage
+                : UserIcon
+            }
+            className="v-mid dib"
+            alt="user"
+            style={{
+              width: '32px',
+              height: '32px',
+              objectFit: 'cover',
+            }}
+          />
+          <h5
+            className="mv0 ml2 mr2"
+            style={{
+              textTransform: 'capitalize',
+            }}
+          >
+            {props.message.account.firstName +
+              ' ' +
+              props.message.account.lastName}
+          </h5>
+          <small className="tigrow-darkGray">
+            {isBeforeToday === true
+              ? moment(props.message.createdAt).format('h:m a')
+              : moment(props.message.createdAt).fromNow()}
+          </small>
+          {/* </>
+          )} */}
         </article>
       ) : null}
 
@@ -85,19 +93,18 @@ const MessageItemComponent = (props: MessageItemProps) => {
           key={props.message.createdAt}
           // tslint:disable-next-line: max-line-length
           className={`message-text db flex items-center ${
-            currentUser ? 'flex-row-reverse' : ''
+            currentUser ? 'flex-row-reverse mr4' : 'ml4'
           } ${props.group.message ? 'mb1' : 'mb3'}`}
           style={{
-            marginLeft: '48px',
             fontSize: '15px',
           }}
         >
           <div
-            className={`ph3 pv1 br4 mw7 ${
-              currentUser ? 'message-mine mr2' : 'message-others ml2'
+            className={`ph3 pv1 br2 mw7 ${
+              currentUser ? ' mr2' : 'ml2'
             }`}
             style={{
-              backgroundColor: currentUser ? '#3b5998' : '#d4d4d47a',
+              backgroundColor: '#F2F2F2',
             }}
           >
             <Linkify
@@ -112,7 +119,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
                   key={key}
                   rel="noreferrer"
                   style={{
-                    color: currentUser ? '#fff' : '#106ba3',
+                    color: '#323030',
                     textDecoration: 'underline',
                   }}
                 >
@@ -123,7 +130,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
               <p
                 className={`mv0 tj break-word`}
                 style={{
-                  color: currentUser ? 'white' : 'rgb(74, 73, 73)',
+                  color: '#323030',
                   whiteSpace: 'pre-wrap',
                 }}
               >
@@ -164,11 +171,10 @@ const MessageItemComponent = (props: MessageItemProps) => {
             <article
               key={file._id}
               className={`db flex items-center ${
-                currentUser ? ' flex-row-reverse' : ''
+                currentUser ? ' flex-row-reverse mr4' : 'ml4'
               }
             ${props.group.message ? 'mb1' : 'mb3'}`}
               style={{
-                marginLeft: '48px',
                 fontSize: '1.2rem',
               }}
             >

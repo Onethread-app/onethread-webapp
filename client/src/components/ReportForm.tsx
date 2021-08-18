@@ -176,7 +176,7 @@ const ReportForm = (props: {
           </h1>
           {/* <h1 className="f6">Details</h1> */}
           <textarea
-            className="bp3-input"
+            className="bp3-input w-100"
             name="issueDetails"
             id="issue-details"
             onChange={handleChange('issueDetails')}

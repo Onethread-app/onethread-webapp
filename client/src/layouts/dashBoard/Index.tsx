@@ -25,6 +25,7 @@ import {
   setSubscriptionExpire,
   setSubscriptionNotExpire,
 } from '../../stores/subscriptionBilling/Actions';
+import './Index.scss';
 
 interface DashBoardViewProps {
   user: User;
@@ -55,7 +56,7 @@ interface latestTask {
 const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [loading, setLoading] = useState(true);
   const [currentTaskPage, setCurrentTaskPage] = useState(1);
-  const [taskItemsPerPage] = useState(5);
+  const [taskItemsPerPage] = useState(10);
   const indexOfLastTask = currentTaskPage * taskItemsPerPage;
   const indexOfFirstTask = indexOfLastTask - taskItemsPerPage;
 
@@ -352,7 +353,10 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                 }}
                               />
                               <div className="w-100 flex flex-row lastest-completed-tasks">
-                                <div className="mr1">
+                                <div
+                                  className="mr1"
+                                  style={{ lineHeight: '21px' }}
+                                >
                                   <span
                                     className="fw6 mr3 ba b-light-gray br2 ph1"
                                     style={{
@@ -372,7 +376,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                     >
                                       {task.name}
                                     </span>{' '}
-                                    from {task.boardId.name}
+                                    from {task.boardId.name}{' '}
                                     {t(
                                       'app.company.Dashboard.Complete-notification',
                                     )}

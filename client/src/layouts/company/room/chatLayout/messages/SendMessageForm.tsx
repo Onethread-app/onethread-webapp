@@ -327,7 +327,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                 clearTimeout(typingTimer);
               }}
               placeholder="Type your message and hit ENTER to send"
-            ></textarea>            
+            ></textarea>
           </div>
           {/* <Button
               className="bp3-minimal outline-0 toggle-emoji dn"

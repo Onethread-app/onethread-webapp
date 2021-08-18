@@ -3,17 +3,21 @@ import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { Dialog } from '@blueprintjs/core';
 import LinkGeneratorPopup from 'components/conference/LinkGeneratorPopup';
+import { useTranslation } from 'react-i18next';
 
 // import Conference from 'resources/svg/Conference.svg';
 
 const VideoConference = () => {
   const [showDialog, setShowDialog] = React.useState(false);
+  const { t } = useTranslation();
   return (
     <div className="video-conference">
       <div className="flex justify-between w-100">
         <div>
-          <h3>Video Conferences</h3>
-          <p>Make Your Team align</p>
+          <h3>{t('app.Video-Conferences.Video-Conferences')}</h3>
+          <p>{t('app.Video-Conferences.Make-Team-align')}</p>
+          {/* <h3>Video Conferences</h3>
+          <p>Make Your Team align</p> */}
         </div>
       </div>
       {/* <div>
@@ -26,7 +30,8 @@ const VideoConference = () => {
       </div> */}
       <div>
         <button onClick={() => setShowDialog(true)}>
-          Create link
+          {t('app.Video-Conferences.Create-link')}
+          {/* Create link */}
         </button>
       </div>
       {showDialog && (

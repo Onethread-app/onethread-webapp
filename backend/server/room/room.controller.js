@@ -65,7 +65,7 @@ const create = async (req, res, next) => {
       req.user._id,
       req.body.name,
     );
-    
+
     const roomMember = await createRoomMember(
       req.headers.companyid,
       req.query.pid,
@@ -98,7 +98,7 @@ const addMembers = async (req, res, next) => {
     });
 
     const result = await RoomMember.create(roomMembers);
-    await addTeamMateIntoRoomNotification(companyId, senderId, roomMembers, 
+    await addTeamMateIntoRoomNotification(companyId, senderId, roomMembers,
       {
         _id: req.user._id,
         name: req.user.name,
@@ -269,8 +269,20 @@ const list = async (req, res, next) => {
       };
     });
 
+    let modifiedRooms = [];
+
+    await Promise.all(filterRooms.map(async (room) => {
+      const memberCount = await RoomMember.find({
+        room: room._id,
+        project,
+        removed: false,
+      }).countDocuments();
+      const modifiedRoom = { ...room, memberCount }
+      modifiedRooms.push(modifiedRoom)
+    }))
+
     return res.status(200).json({
-      rooms: filterRooms,
+      rooms: modifiedRooms,
       roomsUnreadCount,
     });
   } catch (error) {

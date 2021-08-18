@@ -19,7 +19,7 @@ const CompanyAnnouncementsList = (props: any) => {
     setCurrentAnnouncementPage,
   ] = useState(1);
 
-  const [announcementItemsPerPage] = useState(5);
+  const [announcementItemsPerPage] = useState(3);
 
   const indexOfLastAnnouncement =
     currentAnnouncementPage * announcementItemsPerPage;
@@ -98,7 +98,7 @@ const CompanyAnnouncementsList = (props: any) => {
           )}
         </div>
         {props.company.announce && (
-          <div className="w-100-l w-100 pa3 shadow-1 br2 mt2">
+          <div className="w-100-l w-100 pa3 shadow-1 br2">
             {props.company.announce.length > 0 ? (
               currentAnnouncements.map((announcement: any) => (
                 <CompanyAnnouncementItem

@@ -358,6 +358,10 @@
     },
     "project": {
       "Project-preface": {
+        "My-projects": "আমার প্রোজেক্টসমূহ",
+        "Create-Project": "প্রোজেক্ট তৈরি করুন",
+        "Select-company": "একটি কোম্পানি নির্বাচন করুন (আবশ্যক)",
+        "Project-Name": "প্রোজেক্টের নাম (আবশ্যক)",
         "Intro": "সূচনা",
         "Details": "প্রোজেক্টের বিবরণ",
         "Outline": "প্রোজেক্টের রূপরেখা",
@@ -367,7 +371,10 @@
         "Deadline": "শেষ তারিখ",
         "Remaining-Tasks": "বাকি কাজ",
         "Update-Project": "আপডেট প্রোজেক্ট",
-        "Archive-Project": "সংরক্ষণাগার প্রোজেক্ট"
+        "Archive-Project": "সংরক্ষণাগার প্রোজেক্ট",
+        "Label": "লেবেল",
+        "Done": "সম্পন্ন",
+        "Cancel": "বাতিল"
       },
 
       "Project-rooms": {
@@ -456,6 +463,15 @@
       },
 
       "Tasks": {
+        "Tasks": "টাস্কসমূহও",
+        "View": "ভিউ",
+        "List": "লিস্ট",
+        "Board": "বোর্ড",
+        "Add-task": "নতুন টাস্ক যোগ করুন",
+        "Task-Name": "টাস্কের নাম",
+        "Activity": "কার্যকলাপ",
+        "Due-Date": "নির্দিষ্ট তারিখ",
+        "Assigned-Member": "নির্ধারিত সদস্য",
         "Task-Status": "টাস্কের অবস্থা",
         "Total-tasks": "মোট টাস্ক",
         "Remaining-tasks": "বাকি টাস্ক",
@@ -477,6 +493,9 @@
     },
     "user": {
       "Personal-profile": {
+        "My-Profile": "আমার প্রোফাইল",
+        "Completed": "সম্পূর্ণ",
+        "Team": "টীম",
         "Profile": "প্রোফাইল",
         "Cover": "কভার পরিবর্তন",
         "About": "আমার প্রোফাইল",
@@ -551,6 +570,15 @@
         "Name": "প্রোজেক্টের নাম (আবশ্যক)",
         "Type": "একটি প্রতিষ্ঠান বাছাই করুন"
       }
+    },
+    "Video-Conferences": {
+      "Video-Conferences": "ভিডিও কনফারেন্স",
+      "Make-Team-align": "আপনার টীমকে একত্রিত করুন",
+      "Create-link": "লিঙ্ক তৈরি করুন",
+      "Empowering-teams": "দূরবর্তী টীমকে ক্ষমতায়ন করুন",
+      "Enter-name": "টীমের নাম লিখুন এবং লিঙ্ক তৈরি করুন",
+      "Enter-team-name": "টীমের নাম লিখুন",
+      "Link": "লিঙ্ক"
     }
   }
 }
