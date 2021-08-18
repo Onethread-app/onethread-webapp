@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 
-import CreateTaskButton from 'components/task/CreateTaskButton';
-
 import { IColumn } from 'stores/board/Reducer';
 import TasksContainer from 'components/task/TasksContainer';
 
@@ -34,6 +32,21 @@ const ColumnHeader = styled.h3`
   text-overflow: ellipsis;
   text-transform: capitalize;
   color: #323030;
+  display: flex;
+  align-items: center;
+`;
+
+const HeaderIcon = styled.span`
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background: ${(props) =>
+    props.columnName === 'done'
+      ? '#62C89D'
+      : props.columnName === 'in-progress'
+      ? '#08A0F7'
+      : '#FFA800'};
+  margin-right: 0.5rem;
 `;
 
 interface IColumnProps {
@@ -42,6 +55,10 @@ interface IColumnProps {
 }
 
 const Column = (props: IColumnProps) => {
+  const [columnName] = React.useState(
+    props.column.name.toLowerCase().split(' ').join('-'),
+  );
+
   return (
     <Draggable draggableId={props.column._id} index={props.index}>
       {(provided, snapshot) => (
@@ -53,18 +70,15 @@ const Column = (props: IColumnProps) => {
           <ColumnContainer
             className={`flex flex-column justify-center mb3`}
             isDragging={snapshot.isDragging}
+            columnName={columnName}
           >
             <ColumnHeader {...provided.dragHandleProps}>
+              <HeaderIcon columnName={columnName} />
               {props.column.name}{' '}
-              <span>{`(${props.column.tasks?.length})`}</span>
+              <span className="ml2">{`(${props.column.tasks?.length})`}</span>
             </ColumnHeader>
             <TasksContainer column={props.column} />
           </ColumnContainer>
-          {props.column.name.toLowerCase() !== 'done' &&
-            props.column.name.toLowerCase().split(' ').join('-') !==
-              'in-progress' && (
-              <CreateTaskButton columnId={props.column._id} />
-            )}
         </div>
       )}
     </Draggable>

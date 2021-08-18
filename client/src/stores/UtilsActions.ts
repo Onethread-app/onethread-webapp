@@ -163,11 +163,11 @@ export const priorityColor = [
   {
     code: 0,
     name: 'Highest',
-    value: '#C43600',
+    value: '#F44135',
     container: '#F9E9E3',
   },
-  { code: 1, name: 'High', value: '#CB5800', container: '#F9EDE3' },
-  { code: 2, name: 'Medium', value: '#FFA800', container: '#FFF5E3' },
+  { code: 1, name: 'High', value: '#FFA800', container: '#F9EDE3' },
+  { code: 2, name: 'Normal', value: '#08A0F7', container: '#FFF5E3' },
   { code: 3, name: 'Low', value: '#5387AF', container: '#ECF2F6' },
   { code: 4, name: 'Lowest', value: '#093F68', container: '#E4EAEE' },
 ];

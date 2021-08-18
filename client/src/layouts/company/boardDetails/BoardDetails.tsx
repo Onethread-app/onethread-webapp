@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
@@ -11,6 +10,8 @@ import ColumnsContainer from 'components/column/ColumnsContainer';
 import TaskList from 'components/task/TaskList';
 import MemberGroup from 'components/member/MemberGroup';
 import MultiSelectComponent from 'components/dashboard/project-status/MultiSelectComponent';
+import CreateTaskButton from 'components/task/CreateTaskButton';
+import PriorityColorList from 'components/task/PriorityColorList';
 
 import { ICompany } from 'stores/company/Reducer';
 import {
@@ -20,103 +21,14 @@ import {
 } from 'stores/board/Reducer';
 import { setSortBy, setFilerUsers } from 'stores/board/Actions';
 import { IProject } from 'stores/project/Reducer';
-
-const Container = styled.div`
-  background: #fff;
-  font-family: 'Poppins', sans-serif;
-`;
-
-const ProjectName = styled.h3`
-  font-size: 28.9886px;
-  font-weight: 500;
-  line-height: 150%;
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  color: #323030;
-`;
-
-const SortingDiv = styled.div`
-  display: flex;
-  width: fit-content;
-  color: #a4a4a4;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 150%;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-
-  p {
-    margin-bottom: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  span {
-    color: #656565;
-    cursor: pointer;
-  }
-`;
-
-const ViewSelectDiv = styled.div`
-  width: fit-content;
-  gap: 0.5rem;
-  color: #a4a4a4;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 150%;
-  padding: 0.25rem 1rem;
-  border-radius: 5px;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-
-  p {
-    color: #656565;
-    margin-bottom: 0;
-    border-radius: 4px;
-    padding: 0.25rem 0;
-
-    &:not(:first-child) {
-      cursor: pointer;
-      padding: 0.25rem 0.5rem;
-    }
-
-    &.active {
-      background: #e5e5e5;
-      color: #182026;
-    }
-  }
-`;
-
-const TasksNumber = styled.div`
-  display: flex;
-  gap: 0.25rem;
-  align-items: center;
-
-  h3 {
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 36px;
-    color: #323030;
-    margin: 0;
-  }
-
-  span {
-    font-size: 14px;
-    line-height: 21px;
-    text-align: center;
-    color: #000000;
-  }
-`;
-
-const SecondaryHeader = styled.div`
-  > div {
-    width: calc(100% / 3);
-  }
-`;
+import {
+  Container,
+  ProjectName,
+  SecondaryHeader,
+  SortingDiv,
+  TasksNumber,
+  ViewSelectDiv,
+} from './BoardDetails.styles';
 
 interface ISelectedAssignee {
   id: string;
@@ -141,6 +53,7 @@ const BoardDetails = (props: IBoardDetails) => {
   >([]);
   const [filterPopoverOpen, setFilterPopoverOpen] = useState(false);
   const { t } = useTranslation();
+  const [todoColumnId, setTodoColumnId] = React.useState('');
 
   const clearSort = () => {
     props.setSortBy(undefined);
@@ -163,6 +76,15 @@ const BoardDetails = (props: IBoardDetails) => {
     props.setFilerUsers(selectedAssignee);
     props.setSortBy(undefined);
   }, [selectedAssignee]);
+
+  useEffect(() => {
+    if (props.currentBoard.columns.length > 0)
+      setTodoColumnId(
+        props.currentBoard.columns.filter(
+          (col) => col.name.toLowerCase() === 'to do',
+        )[0]._id,
+      );
+  }, [props.currentBoard]);
 
   return (
     <Container className="h-100 ph3 cf flex flex-column">
@@ -201,7 +123,7 @@ const BoardDetails = (props: IBoardDetails) => {
           </div>
         </div>
         <SecondaryHeader className="flex items-center">
-          <div>
+          <div className="flex items-center">
             <TasksNumber>
               <h3>Tasks</h3>
               <span>
@@ -214,6 +136,7 @@ const BoardDetails = (props: IBoardDetails) => {
                 )
               </span>
             </TasksNumber>
+            <CreateTaskButton columnId={todoColumnId} />
           </div>
           <div className="flex justify-center">
             <ViewSelectDiv className="flex">
@@ -256,14 +179,31 @@ const BoardDetails = (props: IBoardDetails) => {
                   popoverClassName="bg-white"
                   content={
                     <div className="bg-white ma3">
-                      <p className="mr2 flex items-center">
-                        Sort By{' '}
-                        <span
-                          onClick={() => props.setSortBy('dueDate')}
-                          className="pointer ml2"
-                        >
-                          Due Date
-                        </span>
+                      <p
+                        className="flex items-center pointer"
+                        onClick={() => props.setSortBy('dueDate')}
+                        style={{
+                          marginRight:
+                            props.currentBoard.sortBy === 'dueDate'
+                              ? '8px'
+                              : '20px',
+                        }}
+                      >
+                        <Icon
+                          icon={
+                            props.currentBoard.sortBy === 'dueDate'
+                              ? 'tick-circle'
+                              : 'circle'
+                          }
+                          iconSize={16}
+                          className="mr2"
+                          color={
+                            props.currentBoard.sortBy === 'dueDate'
+                              ? '#2EB67D'
+                              : 'inherit'
+                          }
+                        />
+                        Due Date
                         {props.currentBoard.sortBy === 'dueDate' && (
                           <Icon
                             iconSize={12}
@@ -275,14 +215,31 @@ const BoardDetails = (props: IBoardDetails) => {
                           />
                         )}
                       </p>
-                      <p className="mr2 flex items-center">
-                        Sort By{' '}
-                        <span
-                          onClick={() => props.setSortBy('priority')}
-                          className="pointer ml2"
-                        >
-                          Priority
-                        </span>
+                      <p
+                        className="mr2 flex items-center pointer"
+                        onClick={() => props.setSortBy('priority')}
+                        style={{
+                          marginRight:
+                            props.currentBoard.sortBy === 'priority'
+                              ? '8px'
+                              : '20px',
+                        }}
+                      >
+                        <Icon
+                          icon={
+                            props.currentBoard.sortBy === 'priority'
+                              ? 'tick-circle'
+                              : 'circle'
+                          }
+                          iconSize={16}
+                          className="mr2"
+                          color={
+                            props.currentBoard.sortBy === 'priority'
+                              ? '#2EB67D'
+                              : 'inherit'
+                          }
+                        />
+                        Priority
                         {props.currentBoard.sortBy === 'priority' && (
                           <Icon
                             iconSize={12}
@@ -361,7 +318,7 @@ const BoardDetails = (props: IBoardDetails) => {
           </div>
         </SecondaryHeader>
       </div>
-
+      {view === 'board' && <PriorityColorList />}
       {view === 'board' ? (
         <ColumnsContainer />
       ) : view === 'list' ? (
