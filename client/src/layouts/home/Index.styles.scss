@@ -279,12 +279,21 @@
       font-size: 20px;
       line-height: 30px;
       color: rgba(0, 0, 0, 0.87);
+      width: fit-content;
     }
 
     &-list {
       display: flex;
       flex-direction: column;
-      // max-height: 80px;
+      overflow-x: auto;
+
+      @media screen and (min-width: 421px) and (max-width: 500px) {
+        width: 420px !important;
+      }
+
+      @media screen and (max-width: 420px) {
+        width: 300px !important;
+      }
     }
   }
 

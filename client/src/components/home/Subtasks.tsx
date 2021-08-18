@@ -4,6 +4,7 @@ import SubtaskItem from 'components/subtask/SubtaskItem';
 
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
+import { sortTasksByDueDate } from 'helpers/utils';
 
 const Subtasks = () => {
   const [subTasks, setSubtasks] = React.useState<any>([]);
@@ -26,11 +27,14 @@ const Subtasks = () => {
     <div className="subtasks">
       <h3>Subtasks</h3>
       <div className="subtasks-list mt2 pa1">
-        <div className="flex items-center justify-between mb2 f5 bb">
+        <div
+          className="flex items-center justify-between mb2 f5 bb"
+          style={{ minWidth: '500px' }}
+        >
           <div>Name</div>
           <div className="flex items-center">
             <div className="mr3" style={{ maxWidth: '100px' }}>
-              Project
+              Task
             </div>
             <div
               className="flex justify-end mr3"
@@ -40,9 +44,17 @@ const Subtasks = () => {
             </div>
           </div>
         </div>
-        {subTasks.map((subtask) => {
-          return <SubtaskItem subtask={subtask} key={subtask._id} />;
-        })}
+        {sortTasksByDueDate(subTasks, 'desc').map(
+          (subtask, index) => {
+            return (
+              <SubtaskItem
+                subtask={subtask}
+                index={index}
+                key={subtask._id}
+              />
+            );
+          },
+        )}
       </div>
     </div>
   );
