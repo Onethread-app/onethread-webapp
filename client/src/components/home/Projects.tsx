@@ -56,7 +56,7 @@ const Projects = () => {
       <div className="your-projects">
         <div>
           <h3 style={{ fontSize: 18, fontWeight: 'bold' }}>
-            My projects
+            My Projects
           </h3>
         </div>
         <div className="flex flex-column justify-center">

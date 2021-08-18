@@ -18,7 +18,7 @@ const H2 = styled.h2`
   font-size: 21.85px;
   line-height: 33px;
   text-transform: uppercase;
-  color: #0f0c4e;
+  color: #34B3E9;
   padding: 0;
   margin: 0;
 `;
@@ -43,7 +43,7 @@ const Input = styled.input`
 `;
 
 const LinkBox = styled.div`
-  background: #0f0c4e;
+  background: #34B3E9;
   border-radius: 4px;
   height: 38px;
   width: 38px;

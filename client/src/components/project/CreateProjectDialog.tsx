@@ -51,7 +51,7 @@ const HEADER = styled.h3`
   font-weight: 500;
   font-size: 25.168px;
   line-height: 38px;
-  color: #0f0c4e;
+  color: #34B3E9;
 `;
 
 const TEXTINPUT = styled.input`
@@ -67,7 +67,7 @@ const TEXTINPUT = styled.input`
 `;
 
 const DONE = styled.button`
-  background: #0f0c4e;
+  background: #34B3E9;
   color: #fff;
   border-radius: 8.45662px;
   outline: none;
@@ -202,7 +202,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
           </div>
         )}
         <CreatableSelect
-          placeholder="Select a company (Required)"
+          placeholder="Create or Select a company"
           id={'companies'}
           options={options}
           onChange={handleCompanyChange}
