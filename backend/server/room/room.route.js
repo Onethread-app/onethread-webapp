@@ -16,6 +16,12 @@ router
   .post(
     authorization,
     SchemaValidator(joiSchema.createRoom),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member'
+    ),
     roomCtrl.create,
   );
 
