@@ -158,10 +158,6 @@ export const ChatLayoutComponent = (
               {projectPermit(props.companyRole) ||
               (props.projectRole &&
                 props.optionalRole &&
-                (permissions.grantAll ||
-                  permissions.projectModerator.includes(
-                    'addRemoveMemberRoom',
-                  )) &&
                 props.currentRoom.archive === false) ? (
                 <div
                   className="pointer ml3-ns ml1"
