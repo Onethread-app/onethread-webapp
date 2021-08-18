@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
+import { find } from 'lodash';
 
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import {
@@ -28,17 +29,27 @@ import {
 } from 'stores/board/Actions';
 import { ITask } from 'stores/board/Reducer';
 import DueDate from './DueDate';
+import { priorityColor } from 'stores/UtilsActions';
 
-const TaskItemContainer = styled.div`
-  width: 235px;
-  padding: 1rem 1.25rem;
-  border-radius: 5px;
-  box-shadow: ${(props) => `
-  rgba(17, 17, 26, 0.05) 0px 1px 0px, ${
-    props.isDragging ? '#3484F0' : 'rgba(17, 17, 26, 0.1)'
-  } 0px 0px 8px`};
-  background-color: #fff;
-  gap: 0.5rem;
+const ThirdRow = styled.div`
+  overflow: hidden;
+  height: 0;
+  transition: all 0.3s ease-in;
+  transition-delay: 0.4s;
+`;
+
+const SecondRow = styled.div`
+  overflow: hidden;
+  height: 0;
+  transition: all 0.3s ease-in;
+  transition-delay: 0.4s;
+`;
+
+const TaskDueDate = styled.div`
+  font-size: 0.75rem;
+  line-height: 140%;
+  color: #a4a4a4;
+  margin-right: 0.75rem;
 `;
 
 const TaskItemName = styled.h3`
@@ -52,11 +63,27 @@ const TaskItemName = styled.h3`
   text-transform: capitalize;
 `;
 
-const TaskDueDate = styled.div`
-  font-size: 0.75rem;
-  line-height: 140%;
-  color: #a4a4a4;
-  margin-right: 0.75rem;
+const TaskItemContainer = styled.div`
+  width: 235px;
+  padding: 1rem 1.25rem;
+  border-radius: 5px;
+  box-shadow: ${(props) => `
+  rgba(17, 17, 26, 0.05) 0px 1px 0px, ${
+    props.isDragging
+      ? '#3484F0'
+      : find(priorityColor, ['code', props.priority])!.value
+  } 0px 0px 4px`};
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+
+  &:hover ${SecondRow} {
+    height: 37px;
+  }
+
+  &:hover ${ThirdRow} {
+    height: 37px;
+  }
 `;
 
 interface IColumnTaskItem {
@@ -124,7 +151,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
           const allowedProps = { ref: provided.innerRef };
           return (
             <TaskItemContainer
-              className={`flex flex-column mh2 w-100`}
+              className={`mh2 w-100`}
               priority={task.priority}
               isDragging={snapshot.isDragging}
               {...provided.draggableProps}
@@ -166,7 +193,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
                   }
                 />
               </div>
-              <div className={`flex  items-center`}>
+              <SecondRow className={`flex  items-center`}>
                 <TaskDueDate>
                   {task.dueDate ? (
                     <DueDate dueDate={task.dueDate} />
@@ -183,8 +210,10 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
                     {task.activityCount ? task.activityCount : 0}
                   </sup>
                 </div>
-              </div>
-              <div className={`flex justify-between items-center`}>
+              </SecondRow>
+              <ThirdRow
+                className={`flex justify-between items-center`}
+              >
                 <TaskPriorityTag priority={task.priority} />
                 {task.assignedMembers &&
                   task.assignedMembers.length > 0 && (
@@ -193,7 +222,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
                       small
                     />
                   )}
-              </div>
+              </ThirdRow>
             </TaskItemContainer>
           );
         }}

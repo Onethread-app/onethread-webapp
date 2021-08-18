@@ -109,6 +109,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
           <TasksContainerDiv
             className={`flex flex-column h-100 overflow-x-hidden overflow-y-auto`}
             windowSize={windowSize}
+            isDraggingOver={snapshot.isDraggingOver}
             {...provided.droppableProps}
             {...allowedProps}
           >

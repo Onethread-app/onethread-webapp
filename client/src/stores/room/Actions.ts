@@ -261,3 +261,8 @@ export const fetchChatsFailure = (errorMessage: any) => ({
   type: RoomActionTypes.FETCH_ROOMS_FAILURE,
   payload: errorMessage,
 });
+
+export const setRoomLoading = (value: boolean) => ({
+  type: RoomActionTypes.SET_ROOM_LOADING,
+  payload: value,
+});

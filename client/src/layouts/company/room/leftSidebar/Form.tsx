@@ -44,6 +44,7 @@ const CreateFormComponent: React.FC<any> = (
     if (
       submitted === true &&
       props.creatingRoom === false &&
+      props.roomLoading === false &&
       props.errorOnRoomCreate === ''
     ) {
       const query = new URLSearchParams(location.search);
@@ -58,7 +59,12 @@ const CreateFormComponent: React.FC<any> = (
       props.setShowDialog(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.creatingRoom]);
+  }, [
+    props.creatingRoom,
+    props.roomLoading,
+    submitted,
+    props.errorOnRoomCreate,
+  ]);
 
   return (
     <Form

@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import TasksContainer from './ListTasksContainer';
-import CreateTaskButton from './CreateTaskButton';
 import { TaskBoard } from 'stores/board/Reducer';
 
 const TaskListContainer = styled.div`
@@ -64,17 +63,6 @@ interface ITaskList {
 }
 
 const TaskList = (props: ITaskList) => {
-  const [todoColumnId, setTodoColumnId] = React.useState('');
-
-  React.useEffect(() => {
-    if (props.currentBoard.columns.length > 0)
-      setTodoColumnId(
-        props.currentBoard.columns.filter(
-          (col) => col.name.toLowerCase() === 'to do',
-        )[0]._id,
-      );
-  }, [props.currentBoard]);
-
   return (
     <TaskListContainer>
       <ListHeader>
@@ -101,7 +89,6 @@ const TaskList = (props: ITaskList) => {
         </HeaderItem>
       </ListHeader>
       <TasksContainer />
-      <CreateTaskButton columnId={todoColumnId} />
     </TaskListContainer>
   );
 };

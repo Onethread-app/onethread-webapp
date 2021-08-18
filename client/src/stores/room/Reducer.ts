@@ -833,6 +833,11 @@ export const RoomReducer = (state = InitialState, action: any) => {
         ...state,
         emojiPicker: action.payload,
       };
+    case RoomActionTypes.SET_ROOM_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
+      };
     // case UPDATE_UNREAD_COUNT_ROOMS: {
     //   return {
     //     ...state,

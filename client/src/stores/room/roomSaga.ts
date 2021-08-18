@@ -37,6 +37,7 @@ import {
   removeRoomDiscussion,
   sendRoomMessageFailure,
   sendRoomMessageSuccess,
+  setRoomLoading,
   toggleDiscussionRoomFailure,
   toggleDiscussionRoomSuccess,
   updateLastSeenFailure,
@@ -62,6 +63,7 @@ function* createRoom({ payload }) {
         headers,
       );
       yield all([
+        put(setRoomLoading(true)),
         put(createRoomSuccess(response.data.room)),
         put({
           type: room.RESPONSE_STATUS_CODE,

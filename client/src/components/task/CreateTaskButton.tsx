@@ -2,22 +2,21 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { Dialog, Icon } from '@blueprintjs/core';
+
 import CreateTaskDialog from './CreateTaskDialog';
 
 const CreateTaskButtonDiv = styled.div`
-  width: 100%;
-  height: 49px;
+  max-width: 200px;
+  height: 40px;
   display: flex;
   align-items: center;
+  margin-left: 0.5rem;
   padding: 1rem;
-  border: 1px dashed #cacaca;
   box-sizing: border-box;
   border-radius: 8px;
-  cursor: ${(props) => (props.columnId ? 'pointer' : 'wait')};
-
-  &:hover {
-    background: #f1f1f1;
-  }
+  cursor: pointer;
+  background: #08a0f7;
+  color: #fff;
 
   p {
     margin: 0;
@@ -31,15 +30,12 @@ interface ICreateTaskButton {
 const CreateTaskButton = (props: ICreateTaskButton) => {
   const [showDialog, setShowDialog] = useState(false);
   const handleClick = () => {
-    if (props.columnId) setShowDialog(true);
+    setShowDialog(true);
   };
   return (
     <>
-      <CreateTaskButtonDiv
-        columnId={props.columnId}
-        onClick={handleClick}
-      >
-        <Icon icon="plus" color="#34B3E9" className="mr2" />
+      <CreateTaskButtonDiv onClick={handleClick}>
+        <Icon icon="plus" color="#fff" className="mr2" />
         <p>Add new task</p>
       </CreateTaskButtonDiv>
       <Dialog
