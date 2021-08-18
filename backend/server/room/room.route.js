@@ -15,12 +15,6 @@ router
   .route('/')
   .post(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member'
-    ),
     SchemaValidator(joiSchema.createRoom),
     roomCtrl.create,
   );
@@ -29,11 +23,6 @@ router
   .route('/:roomId/archive')
   .put(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
     SchemaValidator(joiSchema.archiveRoom),
     roomCtrl.archiveRoom,
   );
@@ -57,11 +46,6 @@ router
   .route('/addUser')
   .post(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
     SchemaValidator(joiSchema.addMembers),
     roomCtrl.addMembers,
   );
@@ -71,11 +55,6 @@ router
   .route('/suggest-member')
   .get(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
     roomCtrl.suggestMember,
   );
 
