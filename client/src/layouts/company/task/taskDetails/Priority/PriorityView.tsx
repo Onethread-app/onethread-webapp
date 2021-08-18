@@ -11,15 +11,14 @@ interface PriorityViewComponentInternalProps {
 export const PriorityViewComponent = (
   props: PriorityViewComponentInternalProps,
 ) => {
-
   const { t } = useTranslation();
 
   return (
-    <>
-      <div style={{ height: '20px' }}>
-        <h1 className="f6">{t('app.project.Project-boards.Priority')}</h1>
-        {/* <h1 className="f6">Priority</h1> */}
-      </div>
+    <div className="flex justify-between items-center">
+      <h1 className="f6">
+        {t('app.project.Project-boards.Priority')}
+      </h1>
+      {/* <h1 className="f6">Priority</h1> */}
       {props.priority! > -1 && (
         <p
           style={{
@@ -35,7 +34,7 @@ export const PriorityViewComponent = (
           {find(priorityColor, ['code', props.priority])!.name}
         </p>
       )}
-    </>
+    </div>
   );
 };
 

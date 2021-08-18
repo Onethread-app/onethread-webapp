@@ -42,6 +42,7 @@ import {
   updateBoardNameFailure,
   updateBoardNameSuccess,
   dragAndDropTaskFailure,
+  updateCurrentTaskColumnId,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
@@ -267,6 +268,15 @@ export function* dragAndDrop({
         0,
         addedTask,
       );
+      const currentTask = yield select(getCurrentTask);
+      if (taskId === currentTask) {
+        yield put(
+          updateCurrentTaskColumnId({
+            columnId: destinationColumnId,
+            status,
+          }),
+        );
+      }
       yield put(dragAndDropTaskSuccess(allColumns));
       yield tigrowApi.post(`tasks/dragTask`, requestData, headers);
     }
@@ -329,6 +339,7 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
           currentColumnName: res.data.columnId.name,
           columnId: res.data.columnId._id,
           file: res.data.file,
+          status: res.data.status,
         };
         yield put(getSelectedTaskDetailsSuccess(response));
       }

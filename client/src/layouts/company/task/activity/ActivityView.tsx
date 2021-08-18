@@ -32,20 +32,27 @@ export const ActivityViewPageComponent = (
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-column h-100 pl2 mb5 mb0-ns">
-      <div className="pl3">
-        <h1 className="f5 fw7 lh-title black">{t('app.project.Project-boards.Activity')}</h1>
-        {/* <h1 className="f5 fw7 lh-title black">Activity</h1> */}
-      </div>
-
+    <div className="flex flex-column pl2 mb5 mb0-ns">
+      <h1
+        style={{
+          color: '#323030',
+          fontSize: '18px',
+          fontWeight: 700,
+          width: '100%',
+        }}
+      >
+        {t('app.project.Project-boards.Activity')}
+      </h1>
+      {/* <h1 className="f5 fw7 lh-title black">Activity</h1> */}
       <div
-        className={`flex flex-column flex-grow-1 overflow-y-auto pt2 ${
+        className={`flex flex-column overflow-y-auto pt2 ${
           !isMobileOnly ? 'bl b--tigrowLightGray-1 pl3' : ''
         } `}
+        style={{ maxHeight: '300px' }}
       >
         {loading === false ? (
           props.commentList.map((comment) => (
-            <div className="flex justify-between">
+            <div key={comment._id} className="flex justify-between">
               <article className="dt pb2 mt2 w-100">
                 <div className="dtc w2">
                   <img

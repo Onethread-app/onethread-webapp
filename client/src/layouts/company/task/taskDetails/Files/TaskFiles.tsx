@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-
 import { IFile } from 'stores/board/Reducer';
 import {
   taskFileDelete,
   ITaskFileDelete,
 } from 'stores/board/Actions';
+import TaskFilesAttach from './TaskFilesAttach';
 import { Icon, Tooltip } from '@blueprintjs/core';
+import { Popover } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import { useTranslation } from 'react-i18next';
 
 interface ITaskFiles {
@@ -37,12 +39,49 @@ const TaskFiles = (props: ITaskFiles) => {
 
   const { t } = useTranslation();
 
+  const [filePopover, setFilePopover] = useState(false);
+
   return (
-    <div>
-      <h1 className="f6">{t('app.project.Project-preface.Media')}</h1>
-      {/* <h1 className="f6">Shared Files</h1> */}
-      <div style={{ maxHeight: '160px', overflowY: 'scroll' }}>
-        {props.taskFiles ? (
+    <div className="w-100">
+      <div className="flex justify-between items-center w-100">
+        <h1
+          style={{
+            color: '#323030',
+            fontSize: '18px',
+            fontWeight: 700,
+            width: '100%',
+          }}
+        >
+          {t('app.project.Project-preface.Media')} (
+          {props.taskFiles && props.taskFiles!.length!})
+        </h1>
+        <div>
+          <Popover
+            isOpen={filePopover}
+            content={
+              <TaskFilesAttach setFilePopover={setFilePopover} />
+            }
+            target={
+              <Icon
+                style={{
+                  color: '#323030',
+                }}
+                icon={IconNames.PLUS}
+                iconSize={20}
+                className="pointer"
+                onClick={() => setFilePopover(!filePopover)}
+              />
+            }
+          />
+        </div>
+      </div>
+      <div
+        style={{
+          maxHeight: '160px',
+          overflowY: 'auto',
+        }}
+      >
+        {props.taskFiles && props.taskFiles.length ? (
           props.taskFiles.map((file) => (
             <div
               key={file._id}
@@ -90,7 +129,7 @@ const TaskFiles = (props: ITaskFiles) => {
             </div>
           ))
         ) : (
-          <h1>No Files</h1>
+          <h1 className="f6">{t('app.project.Tasks.No-Files')}</h1>
         )}
       </div>
     </div>

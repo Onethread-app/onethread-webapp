@@ -6,3 +6,45 @@
     display: none;
   }
 }
+
+.task-due-date {
+  border: 1px solid #b1b1b1;
+  padding: 0.6rem 0.1rem 0.5rem 0.5rem !important;
+  max-width: 11rem;
+  margin: 0.5rem 0rem !important;
+  .MuiInput-underline:before {
+    border-bottom: 0px;
+  }
+  .MuiInput-underline:after {
+    border-bottom: 0px !important;
+  }
+  .MuiInput-underline:hover {
+    border-bottom: 0px !important;
+  }
+  &:hover {
+    .MuiInput-underline:before {
+      border-bottom: 0px !important;
+    }
+  }
+  .MuiFormHelperText-filled {
+    display: none !important;
+  }
+}
+
+.task-activity-container {
+  display: flex;
+
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
+}
+
+.task-info-items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  @media screen and (max-width: 320px) {
+    display: block;
+  }
+}

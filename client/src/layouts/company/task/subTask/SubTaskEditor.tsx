@@ -55,7 +55,8 @@ export const SubTaskCreatorComponent = (
   };
 
   return (
-    <div className="mb3">
+    <div className="mb3 pa3">
+      <h3 className="tc">Create Subtask</h3>
       <Form
         onSubmit={onSubmit}
         initialValues={{
