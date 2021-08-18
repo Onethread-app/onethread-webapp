@@ -119,7 +119,7 @@ export const CreateCompany = () => {
     font-size: 16.376px;
     line-height: 20px;
     background: #ffffff;
-    color: #0f0c4e;
+    color: #34B3E9;
   `;
   return <Button>Create Company</Button>;
 };
