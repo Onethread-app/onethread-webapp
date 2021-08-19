@@ -20,6 +20,10 @@ const ColumnsContainerDiv = styled.div`
   gap: 1.25rem;
   flex-grow: 1;
   padding: 1rem;
+
+  @media only screen and (max-width: 768px) {
+    margin-bottom: 4rem;
+  }
 `;
 
 const AddColumnButton = styled.div`

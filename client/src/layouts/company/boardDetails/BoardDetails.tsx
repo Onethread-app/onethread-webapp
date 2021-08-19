@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { isMobileOnly } from 'react-device-detect';
 
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import { Icon, Popover } from '@blueprintjs/core';
@@ -19,8 +20,13 @@ import {
   SortTasksBy,
   TaskBoard,
 } from 'stores/board/Reducer';
-import { setSortBy, setFilerUsers } from 'stores/board/Actions';
+import {
+  setSortBy,
+  setFilerUsers,
+  setPreferredView,
+} from 'stores/board/Actions';
 import { IProject } from 'stores/project/Reducer';
+
 import {
   Container,
   ProjectName,
@@ -36,15 +42,19 @@ interface ISelectedAssignee {
 }
 
 interface IBoardDetails {
+  fetchingBoard: boolean;
   company: ICompany;
   currentBoard: TaskBoard;
   currentProject: IProject;
   setSortBy: (sort: SortTasksBy) => void;
   setFilerUsers: (list: IFilterUser[]) => void;
+  setPreferredView: (v: 'board' | 'list') => void;
 }
 
 const BoardDetails = (props: IBoardDetails) => {
-  const [view, setView] = useState<'board' | 'list'>('list');
+  const [view, setView] = useState<'board' | 'list'>(
+    props.currentBoard.preferredView ?? 'list',
+  );
   const [boardMembers, setBoardMembers] = useState<
     ISelectedAssignee[]
   >([]);
@@ -86,13 +96,24 @@ const BoardDetails = (props: IBoardDetails) => {
       );
   }, [props.currentBoard]);
 
+  const handleViewChange = (v: 'board' | 'list') => {
+    if (props.fetchingBoard === false) {
+      clearSort();
+      setView(v);
+      props.setPreferredView(v);
+    }
+  };
+
   return (
     <Container className="h-100 ph3 cf flex flex-column">
       <div className="flex flex-column mb3">
-        <div className="flex justify-between">
+        <div className="flex flex-wrap justify-between">
           <div
             className="flex flex-column"
-            style={{ width: 'calc(100%/3)' }}
+            style={{
+              width: isMobileOnly ? 'auto' : 'calc(100%/3)',
+              flexBasis: isMobileOnly ? '100%' : 'auto',
+            }}
           >
             <BreadCrumbs
               items={[
@@ -111,19 +132,25 @@ const BoardDetails = (props: IBoardDetails) => {
           </div>
           <ProjectName
             className="tc"
-            style={{ width: 'calc(100%/3)' }}
+            style={{ width: isMobileOnly ? 'auto' : 'calc(100%/3)' }}
           >
             {props.currentProject.name}
           </ProjectName>
           <div
-            className="flex justify-end"
-            style={{ width: 'calc(100%/3)' }}
+            className={`flex ${
+              isMobileOnly ? 'justify-center' : 'justify-end'
+            }`}
+            style={{ width: isMobileOnly ? 'auto' : 'calc(100%/3)' }}
           >
             <MemberGroup members={props.currentBoard.members} />
           </div>
         </div>
-        <SecondaryHeader className="flex items-center">
-          <div className="flex items-center">
+        <SecondaryHeader className="flex flex-column flex-row-ns items-center">
+          <div
+            className={`flex items-center ${
+              isMobileOnly && 'justify-between'
+            }`}
+          >
             <TasksNumber>
               <h3>Tasks</h3>
               <span>
@@ -139,12 +166,14 @@ const BoardDetails = (props: IBoardDetails) => {
             <CreateTaskButton columnId={todoColumnId} />
           </div>
           <div className="flex justify-center">
-            <ViewSelectDiv className="flex">
+            <ViewSelectDiv
+              fetchingBoard={props.fetchingBoard}
+              className="flex"
+            >
               <p>View:</p>
               <p
                 onClick={() => {
-                  clearSort();
-                  setView('list');
+                  handleViewChange('list');
                 }}
                 className={`${view === 'list' && 'active'}`}
               >
@@ -153,8 +182,7 @@ const BoardDetails = (props: IBoardDetails) => {
 
               <p
                 onClick={() => {
-                  clearSort();
-                  setView('board');
+                  handleViewChange('board');
                 }}
                 className={`${view === 'board' && 'active'}`}
               >
@@ -162,7 +190,11 @@ const BoardDetails = (props: IBoardDetails) => {
               </p>
             </ViewSelectDiv>
           </div>
-          <div className="flex justify-end">
+          <div
+            className={`flex ${
+              isMobileOnly ? 'justify-center' : 'justify-end'
+            }`}
+          >
             <div className="flex items-center">
               {(props.currentBoard.sortBy !== undefined ||
                 selectedAssignee.length > 0) && (
@@ -331,9 +363,12 @@ const BoardDetails = (props: IBoardDetails) => {
 const mapStateToProps = (state: any) => ({
   company: state.companyReducer.currentCompany,
   currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+  fetchingBoard: state.boardIndexReducer.boardReducer.fetchingBoard,
   currentProject: state.projectReducer.projectDetails,
 });
 
-export default connect(mapStateToProps, { setSortBy, setFilerUsers })(
-  BoardDetails,
-);
+export default connect(mapStateToProps, {
+  setSortBy,
+  setFilerUsers,
+  setPreferredView,
+})(BoardDetails);
