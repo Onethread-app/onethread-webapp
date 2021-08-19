@@ -63,4 +63,5 @@ export const BoardActionTypes = {
 
   SET_SORT_BY: 'SET_SORT_BY',
   SET_FILTER_USERS: 'SET_FILTER_USERS',
+  SET_PREFERRED_VIEW: 'SET_PREFERRED_VIEW',
 };

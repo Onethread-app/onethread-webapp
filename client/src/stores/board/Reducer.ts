@@ -49,6 +49,7 @@ export interface TaskBoard {
   sortBy: SortTasksBy;
   orderBy: Order;
   filteredUsers: IFilterUser[];
+  preferredView?: 'board' | 'list';
 }
 
 export interface ITask {
@@ -90,6 +91,7 @@ const InitialState = {
     sortBy: undefined,
     orderBy: 'asc' as const,
     filteredUsers: [],
+    preferredView: 'list',
   },
   currentTask: {},
   creatingBoard: false,
@@ -546,6 +548,14 @@ export const BoardReducer = (state = InitialState, action: any) => {
         currentBoard: {
           ...state.currentBoard,
           filteredUsers: action.payload,
+        },
+      };
+    case BoardActionTypes.SET_PREFERRED_VIEW:
+      return {
+        ...state,
+        currentBoard: {
+          ...state.currentBoard,
+          preferredView: action.payload,
         },
       };
     default:

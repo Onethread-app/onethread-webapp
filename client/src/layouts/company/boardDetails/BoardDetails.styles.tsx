@@ -13,6 +13,7 @@ export const ProjectName = styled.h3`
   margin-top: 0;
   margin-bottom: 0.5rem;
   color: #323030;
+  text-transform: capitalize;
 `;
 
 export const SortingDiv = styled.div`
@@ -59,7 +60,8 @@ export const ViewSelectDiv = styled.div`
     padding: 0.25rem 0;
 
     &:not(:first-child) {
-      cursor: pointer;
+      cursor: ${(props) =>
+        props.fetchingBoard ? 'not-allowed' : 'pointer'};
       padding: 0.25rem 0.5rem;
     }
 
@@ -94,5 +96,18 @@ export const TasksNumber = styled.div`
 export const SecondaryHeader = styled.div`
   > div {
     width: calc(100% / 3);
+  }
+
+  @media only screen and (max-width: 768px) {
+    gap: 0.5rem;
+
+    > div {
+      width: 50%;
+
+      &:first-child {
+        width: 100%;
+        order: 2;
+      }
+    }
   }
 `;
