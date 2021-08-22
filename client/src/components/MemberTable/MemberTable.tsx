@@ -159,7 +159,6 @@ export default function MemberTable({ type, props, rows }) {
                   page * rowsPerPage + rowsPerPage,
                 )
                 .map((row: any, index) => {
-                  console.log('row', row);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   return (
                     <StyledTableRow

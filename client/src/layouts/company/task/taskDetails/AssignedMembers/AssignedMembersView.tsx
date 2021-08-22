@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog } from '@blueprintjs/core';
-import { AssignedMemberListView } from './AssignedMemberListView';
 import { connect } from 'react-redux';
 import { getAllMembers } from 'stores/taskMembers/Action';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { ITaskMember } from 'stores/taskMembers/Reducer';
+import { AssignedMemeberListEditor } from './AssignedMemeberListEditor';
+import { useTranslation } from 'react-i18next';
 
 interface IAssignedMembersViewComponentInternalProps {
   getAllMembers: () => void;
@@ -17,8 +17,8 @@ export const AssignedMembersViewComponent = (
   props: IAssignedMembersViewComponentInternalProps &
     RouteComponentProps,
 ) => {
-  const [showMemberlist, setShowMemberList] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function getAllTaskMembers() {
@@ -27,51 +27,34 @@ export const AssignedMembersViewComponent = (
     }
     getAllTaskMembers();
   }, [props.currentTaskId]);
-
   return (
     <>
       {loading === false ? (
-        <div className="flex">
-          {props.taskMemberList.slice(0, 3).map((list) => (
-            <div className="pa1 dib" key={list._id}>
-              <img
-                src={
-                  list.profileImage
-                    ? list.profileImage
-                    : 'https://tigrowresources.s3-ap-southeast-1.amazonaws.com/profilePhoto.svg'
-                }
-                className="br2 h2 w2 pointer"
-                alt="avatar"
-                onClick={() => setShowMemberList(true)}
-              />
+        <div>
+          <h3> {t('app.project.Tasks.Viewers')}</h3>
+          {props.taskMemberList.map((list) => (
+            <div
+              className="pa1 flex items-center w-100"
+              key={list._id}
+            >
+              <div className="flex items-center w-100">
+                <img
+                  src={
+                    list.profileImage
+                      ? list.profileImage
+                      : 'https://tigrowresources.s3-ap-southeast-1.amazonaws.com/profilePhoto.svg'
+                  }
+                  className="br2 h2 w2 pointer mh2"
+                  alt="avatar"
+                />
+                <p>{list.name}</p>
+              </div>
+              <AssignedMemeberListEditor assignMemberId={list._id} />
             </div>
           ))}
-          {props.taskMemberList.length > 3 && (
-            <div className="pa1 dib">
-              <p
-                className="br2 h2 w2 pa2 pointer"
-                onClick={() => setShowMemberList(true)}
-              >
-                +{props.taskMemberList.length - 3}
-              </p>
-            </div>
-          )}
         </div>
       ) : (
         <Loading />
-      )}
-      {showMemberlist && (
-        <Dialog
-          title="Members List"
-          onClose={() => setShowMemberList(!showMemberlist)}
-          isOpen={showMemberlist}
-          style={{
-            background: '#fff',
-          }}
-          className="pa3"
-        >
-          <AssignedMemberListView />
-        </Dialog>
       )}
     </>
   );

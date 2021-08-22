@@ -4,21 +4,15 @@ import { connect } from 'react-redux';
 import { TaskTitleView } from './TaskTitle/TaskTitleView';
 import { TaskDescriptionView } from './TaskDescription/TaskDescriptionView';
 import { Popover } from '@blueprintjs/core';
-import { DueDateEditor } from './DueDate/DueDateEditor';
-import { DueDateView } from './DueDate/DueDateView';
-import { AssignedMembersView } from './AssignedMembers/AssignedMembersView';
-import { AssignedMembersEditor } from './AssignedMembers/AssignedMembersEditor';
-import dueDate from 'resources/images/dueDate.png';
-import addMembers from 'resources/images/addMembers.png';
+// import { AssignedMembersEditor } from './AssignedMembers/AssignedMembersEditor';
+// import addMembers from 'resources/images/addMembers.png';
 import attachFiles from 'resources/images/attachFiles.png';
-import priority from 'resources/images/priority.png';
-import { PriorityView } from './Priority/PriorityView';
-import { PriorityEditor } from './Priority/PriorityEditor';
-import moment from 'moment';
 import { ICompany } from 'stores/company/Reducer';
 import TaskFiles from './Files/TaskFiles';
 import TaskFilesAttach from './Files/TaskFilesAttach';
 import { useTranslation } from 'react-i18next';
+import { SubTaskView } from '../subTask/SubtaskView';
+import AddSubTaskButton from '../subTask/AddSubtaskButton';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
@@ -26,279 +20,106 @@ interface TaskDetailsInternalProps {
 }
 
 const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
-  const [datePopover, setDatePopover] = useState(false);
-  const [membersPopover, setMembersPopover] = useState(false);
-  const [priorityPopover, setPriorityPopover] = useState(false);
+  const { t } = useTranslation();
+
+  // const [membersPopover, setMembersPopover] = useState(false);
   const [filePopover, setFilePopover] = useState(false);
 
-  const openDatePopOver = () => {
-    setDatePopover(true);
-    setMembersPopover(false);
-    setPriorityPopover(false);
-    setFilePopover(false);
-  };
-
-  const openMembersPopOver = () => {
-    setMembersPopover(true);
-    setDatePopover(false);
-    setPriorityPopover(false);
-    setFilePopover(false);
-  };
-
-  const openPriorityPopOver = () => {
-    setPriorityPopover(true);
-    setDatePopover(false);
-    setMembersPopover(false);
-    setFilePopover(false);
-  };
+  // const openMembersPopOver = () => {
+  //   setMembersPopover(true);
+  //   setFilePopover(false);
+  // };
 
   const openFilePopover = () => {
     setFilePopover(true);
-    setPriorityPopover(false);
-    setDatePopover(false);
-    setMembersPopover(false);
   };
 
-  const { t } = useTranslation();
-
   return (
-    <div className="fl w-100">
-      <div className="fl w-100">
-        <div className="fl w-100">
-          <TaskTitleView />
-        </div>
+    <div className="w-100">
+      <div className="w-100">
+        <TaskTitleView />
       </div>
-      <p style={{ color: '#303030', fontSize: '12px' }}>
-        Created by {props.currentTask!.createdBy} on{' '}
-        {moment(props.currentTask!.createdAt).format(
-          'MMMM Do YYYY, h:mm:ss a',
-        )}
-      </p>
-      <div className="fl w-70-ns w-100">
-        <div className="fl w-100">
-          <div className="flex-ns">
-            <div
-              className="white ph2 br2 h-100"
-              style={{ background: '#FDB64E' }}
-            >
-              <p
-                className="fw7 pt2-ns overflow-hidden"
-                style={{
-                  whiteSpace: 'nowrap',
-                  textOverflow: 'ellipsis',
-                  maxWidth: '200px',
-                }}
-              >
-                {props.currentTask!.currentColumnName}
-              </p>
-            </div>
-            {props.currentTask!.dueDate && (
-              <>
-                {Math.ceil(
-                  moment(props.currentTask!.dueDate).diff(
-                    moment(),
-                    'days',
-                    true,
-                  ),
-                ) === 0 ? (
-                  <p className="pt2 pl3 fw6 red">
-                    Deadline ends today
+      <div className="w-100">
+        <div className="flex justify-start">
+          <div className="mr3">
+            <Popover
+              isOpen={filePopover}
+              content={
+                <TaskFilesAttach setFilePopover={setFilePopover} />
+              }
+              target={
+                <div
+                  onClick={openFilePopover}
+                  className="flex br2 mb2 pt2 ph3 pointer"
+                  style={{
+                    width: '100%',
+                    color: '#5A5A5A',
+                    border: '1px solid #B1B1B1',
+                  }}
+                >
+                  <img
+                    style={{ height: '15px' }}
+                    src={attachFiles}
+                    alt=""
+                  />
+                  <p className="pl3 f7">
+                    {t('app.project.Project-boards.Attach-Files')}
                   </p>
-                ) : Math.ceil(
-                    moment(props.currentTask!.dueDate).diff(
-                      moment(),
-                      'days',
-                      true,
-                    ),
-                  ) < 0 ? (
-                  <p className="pt2 pl3 fw6 red">Expired</p>
-                ) : Math.ceil(
-                    moment(props.currentTask!.dueDate).diff(
-                      moment(),
-                      'days',
-                      true,
-                    ),
-                  ) === 1 ? (
-                  <p className="pt2 pl3 fw6">
-                    {Math.ceil(
-                      moment(props.currentTask!.dueDate).diff(
-                        moment(),
-                        'days',
-                        true,
-                      ),
-                    )}{' '}
-                    day remaining
-                  </p>
-                ) : (
-                  <p className="pt2 pl3 fw6">
-                    {Math.ceil(
-                      moment(props.currentTask!.dueDate).diff(
-                        moment(),
-                        'days',
-                        true,
-                      ),
-                    )}{' '}
-                    days remaining
-                  </p>
-                )}
-              </>
-            )}
+                </div>
+              }
+            />
           </div>
-          <div className="mt2">
-            <AssignedMembersView />
-          </div>
-          <div className="mt2">
-            <TaskDescriptionView />
-          </div>
-          <div className="mt3">
-            <TaskFiles />
-          </div>
-          <div className="mt3">
-            <div className="fl w-100 w-50-ns">
-              <DueDateView />
-            </div>
-            <div className="fl w-100 w-50-ns">
-              <PriorityView />
-            </div>
-          </div>
-          <div></div>
-        </div>
-      </div>
-      <div className="fl w-30-ns w-100">
-        {/* <div className="mt3 dt">
-                  <h1 className="f6">Attach Files</h1>
-                  <p
-                    className="pa2 br3"
-                    style={{ backgroundColor: "#F2FAFA" }}
-                  >
-                    company.tsx
-                  </DueDateView>
-                </div> */}
-        <div className="fl w-100">
-          <div className="fr-ns fl">
-            <div>
-              {props.company ? (
-                <Popover
-                  isOpen={datePopover}
-                  content={
-                    <div className="pa3 cf bg-white">
-                      <DueDateEditor
-                        setDatePopover={setDatePopover}
-                      />
-                    </div>
-                  }
-                  target={
-                    <div
-                      className="flex br2 mb2 pt2 ph3 pointer"
-                      style={{
-                        background: '#C1DEDE',
-                        width: '130px',
-                      }}
-                      onClick={openDatePopOver}
-                    >
-                      <img
-                        style={{ height: '15px' }}
-                        src={dueDate}
-                        alt=""
-                      />
-                      <p className="pl3 f7">{t('app.project.Project-boards.Due-Date')}</p>
-                      {/* <p className="pl3 f7">Due Date</p> */}
-                    </div>
-                  }
-                />
-              ) : null}
-            </div>
-            <div>
+          {/* <div className="mr3">
+            {props.company ? (
               <Popover
-                isOpen={filePopover}
+                isOpen={membersPopover}
                 content={
-                  <TaskFilesAttach setFilePopover={setFilePopover} />
+                  <div className="pa3 cf bg-white">
+                    <AssignedMembersEditor
+                      setMembersPopover={setMembersPopover}
+                    />
+                  </div>
                 }
                 target={
                   <div
-                    onClick={openFilePopover}
                     className="flex br2 mb2 pt2 ph3 pointer"
-                    style={{ background: '#C1DEDE', width: '130px' }}
+                    style={{
+                      width: '100%',
+                      color: '#5A5A5A',
+                      border: '1px solid #B1B1B1',
+                    }}
+                    onClick={openMembersPopOver}
                   >
                     <img
                       style={{ height: '15px' }}
-                      src={attachFiles}
+                      src={addMembers}
                       alt=""
                     />
-                    <p className="pl3 f7">{t('app.project.Project-boards.Attach-Files')}</p>
-                    {/* <p className="pl3 f7">Attach Files</p> */}
+                    <p className="pl3 f7">
+                      {t('app.project.Project-boards.Members')}
+                    </p>
+                    <p className="pl3 f7">Members</p>
                   </div>
                 }
               />
-            </div>
+            ) : undefined}
+          </div> */}
+          <div>
             <div>
-              {props.company ? (
-                <Popover
-                  isOpen={membersPopover}
-                  content={
-                    <div className="pa3 cf bg-white">
-                      <AssignedMembersEditor
-                        setMembersPopover={setMembersPopover}
-                      />
-                    </div>
-                  }
-                  target={
-                    <div
-                      className="flex br2 mb2 pt2 ph3 pointer"
-                      style={{
-                        background: '#C1DEDE',
-                        width: '130px',
-                      }}
-                      onClick={openMembersPopOver}
-                    >
-                      <img
-                        style={{ height: '15px' }}
-                        src={addMembers}
-                        alt=""
-                      />
-                      <p className="pl3 f7">{t('app.project.Project-boards.Members')}</p>
-                      {/* <p className="pl3 f7">Members</p> */}
-                    </div>
-                  }
-                />
-              ) : undefined}
-            </div>
-            <div>
-              {props.company ? (
-                <Popover
-                  isOpen={priorityPopover}
-                  content={
-                    <div
-                      className="pa4 cf bg-white"
-                      style={{ width: '300px' }}
-                    >
-                      <PriorityEditor
-                        setPriorityPopover={setPriorityPopover}
-                      />
-                    </div>
-                  }
-                  target={
-                    <div
-                      className="flex br2 mb2 pt2 ph3 pointer"
-                      onClick={openPriorityPopOver}
-                      style={{
-                        background: '#C1DEDE',
-                        width: '130px',
-                      }}
-                    >
-                      <img
-                        style={{ height: '15px' }}
-                        src={priority}
-                        alt=""
-                      />
-                      <p className="pl3 f7">{t('app.project.Project-boards.Priority')}</p>
-                      {/* <p className="pl3 f7">Priority</p> */}
-                    </div>
-                  }
-                />
-              ) : null}
+              <AddSubTaskButton />
             </div>
           </div>
+        </div>
+      </div>
+      <div className="w-100">
+        <div className="mv2">
+          <TaskDescriptionView />
+        </div>
+        <div className="mv3">
+          <SubTaskView />
+        </div>
+        <div className="mv3">
+          <TaskFiles />
         </div>
       </div>
     </div>

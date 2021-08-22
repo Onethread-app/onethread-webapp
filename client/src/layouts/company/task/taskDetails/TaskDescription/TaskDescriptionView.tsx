@@ -26,13 +26,19 @@ export const TaskDescriptionViewComponent = (
     <>
       <div
         className="flex justify-between"
-        style={{ height: '30px' }}
+        style={{ height: '50px' }}
       >
-        <div>
-          <h1 className="f6">{t('app.project.Project-boards.Description')}</h1>
-          {/* <h1 className="f6">Description</h1> */}
-        </div>
-        <div className="pr2" style={{ paddingTop: '10px' }}>
+        <h1
+          style={{
+            color: '#323030',
+            fontSize: '18px',
+            fontWeight: 700,
+            lineHeight: '28px',
+          }}
+        >
+          {t('app.project.Project-boards.Description')}:
+        </h1>
+        <div className="pr2 pt1">
           {props.company ? (
             <Icon
               className={
@@ -63,13 +69,18 @@ export const TaskDescriptionViewComponent = (
               whiteSpace: 'pre-line',
               maxHeight: '160px',
               overflowY: 'auto',
+              fontSize: '14px',
+              lineHeight: '24px',
+              fontWeight: 400,
             }}
           >
             {props.description}
           </p>
         </Linkify>
       ) : (
-        <p className="pr2">{t('app.project.Project-boards.No-description')}</p>
+        <p className="pr2">
+          {t('app.project.Project-boards.No-description')}
+        </p>
         // <p className="pr2">Description has not been given yet</p>
       )}
     </>

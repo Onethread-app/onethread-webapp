@@ -558,6 +558,15 @@ export const BoardReducer = (state = InitialState, action: any) => {
           preferredView: action.payload,
         },
       };
+    case BoardActionTypes.UPDATE_CURRENTTASK_COLUMNID:
+      return {
+        ...state,
+        currentTask: {
+          ...state.currentTask,
+          columnId: action.payload.columnId,
+          status: action.payload.status,
+        },
+      };
     default:
       return state;
   }

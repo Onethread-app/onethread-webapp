@@ -121,7 +121,9 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
           onClick={(e: any) => props.setFilePopover(false)}
         />
       </div>
-      <h1 className="f5">{t('app.project.Project-boards.Attach-Files')}</h1>
+      <h1 className="f5">
+        {t('app.project.Project-boards.Attach-Files')}
+      </h1>
       {/* <h1 className="f5">Attach Files</h1> */}
       <FileInput
         text={imageName.name ? imageName.name : 'Choose file...'}
@@ -136,10 +138,9 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
           text="Attach"
           className="grow h2 pointer w-40 fr mt2"
           style={{
-            background: '#0fa3a3',
+            background: '#34b3e9',
             outline: 'none',
             color: 'white',
-            boxShadow: 'none',
           }}
           loading={props.uploadingTaskFile}
           disabled={

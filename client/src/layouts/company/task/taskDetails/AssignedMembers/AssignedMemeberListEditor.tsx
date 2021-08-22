@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Popover, Icon } from '@blueprintjs/core';
 import { deleteMember } from 'stores/taskMembers/Action';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { ITaskMember } from 'stores/taskMembers/Reducer';
+import { Button, Popover } from '@blueprintjs/core';
 
 interface IAssignedMemeberListEditorComponentProps {
   assignMemberId: ITaskMember['_id'];
@@ -23,7 +23,7 @@ export const AssignedMemeberListEditorComponent = (
           <h1 className="f5">Delete</h1>
           <p>Are you sure want to permanently remove </p>
           <div className="flex justify-end mt4">
-          <Button
+            <Button
               className="grow h2 pointer white bp3-minimal w4 mr3"
               style={{
                 background: '#34b3e9',
@@ -50,16 +50,26 @@ export const AssignedMemeberListEditorComponent = (
             >
               Cancel
             </Button>
-        
           </div>
         </div>
       }
       target={
-        <Icon
-          className="pt3 pointer"
-          icon="trash"
+        // <Icon
+        //   className="pt3 pointer"
+        //   icon="trash"
+        //   onClick={() => setDeletePopover(true)}
+        // />
+        <Button
+          style={{
+            width: '100%',
+            color: '#5A5A5A',
+            border: '1px solid #B1B1B1',
+            background: 'none',
+          }}
           onClick={() => setDeletePopover(true)}
-        />
+        >
+          Remove
+        </Button>
       }
     />
   );

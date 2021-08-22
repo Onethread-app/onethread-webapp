@@ -4,6 +4,9 @@ import { ITask } from 'stores/board/Reducer';
 import { TaskTitleEditor } from './TaskTitleEditor';
 import { ICompany } from 'stores/company/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
+import moment from 'moment';
+import { Icon } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
@@ -23,22 +26,103 @@ export const TaskTitleViewComponent = (
           setNameEdit={(e) => setNameEdit(!nameEdit)}
         />
       ) : (
-        <h3
-          title="Click to edit title"
-          className="f4 mb0 overflow-hidden w-100 mb1 dim"
-          style={{
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            cursor: 'text',
-          }}
-          onClick={() => {
-            props.company && projectPermit(props.company.role)
-              ? setNameEdit(true)
-              : setNameEdit(false);
-          }}
-        >
-          {props.currentTask!.name}
-        </h3>
+        <div className="mv2">
+          <h5
+            style={{
+              fontSize: '12px',
+              color: '##666666',
+              lineHeight: '15px',
+              fontWeight: 400,
+              margin: '0.2rem 0rem',
+            }}
+          >
+            TASK
+          </h5>
+          <div className="flex justify-between items-center">
+            <h3
+              title="Click to edit title"
+              className="fw6 mb0 overflow-hidden mv2 dim"
+              style={{
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                cursor: 'text',
+                fontSize: '25px',
+              }}
+              onClick={() => {
+                props.company && projectPermit(props.company.role)
+                  ? setNameEdit(true)
+                  : setNameEdit(false);
+              }}
+            >
+              {props.currentTask!.name}
+            </h3>
+            {props.currentTask!.dueDate && (
+              <>
+                {Math.ceil(
+                  moment(props.currentTask!.dueDate).diff(
+                    moment(),
+                    'days',
+                    true,
+                  ),
+                ) === 0 ? (
+                  <p className="fw6 red mv2">Deadline ends today</p>
+                ) : Math.ceil(
+                    moment(props.currentTask!.dueDate).diff(
+                      moment(),
+                      'days',
+                      true,
+                    ),
+                  ) < 0 ? (
+                  <p className="fw6 red mv2">Expired</p>
+                ) : Math.ceil(
+                    moment(props.currentTask!.dueDate).diff(
+                      moment(),
+                      'days',
+                      true,
+                    ),
+                  ) === 1 ? (
+                  <p className="fw6 mv2 flex items-center">
+                    <Icon
+                      style={{
+                        color: '#323030',
+                      }}
+                      icon={IconNames.TIME}
+                      iconSize={12}
+                      className="grow pointer pl2 pr2"
+                    />{' '}
+                    {Math.ceil(
+                      moment(props.currentTask!.dueDate).diff(
+                        moment(),
+                        'days',
+                        true,
+                      ),
+                    )}{' '}
+                    day remaining
+                  </p>
+                ) : (
+                  <p className="fw6  mv2 flex items-center">
+                    <Icon
+                      style={{
+                        color: '#323030',
+                      }}
+                      icon={IconNames.TIME}
+                      iconSize={12}
+                      className="grow pointer pl2 pr2"
+                    />{' '}
+                    {Math.ceil(
+                      moment(props.currentTask!.dueDate).diff(
+                        moment(),
+                        'days',
+                        true,
+                      ),
+                    )}{' '}
+                    days remaining
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        </div>
       )}
     </>
   );

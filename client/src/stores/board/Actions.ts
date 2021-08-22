@@ -274,3 +274,8 @@ export const setPreferredView = (v: 'board' | 'list') => ({
   type: BoardActionTypes.SET_PREFERRED_VIEW,
   payload: v,
 });
+
+export const updateCurrentTaskColumnId = (data) => ({
+  type: BoardActionTypes.UPDATE_CURRENTTASK_COLUMNID,
+  payload: data,
+});

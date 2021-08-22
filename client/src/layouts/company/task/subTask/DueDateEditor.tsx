@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
-import { Button, Icon } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { updateSubTask } from 'stores/subtask/Actions';
 import { ISubTask } from 'stores/subtask/Reducer';
@@ -123,6 +123,7 @@ const DueDateEditor = (props: IDueDateFormProps) => {
                       'app.project.Project-boards.Select-date',
                     )}
                     minDate={new Date()}
+                    onClose={handleSubmit}
                   />
                 </MuiPickersUtilsProvider>
                 {checkError(meta) && (
@@ -138,21 +139,6 @@ const DueDateEditor = (props: IDueDateFormProps) => {
               {t('app.project.Project-boards.Due-date-text')}
             </p>
           )}
-          <div className="fr">
-            <Button
-              className="grow pointer white bp3-minimal w4 mt2"
-              style={{
-                background: '#34b3e9',
-                outline: 'none',
-                color: 'white',
-              }}
-              loading={submitting}
-              type="submit"
-              disabled={submitting || pristine || disable}
-            >
-              Submit
-            </Button>
-          </div>
         </form>
       )}
     />

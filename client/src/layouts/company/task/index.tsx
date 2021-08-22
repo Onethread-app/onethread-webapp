@@ -1,19 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
-import { SubTaskView } from './subTask/SubtaskView';
 import { ActivityView } from './activity/ActivityView';
 import { ITask, TaskBoard } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { TaskDetails } from './taskDetails';
+import TaskInfoViewComponent from './TaskInfoView/Index';
 import { IProject } from 'stores/project/Reducer';
+import { Loading } from 'components/Loading';
 
 interface TaskInternalProps {
   currentTask: ITask;
   currentBoard: TaskBoard;
   company: ICompany;
   currentProject: IProject;
+  fetchingTask;
 }
 
 const TaskPageComponent = (props: TaskInternalProps) => {
@@ -35,21 +36,22 @@ const TaskPageComponent = (props: TaskInternalProps) => {
           },
         ]}
       />
-      <div className="cf flex h-100 flex-column flex-row-l">
-        <div className="w-100 w-50-l pa2">
-          {/* <h1 className="fw6 lh-title black">{props.currentTask.name}</h1> */}
-          <TaskDetails />
-          <SubTaskView />
+      {props.fetchingTask === true ? (
+        <Loading />
+      ) : (
+        <div className="task-activity-container">
+          <div className="w-100 w-70-l pa2">
+            <TaskDetails />
+            <ActivityView />
+          </div>
+          <div
+            className="w-100 w-30-l flex justify-center pa4"
+            style={{ background: '#F6F6F6' }}
+          >
+            <TaskInfoViewComponent />
+          </div>
         </div>
-        <div
-          className="w-100 w-50-l ph2 mb5"
-          style={{
-            height: 'calc(100vh - 100px)',
-          }}
-        >
-          <ActivityView />
-        </div>
-      </div>
+      )}
     </div>
   );
 };
@@ -60,6 +62,7 @@ const mapStateToProps = (state: any) => {
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
     company: state.companyReducer.currentCompany,
     currentProject: state.projectReducer.projectDetails,
+    fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
   };
 };
 

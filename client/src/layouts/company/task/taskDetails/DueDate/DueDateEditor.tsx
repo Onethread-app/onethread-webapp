@@ -2,8 +2,6 @@ import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
-import { Button, Icon } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 import { updateTask } from 'stores/board/Actions';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
@@ -16,7 +14,6 @@ import {
 import '../../task.scss';
 
 interface IDueDateFormProps {
-  setDatePopover: (val: boolean) => void;
   updateTask: (task: ITask) => any;
   dueDate: Date;
   updatingTask: boolean;
@@ -34,10 +31,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
   };
 
   const onSubmit = async (values: any) => {
-    const response = await props.updateTask(values);
-    if (response && !props.updatingTask) {
-      await props.setDatePopover(false);
-    }
+    await props.updateTask(values);
   };
 
   const { t } = useTranslation();
@@ -58,31 +52,17 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="fl w-100 ph2 pt2" onSubmit={handleSubmit}>
-          <div className="flex justify-end">
-            <Icon
-              icon={IconNames.CROSS}
-              iconSize={20}
-              className="grow pointer"
-              onClick={(e: any) => props.setDatePopover(false)}
-            />
-          </div>
+        <form className="w-100" onSubmit={handleSubmit}>
           <div>
             <SubmitError errorMessage={submitError} />
           </div>
           <Field<string>
             name="dueDate"
             render={({ input, meta }) => (
-              <div className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}>
-                <label
-                  style={{
-                    marginBottom: '5px',
-                    display: 'block',
-                  }}
-                >
-                  {t('app.project.Project-boards.Due-Date')}
-                  {/* Due Date */}
-                </label>
+              <div className="task-info-items">
+                <h1 className="f6">
+                  {t('app.project.Project-boards.Due-Date')}:
+                </h1>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     margin="normal"
@@ -93,7 +73,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                       input.onChange(e);
                       handleInputChange(e);
                     }}
-                    className="due-date-input"
+                    className="task-due-date"
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
                     }}
@@ -101,8 +81,10 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                       'app.project.Project-boards.Select-date',
                     )}
                     minDate={new Date()}
+                    onClose={handleSubmit}
                   />
                 </MuiPickersUtilsProvider>
+
                 {checkError(meta) && (
                   <small className="mv3" style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
@@ -116,21 +98,6 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
               {t('app.project.Project-boards.Due-date-text')}
             </p>
           )}
-          <div className="fr">
-            <Button
-              className="grow pointer white bp3-minimal w4 mt2"
-              style={{
-                background: '#34b3e9',
-                outline: 'none',
-                color: 'white',
-              }}
-              loading={submitting}
-              type="submit"
-              disabled={submitting || pristine || disable}
-            >
-              Submit
-            </Button>
-          </div>
         </form>
       )}
     />
