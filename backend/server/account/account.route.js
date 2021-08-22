@@ -88,6 +88,14 @@ router
     accountCtrl.changePassword,
   );
 router.route('/refresh').post(accountCtrl.tokenRefresh);
+
+router
+  .route("/save-language")
+  .post(
+    authorization,
+    accountCtrl.saveLanguage,
+  );
+
 // for admin
 // router
 //   .route('/admin')

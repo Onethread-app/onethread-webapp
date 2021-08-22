@@ -123,6 +123,9 @@ const accountsSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    language: {
+      type: mongoose.Schema.Types.String,
+    },
   },
   {
     timestamps: true,

@@ -68,5 +68,5 @@ router.use('/payments', paymentRoute);
 router.use('/subscriptions', subscriptionRoutes);
 router.use('/video-conferences', videoConferencesRoute);
 router.use('/feedback', feedbackRoutes);
-router.use('/reports', reportRoutes)
+router.use('/reports', reportRoutes);
 module.exports = router;

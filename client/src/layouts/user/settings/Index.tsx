@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Tabs, Tab, Dialog, Button } from '@blueprintjs/core';
 import { ChangePasswordComponent } from 'layouts/user/settings/ChangePasswordComponent';
-import { getLocation } from 'helpers/utils';
 import { useTranslation } from 'react-i18next';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { makeStyles } from '@material-ui/core/styles';
+import { LanguageSettings } from '../LanguageSettingsComponent/LanguageSettingsComponent';
 
 export const ProfileSettingsComponent = () => {
   const [showDialog, setShowDialog] = useState(false);
@@ -44,71 +40,6 @@ export const ProfileSettingsComponent = () => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
-export const LanguageSettingsComponent = () => {
-  const { i18n } = useTranslation();
-
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-  };
-
-  const [language, setLanguage] = useState('');
-  const classes = useStyles();
-
-  useEffect(() => {
-    getLocation().then((data) => {
-      const country = data.data.country;
-
-      localStorage.setItem('city', data.data.city);
-      localStorage.setItem('country', country);
-
-      if (country === 'Bangladesh') {
-        setLanguage('bn');
-        changeLanguage('bn');
-      } else {
-        setLanguage('en');
-        changeLanguage('en');
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleChange = (event) => {
-    const value = event.target.value;
-    if (value === 'bn') {
-      setLanguage('bn');
-      changeLanguage('bn');
-    }
-    if (value === 'en') {
-      setLanguage('en');
-      changeLanguage('en');
-    }
-  };
-
-  return (
-    <FormControl className={classes.formControl}>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={language}
-        onChange={handleChange}
-      >
-        <MenuItem value={'en'}>English</MenuItem>
-        <MenuItem value={'bn'}>বাংলা</MenuItem>
-      </Select>
-    </FormControl>
-  );
-};
-
 const ProfileSettingsPageComponent = () => {
   const { t } = useTranslation();
   return (
@@ -125,7 +56,7 @@ const ProfileSettingsPageComponent = () => {
           id="language_settings"
           title={t('app.user.User-settings.Language-Settings')}
           // title="Language Settings"
-          panel={<LanguageSettingsComponent />}
+          panel={<LanguageSettings />}
           className="outline-0 w-100"
         />
       </Tabs>

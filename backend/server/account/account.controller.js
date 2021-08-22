@@ -599,8 +599,8 @@ const logout = async (req, res, next) => {
           let refreshTokenExpire =
             user.exp * 1000 +
             new Date(user.exp * 1000).getTimezoneOffset() *
-              60 *
-              1000 -
+            60 *
+            1000 -
             (Date.now() +
               new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
           addTokenToBlackList(accessToken, accessTokenExpire);
@@ -735,8 +735,8 @@ const tokenRefresh = async (req, res, next) => {
           const refreshTokenExpire =
             user.exp * 1000 +
             new Date(user.exp * 1000).getTimezoneOffset() *
-              60 *
-              1000 -
+            60 *
+            1000 -
             (Date.now() +
               new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
           const oldAccessToken = req.body.accessToken;
@@ -773,12 +773,12 @@ const tokenRefresh = async (req, res, next) => {
                 let oldAccessTokenExpire =
                   verified.exp * 1000 +
                   new Date(verified.exp * 1000).getTimezoneOffset() *
-                    60 *
-                    1000 -
+                  60 *
+                  1000 -
                   (Date.now() +
                     new Date(Date.now()).getTimezoneOffset() *
-                      60 *
-                      1000);
+                    60 *
+                    1000);
                 addTokenToBlackList(
                   oldAccessToken,
                   oldAccessTokenExpire,
@@ -1021,15 +1021,32 @@ const subtaskMarkAsDone = async (req, res, next) => {
       { new: true },
     );
     sendJSONresponse(res, 200, {
-      message: `Subtask ${subtask.name} marked as ${
-        req.body.done === true ? 'done' : 'not done'
-      }`,
+      message: `Subtask ${subtask.name} marked as ${req.body.done === true ? 'done' : 'not done'
+        }`,
     });
   } catch (error) {
     logger.error(`Subtask: ${error}`);
     next(error);
   }
 };
+
+const saveLanguage = async (req, res, next) => {
+  try {
+    await Account.findByIdAndUpdate({ "_id": req.user._id },
+      {
+        $set: { language: req.body.language }
+      })
+
+    return sendJSONresponse(res, 200, {
+      message: 'language updated'
+    })
+  }
+  catch {
+    logger.error(`report: ${error}`);
+    next(error);
+  }
+};
+
 
 module.exports = {
   register,
@@ -1051,4 +1068,5 @@ module.exports = {
   subtaskMarkAsDone,
   userDueTask,
   userDailyProgress,
+  saveLanguage
 };
