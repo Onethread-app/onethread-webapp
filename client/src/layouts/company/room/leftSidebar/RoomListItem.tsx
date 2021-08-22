@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { IRoom } from 'stores/room/Reducer';
+import { IRoom, IRoomReducer } from 'stores/room/Reducer';
 import { CHANGE_ROOM } from 'stores/room/Types';
 import { RoomQueries, RoomPage } from '../Index';
 import { isMobileOnly } from 'react-device-detect';
 import { Drawer } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core';
 import memberListIcon from './../../../../resources/images/member-list.svg';
+import { MembersList } from '../chatLayout/members/MembersList';
+
 interface RoomListItemProps {
   room: IRoom;
   lastChild?: boolean;
   active: boolean;
   iconBgColor: string;
   currentCompany?: string;
+  users: IRoomReducer['users'];
 }
 
-export const RoomListItem = (props: RoomListItemProps) => {
+const RoomListItemComponent = (props: RoomListItemProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -32,6 +36,10 @@ export const RoomListItem = (props: RoomListItemProps) => {
     view: 'default',
     roomId: '',
   });
+
+  const [showMemberListDialog, setShowMemberListDialog] = useState(
+    false,
+  );
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -100,21 +108,39 @@ export const RoomListItem = (props: RoomListItemProps) => {
             </span>
           </div>
           <div className="flex justify-between items-center w-100">
-            <h1
-              className={`f6 mv0 break-word ${
-                props.active ? 'fw7' : 'fw4'
-              }`}
-              style={{
-                color: props.room.archive
-                  ? 'rgb(141, 141, 141)'
-                  : props.active
-                  ? '#fff'
-                  : '#000',
-              }}
+            <div className="flex">
+              <h1
+                className={`f6 mv0 break-word ${
+                  props.active ? 'fw7' : 'fw4'
+                }`}
+                style={{
+                  color: props.room.archive
+                    ? 'rgb(141, 141, 141)'
+                    : props.active
+                    ? '#fff'
+                    : '#000',
+                }}
+              >
+                {props.room.name}
+              </h1>
+              {unreadCount > 0 ? (
+                <h6
+                  className="bg-tigrowLightBlue white fw8 ma0 ml1"
+                  style={{
+                    padding: '4px 8px',
+                    borderRadius: '50%',
+                  }}
+                >
+                  {unreadCount}
+                </h6>
+              ) : null}
+            </div>
+            <div
+              onClick={() =>
+                setShowMemberListDialog(!showMemberListDialog)
+              }
+              className="ma0 pointer dim flex items-center"
             >
-              {props.room.name}
-            </h1>
-            <div className="ma0 pointer dim flex items-center">
               <img
                 className=""
                 src={memberListIcon}
@@ -128,17 +154,6 @@ export const RoomListItem = (props: RoomListItemProps) => {
                 {props.room.memberCount}
               </span>
             </div>
-            {unreadCount > 0 ? (
-              <h6
-                className="bg-tigrowLightBlue white fw8 ma0 ml1"
-                style={{
-                  padding: '4px 8px',
-                  borderRadius: '50%',
-                }}
-              >
-                {unreadCount}
-              </h6>
-            ) : null}
           </div>
         </article>
       </div>
@@ -154,6 +169,27 @@ export const RoomListItem = (props: RoomListItemProps) => {
           </div>
         </Drawer>
       )}
+      {showMemberListDialog && (
+        <Dialog
+          onClose={() =>
+            setShowMemberListDialog(!showMemberListDialog)
+          }
+          isOpen={showMemberListDialog}
+          style={{ background: '#fff' }}
+        >
+          <MembersList users={props.users} />
+        </Dialog>
+      )}
     </>
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    users: state.roomReducer.users,
+  };
+};
+
+export const RoomListItem = connect(mapStateToProps)(
+  RoomListItemComponent,
+);
