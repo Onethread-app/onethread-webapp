@@ -34,7 +34,7 @@ const TagSelect = styled.select`
   margin: 0;
   width: auto;
   min-width: 11rem;
-  max-width: 215px;
+  max-width: 115px;
   font-family: inherit;
   font-size: 14px;
   cursor: inherit;

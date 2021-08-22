@@ -35,7 +35,10 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   };
 
   return (
-    <div className="w-100">
+    <div
+      className="w-100 ph2"
+      style={{ maxHeight: '650px', overflowY: 'auto' }}
+    >
       <div className="w-100">
         <TaskTitleView />
       </div>

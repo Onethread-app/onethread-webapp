@@ -7,6 +7,37 @@
   }
 }
 
+.due-date-subtask {
+  max-width: 130px !important;
+  padding: 0.2rem;
+  .MuiInputBase-input {
+    color: rgb(148, 162, 180) !important;
+  }
+  .MuiInput-underline:before {
+    border-bottom: 0px;
+  }
+  .MuiInput-underline:after {
+    border-bottom: 0px !important;
+  }
+  .MuiInput-underline:hover {
+    border-bottom: 0px !important;
+  }
+  &:hover {
+    .MuiInput-underline:before {
+      border-bottom: 0px !important;
+    }
+  }
+  .MuiFormHelperText-filled {
+    display: none !important;
+  }
+  .MuiButtonBase-root {
+    padding: 0;
+  }
+  .MuiIconButton-label {
+    color: lightsteelblue !important;
+  }
+}
+
 .task-due-date {
   border: 1px solid #b1b1b1;
   padding: 0.6rem 0.1rem 0.5rem 0.5rem !important;
@@ -33,9 +64,14 @@
 
 .task-activity-container {
   display: flex;
-
+  .task-info-view {
+    min-height: 92vh;
+  }
   @media screen and (max-width: 768px) {
     display: block;
+    .task-info-view {
+      max-height: 100%;
+    }
   }
 }
 
@@ -44,6 +80,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+
   @media screen and (max-width: 320px) {
     display: block;
   }

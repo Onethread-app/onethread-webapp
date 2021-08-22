@@ -15,11 +15,11 @@ interface IPriorityEditorProps {
 const TagSelectPriority = styled.select`
   color: ${(props) =>
     props.colorCode === 0
-      ? '#C43600'
+      ? '#F44135'
       : props.colorCode === 1
       ? '#CB5800'
       : props.colorCode === 2
-      ? '#FFA800'
+      ? '#08A0F7'
       : props.colorCode === 3
       ? '#5387AF'
       : props.colorCode === 4
@@ -85,7 +85,7 @@ export const PriorityEditorListComponent = (
                   : color.code === 1
                   ? '#CB5800'
                   : color.code === 2
-                  ? '#FFA800'
+                  ? '#08A0F7'
                   : color.code === 3
                   ? '#5387AF'
                   : color.code === 4

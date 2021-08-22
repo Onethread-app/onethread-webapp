@@ -35,13 +35,23 @@ const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
     <Popover
       isOpen={isOpen}
       content={
-        <button
-          type="button"
-          className="bp3-button bp3-intent-danger"
-          onClick={handleRemove}
-        >
-          Remove User
-        </button>
+        <div className="pa3 cf bg-white">
+          <h3>Remove User</h3>
+          <button
+            type="button"
+            className="bp3-button bp3-intent-danger mr2"
+            onClick={handleRemove}
+          >
+            Yes, delete
+          </button>
+          <button
+            type="button"
+            className="bp3-button bp3-intent-primary"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            No keep
+          </button>
+        </div>
       }
     >
       <Tooltip
