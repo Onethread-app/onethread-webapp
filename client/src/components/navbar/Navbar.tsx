@@ -25,6 +25,7 @@ interface INavbar {
 interface INavbarInternalProps extends INavbar {
   user: User;
   uniqueCompanyName: string;
+  name: string;
   companyId: string;
   fetchChats: () => void;
   getNotifications: () => void;
@@ -99,7 +100,7 @@ const Navbar = (props: INavbarInternalProps) => {
                 }}
               >
                 {props.type === 'company'
-                  ? props.uniqueCompanyName
+                  ? props.name
                   : match.url.includes('/notifications')
                   ? 'Notifications'
                   : ''}
@@ -122,6 +123,7 @@ const mapStateToProps = (state: any) => ({
   user: state.userReducer.user,
   companyId: state.companyReducer.currentCompany._id,
   uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
+  name: state.companyReducer.currentCompany.name,
 });
 
 export default connect(mapStateToProps, {
