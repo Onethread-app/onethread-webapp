@@ -9,6 +9,7 @@ import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
 import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
 import { Icon } from '@blueprintjs/core';
 import { isMobileOnly } from 'react-device-detect';
+import moment from 'moment';
 
 interface MessageListProps {
   updateLastSeen: (roomId: string) => void;
@@ -26,14 +27,13 @@ export const MessageListComponent = (props: MessageListProps) => {
   const [first, setFirst] = useState(false);
   const [limit, setLimit] = useState(15);
   const [skip, setSkip] = useState(0);
-
+  const [allMessages, setAllMessages] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
 
   const callUpdateLastSeen = async (roomId: string) => {
     await props.updateLastSeen(roomId);
   };
-
   const scrollToBottom = () => {
     // TODO send message read trigger
     if (props.messages.length) {
@@ -103,6 +103,31 @@ export const MessageListComponent = (props: MessageListProps) => {
     return obj;
   };
 
+  const groupMessages = async () => {
+    const messages = props!.messages;
+    const groups = messages.reduce((groups, message) => {
+      const date = moment(message.createdAt).format('MMM DD');
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(message);
+      return groups;
+    }, {});
+
+    const groupArrays = Object.keys(groups).map((date) => {
+      return {
+        date,
+        messages: groups[date],
+      };
+    });
+
+    await setAllMessages(groupArrays);
+  };
+
+  useEffect(() => {
+    groupMessages();
+  }, [props!.messages]);
+
   return (
     <div
       id="message-container"
@@ -133,22 +158,34 @@ export const MessageListComponent = (props: MessageListProps) => {
           </h6>
         </div>
       ) : undefined}
-      {props.messages.length
-        ? props.messages.map(
-            (
-              message: IRoomMessage,
-              index: number,
-              arr: IRoomMessage[],
-            ) => {
-              return (
-                <MessageItem
-                  key={index}
-                  message={message}
-                  group={checkGroup(message, index, arr)}
-                />
-              );
-            },
-          )
+
+      {allMessages.length
+        ? allMessages.map((group) => {
+            return (
+              <>
+                <div className="flex justify-center items-center pv2">
+                  <small className="tigrow-darkGray">
+                    {group.date}
+                  </small>
+                </div>
+                {group.messages.map(
+                  (
+                    message: IRoomMessage,
+                    index: number,
+                    arr: IRoomMessage[],
+                  ) => {
+                    return (
+                      <MessageItem
+                        key={index}
+                        message={message}
+                        group={checkGroup(message, index, arr)}
+                      />
+                    );
+                  },
+                )}
+              </>
+            );
+          })
         : ''}
     </div>
   );

@@ -33,17 +33,6 @@ const MessageItemComponent = (props: MessageItemProps) => {
   );
   return (
     <>
-      {/* date & time */}
-      {props.group.showPicAndName ? (
-        <div className="flex justify-center items-center pv2">
-          {isBeforeToday === true && (
-            <small className="tigrow-darkGray">
-              {moment(props.message.createdAt).format('MMM DD')}
-            </small>
-          )}
-        </div>
-      ) : undefined}
-
       {/* user info */}
       {props.group.showPicAndName ? (
         <article
@@ -77,11 +66,6 @@ const MessageItemComponent = (props: MessageItemProps) => {
               ' ' +
               props.message.account.lastName}
           </h5>
-          <small className="tigrow-darkGray">
-            {isBeforeToday === true
-              ? moment(props.message.createdAt).format('h:m a')
-              : moment(props.message.createdAt).fromNow()}
-          </small>
           {/* </>
           )} */}
         </article>
@@ -127,15 +111,22 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 </a>
               )}
             >
-              <p
-                className={`mv0 tj break-word`}
-                style={{
-                  color: '#323030',
-                  whiteSpace: 'pre-wrap',
-                }}
-              >
-                {props.message.text}
-              </p>
+              <div className="flex justify-between">
+                <p
+                  className={`mv0 tj break-word`}
+                  style={{
+                    color: '#323030',
+                    whiteSpace: 'pre-wrap',
+                  }}
+                >
+                  {props.message.text}
+                </p>
+                <span className="tigrow-darkGray ml3 mt2 f7 mb0">
+                  {isBeforeToday === true
+                    ? moment(props.message.createdAt).format('h:m a')
+                    : moment(props.message.createdAt).fromNow()}
+                </span>
+              </div>
             </Linkify>
           </div>
           <span
