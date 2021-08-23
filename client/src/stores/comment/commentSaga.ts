@@ -6,7 +6,7 @@ import { tigrowApi } from 'config';
 import { isEmpty } from 'lodash';
 
 import { CommentActionTypes } from './Types';
-import { getCurrentTask } from '../board/Selector';
+import { getCurrentTaskId } from '../board/Selector';
 import { getCurrentUser } from '../user/Selector';
 
 import {
@@ -23,7 +23,7 @@ const takeLatest: any = Eff.takeLatest;
 export function* getAllComments() {
   try {
     const headers = tokenConfig();
-    const taskId = yield select(getCurrentTask);
+    const taskId = yield select(getCurrentTaskId);
 
     if (taskId) {
       if ((headers as any).headers.Authorization) {
@@ -71,7 +71,7 @@ export function* getAllComments() {
 export function* createComment({ text }: any) {
   try {
     const headers = tokenConfig();
-    const taskId = yield select(getCurrentTask);
+    const taskId = yield select(getCurrentTaskId);
     const currentUser = yield select(getCurrentUser);
     if ((headers as any).headers.Authorization) {
       const reqBody = {

@@ -212,7 +212,9 @@ export const ListViewComponent = (
                   </article>
                 ),
             )
-          ) : undefined}
+          ) : (
+            <p>{t('app.homepage.No-Companies')}</p>
+          )}
         </div>
         <button
           onClick={() => {

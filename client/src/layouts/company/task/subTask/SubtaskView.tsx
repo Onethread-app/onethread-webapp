@@ -25,7 +25,7 @@ import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
 import SubTaskMemberIcon from './SubTaskMemberIcon';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
+// import moment from 'moment';
 import { Dialog } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
@@ -53,10 +53,10 @@ export const SubTaskViewPageComponent = (
     _id: '',
     open: false,
   });
-  const [dueDatePopover, setDueDatePopover] = useState({
-    _id: '',
-    open: false,
-  });
+  // const [dueDatePopover, setDueDatePopover] = useState({
+  //   _id: '',
+  //   open: false,
+  // });
 
   useEffect(() => {
     async function getAPI() {
@@ -71,9 +71,9 @@ export const SubTaskViewPageComponent = (
     setMembersPopover({ _id: id, open: !membersPopover.open });
   };
 
-  const toggleDueDatePopover = (id: string) => {
-    setDueDatePopover({ _id: id, open: !dueDatePopover.open });
-  };
+  // const toggleDueDatePopover = (id: string) => {
+  //   setDueDatePopover({ _id: id, open: !dueDatePopover.open });
+  // };
 
   const { t } = useTranslation();
 
@@ -148,16 +148,10 @@ export const SubTaskViewPageComponent = (
                   ).length / props.subTaskList.length
                 }
               />
-              <div
-                className="mt3 mb3"
-                style={{
-                  maxHeight: '220px',
-                  overflowY: 'auto',
-                }}
-              >
+              <div className="mt3 mb3">
                 {props.subTaskList.map((subTask) => (
                   <div
-                    className="flex justify-between"
+                    className="flex justify-between items-center"
                     key={subTask._id}
                   >
                     <Checkbox
@@ -207,7 +201,7 @@ export const SubTaskViewPageComponent = (
                             />
                           ))}
                       </div>
-                      <div
+                      {/* <div
                         className={
                           subTask.dueDate
                             ? ' flex items-start mr3'
@@ -230,7 +224,7 @@ export const SubTaskViewPageComponent = (
                         >
                           {moment(subTask.dueDate).fromNow()}
                         </span>
-                      </div>
+                      </div> */}
                       <div>
                         {props.company ? (
                           <Popover
@@ -255,7 +249,7 @@ export const SubTaskViewPageComponent = (
                             }
                             target={
                               <Icon
-                                className="fr mv3 pointer mr4 mv0"
+                                className="fr pointer mr3 pt1"
                                 style={{
                                   marginTop: 0,
                                   color: 'lightsteelblue',
@@ -271,7 +265,7 @@ export const SubTaskViewPageComponent = (
                           />
                         ) : undefined}
                       </div>
-                      <div>
+                      {/* <div>
                         <Popover
                           isOpen={
                             dueDatePopover._id === subTask._id &&
@@ -287,6 +281,7 @@ export const SubTaskViewPageComponent = (
                                   }
                                   dueDate={subTask.dueDate}
                                   subTask={subTask}
+                                  dueDatePopover={dueDatePopover}
                                 />
                               </div>
                             </div>
@@ -307,10 +302,16 @@ export const SubTaskViewPageComponent = (
                             />
                           }
                         />
+                      </div> */}
+                      <div className="mr3">
+                        <DueDateEditor
+                          dueDate={subTask.dueDate}
+                          subTask={subTask}
+                        />
                       </div>
                       <div>
                         <Icon
-                          className="fr mv3 pointer mr4 mv0"
+                          className="fr pointer mr3 pt1"
                           style={{
                             marginTop: 0,
                             color: 'lightsteelblue',

@@ -189,7 +189,7 @@ export const SubTaskDelete = (
       }
       target={
         <Icon
-          className="fr mv3 tigrow-lightBlue pointer mr4"
+          className="fr mv3 tigrow-lightBlue pointer mr4 pt1"
           style={{ marginTop: 0, color: 'lightsteelblue' }}
           icon="trash"
           onClick={() => setDeletePopover(true)}

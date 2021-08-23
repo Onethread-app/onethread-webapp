@@ -49,7 +49,7 @@ import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
 import {
   getCurrentBoard,
-  getCurrentTask,
+  getCurrentTaskId,
   selectColumnName,
 } from './Selector';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
@@ -268,8 +268,8 @@ export function* dragAndDrop({
         0,
         addedTask,
       );
-      const currentTask = yield select(getCurrentTask);
-      if (taskId === currentTask) {
+      const currentTaskId = yield select(getCurrentTaskId);
+      if (taskId === currentTaskId) {
         yield put(
           updateCurrentTaskColumnId({
             columnId: destinationColumnId,
@@ -356,7 +356,7 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
 export function* updateTask({ payload }: any) {
   try {
     const headers = tokenConfig();
-    const taskId = yield select(getCurrentTask);
+    const taskId = yield select(getCurrentTaskId);
     const projectId = yield select(getProjectId);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.put(
@@ -376,7 +376,7 @@ export function* updateTask({ payload }: any) {
         description: res.data.description,
         priority: res.data.priority,
         currentColumnName: res.data.columnId.name,
-        columnId: res.data.columnId,
+        columnId: res.data.columnId._id,
       };
       yield put(updateTaskSuccess(response));
     }

@@ -90,14 +90,14 @@ export const ListViewComponent = (
                 <article
                   key={c.company._id}
                   // tslint:disable-next-line: max-line-length
-                  className={`dt w-100 hover-bg-black-10 pa2 ${
+                  className={`dt w-100 ${
                     props.currentCompany === c.company._id
                       ? 'bg-black-10'
                       : ''
                   } mt2 mr1 pointer bp3-popover-dismiss`}
                   onClick={() => handleClick(c.company.uniqueName)}
                 >
-                  <div className="flex justify-between">
+                  <div className="flex justify-between hover-bg-black-10 pa2 ma1">
                     <img
                       src={
                         c.company.logo ? c.company.logo : CompanyIcon

@@ -20,21 +20,13 @@ interface IDueDateFormProps {
 }
 
 export const DueDateEditorComponent = (props: IDueDateFormProps) => {
-  const [disable, setDisable] = React.useState(false);
-
-  const handleInputChange = (e) => {
-    if (e <= new Date()) {
-      setDisable(true);
-    } else {
-      setDisable(false);
-    }
-  };
+  const { t } = useTranslation();
+  let minDate = new Date();
+  minDate.setDate(minDate.getDate() + 1);
 
   const onSubmit = async (values: any) => {
     await props.updateTask(values);
   };
-
-  const { t } = useTranslation();
 
   return (
     <Form
@@ -69,10 +61,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                     id="date-picker-dialog"
                     format="MM/dd/yyyy"
                     value={input.value ? new Date(input.value) : null}
-                    onChange={(e) => {
-                      input.onChange(e);
-                      handleInputChange(e);
-                    }}
+                    onChange={input.onChange}
                     className="task-due-date"
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
@@ -80,7 +69,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                     placeholder={t(
                       'app.project.Project-boards.Select-date',
                     )}
-                    minDate={new Date()}
+                    minDate={minDate}
                     onClose={handleSubmit}
                   />
                 </MuiPickersUtilsProvider>
@@ -93,11 +82,6 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
               </div>
             )}
           />
-          {disable && (
-            <p style={{ color: 'red' }}>
-              {t('app.project.Project-boards.Due-date-text')}
-            </p>
-          )}
         </form>
       )}
     />

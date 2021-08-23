@@ -13,10 +13,7 @@ const TaskInfoViewComponent = () => {
   const [membersPopover, setMembersPopover] = useState(false);
 
   return (
-    <div
-      className="w-100"
-      style={{ minHeight: '100vh', maxHeight: '100%' }}
-    >
+    <div className="w-100">
       <h3 style={{ fontWeight: 700, lineHeight: '28px' }}>
         {t('app.project.Tasks.Task-Details')}:
       </h3>

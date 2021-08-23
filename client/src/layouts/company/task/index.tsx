@@ -8,16 +8,40 @@ import { TaskDetails } from './taskDetails';
 import TaskInfoViewComponent from './TaskInfoView/Index';
 import { IProject } from 'stores/project/Reducer';
 import { Loading } from 'components/Loading';
+import Modal from 'react-modal';
+import ErrorText from '../settings/ErrorText';
+import { useTranslation } from 'react-i18next';
+
+export const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
 
 interface TaskInternalProps {
   currentTask: ITask;
   currentBoard: TaskBoard;
   company: ICompany;
   currentProject: IProject;
+  subscriptiontExpired: boolean;
   fetchingTask;
 }
 
 const TaskPageComponent = (props: TaskInternalProps) => {
+  const { t } = useTranslation();
+  const [openModal, setOpenModal] = React.useState(false);
+  function closeModal() {
+    setOpenModal(false);
+  }
+  React.useEffect(() => {
+    setOpenModal(props.subscriptiontExpired);
+  }, [props.subscriptiontExpired]);
+
   return (
     <div className="cf ph3">
       <BreadCrumbs
@@ -45,12 +69,27 @@ const TaskPageComponent = (props: TaskInternalProps) => {
             <ActivityView />
           </div>
           <div
-            className="w-100 w-30-l flex justify-center pa4"
+            className="w-100 w-30-l flex justify-center pa4 task-info-view"
             style={{ background: '#F6F6F6' }}
           >
             <TaskInfoViewComponent />
           </div>
         </div>
+      )}
+
+      {openModal && (
+        <Modal
+          isOpen={openModal}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <ErrorText
+            closeModal={closeModal}
+            text={t('app.company.Settings.Expired')}
+            subtext={t('app.company.Settings.Expired-text')}
+          />
+        </Modal>
       )}
     </div>
   );
@@ -63,6 +102,8 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
     currentProject: state.projectReducer.projectDetails,
     fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
   };
 };
 

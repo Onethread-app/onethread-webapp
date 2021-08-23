@@ -1,3 +1,6 @@
+import { store } from "Store";
+import { setSubscriptionExpire } from "stores/subscriptionBilling/Actions";
+
 export const returnErrorText = (error) => {
   if (error.response) {
     const { data, config } = error.response;
@@ -11,6 +14,7 @@ export const returnErrorText = (error) => {
     } else if (data.status === 401) {
       return 'Unauthorized user. Please enter valid email and password.';
     } else if (data.status === 403) {
+      store.dispatch(setSubscriptionExpire());
       return 'Access Error';
     } else if (data.status === 404) {
       return 'Method Not Found';
