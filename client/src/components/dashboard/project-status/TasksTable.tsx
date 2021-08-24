@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import Axios from 'axios';
 import { server } from 'config';
 import AlertDialogSlide from './PermissionModal';
+import moment from 'moment';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -460,9 +461,15 @@ const AppTable = ({
                         style={{ maxWidth: 70 }}
                       >
                         <span>
-                          {row.dueDate !== 'December 31, 1970'
-                            ? row.dueDate
-                            : 'Not Set'}
+                          {row.dueDate !== 'December 31, 1970' ? (
+                            <p>
+                              {moment(row.dueDate).format(
+                                'MMM DD, YYYY',
+                              )}
+                            </p>
+                          ) : (
+                            'Not Set'
+                          )}
                         </span>
                       </StyledTableCell>
                       <StyledTableCell style={{ minWidth: 150 }}>

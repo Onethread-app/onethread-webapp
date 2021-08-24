@@ -46,7 +46,7 @@ const {
 const options = [
   {
     path: 'taskId',
-    select: '_id name boardId columnId project dueDate status',
+    select: '_id name boardId columnId project dueDate status priority',
     populate: [
       {
         path: 'project',
@@ -54,7 +54,7 @@ const options = [
         populate: [
           {
             path: 'company',
-            select: '_id uniqueName',
+            select: '_id uniqueName name',
           },
         ],
       },
@@ -599,8 +599,8 @@ const logout = async (req, res, next) => {
           let refreshTokenExpire =
             user.exp * 1000 +
             new Date(user.exp * 1000).getTimezoneOffset() *
-              60 *
-              1000 -
+            60 *
+            1000 -
             (Date.now() +
               new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
           addTokenToBlackList(accessToken, accessTokenExpire);
@@ -735,8 +735,8 @@ const tokenRefresh = async (req, res, next) => {
           const refreshTokenExpire =
             user.exp * 1000 +
             new Date(user.exp * 1000).getTimezoneOffset() *
-              60 *
-              1000 -
+            60 *
+            1000 -
             (Date.now() +
               new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
           const oldAccessToken = req.body.accessToken;
@@ -773,12 +773,12 @@ const tokenRefresh = async (req, res, next) => {
                 let oldAccessTokenExpire =
                   verified.exp * 1000 +
                   new Date(verified.exp * 1000).getTimezoneOffset() *
-                    60 *
-                    1000 -
+                  60 *
+                  1000 -
                   (Date.now() +
                     new Date(Date.now()).getTimezoneOffset() *
-                      60 *
-                      1000);
+                    60 *
+                    1000);
                 addTokenToBlackList(
                   oldAccessToken,
                   oldAccessTokenExpire,
@@ -943,18 +943,22 @@ const getDueTasks = async (req) => {
 
 const userTaskList = async (req, res, next) => {
   try {
-    const todaysTasks = await getTodaysTask(req);
-    const tomorrowTasks = await getUpcomingTasks(req, 1, 1); // next 1 day
-    const upcomingTasks = await getUpcomingTasks(req, 2, 16); // next 15 days
-    const dueTasks = await getDueTasks(req);
+    const taskList = await Task.find({
+      status: { $ne: 'done' },
+    }).sort({ createdAt: -1 });
 
-    const userTask = {
-      todaysTasks,
-      tomorrowTasks,
-      upcomingTasks,
-      dueTasks,
-    };
-    return sendJSONresponse(res, 200, userTask);
+    let taskId = taskList.map((e) => e._id);
+
+    const tasks = await TaskAssign.find({
+      taskId: taskId,
+      $or: [{ account: req.user._id }, { assignedPerson: req.user._id }],
+    })
+      .sort({ createdAt: -1 })
+      .select('taskId')
+      .populate(options);
+
+    return sendJSONresponse(res, 200, tasks);
+
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
@@ -1021,9 +1025,8 @@ const subtaskMarkAsDone = async (req, res, next) => {
       { new: true },
     );
     sendJSONresponse(res, 200, {
-      message: `Subtask ${subtask.name} marked as ${
-        req.body.done === true ? 'done' : 'not done'
-      }`,
+      message: `Subtask ${subtask.name} marked as ${req.body.done === true ? 'done' : 'not done'
+        }`,
     });
   } catch (error) {
     logger.error(`Subtask: ${error}`);

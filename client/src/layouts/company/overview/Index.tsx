@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
 import ErrorText from '../settings/ErrorText';
+import moment from 'moment';
 
 export const customStyles = {
   content: {
@@ -66,7 +67,7 @@ const Index = (props: any) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [name, setName] = useState('');
-  const [dueDate, setDueDate] = useState('');
+  const [deadline, setDeadline] = useState('');
   const [status, setStatus] = useState('');
   const [lead, setLead] = useState('');
   const [startingDate, setStartingDate] = useState('');
@@ -97,7 +98,7 @@ const Index = (props: any) => {
       .then((res) => {
         const { project } = res.data.response;
         setName(project.name);
-        setDueDate(project.dueDate);
+        setDeadline(project.deadline);
         setStatus(project.status.toLowerCase());
         setLead(project.lead);
         setStartingDate(project.startingDate);
@@ -222,12 +223,16 @@ const Index = (props: any) => {
               <ProjectInfo
                 context={t('app.company.Projects.Beginning')}
                 // context="Starting date: "
-                data={startingDate}
+                data={moment(startingDate).format('MMM DD, YYYY')}
               />
               <ProjectInfo
                 context={t('app.company.Projects.Finish')}
                 // context="End date: "
-                data={dueDate ? dueDate : 'N/A'}
+                data={
+                  deadline
+                    ? moment(deadline).format('MMM DD, YYYY')
+                    : 'N/A'
+                }
               />
               <ProjectInfo
                 context={t('app.company.Projects.Lead')}

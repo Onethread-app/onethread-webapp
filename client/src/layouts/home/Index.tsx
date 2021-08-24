@@ -2,7 +2,7 @@ import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 
 import VideoConference from 'components/home/VideoConference';
-import Tasks from 'components/home/Tasks';
+import { Tasks } from 'components/home/Tasks';
 import Profile from 'components/home/Profile';
 // import Weather from 'components/home/Weather';
 // import ProfileProgress from 'components/home/ProfileProgress';
