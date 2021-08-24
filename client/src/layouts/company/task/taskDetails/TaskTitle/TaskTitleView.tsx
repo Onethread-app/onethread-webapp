@@ -38,24 +38,22 @@ export const TaskTitleViewComponent = (
           >
             TASK
           </h5>
-          <div className="flex justify-between items-center">
-            <h3
-              title="Click to edit title"
-              className="fw6 mb0 overflow-hidden mv2 dim"
-              style={{
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-                cursor: 'text',
-                fontSize: '25px',
-              }}
-              onClick={() => {
-                props.company && projectPermit(props.company.role)
-                  ? setNameEdit(true)
-                  : setNameEdit(false);
-              }}
-            >
-              {props.currentTask!.name}
-            </h3>
+          <h3
+            title="Click to edit title"
+            className="fw6 mb0 mv2 dim"
+            style={{
+              cursor: 'text',
+              fontSize: '25px',
+            }}
+            onClick={() => {
+              props.company && projectPermit(props.company.role)
+                ? setNameEdit(true)
+                : setNameEdit(false);
+            }}
+          >
+            {props.currentTask!.name}
+          </h3>
+          <div className="flex justify-end">
             {props.currentTask!.dueDate && (
               <>
                 {Math.ceil(
