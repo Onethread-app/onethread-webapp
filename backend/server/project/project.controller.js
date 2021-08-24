@@ -674,7 +674,7 @@ const getProjectDetails = async (req, res, next) => {
       _id: req.query.pid,
     })
       .populate('files', 'link s3Key')
-      .select('outline description color name status');
+      .select('outline description color name status totalSpent');
     const members = await Team.find({
       $and: [{ project: req.query.pid }, { removed: false }],
     }).populate('account', 'name profileImage');

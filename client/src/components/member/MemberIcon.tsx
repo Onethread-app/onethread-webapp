@@ -8,6 +8,7 @@ interface IMemberIcon {
   _id?: string;
   name: string;
   profileImage: string;
+  small?: boolean;
 }
 
 const MemberIcon = (props: IMemberIcon) => {
@@ -25,8 +26,8 @@ const MemberIcon = (props: IMemberIcon) => {
             src={props.profileImage ?? UserIcon}
             alt={props.profileImage ?? props.name}
             style={{
-              width: '27px',
-              height: '27px',
+              width: props.small ? '20px' : '27px',
+              height: props.small ? '20px' : '27px',
               borderRadius: '50%',
             }}
           />

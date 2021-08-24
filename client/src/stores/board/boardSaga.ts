@@ -340,6 +340,7 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
           columnId: res.data.columnId._id,
           file: res.data.file,
           status: res.data.status,
+          timeSpent: res.data.timeSpent,
         };
         yield put(getSelectedTaskDetailsSuccess(response));
       }

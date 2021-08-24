@@ -13,6 +13,7 @@ import TaskFilesAttach from './Files/TaskFilesAttach';
 import { useTranslation } from 'react-i18next';
 import { SubTaskView } from '../subTask/SubtaskView';
 import AddSubTaskButton from '../subTask/AddSubtaskButton';
+import Timer from 'components/timer/Timer';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
@@ -72,45 +73,11 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               }
             />
           </div>
-          {/* <div className="mr3">
-            {props.company ? (
-              <Popover
-                isOpen={membersPopover}
-                content={
-                  <div className="pa3 cf bg-white">
-                    <AssignedMembersEditor
-                      setMembersPopover={setMembersPopover}
-                    />
-                  </div>
-                }
-                target={
-                  <div
-                    className="flex br2 mb2 pt2 ph3 pointer"
-                    style={{
-                      width: '100%',
-                      color: '#5A5A5A',
-                      border: '1px solid #B1B1B1',
-                    }}
-                    onClick={openMembersPopOver}
-                  >
-                    <img
-                      style={{ height: '15px' }}
-                      src={addMembers}
-                      alt=""
-                    />
-                    <p className="pl3 f7">
-                      {t('app.project.Project-boards.Members')}
-                    </p>
-                    <p className="pl3 f7">Members</p>
-                  </div>
-                }
-              />
-            ) : undefined}
-          </div> */}
+          <div className="mr3">
+            <AddSubTaskButton />
+          </div>
           <div>
-            <div>
-              <AddSubTaskButton />
-            </div>
+            <Timer task={props.currentTask} />
           </div>
         </div>
       </div>
