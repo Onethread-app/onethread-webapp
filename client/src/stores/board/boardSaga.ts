@@ -358,6 +358,7 @@ export function* updateTask({ payload }: any) {
     const headers = tokenConfig();
     const taskId = yield select(getCurrentTaskId);
     const projectId = yield select(getProjectId);
+    const currentBoard = yield select(getCurrentBoard);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.put(
         `tasks/${taskId}?pid=${projectId}`,
@@ -378,7 +379,31 @@ export function* updateTask({ payload }: any) {
         currentColumnName: res.data.columnId.name,
         columnId: res.data.columnId._id,
       };
-      yield put(updateTaskSuccess(response));
+
+      const allColumns = currentBoard.columns!;
+      allColumns.forEach((column, i) => {
+        if (response.columnId === column._id) {
+          const index = column.tasks!.findIndex(
+            (task) => task._id === taskId,
+          );
+          column.tasks![
+            index
+          ].status = response.currentColumnName
+            .toLowerCase()
+            .split(' ')
+            .join('-');
+          column.tasks![index]._id = response._id;
+          column.tasks![index].name = response.name;
+          column.tasks![index].dueDate = response.dueDate;
+          column.tasks![index].description = response.description;
+          column.tasks![index].priority = response.priority;
+          column.tasks![index].currentColumnName =
+            response.currentColumnName;
+          column.tasks![index].columnId = response.columnId;
+        }
+      });
+
+      yield put(updateTaskSuccess({ allColumns, response }));
     }
   } catch (error) {
     errorMessgeHandler(error);

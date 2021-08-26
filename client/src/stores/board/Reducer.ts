@@ -352,28 +352,9 @@ export const BoardReducer = (state = InitialState, action: any) => {
         ...state,
         currentBoard: {
           ...state.currentBoard,
-          columns: (state.currentBoard.columns as any).map(
-            (column: IColumn) =>
-              column._id === action.payload.columnId._id
-                ? {
-                    ...column,
-                    tasks:
-                      column.tasks && column.tasks.length > 0
-                        ? column.tasks.map((task: ITask) =>
-                            task._id === action.payload._id
-                              ? {
-                                  ...task,
-                                  name: action.payload.name,
-                                  dueDate: action.payload.dueDate,
-                                }
-                              : task,
-                          )
-                        : [],
-                  }
-                : column,
-          ),
+          columns: action.payload.allColumns,
         },
-        currentTask: action.payload,
+        currentTask: action.payload.response,
         updatingTask: false,
       };
     case BoardActionTypes.UPDATE_TASK_FAILURE:
