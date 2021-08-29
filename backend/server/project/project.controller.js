@@ -24,7 +24,7 @@ const {
   createRoom,
   createRoomMember,
 } = require('../room/room.controller');
-const { ISOformat } = require('../helpers/DateFormat');
+// const { ISOformat } = require('../helpers/DateFormat');
 
 const isPidExist = async (pid) => {
   let checkExist = await Project.findOne(
@@ -1058,15 +1058,15 @@ const projectOverview = async (req, res, next) => {
         _id: projectId,
         name: nameWordCapitalize(project.name),
         status: nameWordCapitalize(project.status),
-        dueDate: ISOformat(project.dueDate),
+        deadline: project.deadline,
         lead: project.concernedAdmin
           ? nameWordCapitalize(
-              project.concernedAdmin.firstName +
-                ' ' +
-                project.concernedAdmin.lastName,
-            )
+            project.concernedAdmin.firstName +
+            ' ' +
+            project.concernedAdmin.lastName,
+          )
           : null,
-        startingDate: ISOformat(project.createdAt),
+        startingDate: project.createdAt,
         companyUniqueName: project.company.uniqueName,
       },
     };
@@ -1089,7 +1089,7 @@ const projectOverview = async (req, res, next) => {
         taskId: task._id,
         name: task.name,
         status: nameWordCapitalize(task.status),
-        dueDate: ISOformat(task.dueDate),
+        dueDate: task.dueDate,
         priority: task.priority,
         boardId: task.boardId._id,
       };
@@ -1106,10 +1106,10 @@ const projectOverview = async (req, res, next) => {
       taskInf.assign =
         assignedTo && assignedTo.assignedPerson
           ? nameWordCapitalize(
-              assignedTo.assignedPerson.firstName +
-                ' ' +
-                assignedTo.assignedPerson.lastName,
-            )
+            assignedTo.assignedPerson.firstName +
+            ' ' +
+            assignedTo.assignedPerson.lastName,
+          )
           : null;
 
       taskInf.boardName = task.boardId.name;

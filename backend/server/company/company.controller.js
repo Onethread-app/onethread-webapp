@@ -15,7 +15,7 @@ const {
 const {
   triggerNotification,
 } = require('../services/webpush.services');
-const { ISOformat } = require('../helpers/DateFormat');
+// const { ISOformat } = require('../helpers/DateFormat');
 
 const {
   Subscription,
@@ -634,7 +634,7 @@ const dashBoard = async (req, res, next) => {
       modifiedTask._id = task._id;
       modifiedTask.name = task.name;
       modifiedTask.status = task.status;
-      modifiedTask.dueDate = ISOformat(task.dueDate);
+      modifiedTask.dueDate = task.dueDate;
       modifiedTask.members = members;
       modifiedTask.boardId = task.boardId;
       modifiedTask.priority = task.priority;

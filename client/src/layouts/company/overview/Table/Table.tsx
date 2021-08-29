@@ -17,6 +17,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { priorityColor } from 'stores/UtilsActions';
 import { useHistory } from 'react-router-dom';
+import moment from 'moment';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -333,7 +334,6 @@ const AppTable = ({
                 )
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <StyledTableRow
                       hover
@@ -370,7 +370,15 @@ const AppTable = ({
                         <span>{row.status}</span>
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        {row.dueDate ? row.dueDate : '-'}
+                        {row.dueDate ? (
+                          <p>
+                            {moment(row.dueDate).format(
+                              'MMM DD, YYYY',
+                            )}
+                          </p>
+                        ) : (
+                          '-'
+                        )}
                       </StyledTableCell>
                     </StyledTableRow>
                   );

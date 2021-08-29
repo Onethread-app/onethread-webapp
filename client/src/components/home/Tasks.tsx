@@ -1,51 +1,277 @@
 import React, { useEffect, useState } from 'react';
-import { isMobileOnly } from 'react-device-detect';
-import Select from 'react-select';
-
-import CircularProgress from '@material-ui/core/CircularProgress';
-
 import { tigrowApi } from 'config';
-import { sortTasksByStatus } from 'helpers/utils';
 import { tokenConfig } from 'stores/UtilsActions';
+import { sortBy } from 'lodash';
+import TaskListContainer from './TaskListContainer';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import { Icon, Popover } from '@blueprintjs/core';
+import styled from 'styled-components';
+import moment from 'moment';
+import { connect } from 'react-redux';
 
-import Table from './TaskTable';
+const SortingDiv = styled.div`
+  display: flex;
+  width: fit-content;
+  color: #a4a4a4;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 150%;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 
-type Order = 'asc' | 'desc';
-interface Data {
-  no: string;
-  taskName: string;
-  assignee: string;
-  deadline: string;
-  status: string;
-}
+  p {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
 
-const Tasks = () => {
+  span {
+    color: #656565;
+    cursor: pointer;
+  }
+`;
+
+const TasksComponent = (props: any) => {
+  const userId = props!.user!._id;
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState(1);
-  const [filterOption, setFilterOption] = useState(1);
-
   const [tasks, setTasks] = useState<any>([]);
-  const [todaysTasks, setTodaysTasks] = useState<any>([]);
-  const [tomorrowTasks, setTomorrowTasks] = useState<any>([]);
-  const [upcomingTasks, setUpcomingTasks] = useState<any>([]);
-  const [dueTasks, setDueTasks] = useState<any>([]);
+  const [tasksAll, setTasksAll] = useState<any>([]);
+  const [sortedBy, setSortedBy] = useState('');
+  const [orderBy, setOrderBy] = useState('asc');
+  const [assign, setAssign] = useState('');
+  const [day, setDay] = useState('');
+  const [filterPopoverOpen, setFilterPopoverOpen] = useState(false);
+  const [sortPopoverOpen, setSortPopoverOpen] = useState(false);
+  const [closeButton, setCloseButton] = useState(false);
 
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>(
-    'deadline',
-  );
-  const [selected, setSelected] = React.useState<string[]>([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [selectedTabOptions, setSelectedTabOptions] = useState([
-    { value: 1, label: 'Today' },
-    { value: 2, label: 'Tomorrow' },
-    { value: 3, label: 'Upcoming' },
-    { value: 4, label: 'Due Tasks' },
-  ]);
-  const [selectedTabOnSelect, setSelectedTabOnSelect] = useState(
-    selectedTabOptions[0],
-  );
+  const mdfy = (task) => {
+    const taskList = task.map((t, i) => ({
+      name: t.taskId.name,
+      assignee:
+        t.assignedPerson.firstName + ' ' + t.assignedPerson.lastName,
+      accountId: t.account._id,
+      assignedPersonId: t.assignedPerson._id,
+      dueDate: t.taskId.dueDate,
+      status: t.taskId.status,
+      redirectTo: `/company/${t.taskId.project.company.uniqueName}/project/${t.taskId.project._id}/board/${t.taskId.boardId._id}/task/${t.taskId._id}`,
+      projectName: t.taskId.project.name,
+      companyName: t.taskId.project.company.name,
+      _id: t.taskId._id,
+      priority: t.taskId.priority,
+    }));
+    return taskList;
+  };
+
+  const sortTasksByDueDate = (tasks, orderBy) => {
+    setTasks([]);
+    return tasks.sort((a, b) => {
+      if (a.dueDate < b.dueDate) return orderBy === 'asc' ? 1 : -1;
+      else if (a.dueDate > b.dueDate)
+        return orderBy === 'asc' ? -1 : 1;
+      else return 0;
+    });
+  };
+
+  const sortTasksByPriority = (tasks, orderBy) => {
+    setTasks([]);
+    return tasks.sort((a, b) =>
+      orderBy === 'asc'
+        ? a.priority - b.priority
+        : b.priority - a.priority,
+    );
+  };
+
+  const sortTasksByStatus = (tasks: any, orderBy: any) => {
+    setTasks([]);
+    const sortedTasks = sortBy(tasks, (task) => {
+      if (orderBy === 'asc') {
+        const rank = {
+          'in-progress': 1,
+          'to-do': 2,
+          done: 3,
+        };
+        return rank[task.status];
+      }
+      if (orderBy === 'desc') {
+        const rank = {
+          'in-progress': 3,
+          'to-do': 2,
+          done: 1,
+        };
+        return rank[task.status];
+      }
+    });
+    return sortedTasks;
+  };
+
+  const sortTasksByTodayDay = async (tasks, assign) => {
+    setTasks([]);
+    const today = moment(new Date()).format('MMM DD');
+    let todaysTasks: any = [];
+    await tasks.map((task: any) => {
+      const dueDate = moment(task.dueDate).format('MMM DD');
+      if (assign === 'to-me') {
+        if (task.assignedPersonId === userId && dueDate === today) {
+          todaysTasks.push(task);
+        }
+      } else if (assign === 'by-me') {
+        if (
+          task.accountId === userId &&
+          task.assignedPersonId !== userId &&
+          dueDate === today
+        ) {
+          todaysTasks.push(task);
+        }
+      } else {
+        if (dueDate === today) {
+          todaysTasks.push(task);
+        }
+      }
+    });
+    setTasks(todaysTasks);
+  };
+
+  const sortTasksByUpcomming = async (tasks, assign) => {
+    setTasks([]);
+    const today = moment(new Date()).format('MMM DD');
+    let upcommingTasks: any = [];
+    await tasks.map((task: any) => {
+      const dueDate = moment(task.dueDate).format('MMM DD');
+      if (assign === 'to-me') {
+        if (task.assignedPersonId === userId && dueDate > today) {
+          upcommingTasks.push(task);
+        }
+      } else if (assign === 'by-me') {
+        if (
+          task.accountId === userId &&
+          task.assignedPersonId !== userId &&
+          dueDate > today
+        ) {
+          upcommingTasks.push(task);
+        }
+      } else {
+        if (dueDate > today) {
+          upcommingTasks.push(task);
+        }
+      }
+    });
+    setTasks(upcommingTasks);
+  };
+
+  const sortTasksByTomorrow = async (tasks, assign) => {
+    setTasks([]);
+    const today = moment(new Date()).format('MMM DD');
+    const tomorrow = moment(new Date().getDate() - 1).format(
+      'MMM DD',
+    );
+    let tomorrowTasks: any = [];
+    await tasks.map((task: any) => {
+      const dueDate = moment(task.dueDate).format('MMM DD');
+      if (assign === 'to-me') {
+        if (
+          task.assignedPersonId === userId &&
+          dueDate > today &&
+          dueDate < tomorrow
+        ) {
+          tomorrowTasks.push(task);
+        }
+      } else if (assign === 'by-me') {
+        if (
+          task.accountId === userId &&
+          task.assignedPersonId !== userId &&
+          dueDate > today &&
+          dueDate < tomorrow
+        ) {
+          tomorrowTasks.push(task);
+        }
+      } else {
+        if (dueDate > today && dueDate < tomorrow) {
+          tomorrowTasks.push(task);
+        }
+      }
+    });
+    setTasks(tomorrowTasks);
+  };
+
+  const sortTasksByDueTasks = async (tasks, assign) => {
+    setTasks([]);
+    let dueTasks: any = [];
+    const today = moment(new Date()).format('MMM DD');
+    await tasks.map((task: any) => {
+      const dueDate = moment(task.dueDate).format('MMM DD');
+      if (assign === 'to-me') {
+        if (task.assignedPersonId === userId && dueDate < today) {
+          dueTasks.push(task);
+        }
+      } else if (assign === 'by-me') {
+        if (
+          task.accountId === userId &&
+          task.assignedPersonId !== userId &&
+          dueDate < today
+        )
+          dueTasks.push(task);
+      } else {
+        if (dueDate < today) {
+          dueTasks.push(task);
+        }
+      }
+    });
+    setTasks(dueTasks);
+  };
+
+  const sortByAssignToUser = async (tasks) => {
+    setTasks([]);
+    let assignToUser: any = [];
+    await tasks.map((task: any) => {
+      if (task.assignedPersonId === userId) {
+        assignToUser.push(task);
+      }
+    });
+    setTasks(assignToUser);
+  };
+
+  const sortByAssignByUser = async (tasks) => {
+    setTasks([]);
+    let assignByUser: any = [];
+    await tasks.map((task: any) => {
+      if (
+        task.accountId === userId &&
+        task.assignedPersonId !== userId
+      ) {
+        assignByUser.push(task);
+      }
+    });
+    setTasks(assignByUser);
+  };
+
+  const closeSort = () => {
+    setFilterPopoverOpen(false);
+    setSortPopoverOpen(false);
+    setCloseButton(false);
+  };
+
+  const clearSort = () => {
+    setDay('');
+    setSortedBy('');
+    setAssign('');
+    setTasks(mdfy(tasksAll));
+  };
+
+  const filterPopover = () => {
+    setFilterPopoverOpen(!filterPopoverOpen);
+    setSortPopoverOpen(false);
+    setCloseButton(true);
+  };
+
+  const sortPopover = () => {
+    setSortPopoverOpen(!sortPopoverOpen);
+    setFilterPopoverOpen(false);
+    setCloseButton(true);
+  };
 
   useEffect(() => {
     const getTasks = async () => {
@@ -55,35 +281,7 @@ const Tasks = () => {
           `accounts/task-list?date=${new Date()}`,
           headers,
         );
-        setTodaysTasks(response.data.todaysTasks);
-        setTomorrowTasks(response.data.tomorrowTasks);
-        setUpcomingTasks(response.data.upcomingTasks);
-        setDueTasks(response.data.dueTasks);
-        setSelectedTabOptions((prevState) => {
-          return prevState.map((option) => {
-            if (option.value === 1) {
-              return {
-                value: option.value,
-                label: `${option.label} (${response.data.todaysTasks.totalTasks})`,
-              };
-            } else if (option.value === 2) {
-              return {
-                value: option.value,
-                label: `${option.label} (${response.data.tomorrowTasks.totalTasks})`,
-              };
-            } else if (option.value === 3) {
-              return {
-                value: option.value,
-                label: `${option.label} (${response.data.upcomingTasks.totalTasks})`,
-              };
-            } else {
-              return {
-                value: option.value,
-                label: `${option.label} (${response.data.dueTasks.totalTasks})`,
-              };
-            }
-          });
-        });
+        setTasksAll(response.data);
         setLoading(false);
       }
     };
@@ -91,246 +289,348 @@ const Tasks = () => {
   }, []);
 
   useEffect(() => {
-    setSelectedTabOnSelect(selectedTabOptions[0]);
-  }, [selectedTabOptions]);
-
-  const ISOformat = (time) => {
-    if (!time) return null;
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    const [day, month, year] = new Date(time)
-      .toISOString()
-      .split('T')[0]
-      .split('-')
-      .reverse()
-      .map((d) => parseInt(d));
-    return `${monthNames[month - 1]} ${day}, ${year}`;
-  };
-
-  const mdfy = (task) => {
-    let taskList = task.map((t, i) => ({
-      taskName: t.taskId.name,
-      assignee:
-        t.assignedPerson.firstName + ' ' + t.assignedPerson.lastName,
-      deadline: ISOformat(t.taskId.dueDate),
-      status: t.taskId.status,
-      redirectTo: `/company/${t.taskId.project.company.uniqueName}/project/${t.taskId.project._id}/board/${t.taskId.boardId._id}/task/${t.taskId._id}`,
-    }));
-    taskList.sort((a, b) => {
-      const aTime: any = new Date(a.deadline);
-      const bTime: any = new Date(b.deadline);
-      return aTime - bTime;
-    });
-    taskList = taskList.map((t, i) => ({ no: i + 1, ...t }));
-    return taskList;
-  };
-
-  useEffect(() => {
     if (loading === false) {
-      if (selectedTab === 1 && filterOption === 1) {
-        setTasks(mdfy(sortTasksByStatus(todaysTasks.assignToUser)));
+      if (assign === 'to-me') {
+        sortByAssignToUser(mdfy(tasksAll));
       }
-      if (selectedTab === 1 && filterOption === 2) {
-        setTasks(mdfy(sortTasksByStatus(todaysTasks.assignByUser)));
+      if (assign === 'by-me') {
+        sortByAssignByUser(mdfy(tasksAll));
       }
-      if (selectedTab === 2 && filterOption === 1) {
-        setTasks(mdfy(sortTasksByStatus(tomorrowTasks.assignToUser)));
+      if (day === 'today') {
+        sortTasksByTodayDay(mdfy(tasksAll), assign);
       }
-      if (selectedTab === 2 && filterOption === 2) {
-        setTasks(mdfy(sortTasksByStatus(tomorrowTasks.assignByUser)));
+      if (day === 'tomorrow') {
+        sortTasksByTomorrow(mdfy(tasksAll), assign);
       }
-      if (selectedTab === 3 && filterOption === 1) {
-        setTasks(mdfy(sortTasksByStatus(upcomingTasks.assignToUser)));
+      if (day === 'upcomming') {
+        sortTasksByUpcomming(mdfy(tasksAll), assign);
       }
-      if (selectedTab === 3 && filterOption === 2) {
-        setTasks(mdfy(sortTasksByStatus(upcomingTasks.assignByUser)));
-      }
-      if (selectedTab === 4 && filterOption === 1) {
-        setTasks(mdfy(sortTasksByStatus(dueTasks.assignToUser)));
-      }
-      if (selectedTab === 4 && filterOption === 2) {
-        setTasks(mdfy(sortTasksByStatus(dueTasks.assignByUser)));
+      if (day === 'due') {
+        sortTasksByDueTasks(mdfy(tasksAll), assign);
+      } else {
+        setTasks(mdfy(tasksAll));
       }
     }
-  }, [
-    todaysTasks,
-    tomorrowTasks,
-    upcomingTasks,
-    dueTasks,
-    filterOption,
-    selectedTab,
-    loading,
-  ]);
+  }, [assign, tasksAll, loading, day]);
 
   useEffect(() => {
-    setSelectedTab(selectedTabOnSelect.value);
-  }, [selectedTabOnSelect]);
-
-  const showStar = (assignTo) => {
-    const select = assignTo ? 'assignToUser' : 'assignByUser';
-    if (selectedTab === 1) {
-      return (
-        todaysTasks[select] && todaysTasks[select].length > 0 && '*'
-      );
-    } else if (selectedTab === 2) {
-      return (
-        tomorrowTasks[select] &&
-        tomorrowTasks[select].length > 0 &&
-        '*'
-      );
-    } else if (selectedTab === 3) {
-      return (
-        upcomingTasks[select] &&
-        upcomingTasks[select].length > 0 &&
-        '*'
-      );
-    } else {
-      return dueTasks[select] && dueTasks[select].length > 0 && '*';
+    if (sortedBy === 'dueDate') {
+      setTasks(sortTasksByDueDate([...tasks], orderBy));
     }
-  };
-
-  const handleSelectChange = (selectedOptionOnSelect) => {
-    setSelectedTabOnSelect(selectedOptionOnSelect);
-  };
+    if (sortedBy === 'priority') {
+      setTasks(sortTasksByPriority([...tasks], orderBy));
+    }
+    if (sortedBy === 'status') {
+      setTasks(sortTasksByStatus([...tasks], orderBy));
+    }
+  }, [sortedBy, orderBy]);
 
   return (
     <div className="tasks">
-      <div
-        className={`tasks-filter flex items-center  ${
-          isMobileOnly ? 'justify-center' : 'justify-start'
-        }`}
-      >
-        <div className="flex flex-column">
-          {isMobileOnly ? (
-            <Select
-              defaultValue={selectedTabOptions[0]}
-              value={selectedTabOnSelect}
-              options={selectedTabOptions}
-              onChange={handleSelectChange}
-              isSearchable={false}
-              isClearable={false}
+      <div className="flex justify-between items-center ph3">
+        <h3 className="f3 fw2">My tasks</h3>
+        <div className="flex items-center justify-between items-center">
+          {closeButton === true && (
+            <ClearOutlinedIcon
+              className="mr2 pointer grow ba br2"
+              style={{ color: '#656565', borderColor: '#656565' }}
+              onClick={closeSort}
             />
-          ) : (
-            <div className="flex items-center">
-              <div
-                className="flex items-center"
-                onClick={() => {
-                  setSelectedTab(1);
-                  setFilterOption(1);
-                }}
-              >
-                <h5
-                  className={`${selectedTab === 1 ? 'active' : ''}`}
-                >
-                  Today
-                </h5>
-                <span
-                  style={{
-                    color: selectedTab === 1 ? '#000' : '#a4a4a4',
-                    margin: '0 .25rem',
-                  }}
-                >
-                  ({todaysTasks.totalTasks})
-                </span>
-              </div>
-              <span className="divider">|</span>
-              <div
-                className="flex items-center"
-                onClick={() => {
-                  setSelectedTab(2);
-                  setFilterOption(1);
-                }}
-              >
-                <h5
-                  className={`${selectedTab === 2 ? 'active' : ''}`}
-                >
-                  Tomorrow
-                </h5>
-                <span
-                  style={{
-                    color: selectedTab === 2 ? '#000' : '#a4a4a4',
-                    margin: '0 .25rem',
-                  }}
-                >
-                  ({tomorrowTasks.totalTasks})
-                </span>
-              </div>
-              <span className="divider">|</span>
-              <div
-                className="flex items-center"
-                onClick={() => {
-                  setSelectedTab(3);
-                  setFilterOption(1);
-                }}
-              >
-                <h5
-                  className={`${selectedTab === 3 ? 'active' : ''}`}
-                >
-                  Upcoming
-                </h5>
-                <span
-                  style={{
-                    color: selectedTab === 3 ? '#000' : '#a4a4a4',
-                    margin: '0 .25rem',
-                  }}
-                >
-                  ({upcomingTasks.totalTasks})
-                </span>
-              </div>
-              <span className="divider">|</span>
-              <div
-                className="flex items-center"
-                onClick={() => {
-                  setSelectedTab(4);
-                  setFilterOption(1);
-                }}
-              >
-                <h5
-                  className={`${selectedTab === 4 ? 'active' : ''}`}
-                >
-                  Due Tasks
-                </h5>
-                <span
-                  style={{
-                    color: selectedTab === 4 ? '#000' : '#a4a4a4',
-                    margin: '0 .25rem',
-                  }}
-                >
-                  ({dueTasks.totalTasks})
-                </span>
-              </div>
-            </div>
           )}
-          <div
-            className="flex items-center"
-            style={{ paddingTop: '.7rem' }}
-          >
-            <p
-              className={`${filterOption === 1 ? 'active' : ''}`}
-              onClick={() => setFilterOption(1)}
-            >
-              Assigned to me {showStar(true)}
-            </p>
-            <span className="divider">|</span>
-            <p
-              className={`${filterOption === 2 ? 'active' : ''}`}
-              onClick={() => setFilterOption(2)}
-            >
-              Assigned by me {showStar(false)}
-            </p>
-          </div>
+          <SortingDiv className="flex items-center justify-between">
+            <Popover
+              isOpen={sortPopoverOpen}
+              interactionKind="click"
+              position="bottom"
+              popoverClassName="bg-white"
+              content={
+                <div className="bg-white ma3">
+                  <div className="flex justify-end mb1">
+                    <button
+                      className="bp3-tag pointer bg-light-gray black"
+                      onClick={clearSort}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <p
+                    className="flex items-center pointer"
+                    onClick={() => setSortedBy('dueDate')}
+                    style={{
+                      marginRight:
+                        sortedBy === 'dueDate' ? '8px' : '20px',
+                    }}
+                  >
+                    <Icon
+                      icon={
+                        sortedBy === 'dueDate'
+                          ? 'tick-circle'
+                          : 'circle'
+                      }
+                      iconSize={16}
+                      className="mr2"
+                      color={
+                        sortedBy === 'dueDate' ? '#2EB67D' : 'inherit'
+                      }
+                    />
+                    Due Date
+                    {sortedBy === 'dueDate' && (
+                      <>
+                        {orderBy === 'asc' && (
+                          <Icon
+                            iconSize={12}
+                            icon={'arrow-up'}
+                            onClick={() => setOrderBy('desc')}
+                          />
+                        )}
+                        {orderBy === 'desc' && (
+                          <Icon
+                            iconSize={12}
+                            icon={'arrow-down'}
+                            onClick={() => setOrderBy('asc')}
+                          />
+                        )}
+                      </>
+                    )}
+                  </p>
+                  <p
+                    className="mr2 flex items-center pointer"
+                    onClick={() => setSortedBy('priority')}
+                    style={{
+                      marginRight:
+                        sortedBy === 'priority' ? '8px' : '20px',
+                    }}
+                  >
+                    <Icon
+                      icon={
+                        sortedBy === 'priority'
+                          ? 'tick-circle'
+                          : 'circle'
+                      }
+                      iconSize={16}
+                      className="mr2"
+                      color={
+                        sortedBy === 'priority'
+                          ? '#2EB67D'
+                          : 'inherit'
+                      }
+                    />
+                    Priority
+                    {sortedBy === 'priority' && (
+                      <>
+                        {orderBy === 'asc' && (
+                          <Icon
+                            iconSize={12}
+                            icon={'arrow-up'}
+                            onClick={() => setOrderBy('desc')}
+                          />
+                        )}
+                        {orderBy === 'desc' && (
+                          <Icon
+                            iconSize={12}
+                            icon={'arrow-down'}
+                            onClick={() => setOrderBy('asc')}
+                          />
+                        )}
+                      </>
+                    )}
+                  </p>
+                  <p
+                    className="mr2 flex items-center pointer"
+                    onClick={() => setSortedBy('status')}
+                    style={{
+                      marginRight:
+                        sortedBy === 'status' ? '8px' : '20px',
+                    }}
+                  >
+                    <Icon
+                      icon={
+                        sortedBy === 'status'
+                          ? 'tick-circle'
+                          : 'circle'
+                      }
+                      iconSize={16}
+                      className="mr2"
+                      color={
+                        sortedBy === 'status' ? '#2EB67D' : 'inherit'
+                      }
+                    />
+                    Status
+                    {sortedBy === 'status' && (
+                      <>
+                        {orderBy === 'asc' && (
+                          <Icon
+                            iconSize={12}
+                            icon={'arrow-up'}
+                            onClick={() => setOrderBy('desc')}
+                          />
+                        )}
+                        {orderBy === 'desc' && (
+                          <Icon
+                            iconSize={12}
+                            icon={'arrow-down'}
+                            onClick={() => setOrderBy('asc')}
+                          />
+                        )}
+                      </>
+                    )}
+                  </p>
+                </div>
+              }
+              target={
+                <div
+                  className="flex items-center mr3"
+                  onClick={sortPopover}
+                >
+                  <Icon
+                    icon="sort-desc"
+                    className="mr1"
+                    iconSize={12}
+                  />
+                  <p>Sort</p>
+                </div>
+              }
+            />
+            <Popover
+              isOpen={filterPopoverOpen}
+              interactionKind="click"
+              position="bottom"
+              popoverClassName="bg-white"
+              content={
+                <div className="bg-white ma3">
+                  <div className="flex justify-end mb1">
+                    <button
+                      className="bp3-tag pointer bg-light-gray black"
+                      onClick={clearSort}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <p
+                    className="flex items-center pointer"
+                    onClick={() => setDay('today')}
+                    style={{
+                      marginRight: day === 'today' ? '8px' : '20px',
+                    }}
+                  >
+                    <Icon
+                      icon={
+                        day === 'today' ? 'tick-circle' : 'circle'
+                      }
+                      iconSize={16}
+                      className="mr2"
+                      color={day === 'today' ? '#2EB67D' : 'inherit'}
+                    />
+                    Today's Task
+                  </p>
+                  <p
+                    className="flex items-center pointer"
+                    onClick={() => setDay('tomorrow')}
+                    style={{
+                      marginRight:
+                        day === 'tomorrow' ? '8px' : '20px',
+                    }}
+                  >
+                    <Icon
+                      icon={
+                        day === 'tomorrow' ? 'tick-circle' : 'circle'
+                      }
+                      iconSize={16}
+                      className="mr2"
+                      color={
+                        day === 'tomorrow' ? '#2EB67D' : 'inherit'
+                      }
+                    />
+                    Tomorrow's Task
+                  </p>
+                  <p
+                    className="flex items-center pointer"
+                    onClick={() => setDay('upcomming')}
+                    style={{
+                      marginRight:
+                        day === 'upcomming' ? '8px' : '20px',
+                    }}
+                  >
+                    <Icon
+                      icon={
+                        day === 'upcomming' ? 'tick-circle' : 'circle'
+                      }
+                      iconSize={16}
+                      className="mr2"
+                      color={
+                        day === 'upcomming' ? '#2EB67D' : 'inherit'
+                      }
+                    />
+                    Upcoming Task
+                  </p>
+                  <p
+                    className="flex items-center pointer"
+                    onClick={() => setDay('due')}
+                    style={{
+                      marginRight: day === 'due' ? '8px' : '20px',
+                    }}
+                  >
+                    <Icon
+                      icon={day === 'due' ? 'tick-circle' : 'circle'}
+                      iconSize={16}
+                      className="mr2"
+                      color={day === 'due' ? '#2EB67D' : 'inherit'}
+                    />
+                    Due Task
+                  </p>
+                  <p
+                    className="flex items-center pointer"
+                    onClick={() => setAssign('to-me')}
+                    style={{
+                      marginRight:
+                        assign === 'to-me' ? '8px' : '20px',
+                    }}
+                  >
+                    <Icon
+                      icon={
+                        assign === 'to-me' ? 'tick-circle' : 'circle'
+                      }
+                      iconSize={16}
+                      className="mr2"
+                      color={
+                        assign === 'to-me' ? '#2EB67D' : 'inherit'
+                      }
+                    />
+                    Assigned to me
+                  </p>
+                  <p
+                    className="mr2 flex items-center pointer"
+                    onClick={() => setAssign('by-me')}
+                    style={{
+                      marginRight:
+                        assign === 'by-me' ? '8px' : '20px',
+                    }}
+                  >
+                    <Icon
+                      icon={
+                        assign === 'by-me' ? 'tick-circle' : 'circle'
+                      }
+                      iconSize={16}
+                      className="mr2"
+                      color={
+                        assign === 'by-me' ? '#2EB67D' : 'inherit'
+                      }
+                    />
+                    Assigned by me
+                  </p>
+                </div>
+              }
+              target={
+                <div
+                  className="mr2 flex items-center"
+                  onClick={filterPopover}
+                >
+                  <Icon icon="filter" className="mr1" iconSize={12} />
+                  <p>Filter</p>
+                </div>
+              }
+            />
+          </SortingDiv>
         </div>
       </div>
       <div className="tasks-list w-100">
@@ -342,28 +642,21 @@ const Tasks = () => {
             />
           </div>
         ) : tasks.length > 0 ? (
-          <Table
-            order={order}
-            setOrder={setOrder}
-            orderBy={orderBy}
-            setOrderBy={setOrderBy}
-            selected={selected}
-            setSelected={setSelected}
-            page={page}
-            setPage={setPage}
-            rowsPerPage={rowsPerPage}
-            setRowsPerPage={setRowsPerPage}
-            tasks={tasks}
-            assignedByUser={filterOption === 2 ? true : false}
-          />
+          <>
+            <TaskListContainer tasks={tasks} />
+          </>
         ) : (
-          <div className="w-100 tc gray mt2">
-            Create some task in board!
-          </div>
+          <div className="w-100 tc gray mt2">No Tasks Deadline</div>
         )}
       </div>
     </div>
   );
 };
 
-export default Tasks;
+const mapStateToProps = (state: any) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export const Tasks = connect(mapStateToProps)(TasksComponent);
