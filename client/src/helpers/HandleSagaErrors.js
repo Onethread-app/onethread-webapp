@@ -1,5 +1,6 @@
 import { store } from "Store";
 import { setSubscriptionExpire } from "stores/subscriptionBilling/Actions";
+import i18next from 'i18next';
 
 export const returnErrorText = (error) => {
   if (error.response) {
@@ -8,18 +9,18 @@ export const returnErrorText = (error) => {
       `${data.type} on method ${config.method} at ${config.baseURL}${config.url}`,
     );
     if (data.type === 'Network Error') {
-      return 'Network Error';
+      return `${i18next.t('app.Error-text.Network-Error')}`;
     } else if (data.status === 400) {
-      return 'Bad Request';
+      return `${i18next.t('app.Error-text.Bad-Request')}`;
     } else if (data.status === 401) {
-      return 'Unauthorized user. Please enter valid email and password.';
+      return `${i18next.t('app.Error-text.Unauthorized-user')}`;
     } else if (data.status === 403) {
       store.dispatch(setSubscriptionExpire());
-      return 'Access Error';
+      return `${i18next.t('app.Error-text.Access-Error')}`;
     } else if (data.status === 404) {
-      return 'Method Not Found';
+      return `${i18next.t('app.Error-text.Method-Not-Found')}`;
     } else if (data.status === 409) {
-      return 'Duplicate Value';
+      return `${i18next.t('app.Error-text.Duplicate-Value')}`;
     } else {
       return data.type;
     }

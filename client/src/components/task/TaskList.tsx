@@ -7,6 +7,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 
 import TasksContainer from './ListTasksContainer';
 import { TaskBoard } from 'stores/board/Reducer';
+import { useTranslation } from 'react-i18next';
 
 const TaskListContainer = styled.div`
   padding: 1rem;
@@ -63,26 +64,27 @@ interface ITaskList {
 }
 
 const TaskList = (props: ITaskList) => {
+  const { t } = useTranslation();
   return (
     <TaskListContainer>
       <ListHeader>
         <HeaderItem>
-          <h3>Task Name</h3>
+          <h3>{t('app.project.Tasks.Task-Name')}</h3>
         </HeaderItem>
         <HeaderItem>
-          <h3>Activity</h3>
+          <h3>{t('app.project.Tasks.Activity')}</h3>
         </HeaderItem>
         <HeaderItem>
-          <h3>Priority</h3>
+          <h3>{t('app.project.Tasks.Priority')}</h3>
         </HeaderItem>
         <HeaderItem>
-          <h3>Status</h3>
+          <h3>{t('app.project.Tasks.Status')}</h3>
         </HeaderItem>
         <HeaderItem>
-          <h3>Due Date</h3>
+          <h3>{t('app.project.Tasks.Due-Date')}</h3>
         </HeaderItem>
         <HeaderItem>
-          <h3>Assigned Member</h3>
+          <h3>{t('app.project.Tasks.Assigned-Member')}</h3>
         </HeaderItem>
         <HeaderItem>
           <SettingsIcon htmlColor="#a1a1a1" />

@@ -175,6 +175,9 @@
         "Name": "প্রজেক্টের নাম",
         "Project-Settings": "প্রজেক্টের সেটিংস",
         "My-projects": "আমার প্রজেক্টসমূহ",
+        "Search-projects": "সার্চ প্রজেক্ট",
+        "Create-Project": "প্রজেক্ট তৈরি করুন",
+        "Create-or-Select-company": "কোম্পানি তৈরি অথবা নির্বাচন করুন",
         "Completed-projects": "সমাপ্ত প্রজেক্টসমূহ",
         "No-projects-found": "কোনও প্রজেক্ট নেই",
         "Archived-projects": "আর্কাইভকৃত প্রজেক্টসমূহ",
@@ -470,7 +473,7 @@
         "Add-task": "নতুন টাস্ক যোগ করুন",
         "Task-Name": "টাস্কের নাম",
         "Activity": "কার্যকলাপ",
-        "Due-Date": "নির্দিষ্ট তারিখ",
+        "Due-Date": "সময়সীমা",
         "Assigned-Member": "নির্ধারিত সদস্য",
         "Task-Status": "টাস্কের অবস্থা",
         "Total-tasks": "মোট টাস্ক",
@@ -492,7 +495,13 @@
         "Task-Details": "টাস্কের বিবরণ",
         "Assigned-To": "সদস্য নিয়োগ করুন",
         "Viewers": "দায়িত্বরত",
-        "No-Files": "কোন ফাইল নেই"
+        "No-Files": "কোন ফাইল নেই",
+        "Sort": "সর্ট",
+        "Filter": "ফিল্টার",
+        "Close": "বাতিল",
+        "Task-Priority": "টাস্ক অগ্রাধিকার",
+        "Subtasks": "সাবটাস্ক",
+        "Name": "নাম"
       }
     },
     "user": {
@@ -583,6 +592,14 @@
       "Enter-name": "টীমের নাম লিখুন এবং লিঙ্ক তৈরি করুন",
       "Enter-team-name": "টীমের নাম লিখুন",
       "Link": "লিঙ্ক"
+    },
+    "Error-text": {
+      "Network-Error": "নেটওয়ার্কের ত্রুটি",
+      "Bad-Request": "রিকোয়েস্ট শুদ্ধ নয়",
+      "Unauthorized-user": "অননুমোদিত ব্যবহারকারী। দয়া করে শুদ্ধ ইমেল এবং পাসওয়ার্ড লিখুন",
+      "Access-Error": "অ্যাক্সেস ত্রুটি",
+      "Method-Not-Found": "পদ্ধতি পাওয়া যায় নি",
+      "Duplicate-Value": "ডুপ্লিকেট মান"
     }
   }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { priorityColor } from 'stores/UtilsActions';
+import { useTranslation } from 'react-i18next';
 
 const PriorityIcon = styled.span`
   height: 12px;
@@ -13,9 +14,12 @@ const PriorityIcon = styled.span`
 `;
 
 const PriorityColorList = () => {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center mb2">
-      <span className="mr2">Task Priority: </span>
+      <span className="mr2">
+        {t('app.project.Tasks.Task-Priority')}:{' '}
+      </span>
       {priorityColor.map((priority) => (
         <PriorityIcon
           title={priority.name}
