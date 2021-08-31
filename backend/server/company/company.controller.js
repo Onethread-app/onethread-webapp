@@ -589,7 +589,6 @@ const dashBoard = async (req, res, next) => {
       removed: false,
       hasDeleted: false,
     }).select('_id name status deadline');
-    let i;
 
     let completedProjects = projectList.filter(
       (p) => p.status === 'completed',
