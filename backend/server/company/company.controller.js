@@ -596,8 +596,13 @@ const dashBoard = async (req, res, next) => {
     let runningProjects = projectList.length - completedProjects;
     const allProjectIds = projectList.map((p) => p._id);
 
+    const totalTasks = await Task.countDocuments({
+      project: { $in: allProjectIds },
+    });
+
     const tasks = await Task.find({
       project: { $in: allProjectIds },
+      status: { $ne: 'done' },
     })
       .sort({ priority: 0 })
       .select(
@@ -660,6 +665,7 @@ const dashBoard = async (req, res, next) => {
         completedProjects,
         runningProjects,
         taskCompilation,
+        totalTasks,
       },
     });
   } catch (error) {

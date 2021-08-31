@@ -124,6 +124,7 @@ const ProjectStatusComponent = (props) => {
         const mTask = getModifiedTasks(data.taskCompilation);
         setTasks(mTask);
         setfTasks(mTask);
+        setTotalTasks(data.totalTasks);
         setRunnningProject(data.runningProjects);
         setCompletedProject(data.completedProjects);
         // unique project
@@ -261,10 +262,7 @@ const ProjectStatusComponent = (props) => {
   ]);
 
   useEffect(() => {
-    setTotalTasks(fTasks.length);
-    setRemainingTasks(
-      fTasks.filter((m) => m.status !== 'done').length,
-    );
+    setRemainingTasks(fTasks.length);
   }, [fTasks]);
 
   const resetHandler = () => {
