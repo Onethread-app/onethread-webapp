@@ -389,7 +389,6 @@ const getAccount = async (req, res, next) => {
 //     });
 //   })
 //   .catch(err => {
-//     console.log(err);
 //     next(err);
 //   });
 const userDailyProgress = async (req, res, next) => {
@@ -946,21 +945,26 @@ const userTaskList = async (req, res, next) => {
   try {
     const taskList = await Task.find({
       status: { $ne: 'done' },
-    }).sort({ createdAt: -1 });
-
-    let taskId = taskList.map((e) => e._id);
-
-    const tasks = await TaskAssign.find({
-      taskId: taskId,
-      $or: [
-        { account: req.user._id },
-        { assignedPerson: req.user._id },
-      ],
     })
-      .sort({ createdAt: -1 })
-      .select('taskId')
-      .populate(options);
+      .select('_id')
+      .sort({ createdAt: -1 });
 
+    const tasks = [];
+    await Promise.all(
+      taskList.map(async (t) => {
+        const task = await TaskAssign.findOne({
+          taskId: t._id,
+          $or: [
+            { account: req.user._id },
+            { assignedPerson: req.user._id },
+          ],
+        })
+          .sort({ createdAt: -1 })
+          .select('taskId')
+          .populate(options);
+        if (task) tasks.push(task);
+      }),
+    );
     return sendJSONresponse(res, 200, tasks);
   } catch (error) {
     logger.error(`Account: ${error}`);

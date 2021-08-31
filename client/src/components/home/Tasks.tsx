@@ -49,7 +49,7 @@ const TasksComponent = (props: any) => {
   const [closeButton, setCloseButton] = useState(false);
 
   const mdfy = (task) => {
-    const taskList = task.map((t, i) => ({
+    const taskList = task.map((t) => ({
       name: t.taskId.name,
       assignee:
         t.assignedPerson.firstName + ' ' + t.assignedPerson.lastName,
