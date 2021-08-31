@@ -46,7 +46,6 @@ const TasksComponent = (props: any) => {
   const [day, setDay] = useState('');
   const [filterPopoverOpen, setFilterPopoverOpen] = useState(false);
   const [sortPopoverOpen, setSortPopoverOpen] = useState(false);
-  const [closeButton, setCloseButton] = useState(false);
 
   const mdfy = (task) => {
     const taskList = task.map((t, i) => ({
@@ -137,24 +136,27 @@ const TasksComponent = (props: any) => {
 
   const sortTasksByUpcomming = async (tasks, assign) => {
     setTasks([]);
-    const today = moment(new Date()).format('MMM DD');
+    const tomorrow = moment(new Date())
+      .add(1, 'days')
+      .format('MMM DD');
+
     let upcommingTasks: any = [];
     await tasks.map((task: any) => {
       const dueDate = moment(task.dueDate).format('MMM DD');
       if (assign === 'to-me') {
-        if (task.assignedPersonId === userId && dueDate > today) {
+        if (task.assignedPersonId === userId && dueDate > tomorrow) {
           upcommingTasks.push(task);
         }
       } else if (assign === 'by-me') {
         if (
           task.accountId === userId &&
           task.assignedPersonId !== userId &&
-          dueDate > today
+          dueDate > tomorrow
         ) {
           upcommingTasks.push(task);
         }
       } else {
-        if (dueDate > today) {
+        if (dueDate > tomorrow) {
           upcommingTasks.push(task);
         }
       }
@@ -164,18 +166,17 @@ const TasksComponent = (props: any) => {
 
   const sortTasksByTomorrow = async (tasks, assign) => {
     setTasks([]);
-    const today = moment(new Date()).format('MMM DD');
-    const tomorrow = moment(new Date().getDate() - 1).format(
-      'MMM DD',
-    );
+    const tomorrow = moment(new Date())
+      .add(1, 'days')
+      .format('MMM DD');
+
     let tomorrowTasks: any = [];
     await tasks.map((task: any) => {
       const dueDate = moment(task.dueDate).format('MMM DD');
       if (assign === 'to-me') {
         if (
           task.assignedPersonId === userId &&
-          dueDate > today &&
-          dueDate < tomorrow
+          dueDate === tomorrow
         ) {
           tomorrowTasks.push(task);
         }
@@ -183,13 +184,12 @@ const TasksComponent = (props: any) => {
         if (
           task.accountId === userId &&
           task.assignedPersonId !== userId &&
-          dueDate > today &&
-          dueDate < tomorrow
+          dueDate === tomorrow
         ) {
           tomorrowTasks.push(task);
         }
       } else {
-        if (dueDate > today && dueDate < tomorrow) {
+        if (dueDate === tomorrow) {
           tomorrowTasks.push(task);
         }
       }
@@ -199,8 +199,9 @@ const TasksComponent = (props: any) => {
 
   const sortTasksByDueTasks = async (tasks, assign) => {
     setTasks([]);
-    let dueTasks: any = [];
+
     const today = moment(new Date()).format('MMM DD');
+    let dueTasks: any = [];
     await tasks.map((task: any) => {
       const dueDate = moment(task.dueDate).format('MMM DD');
       if (assign === 'to-me') {
@@ -251,7 +252,6 @@ const TasksComponent = (props: any) => {
   const closeSort = () => {
     setFilterPopoverOpen(false);
     setSortPopoverOpen(false);
-    setCloseButton(false);
   };
 
   const clearSort = () => {
@@ -264,13 +264,11 @@ const TasksComponent = (props: any) => {
   const filterPopover = () => {
     setFilterPopoverOpen(!filterPopoverOpen);
     setSortPopoverOpen(false);
-    setCloseButton(true);
   };
 
   const sortPopover = () => {
     setSortPopoverOpen(!sortPopoverOpen);
     setFilterPopoverOpen(false);
-    setCloseButton(true);
   };
 
   useEffect(() => {
@@ -330,13 +328,15 @@ const TasksComponent = (props: any) => {
       <div className="flex justify-between items-center ph3">
         <h3 className="f3 fw2">My tasks</h3>
         <div className="flex items-center justify-between items-center">
-          {closeButton === true && (
-            <ClearOutlinedIcon
-              className="mr2 pointer grow ba br2"
-              style={{ color: '#656565', borderColor: '#656565' }}
-              onClick={closeSort}
-            />
-          )}
+          {assign !== '' || sortedBy !== '' || day !== '' ? (
+            <button
+              className="bp3-tag pointer bg-light-gray black mr2 pa1 ph2"
+              onClick={clearSort}
+            >
+              Clear
+            </button>
+          ) : null}
+
           <SortingDiv className="flex items-center justify-between">
             <Popover
               isOpen={sortPopoverOpen}
@@ -346,12 +346,16 @@ const TasksComponent = (props: any) => {
               content={
                 <div className="bg-white ma3">
                   <div className="flex justify-end mb1">
-                    <button
-                      className="bp3-tag pointer bg-light-gray black"
-                      onClick={clearSort}
-                    >
-                      Clear
-                    </button>
+                    <ClearOutlinedIcon
+                      className="pointer ba br4"
+                      style={{
+                        color: '#656565',
+                        borderColor: '#656565',
+                        width: '18px',
+                        height: '18px',
+                      }}
+                      onClick={closeSort}
+                    />
                   </div>
                   <p
                     className="flex items-center pointer"
@@ -499,12 +503,16 @@ const TasksComponent = (props: any) => {
               content={
                 <div className="bg-white ma3">
                   <div className="flex justify-end mb1">
-                    <button
-                      className="bp3-tag pointer bg-light-gray black"
-                      onClick={clearSort}
-                    >
-                      Clear
-                    </button>
+                    <ClearOutlinedIcon
+                      className="pointer ba br4"
+                      style={{
+                        color: '#656565',
+                        borderColor: '#656565',
+                        width: '18px',
+                        height: '18px',
+                      }}
+                      onClick={closeSort}
+                    />
                   </div>
                   <p
                     className="flex items-center pointer"
