@@ -5,8 +5,10 @@ import SubtaskItem from 'components/subtask/SubtaskItem';
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
 import { sortTasksByDueDate } from 'helpers/utils';
+import { useTranslation } from 'react-i18next';
 
 const Subtasks = () => {
+  const { t } = useTranslation();
   const [subTasks, setSubtasks] = React.useState<any>([]);
 
   React.useEffect(() => {
@@ -25,22 +27,26 @@ const Subtasks = () => {
 
   return (
     <div className="subtasks">
-      <h3>Subtasks</h3>
+      <h3>{t('app.project.Tasks.Subtasks')}</h3>
+      {/* <h3>Subtasks</h3> */}
       <div className="subtasks-list mt2 pa1">
         <div
           className="flex items-center justify-between mb2 f5 bb"
           style={{ minWidth: '500px' }}
         >
-          <div>Name</div>
+          <div>{t('app.project.Tasks.Subtasks')}</div>
+          {/* <div>Name</div> */}
           <div className="flex items-center">
             <div className="mr3" style={{ maxWidth: '100px' }}>
-              Task
+              {t('app.project.Tasks.Tasks')}
+              {/* Task */}
             </div>
             <div
               className="flex justify-end mr3"
               style={{ width: '100px' }}
             >
-              Deadline
+              {t('app.project.Tasks.Due-date')}
+              {/* Deadline */}
             </div>
           </div>
         </div>

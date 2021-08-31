@@ -16,6 +16,7 @@ import {
   createCompanyAction,
   clearErrorOnCompanyCreate,
 } from 'stores/company/Actions';
+import { useTranslation } from 'react-i18next';
 
 const CONTAINER = styled.div`
   form {
@@ -51,7 +52,7 @@ const HEADER = styled.h3`
   font-weight: 500;
   font-size: 25.168px;
   line-height: 38px;
-  color: #34B3E9;
+  color: #34b3e9;
 `;
 
 const TEXTINPUT = styled.input`
@@ -67,7 +68,7 @@ const TEXTINPUT = styled.input`
 `;
 
 const DONE = styled.button`
-  background: #34B3E9;
+  background: #34b3e9;
   color: #fff;
   border-radius: 8.45662px;
   outline: none;
@@ -96,6 +97,7 @@ interface ICreateProjectDialog {
 }
 
 const CreateProjectDialog = (props: ICreateProjectDialog) => {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [companyId, setCompanyId] = useState('');
   const [deadline, setDeadline] = useState<Date | null>(null);
@@ -186,7 +188,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
 
   return (
     <CONTAINER className="flex flex-column items-center justify-center h-100">
-      <HEADER>Create Project</HEADER>
+      <HEADER>{t('app.company.Projects.Create-Project')}</HEADER>
       <form
         onSubmit={handleSubmit}
         style={{ width: '100%', padding: '2rem 15%' }}
@@ -202,7 +204,9 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
           </div>
         )}
         <CreatableSelect
-          placeholder="Create or Select a company"
+          placeholder={t(
+            'app.company.Projects.Create-or-Select-company',
+          )}
           id={'companies'}
           options={options}
           onChange={handleCompanyChange}
@@ -215,7 +219,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
           type="text"
           name="project-name"
           id="project-name-from-dialog"
-          placeholder="Project Name (Required)"
+          placeholder={t('app.project.Project-preface.Project-Name')}
           className="w-100"
           onChange={handleNameChange}
           required
@@ -232,7 +236,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
             }}
             maxDate={moment().add(10, 'y').toDate()}
             minDate={new Date()}
-            placeholder="Deadline"
+            placeholder={t('app.project.Project-preface.Deadline')}
             className="flex-auto"
           />
         </div>
@@ -241,7 +245,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
             htmlFor="label"
             style={{ color: 'rgba(0, 0, 0, 0.37)' }}
           >
-            Label
+            {t('app.project.Project-preface.Label')}
           </label>
           <div className="flex">
             {Color.map((color) => (
@@ -270,7 +274,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
           </div>
         </div>
         <div className="flex flex-column items-center w-100">
-          <DONE>Done</DONE>
+          <DONE>{t('app.project.Project-preface.Done')}</DONE>
           <p
             className="tc pointer"
             onClick={() => {
@@ -282,7 +286,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
               color: '#0F0C4E',
             }}
           >
-            Cancel
+            {t('app.project.Project-preface.Cancel')}
           </p>
         </div>
       </form>

@@ -7,8 +7,10 @@ import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
 import { CircularProgress } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Projects = () => {
+  const { t } = useTranslation();
   const history = useHistory();
   const [isLoading, setIsLoading] = React.useState(true);
   const [searchInput, setSearchInput] = React.useState('');
@@ -56,14 +58,14 @@ const Projects = () => {
       <div className="your-projects">
         <div>
           <h3 style={{ fontSize: 18, fontWeight: 'bold' }}>
-            My Projects
+            {t('app.company.Projects.My-projects')}
           </h3>
         </div>
         <div className="flex flex-column justify-center">
           <input
             type="text"
             className="search-project"
-            placeholder="Search projects"
+            placeholder={t('app.company.Projects.Search-projects')}
             value={searchInput}
             onChange={handleFilter}
           />
@@ -117,7 +119,7 @@ const Projects = () => {
           )}
 
           <button onClick={() => setShowDialog(true)}>
-            Create Project
+            {t('app.company.Projects.Create-Project')}
           </button>
         </div>
       </div>

@@ -52,6 +52,7 @@ interface IBoardDetails {
 }
 
 const BoardDetails = (props: IBoardDetails) => {
+  const { t } = useTranslation();
   const [view, setView] = useState<'board' | 'list'>(
     props.currentBoard.preferredView ?? 'list',
   );
@@ -62,7 +63,6 @@ const BoardDetails = (props: IBoardDetails) => {
     ISelectedAssignee[]
   >([]);
   const [filterPopoverOpen, setFilterPopoverOpen] = useState(false);
-  const { t } = useTranslation();
   const [todoColumnId, setTodoColumnId] = React.useState('');
 
   const clearSort = () => {
@@ -152,7 +152,7 @@ const BoardDetails = (props: IBoardDetails) => {
             }`}
           >
             <TasksNumber>
-              <h3>Tasks</h3>
+              <h3>{t('app.project.Tasks.Tasks')}</h3>
               <span>
                 (
                 {
@@ -170,14 +170,14 @@ const BoardDetails = (props: IBoardDetails) => {
               fetchingBoard={props.fetchingBoard}
               className="flex"
             >
-              <p>View:</p>
+              <p>{t('app.project.Tasks.View')}:</p>
               <p
                 onClick={() => {
                   handleViewChange('list');
                 }}
                 className={`${view === 'list' && 'active'}`}
               >
-                List
+                {t('app.project.Tasks.List')}
               </p>
 
               <p
@@ -186,7 +186,7 @@ const BoardDetails = (props: IBoardDetails) => {
                 }}
                 className={`${view === 'board' && 'active'}`}
               >
-                Board
+                {t('app.project.Tasks.Board')}
               </p>
             </ViewSelectDiv>
           </div>
@@ -235,7 +235,7 @@ const BoardDetails = (props: IBoardDetails) => {
                               : 'inherit'
                           }
                         />
-                        Due Date
+                        {t('app.project.Tasks.Due-Date')}
                         {props.currentBoard.sortBy === 'dueDate' && (
                           <Icon
                             iconSize={12}
@@ -271,7 +271,7 @@ const BoardDetails = (props: IBoardDetails) => {
                               : 'inherit'
                           }
                         />
-                        Priority
+                        {t('app.project.Tasks.Priority')}
                         {props.currentBoard.sortBy === 'priority' && (
                           <Icon
                             iconSize={12}
@@ -292,7 +292,7 @@ const BoardDetails = (props: IBoardDetails) => {
                         className="mr1"
                         iconSize={12}
                       />
-                      <p>Sort</p>
+                      <p>{t('app.project.Tasks.Sort')}</p>
                     </div>
                   }
                 />
@@ -311,12 +311,14 @@ const BoardDetails = (props: IBoardDetails) => {
                       }}
                     >
                       <div className="flex items-center justify-between mb2">
-                        <p className="ma0">Assignee</p>
+                        <p className="ma0">
+                          {t('app.project.Tasks.Assignee')}
+                        </p>
                         <span
                           className="bp3-tag pointer bg-light-gray black"
                           onClick={() => setFilterPopoverOpen(false)}
                         >
-                          Close
+                          {t('app.project.Tasks.Close')}
                         </span>
                       </div>
                       <MultiSelectComponent
@@ -341,7 +343,7 @@ const BoardDetails = (props: IBoardDetails) => {
                         className="mr1"
                         iconSize={12}
                       />
-                      <p>Filter</p>
+                      <p>{t('app.project.Tasks.Filter')}</p>
                     </div>
                   }
                 />
