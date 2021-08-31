@@ -239,29 +239,32 @@ const getListOverview = async (req, res, next) => {
       .populate('company', 'uniqueName');
 
     const projectList = [];
-    for (let member of memberList) {
-      const teamMembers = await Team.find({
-        member: member._id,
-        removed: false,
-      }).populate(
-        'project',
-        '_id name uniqueName hasDeleted removed createdAt',
-      );
+    await Promise.all(
+      memberList.map(async (member) => {
+        const teamMembers = await Team.find({
+          member: member._id,
+          removed: false,
+        }).populate(
+          'project',
+          '_id name uniqueName hasDeleted removed createdAt',
+        );
 
-      for (let teamMember of teamMembers) {
-        if (
-          !teamMember.project.hasDeleted &&
-          !teamMember.project.removed
-        ) {
-          projectList.push({
-            _id: teamMember.project._id,
-            name: teamMember.project.name,
-            companyUniqueName: member.company.uniqueName,
-            createdAt: teamMember.createdAt,
-          });
+        for (let teamMember of teamMembers) {
+          if (
+            !teamMember.project.hasDeleted &&
+            !teamMember.project.removed
+          ) {
+            projectList.push({
+              _id: teamMember.project._id,
+              name: teamMember.project.name,
+              companyUniqueName: member.company.uniqueName,
+              createdAt: teamMember.createdAt,
+            });
+          }
         }
-      }
-    }
+      }),
+    );
+
     projectList.sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
     );
@@ -1061,10 +1064,10 @@ const projectOverview = async (req, res, next) => {
         deadline: project.deadline,
         lead: project.concernedAdmin
           ? nameWordCapitalize(
-            project.concernedAdmin.firstName +
-            ' ' +
-            project.concernedAdmin.lastName,
-          )
+              project.concernedAdmin.firstName +
+                ' ' +
+                project.concernedAdmin.lastName,
+            )
           : null,
         startingDate: project.createdAt,
         companyUniqueName: project.company.uniqueName,
@@ -1106,10 +1109,10 @@ const projectOverview = async (req, res, next) => {
       taskInf.assign =
         assignedTo && assignedTo.assignedPerson
           ? nameWordCapitalize(
-            assignedTo.assignedPerson.firstName +
-            ' ' +
-            assignedTo.assignedPerson.lastName,
-          )
+              assignedTo.assignedPerson.firstName +
+                ' ' +
+                assignedTo.assignedPerson.lastName,
+            )
           : null;
 
       taskInf.boardName = task.boardId.name;
