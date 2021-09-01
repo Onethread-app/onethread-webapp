@@ -11,9 +11,16 @@ const TaskListContainerDiv = styled.div`
   gap: 1rem;
   border-radius: 8px;
   position: relative;
-  max-width: 1000px;
-  overflow-x: auto;
+  max-width: 100%;
   margin-bottom: ${isMobileOnly ? '4rem' : 0};
+  @media screen and (max-width: 1024px) {
+    width: 950px;
+    overflow-x: auto;
+  }
+  @media screen and (max-width: 425px) {
+    width: 300px;
+    overflow-x: auto;
+  }
 `;
 
 const ListHeader = styled.div`
