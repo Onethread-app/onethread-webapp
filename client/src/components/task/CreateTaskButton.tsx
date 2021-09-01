@@ -47,6 +47,7 @@ const CreateTaskButton = (props: ICreateTaskButton) => {
         canOutsideClickClose={true}
         style={{
           background: '#fff',
+          width: '700px',
         }}
       >
         <CreateTaskDialog
