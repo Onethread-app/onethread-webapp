@@ -43,7 +43,7 @@ const UserPopoverIcon = (props: IUserPopoverIcon) => {
               ? props.user.profileImage
               : UserIcon
           }
-          className={`dim v-mid dib br-100 pointer ${
+          className={`dim v-mid dib pointer br2 ${
             isMobileOnly ? 'mr2' : ''
           }`}
           style={{
@@ -75,7 +75,7 @@ const UserPopoverIcon = (props: IUserPopoverIcon) => {
                         : UserIcon
                     }
                     alt=""
-                    className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10 "
+                    className="db w1 w2-ns h1 h2-ns ba b--black-10 br2"
                   />
                 </div>
                 <div className="dtc v-mid pl3">
@@ -121,7 +121,7 @@ const UserPopoverIcon = (props: IUserPopoverIcon) => {
                   ? props.user.profileImage
                   : UserIcon
               }
-              className="dim v-mid dib br-100 pointer"
+              className="dim v-mid dib pointer br2"
               style={{
                 width: '2rem',
                 height: '2rem',

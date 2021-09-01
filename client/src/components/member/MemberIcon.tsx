@@ -27,7 +27,7 @@ const MemberIcon = (props: IMemberIcon) => {
             style={{
               width: '27px',
               height: '27px',
-              borderRadius: '50%',
+              borderRadius: '10%',
             }}
           />
         }
