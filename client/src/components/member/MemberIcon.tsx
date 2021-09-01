@@ -29,6 +29,7 @@ const MemberIcon = (props: IMemberIcon) => {
               width: props.small ? '20px' : '27px',
               height: props.small ? '20px' : '27px',
               borderRadius: '50%',
+
             }}
           />
         }

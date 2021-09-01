@@ -27,13 +27,11 @@ const Profile = (props: IProfile) => {
             onClick={() => history.push(`/${props.userName}`)}
           >
             {t('app.user.Personal-profile.My-Profile')}
-            {/* My Profile */}
           </h3>
           <p>
             {Math.round(props.complete)}%{' '}
             {t('app.user.Personal-profile.Completed')}
           </p>
-          {/* <p>{Math.round(props.complete)}% Completed</p> */}
         </div>
       </div>
       <div>
@@ -43,7 +41,7 @@ const Profile = (props: IProfile) => {
           style={{
             height: '128px',
             width: '128px',
-            borderRadius: '50%',
+            borderRadius: '10%',
           }}
         />
       </div>
@@ -54,7 +52,6 @@ const Profile = (props: IProfile) => {
       <div className="team">
         {t('app.user.Personal-profile.Team')} :{' '}
         {('0' + (props.teamNumber + 1)).slice(-2)}
-        {/* Team : {('0' + (props.teamNumber + 1)).slice(-2)} */}
       </div>
     </div>
   );

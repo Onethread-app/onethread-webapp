@@ -32,16 +32,16 @@ const index = () => {
     </div>
   ) : (
     <div className="home-container">
-      <div>
+      <div className="w-100">
         <Projects />
         <VideoConference />
       </div>
-      <div>
+      <div className="w-100">
         {/* <Weather /> */}
         <Tasks />
         <Subtasks />
       </div>
-      <div>
+      <div className="w-100">
         <Profile />
         {/* <ProfileProgress /> */}
       </div>

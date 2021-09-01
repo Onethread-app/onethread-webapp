@@ -102,7 +102,7 @@ export const ListViewComponent = (
                       src={
                         c.company.logo ? c.company.logo : CompanyIcon
                       }
-                      className="v-mid dib br-100 w-10"
+                      className="v-mid dib w-10 br2"
                       alt="user"
                       style={{
                         width: '32px',

@@ -190,6 +190,7 @@ const create = async (req, res, next) => {
     if (columnProject.project === req.query.pid) {
       const task = new Task({
         name: req.body.name,
+        description: req.body.description,
         account: req.user._id,
         status: req.body.status,
         columnId: columnId,
@@ -537,7 +538,7 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
-const list = (req, res, next) => {};
+const list = (req, res, next) => { };
 
 const dragTask = async (req, res, next) => {
   try {

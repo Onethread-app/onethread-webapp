@@ -41,6 +41,7 @@ const MemberListDialog = (props: IMemberListDialog) => {
             style={{
               width: '1.3rem',
               height: '1.3rem',
+              borderRadius: '10%',
             }}
           />
           <MemberName>{`${member.firstName} ${member.lastName}`}</MemberName>
