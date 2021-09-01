@@ -74,3 +74,14 @@ export const sortProjectsByStatus = (projects: any) => {
 export const sortProjectsByTasksRemaining = (projects: any) => {
   // console.log(projects);
 };
+
+export const msToTime = (s: number) => {
+  const pad = (n: number, z = 2) => ('00' + n).slice(-z);
+  return (
+    pad((s / 3.6e6) | 0) +
+    ':' +
+    pad(((s % 3.6e6) / 6e4) | 0) +
+    ':' +
+    pad(((s % 6e4) / 1000) | 0)
+  );
+};

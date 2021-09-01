@@ -15,6 +15,7 @@ import toasterReducer from './toast/Reducer';
 import { LandingReducer } from './landing/Reducer';
 import { CommentReducer } from './comment/Reducer';
 import { TaskMembersReducer } from './taskMembers/Reducer';
+import { TimeTrackerReducer } from './time-tracker/Reducer';
 
 import { loadingBarReducer } from 'react-redux-loading-bar';
 
@@ -52,5 +53,6 @@ export const rootReducer = combineReducers({
   landingReducer: LandingReducer,
   commentReducer: CommentReducer,
   taskMembersReducer: TaskMembersReducer,
+  timeTrackerReducer: TimeTrackerReducer,
   loadingBar: loadingBarReducer,
 });

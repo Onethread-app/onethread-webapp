@@ -86,6 +86,10 @@ const projectSchema = new Schema(
       ref: 'Company',
       // required: true,
     },
+    timeSpent: {
+      type: Number,
+      default: 0,
+    },
     version: {
       type: Number,
       default: 0,

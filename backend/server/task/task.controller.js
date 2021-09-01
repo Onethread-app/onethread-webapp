@@ -241,6 +241,7 @@ const create = async (req, res, next) => {
         boardId: createdTask.boardId,
         columnId: createdTask.columnId,
         project: createdTask.project,
+        totalSpent: createdTask.totalSpent,
       };
       logger.info(`Task column create`);
       await sendNotificationToProjectTeamMates(

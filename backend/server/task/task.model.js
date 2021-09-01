@@ -42,6 +42,10 @@ const TaskSchema = new mongoose.Schema(
         ref: 'File',
       },
     ],
+    timeSpent: {
+      type: Number,
+      default: 0,
+    },
     columnId: {
       type: Schema.Types.ObjectId,
       ref: 'BoardColumn',
