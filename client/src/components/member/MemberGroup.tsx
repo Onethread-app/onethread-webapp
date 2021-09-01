@@ -11,8 +11,8 @@ import { Popover } from '@blueprintjs/core';
 
 import MemberListDialog from './MemberListDialog';
 import UserIcon from 'resources/images/profilePhoto.svg';
-
 import { IBoardMember, ITaskMember } from 'stores/board/Reducer';
+import './Icon.scss';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -227,7 +227,7 @@ export const ProjectPrefaceViewComponent = (
                           ? member.account.profileImage
                           : user
                       }
-                      className="db br-100 ba b--black-10"
+                      className="db ba b--black-10 br2"
                       style={{ width: '45px', height: '45px' }}
                       alt=""
                     />
