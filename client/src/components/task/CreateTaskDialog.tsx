@@ -65,8 +65,6 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
   const [creatingTask, setCreatingTask] = useState(false);
   const [assignedUserError, setAssignedUserError] = useState(false);
   const [errorText, setErrorText] = useState('');
-  let minDate = new Date();
-  minDate.setDate(minDate.getDate() + 1);
 
   const userRequestFactory = async (userName: string) => {
     const headers = tokenConfig();
@@ -321,7 +319,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         popoverProps={{
                           targetClassName: 'w-100',
                         }}
-                        minDate={minDate}
+                        minDate={new Date()}
                       />
                     </div>
                   )}

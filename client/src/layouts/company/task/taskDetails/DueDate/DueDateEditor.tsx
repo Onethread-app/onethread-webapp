@@ -21,8 +21,6 @@ interface IDueDateFormProps {
 
 export const DueDateEditorComponent = (props: IDueDateFormProps) => {
   const { t } = useTranslation();
-  let minDate = new Date();
-  minDate.setDate(minDate.getDate() + 1);
 
   const onSubmit = async (values: any) => {
     await props.updateTask(values);
@@ -69,7 +67,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                     placeholder={t(
                       'app.project.Project-boards.Select-date',
                     )}
-                    minDate={minDate}
+                    minDate={new Date()}
                     onClose={handleSubmit}
                   />
                 </MuiPickersUtilsProvider>

@@ -344,14 +344,14 @@ const TasksComponent = (props: any) => {
       <div className="flex justify-between items-center filter-option">
         <h3 className="f3 fw2">My tasks</h3>
         <div className="flex items-center justify-between items-center">
-          {sortPopoverOpen || filterPopoverOpen ? (
+          {sortedBy !== '' || assign !== '' || day !== '' ? (
             <ClearOutlinedIcon
               className="pointer ba br2 mr2 grow"
               style={{
                 color: '#656565',
                 borderColor: '#656565',
               }}
-              onClick={closePopover}
+              onClick={clearSort}
             />
           ) : null}
 
@@ -366,9 +366,9 @@ const TasksComponent = (props: any) => {
                   <div className="flex justify-end mb1">
                     <button
                       className="bp3-tag pointer bg-light-gray black"
-                      onClick={clearSort}
+                      onClick={closePopover}
                     >
-                      Clear
+                      close
                     </button>
                   </div>
                   <div
@@ -558,9 +558,9 @@ const TasksComponent = (props: any) => {
                   <div className="flex justify-end mb1">
                     <button
                       className="bp3-tag pointer bg-light-gray black"
-                      onClick={clearSort}
+                      onClick={closePopover}
                     >
-                      Clear
+                      close
                     </button>
                   </div>
                   <p
