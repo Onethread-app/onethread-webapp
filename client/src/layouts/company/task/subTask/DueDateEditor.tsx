@@ -46,9 +46,6 @@ const DueDateEditor = (props: IDueDateFormProps) => {
 
   const { t } = useTranslation();
 
-  let minDate = new Date();
-  minDate.setDate(minDate.getDate() + 1);
-
   return (
     <Form
       onSubmit={onSubmit}
@@ -106,7 +103,7 @@ const DueDateEditor = (props: IDueDateFormProps) => {
                     placeholder={t(
                       'app.project.Project-boards.Select-date',
                     )}
-                    minDate={minDate}
+                    minDate={new Date()}
                     onClose={handleSubmit}
                   />
                 </MuiPickersUtilsProvider>
