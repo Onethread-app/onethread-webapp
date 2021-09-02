@@ -104,6 +104,7 @@ const findByuser = async (req, res, next) => {
       account: req.user._id,
     })
       .populate(ttPopulateOptions)
+      .sort({ start_time: -1 })
       .exec();
     sendJSONresponse(res, 200, trackedTime);
   } catch (error) {
@@ -121,6 +122,7 @@ const findByTask = async (req, res, next) => {
         '_id start_time duration task subtask column project company',
       )
       .populate(ttPopulateOptions)
+      .sort({ start_time: -1 })
       .exec();
     sendJSONresponse(res, 200, timeTrackers);
   } catch (error) {
@@ -138,6 +140,7 @@ const findBySubtask = async (req, res, next) => {
         '_id start_time duration task subtask column project company',
       )
       .populate(ttPopulateOptions)
+      .sort({ start_time: -1 })
       .exec();
     sendJSONresponse(res, 200, timeTrackers);
   } catch (error) {
@@ -155,6 +158,7 @@ const findByProject = async (req, res, next) => {
         '_id start_time duration task subtask column project company',
       )
       .populate(ttPopulateOptions)
+      .sort({ start_time: -1 })
       .exec();
     sendJSONresponse(res, 200, timeTrackers);
   } catch (error) {
@@ -172,6 +176,7 @@ const findByCompany = async (req, res, next) => {
         '_id start_time duration task subtask column project company',
       )
       .populate(ttPopulateOptions)
+      .sort({ start_time: -1 })
       .exec();
     sendJSONresponse(res, 200, timeTrackers);
   } catch (error) {

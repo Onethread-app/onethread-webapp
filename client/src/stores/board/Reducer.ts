@@ -409,11 +409,15 @@ export const BoardReducer = (state = InitialState, action: any) => {
                 : column,
           ),
         },
-        currentTask: {
-          ...state.currentTask,
-          timeSpent:
-            state.currentTask.timeSpent + action.payload.duration,
-        },
+        currentTask:
+          action.payload.task === state.currentTask._id
+            ? {
+                ...state.currentTask,
+                timeSpent:
+                  state.currentTask.timeSpent +
+                  action.payload.duration,
+              }
+            : state.currentTask,
       };
     case BoardActionTypes.TASK_FILE_UP_START:
       return {
