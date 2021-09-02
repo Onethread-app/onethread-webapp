@@ -538,7 +538,7 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
-const list = (req, res, next) => { };
+const list = (req, res, next) => {};
 
 const dragTask = async (req, res, next) => {
   try {

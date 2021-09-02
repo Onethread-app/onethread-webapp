@@ -98,12 +98,6 @@ export const TimeTrackerReducer = (
     case TimeTrackerTypes.ADD_TRACKED_TIME_START:
       return {
         ...state,
-        addingTrack: true,
-        errorOnAddingTrack: '',
-      };
-    case TimeTrackerTypes.ADD_TRACKED_TIME_SUCCESS:
-      return {
-        ...state,
         currentlyTracking: {
           name: '',
           task: '',
@@ -113,6 +107,12 @@ export const TimeTrackerReducer = (
           company: '',
           duration: 0,
         },
+        addingTrack: true,
+        errorOnAddingTrack: '',
+      };
+    case TimeTrackerTypes.ADD_TRACKED_TIME_SUCCESS:
+      return {
+        ...state,
         addingTrack: false,
       };
     case TimeTrackerTypes.ADD_TRACKED_TIME_FAILURE:

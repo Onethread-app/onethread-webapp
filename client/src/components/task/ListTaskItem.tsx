@@ -20,6 +20,7 @@ import {
 import MemberGroup from 'components/member/MemberGroup';
 import DueDate from './DueDate';
 import TaskPriorityTag from './TaskPriorityTag';
+import Timer from 'components/timer/Timer';
 
 import {
   dragAndDropTask,
@@ -63,11 +64,11 @@ const TaskPortion = styled.div`
   }
 
   &:nth-child(2) {
-    width: 10% !important;
+    width: 5% !important;
   }
 
   &:not(:first-child) {
-    width: 15%;
+    width: 13%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -116,6 +117,7 @@ interface IListTaskItemInternalProps extends IListTaskItemProps {
   fetchingTask: boolean;
   taskError: string;
   uniqueCompanyName: string;
+  companyId: string;
   projectId: string;
   dragAndDropTask: (
     taskId: string,
@@ -305,6 +307,14 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
           )}
         </TaskPortion>
         <TaskPortion>
+          <Timer
+            task={task}
+            list
+            companyId={props.companyId}
+            projectId={props.projectId}
+          />
+        </TaskPortion>
+        <TaskPortion>
           {task.assignedMembers &&
             task.assignedMembers.length > 0 && (
               <MemberGroup members={task.assignedMembers} small />
@@ -409,6 +419,7 @@ const mapStateToProps = (state: any) => ({
   fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
   taskError: state.boardIndexReducer.boardReducer.taskError,
   uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
+  companyId: state.companyReducer.currentCompany._id,
   projectId: state.projectReducer.projectDetails._id,
 });
 

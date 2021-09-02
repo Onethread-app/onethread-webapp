@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { TaskTitleView } from './TaskTitle/TaskTitleView';
 import { TaskDescriptionView } from './TaskDescription/TaskDescriptionView';
 import { Popover } from '@blueprintjs/core';
-// import { AssignedMembersEditor } from './AssignedMembers/AssignedMembersEditor';
-// import addMembers from 'resources/images/addMembers.png';
 import attachFiles from 'resources/images/attachFiles.png';
 import { ICompany } from 'stores/company/Reducer';
 import TaskFiles from './Files/TaskFiles';
@@ -16,20 +14,14 @@ import AddSubTaskButton from '../subTask/AddSubtaskButton';
 import Timer from 'components/timer/Timer';
 
 interface TaskDetailsInternalProps {
-  currentTask?: ITask;
-  company?: ICompany;
+  currentTask: ITask;
+  company: ICompany;
+  currentProjectId: string;
 }
 
 const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
-  const { t } = useTranslation();
-
-  // const [membersPopover, setMembersPopover] = useState(false);
   const [filePopover, setFilePopover] = useState(false);
-
-  // const openMembersPopOver = () => {
-  //   setMembersPopover(true);
-  //   setFilePopover(false);
-  // };
+  const { t } = useTranslation();
 
   const openFilePopover = () => {
     setFilePopover(true);
@@ -77,7 +69,11 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
             <AddSubTaskButton />
           </div>
           <div>
-            <Timer task={props.currentTask} />
+            <Timer
+              task={props.currentTask}
+              companyId={props.company._id}
+              projectId={props.currentProjectId}
+            />
           </div>
         </div>
       </div>
@@ -100,10 +96,10 @@ const mapStateToProps = (state: any) => {
   return {
     currentTask: state.boardIndexReducer.boardReducer.currentTask,
     company: state.companyReducer.currentCompany,
+    currentProjectId: state.projectReducer.projectDetails._id,
   };
 };
 
-export const TaskDetails = connect(
-  mapStateToProps,
-  null,
-)(TaskDetailsComponent);
+export const TaskDetails = connect(mapStateToProps)(
+  TaskDetailsComponent,
+);

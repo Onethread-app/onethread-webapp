@@ -22,24 +22,15 @@ import {
 import { updateTaskTimeSpent } from 'stores/board/Actions';
 import { updateProjectTimeSpent } from 'stores/project/Actions';
 import { getCurrentTaskId } from 'stores/board/Selector';
-import { getProjectId } from 'stores/project/Selector';
 
 function* addTrackedTimeAsync({ payload }: any) {
   try {
-    const currentTaskId = yield select(getCurrentTaskId);
-    const currentProjectId = yield select(getProjectId);
-
-    if (currentTaskId === payload.task) {
-      yield put(updateTaskTimeSpent(payload));
-    }
-    if (currentProjectId === payload.project) {
-      yield put(updateProjectTimeSpent(payload));
-    }
-
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.post(`track/`, payload, headers);
-      yield put(addTrackedTimeSuccess(res.data));
+      yield put(updateProjectTimeSpent(res.data.timeTracker));
+      yield put(updateTaskTimeSpent(res.data.timeTracker));
+      yield put(addTrackedTimeSuccess(res.data.timeTracker));
     }
   } catch (error) {
     yield put(addTrackedTimeFailure(returnErrorText(error)));

@@ -43,11 +43,11 @@ const HeaderItem = styled.div`
   }
 
   &:nth-child(2) {
-    width: 10% !important;
+    width: 5% !important;
   }
 
   &:not(:first-child) {
-    width: 15%;
+    width: 13%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -82,6 +82,9 @@ const TaskList = (props: ITaskList) => {
         </HeaderItem>
         <HeaderItem>
           <h3>{t('app.project.Tasks.Due-Date')}</h3>
+        </HeaderItem>
+        <HeaderItem>
+          <h3>Time Tracker</h3>
         </HeaderItem>
         <HeaderItem>
           <h3>{t('app.project.Tasks.Assigned-Member')}</h3>

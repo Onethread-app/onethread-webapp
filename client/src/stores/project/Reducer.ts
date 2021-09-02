@@ -83,7 +83,7 @@ const initialState = {
     description: '',
     outline: '',
     status: '',
-    totalSpent: 0,
+    timeSpent: 0,
   },
   hasAccess: true,
   teams: [],
@@ -195,6 +195,15 @@ export const ProjectReducer = (state = initialState, action: any) => {
               }
             : project,
         ),
+        projectDetails:
+          state.projectDetails._id === action.payload.project
+            ? {
+                ...state.projectDetails,
+                timeSpent:
+                  state.projectDetails.timeSpent +
+                  action.payload.duration,
+              }
+            : state.projectDetails,
       };
     case ProjectActionTypes.UNARCHIVE_PROJECT_START:
       return {
