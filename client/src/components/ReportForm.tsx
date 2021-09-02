@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -9,6 +10,7 @@ import { tigrowApi } from 'config';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Spinner } from '@blueprintjs/core';
+import { saveReportForm } from 'stores/reportForm/Actions';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -21,6 +23,11 @@ const ReportForm = (props: {
 }) => {
   const { t } = useTranslation();
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const previousData = useSelector(
+    (state: any) => state.reportFormReducer.data,
+  );
+  const [defaultValues, setDefaultValues] = useState<any>([]);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState({
@@ -35,6 +42,8 @@ const ReportForm = (props: {
     issueType: '',
     imageUrl: '',
   });
+  const [imageName, setImageName] = useState({}) as any;
+  const [imageError, setImageError] = useState('');
 
   const handleChange = (name: string) => (event: any) => {
     const value = event.target.value;
@@ -46,9 +55,6 @@ const ReportForm = (props: {
     setIssue(event.target.value);
     setValues({ ...values, issueType: event.target.value });
   };
-
-  const [imageName, setImageName] = useState({}) as any;
-  const [imageError, setImageError] = useState('');
 
   const checkMimetype = [
     'image/apng',
@@ -115,21 +121,32 @@ const ReportForm = (props: {
         setTimeout(() => {
           props.setShowButtonReport(false);
         }, 2000);
+        dispatch(saveReportForm({}));
       }
     }
   };
+
+  useEffect(() => {
+    setDefaultValues(previousData);
+  }, []);
+
+  useEffect(() => {
+    dispatch(saveReportForm(values));
+  }, [values]);
+
+  useEffect(() => {
+    setIssue(defaultValues.issueType);
+  }, [defaultValues]);
 
   return (
     <>
       <form className="fl w-100 pa4" onSubmit={onSubmit}>
         <h1 className="f4 lh-title tigrow-lightBlue mb4">
           {t('app.user.User-settings.Report-Issue')}
-          {/* Report A Issue */}
         </h1>
         <div className="mb3">
           <h1 className="f6">
             {t('app.user.User-settings.Select-type')}
-            {/* Please select a type */}
           </h1>
           <FormControl className={classes.formControl} required>
             <Select
@@ -156,7 +173,6 @@ const ReportForm = (props: {
               <h1 className="f6 mb1">
                 {t('app.user.User-settings.Tittle')}
               </h1>
-              {/* <h1 className="f6">Tittle</h1> */}
               <input
                 type="text"
                 onChange={handleChange('title')}
@@ -166,6 +182,8 @@ const ReportForm = (props: {
                 style={{
                   paddingLeft: '0.6rem',
                 }}
+                defaultValue={defaultValues.title}
+                autoFocus={true}
               />
             </div>
           </div>
@@ -174,19 +192,18 @@ const ReportForm = (props: {
           <h1 className="f6 mb1">
             {t('app.user.User-settings.Details')}
           </h1>
-          {/* <h1 className="f6">Details</h1> */}
           <textarea
             className="bp3-input w-100"
             name="issueDetails"
             id="issue-details"
             onChange={handleChange('issueDetails')}
+            defaultValue={defaultValues.issueDetails}
             required
           />
         </div>
         <div className="mb3">
           <h1 className="f6 mb1">
-            {t('app.user.User-settings.Add-Screenshot-Video')}{' '}
-            {/* Add a Screenshot or Video */}
+            {t('app.user.User-settings.Add-Screenshot-Video')}
           </h1>
           <label className="bp3-file-input .modifier bp3-fill">
             <input
@@ -194,13 +211,13 @@ const ReportForm = (props: {
               accept=".gif, .jpg, .apng, .jpeg, .bmp, .svg, .png"
               onChange={(e) => imageChangeHandler(e)}
               required
+              defaultValue={defaultValues.imageUrl}
             />
             <span className="bp3-file-upload-input">
               {imageName.name ? (
                 imageName.name
               ) : (
                 <p>{t('app.user.User-settings.Choose-file')}...</p>
-                // <p>choose your file...</p>
               )}
             </span>
           </label>
@@ -221,7 +238,6 @@ const ReportForm = (props: {
             onClick={() => props.setShowButtonReport(false)}
           >
             {t('app.user.User-settings.Cancel')}
-            {/* Cancel */}
           </button>
           <button
             type="submit"
@@ -237,7 +253,6 @@ const ReportForm = (props: {
             ) : (
               `${t('app.user.User-settings.Submit')}`
             )}
-            {/* Submit */}
           </button>
         </div>
       </form>

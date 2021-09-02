@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateInput } from '@blueprintjs/datetime';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
@@ -16,8 +16,10 @@ import {
   editEducationExperienceAction,
 } from 'stores/user/Actions';
 import { IExperience } from 'stores/user/Reducer';
+import { saveEduDetailsForm } from 'stores/EduDetailsFrom/Actions';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { useTranslation } from 'react-i18next';
+
 interface IEduFormProps {
   setShowDialog: (val: boolean) => void;
   edit: boolean;
@@ -26,9 +28,15 @@ interface IEduFormProps {
 interface IEduFormInternalProps extends IEduFormProps {
   addEducationExperienceAction: (val: {}) => any;
   editEducationExperienceAction: (jobInfo: {}, id: string) => any;
+  saveEduDetailsForm: any;
+  previousData: any;
 }
 
 const EducationFormComponent = (props: IEduFormInternalProps) => {
+  const { t } = useTranslation();
+  const [data, setData] = useState<any>([]);
+  const [defaultValues, setDefaultValues] = useState<any>([]);
+
   const onSubmit = async (values: any) => {
     let response;
     if (values.currentlyStudy) {
@@ -39,11 +47,13 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
     }
     if (props.edit === false) {
       response = await props.addEducationExperienceAction(values);
+      props.saveEduDetailsForm({});
     } else if (props.edit === true) {
       response = await props.editEducationExperienceAction(
         values,
         values._id,
       );
+      props.saveEduDetailsForm({});
     }
     if (response.message === 200) {
       props.setShowDialog(false);
@@ -52,7 +62,17 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
     return { [response.fieldName]: response.message };
   };
 
-  const { t } = useTranslation();
+  const handleChange = (name: string, value: any) => {
+    setData({ ...data, [name]: value });
+  };
+
+  useEffect(() => {
+    setDefaultValues(props.previousData);
+  }, []);
+
+  useEffect(() => {
+    props.saveEduDetailsForm(data);
+  }, [data]);
 
   return (
     <Form
@@ -60,27 +80,41 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
       initialValues={{
         _id: props.values && props.values._id ? props.values._id : '',
         degree:
-          props.values && props.values.name ? props.values.name : '',
+          props.values && props.values.name
+            ? props.values.name
+            : defaultValues.degree
+            ? defaultValues.degree
+            : '',
         institutionName:
           props.values && props.values.qualification
             ? props.values.qualification
+            : defaultValues.institutionName
+            ? defaultValues.institutionName
             : '',
         // TODO: Date type must be used instead of string
         startYear:
           props.values && props.values.startYear
             ? props.values.startYear
+            : defaultValues.startYear
+            ? defaultValues.startYear
             : '',
         endingYear:
           props.values && props.values.endingYear
             ? props.values.endingYear
+            : defaultValues.endingYear
+            ? defaultValues.endingYear
             : '',
         currentlyStudy:
           props.values && props.values.currentStatus
             ? props.values.currentStatus
+            : defaultValues.currentlyStudy
+            ? defaultValues.currentlyStudy
             : false,
         eduDescription:
           props.values && props.values.description
             ? props.values.description
+            : defaultValues.eduDescription
+            ? defaultValues.eduDescription
             : '',
       }}
       validate={(values: any) => {
@@ -115,12 +149,14 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>{t('app.user.User-Education.Degree')}</label>
-                {/* <label>Degree</label> */}
                 <InputGroupFieldWithError
                   id="degree"
                   className="mt1"
                   value={input.value}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleChange('degree', e.target.value);
+                  }}
                   style={{
                     boxShadow: 'none',
                   }}
@@ -128,6 +164,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                     checkError(meta) &&
                     (meta.error || meta.submitError)
                   }
+                  autoFocus={true}
                 />
               </div>
             )}
@@ -140,12 +177,14 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                 <label>
                   {t('app.user.User-Education.Institution')}
                 </label>
-                {/* <label>Institution Name</label> */}
                 <InputGroupFieldWithError
                   id="institutionName"
                   className="mt1"
                   value={input.value}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleChange('institutionName', e.target.value);
+                  }}
                   style={{
                     boxShadow: 'none',
                   }}
@@ -165,13 +204,15 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                 <label>
                   {t('app.user.User-Education.Start-year')}
                 </label>
-                {/* <label>Start Year</label> */}
                 <DateInput
                   formatDate={(date: Date) =>
                     date.toLocaleDateString()
                   }
                   parseDate={(str: string) => new Date(str)}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleChange('startYear', e);
+                  }}
                   canClearSelection={false}
                   value={
                     values.startYear
@@ -204,13 +245,15 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>{t('app.user.User-Education.End-year')}</label>
-                {/* <label>End Year</label> */}
                 <DateInput
                   formatDate={(date: Date) =>
                     date.toLocaleDateString()
                   }
                   parseDate={(str: string) => new Date(str)}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleChange('endingYear', e);
+                  }}
                   disabled={
                     new Date(
                       values.startYear,
@@ -251,12 +294,14 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                 <label>
                   {t('app.user.User-Education.Description')}
                 </label>
-                {/* <label>Description</label> */}
                 <TextArea
                   id="eduDescription"
                   className="mt1"
                   value={input.value}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleChange('eduDescription', e.target.value);
+                  }}
                   style={{
                     resize: 'none',
                     minHeight: '50px',
@@ -285,10 +330,13 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                     input.onChange(e);
                     values.currentlyStudy = !values.currentlyStudy;
                     values.endingYear = '';
+                    handleChange(
+                      'currentlyStudy',
+                      values.currentlyStudy,
+                    );
                   }}
                   checked={values.currentlyStudy}
                   label={t('app.user.User-Education.Currently')}
-                  // label="I currently study here"
                   disabled={values.startYear === '' ? true : false}
                 />
                 {checkError(meta) && (
@@ -335,7 +383,14 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
   );
 };
 
-export const EducationForm = connect(null, {
+const mapStateToProps = (state: any) => {
+  return {
+    previousData: state.eduDetailsFormReducer.data,
+  };
+};
+
+export const EducationForm = connect(mapStateToProps, {
+  saveEduDetailsForm,
   addEducationExperienceAction,
   editEducationExperienceAction,
 })(EducationFormComponent);

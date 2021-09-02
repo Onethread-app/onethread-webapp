@@ -1,3 +1,5 @@
+import { EduDetailsFormReducer } from './EduDetailsFrom/Reducer';
+import { JobDetailsFormReducer } from './jobDetailsForm/Reducer';
 import { notificationReducer } from './notifications/Reducer';
 import { combineReducers } from 'redux';
 import { UserReducer } from './user/Reducer';
@@ -16,6 +18,11 @@ import { LandingReducer } from './landing/Reducer';
 import { CommentReducer } from './comment/Reducer';
 import { TaskMembersReducer } from './taskMembers/Reducer';
 import { TimeTrackerReducer } from './time-tracker/Reducer';
+import { ReportFormReducer } from './reportForm/Reducer';
+import { ProjectFormReducer } from './projectForm/Reducer';
+import { TaskFormReducer } from './taskForm/Reducer';
+import { UserBasicInfoFormReducer } from './UserBasicInfoDetailsForm/Reducer';
+import { CompanyBasicInfoFormReducer } from './companyBasicInfoForm/Reducer';
 
 import { loadingBarReducer } from 'react-redux-loading-bar';
 
@@ -35,6 +42,13 @@ export interface AppState {
   landingReducer: any;
   commentReducer: any;
   taskMembersReducer: any;
+  reportFormReducer: any;
+  projectFormReducer: any;
+  taskFormReducer: any;
+  userBasicInfoFormReducer: any;
+  jobDetailsFormReducer: any;
+  eduDetailsFormReducer: any;
+  companyBasicInfoFormReducer: any;
 }
 
 export const rootReducer = combineReducers({
@@ -55,4 +69,11 @@ export const rootReducer = combineReducers({
   taskMembersReducer: TaskMembersReducer,
   timeTrackerReducer: TimeTrackerReducer,
   loadingBar: loadingBarReducer,
+  reportFormReducer: ReportFormReducer,
+  projectFormReducer: ProjectFormReducer,
+  taskFormReducer: TaskFormReducer,
+  userBasicInfoFormReducer: UserBasicInfoFormReducer,
+  jobDetailsFormReducer: JobDetailsFormReducer,
+  eduDetailsFormReducer: EduDetailsFormReducer,
+  companyBasicInfoFormReducer: CompanyBasicInfoFormReducer,
 });

@@ -30,7 +30,7 @@ export const TaskTitleViewComponent = (
           <h5
             style={{
               fontSize: '12px',
-              color: '##666666',
+              color: '#666666',
               lineHeight: '15px',
               fontWeight: 400,
               margin: '0.2rem 0rem',
@@ -53,6 +53,17 @@ export const TaskTitleViewComponent = (
           >
             {props.currentTask!.name}
           </h3>
+          <h5
+            style={{
+              fontSize: '14px',
+              color: '#666666',
+              lineHeight: '15px',
+              fontWeight: 400,
+              margin: '0.2rem 0rem',
+            }}
+          >
+            Task created by {props.currentTask!.createdBy}
+          </h5>
           <div className="flex justify-end">
             {props.currentTask!.dueDate && (
               <>

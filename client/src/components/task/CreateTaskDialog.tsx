@@ -1,27 +1,26 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { isEmpty } from 'lodash';
+// import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import Select from 'react-select';
 
 import { Field, Form } from 'react-final-form';
-import { Button, Tag } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { DateInput } from '@blueprintjs/datetime';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { SuggestField } from 'components/fields/SuggestField';
 import {
   checkError,
   composeValidators,
   maxValue,
   required,
 } from 'components/final-form/utils';
-import { useLiveSearch } from 'components/useLiveSearch';
 
 import { tigrowApi } from 'config';
 import { createTask } from 'stores/board/Actions';
 import { ICompanyTeamMembers } from 'stores/company/Reducer';
 import { tokenConfig, priorityColor } from 'stores/UtilsActions';
+import { saveTaskForm } from 'stores/taskForm/Actions';
 import './Task.scss';
 
 const Container = styled.div`
@@ -40,6 +39,8 @@ interface ICreateTaskDialogInternalProps
   creatingTask: boolean;
   errorOnCreatingTask: string;
   createTask: (task: any) => void;
+  saveTaskForm: any;
+  previousData: any;
 }
 
 export interface IOption {
@@ -52,7 +53,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
     [] as ICompanyTeamMembers[],
   );
   const [teamMembers, setTeamMembers]: any = useState([]);
-  const [username, setUsername] = useState('');
+  const [memberValue, setMemberValue]: any = useState([]);
   const [options] = useState<IOption[]>(
     priorityColor.map((pc) => {
       return {
@@ -63,24 +64,101 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
   );
   const [selectedOption, setSelectedOption] = useState(options[2]);
   const [creatingTask, setCreatingTask] = useState(false);
+
   const [assignedUserError, setAssignedUserError] = useState(false);
   const [errorText, setErrorText] = useState('');
+  const [data, setData] = useState<any>({});
+  const [defaultValues, setDefaultValues] = useState<any>([]);
 
-  const userRequestFactory = async (userName: string) => {
-    const headers = tokenConfig();
-    const response = await tigrowApi.get(
-      `/tasks/suggest-member?pid=${props.projectId}`,
-      headers,
-    );
-    return response.data;
+  const handleSelect = (selected: any) => {
+    setData({
+      ...data,
+      priority: selected,
+    });
+    setSelectedOption(selected);
   };
 
-  let result: any = useMemo(() => [], []);
-  result = useLiveSearch(username, userRequestFactory, 800);
+  const handleMember = (selected: any) => {
+    setMemberValue(selected);
+    const memberslit = selected.map((member: any) => ({
+      _id: member.value,
+      name: member.label,
+    }));
+    setSelectedTeamMember(memberslit);
+    setData({
+      ...data,
+      memberValue: selected,
+      assignmembers: memberslit,
+    });
+  };
+
+  const mdfy = (members) => {
+    const membersList = members.map((m) => ({
+      value: m._id,
+      label: m.name,
+    }));
+    return membersList;
+  };
+
+  const onSubmit = (values) => {
+    if (selectedTeamMember.length) {
+      const modifiedTask = {
+        ...values,
+        assignmembers: selectedTeamMember,
+        priority: selectedOption.value,
+        boardId: props.currentBoardId,
+        columnId: props.columnId,
+      };
+      props.createTask(modifiedTask);
+      setCreatingTask(true);
+      props.saveTaskForm({});
+    } else setAssignedUserError(true);
+  };
+
+  const handleChange = (name: string, value: any) => {
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
 
   useEffect(() => {
-    setTeamMembers(result);
-  }, [result]);
+    const loadTeamMembers = async () => {
+      const headers = tokenConfig();
+      const response = await tigrowApi.get(
+        `/tasks/suggest-member?pid=${props.projectId}`,
+        headers,
+      );
+      setTeamMembers(mdfy(response.data));
+    };
+    loadTeamMembers();
+  }, []);
+
+  useEffect(() => {
+    if (selectedTeamMember.length) {
+      setAssignedUserError(false);
+    }
+  }, [selectedTeamMember]);
+
+  useEffect(() => {
+    setDefaultValues(props.previousData);
+  }, []);
+
+  useEffect(() => {
+    if (defaultValues.priority) {
+      setSelectedOption(defaultValues.priority);
+    }
+    if (defaultValues.assignmembers) {
+      setSelectedTeamMember(defaultValues.assignmembers);
+    }
+    if (defaultValues.memberValue) {
+      setMemberValue(defaultValues.memberValue);
+    }
+  }, [defaultValues]);
+
+  useEffect(() => {
+    props.saveTaskForm(data);
+  }, [data]);
 
   useEffect(() => {
     if (
@@ -98,29 +176,6 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
       props.setShowDialog(false);
     }
   }, [creatingTask, props.creatingTask, props.errorOnCreatingTask]);
-
-  const handleSelect = (selected: any) => {
-    setSelectedOption(selected);
-  };
-
-  const onSubmit = (values) => {
-    if (selectedTeamMember.length) {
-      const modifiedTask = {
-        ...values,
-        priority: selectedOption.value,
-        boardId: props.currentBoardId,
-        columnId: props.columnId,
-      };
-      props.createTask(modifiedTask);
-      setCreatingTask(true);
-    } else setAssignedUserError(true);
-  };
-
-  useEffect(() => {
-    if (selectedTeamMember.length) {
-      setAssignedUserError(false);
-    }
-  }, [selectedTeamMember]);
 
   return (
     <Container>
@@ -141,6 +196,11 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
       {errorText && <h3 className="tc fw5 f4 red">{errorText}</h3>}
       <Form
         onSubmit={onSubmit}
+        initialValues={{
+          name: defaultValues.name,
+          dueDate: defaultValues.dueDate,
+          description: defaultValues.description,
+        }}
         render={({
           handleSubmit,
           form,
@@ -170,7 +230,10 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     <InputGroupFieldWithError
                       id="name"
                       value={input.value}
-                      onChange={input.onChange}
+                      onChange={(e) => {
+                        input.onChange(e);
+                        handleChange('name', e.target.value);
+                      }}
                       style={{
                         border: '0px',
                         boxShadow: 'none',
@@ -182,6 +245,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         (meta.error || meta.submitError)
                       }
                       placeHolder="Task Name"
+                      autoFocus={true}
                     />
                   </div>
                 )}
@@ -190,10 +254,10 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                 name="assignmembers"
                 render={({ input, meta }) => (
                   <div className="mb3">
-                    <div className="flex items-center w-50">
+                    <div className="flex items-center">
                       <label
                         style={{
-                          width: '150px',
+                          width: '125px',
                         }}
                       >
                         Assign to:
@@ -210,78 +274,24 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                           )}
                         </div>
                       </label>
-                      <SuggestField
-                        onChange={(query: string) => {
-                          setUsername(query);
-                        }}
-                        items={teamMembers}
-                        selectedItems={selectedTeamMember}
-                        setSelectedItems={(item) => {
-                          setSelectedTeamMember(item);
-                          input.onChange(
-                            item.map(
-                              (member: ICompanyTeamMembers) =>
-                                member._id,
-                            ),
-                          );
-                        }}
-                        multipleItemSelect={true}
+
+                      <Select
+                        isMulti
+                        className="priority-select-option"
+                        name="assignmembers"
+                        value={memberValue}
+                        options={teamMembers}
+                        onChange={handleMember}
                       />
                     </div>
-                    {selectedTeamMember.length > 0 && (
-                      <div className="w-100">
-                        <div
-                          className="overflow-auto br2 mt2"
-                          style={{
-                            border: '1px solid #10161a33',
-                            // maxHeight: '120px',
-                            display: 'flex',
-                            gap: '.5rem',
-                            padding: '.25rem',
-                            marginLeft: '102px',
-                          }}
-                        >
-                          {selectedTeamMember.map((item) => (
-                            <div key={item._id}>
-                              <Tag
-                                key={item._id}
-                                className="pa1"
-                                interactive={true}
-                                style={{ background: '#34b3e9' }}
-                                onRemove={(e) => {
-                                  const filteredItems = selectedTeamMember.filter(
-                                    (selectedItem) =>
-                                      item.name !== selectedItem.name,
-                                  );
-                                  setSelectedTeamMember([
-                                    ...filteredItems,
-                                  ]);
-                                  input.onChange(
-                                    isEmpty(filteredItems)
-                                      ? undefined
-                                      : filteredItems.map(
-                                          (
-                                            member: ICompanyTeamMembers,
-                                          ) => member._id,
-                                        ),
-                                  );
-                                }}
-                                large={true}
-                                intent="primary"
-                              >
-                                {item.name}
-                              </Tag>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 )}
               />
               <div
                 className="flex items-center mb3"
-                style={{ width: '80%' }}
+                style={{
+                  width: '100%',
+                }}
               >
                 <Field<string>
                   name="dueDate"
@@ -290,7 +300,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     <div className="flex items-center w-100 mr3">
                       <label
                         style={{
-                          width: '145px',
+                          width: '105px',
                         }}
                       >
                         Due Date:
@@ -298,7 +308,9 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                           {checkError(meta) && (
                             <small
                               className="mv3"
-                              style={{ color: 'red' }}
+                              style={{
+                                color: 'red',
+                              }}
                             >
                               {meta.error || meta.submitError}
                             </small>
@@ -311,11 +323,15 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         }
                         placeholder="dd/mm/yyyy"
                         parseDate={(str: string) => new Date(str)}
-                        onChange={input.onChange}
+                        onChange={(e) => {
+                          input.onChange(e);
+                          handleChange('dueDate', e);
+                        }}
                         canClearSelection={false}
                         value={
                           input.value ? new Date(input.value) : null
                         }
+                        className="task-dueDate"
                         popoverProps={{
                           targetClassName: 'w-100',
                         }}
@@ -327,7 +343,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                 <div className="flex items-center w-100">
                   <label
                     style={{
-                      width: '80px',
+                      width: '100px',
                     }}
                   >
                     Priority:
@@ -357,7 +373,10 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                       name="description"
                       id="description"
                       value={input.value}
-                      onChange={input.onChange}
+                      onChange={(e) => {
+                        input.onChange(e);
+                        handleChange('description', e.target.value);
+                      }}
                       style={{
                         width: '100%',
                         height: '150px',
@@ -384,7 +403,9 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     props.creatingTask ? (
                       <CircularProgress
                         size={20}
-                        style={{ color: 'white' }}
+                        style={{
+                          color: 'white',
+                        }}
                       />
                     ) : null
                   }
@@ -407,8 +428,9 @@ const mapStateToProps = (state: any) => ({
   creatingTask: state.boardIndexReducer.boardReducer.creatingTask,
   errorOnCreatingTask:
     state.boardIndexReducer.boardReducer.errorOnCreatingTask,
+  previousData: state.taskFormReducer.data,
 });
 
-export default connect(mapStateToProps, { createTask })(
+export default connect(mapStateToProps, { createTask, saveTaskForm })(
   CreateTaskDialog,
 );

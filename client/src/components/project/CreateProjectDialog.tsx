@@ -9,6 +9,7 @@ import { Color } from 'stores/UtilsActions';
 import { Icon } from '@blueprintjs/core';
 import CreatableSelect from 'react-select/creatable';
 
+import { saveProjectForm } from 'stores/projectForm/Actions';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { createProjectInCompany } from 'stores/project/Actions';
 import { ICompanyByUser, User } from 'stores/user/Reducer';
@@ -94,6 +95,8 @@ interface ICreateProjectDialog {
   errorOnCreatingCompany: string;
   currentCompany: any;
   projectList: () => void;
+  saveProjectForm: any;
+  previousData: any;
 }
 
 const CreateProjectDialog = (props: ICreateProjectDialog) => {
@@ -105,15 +108,22 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
   const [options, setOptions] = useState<
     { value: string; label: string }[]
   >([]);
+  const [selectValue, setSelectValue] = useState<
+    { value: string; label: string }[]
+  >([]);
   const [creating, setCreating] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [newCompanyInfo, setNewCompanyInfo] = useState<any>({});
+  const [data, setData] = useState<any>({});
+  const [defaultValues, setDefaultValues] = useState<any>([]);
 
   const handleDateChange = (date: Date | null) => {
+    setData({ ...data, deadline: date });
     setDeadline(date);
   };
 
   const handleNameChange = (e: any) => {
+    setData({ ...data, name: e.target.value });
     setName(e.target.value);
   };
 
@@ -126,8 +136,40 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
       });
     } else {
       setCompanyId(selected.value);
+      setData({
+        ...data,
+        value: selected.value,
+        label: selected.label,
+      });
+      setSelectValue([
+        {
+          value: selected.value,
+          label: selected.label,
+        },
+      ]);
     }
     setErrorMessage('');
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const payload = _.pickBy({
+      name,
+      companyId,
+      deadline,
+      color: labelColor,
+    });
+
+    if (!payload.companyId) {
+      setErrorMessage('Company name is invalid');
+    } else if (!payload.name) {
+      setErrorMessage('Project name is required');
+    } else {
+      props.createProjectInCompany(payload);
+      setCreating(true);
+      props.projectList();
+      props.saveProjectForm({});
+    }
   };
 
   useEffect(() => {
@@ -156,26 +198,6 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creating, props.projectLoading]);
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const payload = _.pickBy({
-      name,
-      companyId,
-      deadline,
-      color: labelColor,
-    });
-
-    if (!payload.companyId) {
-      setErrorMessage('Company name is invalid');
-    } else if (!payload.name) {
-      setErrorMessage('Project name is required');
-    } else {
-      props.createProjectInCompany(payload);
-      setCreating(true);
-      props.projectList();
-    }
-  };
-
   useEffect(() => {
     if (newCompanyInfo.__isNew__ && props.currentCompany._id) {
       if (props.currentCompany.name === newCompanyInfo.value) {
@@ -185,6 +207,27 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
       }
     }
   }, [newCompanyInfo, props.currentCompany]);
+
+  useEffect(() => {
+    setDefaultValues(props.previousData);
+  }, []);
+
+  useEffect(() => {
+    props.saveProjectForm(data);
+  }, [data]);
+
+  useEffect(() => {
+    setLabelColor(defaultValues.color);
+    setDeadline(defaultValues.deadline);
+    setName(defaultValues.name);
+    setCompanyId(defaultValues.value);
+    setSelectValue([
+      {
+        value: defaultValues.value,
+        label: defaultValues.label,
+      },
+    ]);
+  }, [defaultValues]);
 
   return (
     <CONTAINER className="flex flex-column items-center justify-center h-100">
@@ -203,7 +246,9 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
             <span style={{ color: 'red' }}>*{errorMessage}</span>
           </div>
         )}
+
         <CreatableSelect
+          value={defaultValues.value && selectValue}
           placeholder={t(
             'app.company.Projects.Create-or-Select-company',
           )}
@@ -223,7 +268,10 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
           className="w-100"
           onChange={handleNameChange}
           required
+          defaultValue={defaultValues.name}
+          autoFocus={true}
         />
+
         <div className="deadline">
           <DateInput
             formatDate={(date: Date) => date.toLocaleDateString()}
@@ -240,6 +288,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
             className="flex-auto"
           />
         </div>
+
         <div className="project-label">
           <label
             htmlFor="label"
@@ -257,6 +306,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
                   onClick={(e) => {
                     e.preventDefault();
                     setLabelColor(color.code);
+                    setData({ ...data, color: color.code });
                   }}
                   style={{
                     backgroundColor: color.value,
@@ -302,6 +352,7 @@ const mapStateToProps = (state: any) => ({
   currentCompany: state.companyReducer.currentCompany,
   creatingCompany: state.companyReducer.creatingCompany,
   errorOnCreatingCompany: state.companyReducer.errorOnCreatingCompany,
+  previousData: state.projectFormReducer.data,
 });
 
 export default connect(mapStateToProps, {
@@ -309,4 +360,5 @@ export default connect(mapStateToProps, {
   createProjectInCompany,
   createCompanyAction,
   clearErrorOnCompanyCreate,
+  saveProjectForm,
 })(CreateProjectDialog);

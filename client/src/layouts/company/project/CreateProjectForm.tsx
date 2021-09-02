@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
@@ -25,11 +25,12 @@ import arrayMutators from 'final-form-arrays';
 import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
+import { saveProjectForm } from 'stores/projectForm/Actions';
 
-interface IProject {
-  department: string;
-  projectType: string;
-}
+// interface IProject {
+//   department: string;
+//   projectType: string;
+// }
 
 export interface IDepartment {
   name: string;
@@ -42,34 +43,56 @@ const FormComponent = (props: {
   createProjectInCompany: (val: {}) => void;
   company: ICompany;
   associates: Associate[];
+  saveProjectForm: any;
+  previousData: any;
 }) => {
+  const { t } = useTranslation();
+  const [defaultValues, setDefaultValues] = useState<any>([]);
   const [labelColor, setLabelColor] = useState(null as any);
-
   const [hasDeadline, setHasDeadline] = useState(false);
+  const [values, setValues] = useState<any>([]);
 
-  const onSubmit = async (values: IProject) => {
+  const handleChange = (name: string, value: any) => {
+    setValues({ ...values, [name]: value });
+  };
+
+  const onSubmit = async (values: any) => {
     if (
       values.department ? values.department.length > 1 : undefined
     ) {
       values.projectType = 'md';
     }
     await props.createProjectInCompany(values);
+    props.saveProjectForm({});
     if (props.setShowProjectDialog) {
       props.setShowProjectDialog(false);
     }
     return {};
   };
 
-  const { t } = useTranslation();
+  useEffect(() => {
+    setDefaultValues(props.previousData);
+  }, []);
+
+  useEffect(() => {
+    props.saveProjectForm(values);
+  }, [values]);
+
+  useEffect(() => {
+    setLabelColor(defaultValues.color);
+  }, [defaultValues]);
 
   return (
     <>
       <div className="pl3" style={{ marginTop: '6rem' }}>
         <h3>{t('app.forms.Start-project.Create-project')}</h3>
-        {/* <h3>Create Project</h3> */}
       </div>
       <Form
         onSubmit={onSubmit}
+        initialValues={{
+          name: defaultValues.name,
+          deadline: defaultValues.deadline,
+        }}
         mutators={{
           ...arrayMutators,
         }}
@@ -98,7 +121,10 @@ const FormComponent = (props: {
                     <InputGroupFieldWithLabel
                       id="name"
                       value={input.value}
-                      onChange={input.onChange}
+                      onChange={(e) => {
+                        input.onChange(e);
+                        handleChange('name', e.target.value);
+                      }}
                       style={{
                         boxShadow: 'none',
                         fontSize: '18px',
@@ -108,7 +134,6 @@ const FormComponent = (props: {
                         (meta.error || meta.submitError)
                       }
                       label={t('app.forms.Start-project.Name')}
-                      // label="Project Name (required)"
                       autoFocus={true}
                     />
                   </div>
@@ -144,7 +169,10 @@ const FormComponent = (props: {
                               date.toLocaleDateString()
                             }
                             parseDate={(str: string) => new Date(str)}
-                            onChange={input.onChange}
+                            onChange={(e) => {
+                              input.onChange(e);
+                              handleChange('deadline', e);
+                            }}
                             canClearSelection={false}
                             value={
                               input.value
@@ -197,6 +225,7 @@ const FormComponent = (props: {
                               e.preventDefault();
                               input.onChange(color.code);
                               setLabelColor(color.code);
+                              handleChange('color', color.code);
                             }}
                             style={{
                               backgroundColor: color.value,
@@ -256,10 +285,12 @@ const mapStateToProps = (state: any) => {
     departments: state.companyReducer.currentCompany.departments,
     company: state.companyReducer.currentCompany,
     associates: state.associateReducer.associatesList,
+    previousData: state.projectFormReducer.data,
   };
 };
 
 export const FormProject = connect(mapStateToProps, {
   createProjectInCompany,
   getAllDepartments,
+  saveProjectForm,
 })(FormComponent);

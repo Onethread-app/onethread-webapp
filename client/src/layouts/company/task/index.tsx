@@ -1,16 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
-import { ActivityView } from './activity/ActivityView';
 import { ITask, TaskBoard } from 'stores/board/Reducer';
-import { ICompany } from 'stores/company/Reducer';
-import { TaskDetails } from './taskDetails';
-import TaskInfoViewComponent from './TaskInfoView/Index';
 import { IProject } from 'stores/project/Reducer';
+import { ICompany } from 'stores/company/Reducer';
+import { isMobileOnly } from 'react-device-detect';
 import { Loading } from 'components/Loading';
 import Modal from 'react-modal';
 import ErrorText from '../settings/ErrorText';
 import { useTranslation } from 'react-i18next';
+import { ActivityView } from './activity/ActivityView';
+import { TaskDetails } from './taskDetails';
+import TaskInfoViewComponent from './TaskInfoView/Index';
 
 export const customStyles = {
   content: {
@@ -66,7 +67,7 @@ const TaskPageComponent = (props: TaskInternalProps) => {
         <div className="task-activity-container">
           <div className="w-100 w-70-l pa2">
             <TaskDetails />
-            <ActivityView />
+            {isMobileOnly ? null : <ActivityView />}
           </div>
           <div
             className="w-100 w-30-l flex justify-center pa4 task-info-view"
