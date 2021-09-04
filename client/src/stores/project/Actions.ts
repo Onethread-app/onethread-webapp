@@ -412,3 +412,8 @@ export const updateProjectLoading = (loading: boolean) => ({
   type: ProjectActionTypes.UPDATE_PROJECT_LOADING,
   payload: loading,
 });
+
+export const updateProjectTimeSpent = (payload: any) => ({
+  type: ProjectActionTypes.UPDATE_PROJECT_TIME_SPENT,
+  payload,
+});

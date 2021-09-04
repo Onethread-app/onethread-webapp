@@ -175,6 +175,9 @@
         "Name": "Project name",
         "Project-Settings": "Project Settings",
         "My-projects": "My Projects",
+        "Search-projects": "Search projects",
+        "Create-Project": "Create Project",
+        "Create-or-Select-company": "Create or Select a company",
         "Completed-projects": "Completed Projects",
         "No-projects-found": "No projects found",
         "Archived-projects": "Archived Projects",
@@ -492,7 +495,13 @@
         "Task-Details": "Task Details",
         "Assigned-To": "Assigned To",
         "Viewers": "Viewers",
-        "No-Files": "No Files"
+        "No-Files": "No Files",
+        "Sort": "Sort",
+        "Filter": "Filter",
+        "Close": "Close",
+        "Task-Priority": "Task Priority",
+        "Subtasks": "Subtasks",
+        "Name": "Name"
       }
     },
     "user": {
@@ -583,6 +592,14 @@
       "Enter-name": "Enter team name and Create link",
       "Enter-team-name": "Enter team name",
       "Link": "Link"
+    },
+    "Error-text": {
+      "Network-Error": "Network Error",
+      "Bad-Request": "Bad Request",
+      "Unauthorized-user": "Unauthorized user. Please enter valid email and password.",
+      "Access-Error": "Access Error",
+      "Method-Not-Found": "Method Not Found",
+      "Duplicate-Value": "Duplicate Value"
     }
   }
 }

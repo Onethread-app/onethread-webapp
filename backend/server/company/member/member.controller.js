@@ -36,7 +36,7 @@ const changeRole = async (req, res, next) => {
       company: req.company._id,
     });
 
-    if (req.body.role === 'admin' && member.role !== 'superAdmin') {
+    if (req.body.role === 'admin' && member.role === 'employee') {
       return res.status(403).json({
         message: `Restricted`,
       });

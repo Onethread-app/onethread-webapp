@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Select from 'react-select';
 
 import { Field, Form } from 'react-final-form';
-import { Button, Icon, Tag } from '@blueprintjs/core';
+import { Button, Tag } from '@blueprintjs/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { DateInput } from '@blueprintjs/datetime';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
@@ -22,9 +22,10 @@ import { tigrowApi } from 'config';
 import { createTask } from 'stores/board/Actions';
 import { ICompanyTeamMembers } from 'stores/company/Reducer';
 import { tokenConfig, priorityColor } from 'stores/UtilsActions';
+import './Task.scss';
 
 const Container = styled.div`
-  padding: 1rem 1.5rem;
+  padding: 2rem;
 `;
 
 interface ICreateTaskDialogProps {
@@ -123,7 +124,20 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
 
   return (
     <Container>
-      <h3 className="tc fw5 f4">Create Task</h3>
+      <div className="flex justify-end">
+        <Button
+          style={{
+            background: 'transparent',
+            border: 'none',
+            boxShadow: 'none',
+            width: '25px',
+          }}
+          icon="cross"
+          onClick={() => {
+            props.setShowDialog(false);
+          }}
+        />
+      </div>
       {errorText && <h3 className="tc fw5 f4 red">{errorText}</h3>}
       <Form
         onSubmit={onSubmit}
@@ -143,80 +157,59 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                 name="name"
                 validate={composeValidators(required, maxValue(150))}
                 render={({ input, meta }) => (
-                  <div className="mv1">
-                    <p className="fw5 f5 mb2">
-                      Task Name<sup>*</sup>{' '}
-                      <span className="f7">(max: 150)</span>
+                  <div className="mb3">
+                    <p
+                      style={{
+                        fontSize: '10px',
+                        color: '#666666',
+                        fontWeight: 400,
+                      }}
+                    >
+                      NEW TASK
                     </p>
                     <InputGroupFieldWithError
                       id="name"
-                      className={`bw1 pb2 br0 b--lightBlue ph2}`}
                       value={input.value}
                       onChange={input.onChange}
                       style={{
-                        boxShadow:
-                          'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
-                        fontSize: '12px',
+                        border: '0px',
+                        boxShadow: 'none',
+                        fontSize: '22px',
+                        paddingLeft: '0px',
                       }}
                       error={
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      autoFocus={true}
+                      placeHolder="Task Name"
                     />
-                  </div>
-                )}
-              />
-              <Field<string>
-                name="dueDate"
-                validate={required}
-                render={({ input, meta }) => (
-                  <div className={`mb3`}>
-                    <label
-                      style={{
-                        marginBottom: '5px',
-                        display: 'inline-block',
-                      }}
-                    >
-                      Due Date<sup>*</sup>
-                    </label>
-                    <DateInput
-                      formatDate={(date: Date) =>
-                        date.toLocaleDateString()
-                      }
-                      placeholder="dd/mm/yyyy"
-                      parseDate={(str: string) => new Date(str)}
-                      onChange={input.onChange}
-                      canClearSelection={false}
-                      value={
-                        input.value ? new Date(input.value) : null
-                      }
-                      popoverProps={{
-                        targetClassName: 'w-100',
-                      }}
-                      minDate={new Date()}
-                    />
-                    {checkError(meta) && (
-                      <small className="mv3" style={{ color: 'red' }}>
-                        {meta.error || meta.submitError}
-                      </small>
-                    )}
                   </div>
                 )}
               />
               <Field<string>
                 name="assignmembers"
                 render={({ input, meta }) => (
-                  <div className={`mb3`}>
-                    <div className="fl w-100 pb2">
-                      <div className="mb1">
-                        <p
-                          className="fw5"
-                          style={{ fontSize: '.8rem' }}
-                        >
-                          Assign Members<sup>*</sup>
-                        </p>
-                      </div>
+                  <div className="mb3">
+                    <div className="flex items-center w-50">
+                      <label
+                        style={{
+                          width: '150px',
+                        }}
+                      >
+                        Assign to:
+                        <div>
+                          {assignedUserError && (
+                            <small
+                              style={{
+                                color: 'red',
+                                margin: '1rem 0rem',
+                              }}
+                            >
+                              Required
+                            </small>
+                          )}
+                        </div>
+                      </label>
                       <SuggestField
                         onChange={(query: string) => {
                           setUsername(query);
@@ -234,27 +227,18 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         }}
                         multipleItemSelect={true}
                       />
-                      {assignedUserError && (
-                        <small
-                          style={{
-                            color: 'red',
-                            margin: '1rem 0rem',
-                          }}
-                        >
-                          Required
-                        </small>
-                      )}
                     </div>
                     {selectedTeamMember.length > 0 && (
                       <div className="w-100">
                         <div
-                          className="overflow-auto br2"
+                          className="overflow-auto br2 mt2"
                           style={{
-                            border: '1px solid #707070',
+                            border: '1px solid #10161a33',
                             // maxHeight: '120px',
                             display: 'flex',
                             gap: '.5rem',
                             padding: '.25rem',
+                            marginLeft: '102px',
                           }}
                         >
                           {selectedTeamMember.map((item) => (
@@ -263,7 +247,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                                 key={item._id}
                                 className="pa1"
                                 interactive={true}
-                                style={{ background: '#3484F0' }}
+                                style={{ background: '#34b3e9' }}
                                 onRemove={(e) => {
                                   const filteredItems = selectedTeamMember.filter(
                                     (selectedItem) =>
@@ -295,28 +279,99 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                   </div>
                 )}
               />
-              <div className="flex flex-column mb3">
-                <label htmlFor="" className="mb2">
-                  Priority
-                </label>
-                <Select
-                  options={options}
-                  value={selectedOption}
-                  onChange={handleSelect}
+              <div
+                className="flex items-center mb3"
+                style={{ width: '80%' }}
+              >
+                <Field<string>
+                  name="dueDate"
+                  validate={required}
+                  render={({ input, meta }) => (
+                    <div className="flex items-center w-100 mr3">
+                      <label
+                        style={{
+                          width: '145px',
+                        }}
+                      >
+                        Due Date:
+                        <div>
+                          {checkError(meta) && (
+                            <small
+                              className="mv3"
+                              style={{ color: 'red' }}
+                            >
+                              {meta.error || meta.submitError}
+                            </small>
+                          )}
+                        </div>
+                      </label>
+                      <DateInput
+                        formatDate={(date: Date) =>
+                          date.toLocaleDateString()
+                        }
+                        placeholder="dd/mm/yyyy"
+                        parseDate={(str: string) => new Date(str)}
+                        onChange={input.onChange}
+                        canClearSelection={false}
+                        value={
+                          input.value ? new Date(input.value) : null
+                        }
+                        popoverProps={{
+                          targetClassName: 'w-100',
+                        }}
+                        minDate={new Date()}
+                      />
+                    </div>
+                  )}
                 />
+                <div className="flex items-center w-100">
+                  <label
+                    style={{
+                      width: '80px',
+                    }}
+                  >
+                    Priority:
+                  </label>
+                  <div className="w-100">
+                    <Select
+                      className="priority-select-option"
+                      options={options}
+                      value={selectedOption}
+                      onChange={handleSelect}
+                    />
+                  </div>
+                </div>
               </div>
+              <Field<string>
+                name="description"
+                render={({ input, meta }) => (
+                  <div className="mv1 flex">
+                    <label
+                      style={{
+                        width: '130px',
+                      }}
+                    >
+                      Description:
+                    </label>
+                    <textarea
+                      name="description"
+                      id="description"
+                      value={input.value}
+                      onChange={input.onChange}
+                      style={{
+                        width: '100%',
+                        height: '150px',
+                        boxShadow:
+                          'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
+                        border: 'none',
+                        padding: '0.5rem',
+                      }}
+                      placeholder="Add some details about the task"
+                    />
+                  </div>
+                )}
+              />
               <div className="flex justify-end mt3">
-                <Button
-                  className="mr2"
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                  }}
-                  icon="cross"
-                  onClick={() => {
-                    props.setShowDialog(false);
-                  }}
-                />
                 <Button
                   type="submit"
                   style={{
@@ -331,16 +386,10 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         size={20}
                         style={{ color: 'white' }}
                       />
-                    ) : (
-                      <Icon
-                        icon="tick"
-                        iconSize={20}
-                        style={{ color: 'white' }}
-                      />
-                    )
+                    ) : null
                   }
                 >
-                  Create
+                  Create task
                 </Button>
               </div>
             </div>

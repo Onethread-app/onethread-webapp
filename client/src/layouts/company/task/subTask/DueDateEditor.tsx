@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
-import { SubmitError } from 'components/final-form/SubmitError';
+// import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
-import { Icon } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+// import { Icon } from '@blueprintjs/core';
+// import { IconNames } from '@blueprintjs/icons';
 import { updateSubTask } from 'stores/subtask/Actions';
 import { ISubTask } from 'stores/subtask/Reducer';
 import { useTranslation } from 'react-i18next';
@@ -16,12 +16,6 @@ import {
 import '../task.scss';
 
 interface IDueDateFormProps {
-  setDueDatePopover: React.Dispatch<
-    React.SetStateAction<{
-      _id: string;
-      open: boolean;
-    }>
-  >;
   updateSubTask: (subTask: ISubTask) => void;
   subTask: ISubTask;
   dueDate: Date | undefined;
@@ -30,35 +24,25 @@ interface IDueDateFormProps {
 }
 
 const DueDateEditor = (props: IDueDateFormProps) => {
-  const [loading, setLoading] = React.useState(false);
-  const [disable, setDisable] = React.useState(false);
-
-  const handleInputChange = (e) => {
-    if (e <= new Date()) {
-      setDisable(true);
-    } else {
-      setDisable(false);
-    }
-  };
+  // const [loading, setLoading] = React.useState(false);
 
   const onSubmit = (values: any) => {
-    setLoading(true);
     props.updateSubTask({
       _id: props.subTask._id,
       dueDate: values.dueDate,
     });
   };
 
-  React.useEffect(() => {
-    if (
-      loading === true &&
-      props.updatingSubTask === false &&
-      props.errorOnUpdate === ''
-    ) {
-      props.setDueDatePopover({ _id: '', open: false });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, props.updatingSubTask, props.errorOnUpdate]);
+  // React.useEffect(() => {
+  //   if (
+  //     loading === true &&
+  //     props.updatingSubTask === false &&
+  //     props.errorOnUpdate === ''
+  //   ) {
+  //     props.setDueDatePopover({ _id: '', open: false });
+  //   }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loading, props.updatingSubTask, props.errorOnUpdate]);
 
   const { t } = useTranslation();
 
@@ -78,8 +62,8 @@ const DueDateEditor = (props: IDueDateFormProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="fl w-100 ph2 pt2" onSubmit={handleSubmit}>
-          <div className="flex justify-end">
+        <form className="mh1" onSubmit={handleSubmit}>
+          {/* <div className="flex justify-end">
             <Icon
               icon={IconNames.CROSS}
               iconSize={20}
@@ -91,31 +75,28 @@ const DueDateEditor = (props: IDueDateFormProps) => {
           </div>
           <div>
             <SubmitError errorMessage={submitError} />
-          </div>
+          </div> */}
           <Field<string>
             name="dueDate"
             render={({ input, meta }) => (
-              <div className={`${checkError(meta) ? 'mb3' : 'mb2'}`}>
-                <label
+              <>
+                {/* <label
                   style={{
                     marginBottom: '5px',
                     display: 'block',
                   }}
                 >
-                  {/* Due Date */}
+                  Due Date
                   {t('app.project.Project-boards.Due-Date')}
-                </label>
+                </label> */}
+
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
-                    margin="normal"
                     id="date-picker-dialog"
                     format="MM/dd/yyyy"
                     value={input.value ? new Date(input.value) : null}
-                    onChange={(e) => {
-                      input.onChange(e);
-                      handleInputChange(e);
-                    }}
-                    className="due-date-input"
+                    onChange={input.onChange}
+                    className="due-date-input due-date-subtask"
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
                     }}
@@ -131,14 +112,9 @@ const DueDateEditor = (props: IDueDateFormProps) => {
                     {meta.error || meta.submitError}
                   </small>
                 )}
-              </div>
+              </>
             )}
           />
-          {disable && (
-            <p style={{ color: 'red' }}>
-              {t('app.project.Project-boards.Due-date-text')}
-            </p>
-          )}
         </form>
       )}
     />

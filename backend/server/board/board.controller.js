@@ -133,7 +133,7 @@ const get = async (req, res, next) => {
       project: req.query.pid,
     })
       .select(
-        '_id status name color priority description dueDate columnId boardId project',
+        '_id status name color priority description dueDate columnId boardId project timeSpent',
       )
       .exec()
       .then((result) => {

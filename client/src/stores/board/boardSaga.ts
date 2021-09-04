@@ -49,7 +49,7 @@ import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
 import {
   getCurrentBoard,
-  getCurrentTask,
+  getCurrentTaskId,
   selectColumnName,
 } from './Selector';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
@@ -268,8 +268,8 @@ export function* dragAndDrop({
         0,
         addedTask,
       );
-      const currentTask = yield select(getCurrentTask);
-      if (taskId === currentTask) {
+      const currentTaskId = yield select(getCurrentTaskId);
+      if (taskId === currentTaskId) {
         yield put(
           updateCurrentTaskColumnId({
             columnId: destinationColumnId,
@@ -340,6 +340,7 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
           columnId: res.data.columnId._id,
           file: res.data.file,
           status: res.data.status,
+          timeSpent: res.data.timeSpent,
         };
         yield put(getSelectedTaskDetailsSuccess(response));
       }
@@ -356,8 +357,9 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
 export function* updateTask({ payload }: any) {
   try {
     const headers = tokenConfig();
-    const taskId = yield select(getCurrentTask);
+    const taskId = yield select(getCurrentTaskId);
     const projectId = yield select(getProjectId);
+    const currentBoard = yield select(getCurrentBoard);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.put(
         `tasks/${taskId}?pid=${projectId}`,
@@ -376,9 +378,33 @@ export function* updateTask({ payload }: any) {
         description: res.data.description,
         priority: res.data.priority,
         currentColumnName: res.data.columnId.name,
-        columnId: res.data.columnId,
+        columnId: res.data.columnId._id,
       };
-      yield put(updateTaskSuccess(response));
+
+      const allColumns = currentBoard.columns!;
+      allColumns.forEach((column, i) => {
+        if (response.columnId === column._id) {
+          const index = column.tasks!.findIndex(
+            (task) => task._id === taskId,
+          );
+          column.tasks![
+            index
+          ].status = response.currentColumnName
+            .toLowerCase()
+            .split(' ')
+            .join('-');
+          column.tasks![index]._id = response._id;
+          column.tasks![index].name = response.name;
+          column.tasks![index].dueDate = response.dueDate;
+          column.tasks![index].description = response.description;
+          column.tasks![index].priority = response.priority;
+          column.tasks![index].currentColumnName =
+            response.currentColumnName;
+          column.tasks![index].columnId = response.columnId;
+        }
+      });
+
+      yield put(updateTaskSuccess({ allColumns, response }));
     }
   } catch (error) {
     errorMessgeHandler(error);

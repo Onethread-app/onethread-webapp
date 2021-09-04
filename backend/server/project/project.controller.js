@@ -24,7 +24,7 @@ const {
   createRoom,
   createRoomMember,
 } = require('../room/room.controller');
-const { ISOformat } = require('../helpers/DateFormat');
+// const { ISOformat } = require('../helpers/DateFormat');
 
 const isPidExist = async (pid) => {
   let checkExist = await Project.findOne(
@@ -239,29 +239,32 @@ const getListOverview = async (req, res, next) => {
       .populate('company', 'uniqueName');
 
     const projectList = [];
-    for (let member of memberList) {
-      const teamMembers = await Team.find({
-        member: member._id,
-        removed: false,
-      }).populate(
-        'project',
-        '_id name uniqueName hasDeleted removed createdAt',
-      );
+    await Promise.all(
+      memberList.map(async (member) => {
+        const teamMembers = await Team.find({
+          member: member._id,
+          removed: false,
+        }).populate(
+          'project',
+          '_id name uniqueName hasDeleted removed createdAt',
+        );
 
-      for (let teamMember of teamMembers) {
-        if (
-          !teamMember.project.hasDeleted &&
-          !teamMember.project.removed
-        ) {
-          projectList.push({
-            _id: teamMember.project._id,
-            name: teamMember.project.name,
-            companyUniqueName: member.company.uniqueName,
-            createdAt: teamMember.createdAt,
-          });
+        for (let teamMember of teamMembers) {
+          if (
+            !teamMember.project.hasDeleted &&
+            !teamMember.project.removed
+          ) {
+            projectList.push({
+              _id: teamMember.project._id,
+              name: teamMember.project.name,
+              companyUniqueName: member.company.uniqueName,
+              createdAt: teamMember.createdAt,
+            });
+          }
         }
-      }
-    }
+      }),
+    );
+
     projectList.sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
     );
@@ -671,7 +674,7 @@ const getProjectDetails = async (req, res, next) => {
       _id: req.query.pid,
     })
       .populate('files', 'link s3Key')
-      .select('outline description color name status');
+      .select('outline description color name status totalSpent');
     const members = await Team.find({
       $and: [{ project: req.query.pid }, { removed: false }],
     }).populate('account', 'name profileImage');
@@ -1058,7 +1061,7 @@ const projectOverview = async (req, res, next) => {
         _id: projectId,
         name: nameWordCapitalize(project.name),
         status: nameWordCapitalize(project.status),
-        dueDate: ISOformat(project.dueDate),
+        deadline: project.deadline,
         lead: project.concernedAdmin
           ? nameWordCapitalize(
               project.concernedAdmin.firstName +
@@ -1066,7 +1069,7 @@ const projectOverview = async (req, res, next) => {
                 project.concernedAdmin.lastName,
             )
           : null,
-        startingDate: ISOformat(project.createdAt),
+        startingDate: project.createdAt,
         companyUniqueName: project.company.uniqueName,
       },
     };
@@ -1089,7 +1092,7 @@ const projectOverview = async (req, res, next) => {
         taskId: task._id,
         name: task.name,
         status: nameWordCapitalize(task.status),
-        dueDate: ISOformat(task.dueDate),
+        dueDate: task.dueDate,
         priority: task.priority,
         boardId: task.boardId._id,
       };

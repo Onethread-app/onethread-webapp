@@ -190,6 +190,7 @@ const create = async (req, res, next) => {
     if (columnProject.project === req.query.pid) {
       const task = new Task({
         name: req.body.name,
+        description: req.body.description,
         account: req.user._id,
         status: req.body.status,
         columnId: columnId,
@@ -240,6 +241,7 @@ const create = async (req, res, next) => {
         boardId: createdTask.boardId,
         columnId: createdTask.columnId,
         project: createdTask.project,
+        totalSpent: createdTask.totalSpent,
       };
       logger.info(`Task column create`);
       await sendNotificationToProjectTeamMates(

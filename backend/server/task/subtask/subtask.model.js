@@ -25,6 +25,10 @@ const SubTaskSchema = new mongoose.Schema(
       ref: 'Task',
       required: true,
     },
+    timeSpent: {
+      type: Number,
+      default: 0,
+    },
     assignedMembers: [
       {
         type: Schema.Types.ObjectId,

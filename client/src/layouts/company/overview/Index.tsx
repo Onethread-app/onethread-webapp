@@ -6,12 +6,25 @@ import { useParams, NavLink } from 'react-router-dom';
 import { tokenConfig } from 'stores/UtilsActions';
 import './index.scss';
 import Table from './Table/Table';
+import Modal from 'react-modal';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { withRouter } from 'react-router';
-
 import { connect } from 'react-redux';
 import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
+import ErrorText from '../settings/ErrorText';
+import moment from 'moment';
+
+export const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
 
 const ProjectInfo = ({
   context,
@@ -50,10 +63,11 @@ interface Data {
 }
 
 const Index = (props: any) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
 
   const [name, setName] = useState('');
-  const [dueDate, setDueDate] = useState('');
+  const [deadline, setDeadline] = useState('');
   const [status, setStatus] = useState('');
   const [lead, setLead] = useState('');
   const [startingDate, setStartingDate] = useState('');
@@ -68,6 +82,13 @@ const Index = (props: any) => {
   const [companyUnqName, setCompanyUnqName] = React.useState('');
 
   const { projectId } = useParams<{ projectId: string }>();
+  const [openModal, setOpenModal] = useState(false);
+  function closeModal() {
+    setOpenModal(false);
+  }
+  useEffect(() => {
+    setOpenModal(props.subscriptiontExpired);
+  }, [props.subscriptiontExpired]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -77,7 +98,7 @@ const Index = (props: any) => {
       .then((res) => {
         const { project } = res.data.response;
         setName(project.name);
-        setDueDate(project.dueDate);
+        setDeadline(project.deadline);
         setStatus(project.status.toLowerCase());
         setLead(project.lead);
         setStartingDate(project.startingDate);
@@ -89,8 +110,6 @@ const Index = (props: any) => {
         setIsLoading(false);
       });
   }, []);
-
-  const { t } = useTranslation();
 
   return (
     <div className={isMobileOnly ? 'ph2' : 'ph5'}>
@@ -204,12 +223,16 @@ const Index = (props: any) => {
               <ProjectInfo
                 context={t('app.company.Projects.Beginning')}
                 // context="Starting date: "
-                data={startingDate}
+                data={moment(startingDate).format('MMM DD, YYYY')}
               />
               <ProjectInfo
                 context={t('app.company.Projects.Finish')}
                 // context="End date: "
-                data={dueDate ? dueDate : 'N/A'}
+                data={
+                  deadline
+                    ? moment(deadline).format('MMM DD, YYYY')
+                    : 'N/A'
+                }
               />
               <ProjectInfo
                 context={t('app.company.Projects.Lead')}
@@ -270,6 +293,20 @@ const Index = (props: any) => {
           </div>
         </>
       )}
+      {openModal && (
+        <Modal
+          isOpen={openModal}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <ErrorText
+            closeModal={closeModal}
+            text={t('app.company.Settings.Expired')}
+            subtext={t('app.company.Settings.Expired-text')}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
@@ -293,6 +330,8 @@ const mapStateToProps = (state: any) => {
     fetchingBoard: state.boardIndexReducer.boardReducer.fetchingBoard,
     errorOnFetchingBoard:
       state.boardIndexReducer.boardReducer.errorOnFetchingBoard,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
   };
 };
 

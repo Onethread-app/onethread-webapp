@@ -75,6 +75,7 @@ import {
 import { Toaster } from '@blueprintjs/core';
 import { getAllProjects } from 'stores/project/Actions';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { setSubscriptionNotExpire } from 'stores/subscriptionBilling/Actions';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -104,7 +105,10 @@ export function* getCompanyDetailsAsync({ payload }: any) {
     if (payload) {
       yield put(showLoading());
       const headers = tokenConfig();
-      yield put(clearCompanyError());
+      yield all([
+        put(setSubscriptionNotExpire()),
+        put(clearCompanyError()),
+      ]);
 
       if ((headers as any).headers.Authorization) {
         const response = yield tigrowApi.get(

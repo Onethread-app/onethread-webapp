@@ -279,3 +279,8 @@ export const updateCurrentTaskColumnId = (data) => ({
   type: BoardActionTypes.UPDATE_CURRENTTASK_COLUMNID,
   payload: data,
 });
+
+export const updateTaskTimeSpent = (payload: number) => ({
+  type: BoardActionTypes.UPDATE_TASK_TIME_SPENT,
+  payload,
+});

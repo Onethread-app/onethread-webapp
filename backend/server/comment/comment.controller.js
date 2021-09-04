@@ -93,7 +93,7 @@ const list = async (req, res, next) => {
         select: '_id firstName lastName profileImage position',
       },
     ])
-    .sort({ createdAt: -1 })
+    .sort({ createdAt: 1 })
     .skip(+skip)
     .limit(+limit)
     .exec()

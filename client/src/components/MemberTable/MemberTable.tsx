@@ -473,44 +473,46 @@ export default function MemberTable({ type, props, rows }) {
                                     isEqual(
                                       row.m.role,
                                       'superAdmin',
-                                    ) === false
-                                      ? isEqual(
-                                          row.m.role,
-                                          'admin',
-                                        ) === true
-                                        ? props.company.role ===
-                                            'superAdmin' && (
-                                            <Button
-                                              className="outline-0 bp3-large bp3-popover-dismiss"
-                                              onClick={async () => {
-                                                await props.changeMemberRole(
-                                                  {
-                                                    role: 'employee',
-                                                  },
-                                                  row.m._id,
-                                                );
-                                              }}
-                                            >
-                                              <span className="red">
-                                                Remove from Admin
-                                              </span>
-                                            </Button>
-                                          )
-                                        : props.company.role ===
-                                            'superAdmin' && (
-                                            <Button
-                                              className="outline-0 bp3-large bp3-popover-dismiss"
-                                              onClick={async () => {
-                                                await props.changeMemberRole(
-                                                  { role: 'admin' },
-                                                  row.m._id,
-                                                );
-                                              }}
-                                            >
-                                              <span>Make Admin</span>
-                                            </Button>
-                                          )
-                                      : null}
+                                    ) === false ? (
+                                      isEqual(row.m.role, 'admin') ===
+                                      true ? (
+                                        props.company.role ===
+                                          'superAdmin' ||
+                                        props.company.role ===
+                                          'admin' ? (
+                                          <Button
+                                            className="outline-0 bp3-large bp3-popover-dismiss"
+                                            onClick={async () => {
+                                              await props.changeMemberRole(
+                                                {
+                                                  role: 'employee',
+                                                },
+                                                row.m._id,
+                                              );
+                                            }}
+                                          >
+                                            <span className="red">
+                                              Remove from Admin
+                                            </span>
+                                          </Button>
+                                        ) : null
+                                      ) : props.company.role ===
+                                          'superAdmin' ||
+                                        props.company.role ===
+                                          'admin' ? (
+                                        <Button
+                                          className="outline-0 bp3-large bp3-popover-dismiss"
+                                          onClick={async () => {
+                                            await props.changeMemberRole(
+                                              { role: 'admin' },
+                                              row.m._id,
+                                            );
+                                          }}
+                                        >
+                                          <span>Make Admin</span>
+                                        </Button>
+                                      ) : null
+                                    ) : null}
                                   </ButtonGroup>
                                 }
                                 target={

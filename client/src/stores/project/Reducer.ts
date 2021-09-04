@@ -32,6 +32,7 @@ export interface IProject {
   concernAdmin: User;
   createdAt: Date;
   status: String;
+  timeSpent?: number;
 }
 
 export interface IPendingProject {
@@ -82,6 +83,7 @@ const initialState = {
     description: '',
     outline: '',
     status: '',
+    timeSpent: 0,
   },
   hasAccess: true,
   teams: [],
@@ -180,6 +182,28 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         updatingProject: false,
         errorOnUpdatingProject: action.payload,
+      };
+    case ProjectActionTypes.UPDATE_PROJECT_TIME_SPENT:
+      return {
+        ...state,
+        allProjects: state.allProjects.map((project: IProject) =>
+          project._id === action.payload.project
+            ? {
+                ...project,
+                timeSpent:
+                  project.timeSpent + action.payload.duration,
+              }
+            : project,
+        ),
+        projectDetails:
+          state.projectDetails._id === action.payload.project
+            ? {
+                ...state.projectDetails,
+                timeSpent:
+                  state.projectDetails.timeSpent +
+                  action.payload.duration,
+              }
+            : state.projectDetails,
       };
     case ProjectActionTypes.UNARCHIVE_PROJECT_START:
       return {

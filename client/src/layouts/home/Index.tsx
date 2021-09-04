@@ -2,7 +2,7 @@ import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 
 import VideoConference from 'components/home/VideoConference';
-import Tasks from 'components/home/Tasks';
+import { Tasks } from 'components/home/Tasks';
 import Profile from 'components/home/Profile';
 // import Weather from 'components/home/Weather';
 // import ProfileProgress from 'components/home/ProfileProgress';
@@ -32,16 +32,16 @@ const index = () => {
     </div>
   ) : (
     <div className="home-container">
-      <div>
+      <div className="w-100">
         <Projects />
         <VideoConference />
       </div>
-      <div>
+      <div className="w-100">
         {/* <Weather /> */}
         <Tasks />
         <Subtasks />
       </div>
-      <div>
+      <div className="w-100">
         <Profile />
         {/* <ProfileProgress /> */}
       </div>

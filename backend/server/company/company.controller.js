@@ -15,7 +15,7 @@ const {
 const {
   triggerNotification,
 } = require('../services/webpush.services');
-const { ISOformat } = require('../helpers/DateFormat');
+// const { ISOformat } = require('../helpers/DateFormat');
 
 const {
   Subscription,
@@ -584,13 +584,11 @@ const dashBoard = async (req, res, next) => {
   try {
     const companyId = req.params.companyId;
     let taskCompilation = [];
-    // Query 1 [O(nProjects)]
     let projectList = await Project.find({
       $or: [{ company: companyId }, { associate: companyId }],
       removed: false,
       hasDeleted: false,
     }).select('_id name status deadline');
-    let i;
 
     let completedProjects = projectList.filter(
       (p) => p.status === 'completed',
@@ -598,8 +596,13 @@ const dashBoard = async (req, res, next) => {
     let runningProjects = projectList.length - completedProjects;
     const allProjectIds = projectList.map((p) => p._id);
 
+    const totalTasks = await Task.countDocuments({
+      project: { $in: allProjectIds },
+    });
+
     const tasks = await Task.find({
       project: { $in: allProjectIds },
+      status: { $ne: 'done' },
     })
       .sort({ priority: 0 })
       .select(
@@ -616,41 +619,42 @@ const dashBoard = async (req, res, next) => {
         ],
       });
 
-    for (let i = 0; i < tasks.length; i++) {
-      const task = tasks[i];
-      let modifiedTask = {};
-      const totalSubtasks = await SubTask.find({
-        taskId: task._id,
-      }).countDocuments();
-      const doneSubtasks = await SubTask.find({
-        $and: [{ taskId: task._id, done: true }],
-      }).countDocuments();
+    await Promise.all(
+      tasks.map(async (task) => {
+        let modifiedTask = {};
+        const totalSubtasks = await SubTask.find({
+          taskId: task._id,
+        }).countDocuments();
+        const doneSubtasks = await SubTask.find({
+          $and: [{ taskId: task._id, done: true }],
+        }).countDocuments();
 
-      const taskMembers = await getTaskMembers(task._id);
-      const members = taskMembers.map((tMember) => {
-        return tMember.assignedPerson;
-      });
+        const taskMembers = await getTaskMembers(task._id);
+        const members = taskMembers.map((tMember) => {
+          return tMember.assignedPerson;
+        });
 
-      modifiedTask._id = task._id;
-      modifiedTask.name = task.name;
-      modifiedTask.status = task.status;
-      modifiedTask.dueDate = ISOformat(task.dueDate);
-      modifiedTask.members = members;
-      modifiedTask.boardId = task.boardId;
-      modifiedTask.priority = task.priority;
-      modifiedTask.createdAt = task.createdAt;
-      modifiedTask.project = {
-        _id: task.project._id,
-        name: task.project.name,
-      };
-      modifiedTask.company = {
-        _id: task.project.company._id,
-        uniqueName: task.project.company.uniqueName,
-      };
-      modifiedTask.doneSubtasks = doneSubtasks;
-      modifiedTask.totalSubtasks = totalSubtasks;
-      taskCompilation.push(modifiedTask);
-    }
+        modifiedTask._id = task._id;
+        modifiedTask.name = task.name;
+        modifiedTask.status = task.status;
+        modifiedTask.dueDate = task.dueDate;
+        modifiedTask.members = members;
+        modifiedTask.boardId = task.boardId;
+        modifiedTask.priority = task.priority;
+        modifiedTask.createdAt = task.createdAt;
+        modifiedTask.project = {
+          _id: task.project._id,
+          name: task.project.name,
+        };
+        modifiedTask.company = {
+          _id: task.project.company._id,
+          uniqueName: task.project.company.uniqueName,
+        };
+        modifiedTask.doneSubtasks = doneSubtasks;
+        modifiedTask.totalSubtasks = totalSubtasks;
+        taskCompilation.push(modifiedTask);
+      }),
+    );
 
     taskCompilation.sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
@@ -661,6 +665,7 @@ const dashBoard = async (req, res, next) => {
         completedProjects,
         runningProjects,
         taskCompilation,
+        totalTasks,
       },
     });
   } catch (error) {

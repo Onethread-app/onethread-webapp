@@ -46,7 +46,8 @@ const {
 const options = [
   {
     path: 'taskId',
-    select: '_id name boardId columnId project dueDate status',
+    select:
+      '_id name boardId columnId project dueDate status priority',
     populate: [
       {
         path: 'project',
@@ -54,7 +55,7 @@ const options = [
         populate: [
           {
             path: 'company',
-            select: '_id uniqueName',
+            select: '_id uniqueName name',
           },
         ],
       },
@@ -389,7 +390,6 @@ const getAccount = async (req, res, next) => {
 //     });
 //   })
 //   .catch(err => {
-//     console.log(err);
 //     next(err);
 //   });
 const userDailyProgress = async (req, res, next) => {
@@ -944,18 +944,29 @@ const getDueTasks = async (req) => {
 
 const userTaskList = async (req, res, next) => {
   try {
-    const todaysTasks = await getTodaysTask(req);
-    const tomorrowTasks = await getUpcomingTasks(req, 1, 1); // next 1 day
-    const upcomingTasks = await getUpcomingTasks(req, 2, 16); // next 15 days
-    const dueTasks = await getDueTasks(req);
+    const taskList = await Task.find({
+      status: { $ne: 'done' },
+    })
+      .select('_id')
+      .sort({ createdAt: -1 });
 
-    const userTask = {
-      todaysTasks,
-      tomorrowTasks,
-      upcomingTasks,
-      dueTasks,
-    };
-    return sendJSONresponse(res, 200, userTask);
+    const tasks = [];
+    await Promise.all(
+      taskList.map(async (t) => {
+        const task = await TaskAssign.findOne({
+          taskId: t._id,
+          $or: [
+            { account: req.user._id },
+            { assignedPerson: req.user._id },
+          ],
+        })
+          .sort({ createdAt: -1 })
+          .select('taskId')
+          .populate(options);
+        if (task) tasks.push(task);
+      }),
+    );
+    return sendJSONresponse(res, 200, tasks);
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);

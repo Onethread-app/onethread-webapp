@@ -54,6 +54,8 @@ import { Navbar } from '@blueprintjs/core';
 import { companyPermit } from 'stores/UtilsActions';
 import { CURRENT_ROOM } from 'stores/room/Types';
 import { useTranslation } from 'react-i18next';
+import { ICurrentTrack } from 'stores/time-tracker/Reducer';
+import { updateDurationPersecond } from 'stores/time-tracker/Action';
 
 const load = async (
   reactRouterMatch: match,
@@ -117,6 +119,7 @@ interface LayoutInternalProps
   projectLoading: boolean;
   boardLoading: boolean;
   rooms: IRoom[];
+  currentlyTracking: ICurrentTrack;
   getRoomMembers: (roomId: string) => void;
   getRoomMessages: (roomId: string) => void;
   getRoomSharedFiles: (roomId: string) => void;
@@ -298,6 +301,20 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   const [scrollTop, setScrollTop] = React.useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    let interval;
+
+    if (props.currentlyTracking.name) {
+      interval = setInterval(() => {
+        dispatch(updateDurationPersecond());
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [props.currentlyTracking.name]);
 
   return (
     <div
@@ -691,6 +708,7 @@ const mapStateToProps = (state: any) => {
     companyLoading: state.companyReducer.loading,
     projectLoading: state.projectReducer.singleProjectLoading,
     boardLoading: state.boardIndexReducer.boardReducer.fetchingBoard,
+    currentlyTracking: state.timeTrackerReducer.currentlyTracking,
   };
 };
 

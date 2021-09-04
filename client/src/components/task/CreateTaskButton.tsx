@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Dialog, Icon } from '@blueprintjs/core';
 
 import CreateTaskDialog from './CreateTaskDialog';
+import { useTranslation } from 'react-i18next';
 
 const CreateTaskButtonDiv = styled.div`
   max-width: 200px;
@@ -28,6 +29,7 @@ interface ICreateTaskButton {
 }
 
 const CreateTaskButton = (props: ICreateTaskButton) => {
+  const { t } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
   const handleClick = () => {
     setShowDialog(true);
@@ -36,7 +38,7 @@ const CreateTaskButton = (props: ICreateTaskButton) => {
     <>
       <CreateTaskButtonDiv onClick={handleClick}>
         <Icon icon="plus" color="#fff" className="mr2" />
-        <p>Add new task</p>
+        <p> {t('app.project.Tasks.Add-task')}</p>
       </CreateTaskButtonDiv>
       <Dialog
         isOpen={showDialog}
@@ -45,6 +47,7 @@ const CreateTaskButton = (props: ICreateTaskButton) => {
         canOutsideClickClose={true}
         style={{
           background: '#fff',
+          width: '700px',
         }}
       >
         <CreateTaskDialog

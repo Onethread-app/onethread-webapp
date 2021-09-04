@@ -106,7 +106,7 @@ export const ListViewComponent = (
                     ? props.user.profileImage
                     : user
                 }
-                className="db w2 h2 br-100 ba b--white-90 "
+                className="db w2 h2 ba b--white-90 br2"
                 alt=""
               />
             </div>
@@ -194,7 +194,7 @@ export const ListViewComponent = (
                             ? c.company.logo
                             : CompanyIcon
                         }
-                        className="v-mid dib br-100 w-10"
+                        className="v-mid dib w-10 br2"
                         alt="user"
                         style={{
                           width: '32px',
@@ -212,7 +212,9 @@ export const ListViewComponent = (
                   </article>
                 ),
             )
-          ) : undefined}
+          ) : (
+            <p>{t('app.homepage.No-Companies')}</p>
+          )}
         </div>
         <button
           onClick={() => {

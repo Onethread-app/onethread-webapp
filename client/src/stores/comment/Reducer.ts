@@ -50,6 +50,7 @@ export const CommentReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         commentList: [
+          ...state.commentList,
           {
             _id: action.payload._id,
             name: action.payload.name,
@@ -58,7 +59,6 @@ export const CommentReducer = (state = InitialState, action: any) => {
             text: action.payload.text,
             createdAt: action.payload.createdAt,
           },
-          ...state.commentList,
         ],
         isCreating: false,
       };

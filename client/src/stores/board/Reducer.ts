@@ -69,6 +69,7 @@ export interface ITask {
   column?: IColumn;
   boardId?: string;
   activityCount?: number;
+  timeSpent?: number;
 }
 
 export interface IBoard {
@@ -93,7 +94,25 @@ const InitialState = {
     filteredUsers: [],
     preferredView: 'list',
   },
-  currentTask: {},
+  currentTask: {
+    _id: '',
+    name: '',
+    description: '',
+    columnId: '',
+    currentColumnName: '',
+    createdAt: null,
+    createdBy: '',
+    status: '',
+    assignedMembers: [],
+    dueDate: null,
+    priority: 2,
+    file: [],
+    comments: [],
+    column: {},
+    boardId: '',
+    activityCount: 0,
+    timeSpent: 0,
+  },
   creatingBoard: false,
   creatingTask: false,
   fetchingBoards: false,
@@ -352,19 +371,36 @@ export const BoardReducer = (state = InitialState, action: any) => {
         ...state,
         currentBoard: {
           ...state.currentBoard,
+          columns: action.payload.allColumns,
+        },
+        currentTask: action.payload.response,
+        updatingTask: false,
+      };
+    case BoardActionTypes.UPDATE_TASK_FAILURE:
+      return {
+        ...state,
+        taskError: action.payload,
+        updatingTask: false,
+      };
+    case BoardActionTypes.UPDATE_TASK_TIME_SPENT:
+      return {
+        ...state,
+        currentBoard: {
+          ...state.currentBoard,
           columns: (state.currentBoard.columns as any).map(
             (column: IColumn) =>
-              column._id === action.payload.columnId._id
+              column._id === action.payload.column
                 ? {
                     ...column,
                     tasks:
                       column.tasks && column.tasks.length > 0
                         ? column.tasks.map((task: ITask) =>
-                            task._id === action.payload._id
+                            task._id === action.payload.task
                               ? {
                                   ...task,
-                                  name: action.payload.name,
-                                  dueDate: action.payload.dueDate,
+                                  timeSpent:
+                                    task.timeSpent +
+                                    action.payload.duration,
                                 }
                               : task,
                           )
@@ -373,14 +409,15 @@ export const BoardReducer = (state = InitialState, action: any) => {
                 : column,
           ),
         },
-        currentTask: action.payload,
-        updatingTask: false,
-      };
-    case BoardActionTypes.UPDATE_TASK_FAILURE:
-      return {
-        ...state,
-        taskError: action.payload,
-        updatingTask: false,
+        currentTask:
+          action.payload.task === state.currentTask._id
+            ? {
+                ...state.currentTask,
+                timeSpent:
+                  state.currentTask.timeSpent +
+                  action.payload.duration,
+              }
+            : state.currentTask,
       };
     case BoardActionTypes.TASK_FILE_UP_START:
       return {
