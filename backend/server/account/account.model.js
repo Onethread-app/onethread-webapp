@@ -125,6 +125,8 @@ const accountsSchema = new mongoose.Schema(
     },
     language: {
       type: mongoose.Schema.Types.String,
+      default: 'en',
+      enum: ['en', 'bn'],
     },
   },
   {
