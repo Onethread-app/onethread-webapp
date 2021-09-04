@@ -303,6 +303,7 @@ const login = async (req, res, next) => {
     );
     let userObj = {};
     userObj.name = req.user.name;
+    userObj.language = req.user.language || 'en';
     // addUserDataIntoCache(req.user._id, req.user);
     let pushSubscription;
     if (req.body.pushSubscription) {
@@ -1042,6 +1043,24 @@ const subtaskMarkAsDone = async (req, res, next) => {
   }
 };
 
+const saveLanguage = async (req, res, next) => {
+  try {
+    await Account.findByIdAndUpdate(
+      { _id: req.user._id },
+      {
+        $set: { language: req.body.language },
+      },
+    );
+
+    return sendJSONresponse(res, 200, {
+      message: 'language updated',
+    });
+  } catch {
+    logger.error(`report: ${error}`);
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   resendEmail,
@@ -1062,4 +1081,5 @@ module.exports = {
   subtaskMarkAsDone,
   userDueTask,
   userDailyProgress,
+  saveLanguage,
 };

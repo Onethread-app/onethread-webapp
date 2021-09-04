@@ -37,6 +37,7 @@ interface SignInPageInternalProps {
 export const SignInPageComponent = (
   props: SignInPageInternalProps & RouteComponentProps,
 ) => {
+  const { t, i18n } = useTranslation();
   const {
     pushNotificationSupported,
     AskUserPermission,
@@ -63,6 +64,8 @@ export const SignInPageComponent = (
       pushSubscription: localStorage.getItem('pushSubscription'),
     });
     if (response.message === 200) {
+      const lng = response.payload.data.user.language;
+      i18n.changeLanguage(lng);
       props.history.push(`/${response.payload.data.user.name}/home`);
       return true;
     }
@@ -94,7 +97,9 @@ export const SignInPageComponent = (
           ),
         };
       default:
-        return { [response.fieldName]: response.message };
+        return {
+          [response.fieldName]: response.message,
+        };
     }
   };
   const [showPassword, setShowPassword] = useState(false);
@@ -105,8 +110,6 @@ export const SignInPageComponent = (
     const params = new URLSearchParams(search);
     setEmail(params.get('email') ? params.get('email')! : '');
   }, [props.location.search]);
-
-  const { t } = useTranslation();
 
   return (
     <div className="cf">
@@ -211,7 +214,9 @@ export const SignInPageComponent = (
                                   <span className="bp3-icon">
                                     <Icon
                                       icon="envelope"
-                                      style={{ color: '#34b3e9' }}
+                                      style={{
+                                        color: '#34b3e9',
+                                      }}
                                     />
                                   </span>
                                 }
@@ -263,7 +268,9 @@ export const SignInPageComponent = (
                                   <span className="bp3-icon">
                                     <Icon
                                       icon="lock"
-                                      style={{ color: '#34b3e9' }}
+                                      style={{
+                                        color: '#34b3e9',
+                                      }}
                                     />
                                   </span>
                                 }
