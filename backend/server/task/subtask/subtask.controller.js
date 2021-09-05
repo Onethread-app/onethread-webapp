@@ -152,7 +152,7 @@ const addMember = async (req, res, next) => {
             },
           ])
           .exec();
-        if (req.user._id !== requestedMember) {
+        if (req.user._id == requestedMember) {
           await subTaskAssignNotificationToUsers(
             req.user._id,
             req.headers.companyid,

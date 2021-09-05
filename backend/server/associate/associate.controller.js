@@ -138,8 +138,8 @@ const acceptPending = async (req, res, next) => {
 
     return res.status(200).json(associate);
   } catch (error) {
+    consoel.log(error)
     logger.error(`Associate accept: ${error}`);
-
     next(error);
   }
 };

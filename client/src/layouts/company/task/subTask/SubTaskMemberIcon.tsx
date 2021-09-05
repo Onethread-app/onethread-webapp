@@ -42,14 +42,14 @@ const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
             className="bp3-button bp3-intent-danger mr2"
             onClick={handleRemove}
           >
-            Yes, delete
+            Yes, Delete
           </button>
           <button
             type="button"
             className="bp3-button bp3-intent-primary"
             onClick={() => setIsOpen(!isOpen)}
           >
-            No keep
+            No, Keep
           </button>
         </div>
       }

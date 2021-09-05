@@ -186,8 +186,7 @@ const register = async (req, res, next) => {
     name: name,
     contactNo: Date.now(),
     password: data.password,
-    birthDate: data.birthDate,
-    isAccountVerified: data.isAccountVerified,
+    isAccountVerified: false,
   });
   await account
     .save()

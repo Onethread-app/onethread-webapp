@@ -1,8 +1,8 @@
 {
-  "name": "tigrow",
-  "version": "2.4.4",
-  "description": "A comunity for business people",
-  "author": "Rubaiyat Farhan <tigrowtecheven@gmail.com>",
+  "name": "onethread",
+  "version": "2.4.12",
+  "description": "Efficiency for everyone",
+  "author": "Robat Das Orvi (orvi@onethread.app)",
   "main": "index.js",
   "private": true,
   "engines": {
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TiGrow-Tech/TiGrowWebApp.git"
+    "url": "https://github.com/Onethread-app/onethread-webapp"
   },
   "keywords": [
     "server",
