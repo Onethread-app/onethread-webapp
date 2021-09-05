@@ -1,16 +1,13 @@
 const Task = require('./task.model');
 const BoardColumn = require('./../boardColumn/boardColumn.model');
-const ActivityCtrl = require('./../activity/activity.controller');
 const logger = require('../../config/winston');
 const TaskAssign = require('./taskAssign.model');
 const { Project } = require('../project/project.model');
 const {
   calculateProjectStatus,
 } = require('../project/project.controller');
-const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
 const SubTask = require('./subtask/subtask.model');
-const File = require('../file/file.model');
 const {
   taskAssignNotificationToUsers,
   sendNotificationToProjectTeamMates,
@@ -99,7 +96,7 @@ const addMemberToTask = async (
       .exec();
 
     members.map(async (e) => {
-      if (req.user._id !== e.assignedPerson._id) {
+      if (req.user._id !== e.assignedPerson._id.toString()) {
         await taskAssignNotificationToUsers(
           req.user._id,
           req.headers.companyid,
@@ -138,7 +135,7 @@ const addMemberToTask = async (
       ])
       .exec();
     members.map(async (e) => {
-      if (req.user._id !== e.assignedPerson._id) {
+      if (req.user._id !== e.assignedPerson._id.toString()) {
         await taskAssignNotificationToUsers(
           req.user._id,
           req.headers.companyid,
@@ -150,6 +147,7 @@ const addMemberToTask = async (
             pusherSock: req.headers.clientid,
           },
         );
+        await triggerUnreadNotifications(e.assignedPerson._id);
       }
     });
     return members;
