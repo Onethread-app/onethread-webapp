@@ -58,8 +58,7 @@ module.exports = {
       lastName: schema.lastName,
       email: schema.email,
       password: schema.password,
-      birthDate: schema.birthDate,
-      isAccountVerified: schema.isAccountVerified.required(),
+      isAccountVerified: schema.isAccountVerified,
       // contactNo: schema.contactNo,
       // .regex(/^(\+?(880)[0-9]{10})$/)
       // // .required()

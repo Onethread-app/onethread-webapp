@@ -36,7 +36,7 @@ export const AssignedMemeberListEditorComponent = (
                 setDeletePopover(false);
               }}
             >
-              Yes, delete
+              Yes, Delete
             </Button>
             <Button
               className="grow h2 pointer white bp3-minimal w4"
@@ -48,7 +48,7 @@ export const AssignedMemeberListEditorComponent = (
               }}
               onClick={() => setDeletePopover(false)}
             >
-              No keep
+              No, Keep
             </Button>
           </div>
         </div>
