@@ -943,6 +943,7 @@ const getDueTasks = async (req) => {
 };
 
 const userTaskList = async (req, res, next) => {
+  const { limit = 50, skip = 0 } = req.query;
   try {
     const taskList = await Task.find({
       status: { $ne: 'done' },
@@ -961,6 +962,8 @@ const userTaskList = async (req, res, next) => {
           ],
         })
           .sort({ createdAt: -1 })
+          .skip(+skip)
+          .limit(+limit)
           .select('taskId')
           .populate(options);
         if (task) tasks.push(task);

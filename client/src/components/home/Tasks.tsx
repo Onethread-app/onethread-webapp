@@ -3,7 +3,7 @@ import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
 import { sortBy } from 'lodash';
 import TaskListContainer from './TaskListContainer';
-import CircularProgress from '@material-ui/core/CircularProgress';
+// import CircularProgress from '@material-ui/core/CircularProgress';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import { Icon, Popover } from '@blueprintjs/core';
 import styled from 'styled-components';
@@ -342,7 +342,7 @@ const TasksComponent = (props: any) => {
   return (
     <div className="tasks">
       <div className="flex justify-between items-center filter-option">
-        <h3 className="f3 fw2">My tasks</h3>
+        <h3 className="f3 fw2 ttc">My tasks</h3>
         <div className="flex items-center justify-between items-center">
           {sortedBy !== '' || assign !== '' || day !== '' ? (
             <ClearOutlinedIcon
@@ -711,20 +711,7 @@ const TasksComponent = (props: any) => {
         </div>
       </div>
       <div className="tasks-list w-100">
-        {loading ? (
-          <div className="flex justify-center mt2 w-100">
-            <CircularProgress
-              style={{ color: 'rgb(48, 48, 83)' }}
-              size={26}
-            />
-          </div>
-        ) : tasks.length > 0 ? (
-          <>
-            <TaskListContainer tasks={tasks} />
-          </>
-        ) : (
-          <div className="w-100 tc gray mt2">No Tasks Deadline</div>
-        )}
+        <TaskListContainer tasks={tasks} loading={loading} />
       </div>
     </div>
   );

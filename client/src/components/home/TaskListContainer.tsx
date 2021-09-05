@@ -1,6 +1,7 @@
 import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import styled from 'styled-components';
+import TaskListSkeleton from './TaskListSkeleton';
 import TaskTableContainer from './TaskTableContainer';
 
 const TaskListContainerDiv = styled.div`
@@ -60,7 +61,9 @@ const HeaderItem = styled.div`
 `;
 
 const TaskListContainer = (props: any) => {
-  return (
+  return props.loading ? (
+    <TaskListSkeleton />
+  ) : props.tasks.length > 0 ? (
     <TaskListContainerDiv>
       <ListHeader>
         <HeaderItem>
@@ -81,6 +84,10 @@ const TaskListContainer = (props: any) => {
       </ListHeader>
       <TaskTableContainer tasks={props.tasks} />
     </TaskListContainerDiv>
+  ) : (
+    <div className="w-100 tc gray mt2">
+      Create some tasks in board.
+    </div>
   );
 };
 

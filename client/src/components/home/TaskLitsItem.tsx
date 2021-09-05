@@ -4,7 +4,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-const TaskItemContainer = styled.div`
+export const TaskItemContainer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;

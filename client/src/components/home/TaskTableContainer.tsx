@@ -5,7 +5,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import { ITask } from 'stores/board/Reducer';
 import TaskLitsItem from './TaskLitsItem';
 
-const TasksContainerDiv = styled.div`
+export const TasksContainerDiv = styled.div`
   flex-grow: 1;
   background: #ffffff;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
