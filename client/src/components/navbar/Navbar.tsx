@@ -47,6 +47,7 @@ const Navbar = (props: INavbarInternalProps) => {
         position: isMobileOnly ? 'absolute' : 'sticky',
         left: isMobileOnly ? 0 : 'auto',
         right: isMobileOnly ? 0 : 'auto',
+        top: isMobileOnly ? '-65px' : 'auto',
       }}
     >
       <div className="w-100">
