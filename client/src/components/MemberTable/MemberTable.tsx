@@ -28,6 +28,7 @@ import {
 } from '@blueprintjs/core';
 import { useTranslation } from 'react-i18next';
 import altImg from '../../resources/images/profilePhoto.svg';
+import { useSelector } from 'react-redux';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -78,13 +79,16 @@ const useStyles = makeStyles({
 });
 
 export default function MemberTable({ type, props, rows }) {
+  const { t } = useTranslation();
   const classes = useStyles();
+  const userId = useSelector(
+    (state: any) => state.userReducer.user._id,
+  );
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [editMember, setEditMember] = React.useState();
   const [showDialogEdit, setShowDialogEdit] = React.useState(false);
   const [showDialogAdd, setShowDialogAdd] = React.useState(false);
-  const { t } = useTranslation();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -513,6 +517,24 @@ export default function MemberTable({ type, props, rows }) {
                                         </Button>
                                       ) : null
                                     ) : null}
+                                    {companyPermit(
+                                      props.company.role,
+                                    ) &&
+                                      row.role !== 'superAdmin' &&
+                                      userId !== row.accountId && (
+                                        <Button
+                                          className="outline-0 bp3-large bp3-popover-dismiss"
+                                          onClick={async () => {
+                                            await props.deleteCompanyMember(
+                                              row.id,
+                                            );
+                                          }}
+                                        >
+                                          <span className="red">
+                                            Remove Member
+                                          </span>
+                                        </Button>
+                                      )}
                                   </ButtonGroup>
                                 }
                                 target={

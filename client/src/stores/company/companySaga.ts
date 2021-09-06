@@ -750,5 +750,6 @@ export default function* companySaga() {
     call(onInviteColleagueInBulk),
     call(onEditCompanyCertificate),
     call(onGetLatestCompletedTasks),
+    call(onDeleteCompanyMember),
   ]);
 }
