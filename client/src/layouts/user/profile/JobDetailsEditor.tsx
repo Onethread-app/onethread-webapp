@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateInput } from '@blueprintjs/datetime';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { Checkbox, TextArea, Button } from '@blueprintjs/core';
@@ -15,8 +15,10 @@ import {
   maxValue,
 } from 'components/final-form/utils';
 import { IExperience } from 'stores/user/Reducer';
+import { saveJobDetailsForm } from 'stores/jobDetailsForm/Actions';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { useTranslation } from 'react-i18next';
+
 interface IJobFormProps {
   setShowDialog: (val: boolean) => void;
   edit: boolean;
@@ -25,9 +27,19 @@ interface IJobFormProps {
 interface IJobFormInternalProps extends IJobFormProps {
   addJobExperienceAction: (val: {}) => any;
   editJobExperienceAction: (jobInfo: {}, id: string) => any;
+  saveJobDetailsForm: any;
+  previousData: any;
 }
 
 const JobFormComponent = (props: IJobFormInternalProps) => {
+  const { t } = useTranslation();
+  const [data, setData] = useState<any>([]);
+  const [defaultValues, setDefaultValues] = useState<any>([]);
+
+  const handleChange = (name: string, value: any) => {
+    setData({ ...data, [name]: value });
+  };
+
   const onSubmit = async (values: any) => {
     let response;
     if (values.currentlyWork) {
@@ -38,11 +50,13 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
     }
     if (props.edit === false) {
       response = await props.addJobExperienceAction(values);
+      props.saveJobDetailsForm({});
     } else if (props.edit === true) {
       response = await props.editJobExperienceAction(
         values,
         values._id,
       );
+      props.saveJobDetailsForm({});
     }
     if (response.message === 200) {
       props.setShowDialog(false);
@@ -51,7 +65,13 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
     return { [response.fieldName]: response.message };
   };
 
-  const { t } = useTranslation();
+  useEffect(() => {
+    setDefaultValues(props.previousData);
+  }, []);
+
+  useEffect(() => {
+    props.saveJobDetailsForm(data);
+  }, [data]);
 
   return (
     <>
@@ -63,27 +83,39 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
           companyName:
             props.values && props.values.name
               ? props.values.name
+              : defaultValues.companyName
+              ? defaultValues.companyName
               : '',
           positionName:
             props.values && props.values.qualification
               ? props.values.qualification
+              : defaultValues.positionName
+              ? defaultValues.positionName
               : '',
           // TODO: Date type must be used instead of string
           startYear:
             props.values && props.values.startYear
               ? props.values.startYear
+              : defaultValues.startYear
+              ? defaultValues.startYear
               : '',
           endingYear:
             props.values && props.values.endingYear
               ? props.values.endingYear
+              : defaultValues.endingYear
+              ? defaultValues.endingYear
               : '',
           currentlyWork:
             props.values && props.values.currentStatus
               ? props.values.currentStatus
+              : defaultValues.currentlyWork
+              ? defaultValues.currentlyWork
               : false,
           jobDescription:
             props.values && props.values.description
               ? props.values.description
+              : defaultValues.jobDescription
+              ? defaultValues.jobDescription
               : '',
         }}
         validate={(values: any) => {
@@ -120,12 +152,14 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <label>{t('app.user.User-job.Company-name')}</label>
-                  {/* <label>Company Name</label> */}
                   <InputGroupFieldWithError
                     id="companyName"
                     className="mt1"
                     value={input.value}
-                    onChange={input.onChange}
+                    onChange={(e) => {
+                      input.onChange(e);
+                      handleChange('companyName', e.target.value);
+                    }}
                     style={{
                       boxShadow: 'none',
                     }}
@@ -133,6 +167,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                       checkError(meta) &&
                       (meta.error || meta.submitError)
                     }
+                    autoFocus={true}
                   />
                 </div>
               )}
@@ -147,12 +182,14 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                   <label>
                     {t('app.user.User-job.Position-name')}
                   </label>
-                  {/* <label>Position Name</label> */}
                   <InputGroupFieldWithError
                     id="positionName"
                     className="mt1"
                     value={input.value}
-                    onChange={input.onChange}
+                    onChange={(e) => {
+                      input.onChange(e);
+                      handleChange('positionName', e.target.value);
+                    }}
                     style={{
                       boxShadow: 'none',
                     }}
@@ -172,13 +209,15 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                   className={`${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <label>{t('app.user.User-job.Start-year')}</label>
-                  {/* <label>Start Year</label> */}
                   <DateInput
                     formatDate={(date: Date) =>
                       date.toLocaleDateString()
                     }
                     parseDate={(str: string) => new Date(str)}
-                    onChange={input.onChange}
+                    onChange={(e) => {
+                      input.onChange(e);
+                      handleChange('startYear', e);
+                    }}
                     canClearSelection={false}
                     value={
                       values.startYear
@@ -210,13 +249,15 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <label>{t('app.user.User-job.End')}</label>
-                  {/* <label>End Year</label> */}
                   <DateInput
                     formatDate={(date: Date) =>
                       date.toLocaleDateString()
                     }
                     parseDate={(str: string) => new Date(str)}
-                    onChange={input.onChange}
+                    onChange={(e) => {
+                      input.onChange(e);
+                      handleChange('endingYear', e);
+                    }}
                     disabled={
                       new Date(
                         values.startYear,
@@ -257,12 +298,14 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <label>{t('app.user.User-job.Description')}</label>
-                  {/* <label>Description</label> */}
                   <TextArea
                     className="mt1"
                     id="jobDescription"
                     value={input.value}
-                    onChange={input.onChange}
+                    onChange={(e) => {
+                      input.onChange(e);
+                      handleChange('jobDescription', e.target.value);
+                    }}
                     style={{
                       resize: 'none',
                       minHeight: '50px',
@@ -294,10 +337,13 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                       input.onChange(e);
                       values.currentlyWork = !values.currentlyWork;
                       values.endingYear = '';
+                      handleChange(
+                        'currentlyWork',
+                        values.currentlyWork,
+                      );
                     }}
                     checked={values.currentlyWork}
                     label={t('app.user.User-job.Current-work')}
-                    // label="I currently work here"
                     disabled={values.startYear === '' ? true : false}
                   />
                   {checkError(meta) && (
@@ -345,7 +391,14 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
   );
 };
 
-export const JobForm = connect(null, {
+const mapStateToProps = (state: any) => {
+  return {
+    previousData: state.jobDetailsFormReducer.data,
+  };
+};
+
+export const JobForm = connect(mapStateToProps, {
   addJobExperienceAction,
   editJobExperienceAction,
+  saveJobDetailsForm,
 })(JobFormComponent);

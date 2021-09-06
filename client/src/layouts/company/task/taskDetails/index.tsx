@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
+import { isMobileOnly } from 'react-device-detect';
 import { ITask } from 'stores/board/Reducer';
-import { connect } from 'react-redux';
-import { TaskTitleView } from './TaskTitle/TaskTitleView';
-import { TaskDescriptionView } from './TaskDescription/TaskDescriptionView';
-import { Popover } from '@blueprintjs/core';
-import attachFiles from 'resources/images/attachFiles.png';
 import { ICompany } from 'stores/company/Reducer';
+import { connect } from 'react-redux';
+import { Popover } from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
+// import { AssignedMembersEditor } from './AssignedMembers/AssignedMembersEditor';
+// import addMembers from 'resources/images/addMembers.png';
+import attachFiles from 'resources/images/attachFiles.png';
 import TaskFiles from './Files/TaskFiles';
 import TaskFilesAttach from './Files/TaskFilesAttach';
-import { useTranslation } from 'react-i18next';
 import { SubTaskView } from '../subTask/SubtaskView';
 import AddSubTaskButton from '../subTask/AddSubtaskButton';
 import Timer from 'components/timer/Timer';
+import { ActivityView } from '../activity/ActivityView';
+import { TaskTitleView } from './TaskTitle/TaskTitleView';
+import { TaskDescriptionView } from './TaskDescription/TaskDescriptionView';
 
 interface TaskDetailsInternalProps {
   currentTask: ITask;
@@ -78,9 +82,14 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
         </div>
       </div>
       <div className="w-100">
-        <div className="mv2">
+        <div className="mv3">
           <TaskDescriptionView />
         </div>
+        {isMobileOnly && (
+          <div className="mv3">
+            <ActivityView />
+          </div>
+        )}
         <div className="mv3">
           <SubTaskView />
         </div>

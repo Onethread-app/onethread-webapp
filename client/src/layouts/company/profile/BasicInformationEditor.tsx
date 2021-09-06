@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { isNumber, isEmpty, isEqual } from 'lodash';
 import { connect } from 'react-redux';
+import { saveCompanyBasicInfoForm } from 'stores/companyBasicInfoForm/Actions';
 import { Button, Icon, HTMLSelect } from '@blueprintjs/core';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
@@ -10,6 +11,8 @@ import { useTranslation } from 'react-i18next';
 
 interface CompanyInfoProps {
   companyInfo: ICompany;
+  saveCompanyBasicInfoForm: any;
+  previousData: any;
 }
 
 const Type = [
@@ -31,6 +34,8 @@ const CompanyInfoFormComponent = (
     setShowDialog: (val: boolean) => void;
   } & CompanyInfoProps,
 ) => {
+  const { t } = useTranslation();
+  const [data, setData] = useState<any>([]);
   const [values, setValues] = useState({
     name: props.companyInfo.name,
     type: props.companyInfo.type,
@@ -89,11 +94,13 @@ const CompanyInfoFormComponent = (
       ? event.toString()
       : event.target.value;
     setValues({ ...values, [name]: value });
+    setData({ ...values, [name]: value });
   };
 
   const onChangeSelectField = (name: string) => (event: any) => {
     const value = event.currentTarget.value;
     setValues({ ...values, [name]: value });
+    setData({ ...values, [name]: value });
     setErrors({ ...errors, [name]: '' });
   };
 
@@ -105,13 +112,25 @@ const CompanyInfoFormComponent = (
     }
   };
 
-  const { t } = useTranslation();
+  useEffect(() => {
+    setValues({
+      name: props.previousData.name,
+      type: props.previousData.type,
+      address: props.previousData.address,
+      email: props.previousData.email,
+      legalOwnerName: props.previousData.legalOwnerName,
+      legalOwnerMail: props.previousData.legalOwnerMail,
+    });
+  }, []);
+
+  useEffect(() => {
+    props.saveCompanyBasicInfoForm(data);
+  }, [data]);
 
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
         {t('app.company.Company-profile.Basic')}
-        {/* Basic Information */}
       </h1>
       <div className={` ${errors.name ? 'mb3' : 'mb4'}`}>
         <InputGroupField
@@ -121,7 +140,6 @@ const CompanyInfoFormComponent = (
           placeHolder={`${t(
             'app.forms.Create-company.Name',
           )} (Required)`}
-          // placeHolder="Company Name (Required)"
           leftIcon="user"
           style={{
             boxShadow: 'none',
@@ -194,7 +212,6 @@ const CompanyInfoFormComponent = (
           placeHolder={`${t(
             'app.forms.Create-company.Address',
           )} (Required)`}
-          // placeHolder="Company Address (Required)"
           leftIcon="map-marker"
           style={{
             boxShadow: 'none',
@@ -235,7 +252,6 @@ const CompanyInfoFormComponent = (
           value={values.email}
           onChange={handleChange('email')}
           placeHolder={t('app.forms.Create-company.Email')}
-          // placeHolder="Company email address"
           leftIcon="envelope"
           style={{
             boxShadow: 'none',
@@ -279,7 +295,6 @@ const CompanyInfoFormComponent = (
           value={values.legalOwnerName}
           onChange={handleChange('legalOwnerName')}
           placeHolder={t('app.forms.Create-company.Legal-name')}
-          // placeHolder="Legal Owner Name"
           leftIcon="mugshot"
           style={{
             boxShadow: 'none',
@@ -324,7 +339,6 @@ const CompanyInfoFormComponent = (
           value={values.legalOwnerMail}
           onChange={handleChange('legalOwnerMail')}
           placeHolder={t('app.forms.Create-company.Legal-email')}
-          // placeHolder="Legal Owner email address"
           leftIcon="envelope"
           style={{
             boxShadow: 'none',
@@ -414,9 +428,11 @@ const CompanyInfoFormComponent = (
 const mapStateToProps = (state: any) => {
   return {
     companyInfo: state.companyReducer.currentCompany,
+    previousData: state.companyBasicInfoFormReducer.data,
   };
 };
 
 export const CompanyInfoForm = connect(mapStateToProps, {
+  saveCompanyBasicInfoForm,
   editCompanyInfoAction,
 })(CompanyInfoFormComponent);

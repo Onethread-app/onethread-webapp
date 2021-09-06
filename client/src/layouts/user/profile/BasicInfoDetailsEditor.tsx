@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { editUserInfoAction } from 'stores/user/Actions';
 import { Button, RadioGroup, Radio } from '@blueprintjs/core';
@@ -7,6 +7,7 @@ import {
   InputGroupFieldWithError,
 } from 'components/fields/InputGroupField';
 import { User } from 'stores/user/Reducer';
+import { saveUserBasicInfoForm } from 'stores/UserBasicInfoDetailsForm/Actions';
 import { DateInput } from '@blueprintjs/datetime';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { isEqual, isEmpty } from 'lodash';
@@ -19,15 +20,22 @@ import {
 import { DropdownField } from 'components/fields/DropdownField';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { useTranslation } from 'react-i18next';
+
 interface IBasicInfoProps {
   setShowDialog: (val: boolean) => void;
 }
 interface IBasicInfoInternalProps extends IBasicInfoProps {
   userInfo: User;
   editInfoAction: (val: User) => any;
+  saveUserBasicInfoForm: any;
+  previousData: any;
 }
 
 const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
+  const { t } = useTranslation();
+  const [defaultValues, setDefaultValues] = useState<any>([]);
+  const [data, setData] = useState<any>([]);
+
   const maxBirthDate = () => {
     const d = new Date();
     const maxDate = d.getFullYear() - 13;
@@ -42,24 +50,39 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
     const response = await props.editInfoAction(values);
     if (response.message === 200) {
       props.setShowDialog(false);
+      props.saveUserBasicInfoForm({});
       return true;
     }
     return { [response.fieldName]: response.message };
   };
 
-  const { t } = useTranslation();
+  const handleChange = (name: string, value: any) => {
+    setData({ ...data, [name]: value });
+  };
+
+  useEffect(() => {
+    setDefaultValues(props.previousData);
+  }, []);
+
+  useEffect(() => {
+    props.saveUserBasicInfoForm(data);
+  }, [data]);
 
   return (
     <Form
       onSubmit={onSubmit}
       initialValues={{
         email: props.userInfo.email,
-        secondaryEmail: props.userInfo.secondaryEmail,
+        secondaryEmail:
+          props.userInfo.secondaryEmail ||
+          defaultValues.secondaryEmail,
         // contactNo: props.userInfo.contactNo.substring(3),
-        location: props.userInfo.location,
-        gender: props.userInfo.gender,
-        birthDate: props.userInfo.birthDate,
-        bloodGroup: props.userInfo.bloodGroup,
+        location: props.userInfo.location || defaultValues.location,
+        gender: props.userInfo.gender || defaultValues.gender,
+        birthDate:
+          props.userInfo.birthDate || defaultValues.birthDate,
+        bloodGroup:
+          props.userInfo.bloodGroup || defaultValues.bloodGroup,
       }}
       validate={(values: any) => {
         const errors = {} as any;
@@ -91,7 +114,6 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             render={({ input, meta }) => (
               <div className="mb4">
                 <label>{t('app.user.Personal-profile.Email')}</label>
-                {/* <label>Email</label> */}
                 <InputGroupField
                   id="email"
                   className="mt1 bg-white"
@@ -113,12 +135,14 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                 <label>
                   {t('app.user.Personal-profile.Secondaty')}
                 </label>
-                {/* <label>Secondary Email</label> */}
                 <InputGroupFieldWithError
                   id="secondaryEmail"
                   className="mt1"
                   value={input.value}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleChange('secondaryEmail', e.target.value);
+                  }}
                   style={{
                     boxShadow: 'none',
                   }}
@@ -126,6 +150,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                     checkError(meta) &&
                     (meta.error || meta.submitError)
                   }
+                  autoFocus={true}
                 />
               </div>
             )}
@@ -164,11 +189,13 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                 <label>
                   {t('app.user.Personal-profile.Address')}
                 </label>
-                {/* <label>Address</label> */}
                 <InputGroupFieldWithError
                   id="location"
                   value={input.value}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleChange('location', e.target.value);
+                  }}
                   style={{
                     boxShadow: 'none',
                   }}
@@ -183,7 +210,6 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
           />
           <div className="mb4">
             <label>{t('app.user.Personal-profile.Blood')}</label>
-            {/* <label>Blood Group</label> */}
             <Field<string>
               name="bloodGroup"
               render={({ input, meta }) => (
@@ -200,7 +226,10 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                     { _id: 'B+', name: 'B+' },
                     { _id: 'B-', name: 'B-' },
                   ]}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleChange('bloodGroup', e.target.value);
+                  }}
                   className="bn"
                 />
               )}
@@ -219,7 +248,10 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                     date.toLocaleDateString()
                   }
                   parseDate={(str: string) => new Date(str)}
-                  onChange={input.onChange}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    handleChange('birthDate', e);
+                  }}
                   canClearSelection={false}
                   value={
                     values.birthDate
@@ -248,8 +280,10 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
               <RadioGroup
                 name="gender"
                 label={t('app.user.Personal-profile.Gender')}
-                // label="Gender"
-                onChange={input.onChange}
+                onChange={(e: any) => {
+                  input.onChange(e);
+                  handleChange('gender', e.target.value);
+                }}
                 inline={true}
                 className="tigrow-lightBlue outline-0"
                 selectedValue={values.gender}
@@ -305,9 +339,11 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     userInfo: state.userReducer.user,
+    previousData: state.userBasicInfoFormReducer.data,
   };
 };
 
 export const BasicInfoForm = connect(mapStateToProps, {
   editInfoAction: editUserInfoAction,
+  saveUserBasicInfoForm,
 })(BasicInfoFormComponent);

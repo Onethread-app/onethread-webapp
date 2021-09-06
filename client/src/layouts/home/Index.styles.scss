@@ -266,15 +266,26 @@
         }
       }
     }
+
+    @media screen and (max-width: 1440px) {
+      width: 850px;
+    }
+
+    @media screen and (max-width: 1366px) {
+      width: 780px;
+    }
+
     @media screen and (max-width: 1024px) {
       width: 1000px;
     }
+
     @media screen and (max-width: 425px) {
       .filter-option {
         padding: 0rem;
       }
       width: 400px;
     }
+
     @media screen and (max-width: 320px) {
       width: 300px;
     }

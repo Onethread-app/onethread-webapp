@@ -1,0 +1,1 @@
+export const SAVE_REPORT_FORM = 'SAVE_REPORT_FORM';
