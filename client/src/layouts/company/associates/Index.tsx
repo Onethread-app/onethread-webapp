@@ -8,6 +8,7 @@ import Navbar from 'components/navbar/Navbar';
 import { ICompany } from 'stores/company/Reducer';
 import { useTranslation } from 'react-i18next';
 import { isMobileOnly } from 'react-device-detect';
+import { companyPermit } from 'stores/UtilsActions';
 
 interface AssociatesPageProps {
   user: User;
@@ -38,17 +39,20 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
           <Tab
             id="associates"
             title={t('app.company.Partners.Partners')}
-            // title="Partners"
             panel={<AssociateList />}
             className="outline-0"
           />
-          <Tab
-            id="pending_associates"
-            title={t('app.company.Partners.Pending-partners')}
-            // title="Pending Partners"
-            panel={<PendingAssociateList />}
-            className="outline-0"
-          />
+          {companyPermit(
+            props.company.role,
+            'addAcceptRejectAssociate',
+          ) && (
+            <Tab
+              id="pending_associates"
+              title={t('app.company.Partners.Pending-partners')}
+              panel={<PendingAssociateList />}
+              className="outline-0"
+            />
+          )}
         </Tabs>
       </div>
     </>

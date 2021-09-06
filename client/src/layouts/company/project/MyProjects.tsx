@@ -120,7 +120,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     }
 
     loadProjects();
-  }, []);
+  }, [props.company._id]);
 
   useEffect(() => {
     if (

@@ -5,7 +5,7 @@ import { tigrowApi } from 'config';
 // import { isEqual } from 'lodash';
 import { tokenConfig } from 'stores/UtilsActions';
 // import { combineReducers } from 'redux';
-import { isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 // import { Associate } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
 import { ICompany } from 'stores/company/Reducer';
@@ -20,6 +20,8 @@ import {
 } from './Actions';
 import { getProjectAssociatesFailure } from 'stores/project/Actions';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { getCompanyId } from 'stores/company/Selector';
+import { getProjectId } from 'stores/project/Selector';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
@@ -61,11 +63,12 @@ function* addAssociate(action: IAddAssociateAction) {
 
 function* getAllAssociates() {
   try {
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
     const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const companyId = yield select(selectCompanyId);
+    const companyId = yield select(getCompanyId);
+    if (
+      (headers as any).headers.Authorization &&
+      !isEmpty(companyId)
+    ) {
       const response = yield tigrowApi.get(
         `associate/${companyId}`,
         headers,
@@ -100,9 +103,8 @@ function* getAllAssociates() {
 function* getProjectAssociates() {
   try {
     const headers = tokenConfig();
-    const selectProjectId = (state) => state.projectReducer.pid;
+    const pid = yield select(getProjectId);
     if ((headers as any).headers.Authorization) {
-      const pid = yield select(selectProjectId);
       const response = yield tigrowApi.get(
         `/teams/member-list?pid=${pid}`,
         headers,
@@ -120,10 +122,11 @@ function* getProjectAssociates() {
 function* getAllPendingAssociates() {
   try {
     const headers = tokenConfig();
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
-    if ((headers as any).headers.Authorization) {
-      const companyId = yield select(selectCompanyId);
+    const companyId = yield select(getCompanyId);
+    if (
+      (headers as any).headers.Authorization &&
+      !isEmpty(companyId)
+    ) {
       const response = yield tigrowApi.get(
         `associate/pending/${companyId}`,
         headers,
@@ -172,17 +175,11 @@ function* acceptPendingAssociate(action: {
 }) {
   try {
     const headers = tokenConfig();
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
-    console.log(
-      (headers as any).headers.Authorization && action.associateID,
-    );
+    const companyID = yield select(getCompanyId);
     if (
       (headers as any).headers.Authorization &&
       action.associateID
     ) {
-      const companyID = yield select(selectCompanyId);
-
       const response = yield tigrowApi.post(
         `associate/accept/${companyID}`,
         {
@@ -213,17 +210,12 @@ function* rejectPendingAssociate(action: {
 }) {
   try {
     const headers = tokenConfig();
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
-    console.log(
-      (headers as any).headers.Authorization && action.associateID,
-    );
+    const companyID = yield select(getCompanyId);
     if (
       (headers as any).headers.Authorization &&
-      action.associateID
+      action.associateID &&
+      !isEmpty(companyID)
     ) {
-      const companyID = yield select(selectCompanyId);
-
       const response = yield tigrowApi.post(
         `associate/reject/${companyID}`,
         {
@@ -251,10 +243,12 @@ function* rejectPendingAssociate(action: {
 function* getSelectedAssociate({ payload }: any) {
   try {
     const headers = tokenConfig();
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
-    if ((headers as any).headers.Authorization && payload) {
-      const companyId = yield select(selectCompanyId);
+    const companyId = yield select(getCompanyId);
+    if (
+      (headers as any).headers.Authorization &&
+      payload &&
+      !isEmpty(companyId)
+    ) {
       const response = yield tigrowApi.get(
         `associate/${payload}/${companyId}`,
         headers,

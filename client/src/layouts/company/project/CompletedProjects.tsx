@@ -72,7 +72,7 @@ const CompletedProjectsComponent = (
     }
 
     loadProjects();
-  }, []);
+  }, [props.company._id]);
 
   useEffect(() => {
     setAllProjects(

@@ -65,33 +65,6 @@ const load = async (
   getSelectedTask: (taskId: string) => any,
 ) => {
   await fetchUser();
-  if (isEmpty((reactRouterMatch.params as any).cname) === false) {
-    const response = await getCompanyInformation(
-      (reactRouterMatch.params as any).cname,
-    );
-    // only handled for 404 error status
-    if (response.status === 404) {
-      return response.status;
-    }
-  }
-  if (isEmpty((reactRouterMatch.params as any).boardId) === false) {
-    const responseStatus = await getSelectedBoardDetails(
-      (reactRouterMatch.params as any).boardId,
-    );
-    // only handled for 404 error status
-    if (responseStatus === 404) {
-      return responseStatus;
-    }
-  }
-  if (isEmpty((reactRouterMatch.params as any).taskId) === false) {
-    const responseStatus = await getSelectedTask(
-      (reactRouterMatch.params as any).taskId,
-    );
-    // only handled for 404 error status
-    if (responseStatus === 404) {
-      return responseStatus;
-    }
-  }
   return Promise.resolve({});
 };
 
@@ -136,23 +109,19 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const updateCompanyReducer = async () => {
-    await props.getCompanyDetails((props.match.params as any).cname);
+  const updateCompanyReducer = () => {
+    props.getCompanyDetails((props.match.params as any).cname);
   };
-  const updateProjectReducer = async () => {
-    await props.getSingleProject(
-      (props.match.params as any).projectId,
-    );
+  const updateProjectReducer = () => {
+    props.getSingleProject((props.match.params as any).projectId);
   };
 
-  const updateBoardReducer = async () => {
-    await props.getSelectedBoard((props.match.params as any).boardId);
+  const updateBoardReducer = () => {
+    props.getSelectedBoard((props.match.params as any).boardId);
   };
 
-  const updateTaskReducer = async () => {
-    await props.getSelectedTaskDetails(
-      (props.match.params as any).taskId,
-    );
+  const updateTaskReducer = () => {
+    props.getSelectedTaskDetails((props.match.params as any).taskId);
   };
 
   useEffect(() => {
@@ -198,8 +167,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       props.history.push(`/notFound`);
     }
     if (
-      props.company._id &&
-      projectId &&
+      !isEmpty(props.company._id) &&
+      !isEmpty(projectId) &&
       projectId !== props.project._id
     ) {
       updateProjectReducer();
@@ -216,11 +185,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       props.history.push(`/notFound`);
     }
     if (
-      props.company._id &&
-      props.project._id &&
-      boardId &&
+      !isEmpty(props.company._id) &&
+      !isEmpty(props.project._id) &&
+      !isEmpty(boardId) &&
       boardId !== props.boardId
     ) {
+      console.log(props.company._id, isEmpty(props.company._id));
       updateBoardReducer();
     }
     props.fetchRooms();
@@ -237,9 +207,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     }
 
     if (
-      props.company._id &&
-      props.project._id &&
-      props.boardId &&
+      !isEmpty(props.company._id) &&
+      !isEmpty(props.project._id) &&
+      !isEmpty(props.boardId) &&
       taskId &&
       taskId !== props.taskId
     ) {

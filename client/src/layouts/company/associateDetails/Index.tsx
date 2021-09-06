@@ -30,7 +30,7 @@ const AssociatesDetailsViewComponent = (
       setLoading(false);
     }
     loadAssociate();
-  }, []);
+  }, [props.company._id]);
 
   return (
     <>
