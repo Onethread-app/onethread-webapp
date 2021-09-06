@@ -174,7 +174,7 @@ export const SubTaskViewPageComponent = (
                         props.updateSubTask(subtaskData);
                       }}
                     />
-                    <div className="flex">
+                    <div className="flex items-center">
                       <div
                         className={
                           subTask.assignedMembers &&
@@ -311,7 +311,7 @@ export const SubTaskViewPageComponent = (
                       </div>
                       <div>
                         <Icon
-                          className="fr pointer mr3 pt1"
+                          className="fr pointer mr3"
                           style={{
                             marginTop: 0,
                             color: 'lightsteelblue',
@@ -324,10 +324,12 @@ export const SubTaskViewPageComponent = (
                         />
                       </div>
 
-                      <SubTaskDelete
-                        subTask={subTask}
-                        deleteSubTask={props.deleteSubTask}
-                      />
+                      <div className="pt2">
+                        <SubTaskDelete
+                          subTask={subTask}
+                          deleteSubTask={props.deleteSubTask}
+                        />
+                      </div>
                     </div>
                   </div>
                 ))}
