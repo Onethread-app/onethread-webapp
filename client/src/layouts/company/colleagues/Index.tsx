@@ -44,7 +44,7 @@ interface Colleagues {
     values: { role: string },
     memberId: string,
   ) => void;
-  deleteCompanyMember: (memberId: string) => void;
+  deleteCompanyMember: (accountId: string) => void;
   inviteColleagueInBulk: (emails: any) => void;
   companyLoading: boolean;
   subscriptiontExpired: boolean;

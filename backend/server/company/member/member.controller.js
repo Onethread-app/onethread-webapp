@@ -27,6 +27,7 @@ const {
 const {
   triggerUnreadNotifications,
 } = require('../../services/webpush.services');
+const { Team } = require('../../team-member/team.model');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -229,15 +230,21 @@ const deleteMember = async (req, res, next) => {
   try {
     // check role: superAdmin/admin
     const member = await Member.findOne({
-      account: req.user._id,
+      _id: req.member._id,
       company: req.company._id,
     });
 
-    if (!['superAdmin', 'admin'].includes(member.role)) {
+    await Team.updateOne({
+      member: member._id,
+    }, {
+      $set: { removed: true }
+    });
+
+    if (['superAdmin'].includes(member.role)) {
       return res.status(403).json({
         message: `Restricted`,
-      });
-    }
+      })
+    };
 
     req.member.removed = true;
 
