@@ -343,7 +343,6 @@ const AppTable = ({
       }
     }
   };
-
   return (
     <>
       <div className={classes.root} style={{ paddingTop: 5 }}>

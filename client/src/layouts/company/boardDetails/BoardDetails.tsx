@@ -13,6 +13,7 @@ import MemberGroup from 'components/member/MemberGroup';
 import MultiSelectComponent from 'components/dashboard/project-status/MultiSelectComponent';
 import CreateTaskButton from 'components/task/CreateTaskButton';
 import PriorityColorList from 'components/task/PriorityColorList';
+import CalendarView from 'components/task/CalendarView';
 
 import { ICompany } from 'stores/company/Reducer';
 import {
@@ -48,12 +49,12 @@ interface IBoardDetails {
   currentProject: IProject;
   setSortBy: (sort: SortTasksBy) => void;
   setFilerUsers: (list: IFilterUser[]) => void;
-  setPreferredView: (v: 'board' | 'list') => void;
+  setPreferredView: (v: 'board' | 'list' | 'calender') => void;
 }
 
 const BoardDetails = (props: IBoardDetails) => {
   const { t } = useTranslation();
-  const [view, setView] = useState<'board' | 'list'>(
+  const [view, setView] = useState<'board' | 'list' | 'calender'>(
     props.currentBoard.preferredView ?? 'list',
   );
   const [boardMembers, setBoardMembers] = useState<
@@ -96,7 +97,7 @@ const BoardDetails = (props: IBoardDetails) => {
       );
   }, [props.currentBoard]);
 
-  const handleViewChange = (v: 'board' | 'list') => {
+  const handleViewChange = (v: 'board' | 'list' | 'calender') => {
     if (props.fetchingBoard === false) {
       clearSort();
       setView(v);
@@ -187,6 +188,15 @@ const BoardDetails = (props: IBoardDetails) => {
                 className={`${view === 'board' && 'active'}`}
               >
                 {t('app.project.Tasks.Board')}
+              </p>
+
+              <p
+                onClick={() => {
+                  handleViewChange('calender');
+                }}
+                className={`${view === 'calender' && 'active'}`}
+              >
+                {t('app.project.Tasks.Calender')}
               </p>
             </ViewSelectDiv>
           </div>
@@ -357,6 +367,8 @@ const BoardDetails = (props: IBoardDetails) => {
         <ColumnsContainer />
       ) : view === 'list' ? (
         <TaskList />
+      ) : view === 'calender' ? (
+        <CalendarView />
       ) : null}
     </Container>
   );
