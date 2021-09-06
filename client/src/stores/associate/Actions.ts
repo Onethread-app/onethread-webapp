@@ -1,11 +1,11 @@
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
-import { isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import {
   GET_ALL_ASSOCIATE,
   ADD_ASSOCIATE,
   GET_ALL_PENDING_ASSOCIATE,
-  associate
+  associate,
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 import { Associate } from './Reducer';
@@ -34,15 +34,13 @@ export const addAssociate = (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      
     } else {
       // tslint:disable-next-line: no-console
-      
+
       return error.response;
     }
   }
@@ -54,8 +52,12 @@ export const getAllAssociates = () => async (
 ) => {
   try {
     const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const companyId = getState().companyReducer.currentCompany._id;
+    const companyId = await getState().companyReducer.currentCompany
+      ._id;
+    if (
+      (headers as any).headers.Authorization &&
+      !isEmpty(companyId)
+    ) {
       const response = await tigrowApi.get(
         `associate/${companyId}`,
         headers,
@@ -76,15 +78,12 @@ export const getAllAssociates = () => async (
       dispatch({ type: GET_ALL_ASSOCIATE, payload: associates });
     } else {
       // tslint:disable-next-line: no-console
-      
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      
     } else {
       // tslint:disable-next-line: no-console
-      
       // return error.response;
     }
   }
@@ -96,9 +95,12 @@ export const getAllPendingAssociates = () => async (
 ) => {
   try {
     const headers = tokenConfig();
-
-    if ((headers as any).headers.Authorization) {
-      const companyId = getState().companyReducer.currentCompany._id;
+    const companyId = await getState().companyReducer.currentCompany
+      ._id;
+    if (
+      (headers as any).headers.Authorization &&
+      !isEmpty(companyId)
+    ) {
       const response = await tigrowApi.get(
         `associate/pending/${companyId}`,
         headers,
@@ -123,15 +125,12 @@ export const getAllPendingAssociates = () => async (
       });
     } else {
       // tslint:disable-next-line: no-console
-      
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      
     } else {
       // tslint:disable-next-line: no-console
-      
       // return error.response;
     }
   }
@@ -182,16 +181,13 @@ export const acceptPendingAssociate = (associateID: string) => async (
         });
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      
     } else {
       // tslint:disable-next-line: no-console
-      
       // return error.response;
     }
   }
@@ -230,16 +226,13 @@ export const rejectPendingAssociate = (associateID: string) => async (
         });
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      
     } else {
       // tslint:disable-next-line: no-console
-      
       // return error.response;
     }
   }
@@ -247,15 +240,15 @@ export const rejectPendingAssociate = (associateID: string) => async (
 
 export const getSelectedAssociate = (associateID: string) => ({
   type: associate.SELECT_ASSOCIATE_START,
-  payload: associateID
+  payload: associateID,
 });
 
 export const selectAssociateSuccess = (response: any) => ({
   type: associate.SELECT_ASSOCIATE_SUCCESS,
-  payload: response
+  payload: response,
 });
 
 export const selectAssociateFailure = (errorMessage: any) => ({
   type: associate.SELECT_ASSOCIATE_FAILURE,
-  payload: errorMessage
+  payload: errorMessage,
 });

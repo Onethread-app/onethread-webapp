@@ -38,7 +38,7 @@ export const AssociateListComponent = (
       setLoading(false);
     }
     loadAssociates(props.getAllAssociates);
-  }, []);
+  }, [props.company._id]);
 
   const { t } = useTranslation();
 

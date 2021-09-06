@@ -426,7 +426,6 @@ const TaskPageComponent = (
                 {/* Board */}
               </h3>
             )}
-            
           </div>
           <p
             className="pl2 mt3"
