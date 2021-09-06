@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash';
 import { User } from 'stores/user/Reducer';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 import TimerWatch from './timer/TimerWatch';
+import { isMobileOnly } from 'react-device-detect';
 
 interface SecondaryLayoutProps {
   Component: React.ComponentClass | React.StatelessComponent;
@@ -30,7 +31,7 @@ export const SecondaryLayout = (props: SecondaryLayoutProps) => {
   }, []);
 
   return props.Component ? (
-    <div className="relative h-100">
+    <div className={` ${isMobileOnly ? '' : 'relative'} h-100`}>
       <props.Component />
       {!!currentlyTracking.name && taskId !== currentlyTracking.task && (
         <div className="fixed" style={{ bottom: 20, right: 50 }}>
