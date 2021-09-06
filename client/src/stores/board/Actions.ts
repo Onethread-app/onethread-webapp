@@ -270,7 +270,9 @@ export const setFilerUsers = (list: IFilterUser[]) => ({
   payload: list,
 });
 
-export const setPreferredView = (v: 'board' | 'list') => ({
+export const setPreferredView = (
+  v: 'board' | 'list' | 'calender',
+) => ({
   type: BoardActionTypes.SET_PREFERRED_VIEW,
   payload: v,
 });

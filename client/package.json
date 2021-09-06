@@ -63,6 +63,7 @@
     "pusher-js": "^5.1.1",
     "react": "^16.9.0",
     "react-beautiful-dnd": "^11.0.5",
+    "react-big-calendar": "^0.35.0",
     "react-chartjs-2": "^2.10.0",
     "react-device-detect": "^1.11.14",
     "react-dom": "^16.12.0",

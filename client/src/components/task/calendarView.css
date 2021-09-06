@@ -1,0 +1,67 @@
+.rbc-header {
+  padding: 10px;
+  background: #f0f0f0;
+}
+
+@media screen and (max-width: 600px) {
+  .rbc-header {
+    padding: 3.5px;
+  }
+}
+.rbc-month-view {
+  background: #e5e5e5dc;
+}
+
+.rbc-off-range {
+  color: black;
+}
+
+.rbc-date-cell {
+  text-align: left;
+  padding: 5px;
+  padding-left: 10px;
+}
+
+.rbc-off-range-bg {
+  background: transparent;
+}
+
+.rbc-row {
+  margin-bottom: 2px;
+}
+
+.rbc-event-content {
+  padding: 2px;
+  padding-left: 8px;
+}
+
+.rbc-show-more {
+  background: transparent;
+}
+
+.rbc-task-style {
+  padding: 5px;
+  background: white;
+  color: black;
+  padding-left: 12px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  margin: 5;
+  margin-top: 0;
+  margin-bottom: 1;
+  margin-left: 20px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .rbc-task-style {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 11.5px;
+  }
+}
+
+.rbc-overlay .rbc-task-style {
+  margin-left: 0px;
+}
