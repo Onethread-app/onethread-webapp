@@ -10,6 +10,8 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 const SortingDiv = styled.div`
   display: flex;
   width: fit-content;
@@ -375,177 +377,175 @@ const TasksComponent = (props: any) => {
               position="bottom"
               popoverClassName="bg-white"
               content={
-                <div className="bg-white ma3">
-                  <div className="flex justify-end mb1">
-                    <button
-                      className="bp3-tag pointer bg-light-gray black"
-                      onClick={closePopover}
+                <ClickAwayListener onClickAway={closePopover}>
+                  <div className="bg-white ma3">
+                    <div
+                      className="flex items-center pointer mb2"
+                      style={{
+                        marginRight:
+                          sortedBy === 'dueDate' ? '8px' : '20px',
+                      }}
                     >
-                      close
-                    </button>
-                  </div>
-                  <div
-                    className="flex items-center pointer mb2"
-                    style={{
-                      marginRight:
-                        sortedBy === 'dueDate' ? '8px' : '20px',
-                    }}
-                  >
-                    <Icon
-                      icon={
-                        sortedBy === 'dueDate'
-                          ? 'tick-circle'
-                          : 'circle'
-                      }
-                      iconSize={16}
-                      className="mr2"
-                      color={
-                        sortedBy === 'dueDate' ? '#2EB67D' : 'inherit'
-                      }
-                      onClick={() =>
-                        sortedBy === 'dueDate'
-                          ? setSortedBy('')
-                          : setSortedBy('dueDate')
-                      }
-                    />
-                    <p
-                      className="mb0 mr1"
-                      onClick={() =>
-                        sortedBy === 'dueDate'
-                          ? setSortedBy('')
-                          : setSortedBy('dueDate')
-                      }
+                      <Icon
+                        icon={
+                          sortedBy === 'dueDate'
+                            ? 'tick-circle'
+                            : 'circle'
+                        }
+                        iconSize={16}
+                        className="mr2"
+                        color={
+                          sortedBy === 'dueDate'
+                            ? '#2EB67D'
+                            : 'inherit'
+                        }
+                        onClick={() =>
+                          sortedBy === 'dueDate'
+                            ? setSortedBy('')
+                            : setSortedBy('dueDate')
+                        }
+                      />
+                      <p
+                        className="mb0 mr1"
+                        onClick={() =>
+                          sortedBy === 'dueDate'
+                            ? setSortedBy('')
+                            : setSortedBy('dueDate')
+                        }
+                      >
+                        Due Date
+                      </p>
+                      {sortedBy === 'dueDate' && (
+                        <>
+                          {orderBy === 'asc' && (
+                            <Icon
+                              iconSize={12}
+                              icon={'arrow-up'}
+                              onClick={() => setOrderBy('desc')}
+                            />
+                          )}
+                          {orderBy === 'desc' && (
+                            <Icon
+                              iconSize={12}
+                              icon={'arrow-down'}
+                              onClick={() => setOrderBy('asc')}
+                            />
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div
+                      className="flex items-center pointer mb2"
+                      style={{
+                        marginRight:
+                          sortedBy === 'priority' ? '8px' : '20px',
+                      }}
                     >
-                      Due Date
-                    </p>
-                    {sortedBy === 'dueDate' && (
-                      <>
-                        {orderBy === 'asc' && (
-                          <Icon
-                            iconSize={12}
-                            icon={'arrow-up'}
-                            onClick={() => setOrderBy('desc')}
-                          />
-                        )}
-                        {orderBy === 'desc' && (
-                          <Icon
-                            iconSize={12}
-                            icon={'arrow-down'}
-                            onClick={() => setOrderBy('asc')}
-                          />
-                        )}
-                      </>
-                    )}
-                  </div>
-                  <div
-                    className="flex items-center pointer mb2"
-                    style={{
-                      marginRight:
-                        sortedBy === 'priority' ? '8px' : '20px',
-                    }}
-                  >
-                    <Icon
-                      icon={
-                        sortedBy === 'priority'
-                          ? 'tick-circle'
-                          : 'circle'
-                      }
-                      iconSize={16}
-                      className="mr2"
-                      color={
-                        sortedBy === 'priority'
-                          ? '#2EB67D'
-                          : 'inherit'
-                      }
-                      onClick={() =>
-                        sortedBy === 'priority'
-                          ? setSortedBy('')
-                          : setSortedBy('priority')
-                      }
-                    />
-                    <p
-                      className="mb0 mr1"
-                      onClick={() =>
-                        sortedBy === 'priority'
-                          ? setSortedBy('')
-                          : setSortedBy('priority')
-                      }
+                      <Icon
+                        icon={
+                          sortedBy === 'priority'
+                            ? 'tick-circle'
+                            : 'circle'
+                        }
+                        iconSize={16}
+                        className="mr2"
+                        color={
+                          sortedBy === 'priority'
+                            ? '#2EB67D'
+                            : 'inherit'
+                        }
+                        onClick={() =>
+                          sortedBy === 'priority'
+                            ? setSortedBy('')
+                            : setSortedBy('priority')
+                        }
+                      />
+                      <p
+                        className="mb0 mr1"
+                        onClick={() =>
+                          sortedBy === 'priority'
+                            ? setSortedBy('')
+                            : setSortedBy('priority')
+                        }
+                      >
+                        Priority
+                      </p>
+                      {sortedBy === 'priority' && (
+                        <>
+                          {orderBy === 'asc' && (
+                            <Icon
+                              iconSize={12}
+                              icon={'arrow-up'}
+                              onClick={() => setOrderBy('desc')}
+                            />
+                          )}
+                          {orderBy === 'desc' && (
+                            <Icon
+                              iconSize={12}
+                              icon={'arrow-down'}
+                              onClick={() => setOrderBy('asc')}
+                            />
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div
+                      className="flex items-center pointer mb2"
+                      style={{
+                        marginRight:
+                          sortedBy === 'status' ? '8px' : '20px',
+                      }}
                     >
-                      Priority
-                    </p>
-                    {sortedBy === 'priority' && (
-                      <>
-                        {orderBy === 'asc' && (
-                          <Icon
-                            iconSize={12}
-                            icon={'arrow-up'}
-                            onClick={() => setOrderBy('desc')}
-                          />
-                        )}
-                        {orderBy === 'desc' && (
-                          <Icon
-                            iconSize={12}
-                            icon={'arrow-down'}
-                            onClick={() => setOrderBy('asc')}
-                          />
-                        )}
-                      </>
-                    )}
+                      <Icon
+                        icon={
+                          sortedBy === 'status'
+                            ? 'tick-circle'
+                            : 'circle'
+                        }
+                        iconSize={16}
+                        className="mr2"
+                        color={
+                          sortedBy === 'status'
+                            ? '#2EB67D'
+                            : 'inherit'
+                        }
+                        onClick={() =>
+                          sortedBy === 'status'
+                            ? setSortedBy('')
+                            : setSortedBy('status')
+                        }
+                      />
+                      <p
+                        className="mb0 mr1"
+                        onClick={() =>
+                          sortedBy === 'status'
+                            ? setSortedBy('')
+                            : setSortedBy('status')
+                        }
+                      >
+                        Status
+                      </p>
+                      {sortedBy === 'status' && (
+                        <>
+                          {orderBy === 'asc' && (
+                            <Icon
+                              iconSize={12}
+                              icon={'arrow-up'}
+                              onClick={() => setOrderBy('desc')}
+                            />
+                          )}
+                          {orderBy === 'desc' && (
+                            <Icon
+                              iconSize={12}
+                              icon={'arrow-down'}
+                              onClick={() => setOrderBy('asc')}
+                            />
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <div
-                    className="flex items-center pointer mb2"
-                    style={{
-                      marginRight:
-                        sortedBy === 'status' ? '8px' : '20px',
-                    }}
-                  >
-                    <Icon
-                      icon={
-                        sortedBy === 'status'
-                          ? 'tick-circle'
-                          : 'circle'
-                      }
-                      iconSize={16}
-                      className="mr2"
-                      color={
-                        sortedBy === 'status' ? '#2EB67D' : 'inherit'
-                      }
-                      onClick={() =>
-                        sortedBy === 'status'
-                          ? setSortedBy('')
-                          : setSortedBy('status')
-                      }
-                    />
-                    <p
-                      className="mb0 mr1"
-                      onClick={() =>
-                        sortedBy === 'status'
-                          ? setSortedBy('')
-                          : setSortedBy('status')
-                      }
-                    >
-                      Status
-                    </p>
-                    {sortedBy === 'status' && (
-                      <>
-                        {orderBy === 'asc' && (
-                          <Icon
-                            iconSize={12}
-                            icon={'arrow-up'}
-                            onClick={() => setOrderBy('desc')}
-                          />
-                        )}
-                        {orderBy === 'desc' && (
-                          <Icon
-                            iconSize={12}
-                            icon={'arrow-down'}
-                            onClick={() => setOrderBy('asc')}
-                          />
-                        )}
-                      </>
-                    )}
-                  </div>
-                </div>
+                </ClickAwayListener>
               }
               target={
                 <div
@@ -567,148 +567,154 @@ const TasksComponent = (props: any) => {
               position="bottom"
               popoverClassName="bg-white"
               content={
-                <div className="bg-white ma3">
-                  <div className="flex justify-end mb1">
-                    <button
-                      className="bp3-tag pointer bg-light-gray black"
-                      onClick={closePopover}
+                <ClickAwayListener onClickAway={closePopover}>
+                  <div className="bg-white ma3">
+                    <p
+                      className="flex items-center pointer"
+                      onClick={() =>
+                        day === 'today' ? setDay('') : setDay('today')
+                      }
+                      style={{
+                        marginRight: day === 'today' ? '8px' : '20px',
+                      }}
                     >
-                      close
-                    </button>
+                      <Icon
+                        icon={
+                          day === 'today' ? 'tick-circle' : 'circle'
+                        }
+                        iconSize={16}
+                        className="mr2"
+                        color={
+                          day === 'today' ? '#2EB67D' : 'inherit'
+                        }
+                      />
+                      Today's Task
+                    </p>
+                    <p
+                      className="flex items-center pointer"
+                      onClick={() =>
+                        day === 'tomorrow'
+                          ? setDay('')
+                          : setDay('tomorrow')
+                      }
+                      style={{
+                        marginRight:
+                          day === 'tomorrow' ? '8px' : '20px',
+                      }}
+                    >
+                      <Icon
+                        icon={
+                          day === 'tomorrow'
+                            ? 'tick-circle'
+                            : 'circle'
+                        }
+                        iconSize={16}
+                        className="mr2"
+                        color={
+                          day === 'tomorrow' ? '#2EB67D' : 'inherit'
+                        }
+                      />
+                      Tomorrow's Task
+                    </p>
+                    <p
+                      className="flex items-center pointer"
+                      onClick={() =>
+                        day === 'upcomming'
+                          ? setDay('')
+                          : setDay('upcomming')
+                      }
+                      style={{
+                        marginRight:
+                          day === 'upcomming' ? '8px' : '20px',
+                      }}
+                    >
+                      <Icon
+                        icon={
+                          day === 'upcomming'
+                            ? 'tick-circle'
+                            : 'circle'
+                        }
+                        iconSize={16}
+                        className="mr2"
+                        color={
+                          day === 'upcomming' ? '#2EB67D' : 'inherit'
+                        }
+                      />
+                      Upcoming Task
+                    </p>
+                    <p
+                      className="flex items-center pointer"
+                      onClick={() =>
+                        day === 'due' ? setDay('') : setDay('due')
+                      }
+                      style={{
+                        marginRight: day === 'due' ? '8px' : '20px',
+                      }}
+                    >
+                      <Icon
+                        icon={
+                          day === 'due' ? 'tick-circle' : 'circle'
+                        }
+                        iconSize={16}
+                        className="mr2"
+                        color={day === 'due' ? '#2EB67D' : 'inherit'}
+                      />
+                      Due Task
+                    </p>
+                    <p
+                      className="flex items-center pointer"
+                      onClick={() =>
+                        assign === 'to-me'
+                          ? setAssign('')
+                          : setAssign('to-me')
+                      }
+                      style={{
+                        marginRight:
+                          assign === 'to-me' ? '8px' : '20px',
+                      }}
+                    >
+                      <Icon
+                        icon={
+                          assign === 'to-me'
+                            ? 'tick-circle'
+                            : 'circle'
+                        }
+                        iconSize={16}
+                        className="mr2"
+                        color={
+                          assign === 'to-me' ? '#2EB67D' : 'inherit'
+                        }
+                      />
+                      Assigned to me
+                    </p>
+                    <p
+                      className="mr2 flex items-center pointer"
+                      onClick={() =>
+                        assign === 'by-me'
+                          ? setAssign('')
+                          : setAssign('by-me')
+                      }
+                      style={{
+                        marginRight:
+                          assign === 'by-me' ? '8px' : '20px',
+                      }}
+                    >
+                      <Icon
+                        icon={
+                          assign === 'by-me'
+                            ? 'tick-circle'
+                            : 'circle'
+                        }
+                        iconSize={16}
+                        className="mr2"
+                        color={
+                          assign === 'by-me' ? '#2EB67D' : 'inherit'
+                        }
+                      />
+                      Assigned by me
+                    </p>
                   </div>
-                  <p
-                    className="flex items-center pointer"
-                    onClick={() =>
-                      day === 'today' ? setDay('') : setDay('today')
-                    }
-                    style={{
-                      marginRight: day === 'today' ? '8px' : '20px',
-                    }}
-                  >
-                    <Icon
-                      icon={
-                        day === 'today' ? 'tick-circle' : 'circle'
-                      }
-                      iconSize={16}
-                      className="mr2"
-                      color={day === 'today' ? '#2EB67D' : 'inherit'}
-                    />
-                    Today's Task
-                  </p>
-                  <p
-                    className="flex items-center pointer"
-                    onClick={() =>
-                      day === 'tomorrow'
-                        ? setDay('')
-                        : setDay('tomorrow')
-                    }
-                    style={{
-                      marginRight:
-                        day === 'tomorrow' ? '8px' : '20px',
-                    }}
-                  >
-                    <Icon
-                      icon={
-                        day === 'tomorrow' ? 'tick-circle' : 'circle'
-                      }
-                      iconSize={16}
-                      className="mr2"
-                      color={
-                        day === 'tomorrow' ? '#2EB67D' : 'inherit'
-                      }
-                    />
-                    Tomorrow's Task
-                  </p>
-                  <p
-                    className="flex items-center pointer"
-                    onClick={() =>
-                      day === 'upcomming'
-                        ? setDay('')
-                        : setDay('upcomming')
-                    }
-                    style={{
-                      marginRight:
-                        day === 'upcomming' ? '8px' : '20px',
-                    }}
-                  >
-                    <Icon
-                      icon={
-                        day === 'upcomming' ? 'tick-circle' : 'circle'
-                      }
-                      iconSize={16}
-                      className="mr2"
-                      color={
-                        day === 'upcomming' ? '#2EB67D' : 'inherit'
-                      }
-                    />
-                    Upcoming Task
-                  </p>
-                  <p
-                    className="flex items-center pointer"
-                    onClick={() =>
-                      day === 'due' ? setDay('') : setDay('due')
-                    }
-                    style={{
-                      marginRight: day === 'due' ? '8px' : '20px',
-                    }}
-                  >
-                    <Icon
-                      icon={day === 'due' ? 'tick-circle' : 'circle'}
-                      iconSize={16}
-                      className="mr2"
-                      color={day === 'due' ? '#2EB67D' : 'inherit'}
-                    />
-                    Due Task
-                  </p>
-                  <p
-                    className="flex items-center pointer"
-                    onClick={() =>
-                      assign === 'to-me'
-                        ? setAssign('')
-                        : setAssign('to-me')
-                    }
-                    style={{
-                      marginRight:
-                        assign === 'to-me' ? '8px' : '20px',
-                    }}
-                  >
-                    <Icon
-                      icon={
-                        assign === 'to-me' ? 'tick-circle' : 'circle'
-                      }
-                      iconSize={16}
-                      className="mr2"
-                      color={
-                        assign === 'to-me' ? '#2EB67D' : 'inherit'
-                      }
-                    />
-                    Assigned to me
-                  </p>
-                  <p
-                    className="mr2 flex items-center pointer"
-                    onClick={() =>
-                      assign === 'by-me'
-                        ? setAssign('')
-                        : setAssign('by-me')
-                    }
-                    style={{
-                      marginRight:
-                        assign === 'by-me' ? '8px' : '20px',
-                    }}
-                  >
-                    <Icon
-                      icon={
-                        assign === 'by-me' ? 'tick-circle' : 'circle'
-                      }
-                      iconSize={16}
-                      className="mr2"
-                      color={
-                        assign === 'by-me' ? '#2EB67D' : 'inherit'
-                      }
-                    />
-                    Assigned by me
-                  </p>
-                </div>
+                </ClickAwayListener>
               }
               target={
                 <div
