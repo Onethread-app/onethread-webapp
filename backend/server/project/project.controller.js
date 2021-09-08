@@ -675,9 +675,11 @@ const getProjectDetails = async (req, res, next) => {
     })
       .populate('files', 'link s3Key')
       .select('outline description color name status totalSpent');
+
     const members = await Team.find({
-      $and: [{ project: req.query.pid }, { removed: false }],
+      project: req.query.pid, removed: false
     }).populate('account', 'name profileImage');
+
     let projectObj = {
       ...project._doc,
       members,
@@ -1064,10 +1066,10 @@ const projectOverview = async (req, res, next) => {
         deadline: project.deadline,
         lead: project.concernedAdmin
           ? nameWordCapitalize(
-              project.concernedAdmin.firstName +
-                ' ' +
-                project.concernedAdmin.lastName,
-            )
+            project.concernedAdmin.firstName +
+            ' ' +
+            project.concernedAdmin.lastName,
+          )
           : null,
         startingDate: project.createdAt,
         companyUniqueName: project.company.uniqueName,
@@ -1109,10 +1111,10 @@ const projectOverview = async (req, res, next) => {
       taskInf.assign =
         assignedTo && assignedTo.assignedPerson
           ? nameWordCapitalize(
-              assignedTo.assignedPerson.firstName +
-                ' ' +
-                assignedTo.assignedPerson.lastName,
-            )
+            assignedTo.assignedPerson.firstName +
+            ' ' +
+            assignedTo.assignedPerson.lastName,
+          )
           : null;
 
       taskInf.boardName = task.boardId.name;
@@ -1124,6 +1126,26 @@ const projectOverview = async (req, res, next) => {
     next(error);
   }
 };
+
+
+const deleteTeamMember = async (req, res, next) => {
+  try {
+    await Team.updateOne({
+      _id: req.params.accountId,
+      project: req.params.projectId
+    }, {
+      $set: { removed: true }
+    });
+
+    return res.status(200).json({
+      message: 'member deleted successfully',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+}
+
 
 module.exports = {
   calculateProjectStatus,
@@ -1152,4 +1174,5 @@ module.exports = {
   projectOverview,
   deleteProject,
   getListOverview,
+  deleteTeamMember,
 };

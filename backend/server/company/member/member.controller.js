@@ -238,7 +238,7 @@ const deleteMember = async (req, res, next) => {
       member: member._id,
     }, {
       $set: { removed: true }
-    });
+    }, { new: true });
 
     if (['superAdmin'].includes(member.role)) {
       return res.status(403).json({
@@ -249,22 +249,6 @@ const deleteMember = async (req, res, next) => {
     req.member.removed = true;
 
     await req.member.save();
-
-    const body = {
-      query: {
-        term: {
-          mongo_id: req.member._id,
-        },
-      },
-    };
-
-    await deleteDocument(memberIndex, '_doc', body);
-
-    logger.info(
-      chalk.blueBright(
-        `ElasticSearch successfully deleted  document on ${memberIndex}`,
-      ),
-    );
 
     return res.status(200).json({
       message: 'member deleted successfully',

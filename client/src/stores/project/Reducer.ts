@@ -126,6 +126,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.ARCHIVE_PROJECT_START:
     case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_START:
     case ProjectActionTypes.CREATE_PROJECT_START:
+    case ProjectActionTypes.DELETE_TEAM_MEMBER_START:
       return {
         ...state,
         projectLoading: true,
@@ -161,6 +162,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.ARCHIVE_PROJECT_FAILURE:
     case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_FAILURE:
     case ProjectActionTypes.CREATE_PROJECT_FAILURE:
+    case ProjectActionTypes.DELETE_TEAM_MEMBER_FAILURE:
       return {
         ...state,
         error: action.payload,
@@ -382,6 +384,14 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         hasAccess: action.payload,
+      };
+    case ProjectActionTypes.DELETE_TEAM_MEMBER_SUCCESS:
+      return {
+        ...state,
+        teams: state.teams.filter(
+          (team: any) => team._id !== action.payload,
+        ),
+        loading: false,
       };
     default:
       return state;

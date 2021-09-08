@@ -638,6 +638,22 @@ export function* getProjectsIndividualAsync() {
   }
 }
 
+export function* deleteTeamMemberAsync({ payload }: any) {
+  try {
+    const headers = tokenConfig();
+    const projectId = yield select(getProjectId);
+    if ((headers as any).headers.Authorization) {
+      tigrowApi.delete(
+        `projects/${projectId}/teams/${payload}`,
+        headers,
+      );
+      yield put(deleteTeamMemberSuccess(payload));
+    }
+  } catch (error) {
+    yield put(deleteTeamMemberFailure(returnErrorText(error)));
+  }
+}
+
 export function* clearProjectReducerAsync() {
   yield put(clearCurrentBoard());
   yield put({ type: CLEAR_PROJECT_REDUCER_STATE });
@@ -811,6 +827,23 @@ export function* onClearProjectReducer() {
   );
 }
 
+export function* onDeleteTeamMember() {
+  yield takeEvery(
+    ProjectActionTypes.DELETE_TEAM_MEMBER_START,
+    deleteTeamMemberAsync,
+  );
+}
+
+export const deleteTeamMemberSuccess = (response: any) => ({
+  type: ProjectActionTypes.DELETE_TEAM_MEMBER_SUCCESS,
+  payload: response,
+});
+
+export const deleteTeamMemberFailure = (errorMessage: any) => ({
+  type: ProjectActionTypes.DELETE_TEAM_MEMBER_FAILURE,
+  payload: errorMessage,
+});
+
 export default function* projectSaga() {
   yield all([
     call(onCreateProject),
@@ -837,5 +870,6 @@ export default function* projectSaga() {
     call(onChangeProjectMemberRole),
     call(onGetIndividualProjectList),
     call(onClearProjectReducer),
+    call(onDeleteTeamMember),
   ]);
 }

@@ -314,25 +314,30 @@ const getMemberLoad = async (req, res, next) => {
 const searchTeamMember = async (req, res, next) => {
   try {
     let projectMembers = await Team.find({ project: req.query.pid })
-      .select('_id member')
+      .select('_id member removed')
       .exec();
 
     let companyMembers = await Member.find({
       company: req.params.companyId,
     })
-      .select('_id account')
+      .select('_id account removed')
       .populate('account', '_id name firstName lastName email')
       .exec();
 
     let teams = companyMembers.filter((cm) => {
-      return !projectMembers.some((pm) => {
-        return pm.member._id.toString() === cm._id.toString();
-      });
+      if (cm.removed === false) {
+        return !projectMembers.some((pm) => {
+          if (pm.removed === false) {
+            return pm.member._id.toString() === cm._id.toString();
+          }
+        });
+      }
     });
 
     return sendJSONresponse(res, 200, {
       teams,
     });
+
   } catch (error) {
     logger.error(`${error}`);
     next(error);
