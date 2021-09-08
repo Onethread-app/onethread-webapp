@@ -86,22 +86,27 @@ const TasksComponent = (props: any) => {
 
   const sortTasksByStatus = (tasks: any, orderBy: any) => {
     setTasks([]);
+    const primaryStatus = ['in-progress', 'to-do', 'done'];
     const sortedTasks = sortBy(tasks, (task) => {
       if (orderBy === 'asc') {
         const rank = {
           'in-progress': 1,
-          'to-do': 2,
-          done: 3,
+          'to-do': 3,
+          other: 2,
         };
-        return rank[task.status];
+        return primaryStatus.includes(task.status)
+          ? rank[task.status]
+          : rank['other'];
       }
       if (orderBy === 'desc') {
         const rank = {
           'in-progress': 3,
-          'to-do': 2,
-          done: 1,
+          other: 2,
+          'to-do': 1,
         };
-        return rank[task.status];
+        return primaryStatus.includes(task.status)
+          ? rank[task.status]
+          : rank['other'];
       }
     });
     return sortedTasks;
@@ -274,7 +279,11 @@ const TasksComponent = (props: any) => {
     setDay('');
     setSortedBy('');
     setAssign('');
-    setTasks(mdfy(tasksAll));
+    const initialSortedTasks = sortTasksByStatus(
+      mdfy(tasksAll),
+      'asc',
+    );
+    setTasks(initialSortedTasks);
   };
 
   const filterPopover = () => {
@@ -322,7 +331,11 @@ const TasksComponent = (props: any) => {
       if (day === 'due') {
         sortTasksByDueTasks(mdfy(tasksAll), assign);
       } else {
-        setTasks(mdfy(tasksAll));
+        const initialSortedTasks = sortTasksByStatus(
+          mdfy(tasksAll),
+          'asc',
+        );
+        setTasks(initialSortedTasks);
       }
     }
   }, [assign, tasksAll, loading, day]);
