@@ -71,17 +71,17 @@ export const addTeamMembersFailure = (errorMessage: any) => ({
 });
 
 export const deleteCompanyMember = (memberId: string) => ({
-  type: CompanyActionTypes.DELETE_TEAM_MEMBER_START,
+  type: CompanyActionTypes.DELETE_COMPANY_MEMBER_START,
   payload: memberId,
 });
 
 export const deleteCompanyMemberSuccess = (response: any) => ({
-  type: CompanyActionTypes.DELETE_TEAM_MEMBER_SUCCESS,
+  type: CompanyActionTypes.DELETE_COMPANY_MEMBER_SUCCESS,
   payload: response,
 });
 
 export const deleteCompanyMemberFailure = (errorMessage: any) => ({
-  type: CompanyActionTypes.DELETE_TEAM_MEMBER_FAILURE,
+  type: CompanyActionTypes.DELETE_COMPANY_MEMBER_FAILURE,
   payload: errorMessage,
 });
 

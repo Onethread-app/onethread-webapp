@@ -158,7 +158,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CompanyActionTypes.CHANGE_COMPANY_LOGO_START:
     case CompanyActionTypes.EDIT_COMPANY_INFO_START:
     case CompanyActionTypes.GET_ALL_COMPANY_PENDING_MEMBERS_START:
-    case CompanyActionTypes.DELETE_TEAM_MEMBER_START:
+    case CompanyActionTypes.DELETE_COMPANY_MEMBER_START:
     case CompanyActionTypes.ADD_TEAM_MEMBER_START:
     case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_START:
       return {
@@ -176,7 +176,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CompanyActionTypes.CHANGE_MEMBER_ROLE_FAILURE:
     case CompanyActionTypes.CHANGE_COMPANY_LOGO_FAILURE:
     case CompanyActionTypes.GET_ALL_COMPANY_PENDING_MEMBERS_FAILURE:
-    case CompanyActionTypes.DELETE_TEAM_MEMBER_FAILURE:
+    case CompanyActionTypes.DELETE_COMPANY_MEMBER_FAILURE:
     case CompanyActionTypes.ADD_TEAM_MEMBER_FAILURE:
     case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_FAILURE:
       return {
@@ -241,7 +241,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         },
         loading: false,
       };
-    case CompanyActionTypes.DELETE_TEAM_MEMBER_SUCCESS:
+    case CompanyActionTypes.DELETE_COMPANY_MEMBER_SUCCESS:
       return {
         ...state,
         currentCompany: {

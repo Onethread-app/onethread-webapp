@@ -31,6 +31,10 @@ const schema = {
   ),
 };
 
+const accountId = Joi.object().keys({
+  accountId: idSchema.id.required(),
+});
+
 module.exports = {
   createNewProjectForCompany: Joi.object().keys({
     body: Joi.object().keys({
@@ -123,5 +127,8 @@ module.exports = {
       companyName: schema.name.required(),
       name: schema.name.required(),
     }),
+  }),
+  deleteTeamMember: Joi.object().keys({
+    params: accountId,
   }),
 };

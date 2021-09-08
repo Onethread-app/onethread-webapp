@@ -270,7 +270,6 @@ export default function MemberTable({ type, props, rows }) {
                       <StyledTableCell align="left">
                         {type === 'teammates' && (
                           <>
-                            {' '}
                             {row.role === 'admin' ? (
                               <>
                                 {isEqual(
@@ -309,6 +308,20 @@ export default function MemberTable({ type, props, rows }) {
                                             Remove from Admin
                                           </span>
                                         </Button>
+                                        {userId !== row.accountId && (
+                                          <Button
+                                            className="outline-0 bp3-large bp3-popover-dismiss"
+                                            onClick={async () => {
+                                              await props.deleteTeamMember(
+                                                row.id,
+                                              );
+                                            }}
+                                          >
+                                            <span className="red">
+                                              Remove Member
+                                            </span>
+                                          </Button>
+                                        )}
                                       </ButtonGroup>
                                     }
                                     target={
@@ -367,6 +380,19 @@ export default function MemberTable({ type, props, rows }) {
                                             Remove from Moderator
                                           </span>
                                         </Button>
+
+                                        <Button
+                                          className="outline-0 bp3-large bp3-popover-dismiss"
+                                          onClick={async () => {
+                                            await props.deleteTeamMember(
+                                              row.id,
+                                            );
+                                          }}
+                                        >
+                                          <span className="red">
+                                            Remove Member
+                                          </span>
+                                        </Button>
                                       </ButtonGroup>
                                     }
                                     target={
@@ -412,6 +438,19 @@ export default function MemberTable({ type, props, rows }) {
                                           }}
                                         >
                                           <span>Make Moderator</span>
+                                        </Button>
+
+                                        <Button
+                                          className="outline-0 bp3-large bp3-popover-dismiss"
+                                          onClick={async () => {
+                                            await props.deleteTeamMember(
+                                              row.id,
+                                            );
+                                          }}
+                                        >
+                                          <span className="red">
+                                            Remove Member
+                                          </span>
                                         </Button>
                                       </ButtonGroup>
                                     }

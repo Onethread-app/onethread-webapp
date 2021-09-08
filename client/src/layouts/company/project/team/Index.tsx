@@ -9,6 +9,7 @@ import { AssociateList } from './AssociateList';
 import {
   getProjectTeams,
   changeProjectMemberRole,
+  deleteTeamMember,
 } from 'stores/project/Actions';
 import { IProjectTeam } from 'stores/project/Reducer';
 import {
@@ -39,6 +40,7 @@ interface TeamMember {
     memberId: string,
     accountId: string,
   ) => void;
+  deleteTeamMember: (teamId: string) => void;
   project: any;
   projectList: Array<{ _id: string; company: string }>;
 }
@@ -81,6 +83,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         m.member.designations[0].position
       }`,
       role: m.role,
+      id: m._id,
+      accountId: m.member.account._id,
       member: m.member,
     }));
     setTeammatesList(teammatesList);
@@ -301,6 +305,7 @@ const mapStateToProps = (state: any) => {
 export const ProjectTeamPage = connect(mapStateToProps, {
   getProjectTeams,
   changeProjectMemberRole,
+  deleteTeamMember,
 })(ProjectTeamPageComponent);
 
 export default ProjectTeamPage;

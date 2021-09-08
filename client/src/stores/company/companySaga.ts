@@ -587,7 +587,7 @@ export function* onAddTeamMembers() {
 
 export function* onDeleteCompanyMember() {
   yield takeEvery(
-    CompanyActionTypes.DELETE_TEAM_MEMBER_START,
+    CompanyActionTypes.DELETE_COMPANY_MEMBER_START,
     deleteCompanyMemberAsync,
   );
 }

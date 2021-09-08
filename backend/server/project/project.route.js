@@ -237,4 +237,11 @@ router
     projectCtrl.deleteProject,
   );
 
+router
+  .route('/:projectId/teams/:accountId')
+  .delete(
+    authorization, schemaValidator(projectValidation.deleteTeamMember),
+    projectCtrl.deleteTeamMember
+  )
+
 module.exports = router;

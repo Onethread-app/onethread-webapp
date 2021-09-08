@@ -417,3 +417,8 @@ export const updateProjectTimeSpent = (payload: any) => ({
   type: ProjectActionTypes.UPDATE_PROJECT_TIME_SPENT,
   payload,
 });
+
+export const deleteTeamMember = (teamId: string) => ({
+  type: ProjectActionTypes.DELETE_TEAM_MEMBER_START,
+  payload: teamId,
+});
