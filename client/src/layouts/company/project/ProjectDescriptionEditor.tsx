@@ -1,19 +1,23 @@
 import React from 'react';
-import { Form, Field } from 'react-final-form';
+import { connect } from 'react-redux';
+
 import TextareaAutosize from 'react-textarea-autosize';
+import { Form, Field } from 'react-final-form';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
+import {
+  projectPrefaceDescriptionUpdate,
+  getSingleProject,
+} from '../../../stores/project/Actions';
+
 import {
   required,
   checkError,
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import { Button, Icon } from '@blueprintjs/core';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { connect } from 'react-redux';
-import {
-  projectPrefaceDescriptionUpdate,
-  getSingleProject,
-} from '../../../stores/project/Actions';
 
 import './textArea.css';
 

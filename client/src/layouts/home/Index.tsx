@@ -7,9 +7,9 @@ import Profile from 'components/home/Profile';
 // import Weather from 'components/home/Weather';
 // import ProfileProgress from 'components/home/ProfileProgress';
 import Projects from 'components/home/Projects';
+import Subtasks from 'components/home/Subtasks';
 
 import './Index.styles.scss';
-import Subtasks from 'components/home/Subtasks';
 
 const index = () => {
   return isMobileOnly ? (

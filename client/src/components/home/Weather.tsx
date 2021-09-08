@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import Clock from 'components/clock/Clock';
 import { getLocation } from 'helpers/utils';
+
+import Clock from 'components/clock/Clock';
 
 interface IWeather {
   userFirstName: string;

@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { tigrowApi } from 'config';
+import { isEqual } from 'lodash';
+import { useTranslation } from 'react-i18next';
+
+import { Tag } from '@blueprintjs/core/lib/esm/components/tag/tag';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { ICompany } from 'stores/company/Reducer';
+import { addProjectAssociate } from 'stores/project/Actions';
+import { tokenConfig } from 'stores/UtilsActions';
+
 import {
   SuggestField,
   ItemEntityProps,
 } from 'components/fields/SuggestField';
-import { connect } from 'react-redux';
-import { tokenConfig } from 'stores/UtilsActions';
-import { Button, Tag } from '@blueprintjs/core';
-import { addProjectAssociate } from 'stores/project/Actions';
-import { tigrowApi } from 'config';
-import { ICompany } from 'stores/company/Reducer';
 import { useLiveSearch } from 'components/useLiveSearch';
-import { isEqual } from 'lodash';
-import { useTranslation } from 'react-i18next';
+
 interface ProjectAssociateProps {
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;
@@ -36,6 +41,7 @@ interface ProjectAssociateInternalProps
 const AddProjectAssociateFormComponent = (
   props: ProjectAssociateInternalProps,
 ) => {
+  const { t } = useTranslation();
   const [associates, setAssociates] = useState([]);
   const [selectedAssociate, setSelectedAssociate] = useState(
     [] as ItemEntityProps[],
@@ -45,9 +51,7 @@ const AddProjectAssociateFormComponent = (
   const userRequestFactoryAssociate = async (userName: string) => {
     const headers = tokenConfig();
     const response = await tigrowApi.get(
-      `projects/associate-company-search/${
-      props.company._id
-      }?name=${searchAssociate}&companyName=${props.company.name}`,
+      `projects/associate-company-search/${props.company._id}?name=${searchAssociate}&companyName=${props.company.name}`,
       headers,
     );
 
@@ -59,24 +63,27 @@ const AddProjectAssociateFormComponent = (
     //   };
     // });
     const asso = response.data.data.map((e: any) =>
-      isEqual(props.company._id, e._source.company_id) === true ?
-        {
-          _id: e._source.mongo_id,
-          name: e._source.associateCompanyName,
-          size: 5
-        }
-        :
-        {
-          _id: e._source.mongo_id,
-          name: e._source.companyName,
-          size: 5
-        }
+      isEqual(props.company._id, e._source.company_id) === true
+        ? {
+            _id: e._source.mongo_id,
+            name: e._source.associateCompanyName,
+            size: 5,
+          }
+        : {
+            _id: e._source.mongo_id,
+            name: e._source.companyName,
+            size: 5,
+          },
     );
     return asso;
   };
 
   let resultAssociate: any = [];
-  resultAssociate = useLiveSearch(searchAssociate, userRequestFactoryAssociate, 0);
+  resultAssociate = useLiveSearch(
+    searchAssociate,
+    userRequestFactoryAssociate,
+    0,
+  );
   // const getSuggestionsForProjectAssociate = async () => {
   //   try {
   //     const headers = tokenConfig();
@@ -98,27 +105,23 @@ const AddProjectAssociateFormComponent = (
   //               size: 5,
   //             },
   //       );
-  //       
+  //
 
   //       setSuggestedAssociate(formatResponse);
   //     } else {
   //       // tslint:disable-next-line: no-console
-  //       
+  //
   //     }
   //   } catch (error) {
   //     if (isEqual(error.message, 'Network Error')) {
   //       // tslint:disable-next-line: no-console
-  //       
+  //
   //     } else {
   //       // tslint:disable-next-line: no-console
-  //       
+  //
   //     }
   //   }
   // };
-
-  useEffect(() => {
-    setAssociates(resultAssociate);
-  }, [resultAssociate]);
 
   const teamSizes = [
     { value: 5, label: '1-5' },
@@ -126,13 +129,16 @@ const AddProjectAssociateFormComponent = (
     { value: 15, label: '11-15' },
   ];
 
-  const { t } = useTranslation();  
+  useEffect(() => {
+    setAssociates(resultAssociate);
+  }, [resultAssociate]);
 
   return (
     <div className="pa3">
       <div className="w-100">
-        <h1 className="f5 tigrow-darkBlue">{t('app.company.Partners.Add-Partners')}</h1>
-        {/* <h1 className="f5 tigrow-darkBlue">Add Partners</h1> */}
+        <h1 className="f5 tigrow-darkBlue">
+          {t('app.company.Partners.Add-Partners')}
+        </h1>
         <SuggestField
           onChange={(query: string) => {
             setSearchAssociate(query);
@@ -177,9 +183,11 @@ const AddProjectAssociateFormComponent = (
                   sa[index]['size'] = e.target.value;
                   setSelectedAssociate(sa);
                 }}
-                className="pa1" 
+                className="pa1"
               >
-                <option selected value="">No. of employee</option>
+                <option selected value="">
+                  No. of employee
+                </option>
                 {teamSizes.map((t) => {
                   return (
                     <option key={t.label + t.value} value={t.value}>
@@ -218,7 +226,7 @@ const AddProjectAssociateFormComponent = (
                 return {
                   _id: m._id,
                   size: m.size,
-                  name: m.name
+                  name: m.name,
                 };
               }),
             };

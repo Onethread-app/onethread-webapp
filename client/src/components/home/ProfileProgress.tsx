@@ -1,9 +1,9 @@
 import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
+import { tigrowApi } from 'config';
 
 import { ChartDonutUtilization } from '@patternfly/react-charts';
 
-import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
 
 import '@patternfly/react-core/dist/styles/base.css';

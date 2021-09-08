@@ -1,12 +1,11 @@
 import React, { useRef } from 'react';
-// import { NavbarTop } from 'components/Navbar';
-import NavbarTop from 'components/navbar/Navbar';
-import { Sidebar } from 'components/Sidebar';
 import { useState, useEffect } from 'react';
-// import { Loading } from './Loading';
-import { connect, useDispatch } from 'react-redux';
-import { User } from 'stores/user/Reducer';
-import { isEmpty, isEqual, isNil } from 'lodash';
+import {
+  CustomView,
+  MobileOnlyView,
+  isMobileOnly,
+} from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
 import {
   withRouter,
   RouteComponentProps,
@@ -14,8 +13,17 @@ import {
   NavLink,
   useLocation,
 } from 'react-router-dom';
-import { fetchUserAction } from 'stores/auth/Actions';
+import Modal from 'react-modal';
+import { connect, useDispatch } from 'react-redux';
+import { isEmpty, isEqual, isNil } from 'lodash';
+
+import { Navbar } from '@blueprintjs/core/lib/esm/components/navbar/navbar';
+
+import { User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
+import { ICompanyRoom, IRoom } from 'stores/room/Reducer';
+import { ICurrentTrack } from 'stores/time-tracker/Reducer';
+import { fetchUserAction } from 'stores/auth/Actions';
 import { getCompanyDetails } from 'stores/company/Actions';
 import {
   getSelectedBoard,
@@ -29,7 +37,12 @@ import {
   getRoomSharedFiles,
   getRoomDiscussions,
 } from 'stores/room/Actions';
+import { companyPermit } from 'stores/UtilsActions';
 import { addTrackedTime } from 'stores/time-tracker/Action';
+import { updateDurationPersecond } from 'stores/time-tracker/Action';
+import { setSubscriptionNotExpire } from 'stores/subscriptionBilling/Actions';
+import { CURRENT_ROOM } from 'stores/room/Types';
+import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -40,27 +53,13 @@ import team from '../resources/images/sidebarTeam.svg';
 import associate from '../resources/images/sideBarAssociates.svg';
 import settings from '../resources/images/sidebarSettings.svg';
 import feedbackLight from '../resources/images/feedback-light.svg';
-import { ICompanyRoom, IRoom } from 'stores/room/Reducer';
+
+import SuspenseLoader from './loader/SuspenseLoader';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
-
-import {
-  CustomView,
-  MobileOnlyView,
-  isMobileOnly,
-} from 'react-device-detect';
-import { Navbar } from '@blueprintjs/core';
-// import { NavbarIndividual } from './NavbarIndividual';
-import { companyPermit } from 'stores/UtilsActions';
-import { CURRENT_ROOM } from 'stores/room/Types';
-import { useTranslation } from 'react-i18next';
-import { ICurrentTrack } from 'stores/time-tracker/Reducer';
-import { updateDurationPersecond } from 'stores/time-tracker/Action';
-import { setSubscriptionNotExpire } from 'stores/subscriptionBilling/Actions';
-import SuspenseLoader from './loader/SuspenseLoader';
-import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import ErrorText from 'layouts/company/settings/ErrorText';
-import Modal from 'react-modal';
+import NavbarTop from 'components/navbar/Navbar';
+import { Sidebar } from 'components/Sidebar';
 import { customStylesForModal } from 'layouts/company/settings/Index';
 
 interface LayoutProps {
@@ -99,6 +98,12 @@ interface LayoutInternalProps
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const [leftOpen, setLeftOpen] = useState(true);
+  const [scrollTop, setScrollTop] = React.useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [queries, setQueries] = useState<RoomQueries>({
     view: 'default',
@@ -107,8 +112,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   const [subscriptionExpired, setSubscriptionExpired] = useState(
     false,
   );
-  const dispatch = useDispatch();
-  const location = useLocation();
 
   const updateCompanyReducer = () => {
     props.getCompanyDetails((props.match.params as any).cname);
@@ -123,6 +126,13 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 
   const updateTaskReducer = () => {
     props.getSelectedTaskDetails((props.match.params as any).taskId);
+  };
+
+  const closeSubErrorModal = () => {
+    setSubscriptionExpired(false);
+    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    props.setSubscriptionNotExpire();
+    props.history.push(`/${props.user.name}/home`);
   };
 
   useEffect(() => {
@@ -270,11 +280,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     };
   }, []);
 
-  const [leftOpen, setLeftOpen] = useState(true);
-  const [scrollTop, setScrollTop] = React.useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation();
-
   useEffect(() => {
     let interval;
 
@@ -303,13 +308,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     props.match.path,
     props.subscriptiontExpired,
   ]);
-
-  const closeSubErrorModal = () => {
-    setSubscriptionExpired(false);
-    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
-    props.setSubscriptionNotExpire();
-    props.history.push(`/${props.user.name}/home`);
-  };
 
   useEffect(() => {
     if (
@@ -353,7 +351,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
             }}
           >
             {t('landing.login.sign-in-form.sign-in-button')}
-            {/* Sign in */}
           </Link>
         </p>
       ) : (
@@ -519,7 +516,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                             </span>
                             <small style={{ color: 'inherit' }}>
                               {t('app.user.Personal-profile.Profile')}
-                              {/* Profile */}
                             </small>
                           </NavLink>
                           <NavLink
@@ -542,7 +538,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                             </span>
                             <small style={{ color: 'inherit' }}>
                               {t('app.company.Dashboard.Headline')}
-                              {/* Dashboard */}
                             </small>
                           </NavLink>
                           <NavLink
@@ -565,7 +560,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                             </span>
                             <small style={{ color: 'inherit' }}>
                               {t('app.homepage.Projects')}
-                              {/* Project */}
                             </small>
                           </NavLink>
                           <NavLink
@@ -588,7 +582,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                             </span>
                             <small style={{ color: 'inherit' }}>
                               {t('app.company.Colleagues.Colleagues')}
-                              {/* Colleagues */}
                             </small>
                           </NavLink>
                           <NavLink
@@ -611,7 +604,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                             </span>
                             <small style={{ color: 'inherit' }}>
                               {t('app.company.Partners.Partners')}
-                              {/* Partners */}
                             </small>
                           </NavLink>
                           {companyPermit(props.company.role) &&
@@ -636,7 +628,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                                 </span>
                                 <small style={{ color: 'inherit' }}>
                                   {t('app.company.Settings.Settings')}
-                                  {/* Settings */}
                                 </small>
                               </NavLink>
                             )}
@@ -660,7 +651,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                             </span>
                             <small style={{ color: 'inherit' }}>
                               {t('app.company.Feedback.Feedback')}
-                              {/* Feedback */}
                             </small>
                           </NavLink>
                         </Navbar>

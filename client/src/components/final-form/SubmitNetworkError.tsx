@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Icon } from '@blueprintjs/core';
+
 import { IconNames } from '@blueprintjs/icons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 
 export const SubmitNetworkError = () => (
   <div>

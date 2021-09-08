@@ -1,11 +1,16 @@
 import React from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import { useTranslation } from 'react-i18next';
+
+import Paper from '@material-ui/core/Paper/Paper';
+import TableHead from '@material-ui/core/TableHead/TableHead';
+import TableRow from '@material-ui/core/TableRow/TableRow';
+import TableCell from '@material-ui/core/TableCell/TableCell';
+import Table from '@material-ui/core/Table/Table';
+import TableBody from '@material-ui/core/TableBody/TableBody';
+import TableContainer from '@material-ui/core/TableContainer/TableContainer';
+import { IconNames } from '@blueprintjs/icons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
 import Onethread from '../../resources/images/onethread-logo-dark.png';
 import Slack from '../../resources/images/companies/slack.png';
 import ClickUp from '../../resources/images/companies/clickup.png';
@@ -17,11 +22,10 @@ import firefox from '../../resources/images/companies/firefox-logo.png';
 import safari from '../../resources/images/companies/safari.png';
 import operamini from '../../resources/images/companies/opera-mini-logo.png';
 import edge from '../../resources/images/companies/edge-logo.png';
+
 import features from './CompaniesData.json';
-import { Icon } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+
 import './WhyOnethread.scss';
-import { useTranslation } from 'react-i18next';
 
 const WhyOnethread = () => {
   const { t } = useTranslation();

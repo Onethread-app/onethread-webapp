@@ -1,26 +1,29 @@
-import { Button, Icon } from '@blueprintjs/core';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 import Axios from 'axios';
-import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
-import {
-  checkError,
-  composeValidators,
-  maxValue,
-  required,
-} from 'components/final-form/utils';
 import { server } from 'config';
 import { isEqual } from 'lodash';
-import React, { useState } from 'react';
+
 import { Field, Form } from 'react-final-form';
-import { connect } from 'react-redux';
-// import { useHistory } from 'react-router-dom';
-import { clearCurrentBoard, createBoard } from 'stores/task/Actions';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 import { TaskBoard } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import { getAllDepartments } from 'stores/company/Actions';
 import { Color, tokenConfig } from 'stores/UtilsActions';
 import { getAllBoards } from 'stores/task/Actions';
-import { useTranslation } from 'react-i18next';
+import { clearCurrentBoard, createBoard } from 'stores/task/Actions';
+
+import {
+  checkError,
+  composeValidators,
+  maxValue,
+  required,
+} from 'components/final-form/utils';
+import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 
 const UpdateFormComponent = (props: {
   getAllBoards: () => void;
@@ -35,6 +38,9 @@ const UpdateFormComponent = (props: {
   selectedBoard: any;
 }) => {
   const { selectedBoard } = props;
+  const { t } = useTranslation();
+  const [labelColor, setLabelColor] = useState(selectedBoard.color);
+
   const onSubmit = async (values: any) => {
     const headers = tokenConfig();
     try {
@@ -50,15 +56,10 @@ const UpdateFormComponent = (props: {
     return {};
   };
 
-  const [labelColor, setLabelColor] = useState(selectedBoard.color);
-
-  const { t } = useTranslation();
-
   return (
     <>
       <div className="pl3" style={{ marginTop: '6rem' }}>
         <h3>{t('app.project.Project-boards.Update-Board')}</h3>
-        {/* <h3>Update Board</h3> */}
       </div>
       <Form
         onSubmit={onSubmit}
@@ -100,7 +101,6 @@ const UpdateFormComponent = (props: {
                       label={t(
                         'app.project.Project-boards.Board-Name',
                       )}
-                      // label="Board Name (Required)"
                       autoFocus={true}
                     />
                   </div>
@@ -115,7 +115,6 @@ const UpdateFormComponent = (props: {
                       style={{ fontSize: '.8rem' }}
                     >
                       {t('app.project.Project-boards.Label')}
-                      {/* Label */}
                     </p>
                     <div className="flex">
                       {Color.map((color) => (
@@ -162,7 +161,6 @@ const UpdateFormComponent = (props: {
                   disabled={submitting || pristine}
                 >
                   {t('app.project.Project-boards.Update')}
-                  {/* Update */}
                 </Button>
                 <Button
                   className="w4 grow h2 pointer"
@@ -179,7 +177,6 @@ const UpdateFormComponent = (props: {
                   }}
                 >
                   {t('app.project.Project-boards.cancel')}
-                  {/* cancel */}
                 </Button>
               </div>
             </div>

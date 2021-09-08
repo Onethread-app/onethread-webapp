@@ -2,14 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 
-import { Popover, Position } from '@blueprintjs/core';
-import { Badge } from '@material-ui/core';
 import ChatIcon from '@material-ui/icons/Chat';
+import Badge from '@material-ui/core/Badge/Badge';
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+
+import { IChat } from 'stores/room/Reducer';
+import { compareChats } from 'helpers/utils';
 
 import ChatListItem from 'components/chat/ChatListItem';
-
-import { compareChats } from 'helpers/utils';
-import { IChat } from 'stores/room/Reducer';
 
 interface IChatPopoverIcon {
   type: string;

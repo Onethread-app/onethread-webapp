@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
 import { User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import { Dialog } from '@blueprintjs/core';
-import { ImageEdit } from '../image-editor/ImageEditor';
-import DefaultUserImage from './../../resources/images/profilePhoto.svg';
 import { companyPermit } from 'stores/UtilsActions';
+
+import DefaultUserImage from './../../resources/images/profilePhoto.svg';
+
+import { ImageEdit } from '../image-editor/ImageEditor';
 
 interface IProfilePictureProps {
   company?: ICompany;
@@ -12,6 +16,7 @@ interface IProfilePictureProps {
 }
 export const ProfilePicture = (props: IProfilePictureProps) => {
   const [showDialogPicture, setShowDialogPicture] = useState(false);
+
   let type;
   if (props.company) {
     type = 'company-logo';
@@ -19,6 +24,7 @@ export const ProfilePicture = (props: IProfilePictureProps) => {
   if (props.user) {
     type = 'profilePic';
   }
+
   let imageSrc;
   if (props.company) {
     imageSrc = props.company.logo
@@ -42,6 +48,7 @@ export const ProfilePicture = (props: IProfilePictureProps) => {
       setShowDialogPicture(true);
     }
   };
+
   return (
     <>
       <div>

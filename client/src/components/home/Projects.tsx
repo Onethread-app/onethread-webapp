@@ -1,13 +1,15 @@
 import React from 'react';
-import { isMobileOnly } from 'react-device-detect';
-
-import { Dialog } from '@blueprintjs/core';
-import CreateProjectDialog from 'components/project/CreateProjectDialog';
-import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
-import { CircularProgress } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
+import { tigrowApi } from 'config';
+
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+
+import { tokenConfig } from 'stores/UtilsActions';
+
+import CreateProjectDialog from 'components/project/CreateProjectDialog';
 
 const Projects = () => {
   const { t } = useTranslation();
@@ -40,10 +42,6 @@ const Projects = () => {
     }
   };
 
-  React.useEffect(() => {
-    getProjectLists();
-  }, []);
-
   const handleFilter = (e) => {
     const { value } = e.target;
     setSearchInput(value);
@@ -52,6 +50,10 @@ const Projects = () => {
     );
     setFilteredProjectList(lists);
   };
+
+  React.useEffect(() => {
+    getProjectLists();
+  }, []);
 
   return (
     <>

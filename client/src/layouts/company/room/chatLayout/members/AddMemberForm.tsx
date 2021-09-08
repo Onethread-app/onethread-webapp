@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { connect, useDispatch } from 'react-redux';
+import { isEqual, isEmpty } from 'lodash';
+import { tigrowApi } from 'config';
+
+import { Tag } from '@blueprintjs/core/lib/esm/components/tag/tag';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { IRoomReducer } from 'stores/room/Reducer';
+import { tokenConfig } from 'stores/UtilsActions';
+import { addRoomMembers } from 'stores/room/Actions';
+import { room } from 'stores/room/Types';
+
 import {
   SuggestField,
   ItemEntityProps,
 } from 'components/fields/SuggestField';
-import { connect, useDispatch } from 'react-redux';
-import { tokenConfig } from 'stores/UtilsActions';
-import { isEqual, isEmpty } from 'lodash';
-import { Button, Tag } from '@blueprintjs/core';
-import { addRoomMembers } from 'stores/room/Actions';
-import { tigrowApi } from 'config';
-import { IRoomReducer } from 'stores/room/Reducer';
-import { room } from 'stores/room/Types';
 
 interface RoomMembersViewProps {
   showDialog: boolean;
@@ -40,20 +44,12 @@ interface RoomMembersViewInternalProps extends RoomMembersViewProps {
 const AddMemberFormComponent = (
   props: RoomMembersViewInternalProps,
 ) => {
+  const dispatch = useDispatch();
   const [suggestedMembers, setSuggestedMembers]: any = useState([]);
   const [selectedRoomMember, setSelectedRoomMember] = useState(
     [] as ItemEntityProps[],
   );
   const [error, setError] = useState('');
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    dispatch({ type: room.CLEAR_STATUS_CODE });
-
-    return () => {
-      dispatch({ type: room.CLEAR_STATUS_CODE });
-    };
-  }, []);
 
   const getSuggestionsForRoomMembers = async () => {
     try {
@@ -68,7 +64,7 @@ const AddMemberFormComponent = (
       } else {
         // tslint:disable-next-line: no-console
       }
-    } catch (error) {
+    } catch (error:any) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
       } else {
@@ -92,6 +88,14 @@ const AddMemberFormComponent = (
     }
     return;
   };
+
+  React.useEffect(() => {
+    dispatch({ type: room.CLEAR_STATUS_CODE });
+
+    return () => {
+      dispatch({ type: room.CLEAR_STATUS_CODE });
+    };
+  }, []);
 
   useEffect(() => {
     if (

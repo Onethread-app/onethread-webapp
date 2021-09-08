@@ -1,5 +1,7 @@
 import React from 'react';
+
 import SearchBar from 'material-ui-search-bar';
+
 import './SearchOption.scss';
 
 const SearchOption = ({ list, rows, setRows }: any) => {

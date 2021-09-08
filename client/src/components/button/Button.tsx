@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 interface IButtonProps {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
@@ -119,7 +120,7 @@ export const CreateCompany = () => {
     font-size: 16.376px;
     line-height: 20px;
     background: #ffffff;
-    color: #34B3E9;
+    color: #34b3e9;
   `;
   return <Button>Create Company</Button>;
 };

@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { Suggest } from '@blueprintjs/select';
-import { MenuItem, Intent } from '@blueprintjs/core';
-import { includes, lowerCase, isEqual, findIndex } from 'lodash';
 import { useState } from 'react';
+import { includes, lowerCase, isEqual, findIndex } from 'lodash';
+
+import { Suggest } from '@blueprintjs/select';
+import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
+import { Intent } from '@blueprintjs/core/lib/esm/common/intent';
+
 import { capitalizeName } from 'stores/UtilsActions';
+
 export interface ItemEntityProps {
   _id?: string;
   email?: string;
@@ -23,7 +27,6 @@ interface SuggestFieldProps {
   multipleItemSelect?: boolean;
   error?: string;
   className?: string | '';
-
 }
 
 const SuggestInput = Suggest.ofType<ItemEntityProps>();
@@ -79,7 +82,9 @@ export const SuggestField = (props: SuggestFieldProps) => {
           text={
             item.email ? (
               <div className="flex justify-start items-center">
-                <h5 className="ma0 mr1">{capitalizeName(item.email)}</h5>
+                <h5 className="ma0 mr1">
+                  {capitalizeName(item.email)}
+                </h5>
                 <small>({item.name})</small>
               </div>
             ) : (
@@ -143,14 +148,12 @@ export const SuggestField = (props: SuggestFieldProps) => {
             intent={Intent.WARNING}
             onClick={async (e: any) => {
               // tslint:disable-next-line: no-console
-              
             }}
           />
         ) : undefined;
       }}
       onItemSelect={(selectedSkill) => {
         // tslint:disable-next-line: no-console
-        
       }}
       closeOnSelect={false}
       resetOnClose={true}

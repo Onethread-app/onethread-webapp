@@ -1,8 +1,10 @@
-import TaskPriorityTag from 'components/task/TaskPriorityTag';
-import moment from 'moment';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+
+import moment from 'moment';
+
+import TaskPriorityTag from 'components/task/TaskPriorityTag';
 
 export const TaskItemContainer = styled.div`
   width: 100%;

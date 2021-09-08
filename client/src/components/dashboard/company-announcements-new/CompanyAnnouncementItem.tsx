@@ -1,9 +1,12 @@
 import React from 'react';
-import './CompanyAnnouncementsNew.scss';
 import Linkify from 'react-linkify';
 import { upperFirst } from 'lodash';
-import { componentDecorator } from 'helpers/LinkifyHelper';
+
 import icon from '../../../resources/images/icons/announcement.png';
+
+import { componentDecorator } from 'helpers/LinkifyHelper';
+
+import './CompanyAnnouncementsNew.scss';
 
 const CompanyAnnouncementItem = (props) => {
   return (

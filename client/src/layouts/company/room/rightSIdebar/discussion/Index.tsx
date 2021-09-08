@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+
 import { IRoomReducer } from 'stores/room/Reducer';
 
 interface DiscussionComponentProps {
@@ -20,7 +21,6 @@ const DiscussionComponent = (props: DiscussionComponentProps) => {
       <h3 className="mv2 f6 f5-ns">
         {t('app.project.Project-rooms.Highlighted-Discussions')}
       </h3>
-      {/* <h3 className="mv2 f6 f5-ns">Highlighted Discussions</h3> */}
       <div className="overflow-y-auto flex-grow-1 pr3">
         {props.discussions && props.discussions.length > 0 ? (
           props.discussions.map((d) => (
@@ -36,7 +36,6 @@ const DiscussionComponent = (props: DiscussionComponentProps) => {
           <h4 className="mv0 gray f7 f5-ns">
             {t('app.project.Project-rooms.No-discussions')}
           </h4>
-          // <h4 className="mv0 gray f7 f5-ns">No discussions.</h4>
         )}
       </div>
     </div>

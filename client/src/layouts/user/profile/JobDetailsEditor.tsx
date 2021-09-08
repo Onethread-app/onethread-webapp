@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { DateInput } from '@blueprintjs/datetime';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { Checkbox, TextArea, Button } from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Form, Field } from 'react-final-form';
+import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
+import { TextArea } from '@blueprintjs/core/lib/esm/components/forms/textArea';
+import { Checkbox } from '@blueprintjs/core/lib/esm/components/forms/controls';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { IExperience } from 'stores/user/Reducer';
 import {
   addJobExperienceAction,
   editJobExperienceAction,
 } from 'stores/user/Actions';
-import { connect } from 'react-redux';
-import { Form, Field } from 'react-final-form';
+import { saveJobDetailsForm } from 'stores/jobDetailsForm/Actions';
+
 import {
   required,
   checkError,
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import { IExperience } from 'stores/user/Reducer';
-import { saveJobDetailsForm } from 'stores/jobDetailsForm/Actions';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { useTranslation } from 'react-i18next';
 
 interface IJobFormProps {
   setShowDialog: (val: boolean) => void;

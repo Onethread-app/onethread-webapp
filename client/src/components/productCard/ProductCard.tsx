@@ -1,12 +1,14 @@
 import React from 'react';
-import { TiButton } from '../button/Button';
 import { isMobileOnly } from 'react-device-detect';
+
 import tick from './../../resources/LandingImages/tick.svg';
 import task from './../../resources/LandingImages/task-complete.svg';
 import intClient from './../../resources/LandingImages/international-client.svg';
 import business from './../../resources/LandingImages/business.svg';
 import team from './../../resources/LandingImages/team.svg';
 import support from './../../resources/LandingImages/support.svg';
+
+import { TiButton } from '../button/Button';
 
 interface ICardData {
   data: {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from '@blueprintjs/core';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 import { JobForm } from './JobDetailsEditor';
 import { EducationForm } from './EducationDetailsEditor';
 

@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import CloseIcon from '@material-ui/icons/Close';
 import { useSpring, animated } from 'react-spring';
+
 import DarkLogo from 'resources/images/onethread-logo-dark.png';
 import { ReactComponent as Hamburger } from 'resources/navigation-menu.svg';
-import Switch from '../../../components/Switch/Switch';
-import { useTranslation } from 'react-i18next';
+
 import { getLocation } from 'helpers/utils';
+import Switch from '../../../components/Switch/Switch';
 
 const Menu = ({ setOpen }) => {
+  const { i18n } = useTranslation();
+  const { t } = useTranslation();
+  const [isToggle, setIsToggle] = useState(false);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -18,11 +25,18 @@ const Menu = ({ setOpen }) => {
     from: { opacity: 0 },
   });
 
-  const { i18n } = useTranslation();
-  const [isToggle, setIsToggle] = useState(false);
-
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+  };
+
+  const handleToggle = (value: boolean) => {
+    if (value === true) {
+      changeLanguage('bn');
+    }
+    if (value === false) {
+      changeLanguage('en');
+    }
+    setIsToggle(!isToggle);
   };
 
   useEffect(() => {
@@ -41,18 +55,6 @@ const Menu = ({ setOpen }) => {
       }
     });
   }, []);
-
-  const handleToggle = (value: boolean) => {
-    if (value === true) {
-      changeLanguage('bn');
-    }
-    if (value === false) {
-      changeLanguage('en');
-    }
-    setIsToggle(!isToggle);
-  };
-
-  const { t } = useTranslation();
 
   return (
     <animated.div style={props} className="overlay-menu">
@@ -77,30 +79,22 @@ const Menu = ({ setOpen }) => {
               rel="noreferrer"
             >
               {t('app.Navbar.How-It-Works')}
-              {/* How It Works */}
             </a>
           </li>
           <li>
             <NavLink to="/pricing">{t('app.Navbar.Pricing')}</NavLink>
-            {/* <NavLink to="/pricing">Pricing</NavLink> */}
           </li>
           <li>
-            <a
-              href="https://blog.onethread.app/"
-              rel="noreferrer"
-            >
+            <a href="https://blog.onethread.app/" rel="noreferrer">
               {t('app.Navbar.Blog')}
-              {/* Blog */}
             </a>
           </li>
           <li>
             <NavLink to="/signin">{t('app.Navbar.Login')}</NavLink>
-            {/* <NavLink to="/signin">Login</NavLink> */}
           </li>
           <li>
             <NavLink to="/signup" className="b">
               {t('app.Navbar.SignUp')}
-              {/* SignUp */}
             </NavLink>
           </li>
         </ul>

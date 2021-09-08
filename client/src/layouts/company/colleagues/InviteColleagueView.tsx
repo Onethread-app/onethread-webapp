@@ -1,14 +1,16 @@
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import { Button } from '@material-ui/core';
-
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import { makeStyles } from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
 import { CSVReader } from 'react-papaparse';
-import { ICompany } from 'stores/company/Reducer';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import { connect } from 'react-redux';
+
+import TextField from '@material-ui/core/TextField/TextField';
+import Button from '@material-ui/core/Button/Button';
+import AttachmentIcon from '@material-ui/icons/Attachment';
+import CloseIcon from '@material-ui/icons/Close';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
+import { ICompany } from 'stores/company/Reducer';
+
 import './InviteColleagueView.scss';
 
 const ErrorLabel = () => {
@@ -42,14 +44,13 @@ interface IInviteColleagueViewInternalProps
 function _InviteColleagueView(
   props: IInviteColleagueViewInternalProps,
 ) {
+  const classes = useStyles();
   const [inputType, setInputType] = React.useState('single');
   const [emails, setEmails] = React.useState([]);
   const [emailsCsv, setEmailCsv] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [emailValidation, setEmailValidation] = React.useState(false);
-
-  const classes = useStyles();
 
   const validateEmail = (email) => {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

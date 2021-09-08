@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { InputGroupField } from 'components/fields/InputGroupField';
-import { isEmpty, isEqual, pickBy } from 'lodash';
-import { Button, Spinner } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import { isEmpty, isEqual, pickBy } from 'lodash';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Spinner } from '@blueprintjs/core/lib/esm/components/spinner/spinner';
+
 import {
   createCompanyAction,
   clearErrorOnCompanyCreate,
 } from 'stores/company/Actions';
-import { useTranslation } from 'react-i18next';
+
+import { InputGroupField } from 'components/fields/InputGroupField';
 
 // const Type = [
 //   'Manufacturer',
@@ -32,6 +36,7 @@ const CompanySignupFormComponent = (
     errorOnCreatingCompany: string;
   } & RouteComponentProps,
 ) => {
+  const { t } = useTranslation();
   const [currentCompanyName, setCurrentCompanyName] = useState('');
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
@@ -51,32 +56,6 @@ const CompanySignupFormComponent = (
     address: '',
     type: '',
   });
-
-  React.useEffect(() => {
-    setCurrentCompanyName(props.companyName);
-    return () => {
-      props.clearErrorOnCompanyCreate();
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (
-      loading &&
-      props.creatingCompany === false &&
-      props.errorOnCreatingCompany === '' &&
-      props.companyName !== currentCompanyName
-    ) {
-      setLoading(false);
-      props.setShowDialog(false);
-      props.history.push(`/company/${props.companyName}/dashboard`);
-    }
-  }, [props.creatingCompany]);
-
-  React.useEffect(() => {
-    if (props.errorOnCreatingCompany) {
-      setLoading(false);
-    }
-  }, [props.errorOnCreatingCompany]);
 
   const emailValidation = (email: string) => {
     if (email !== '') {
@@ -148,13 +127,36 @@ const CompanySignupFormComponent = (
     }
   };
 
-  const { t } = useTranslation();
+  React.useEffect(() => {
+    setCurrentCompanyName(props.companyName);
+    return () => {
+      props.clearErrorOnCompanyCreate();
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (
+      loading &&
+      props.creatingCompany === false &&
+      props.errorOnCreatingCompany === '' &&
+      props.companyName !== currentCompanyName
+    ) {
+      setLoading(false);
+      props.setShowDialog(false);
+      props.history.push(`/company/${props.companyName}/dashboard`);
+    }
+  }, [props.creatingCompany]);
+
+  React.useEffect(() => {
+    if (props.errorOnCreatingCompany) {
+      setLoading(false);
+    }
+  }, [props.errorOnCreatingCompany]);
 
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
         {t('app.forms.Create-company.Create')}
-        {/* Create Company */}
       </h1>
       <div className={` ${errors.name ? 'mb3' : 'mb4'}`}>
         <div className="flex">
@@ -162,8 +164,7 @@ const CompanySignupFormComponent = (
             id="companyName"
             value={values.name}
             onChange={handleChange('name')}
-            placeHolder={`${t('app.forms.Create-company.Name')} (Required)`}
-            // placeHolder="Company Name (Required)"
+            placeHolder={t('app.forms.Create-company.Name')}
             leftIcon="briefcase"
             style={{
               boxShadow: 'none',
@@ -211,7 +212,6 @@ const CompanySignupFormComponent = (
             value={values.address}
             onChange={handleChange('address')}
             placeHolder={t('app.forms.Create-company.Address')}
-            // placeHolder="Company Address"
             leftIcon="map-marker"
             style={{
               boxShadow: 'none',
@@ -291,7 +291,6 @@ const CompanySignupFormComponent = (
             value={values.email}
             onChange={handleChange('email')}
             placeHolder={t('app.forms.Create-company.Email')}
-            // placeHolder="Company Email Address"
             leftIcon="envelope"
             style={{
               boxShadow: 'none',
@@ -335,7 +334,6 @@ const CompanySignupFormComponent = (
             value={values.legalOwnerName}
             onChange={handleChange('legalOwnerName')}
             placeHolder={t('app.forms.Create-company.Legal-name')}
-            // placeHolder="Legal Owner's Name"
             leftIcon="mugshot"
             style={{
               boxShadow: 'none',
@@ -374,7 +372,6 @@ const CompanySignupFormComponent = (
             value={values.legalOwnerMail}
             onChange={handleChange('legalOwnerMail')}
             placeHolder={t('app.forms.Create-company.Legal-email')}
-            // placeHolder="Legal Owner's Email Address"
             leftIcon="envelope"
             style={{
               boxShadow: 'none',

@@ -1,8 +1,11 @@
 import React, { Dispatch, SetStateAction } from 'react';
 
-import Snackbar, { SnackbarOrigin } from '@material-ui/core/Snackbar';
+import Snackbar, {
+  SnackbarOrigin,
+} from '@material-ui/core/Snackbar/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;

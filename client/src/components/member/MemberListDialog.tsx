@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Avatar from '@material-ui/core/Avatar/Avatar';
-import UserIcon from 'resources/images/profilePhoto.svg';
 
 import { IBoardMember, ITaskMember } from 'stores/task/Reducer';
+
+import UserIcon from 'resources/images/profilePhoto.svg';
 
 const Container = styled.div`
   padding: 0.5rem 1rem;

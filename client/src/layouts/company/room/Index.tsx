@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Icon, Drawer } from '@blueprintjs/core';
-import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
-import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-import { IRoomReducer, IRoom } from 'stores/room/Reducer';
+import {
+  isMobileOnly,
+  CustomView,
+  MobileView,
+} from 'react-device-detect';
 import { isEmpty, isEqual } from 'lodash';
-import { RoomRightSidebar } from './rightSIdebar/Index';
+
+import Pusher from 'pusher-js/types/src/core/pusher';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Drawer } from '@blueprintjs/core/lib/esm/components/drawer/drawer';
+
+import { IRoomReducer, IRoom } from 'stores/room/Reducer';
 import {
   getRoomMembers,
   getRoomMessages,
@@ -19,14 +26,11 @@ import {
   setCurrentProjectId,
   getRoleForProject,
 } from '../../../stores/project/Actions';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import Pusher from 'pusher-js';
-import {
-  isMobileOnly,
-  CustomView,
-  MobileView,
-} from 'react-device-detect';
 import { CURRENT_ROOM } from 'stores/room/Types';
+
+import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
+import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
+import { RoomRightSidebar } from './rightSIdebar/Index';
 
 export interface RoomQueries {
   view: 'default' | 'mobile';
@@ -65,17 +69,19 @@ interface RoomPageComponentProps extends RouteComponentProps {
 }
 
 const RoomPageComponent = (props: RoomPageComponentProps) => {
+  const dispatch = useDispatch();
   const [isOpenLeftSidebar, setIsOpenLeftSidebar] = useState(true);
   const [isOpenRightSidebar, setIsOpenRightSidebar] = useState(true);
   const [queries, setQueries] = useState<RoomQueries>({
     view: 'default',
     roomId: '',
   });
-  const dispatch = useDispatch();
+  const [showDialog, setShowDialog] = useState(false);
 
   const load = async (_getRooms: any) => {
     await _getRooms();
   };
+
   // if(isEmpty(props.projectId)){
   //   const { projectId } = (props.match.params as any);
   //   props.getSingleProject(projectId);
@@ -96,6 +102,10 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
     }
   };
 
+  const callUpdateLastSeen = async (roomId: string) => {
+    await props.updateLastSeen(roomId);
+  };
+
   // get all rooms
   useEffect(() => {
     if (!isMobileOnly && props.companyId && props.projectId) {
@@ -114,10 +124,6 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
     setQueries({ view, roomId });
   }, [props.location.search]);
 
-  const callUpdateLastSeen = async (roomId: string) => {
-    await props.updateLastSeen(roomId);
-  };
-
   // fetch room infos
   useEffect(() => {
     if (
@@ -133,8 +139,6 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
       roomSwitch(queries.roomId);
     }
   }, [queries.roomId, props.pusherInstance, props.rooms]);
-
-  const [showDialog, setShowDialog] = useState(false);
 
   return (
     <>

@@ -1,6 +1,8 @@
 import React from 'react';
-import DownloadIcon from './../../../../../resources/images/file-download.svg';
+
 import { IRoomFile } from 'stores/room/Reducer';
+
+import DownloadIcon from './../../../../../resources/images/file-download.svg';
 
 interface SharedFileItemComponentProps {
   file: IRoomFile;

@@ -1,6 +1,8 @@
 import React from 'react';
-import expiredIcon from '../../../resources/images/expiredIcon.png';
+
 import CloseIcon from '@material-ui/icons/Close';
+
+import expiredIcon from '../../../resources/images/expiredIcon.png';
 
 interface IErrorText {
   text: string;
@@ -8,9 +10,7 @@ interface IErrorText {
   closeModal: () => void;
   setExpireMassage?: () => void;
 }
-export default function ErrorText(
-  props: IErrorText,
-) {
+export default function ErrorText(props: IErrorText) {
   return (
     <div>
       <div

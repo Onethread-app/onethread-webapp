@@ -1,12 +1,15 @@
 import React, { Dispatch, SetStateAction } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
-import { Button, FileInput, Icon } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 
-import { ITaskFileUpload, taskFileUpload } from 'stores/task/Actions';
+import { IconNames } from '@blueprintjs/icons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { FileInput } from '@blueprintjs/core/lib/esm/components/forms/fileInput';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 import { ITask } from 'stores/task/Reducer';
-import { useTranslation } from 'react-i18next';
+import { ITaskFileUpload, taskFileUpload } from 'stores/task/Actions';
 
 interface ITaskFilesAttachProps {
   setFilePopover: Dispatch<SetStateAction<boolean>>;
@@ -21,13 +24,13 @@ interface ITaskFilesAttachInternalProps
 }
 
 const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
+  const { t } = useTranslation();
+  const sizeLimit = 25;
   const [imageName, setImageName] = React.useState({}) as any;
   const [imageSelected, setImageSelected] = React.useState({}) as any;
   const [imageError, setImageError] = React.useState('');
   const [fileLoading, setFileLoading] = React.useState(false);
   // const [imageError, setImageError] = useState('');
-
-  const sizeLimit = 25;
 
   const checkMimetype = [
     'application/zip',
@@ -106,8 +109,6 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
     }
   }, [props.uploadingTaskFile, props.errorOnUploadingTaskFile]);
 
-  const { t } = useTranslation();
-
   return (
     <div className="pa3 cf bg-white flex flex-column">
       <div className="flex justify-end">
@@ -121,7 +122,6 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
       <h1 className="f5">
         {t('app.project.Project-boards.Attach-Files')}
       </h1>
-      {/* <h1 className="f5">Attach Files</h1> */}
       <FileInput
         text={imageName.name ? imageName.name : 'Choose file...'}
         onInputChange={(e) => imageChangeHandler(e)}

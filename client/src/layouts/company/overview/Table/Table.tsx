@@ -1,10 +1,9 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+
+import moment from 'moment';
 import Paper from '@material-ui/core/Paper';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  withStyles,
-} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,11 +12,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import createStyles from '@material-ui/core/styles/createStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
 import { priorityColor } from 'stores/UtilsActions';
-import { useHistory } from 'react-router-dom';
-import moment from 'moment';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -111,38 +111,6 @@ function stableSort<T>(
   return stabilizedThis.map((el) => el[0]);
 }
 
-// interface HeadCell {
-//   id: keyof Data;
-//   label: string;
-// }
-
-// const headCells: HeadCell[] = [
-//   {
-//     id: 'name',
-//     label: 'Deliverable',
-//   },
-//   {
-//     id: 'assign',
-//     label: 'Resource Assign',
-//   },
-//   {
-//     id: 'boardName',
-//     label: 'Board',
-//   },
-//   {
-//     id: 'priority',
-//     label: 'Priority',
-//   },
-//   {
-//     id: 'status',
-//     label: 'Status',
-//   },
-//   {
-//     id: 'dueDate',
-//     label: 'End',
-//   },
-// ];
-
 interface EnhancedTableProps {
   classes: ReturnType<typeof useStyles>;
   numSelected: number;
@@ -159,6 +127,7 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
+  const { t } = useTranslation();
   const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property: keyof Data) => (
     event: React.MouseEvent<unknown>,
@@ -171,38 +140,30 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     label: string;
   }
 
-  const { t } = useTranslation();
-
   const headCells: HeadCell[] = [
     {
       id: 'name',
       label: `${t('app.project.Project-boards.Deliverable')}`,
-      // label: 'Deliverable',
     },
     {
       id: 'assign',
       label: `${t('app.project.Project-boards.Resource-Assign')}`,
-      // label: 'Resource Assign',
     },
     {
       id: 'boardName',
       label: `${t('app.project.Project-boards.Board')}`,
-      // label: 'Board',
     },
     {
       id: 'priority',
       label: `${t('app.project.Project-boards.Priority')}`,
-      // label: 'Priority',
     },
     {
       id: 'status',
       label: `${t('app.project.Project-boards.Status')}`,
-      // label: 'Status',
     },
     {
       id: 'dueDate',
       label: `${t('app.project.Project-boards.End')}`,
-      // label: 'End',
     },
   ];
 

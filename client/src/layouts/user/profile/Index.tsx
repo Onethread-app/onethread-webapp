@@ -1,15 +1,20 @@
 import React from 'react';
-import 'react-vertical-timeline-component/style.min.css';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Tabs } from '@blueprintjs/core/lib/esm/components/tabs/tabs';
+import { Tab } from '@blueprintjs/core/lib/esm/components/tabs/tab';
+
+import { User } from 'stores/user/Reducer';
+
 import { ExperienceView } from 'layouts/user/profile/ExperienceView';
 import { SkillView } from 'layouts/user/profile/SkillView';
 import { AboutView } from './AboutView';
 import { BasicInfoDetailsView } from './BasicInfoDetailsView';
-import { Tabs, Tab } from '@blueprintjs/core';
-import { User } from 'stores/user/Reducer';
 import { CoverPhoto } from 'components/cover-photo/CoverPhoto';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+
+import 'react-vertical-timeline-component/style.min.css';
 
 interface UserProfilePageProps {
   user: User;
@@ -46,14 +51,12 @@ const _UserProfilePage = (
                 <Tab
                   id="Experience"
                   title={t('app.user.Personal-profile.Experience')}
-                  // title="Experience"
                   panel={<ExperienceView />}
                   className="h-auto outline-0 f5 fw6"
                 />
                 <Tab
                   id="Basic Information"
                   title={t('app.user.Personal-profile.Basic-info')}
-                  // title="Basic Information"
                   panel={<BasicInfoDetailsView />}
                   className="outline-0 h-auto f5 fw6"
                 />

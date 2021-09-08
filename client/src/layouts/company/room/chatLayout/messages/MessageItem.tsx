@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useSelector, connect } from 'react-redux';
+
 import moment from 'moment';
 import Linkify from 'react-linkify';
 
@@ -12,6 +13,7 @@ import starIcon from './../../../../../resources/images/colorful-star.svg';
 import muteStarIcon from './../../../../../resources/images/mute-star.svg';
 
 // import { handleDownload } from 'helpers/FileDownload';
+
 interface MessageItemProps {
   message: IRoomMessage;
   group: {

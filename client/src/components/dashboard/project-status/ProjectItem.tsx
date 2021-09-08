@@ -1,17 +1,15 @@
 import React from 'react';
-import moment from 'moment';
 
-import {
-  createStyles,
-  withStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import moment from 'moment';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import createStyles from '@material-ui/core/styles/createStyles';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 
 import StatusTag from 'components/project/StatusTag';
 import MemberIcon from 'components/member/MemberIcon';
-import { Dialog } from '@blueprintjs/core';
 import MembersList from './MembersList';
 
 const BorderLinearProgress = withStyles((theme: Theme) =>

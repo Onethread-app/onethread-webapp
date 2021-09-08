@@ -1,15 +1,16 @@
 import React from 'react';
 
-import { ClickAwayListener } from '@material-ui/core';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener';
 
 import ProfilePic from 'resources/svg/ProfilePic.svg';
 import Dashboard from 'resources/svg/Dashboard.svg';
 import Settings from 'resources/svg/Settings.svg';
 import Logout from 'resources/svg/Logout.svg';
 
-import './MobileSidebar.styles.scss';
 import CompanyItem from './CompanyItem';
 import { CreateCompany } from 'components/button/Button';
+
+import './MobileSidebar.styles.scss';
 
 interface IMobileSidebar {
   setShowSidebar: (val: boolean) => void;

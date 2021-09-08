@@ -1,7 +1,10 @@
 import React from 'react';
-import './DashboardSummary.scss';
-import DashboardChart from '../dashboard-chart/DashboardChart';
 import { useTranslation } from 'react-i18next';
+
+import DashboardChart from '../dashboard-chart/DashboardChart';
+
+import './DashboardSummary.scss';
+
 const primaryColor = {
   color: '#3484F0',
 };
@@ -11,6 +14,8 @@ const fontColor = {
 };
 
 export const DashboardSummary = (props) => {
+  const { t } = useTranslation();
+  const { projectCompilation } = props.stat;
   const [runningProjectsVal, setRunningProjectVal] = React.useState(
     0,
   );
@@ -18,8 +23,9 @@ export const DashboardSummary = (props) => {
     completedProjectsVal,
     setCompletedProjectsVal,
   ] = React.useState(0);
+  const runningProjects = runningProjectsVal;
+  const completedProjects = completedProjectsVal;
 
-  const { projectCompilation } = props.stat;
   React.useEffect(() => {
     if (projectCompilation) {
       const projectStats = projectCompilation.map((project) => {
@@ -48,11 +54,6 @@ export const DashboardSummary = (props) => {
     }
   }, [projectCompilation]);
 
-  const runningProjects = runningProjectsVal;
-  const completedProjects = completedProjectsVal;
-
-  const { t } = useTranslation();
-
   return (
     <div className="flex flex-row-ns flex-column">
       <div className="w-30-l w-100 b--black-05 br-l bn bw1 summary-wrapper">
@@ -68,10 +69,16 @@ export const DashboardSummary = (props) => {
             style={fontColor}
           >
             <div className="flex flex-column">
-              <span>{t('app.company.Dashboard.Ongoing-projects.first-part')}</span>
-              <span>{t('app.company.Dashboard.Ongoing-projects.second-part')}</span>
-              {/* <span>Running</span>
-              <span>Projects</span> */}
+              <span>
+                {t(
+                  'app.company.Dashboard.Ongoing-projects.first-part',
+                )}
+              </span>
+              <span>
+                {t(
+                  'app.company.Dashboard.Ongoing-projects.second-part',
+                )}
+              </span>
             </div>
             <span className="fr f2-ns f3 pl3" style={primaryColor}>
               {runningProjects}
@@ -90,10 +97,16 @@ export const DashboardSummary = (props) => {
             style={fontColor}
           >
             <div className="flex flex-column">
-              <span>{t('app.company.Dashboard.Finished-projects.first-part')}</span>
-              <span>{t('app.company.Dashboard.Finished-projects.second-part')}</span>
-              {/* <span>Completed</span>
-              <span>Projects</span> */}
+              <span>
+                {t(
+                  'app.company.Dashboard.Finished-projects.first-part',
+                )}
+              </span>
+              <span>
+                {t(
+                  'app.company.Dashboard.Finished-projects.second-part',
+                )}
+              </span>
             </div>
             <span className="fr f2-ns f3 pl3" style={primaryColor}>
               {completedProjects}

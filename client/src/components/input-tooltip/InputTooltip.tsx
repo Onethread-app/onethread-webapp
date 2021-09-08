@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import './InputTooltip.scss';
 
 const InputTooltip = (props) => {
@@ -22,7 +23,12 @@ const InputTooltip = (props) => {
       // When to show the tooltip
       onMouseEnter={showTip}
       onMouseLeave={hideTip}
-      style={{position: 'absolute', width: '30px', left: '-20px', top: '0px'}}
+      style={{
+        position: 'absolute',
+        width: '30px',
+        left: '-20px',
+        top: '0px',
+      }}
     >
       {/* Wrapping */}
       {props.children}

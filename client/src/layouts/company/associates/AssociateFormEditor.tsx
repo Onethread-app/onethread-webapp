@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { isEmpty, map } from 'lodash';
+import { connect } from 'react-redux';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { tokenConfig } from 'stores/UtilsActions';
+import { addAssociate } from 'stores/associate/Actions';
+import { server } from 'config';
+import { ICompany } from 'stores/company/Reducer';
+
+import { useLiveSearch } from 'components/useLiveSearch';
 import {
   SuggestField,
   ItemEntityProps,
 } from 'components/fields/SuggestField';
-import { connect } from 'react-redux';
-import { tokenConfig } from 'stores/UtilsActions';
-import { Button } from '@blueprintjs/core';
-import { addAssociate } from 'stores/associate/Actions';
-import { server } from 'config';
-import { useLiveSearch } from 'components/useLiveSearch';
-import { isEmpty, map } from 'lodash';
-import { ICompany } from 'stores/company/Reducer';
-import { useTranslation } from 'react-i18next';
 
 interface AddAssociateEditorProps {
   company: ICompany;
@@ -31,6 +34,7 @@ interface AddAssociateEditorInternalProps
 const AssociateFormEditorComponent = (
   props: AddAssociateEditorInternalProps,
 ) => {
+  const { t } = useTranslation();
   const [associates, setAssociates]: any = useState([]);
   const [selectedAssociate, setSelectedAssociate] = useState(
     {} as ItemEntityProps,
@@ -55,15 +59,12 @@ const AssociateFormEditorComponent = (
     setAssociates(result);
   }, [result]);
 
-  const { t } = useTranslation();
-
   return (
     <div className="pa3 mt5 mt0-ns">
       <div className=" w-100">
         <h1 className="f5 tigrow-lightBlue">
           {t('app.company.Partners.Add-Partners')}
         </h1>
-        {/* <h1 className="f5 tigrow-lightBlue">Add Partners</h1> */}
         <SuggestField
           onChange={(value: string) => {
             setQuery(value);

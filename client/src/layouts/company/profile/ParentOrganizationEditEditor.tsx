@@ -1,15 +1,18 @@
-import { Button } from '@blueprintjs/core';
-import { connect } from 'react-redux';
 import React from 'react';
+import { connect } from 'react-redux';
+
 import { Form, Field } from 'react-final-form';
-import { checkError, maxValue } from 'components/final-form/utils';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { SubmitError } from 'components/final-form/SubmitError';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { ICompany, IOrg } from 'stores/company/Reducer';
 import {
   editOrganization,
   getCompanyDetails,
 } from 'stores/company/Actions';
-import { ICompany, IOrg } from 'stores/company/Reducer';
+
+import { checkError, maxValue } from 'components/final-form/utils';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { SubmitError } from 'components/final-form/SubmitError';
 
 interface IOrganizationEditProps {
   setShowDialog: (val: boolean) => void;
@@ -20,10 +23,14 @@ interface IOrganizationEditProps {
   isLoading: boolean;
 }
 
-const OrganizationEditEditorComponent = (props: IOrganizationEditProps) => {
-
+const OrganizationEditEditorComponent = (
+  props: IOrganizationEditProps,
+) => {
   const onSubmit = async (values: any) => {
-    const response = await props.editOrganization(values, props.org.ind);
+    const response = await props.editOrganization(
+      values,
+      props.org.ind,
+    );
     if (response && props.isLoading === false) {
       props.setShowDialog(false);
     }

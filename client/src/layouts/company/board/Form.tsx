@@ -1,22 +1,26 @@
-import { Button, Icon } from '@blueprintjs/core';
-import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
+
+import { Field, Form } from 'react-final-form';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { TaskBoard } from 'stores/task/Reducer';
+import { ICompany } from 'stores/company/Reducer';
+import { IProject } from 'stores/project/Reducer';
+import { Color } from 'stores/UtilsActions';
+import { clearCurrentBoard, createBoard } from 'stores/task/Actions';
+
 import {
   checkError,
   composeValidators,
   maxValue,
   required,
 } from 'components/final-form/utils';
-import { isEqual } from 'lodash';
-import React, { useState } from 'react';
-import { Field, Form } from 'react-final-form';
-import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { clearCurrentBoard, createBoard } from 'stores/task/Actions';
-import { TaskBoard } from 'stores/task/Reducer';
-import { ICompany } from 'stores/company/Reducer';
-import { IProject } from 'stores/project/Reducer';
-import { Color } from 'stores/UtilsActions';
+import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 
 const FormComponent = (props: {
   setShowTaskBoardDialog?: (val: boolean) => void;
@@ -28,6 +32,8 @@ const FormComponent = (props: {
   isCreating: boolean;
 }) => {
   const history = useHistory();
+  const { t } = useTranslation();
+  const [labelColor, setLabelColor] = useState(null as any);
 
   const onSubmit = async (values: any) => {
     await props.createBoard(values);
@@ -41,15 +47,10 @@ const FormComponent = (props: {
     return {};
   };
 
-  const [labelColor, setLabelColor] = useState(null as any);
-
-  const { t } = useTranslation();
-
   return (
     <>
       <div className="pl3" style={{ marginTop: '6rem' }}>
         <h3>{t('app.project.Project-boards.Create-Board')}</h3>
-        {/* <h3>Create Board</h3> */}
       </div>
       <Form
         onSubmit={onSubmit}
@@ -87,7 +88,6 @@ const FormComponent = (props: {
                       label={t(
                         'app.project.Project-boards.Board-Name',
                       )}
-                      // label="Board Name (Required)"
                       autoFocus={true}
                     />
                   </div>
@@ -102,7 +102,6 @@ const FormComponent = (props: {
                       style={{ fontSize: '.8rem' }}
                     >
                       {t('app.project.Project-boards.Label')}
-                      {/* Label */}
                     </p>
                     <div className="flex">
                       {Color.map((color) => (
@@ -149,7 +148,6 @@ const FormComponent = (props: {
                   disabled={submitting || pristine}
                 >
                   {t('app.project.Project-boards.Create')}
-                  {/* Create */}
                 </Button>
                 <Button
                   className="w4 grow h2 pointer"
@@ -166,7 +164,6 @@ const FormComponent = (props: {
                   }}
                 >
                   {t('app.project.Project-boards.cancel')}
-                  {/* cancel */}
                 </Button>
               </div>
             </div>

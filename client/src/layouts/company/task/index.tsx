@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { isMobileOnly } from 'react-device-detect';
 import { connect } from 'react-redux';
-// import { useParams, useLocation } from 'react-router';
+
 import { ITask, TaskBoard } from 'stores/task/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import { ICompany } from 'stores/company/Reducer';
@@ -8,7 +9,7 @@ import {
   getSelectedTaskDetails,
   getSelectedBoard,
 } from 'stores/task/Actions';
-import { isMobileOnly } from 'react-device-detect';
+
 import { ActivityView } from './activity/ActivityView';
 import { TaskDetails } from './taskDetails';
 import TaskInfoViewComponent from './TaskInfoView/Index';

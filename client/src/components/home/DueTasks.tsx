@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-
-import TaskItem from './TaskItem';
-
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
-import { sortTasksByStatus } from 'helpers/utils';
-import Pagination from '@material-ui/lab/Pagination';
 import { isMobileOnly } from 'react-device-detect';
+import { tigrowApi } from 'config';
+
+import Pagination from '@material-ui/lab/Pagination/Pagination';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+
+import { tokenConfig } from 'stores/UtilsActions';
+
+import { sortTasksByStatus } from 'helpers/utils';
+import TaskItem from './TaskItem';
 
 const DueTasks = () => {
   const [loading, setLoading] = useState(true);
@@ -20,6 +20,10 @@ const DueTasks = () => {
   const [totalPage, setTotalPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3);
+
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   useEffect(() => {
     const getTasks = async () => {
@@ -61,10 +65,6 @@ const DueTasks = () => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     setTasksToShow(tasks.slice(indexOfFirstItem, indexOfLastItem));
   }, [currentPage, itemsPerPage, tasks]);
-
-  const handleChange = (event, value) => {
-    setCurrentPage(value);
-  };
 
   return (
     <div className="due-tasks">

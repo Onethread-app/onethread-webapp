@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@blueprintjs/core';
 import { connect, useDispatch } from 'react-redux';
+import { tigrowApi } from 'config';
+
 import { Field, Form } from 'react-final-form';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { ICompany } from 'stores/company/Reducer';
+import { tokenConfig, Entity } from 'stores/UtilsActions';
+import { ADD_PRODUCT } from 'stores/company/Types';
+
 import { DropdownField } from 'components/fields/DropdownField';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { tokenConfig, Entity } from 'stores/UtilsActions';
-import { tigrowApi } from 'config';
-import { ICompany } from 'stores/company/Reducer';
 import { required } from 'components/final-form/utils';
-import { ADD_PRODUCT } from 'stores/company/Types';
+
 interface ProductEditProps {
   setShowDialog: (val: boolean) => void;
   showDialog: boolean;

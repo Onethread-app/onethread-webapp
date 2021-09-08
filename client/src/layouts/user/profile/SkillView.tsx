@@ -1,16 +1,19 @@
-import { User } from 'stores/user/Reducer';
 import React, { useState } from 'react';
-import { ItemEntityProps } from 'components/fields/SuggestField';
-import { SkillEdit } from './SkillEditor';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+
+import { User } from 'stores/user/Reducer';
 import {
   addSkillAction,
   deleteSkillAction,
 } from 'stores/user/Actions';
 
 import skillImage from './../../../resources/images/skills.png';
+
+import { SkillEdit } from './SkillEditor';
+import { ItemEntityProps } from 'components/fields/SuggestField';
 import { RightSidebar } from 'components/RightSidebar';
-import { useTranslation } from 'react-i18next';
+
 interface SkillViewComponentProps {
   user: User;
   addSkillAction: (skillSet: string[]) => void;
@@ -20,15 +23,14 @@ interface SkillViewComponentProps {
 export const SkillViewComponent = (
   props: SkillViewComponentProps,
 ) => {
-  const [showDialog, setShowDialog] = useState(false);
   const { t } = useTranslation();
+  const [showDialog, setShowDialog] = useState(false);
 
   return (
     <>
       <h1 className="f5 lh-copy">
         {t('app.user.Personal-profile.Skills')}
       </h1>
-      {/* <h1 className="f5 lh-copy">Skills</h1> */}
       <div className="dib">
         {props.user.skillArea && props.user.skillArea.length > 0 ? (
           props.user.skillArea.map((skill: ItemEntityProps) => {
@@ -72,7 +74,6 @@ export const SkillViewComponent = (
           onClick={() => setShowDialog(!showDialog)}
         >
           {t('app.user.Personal-profile.Add-skills')}
-          {/* Add Skills */}
         </button>
       </div>
       {showDialog && (

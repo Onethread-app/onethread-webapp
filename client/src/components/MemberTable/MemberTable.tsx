@@ -1,34 +1,34 @@
 import React from 'react';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { isEmpty, isEqual } from 'lodash';
+
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { ButtonGroup } from '@blueprintjs/core/lib/esm/components/button/buttonGroup';
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Alignment } from '@blueprintjs/core/lib/esm/common/alignment';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import createStyles from '@material-ui/core/styles/createStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import TableCell from '@material-ui/core/TableCell/TableCell';
+import TableRow from '@material-ui/core/TableRow/TableRow';
+import Paper from '@material-ui/core/Paper/Paper';
+import TableContainer from '@material-ui/core/TableContainer/TableContainer';
+import Table from '@material-ui/core/Table/Table';
+import TableHead from '@material-ui/core/TableHead/TableHead';
+import TablePagination from '@material-ui/core/TablePagination/TablePagination';
+import TableBody from '@material-ui/core/TableBody/TableBody';
+
 import { companyPermit } from 'stores/UtilsActions';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  withStyles,
-} from '@material-ui/core/styles';
+
+import altImg from '../../resources/images/profilePhoto.svg';
+
 import { EditDesignationForm } from 'layouts/company/colleagues/EditDesignationForm';
 import { AddDesignationForm } from 'layouts/company/colleagues/AddDesignationForm';
-import {
-  Button,
-  Popover,
-  Position,
-  Icon,
-  ButtonGroup,
-  Alignment,
-  Dialog,
-} from '@blueprintjs/core';
-import { useTranslation } from 'react-i18next';
-import altImg from '../../resources/images/profilePhoto.svg';
-import { useSelector } from 'react-redux';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({

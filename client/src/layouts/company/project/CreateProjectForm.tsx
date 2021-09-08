@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Icon } from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { Form, Field } from 'react-final-form';
+import { isEqual } from 'lodash';
 
-import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
-import { Switch } from '@blueprintjs/core';
+import moment from 'moment';
+import { Form, Field } from 'react-final-form';
+import { Switch } from '@blueprintjs/core/lib/esm/components/forms/controls';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import arrayMutators from 'final-form-arrays';
+
+import { ICompany } from 'stores/company/Reducer';
+import { Associate } from 'stores/associate/Reducer';
+import { Color } from 'stores/UtilsActions';
+import { createProjectInCompany } from '../../../stores/project/Actions';
+import { getAllDepartments } from '../../../stores/company/Actions';
+import { saveProjectForm } from 'stores/projectForm/Actions';
 
 import {
   checkError,
@@ -12,25 +24,7 @@ import {
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import { Color } from 'stores/UtilsActions';
-import { isEqual } from 'lodash';
-// import { SuggestFieldWithError } from 'components/fields/SuggestField';
-import { ICompany } from 'stores/company/Reducer';
-// import { useLiveSearch } from 'components/useLiveSearch';
-import { createProjectInCompany } from '../../../stores/project/Actions';
-import { getAllDepartments } from '../../../stores/company/Actions';
-
-import { Associate } from 'stores/associate/Reducer';
-import arrayMutators from 'final-form-arrays';
-import { DateInput } from '@blueprintjs/datetime';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-import { saveProjectForm } from 'stores/projectForm/Actions';
-
-// interface IProject {
-//   department: string;
-//   projectType: string;
-// }
+import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 
 export interface IDepartment {
   name: string;

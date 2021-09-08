@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
-import { Button, Icon, Popover } from '@blueprintjs/core';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
+
 import { Form, Field } from 'react-final-form';
-import { SubmitError } from 'components/final-form/SubmitError';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
+import { ISubTask } from 'stores/subtask/Reducer';
+import { createSubTask, updateSubTask } from 'stores/subtask/Actions';
+
 import {
   required,
   checkError,
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import { createSubTask, updateSubTask } from 'stores/subtask/Actions';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { ISubTask } from 'stores/subtask/Reducer';
-import { isEmpty } from 'lodash';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { SubmitError } from 'components/final-form/SubmitError';
 
 interface ITaskDescriptionCreateFormProps {
   setShowSubTaskForm: (val: boolean) => void;

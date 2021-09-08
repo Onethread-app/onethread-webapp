@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { isNumber, isEmpty, isEqual } from 'lodash';
 import { connect } from 'react-redux';
-import { saveCompanyBasicInfoForm } from 'stores/companyBasicInfoForm/Actions';
-import { Button, Icon, HTMLSelect } from '@blueprintjs/core';
-import { InputGroupField } from 'components/fields/InputGroupField';
+
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { HTMLSelect } from '@blueprintjs/core/lib/esm/components/html-select/htmlSelect';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
+
 import { ICompany } from 'stores/company/Reducer';
 import { editCompanyInfoAction } from 'stores/company/Actions';
-import { useTranslation } from 'react-i18next';
+import { saveCompanyBasicInfoForm } from 'stores/companyBasicInfoForm/Actions';
+
+import { InputGroupField } from 'components/fields/InputGroupField';
 
 interface CompanyInfoProps {
   companyInfo: ICompany;

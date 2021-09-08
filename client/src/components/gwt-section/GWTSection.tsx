@@ -1,6 +1,8 @@
 import React from 'react';
-import { TiButton } from 'components/button/Button';
+
 import smile from './../../resources/LandingImages/Smile.png';
+
+import { TiButton } from 'components/button/Button';
 
 export const GWTSection = () => {
   return (

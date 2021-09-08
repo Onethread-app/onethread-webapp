@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import warningIcon from './../../resources/images/warningIcon.png';
 
 export const SubmitError = (props: { errorMessage: string }) => (

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Spinner } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Spinner } from '@blueprintjs/core/lib/esm/components/spinner/spinner';
+
 import { projectFileUpload } from '../../../stores/project/Actions';
 
 interface IFileUploadProps {

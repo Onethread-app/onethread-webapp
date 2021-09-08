@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { InputGroupFieldWithError } from '../../../components/fields/InputGroupField';
-import { Button, Icon } from '@blueprintjs/core';
-import { isEqual } from 'lodash';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { tokenConfig } from 'stores/UtilsActions';
 import { connect } from 'react-redux';
-import { logoutAction } from 'stores/auth/Actions';
+import { isEqual } from 'lodash';
+import { tigrowApi } from 'config';
+
 import { History } from 'history';
 import { Form, Field } from 'react-final-form';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { tokenConfig } from 'stores/UtilsActions';
+import { logoutAction } from 'stores/auth/Actions';
+
 import { SubmitError } from 'components/final-form/SubmitError';
 import {
   checkError,
@@ -16,8 +20,9 @@ import {
   composeValidators,
   errorMessgeHandler,
 } from 'components/final-form/utils';
-import { tigrowApi } from 'config';
 import InputTooltip from 'components/input-tooltip/InputTooltip';
+import { InputGroupFieldWithError } from '../../../components/fields/InputGroupField';
+
 const validation = {
   rules: [
     'At least 1 capital letter',
@@ -38,7 +43,6 @@ const ChangePasswordComponentView = (
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(
     false,
   );
-
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleChangePassword = async (changePasswordInfo: {}) => {
@@ -111,7 +115,6 @@ const ChangePasswordComponentView = (
           <SubmitError errorMessage={submitError} />
           <h1 className="f5 lh-copy  mb4 tigrow-lightBlue">
             Change Password
-            {/* Change Password */}
           </h1>
           <div>
             <h1 className="f6">Old Password</h1>

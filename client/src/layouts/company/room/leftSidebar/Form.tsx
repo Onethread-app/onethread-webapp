@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-import { Button } from '@blueprintjs/core';
-import { createRoom } from 'stores/room/Actions';
+
 import { Form, Field } from 'react-final-form';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { IRoom } from 'stores/room/Reducer';
+import { createRoom } from 'stores/room/Actions';
+import { room } from 'stores/room/Types';
+
 import {
   required,
   composeValidators,
@@ -11,8 +16,6 @@ import {
 } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { checkError } from 'components/final-form/utils';
-import { room } from 'stores/room/Types';
-import { IRoom } from 'stores/room/Reducer';
 
 interface ICreateFormProps {
   setShowDialog: (val: boolean) => void;
@@ -30,10 +33,10 @@ interface ICreateFormInternalProps extends ICreateFormProps {
 const CreateFormComponent: React.FC<any> = (
   props: ICreateFormInternalProps,
 ) => {
-  const [submitted, setSubmitted] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
+  const [submitted, setSubmitted] = useState(false);
 
   const onSubmit: any = (values: any) => {
     props.createRoom(values);

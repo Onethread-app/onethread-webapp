@@ -1,8 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Button, HTMLTable, Dialog } from '@blueprintjs/core';
-import MuiAlert from '@material-ui/lab/Alert';
-import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import { isMobileOnly } from 'react-device-detect';
+import { upperFirst, chunk } from 'lodash';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { HTMLTable } from '@blueprintjs/core/lib/esm/components/html-table/htmlTable';
+import Snackbar from '@material-ui/core/Snackbar/Snackbar';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import MuiAlert from '@material-ui/lab/Alert';
+
+import { IProjectTeam } from 'stores/project/Reducer';
+import {
+  ICompanyMembers,
+  ICompanyPendingMembers,
+  ICompany,
+} from 'stores/company/Reducer';
+import { User } from 'stores/user/Reducer';
 import {
   getCompanyMembers,
   getAllDepartments,
@@ -13,23 +27,15 @@ import {
   deleteCompanyMember,
   inviteColleagueInBulk,
 } from 'stores/company/Actions';
-import {
-  ICompanyMembers,
-  ICompanyPendingMembers,
-  ICompany,
-} from 'stores/company/Reducer';
-import { Loading } from 'components/Loading';
 import { companyPermit } from 'stores/UtilsActions';
-import { upperFirst, chunk } from 'lodash';
-import { User } from 'stores/user/Reducer';
-import { IProjectTeam } from 'stores/project/Reducer';
-import { isMobileOnly } from 'react-device-detect';
+
 import Navbar from 'components/navbar/Navbar';
 import { InviteColleagueView } from './InviteColleagueView';
-import { useTranslation } from 'react-i18next';
-import { Snackbar } from '@material-ui/core';
+import { Loading } from 'components/Loading';
 import MemberTable from '../../../components/MemberTable/MemberTable';
 import SearchOption from 'components/SearchOption/SearchOption';
+import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
+
 import './Index.scss';
 
 interface Colleagues {
@@ -101,12 +107,10 @@ const ColleaguesPageComponent = (props: Colleagues) => {
   const [pendingList, setPendingList] = useState<
     ICompanyPendingMembers[][]
   >([]);
-
   const [members, setMembers] = React.useState<ICompanyMembers[]>([]);
   const [colleaguesList, setColleaguesList] = React.useState<any[]>(
     [],
   );
-
   const [rows, setRows] = React.useState<any[]>(colleaguesList);
 
   useEffect(() => {
@@ -189,7 +193,6 @@ const ColleaguesPageComponent = (props: Colleagues) => {
               {t('app.company.Colleagues.Colleagues')} (
               {members.length})
             </h1>
-            // <h1 className="tigrow-lightGray-1">Colleagues</h1>
           )}
           <div className="colleagues-top-area">
             <SearchOption
@@ -209,7 +212,6 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                   onClick={() => setShowDialog(!showDialog)}
                 >
                   {t('app.company.Colleagues.Add-Colleagues')}
-                  {/* Add Colleagues */}
                 </Button>
                 <Button
                   className="grow fr h2 pointer white bp3-minimal ml2 mb1"
@@ -225,7 +227,6 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                   }
                 >
                   {t('app.company.Colleagues.Invite-Colleagues')}
-                  {/* Invite Colleagues */}
                 </Button>
               </div>
             ) : undefined}
@@ -245,7 +246,6 @@ const ColleaguesPageComponent = (props: Colleagues) => {
           <>
             <h1 className="f4 tigrow-lightGray-1">
               {t('app.company.Colleagues.Invited-Colleagues')}
-              {/* Invited Colleagues */}
             </h1>
             <HTMLTable className="w-100 mv3" striped={true}>
               {props.companyLoading ? (
@@ -275,7 +275,6 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                     <td colSpan={3}>
                       {t('app.company.Colleagues.No-pending')}
                     </td>
-                    {/* <td colSpan={3}>No pending request</td> */}
                   </tr>
                 </tbody>
               )}

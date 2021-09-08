@@ -1,24 +1,25 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
-import {
-  CardActions,
-  Grid,
-  ListItemIcon,
-  ListItem,
-  List,
-} from '@material-ui/core';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
+
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import Button from '@material-ui/core/Button/Button';
+import Grid from '@material-ui/core/Grid/Grid';
+import Card from '@material-ui/core/Card/Card';
+import CardContent from '@material-ui/core/CardContent/CardContent';
+import List from '@material-ui/core/List/List';
+import ListItem from '@material-ui/core/ListItem/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
+import CardActions from '@material-ui/core/CardActions/CardActions';
 import CheckIcon from '@material-ui/icons/Check';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { makeStyles } from '@material-ui/core/styles';
+
 import { getSubscription } from '../../../../stores/subscriptionBilling/Actions';
-import { connect } from 'react-redux';
 
 interface IPlan {
   _id: string;
   pricing: number;
 }
+
 interface ISubscription {
   maxTier: number;
   name: string;
@@ -26,6 +27,7 @@ interface ISubscription {
   validity: number;
   _id: string;
 }
+
 interface ISubscriptionList {
   currentComponent: string;
   changeComponentTo: (componentName: string) => any;
@@ -33,6 +35,7 @@ interface ISubscriptionList {
   getSubscription: () => void;
   getPlan: (planId: IPlan) => void;
 }
+
 const useStyles = makeStyles({
   button: {
     textTransform: 'none',
@@ -91,7 +94,8 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                                   <CheckIcon />
                                 </ListItemIcon>
                                 <div>
-                                  Validity {subscription.validity} days
+                                  Validity {subscription.validity}{' '}
+                                  days
                                 </div>
                               </ListItem>
                               ,
@@ -102,15 +106,17 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                         <Grid item xs={6}>
                           <CardActions className="h-100 v-mid">
                             <div className="mt4 center">
-                              <h3 className="mb1">${subscription.pricing}</h3>
-                              {
-                                subscription.pricing !== 0 && 
+                              <h3 className="mb1">
+                                ${subscription.pricing}
+                              </h3>
+                              {subscription.pricing !== 0 && (
                                 <>
                                   <span className="fw6">Or</span>
-                                  <h3 className="mt1">BDT {subscription.pricing * 85}</h3>
+                                  <h3 className="mt1">
+                                    BDT {subscription.pricing * 85}
+                                  </h3>
                                 </>
-
-                              }
+                              )}
                               <Button
                                 className={classes.button}
                                 variant="contained"

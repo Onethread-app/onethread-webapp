@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { setRightSidebar } from 'stores/layout/Actions';
 import { createPortal } from 'react-dom';
+import { connect } from 'react-redux';
+
+import { setRightSidebar } from 'stores/layout/Actions';
 
 interface IRightSidebarProps {
   children: JSX.Element;

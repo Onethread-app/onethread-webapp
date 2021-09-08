@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ITask, IColumn } from 'stores/task/Reducer';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+
+import { ITask, IColumn } from 'stores/task/Reducer';
 import { dragAndDropTask } from 'stores/task/Actions';
 
 interface ISelectOption {
