@@ -19,13 +19,17 @@ export const getLocation = async () => {
 };
 
 export const sortTasksByStatus = (tasks: any) => {
+  const primaryStatus = ['in-progress', 'to-do', 'done'];
   const sortedTasks = sortBy(tasks, (task) => {
     const rank = {
-      'in-progress': 1,
-      'to-do': 2,
-      done: 3,
+      'in-progress': 2,
+      'to-do': 1,
+      other: 3,
+      done: 999,
     };
-    return rank[task.taskId.status];
+    return primaryStatus.includes(task.status)
+      ? rank[task.status]
+      : rank['other'];
   });
   return sortedTasks;
 };
@@ -62,7 +66,6 @@ export const compareChats = (a: any, b: any) => {
 export const sortProjectsByDeadline = (projects: any) => {
   // console.log(projects);
   projects.sort((a: any, b: any) => {
-    console.log(a.deadline, b.deadline);
     return a.deadline - b.deadline;
   });
 };

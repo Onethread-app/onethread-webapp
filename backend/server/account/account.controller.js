@@ -944,31 +944,21 @@ const getDueTasks = async (req) => {
 const userTaskList = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   try {
-    const taskList = await Task.find({
-      status: { $ne: 'done' },
+    const tasks = await TaskAssign.find({
+      $or: [
+        { account: req.user._id },
+        { assignedPerson: req.user._id },
+      ],
     })
-      .select('_id')
-      .sort({ createdAt: -1 });
-
-    const tasks = [];
-    await Promise.all(
-      taskList.map(async (t) => {
-        const task = await TaskAssign.findOne({
-          taskId: t._id,
-          $or: [
-            { account: req.user._id },
-            { assignedPerson: req.user._id },
-          ],
-        })
-          .sort({ createdAt: -1 })
-          .skip(+skip)
-          .limit(+limit)
-          .select('taskId')
-          .populate(options);
-        if (task) tasks.push(task);
-      }),
+      .sort({ createdAt: -1 })
+      .skip(+skip)
+      .limit(+limit)
+      .select('taskId')
+      .populate(options);
+    const filteredTask = tasks.filter(
+      (task) => task.taskId !== null && task.taskId.status !== 'done',
     );
-    return sendJSONresponse(res, 200, tasks);
+    return sendJSONresponse(res, 200, filteredTask);
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);

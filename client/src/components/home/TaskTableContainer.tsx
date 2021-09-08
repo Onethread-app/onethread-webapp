@@ -54,8 +54,8 @@ const TaskTableContainer = (props: any) => {
   return (
     <>
       <TasksContainerDiv>
-        {tasksToShow.map((task: ITask) => (
-          <TaskLitsItem key={task._id} task={task} />
+        {tasksToShow.map((task: ITask, i) => (
+          <TaskLitsItem key={i} task={task} />
         ))}
       </TasksContainerDiv>
       {tasks.length > itemsPerPage && (

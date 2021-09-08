@@ -13,6 +13,7 @@ import { ITask, TaskBoard } from 'stores/board/Reducer';
 import {
   sortTasksByDueDate,
   sortTasksByPriority,
+  sortTasksByStatus,
 } from 'helpers/utils';
 
 const TasksContainerDiv = styled.div`
@@ -70,7 +71,8 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
       const colTasks = props.currentBoard.columns
         .map((col) => col.tasks)
         .flat();
-      setTasks(colTasks);
+      const sortedTasks = sortTasksByStatus(colTasks);
+      setTasks(sortedTasks);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -109,7 +111,8 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
       const colTasks = props.currentBoard.columns
         .map((col) => col.tasks)
         .flat();
-      setTasks(colTasks);
+      const sortedTasks = sortTasksByStatus(colTasks);
+      setTasks(sortedTasks);
     }
   }, [props.currentBoard.columns, props.currentBoard.filteredUsers]);
 
