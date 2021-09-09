@@ -45,10 +45,7 @@ const CreateTaskButton = (props: ICreateTaskButton) => {
         onClose={() => setShowDialog(false)}
         canEscapeKeyClose={true}
         canOutsideClickClose={true}
-        style={{
-          background: '#fff',
-          width: '700px',
-        }}
+        className="create-task-dialog"
       >
         <CreateTaskDialog
           setShowDialog={setShowDialog}
