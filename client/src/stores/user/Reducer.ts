@@ -92,6 +92,7 @@ const InitialState = {
     complete: 0,
     teamNumber: 0,
     videos: [],
+    fetchingUser: true,
   },
   error: '',
 };
@@ -147,6 +148,7 @@ export const UserReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         user: action.payload,
+        fetchingUser: false,
       };
     case ADD_EXPERIENCE: {
       return {

@@ -13,7 +13,9 @@ import MemberGroup from 'components/member/MemberGroup';
 import MultiSelectComponent from 'components/dashboard/project-status/MultiSelectComponent';
 import CreateTaskButton from 'components/task/CreateTaskButton';
 import PriorityColorList from 'components/task/PriorityColorList';
-import CalendarView from 'components/task/CalendarView';
+import CalendarView, {
+  ITaskForCalendar,
+} from 'components/calendar/CalendarView';
 
 import { ICompany } from 'stores/company/Reducer';
 import {
@@ -64,13 +66,22 @@ const BoardDetails = (props: IBoardDetails) => {
     ISelectedAssignee[]
   >([]);
   const [filterPopoverOpen, setFilterPopoverOpen] = useState(false);
-  const [todoColumnId, setTodoColumnId] = React.useState('');
+  const [todoColumnId, setTodoColumnId] = useState('');
+  const [tasksForCalendarView, setTasksForCalendarView] = useState<
+    ITaskForCalendar[]
+  >([]);
 
   const clearSort = () => {
     props.setSortBy(undefined);
     setFilterPopoverOpen(false);
     setSelectedAssignee([]);
   };
+
+  useEffect(() => {
+    props.setFilerUsers(selectedAssignee);
+    props.setSortBy(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAssignee]);
 
   useEffect(() => {
     setBoardMembers(
@@ -81,20 +92,25 @@ const BoardDetails = (props: IBoardDetails) => {
         };
       }),
     );
-  }, [props.currentBoard]);
-
-  useEffect(() => {
-    props.setFilerUsers(selectedAssignee);
-    props.setSortBy(undefined);
-  }, [selectedAssignee]);
-
-  useEffect(() => {
     if (props.currentBoard.columns.length > 0)
       setTodoColumnId(
         props.currentBoard.columns.filter(
           (col) => col.name.toLowerCase() === 'to do',
         )[0]._id,
       );
+    const colTasks = props.currentBoard.columns
+      .map((col) => col.tasks)
+      .flat();
+    const cTasks: ITaskForCalendar[] = colTasks.map((t: any) => ({
+      title: t.name,
+      start: new Date(t.createdAt),
+      end: new Date(t.dueDate),
+      allDay: true,
+      redirectTo: `/company/${props.company.uniqueName}/project/${t.project}/board/${t.boardId}/task/${t._id}`,
+      ...t,
+    }));
+    setTasksForCalendarView(cTasks);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentBoard]);
 
   const handleViewChange = (v: 'board' | 'list' | 'calender') => {
@@ -368,7 +384,7 @@ const BoardDetails = (props: IBoardDetails) => {
       ) : view === 'list' ? (
         <TaskList />
       ) : view === 'calender' ? (
-        <CalendarView />
+        <CalendarView tasks={tasksForCalendarView} />
       ) : null}
     </Container>
   );
