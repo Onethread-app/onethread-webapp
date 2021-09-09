@@ -11,6 +11,8 @@ import Navbar from 'components/navbar/Navbar';
 import { isMobileOnly } from 'react-device-detect';
 import ArchivedProjects from './ArchivedProjects';
 
+import './Index.scss';
+
 const _ProjectPage = (props: any) => {
   React.useEffect(() => {
     if (props.subscriptiontExpired) {
@@ -33,8 +35,8 @@ const _ProjectPage = (props: any) => {
   return (
     <>
       {isMobileOnly && <Navbar type="company" />}
-      <div className="ph5-ns ph4 pt5 pt0-ns">
-        <Tabs id="TabsExample">
+      <div className="ph5-ns ph4 pt5 pt0-ns h-100">
+        <Tabs id="TabsExample" className="h-100">
           <Tab
             id="MyProjects"
             title={t('app.company.Projects.My-projects')}

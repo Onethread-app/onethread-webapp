@@ -3,14 +3,13 @@ import React, { useRef } from 'react';
 import NavbarTop from 'components/navbar/Navbar';
 import { Sidebar } from 'components/Sidebar';
 import { useState, useEffect } from 'react';
-import { Loading } from './Loading';
+// import { Loading } from './Loading';
 import { connect, useDispatch } from 'react-redux';
 import { User } from 'stores/user/Reducer';
 import { isEmpty, isEqual, isNil } from 'lodash';
 import {
   withRouter,
   RouteComponentProps,
-  match,
   Link,
   NavLink,
   useLocation,
@@ -56,17 +55,7 @@ import { CURRENT_ROOM } from 'stores/room/Types';
 import { useTranslation } from 'react-i18next';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 import { updateDurationPersecond } from 'stores/time-tracker/Action';
-
-const load = async (
-  reactRouterMatch: match,
-  fetchUser: () => void,
-  getCompanyInformation: (companyName: string) => any,
-  getSelectedBoardDetails: (boardId: string) => any,
-  getSelectedTask: (taskId: string) => any,
-) => {
-  await fetchUser();
-  return Promise.resolve({});
-};
+import SuspenseLoader from './loader/SuspenseLoader';
 
 interface LayoutProps {
   Component: React.ComponentClass | React.StatelessComponent;
@@ -76,6 +65,7 @@ interface LayoutInternalProps
   extends LayoutProps,
     RouteComponentProps {
   user: User;
+  fetchingUser: boolean;
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => any;
   getSelectedBoard: (boardId: string) => any;
@@ -190,7 +180,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       !isEmpty(boardId) &&
       boardId !== props.boardId
     ) {
-      console.log(props.company._id, isEmpty(props.company._id));
       updateBoardReducer();
     }
     props.fetchRooms();
@@ -219,11 +208,23 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 
   useEffect(() => {
     if (
+      loading === true &&
+      props.fetchingUser === false &&
+      isEmpty(props.user._id) === false
+    ) {
+      setLoading(false);
+    }
+  }, [loading, props.fetchingUser]);
+
+  useEffect(() => {
+    if (isEmpty(props.user._id) === true) {
+      props.fetchUserAction();
+    }
+    if (
       props.match.url === '/' &&
       isEmpty(props.user._id) === false
     ) {
       props.history.push(`/${props.user.name}/home`);
-      setLoading(false);
     }
     if (
       (props.match.params as any).username &&
@@ -234,28 +235,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         props.user.name,
       ) === false
     ) {
-      setLoading(false);
       props.history.push(`/notFound`);
     }
-    if (
-      isEmpty(props.user._id) === true ||
-      (isEmpty((props.match.params as any).cname) === false &&
-        isEmpty(props.company._id) === true)
-    ) {
-      load(
-        props.match,
-        props.fetchUserAction,
-        props.getCompanyDetails,
-        props.getSelectedBoard,
-        props.getSelectedTaskDetails,
-      ).then((response) => {
-        setLoading(false);
-        if (response === 404) {
-          props.history.push(`/notFound`);
-        }
-      });
-    }
-  }, [loading]);
+  }, [props.user, props.user._id, props.match.params]);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -289,7 +271,13 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   return (
     <div
       className="cf vh-100"
-      style={{ background: isMobileOnly ? 'white' : '#303053' }}
+      style={{
+        background: isMobileOnly
+          ? 'white'
+          : loading
+          ? '#fff'
+          : '#303053',
+      }}
       onScroll={() =>
         scrollRef &&
         scrollRef.current &&
@@ -297,16 +285,15 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       }
     >
       {loading === true ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-          }}
-        >
-          <Loading />
-        </div>
+        // <div
+        // style={{
+        //   display: 'flex',
+        //   justifyContent: 'center',
+        //   alignItems: 'center',
+        //   height: '100vh',
+        // }}
+        // ></div>
+        <SuspenseLoader />
       ) : isEmpty(props.user._id) === true ? (
         <p className="f3 tc fw5 pt4 white">
           Your Session is expired. Please
@@ -668,6 +655,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
+    fetchingUser: state.userReducer.fetchingUser,
     company: state.companyReducer.currentCompany,
     rightSidebarOpen: state.layoutReducer.rightSidebar.open,
     project: state.projectReducer.projectDetails,

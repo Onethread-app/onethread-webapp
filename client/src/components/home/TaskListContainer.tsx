@@ -15,7 +15,7 @@ const TaskListContainerDiv = styled.div`
   max-width: 100%;
   margin-bottom: ${isMobileOnly ? '4rem' : 0};
   @media screen and (max-width: 1366px) {
-    width: 550px;
+    width: 720px;
   }
   @media screen and (max-width: 1024px) {
     width: 950px;

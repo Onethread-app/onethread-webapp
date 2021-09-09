@@ -44,6 +44,7 @@ import { projectRules } from './settings/projectrules';
 import './MyProjects.scss';
 import { useTranslation } from 'react-i18next';
 import StatusTag from 'components/project/StatusTag';
+import useWindowSize from 'helpers/hooks/useWindowSize';
 
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
@@ -52,7 +53,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   );
 
   const { t } = useTranslation();
-
+  const projectsPageSize = useWindowSize();
   const [open, setOpen] = useState(false);
   const [singleProjectLoading, setSingleProjectLoading] = useState(
     false,
@@ -77,7 +78,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     undefined,
   ]);
   const [searchValue, setSearchValue] = useState('');
-  const [itemsPerPage] = useState(15);
+  const [itemsPerPage] = useState(
+    projectsPageSize.height > 768 ? 16 : 12,
+  );
   const permissions = projectRules(props.role, props.optionalRole);
   const statusOptions = [
     {
@@ -327,94 +330,96 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
 
   return (
     <>
-      <div>
-        <div className="overflow-auto my-projects">
-          <div className="flex flex-column relative">
-            <div
-              className="projects-filter mh1 mt1 mb3 self-start flex flex-row-l flex-column items-center justify-between w-90"
-              style={{ gap: '.5rem' }}
-            >
-              <div className="flex flex-row-l flex-column items-center filter mb0-ns mb2">
-                <Select
-                  options={statusOptions}
-                  value={selectedOption}
-                  onChange={handleSelect}
-                />
-                <DateRangeInput
-                  maxDate={new Date()}
-                  formatDate={(date) => date.toLocaleString()}
-                  onChange={handleRangeChange}
-                  parseDate={(str) => new Date(str)}
-                  timePickerProps={{
-                    precision: TimePrecision.MINUTE,
-                    showArrowButtons: true,
-                  }}
-                  value={range}
-                />
-                {showClearFilter && (
-                  <Button
-                    icon={
-                      <Icon
-                        icon="refresh"
-                        style={{
-                          color: '#fff',
-                          background: '#34b3e9',
-                        }}
-                      />
-                    }
-                    onClick={handleClear}
-                    style={{
-                      height: '38px',
-                      background: '#34b3e9',
-                    }}
-                  />
-                )}
-              </div>
-              <div className="bp3-input-group .modifier">
-                <span className="bp3-icon bp3-icon-search"></span>
-                <input
-                  type="text"
-                  className="bp3-input"
-                  placeholder={t('app.company.Projects.Find')}
-                  // placeholder="Search"
-                  onChange={(e) => handleSearch(e)}
-                />
-              </div>
-            </div>
-            <div
-              style={
-                projectsLoaded && filteredProjects.length > 0
-                  ? {
-                      display: 'grid',
-                      gridTemplateColumns:
-                        'repeat(auto-fit, minmax(200px, 265px))',
-                      gridAutoRows: '135px',
-                      gridGap: '10px 10px',
-                    }
-                  : {}
-              }
-            >
-              {projectsLoaded === false ? (
-                <CircularProgress />
-              ) : filteredProjects.length > 0 ? (
-                currentProjects.map((project: any) => (
-                  <div className="pa1" key={project._id}>
-                    <Card
-                      key={project._id}
-                      className="h-100"
-                      interactive={true}
-                      elevation={Elevation.TWO}
+      <div
+        className="h-100 overflow-y-auto my-projects"
+        style={{ maxHeight: '100%' }}
+      >
+        <div className="flex flex-column relative">
+          <div
+            className="projects-filter mh1 mt1 mb3 self-start flex flex-row-l flex-column items-center justify-between w-90"
+            style={{ gap: '.5rem' }}
+          >
+            <div className="flex flex-row-l flex-column items-center filter mb0-ns mb2">
+              <Select
+                options={statusOptions}
+                value={selectedOption}
+                onChange={handleSelect}
+              />
+              <DateRangeInput
+                maxDate={new Date()}
+                formatDate={(date) => date.toLocaleString()}
+                onChange={handleRangeChange}
+                parseDate={(str) => new Date(str)}
+                timePickerProps={{
+                  precision: TimePrecision.MINUTE,
+                  showArrowButtons: true,
+                }}
+                value={range}
+              />
+              {showClearFilter && (
+                <Button
+                  icon={
+                    <Icon
+                      icon="refresh"
                       style={{
-                        paddingLeft: '0px',
-                        paddingBottom: '0px',
-                        cursor: 'default',
+                        color: '#fff',
+                        background: '#34b3e9',
                       }}
-                    >
-                      <div className="flex flex-column">
-                        <div className="flex items-start">
-                          <h3
-                            style={{
-                              borderLeft: `5px solid 
+                    />
+                  }
+                  onClick={handleClear}
+                  style={{
+                    height: '38px',
+                    background: '#34b3e9',
+                  }}
+                />
+              )}
+            </div>
+            <div className="bp3-input-group .modifier">
+              <span className="bp3-icon bp3-icon-search"></span>
+              <input
+                type="text"
+                className="bp3-input"
+                placeholder={t('app.company.Projects.Find')}
+                // placeholder="Search"
+                onChange={(e) => handleSearch(e)}
+              />
+            </div>
+          </div>
+          <div
+            style={
+              projectsLoaded && filteredProjects.length > 0
+                ? {
+                    display: 'grid',
+                    gridTemplateColumns:
+                      'repeat(auto-fit, minmax(200px, 265px))',
+                    gridAutoRows: '135px',
+                    gridGap: '10px 10px',
+                  }
+                : {}
+            }
+          >
+            {projectsLoaded === false ? (
+              <CircularProgress />
+            ) : filteredProjects.length > 0 ? (
+              currentProjects.map((project: any) => (
+                <div className="pa1" key={project._id}>
+                  <Card
+                    key={project._id}
+                    className="h-100"
+                    interactive={true}
+                    elevation={Elevation.TWO}
+                    style={{
+                      paddingLeft: '0px',
+                      paddingBottom: '0px',
+                      cursor: 'default',
+                    }}
+                  >
+                    <div className="flex flex-column">
+                      <div className="flex items-start">
+                        <h3
+                          style={{
+                            borderLeft: `5px solid 
                               ${
                                 find(Color, ['code', project.color])
                                   ? find(Color, [
@@ -423,122 +428,120 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                     ])!.value
                                   : 'white'
                               }`,
-                              paddingLeft: '20px',
-                              marginLeft: '-2px',
-                              borderRadius: '3px',
-                              whiteSpace: 'nowrap',
-                              textOverflow: 'ellipsis',
-                              width: '220px',
-                              height: '2rem',
-                              display: '-webkit-box',
-                              WebkitLineClamp: 2,
-                              WebkitBoxOrient: 'vertical',
-                            }}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              singleProjectOnClick(project._id);
-                            }}
-                            className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
-                          >
-                            {project.name}
-                          </h3>
-                          <Popover
-                            className="w-10"
-                            content={
-                              modalOpen ? (
-                                <Menu className="pa2">
-                                  <MenuItem
-                                    className="pa1"
-                                    text={t(
-                                      'app.project.Project-preface.Update-Project',
-                                    )}
-                                    // text="Update Project"
-                                    onClick={(e: any) =>
-                                      checkRoleForChangeName()
-                                    }
-                                  />
-                                  <MenuItem
-                                    className="pa1 red"
-                                    text={t(
-                                      'app.project.Project-preface.Archive-Project',
-                                    )}
-                                    // text="Archive Project"
-                                    onClick={(e: any) =>
-                                      checkRoleForArchiveProject(
-                                        project._id,
-                                      )
-                                    }
-                                  />
-                                </Menu>
-                              ) : (
-                                'Loading..'
-                              )
-                            }
-                            target={
-                              <Button
-                                style={{
-                                  transform: 'rotate(90deg)',
-                                  OTransform: 'rotate(90deg)',
-                                  msTransform: 'rotate(90deg)',
-                                  WebkitTransform: 'rotate(90deg)',
-                                }}
-                                icon="more"
-                                minimal={true}
-                                className="outline-0"
-                                onClick={(e: any) =>
-                                  getProjectRole(project._id)
-                                }
-                              />
-                            }
-                          />
-                          {props.companyRooms &&
-                          unreadMessageNotification(
-                            props.companyRooms,
-                            'project',
-                            project._id,
-                          ) ? (
-                            <span
-                              className="ml1 br-100 bg-red"
-                              style={{ width: '7px', height: '7px' }}
-                            ></span>
-                          ) : null}
-                        </div>
-                        <div
-                          className="flex flex-column items-start mt2"
-                          style={{ paddingLeft: '25px' }}
+                            paddingLeft: '20px',
+                            marginLeft: '-2px',
+                            borderRadius: '3px',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            width: '220px',
+                            height: '2rem',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            singleProjectOnClick(project._id);
+                          }}
+                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
                         >
-                          <div className="flex items-center justify-between w-100">
-                            <StatusTag status={project.status} />
-                          </div>
-                          {project.status !== 'not-started' && (
-                            <span
-                              className="f7 fw5 mr2"
-                              style={{ marginTop: '1.5px' }}
-                            >
-                              {t(
-                                'app.project.Project-preface.Remaining-Tasks',
-                              )}
-                              : {/* Remaining Tasks:{' '} */}
-                              {`${project.remainingTasks}/${project.totalTasks}`}
-                            </span>
-                          )}
-
-                          <p
-                            className="f7 fw5"
-                            style={{ marginTop: '5px' }}
+                          {project.name}
+                        </h3>
+                        <Popover
+                          className="w-10"
+                          content={
+                            modalOpen ? (
+                              <Menu className="pa2">
+                                <MenuItem
+                                  className="pa1"
+                                  text={t(
+                                    'app.project.Project-preface.Update-Project',
+                                  )}
+                                  // text="Update Project"
+                                  onClick={(e: any) =>
+                                    checkRoleForChangeName()
+                                  }
+                                />
+                                <MenuItem
+                                  className="pa1 red"
+                                  text={t(
+                                    'app.project.Project-preface.Archive-Project',
+                                  )}
+                                  // text="Archive Project"
+                                  onClick={(e: any) =>
+                                    checkRoleForArchiveProject(
+                                      project._id,
+                                    )
+                                  }
+                                />
+                              </Menu>
+                            ) : (
+                              'Loading..'
+                            )
+                          }
+                          target={
+                            <Button
+                              style={{
+                                transform: 'rotate(90deg)',
+                                OTransform: 'rotate(90deg)',
+                                msTransform: 'rotate(90deg)',
+                                WebkitTransform: 'rotate(90deg)',
+                              }}
+                              icon="more"
+                              minimal={true}
+                              className="outline-0"
+                              onClick={(e: any) =>
+                                getProjectRole(project._id)
+                              }
+                            />
+                          }
+                        />
+                        {props.companyRooms &&
+                        unreadMessageNotification(
+                          props.companyRooms,
+                          'project',
+                          project._id,
+                        ) ? (
+                          <span
+                            className="ml1 br-100 bg-red"
+                            style={{ width: '7px', height: '7px' }}
+                          ></span>
+                        ) : null}
+                      </div>
+                      <div
+                        className="flex flex-column items-start mt2"
+                        style={{ paddingLeft: '25px' }}
+                      >
+                        <div className="flex items-center justify-between w-100">
+                          <StatusTag status={project.status} />
+                        </div>
+                        {project.status !== 'not-started' && (
+                          <span
+                            className="f7 fw5 mr2"
+                            style={{ marginTop: '1.5px' }}
                           >
                             {t(
-                              'app.project.Project-preface.Deadline',
+                              'app.project.Project-preface.Remaining-Tasks',
                             )}
-                            : {/* Deadline:{' '} */}
-                            {project.deadline
-                              ? moment(project.deadline).format(
-                                  'DD/MM/YYYY',
-                                )
-                              : 'Not Set'}
-                          </p>
-                        </div>
-                        {/* <h3
+                            : {/* Remaining Tasks:{' '} */}
+                            {`${project.remainingTasks}/${project.totalTasks}`}
+                          </span>
+                        )}
+
+                        <p
+                          className="f7 fw5"
+                          style={{ marginTop: '5px' }}
+                        >
+                          {t('app.project.Project-preface.Deadline')}:{' '}
+                          {/* Deadline:{' '} */}
+                          {project.deadline
+                            ? moment(project.deadline).format(
+                                'DD/MM/YYYY',
+                              )
+                            : 'Not Set'}
+                        </p>
+                      </div>
+                      {/* <h3
                           className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
                           style={{
                             whiteSpace: 'nowrap',
@@ -553,103 +556,96 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                               </label>
                             ))}
                         </h3> */}
-                      </div>
-                    </Card>
-                    {showUpdateNameDialog && (
-                      <RightSidebar
-                        onClose={() =>
-                          setShowUpdateNameDialog(
-                            !showUpdateNameDialog,
-                          )
+                    </div>
+                  </Card>
+                  {showUpdateNameDialog && (
+                    <RightSidebar
+                      onClose={() =>
+                        setShowUpdateNameDialog(!showUpdateNameDialog)
+                      }
+                    >
+                      <UpdateProject
+                        projectName={props.currentProject.name}
+                        projectId={props.currentProject._id}
+                        color={props.currentProject.color}
+                        deadline={
+                          props.currentProject.deadline
+                            ? props.currentProject.deadline
+                            : undefined
                         }
-                      >
-                        <UpdateProject
-                          projectName={props.currentProject.name}
-                          projectId={props.currentProject._id}
-                          color={props.currentProject.color}
-                          deadline={
-                            props.currentProject.deadline
-                              ? props.currentProject.deadline
-                              : undefined
-                          }
-                          setShowDialog={setShowUpdateNameDialog}
-                        />
-                      </RightSidebar>
-                    )}
-                  </div>
-                ))
-              ) : (
-                noProjectsFound
-              )}
-            </div>
-            {projectsLoaded === true &&
-              filteredProjects.length > itemsPerPage && (
-                <div className="flex flex-row items-center w-100 justify-center mt3">
-                  <div
-                    className="f6 fw5 flex flex-row items-center"
-                    style={{ color: '#BBBBBB' }}
-                  >
-                    <Icon
-                      icon="circle-arrow-left"
-                      iconSize={25}
-                      onClick={prevProjectsPage}
-                      className={`mr2 ${
-                        currentProjectPage > 1 && 'pointer'
-                      }`}
-                      style={{
-                        color:
-                          currentProjectPage > 1
-                            ? '#34b3e9'
-                            : '#656565',
-                      }}
-                    />
-                    {currentProjectPage} of{' '}
-                    {Math.ceil(
-                      filteredProjects.length / itemsPerPage,
-                    )}
-                    <Icon
-                      icon="circle-arrow-right"
-                      iconSize={25}
-                      onClick={nextProjectsPage}
-                      className={`ml2 ${
-                        currentProjectPage <
-                          Math.ceil(
-                            filteredProjects.length / itemsPerPage,
-                          ) && 'pointer'
-                      }`}
-                      style={{
-                        color:
-                          currentProjectPage <
-                          Math.ceil(
-                            filteredProjects.length / itemsPerPage,
-                          )
-                            ? '#34b3e9'
-                            : '#656565',
-                      }}
-                    />
-                  </div>
+                        setShowDialog={setShowUpdateNameDialog}
+                      />
+                    </RightSidebar>
+                  )}
                 </div>
-              )}
+              ))
+            ) : (
+              noProjectsFound
+            )}
           </div>
-          {projectsLoaded && props.company.role !== 'employee' && (
-            <div>
-              <img
-                onClick={() =>
-                  setShowProjectDialog(!showProjectDialog)
-                }
-                src={addIcon}
-                className={`fixed pointer addButton ${
-                  showProjectDialog ? 'dn' : 'db'
-                }`}
-                style={{
-                  boxShadow: '0px 6px 6px #00000029',
-                  borderRadius: '50%',
-                }}
-                alt=""
-              />
-            </div>
-          )}
+          {projectsLoaded === true &&
+            filteredProjects.length > itemsPerPage && (
+              <div className="flex flex-row items-center w-100 justify-center mt3">
+                <div
+                  className="f6 fw5 flex flex-row items-center"
+                  style={{ color: '#BBBBBB' }}
+                >
+                  <Icon
+                    icon="circle-arrow-left"
+                    iconSize={25}
+                    onClick={prevProjectsPage}
+                    className={`mr2 ${
+                      currentProjectPage > 1 && 'pointer'
+                    }`}
+                    style={{
+                      color:
+                        currentProjectPage > 1
+                          ? '#34b3e9'
+                          : '#656565',
+                    }}
+                  />
+                  {currentProjectPage} of{' '}
+                  {Math.ceil(filteredProjects.length / itemsPerPage)}
+                  <Icon
+                    icon="circle-arrow-right"
+                    iconSize={25}
+                    onClick={nextProjectsPage}
+                    className={`ml2 ${
+                      currentProjectPage <
+                        Math.ceil(
+                          filteredProjects.length / itemsPerPage,
+                        ) && 'pointer'
+                    }`}
+                    style={{
+                      color:
+                        currentProjectPage <
+                        Math.ceil(
+                          filteredProjects.length / itemsPerPage,
+                        )
+                          ? '#34b3e9'
+                          : '#656565',
+                    }}
+                  />
+                </div>
+              </div>
+            )}
         </div>
+        {projectsLoaded && props.company.role !== 'employee' && (
+          <div>
+            <img
+              onClick={() => setShowProjectDialog(!showProjectDialog)}
+              src={addIcon}
+              className={`fixed pointer addButton ${
+                showProjectDialog ? 'dn' : 'db'
+              }`}
+              style={{
+                boxShadow: '0px 6px 6px #00000029',
+                borderRadius: '50%',
+              }}
+              alt=""
+            />
+          </div>
+        )}
       </div>
       {showProjectDialog && (
         <RightSidebar

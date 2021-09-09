@@ -1,0 +1,9 @@
+.bp3-tabs {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .bp3-tab-panel {
+    flex-grow: 1;
+  }
+}

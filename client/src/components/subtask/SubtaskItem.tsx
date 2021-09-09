@@ -23,7 +23,11 @@ const SubtaskItem = (props: ISubtaskItemProps) => {
       style={{ minWidth: '500px' }}
       onClick={handleClick}
     >
-      <div className="flex items-center truncate">
+      <div
+        className="flex items-center truncate"
+        style={{ maxWidth: '60%' }}
+        title={subtask.name}
+      >
         <span className="mr2">
           {('0' + (props.index + 1)).slice(-2)}.
         </span>
