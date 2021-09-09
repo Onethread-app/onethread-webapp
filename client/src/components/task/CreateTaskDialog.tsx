@@ -255,11 +255,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                 render={({ input, meta }) => (
                   <div className="mb3">
                     <div className="flex items-center">
-                      <label
-                        style={{
-                          width: '125px',
-                        }}
-                      >
+                      <label className="text-width">
                         Assign to:
                         <div>
                           {assignedUserError && (
@@ -277,7 +273,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
 
                       <Select
                         isMulti
-                        className="priority-select-option"
+                        className="select-option-mdfy"
                         name="assignmembers"
                         value={memberValue}
                         options={teamMembers}
@@ -287,22 +283,13 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                   </div>
                 )}
               />
-              <div
-                className="flex items-center mb3"
-                style={{
-                  width: '100%',
-                }}
-              >
+              <div className="duedate-priority-container">
                 <Field<string>
                   name="dueDate"
                   validate={required}
                   render={({ input, meta }) => (
-                    <div className="flex items-center w-100 mr3">
-                      <label
-                        style={{
-                          width: '105px',
-                        }}
-                      >
+                    <div className="flex items-center w-100 mb3">
+                      <label className="text-width-dueDate">
                         Due Date:
                         <div>
                           {checkError(meta) && (
@@ -340,17 +327,11 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     </div>
                   )}
                 />
-                <div className="flex items-center w-100">
-                  <label
-                    style={{
-                      width: '100px',
-                    }}
-                  >
-                    Priority:
-                  </label>
+                <div className="flex items-center w-100 mb3">
+                  <label className="text-width">Priority:</label>
                   <div className="w-100">
                     <Select
-                      className="priority-select-option"
+                      className="select-option-mdfy"
                       options={options}
                       value={selectedOption}
                       onChange={handleSelect}
@@ -362,13 +343,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                 name="description"
                 render={({ input, meta }) => (
                   <div className="mv1 flex">
-                    <label
-                      style={{
-                        width: '130px',
-                      }}
-                    >
-                      Description:
-                    </label>
+                    <label className="text-width">Description:</label>
                     <textarea
                       name="description"
                       id="description"
@@ -384,6 +359,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                           'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
                         border: 'none',
                         padding: '0.5rem',
+                        borderRadius: '0.2rem',
                       }}
                       placeholder="Add some details about the task"
                     />
