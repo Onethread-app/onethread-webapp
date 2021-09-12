@@ -9,7 +9,7 @@ import { useLiveSearch } from 'components/useLiveSearch';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import { IconNames } from '@blueprintjs/icons';
-import { ITask } from 'stores/board/Reducer';
+import { ITask } from 'stores/task/Reducer';
 import {
   addTaskMember,
   addTaskMemberSuccess,
@@ -193,7 +193,7 @@ export const AssignedMembersEditorComponent = (
 const mapStateToProps = (state: any) => {
   return {
     project: state.projectReducer.projectDetails,
-    currentTask: state.boardIndexReducer.boardReducer.currentTask,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
     isEditingTask: state.taskMembersReducer.isEditingTask,
   };
 };

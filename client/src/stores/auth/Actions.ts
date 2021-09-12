@@ -83,7 +83,7 @@ const resfreshApiAction = async () => {
       intent: 'danger',
     });
     RouteHistory.push('/signin');
-    window.location.reload(false);
+    window.location.reload();
     return;
   }
 };

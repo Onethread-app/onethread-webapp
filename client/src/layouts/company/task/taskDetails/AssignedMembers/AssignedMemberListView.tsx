@@ -56,7 +56,7 @@ export const AssignedMemberListViewComponent = (
 const mapStateToProps = (state: any) => {
   return {
     taskMemberList:
-      state.boardIndexReducer.taskMembersReducer.taskMemberList,
+      state.taskIndexReducer.taskMembersReducer.taskMemberList,
   };
 };
 

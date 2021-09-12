@@ -64,13 +64,18 @@
 
 .task-activity-container {
   display: flex;
+
   .task-info-view {
     min-height: 92vh;
   }
+
   @media screen and (max-width: 768px) {
-    display: block;
+    flex-direction: column-reverse;
+    margin-top: 1rem;
+
     .task-info-view {
-      max-height: 100%;
+      min-height: auto;
+      max-height: 100% !important;
     }
   }
 }

@@ -3,8 +3,8 @@ import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 import { Button } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
-import { createColumn, updateColumn } from 'stores/board/Actions';
-import { TaskBoard, IColumn } from 'stores/board/Reducer';
+import { createColumn, updateColumn } from 'stores/task/Actions';
+import { TaskBoard, IColumn } from 'stores/task/Reducer';
 import { Form, Field } from 'react-final-form';
 import {
   required,
@@ -75,7 +75,11 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
             <div className="pv3 justify-content w-100">
               <Field<string>
                 name="name"
-                validate={composeValidators(required, maxValue(60), checkTaskName)}
+                validate={composeValidators(
+                  required,
+                  maxValue(60),
+                  checkTaskName,
+                )}
                 render={({ input, meta }) => (
                   <div
                     className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
@@ -139,7 +143,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+    currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
   };
 };
 

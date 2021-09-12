@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TaskDescriptionEditor } from './TaskDescriptionEditor';
 import { Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { ITask } from 'stores/board/Reducer';
+import { ITask } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import Linkify from 'react-linkify';
 import { componentDecorator } from 'helpers/LinkifyHelper';
@@ -90,7 +90,7 @@ export const TaskDescriptionViewComponent = (
 const mapStateToProps = (state: any) => {
   return {
     description:
-      state.boardIndexReducer.boardReducer.currentTask.description,
+      state.taskIndexReducer.taskReducer.currentTask.description,
     company: state.companyReducer.currentCompany,
   };
 };

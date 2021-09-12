@@ -164,7 +164,7 @@ const ProjectStatusComponent = (props) => {
         }));
         setUniqueMembers(uniqueMembersT);
       } catch (err) {
-        if (err.response.data.status === 403) {
+        if ((err as any).response.data.status === 403) {
           await props.setSubscriptionExpire();
           await props.getCurrentSubscription();
           props.company.role === 'superAdmin'

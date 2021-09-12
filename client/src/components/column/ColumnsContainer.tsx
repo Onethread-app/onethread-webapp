@@ -13,8 +13,8 @@ import Column from 'components/column/Column';
 import { RightSidebar } from 'components/RightSidebar';
 import { ColumnForm } from 'components/column/ColumnForm';
 
-import { dragAndDropTask, updateColumn } from 'stores/board/Actions';
-import { IColumn, TaskBoard } from 'stores/board/Reducer';
+import { dragAndDropTask, updateColumn } from 'stores/task/Actions';
+import { IColumn, TaskBoard } from 'stores/task/Reducer';
 
 const ColumnsContainerDiv = styled.div`
   gap: 1.25rem;
@@ -143,8 +143,8 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  columns: state.boardIndexReducer.boardReducer.currentBoard.columns,
-  currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+  columns: state.taskIndexReducer.taskReducer.currentBoard.columns,
+  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
 });
 
 export default connect(mapStateToProps, {

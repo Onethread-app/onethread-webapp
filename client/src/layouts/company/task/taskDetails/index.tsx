@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
-import { ITask } from 'stores/board/Reducer';
+import { ITask } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { connect } from 'react-redux';
 import { Popover } from '@blueprintjs/core';
@@ -32,10 +32,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   };
 
   return (
-    <div
-      className="w-100 ph2"
-      style={{ maxHeight: '650px', overflowY: 'auto' }}
-    >
+    <div className="w-100 ph2">
       <div className="w-100">
         <TaskTitleView />
       </div>
@@ -103,7 +100,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentTask: state.boardIndexReducer.boardReducer.currentTask,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
     company: state.companyReducer.currentCompany,
     currentProjectId: state.projectReducer.projectDetails._id,
   };

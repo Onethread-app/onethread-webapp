@@ -19,9 +19,9 @@ import {
   getTaskTrackersFailure,
   getTaskTrackersSuccess,
 } from './Action';
-import { updateTaskTimeSpent } from 'stores/board/Actions';
+import { updateTaskTimeSpent } from 'stores/task/Actions';
 import { updateProjectTimeSpent } from 'stores/project/Actions';
-import { getCurrentTaskId } from 'stores/board/Selector';
+import { getCurrentTaskId } from 'stores/task/Selector';
 
 function* addTrackedTimeAsync({ payload }: any) {
   try {

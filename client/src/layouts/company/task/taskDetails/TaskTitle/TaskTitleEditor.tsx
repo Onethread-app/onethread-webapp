@@ -9,8 +9,8 @@ import {
 } from 'components/final-form/utils';
 import { EditableText, Button, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { ITask } from 'stores/board/Reducer';
-import { updateTask } from 'stores/board/Actions';
+import { ITask } from 'stores/task/Reducer';
+import { updateTask } from 'stores/task/Actions';
 
 interface ITaskTitleFormProps {
   setNameEdit: (val: boolean) => void;
@@ -23,7 +23,7 @@ interface ITaskTitleFormProps {
 const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
-    if ( response && !props.updatingTask ) {
+    if (response && !props.updatingTask) {
       props.setNameEdit(false);
     }
   };
@@ -102,8 +102,8 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
 };
 const mapStateToProps = (state: any) => {
   return {
-    currentTask: state.boardIndexReducer.boardReducer.currentTask,
-    updatingTask: state.boardIndexReducer.boardReducer.updatingTask,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
+    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
   };
 };
 

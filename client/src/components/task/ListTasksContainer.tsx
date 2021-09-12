@@ -8,7 +8,7 @@ import useElementSize from 'helpers/hooks/useElementSize';
 
 import ListTaskItem from './ListTaskItem';
 
-import { ITask, TaskBoard } from 'stores/board/Reducer';
+import { ITask, TaskBoard } from 'stores/task/Reducer';
 
 import {
   sortTasksByDueDate,
@@ -152,7 +152,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
 });
 
 export default connect(mapStateToProps)(TasksContainer);

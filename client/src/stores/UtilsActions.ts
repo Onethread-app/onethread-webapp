@@ -30,7 +30,7 @@ export const tokenConfig = () => {
       intent: 'danger',
     });
     History.push('/signin');
-    window.location.reload(false);
+    window.location.reload();
   }
   return {
     headers: {
@@ -68,7 +68,7 @@ export const tokenConfigFIleUpload = () => {
       intent: 'danger',
     });
     History.push('/signin');
-    window.location.reload(false);
+    window.location.reload();
   }
   return {
     headers: {

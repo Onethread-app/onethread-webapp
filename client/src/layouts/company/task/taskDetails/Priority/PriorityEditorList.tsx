@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { priorityColor } from 'stores/UtilsActions';
 import { connect } from 'react-redux';
-import { updateTask } from 'stores/board/Actions';
-import { ITask } from 'stores/board/Reducer';
+import { updateTask } from 'stores/task/Actions';
+import { ITask } from 'stores/task/Reducer';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 
@@ -47,6 +47,10 @@ export const PriorityEditorListComponent = (
     value: props.colorCode,
   });
 
+  useEffect(() => {
+    setSelectedPriority(props.colorCode);
+  }, [props.colorCode]);
+
   const handlePriorityChange = async (e) => {
     setSelectedPriority(e.target.value);
     const values: any = {
@@ -71,7 +75,7 @@ export const PriorityEditorListComponent = (
         id="taskPriority"
         onClick={handlePriorityClick}
         onChange={handlePriorityChange}
-        value={selectedPriority.value}
+        value={selectedPriority}
         colorCode={props.colorCode}
       >
         {priorityColor.map((color) => (
@@ -104,8 +108,8 @@ export const PriorityEditorListComponent = (
 const mapStateToProps = (state: any) => {
   return {
     colorCode:
-      state.boardIndexReducer.boardReducer.currentTask.priority,
-    updatingTask: state.boardIndexReducer.boardReducer.updatingTask,
+      state.taskIndexReducer.taskReducer.currentTask.priority,
+    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
   };
 };
 

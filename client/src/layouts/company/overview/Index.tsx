@@ -312,7 +312,7 @@ const Index = (props: any) => {
 };
 const mapStateToProps = (state: any) => {
   return {
-    boardList: state.boardIndexReducer.boardReducer.boardList,
+    boardList: state.taskIndexReducer.taskReducer.boardList,
     company: state.companyReducer.currentCompany,
     departmentNameLoading: state.companyReducer.departmentNameLoading,
     role:
@@ -324,12 +324,11 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     project: state.projectReducer.projectDetails,
     singleProjectLoading: state.projectReducer.singleProjectLoading,
-    currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
-    fetchingBoards:
-      state.boardIndexReducer.boardReducer.fetchingBoards,
-    fetchingBoard: state.boardIndexReducer.boardReducer.fetchingBoard,
+    currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
+    fetchingBoards: state.taskIndexReducer.taskReducer.fetchingBoards,
+    fetchingBoard: state.taskIndexReducer.taskReducer.fetchingBoard,
     errorOnFetchingBoard:
-      state.boardIndexReducer.boardReducer.errorOnFetchingBoard,
+      state.taskIndexReducer.taskReducer.errorOnFetchingBoard,
     subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
   };

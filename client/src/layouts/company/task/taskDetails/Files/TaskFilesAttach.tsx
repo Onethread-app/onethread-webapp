@@ -4,11 +4,8 @@ import { isEmpty } from 'lodash';
 import { Button, FileInput, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
-import {
-  ITaskFileUpload,
-  taskFileUpload,
-} from 'stores/board/Actions';
-import { ITask } from 'stores/board/Reducer';
+import { ITaskFileUpload, taskFileUpload } from 'stores/task/Actions';
+import { ITask } from 'stores/task/Reducer';
 import { useTranslation } from 'react-i18next';
 
 interface ITaskFilesAttachProps {
@@ -158,11 +155,11 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentTask: state.boardIndexReducer.boardReducer.currentTask,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
     uploadingTaskFile:
-      state.boardIndexReducer.boardReducer.uploadingTaskFile,
+      state.taskIndexReducer.taskReducer.uploadingTaskFile,
     errorOnUploadingTaskFile:
-      state.boardIndexReducer.boardReducer.errorOnUploadingTaskFile,
+      state.taskIndexReducer.taskReducer.errorOnUploadingTaskFile,
   };
 };
 

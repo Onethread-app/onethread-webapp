@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import TasksContainer from './ListTasksContainer';
-import { TaskBoard } from 'stores/board/Reducer';
+import { TaskBoard } from 'stores/task/Reducer';
 import { useTranslation } from 'react-i18next';
 
 const TaskListContainer = styled.div`
@@ -99,7 +99,7 @@ const TaskList = (props: ITaskList) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
 });
 
 export default connect(mapStateToProps)(TaskList);

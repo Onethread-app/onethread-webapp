@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { priorityColor } from 'stores/UtilsActions';
 
 const CustomComponents = {
@@ -7,14 +8,22 @@ const CustomComponents = {
     const pColor: any = priorityColor.find(
       (c) => c.code === task.priority,
     );
+    const location = useLocation();
+
     return (
-      <div
-        className="rbc-task-style"
-        style={{ borderRight: `7px solid ${pColor.value}` }}
-        onClick={() => history.push(task.redirectTo)}
+      <Link
+        to={{
+          pathname: `/task/${task._id}`,
+          state: { background: location },
+        }}
       >
-        {task.name}
-      </div>
+        <div
+          className="rbc-task-style"
+          style={{ borderRight: `7px solid ${pColor.value}` }}
+        >
+          {task.name}
+        </div>
+      </Link>
     );
   },
 };

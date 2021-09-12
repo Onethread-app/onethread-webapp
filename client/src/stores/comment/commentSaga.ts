@@ -6,7 +6,7 @@ import { tigrowApi } from 'config';
 import { isEmpty } from 'lodash';
 
 import { CommentActionTypes } from './Types';
-import { getCurrentTaskId } from '../board/Selector';
+import { getCurrentTaskId } from '../task/Selector';
 import { getCurrentUser } from '../user/Selector';
 
 import {

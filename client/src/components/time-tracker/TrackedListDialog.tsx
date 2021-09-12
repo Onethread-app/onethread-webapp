@@ -108,7 +108,7 @@ const TrackedListDialog = (props: ITrackedListDialog) => {
 const mapStateToProps = (state: any) => ({
   trackList: state.timeTrackerReducer.trackListForCurrentTask,
   taskTimeSpent:
-    state.boardIndexReducer.boardReducer.currentTask.timeSpent,
+    state.taskIndexReducer.taskReducer.currentTask.timeSpent,
   gettingList: state.timeTrackerReducer.gettingTrackList,
 });
 

@@ -109,9 +109,8 @@ export const ActivityViewPageComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-    currentTaskId:
-      state.boardIndexReducer.boardReducer.currentTask._id,
-    commentList: state.boardIndexReducer.commentReducer.commentList,
+    currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
+    commentList: state.taskIndexReducer.commentReducer.commentList,
   };
 };
 

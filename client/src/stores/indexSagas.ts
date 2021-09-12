@@ -6,7 +6,7 @@ import notificationSaga from './notifications/notificationSaga';
 import subscriptionSaga from './subscriptionBilling/subscriptionSaga';
 import videoConferencesSaga from './videoConferences/saga';
 import landingSaga from './landing/landingSaga';
-import boardSaga from './board/boardSaga';
+import taskSaga from './task/taskSaga';
 import commentSaga from './comment/commentSaga';
 import companySaga from './company/companySaga';
 import taskMembersSaga from './taskMembers/taskMembersSaga';
@@ -22,7 +22,7 @@ export default function* rootSaga() {
     subscriptionSaga(),
     videoConferencesSaga(),
     landingSaga(),
-    boardSaga(),
+    taskSaga(),
     commentSaga(),
     companySaga(),
     taskMembersSaga(),

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ITask, IColumn } from 'stores/board/Reducer';
+import { ITask, IColumn } from 'stores/task/Reducer';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { dragAndDropTask } from 'stores/board/Actions';
+import { dragAndDropTask } from 'stores/task/Actions';
 
 interface ISelectOption {
   value: string;
@@ -145,9 +145,8 @@ const TaskStatusEdiorComponent = (props: TaskInfoInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentTask: state.boardIndexReducer.boardReducer.currentTask,
-    columns:
-      state.boardIndexReducer.boardReducer.currentBoard.columns,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
+    columns: state.taskIndexReducer.taskReducer.currentBoard.columns,
   };
 };
 

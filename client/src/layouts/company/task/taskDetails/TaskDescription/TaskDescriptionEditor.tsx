@@ -8,9 +8,9 @@ import {
 } from 'components/final-form/utils';
 import { Button, Icon, EditableText } from '@blueprintjs/core';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { ITask } from 'stores/board/Reducer';
+import { ITask } from 'stores/task/Reducer';
 import { connect } from 'react-redux';
-import { updateTask } from 'stores/board/Actions';
+import { updateTask } from 'stores/task/Actions';
 
 interface ITaskDescriptionFormProps {
   description: ITask['description'];
@@ -25,7 +25,7 @@ export const TaskDescriptionEditorComponent = (
 ) => {
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
-    if ( response && !props.updatingTask ) {
+    if (response && !props.updatingTask) {
       props.setEditDescriptionDialog(false);
       return true;
     }
@@ -74,7 +74,7 @@ export const TaskDescriptionEditorComponent = (
                 )}
               />
               <div className="flex justify-end mt2">
-              <Button
+                <Button
                   className="mr2"
                   type="submit"
                   style={{ background: '#34b3e9' }}
@@ -89,7 +89,6 @@ export const TaskDescriptionEditorComponent = (
                   disabled={submitting || pristine}
                 />
                 <Button
-                 
                   style={{ background: 'transparent' }}
                   icon="cross"
                   onClick={() =>
@@ -98,7 +97,6 @@ export const TaskDescriptionEditorComponent = (
                     )
                   }
                 />
-               
               </div>
             </div>
           </form>
@@ -111,8 +109,8 @@ export const TaskDescriptionEditorComponent = (
 const mapStateToProps = (state: any) => {
   return {
     description:
-      state.boardIndexReducer.boardReducer.currentTask.description,
-    updatingTask: state.boardIndexReducer.boardReducer.updatingTask,
+      state.taskIndexReducer.taskReducer.currentTask.description,
+    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
   };
 };
 

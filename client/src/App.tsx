@@ -1,6 +1,12 @@
 import React, { useEffect, Suspense, lazy } from 'react';
 import { withRouter } from 'react-router';
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import {
+  Link,
+  Redirect,
+  Route,
+  Switch,
+  // useLocation,
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import ReactGA from 'react-ga';
@@ -70,6 +76,9 @@ const BoardDetails = lazy(() =>
   import('layouts/company/boardDetails/BoardDetails'),
 );
 const TaskPage = lazy(() => import('layouts/company/task'));
+// const TaskModal = lazy(() =>
+//   import('components/task/Modal/TaskModal'),
+// );
 const UserProfilePage = lazy(() =>
   import('layouts/user/profile/Index'),
 );
@@ -90,7 +99,7 @@ const Feedback = lazy(() => import('layouts/feedback/Feedback'));
 
 const PrivateRoute = (props: {
   component: any;
-  path: string;
+  path: string | string[];
   exact: boolean;
 }) => {
   useEffect(() => {
@@ -145,6 +154,8 @@ const NotFound = () => (
 );
 
 const App = () => {
+  // const location: any = useLocation();
+  // const background = location.state && location.state.background;
   return (
     <ErrorBoundary>
       <Suspense fallback={<SuspenseLoader />}>
@@ -221,45 +232,6 @@ const App = () => {
               isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
             }
           />
-          {/* <Route
-          exact
-          path="/work-from-home-solution"
-          render={() =>
-            isAuthenticate() ? (
-              <Redirect to="/" />
-            ) : (
-              <WorkFromHomePage />
-            )
-          }
-        />
-        <Route
-          exact
-          path="/vendor-management-tool"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <VendorManagementPage />
-          }
-        />
-        <Route
-          exact
-          path="/project-management-tool"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <ProjectManagementTool />
-          }
-        />
-        <Route
-          exact
-          path="/about"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <AboutPage />
-          }
-        />
-        <Route
-          exact
-          path="/contact"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <ContactUsPage />
-          }
-        /> */}
           <PrivateRoute exact path="/" component={Demo} />
           <PrivateRoute
             path="/:username"
@@ -312,7 +284,10 @@ const App = () => {
             component={OverviewPage}
           />
           <PrivateRoute
-            path="/company/:cname/project/:projectId/board/:boardId"
+            path={[
+              '/company/:cname/project/:projectId/board/:boardId',
+              '/task/:taskId',
+            ]}
             exact={true}
             component={BoardDetails}
           />
@@ -384,6 +359,9 @@ const App = () => {
           />
           <Route component={NoMatch} />
         </Switch>
+        {/* {background && (
+          <Route path="/task/:taskId" children={<TaskModal />} />
+        )} */}
       </Suspense>
     </ErrorBoundary>
   );

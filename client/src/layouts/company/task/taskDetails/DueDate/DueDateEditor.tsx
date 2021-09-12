@@ -2,9 +2,9 @@ import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
-import { updateTask } from 'stores/board/Actions';
+import { updateTask } from 'stores/task/Actions';
 import { connect } from 'react-redux';
-import { ITask } from 'stores/board/Reducer';
+import { ITask } from 'stores/task/Reducer';
 import { useTranslation } from 'react-i18next';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -88,8 +88,8 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    dueDate: state.boardIndexReducer.boardReducer.currentTask.dueDate,
-    updatingTask: state.boardIndexReducer.boardReducer.updatingTask,
+    dueDate: state.taskIndexReducer.taskReducer.currentTask.dueDate,
+    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
   };
 };
 

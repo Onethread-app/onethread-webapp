@@ -30,7 +30,7 @@ export const DueDateViewComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-    dueDate: state.boardIndexReducer.boardReducer.currentTask.dueDate,
+    dueDate: state.taskIndexReducer.taskReducer.currentTask.dueDate,
   };
 };
 

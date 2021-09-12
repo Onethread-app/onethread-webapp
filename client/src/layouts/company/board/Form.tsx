@@ -12,8 +12,8 @@ import { Field, Form } from 'react-final-form';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { clearCurrentBoard, createBoard } from 'stores/board/Actions';
-import { TaskBoard } from 'stores/board/Reducer';
+import { clearCurrentBoard, createBoard } from 'stores/task/Actions';
+import { TaskBoard } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import { Color } from 'stores/UtilsActions';
@@ -84,7 +84,9 @@ const FormComponent = (props: {
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      label={t('app.project.Project-boards.Board-Name')}
+                      label={t(
+                        'app.project.Project-boards.Board-Name',
+                      )}
                       // label="Board Name (Required)"
                       autoFocus={true}
                     />
@@ -180,7 +182,7 @@ const mapStateToProps = (state: any) => {
     departments: state.companyReducer.currentCompany.departments,
     company: state.companyReducer.currentCompany,
     currentProject: state.projectReducer.projectDetails,
-    isCreating: state.boardIndexReducer.boardReducer.creatingBoard,
+    isCreating: state.taskIndexReducer.taskReducer.creatingBoard,
   };
 };
 

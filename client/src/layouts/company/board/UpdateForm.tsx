@@ -13,13 +13,13 @@ import React, { useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import { connect } from 'react-redux';
 // import { useHistory } from 'react-router-dom';
-import { clearCurrentBoard, createBoard } from 'stores/board/Actions';
-import { TaskBoard } from 'stores/board/Reducer';
+import { clearCurrentBoard, createBoard } from 'stores/task/Actions';
+import { TaskBoard } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import { getAllDepartments } from 'stores/company/Actions';
 import { Color, tokenConfig } from 'stores/UtilsActions';
-import { getAllBoards } from 'stores/board/Actions';
+import { getAllBoards } from 'stores/task/Actions';
 import { useTranslation } from 'react-i18next';
 
 const UpdateFormComponent = (props: {
@@ -97,7 +97,9 @@ const UpdateFormComponent = (props: {
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      label={t('app.project.Project-boards.Board-Name')}
+                      label={t(
+                        'app.project.Project-boards.Board-Name',
+                      )}
                       // label="Board Name (Required)"
                       autoFocus={true}
                     />
@@ -193,7 +195,7 @@ const mapStateToProps = (state: any) => {
     departments: state.companyReducer.currentCompany.departments,
     company: state.companyReducer.currentCompany,
     currentProject: state.projectReducer.projectDetails,
-    isCreating: state.boardIndexReducer.boardReducer.creatingBoard,
+    isCreating: state.taskIndexReducer.taskReducer.creatingBoard,
   };
 };
 

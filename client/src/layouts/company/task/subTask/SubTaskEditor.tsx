@@ -131,9 +131,9 @@ export const SubTaskCreatorComponent = (
 const mapStateToProps = (state: any) => {
   return {
     creatingSubTask:
-      state.boardIndexReducer.subTaskReducer.creatingSubTask,
+      state.taskIndexReducer.subTaskReducer.creatingSubTask,
     updatingSubTask:
-      state.boardIndexReducer.subTaskReducer.updatingSubTask,
+      state.taskIndexReducer.subTaskReducer.updatingSubTask,
   };
 };
 

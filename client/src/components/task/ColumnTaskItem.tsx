@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import {
+  useHistory,
+  // useLocation,
+  // Link,
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
@@ -26,8 +30,8 @@ import {
   getSelectedTaskDetails,
   deleteTask,
   ITaskDelete,
-} from 'stores/board/Actions';
-import { ITask } from 'stores/board/Reducer';
+} from 'stores/task/Actions';
+import { ITask } from 'stores/task/Reducer';
 import DueDate from './DueDate';
 import { priorityColor } from 'stores/UtilsActions';
 
@@ -74,6 +78,7 @@ const TaskItemContainer = styled.div`
       : find(priorityColor, ['code', props.priority])!.value
   } 0px 0px 4px`};
   background-color: #fff;
+  color: #182026 !important;
   display: flex;
   flex-direction: column;
 
@@ -109,6 +114,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   const [showPopover, setShowPopover] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
   const history = useHistory();
+  // const location = useLocation();
 
   useEffect(() => {
     if (
@@ -150,6 +156,12 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
         {(provided, snapshot) => {
           const allowedProps = { ref: provided.innerRef };
           return (
+            // <Link
+            //   to={{
+            //     pathname: `/task/${task._id}`,
+            //     state: { background: location },
+            //   }}
+            // >
             <TaskItemContainer
               className={`mh2 w-100`}
               priority={task.priority}
@@ -187,6 +199,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
                       style={{ cursor: 'pointer' }}
                       onClick={(e) => {
                         e.stopPropagation();
+                        e.preventDefault();
                         setShowPopover(!showPopover);
                       }}
                     />
@@ -224,6 +237,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
                   )}
               </ThirdRow>
             </TaskItemContainer>
+            // </Link>
           );
         }}
       </Draggable>
@@ -291,11 +305,11 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
 const mapStateToProps = (state: any) => ({
   uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
   projectId: state.projectReducer.projectDetails._id,
-  fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
-  taskError: state.boardIndexReducer.boardReducer.taskError,
-  deletingTask: state.boardIndexReducer.boardReducer.deletingTask,
+  fetchingTask: state.taskIndexReducer.taskReducer.fetchingTask,
+  taskError: state.taskIndexReducer.taskReducer.taskError,
+  deletingTask: state.taskIndexReducer.taskReducer.deletingTask,
   errorOnTaskDelete:
-    state.boardIndexReducer.boardReducer.errorOnTaskDelete,
+    state.taskIndexReducer.taskReducer.errorOnTaskDelete,
 });
 
 export default connect(mapStateToProps, {

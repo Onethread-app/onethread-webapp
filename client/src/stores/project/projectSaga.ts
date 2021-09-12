@@ -78,10 +78,7 @@ import {
   getCurrentUserId,
   getUserCompanyList,
 } from 'stores/user/Selector';
-import {
-  clearCurrentBoard,
-  getAllBoards,
-} from 'stores/board/Actions';
+import { clearCurrentBoard, getAllBoards } from 'stores/task/Actions';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;

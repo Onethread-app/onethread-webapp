@@ -17,7 +17,7 @@ import {
 } from 'components/final-form/utils';
 
 import { tigrowApi } from 'config';
-import { createTask } from 'stores/board/Actions';
+import { createTask } from 'stores/task/Actions';
 import { ICompanyTeamMembers } from 'stores/company/Reducer';
 import { tokenConfig, priorityColor } from 'stores/UtilsActions';
 import { saveTaskForm } from 'stores/taskForm/Actions';
@@ -399,11 +399,10 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
 
 const mapStateToProps = (state: any) => ({
   projectId: state.projectReducer.projectDetails._id,
-  currentBoardId:
-    state.boardIndexReducer.boardReducer.currentBoard._id,
-  creatingTask: state.boardIndexReducer.boardReducer.creatingTask,
+  currentBoardId: state.taskIndexReducer.taskReducer.currentBoard._id,
+  creatingTask: state.taskIndexReducer.taskReducer.creatingTask,
   errorOnCreatingTask:
-    state.boardIndexReducer.boardReducer.errorOnCreatingTask,
+    state.taskIndexReducer.taskReducer.errorOnCreatingTask,
   previousData: state.taskFormReducer.data,
 });
 

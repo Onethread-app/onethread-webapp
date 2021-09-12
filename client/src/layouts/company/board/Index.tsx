@@ -24,8 +24,8 @@ import {
   clearCurrentBoard,
   getAllBoards,
   getSelectedBoard,
-} from 'stores/board/Actions';
-import { TaskBoard } from 'stores/board/Reducer';
+} from 'stores/task/Actions';
+import { TaskBoard } from 'stores/task/Reducer';
 import { getAllDepartments } from 'stores/company/Actions';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
@@ -591,7 +591,7 @@ const TaskPageComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-    boardList: state.boardIndexReducer.boardReducer.boardList,
+    boardList: state.taskIndexReducer.taskReducer.boardList,
     company: state.companyReducer.currentCompany,
     departmentNameLoading: state.companyReducer.departmentNameLoading,
     role:
@@ -603,13 +603,12 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     project: state.projectReducer.projectDetails,
     singleProjectLoading: state.projectReducer.singleProjectLoading,
-    currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
-    fetchingBoards:
-      state.boardIndexReducer.boardReducer.fetchingBoards,
-    boardError: state.boardIndexReducer.boardReducer.boardError,
-    fetchingBoard: state.boardIndexReducer.boardReducer.fetchingBoard,
+    currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
+    fetchingBoards: state.taskIndexReducer.taskReducer.fetchingBoards,
+    boardError: state.taskIndexReducer.taskReducer.boardError,
+    fetchingBoard: state.taskIndexReducer.taskReducer.fetchingBoard,
     errorOnFetchingBoard:
-      state.boardIndexReducer.boardReducer.errorOnFetchingBoard,
+      state.taskIndexReducer.taskReducer.errorOnFetchingBoard,
   };
 };
 

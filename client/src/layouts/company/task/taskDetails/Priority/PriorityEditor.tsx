@@ -6,8 +6,8 @@ import { isEqual } from 'lodash';
 import { IconNames } from '@blueprintjs/icons';
 import { priorityColor } from 'stores/UtilsActions';
 import { connect } from 'react-redux';
-import { updateTask } from 'stores/board/Actions';
-import { ITask } from 'stores/board/Reducer';
+import { updateTask } from 'stores/task/Actions';
+import { ITask } from 'stores/task/Reducer';
 import { useTranslation } from 'react-i18next';
 
 interface IPriorityEditorProps {
@@ -22,7 +22,7 @@ export const PriorityEditorComponent = (
 ) => {
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
-    if ( response && !props.updatingTask ) {
+    if (response && !props.updatingTask) {
       props.setPriorityPopover(false);
     }
   };
@@ -62,7 +62,11 @@ export const PriorityEditorComponent = (
                 name="priority"
                 render={({ input, meta }) => (
                   <div className="mb3">
-                    <h3 className="f5 mt0">{t('app.project.Project-boards.Choose-Priority')}</h3>
+                    <h3 className="f5 mt0">
+                      {t(
+                        'app.project.Project-boards.Choose-Priority',
+                      )}
+                    </h3>
                     {/* <h3 className="f5 mt0">Choose Priority</h3> */}
                     <div className="mt4">
                       {priorityColor.map((color) => (
@@ -145,8 +149,8 @@ export const PriorityEditorComponent = (
 const mapStateToProps = (state: any) => {
   return {
     colorCode:
-      state.boardIndexReducer.boardReducer.currentTask.priority,
-    updatingTask: state.boardIndexReducer.boardReducer.updatingTask,
+      state.taskIndexReducer.taskReducer.currentTask.priority,
+    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
   };
 };
 

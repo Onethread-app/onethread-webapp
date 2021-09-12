@@ -355,15 +355,14 @@ export const SubTaskViewPageComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-    subTaskList: state.boardIndexReducer.subTaskReducer.subTaskList,
+    subTaskList: state.taskIndexReducer.subTaskReducer.subTaskList,
     deletingMember:
-      state.boardIndexReducer.subTaskReducer.deletingMember,
+      state.taskIndexReducer.subTaskReducer.deletingMember,
     errorOnDeletingMember:
-      state.boardIndexReducer.subTaskReducer.errorOnDeletingMember,
-    loading: state.boardIndexReducer.subTaskReducer.fetchingSubTask,
-    currentTaskId:
-      state.boardIndexReducer.boardReducer.currentTask._id,
-    fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
+      state.taskIndexReducer.subTaskReducer.errorOnDeletingMember,
+    loading: state.taskIndexReducer.subTaskReducer.fetchingSubTask,
+    currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
+    fetchingTask: state.taskIndexReducer.taskReducer.fetchingTask,
     company: state.companyReducer.currentCompany,
   };
 };

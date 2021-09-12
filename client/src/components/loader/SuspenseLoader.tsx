@@ -1,12 +1,16 @@
 import React from 'react';
 import './SuspenseLoader.styles.scss';
 
-const SuspenseLoader = () => {
+interface ISuspenseLoader {
+  insideComponent?: boolean;
+}
+
+const SuspenseLoader = (props: ISuspenseLoader) => {
   return (
     <div
       className="w-100 flex items-center justify-center"
       style={{
-        height: '100vh',
+        height: props.insideComponent ? '100%' : '100vh',
       }}
     >
       <div className="lds-grid">

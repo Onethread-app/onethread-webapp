@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { ITask } from 'stores/board/Reducer';
+import { ITask } from 'stores/task/Reducer';
 import { TaskTitleEditor } from './TaskTitleEditor';
 import { ICompany } from 'stores/company/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
@@ -139,7 +139,7 @@ export const TaskTitleViewComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-    currentTask: state.boardIndexReducer.boardReducer.currentTask,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
     company: state.companyReducer.currentCompany,
   };
 };

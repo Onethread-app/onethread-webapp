@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import {
+  // Link,
+  useHistory,
+  // useLocation,
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -27,8 +31,8 @@ import {
   deleteTask,
   ITaskDelete,
   getSelectedTaskDetails,
-} from 'stores/board/Actions';
-import { IColumn, ITask } from 'stores/board/Reducer';
+} from 'stores/task/Actions';
+import { IColumn, ITask } from 'stores/task/Reducer';
 
 const TaskItemContainer = styled.div`
   width: 100%;
@@ -39,6 +43,7 @@ const TaskItemContainer = styled.div`
   height: 56px;
   border-bottom: 1px solid #e8e8e8;
   cursor: pointer;
+  color: #182026 !important;
 
   &:first-child {
     border-top-right-radius: 8px;
@@ -146,6 +151,7 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
   const [loading, setLoading] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
   const history = useHistory();
+  // const location = useLocation();
 
   useEffect(() => {
     setSelectedOption((prev) => {
@@ -227,6 +233,7 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
 
   const handleStatusClick = (e) => {
     e.stopPropagation();
+    e.preventDefault();
   };
 
   const handleStatusChange = (e) => {
@@ -251,6 +258,12 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
   };
 
   return (
+    // <Link
+    //   to={{
+    //     pathname: `/task/${task._id}`,
+    //     state: { background: location },
+    //   }}
+    // >
     <>
       <TaskItemContainer onClick={handleClick}>
         <TaskPortion>
@@ -343,6 +356,7 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
                 htmlColor="#a1a1a1"
                 onClick={(e) => {
                   e.stopPropagation();
+                  e.preventDefault();
                   setShowPopover(!showPopover);
                 }}
               />
@@ -408,16 +422,17 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
         </div>
       </Dialog>
     </>
+    // </Link>
   );
 };
 
 const mapStateToProps = (state: any) => ({
-  columns: state.boardIndexReducer.boardReducer.currentBoard.columns,
-  deletingTask: state.boardIndexReducer.boardReducer.deletingTask,
+  columns: state.taskIndexReducer.taskReducer.currentBoard.columns,
+  deletingTask: state.taskIndexReducer.taskReducer.deletingTask,
   errorOnTaskDelete:
-    state.boardIndexReducer.boardReducer.errorOnTaskDelete,
-  fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
-  taskError: state.boardIndexReducer.boardReducer.taskError,
+    state.taskIndexReducer.taskReducer.errorOnTaskDelete,
+  fetchingTask: state.taskIndexReducer.taskReducer.fetchingTask,
+  taskError: state.taskIndexReducer.taskReducer.taskError,
   uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
   companyId: state.companyReducer.currentCompany._id,
   projectId: state.projectReducer.projectDetails._id,
