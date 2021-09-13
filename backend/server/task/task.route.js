@@ -1,18 +1,15 @@
 const express = require('express');
-const multer = require('multer');
 const taskCtrl = require('./task.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 const joiSchema = require('./task.validation');
 const subCtrl = require('../subscription/subscription.controller');
 const projectCtrl = require('../project/project.controller');
-// const authorization = passport.authenticate('jwt', { session: false });
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 const router = express.Router();
 
+router.get('/reminder', taskCtrl.taskReminder);
 router.use('/', subCtrl.subscriptionExpireCheck());
 
 router

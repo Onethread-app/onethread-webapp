@@ -16,6 +16,7 @@ const {
 
 const {
   triggerUnreadNotifications,
+  triggerMessage,
 } = require('../services/webpush.services');
 
 const _ = require('lodash');
@@ -625,6 +626,100 @@ const dragTask = async (req, res, next) => {
   }
 };
 
+const taskReminder = async (req, res, next) => {
+  let startToday = new Date();
+  startToday.setHours(0, 0, 0, 0);
+
+  let endToday = new Date();
+  endToday.setHours(23, 59, 59, 999);
+
+  let tomorrowEnd = new Date();
+  tomorrowEnd.setDate(tomorrowEnd.getDate() + 100);
+  tomorrowEnd.setHours(23, 59, 59, 999);
+
+  let taskId = [];
+
+  const taskListToday = await Task.find({
+    dueDate: { $gte: startToday, $lte: endToday },
+  });
+  taskId = taskListToday.map((i) => i._id);
+
+  const todayCounter = {};
+  let todaysTask = [];
+  const usernameMapping = {};
+  const userTaskListToday = await TaskAssign.find({ taskId })
+    .populate({ path: 'account', select: '_id name' })
+    .populate({ path: 'assignedPerson', select: '_id name' });
+
+  const idStr = (x) => x._id.toString();
+
+  for (let task of userTaskListToday) {
+    if (!todayCounter[idStr(task.account)])
+      todayCounter[idStr(task.account)] = 0;
+    todayCounter[idStr(task.account)]++;
+    todaysTask.push(idStr(task.account));
+    usernameMapping[idStr(task.account)] = task.account.name;
+
+    if (!todayCounter[idStr(task.assignedPerson)])
+      todayCounter[idStr(task.assignedPerson)] = 0;
+    todayCounter[idStr(task.assignedPerson)]++;
+    todaysTask.push(idStr(task.assignedPerson));
+    usernameMapping[idStr(task.assignedPerson)] =
+      task.assignedPerson.name;
+  }
+  todaysTask = [...new Set(todaysTask)];
+
+  const tomorrowCounter = {};
+  let tomorrowTask = [];
+  const taskListTomorrow = await Task.find({
+    dueDate: { $gte: startToday, $lte: tomorrowEnd },
+  });
+  taskId = taskListTomorrow.map((i) => i._id);
+  const userTaskListTomorrow = await TaskAssign.find({ taskId })
+    .populate({ path: 'account', select: '_id name' })
+    .populate({ path: 'assignedPerson', select: '_id name' });
+
+  for (let task of userTaskListTomorrow) {
+    if (!tomorrowCounter[idStr(task.account)])
+      tomorrowCounter[idStr(task.account)] = 0;
+    tomorrowCounter[idStr(task.account)]++;
+    tomorrowTask.push(idStr(task.account));
+    usernameMapping[idStr(task.account)] = task.account.name;
+
+    if (!tomorrowCounter[idStr(task.assignedPerson)])
+      tomorrowCounter[idStr(task.assignedPerson)] = 0;
+    tomorrowCounter[idStr(task.assignedPerson)]++;
+    tomorrowTask.push(idStr(task.assignedPerson));
+    usernameMapping[idStr(task.assignedPerson)] =
+      task.assignedPerson.name;
+  }
+  tomorrowTask = [...new Set(tomorrowTask)];
+
+  await Promise.all(
+    tomorrowTask.map(async (account) => {
+      await triggerMessage(account, {
+        notification: {
+          title: 'Task Reminder',
+          body: `You have ${
+            todayCounter[account] ?? 0
+          } tasks today and ${
+            tomorrowCounter[account] ?? 0
+          } tasks tomorrow`,
+          icon: '',
+          data: `/${usernameMapping[account]}/home`,
+        },
+      });
+    }),
+  );
+
+  return res.status(200).json({
+    todayCounter,
+    todaysTask,
+    tomorrowCounter,
+    tomorrowTask,
+  });
+};
+
 module.exports = {
   create,
   get,
@@ -639,4 +734,5 @@ module.exports = {
   deleteMember,
   suggestMemberForCreatingTask,
   suggestMember,
+  taskReminder,
 };
