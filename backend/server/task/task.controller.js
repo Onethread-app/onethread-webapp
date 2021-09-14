@@ -700,11 +700,7 @@ const taskReminder = async (req, res, next) => {
       await triggerMessage(account, {
         notification: {
           title: 'Task Reminder',
-          body: `You have ${
-            todayCounter[account] ?? 0
-          } tasks today and ${
-            tomorrowCounter[account] ?? 0
-          } tasks tomorrow`,
+          body: `You have ${todayCounter[account]} tasks today and ${tomorrowCounter[account]} tasks tomorrow`,
           icon: '',
           data: `/${usernameMapping[account]}/home`,
         },
