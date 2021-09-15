@@ -7,7 +7,7 @@ import ColumnTaskItem from 'components/task/ColumnTaskItem';
 
 import useWindowSize from 'helpers/hooks/useWindowSize';
 
-import { IColumn, ITask, TaskBoard } from 'stores/board/Reducer';
+import { IColumn, ITask, TaskBoard } from 'stores/task/Reducer';
 import {
   sortTasksByDueDate,
   sortTasksByPriority,
@@ -128,7 +128,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
 });
 
 export default connect(mapStateToProps)(TasksContainer);

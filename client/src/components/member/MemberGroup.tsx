@@ -11,7 +11,7 @@ import { Popover } from '@blueprintjs/core';
 
 import MemberListDialog from './MemberListDialog';
 import UserIcon from 'resources/images/profilePhoto.svg';
-import { IBoardMember, ITaskMember } from 'stores/board/Reducer';
+import { IBoardMember, ITaskMember } from 'stores/task/Reducer';
 import './Icon.scss';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,10 +25,12 @@ const useStyles = makeStyles((theme: Theme) =>
     small: {
       width: theme.spacing(3),
       height: theme.spacing(3),
+      zIndex: 0,
     },
     large: {
       width: theme.spacing(5),
       height: theme.spacing(5),
+      zIndex: 0,
     },
   }),
 );

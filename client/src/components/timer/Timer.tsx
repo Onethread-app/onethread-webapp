@@ -14,7 +14,7 @@ import {
   addTrackedTime,
 } from 'stores/time-tracker/Action';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
-import { ITask } from 'stores/board/Reducer';
+import { ITask } from 'stores/task/Reducer';
 
 import TrackedListDialog from 'components/time-tracker/TrackedListDialog';
 

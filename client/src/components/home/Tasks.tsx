@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
+// import { tigrowApi } from 'config';
+// import { tokenConfig } from 'stores/UtilsActions';
 import { sortBy } from 'lodash';
 import TaskListContainer from './TaskListContainer';
 // import CircularProgress from '@material-ui/core/CircularProgress';
@@ -9,6 +9,7 @@ import { Icon, Popover } from '@blueprintjs/core';
 import styled from 'styled-components';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { getAllUserTasks } from 'stores/task/Actions';
 
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
@@ -39,7 +40,7 @@ const SortingDiv = styled.div`
 
 const TasksComponent = (props: any) => {
   const userId = props!.user!._id;
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [tasks, setTasks] = useState<any>([]);
   const [tasksAll, setTasksAll] = useState<any>([]);
   const [sortedBy, setSortedBy] = useState('');
@@ -299,19 +300,40 @@ const TasksComponent = (props: any) => {
   };
 
   useEffect(() => {
-    const getTasks = async () => {
-      const headers = tokenConfig();
-      if ((headers.headers as any).Authorization) {
-        const response = await tigrowApi.get(
-          `accounts/task-list?date=${new Date()}`,
-          headers,
-        );
-        setTasksAll(response.data);
-        setLoading(false);
-      }
-    };
-    getTasks();
-  }, []);
+    props.getAllUserTasks();
+    setLoading(true);
+  }, [props.user._id]);
+
+  useEffect(() => {
+    if (
+      loading === true &&
+      props.fetchingUserTasks === false &&
+      props.errorOnFetchingUserTasks === ''
+    ) {
+      setTasksAll(props.userTasks);
+      setLoading(false);
+    }
+  }, [
+    loading,
+    props.fetchingUserTasks,
+    props.errorOnFetchingUserTasks,
+    props.userTasks,
+  ]);
+
+  // useEffect(() => {
+  //   const getTasks = async () => {
+  //     const headers = tokenConfig();
+  //     if ((headers.headers as any).Authorization) {
+  //       const response = await tigrowApi.get(
+  //         `accounts/task-list?date=${new Date()}`,
+  //         headers,
+  //       );
+  //       setTasksAll(response.data);
+  //       setLoading(false);
+  //     }
+  //   };
+  //   getTasks();
+  // }, []);
 
   useEffect(() => {
     if (loading === false) {
@@ -739,7 +761,14 @@ const TasksComponent = (props: any) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
+    userTasks: state.taskIndexReducer.taskReducer.userTasks,
+    fetchingUserTasks:
+      state.taskIndexReducer.taskReducer.fetchingUserTasks,
+    errorOnFetchingUserTasks:
+      state.taskIndexReducer.taskReducer.errorOnFetchingUserTasks,
   };
 };
 
-export const Tasks = connect(mapStateToProps)(TasksComponent);
+export const Tasks = connect(mapStateToProps, { getAllUserTasks })(
+  TasksComponent,
+);

@@ -1,4 +1,4 @@
-import { BoardActionTypes } from './Types';
+import { TaskActionType } from './Types';
 import { toggleOrderOnSort } from './Utils';
 
 export type Order = 'asc' | 'desc';
@@ -58,11 +58,11 @@ export interface ITask {
   description?: string;
   columnId: string;
   currentColumnName: string;
-  createdAt: Date;
+  createdAt: Date | null;
   createdBy: string;
   status: string;
   assignedMembers?: ITaskMember[];
-  dueDate?: Date;
+  dueDate?: Date | null;
   priority: number;
   file?: IFile[];
   comments?: Object[];
@@ -76,19 +76,46 @@ export interface IBoard {
   boardList: TaskBoard[];
   currentBoard: TaskBoard;
   currentTask: ITask;
+  userTasks: ITask[];
   boardError: string;
   boardColumnError: string;
   boardTaskError: string;
+  creatingBoard: boolean;
+  creatingTask: boolean;
+  fetchingBoards: boolean;
+  fetchingBoard: boolean;
+  fetchingColumn: boolean;
+  fetchingTask: boolean;
+  fetchingUserTasks: boolean;
+  updatingColumn: boolean;
+  updatingBoard: boolean;
+  updatingBoardName: boolean;
+  updatingTask: boolean;
+  deletingTask: boolean;
+  dragAndDrop: boolean;
+  uploadingTaskFile: boolean;
+  deletingTaskFile: boolean;
+  taskError: string;
+  errorOnCreatingTask: string;
+  errorOnUpdatingBoardName: string;
+  errorOnFetchingBoard: string;
+  errorOnFetchingUserTasks: string;
+  errorOnTaskDelete: string;
+  errorOnUploadingTaskFile: string;
+  errorOnTaskFileDelete: string;
 }
 
-const InitialState = {
+const InitialState: IBoard = {
   boardList: [] as any,
   currentBoard: {
     _id: '',
     name: '',
-    description: '',
     columns: [],
     members: [],
+    department: '',
+    color: '',
+    totalTasks: 0,
+    remainingTasks: 0,
     sortBy: undefined,
     orderBy: 'asc' as const,
     filteredUsers: [],
@@ -108,17 +135,23 @@ const InitialState = {
     priority: 2,
     file: [],
     comments: [],
-    column: {},
+    column: {
+      _id: '',
+      name: '',
+      positionInBoard: 0,
+    },
     boardId: '',
     activityCount: 0,
     timeSpent: 0,
   },
+  userTasks: [],
   creatingBoard: false,
   creatingTask: false,
   fetchingBoards: false,
   fetchingBoard: false,
   fetchingColumn: false,
   fetchingTask: false,
+  fetchingUserTasks: false,
   updatingColumn: false,
   updatingBoard: false,
   updatingBoardName: false,
@@ -134,20 +167,21 @@ const InitialState = {
   errorOnCreatingTask: '',
   errorOnUpdatingBoardName: '',
   errorOnFetchingBoard: '',
+  errorOnFetchingUserTasks: '',
   errorOnTaskDelete: '',
   errorOnUploadingTaskFile: '',
   errorOnTaskFileDelete: '',
 };
 
-export const BoardReducer = (state = InitialState, action: any) => {
+export const TaskReducer = (state = InitialState, action: any) => {
   switch (action.type) {
-    case BoardActionTypes.CREATE_BOARD_START:
+    case TaskActionType.CREATE_BOARD_START:
       return {
         ...state,
         creatingBoard: true,
         boardError: '',
       };
-    case BoardActionTypes.CREATE_BOARD_SUCCESS:
+    case TaskActionType.CREATE_BOARD_SUCCESS:
       return {
         ...state,
         boardList: [
@@ -162,56 +196,74 @@ export const BoardReducer = (state = InitialState, action: any) => {
         ],
         creatingBoard: false,
       };
-    case BoardActionTypes.CREATE_BOARD_FAILURE:
+    case TaskActionType.CREATE_BOARD_FAILURE:
       return {
         ...state,
         creatingBoard: false,
         boardError: action.payload,
       };
-    case BoardActionTypes.GET_ALL_BOARDS_START:
+    case TaskActionType.GET_ALL_BOARDS_START:
       return {
         ...state,
         boardError: '',
         fetchingBoards: true,
       };
-    case BoardActionTypes.GET_ALL_BOARDS_SUCCESS:
+    case TaskActionType.GET_ALL_BOARDS_SUCCESS:
       return {
         ...state,
         boardList: action.payload,
         boardError: '',
         fetchingBoards: false,
       };
-    case BoardActionTypes.GET_ALL_BOARDS_FAILURE:
+    case TaskActionType.GET_ALL_BOARDS_FAILURE:
       return {
         ...state,
         boardError: action.payload,
         fetchingBoards: false,
       };
-    case BoardActionTypes.SELECT_BOARD_START:
+    case TaskActionType.GET_ALL_USER_TASKS_START:
+      return {
+        ...state,
+        fetchingUserTasks: true,
+        errorOnFetchingUserTasks: '',
+      };
+    case TaskActionType.GET_ALL_USER_TASKS_SUCCESS:
+      return {
+        ...state,
+        userTasks: action.payload,
+        fetchingUserTasks: false,
+      };
+    case TaskActionType.GET_ALL_USER_TASKS_FAILURE:
+      return {
+        ...state,
+        errorOnFetchingUserTasks: action.payload,
+        fetchingUserTasks: false,
+      };
+    case TaskActionType.SELECT_BOARD_START:
       return {
         ...state,
         errorOnFetchingBoard: '',
         fetchingBoard: true,
       };
-    case BoardActionTypes.SELECT_BOARD_SUCCESS:
+    case TaskActionType.SELECT_BOARD_SUCCESS:
       return {
         ...state,
         currentBoard: action.payload,
         fetchingBoard: false,
       };
-    case BoardActionTypes.SELECT_BOARD_FAILURE:
+    case TaskActionType.SELECT_BOARD_FAILURE:
       return {
         ...state,
         errorOnFetchingBoard: action.payload,
         fetchingBoard: false,
       };
-    case BoardActionTypes.UPDATE_BOARD_NAME_START:
+    case TaskActionType.UPDATE_BOARD_NAME_START:
       return {
         ...state,
         updatingBoardName: true,
         errorOnUpdatingBoardName: '',
       };
-    case BoardActionTypes.UPDATE_BOARD_NAME_SUCCESS:
+    case TaskActionType.UPDATE_BOARD_NAME_SUCCESS:
       return {
         ...state,
         currentBoard: {
@@ -220,19 +272,19 @@ export const BoardReducer = (state = InitialState, action: any) => {
         },
         updatingBoardName: false,
       };
-    case BoardActionTypes.UPDATE_BOARD_NAME_FAILURE:
+    case TaskActionType.UPDATE_BOARD_NAME_FAILURE:
       return {
         ...state,
         errorOnUpdatingBoardName: action.payload,
         updatingBoardName: false,
       };
-    case BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_START:
+    case TaskActionType.ADD_TEAM_MEMBER_IN_BOARD_START:
       return {
         ...state,
         updatingBoard: true,
         boardError: '',
       };
-    case BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_SUCCESS:
+    case TaskActionType.ADD_TEAM_MEMBER_IN_BOARD_SUCCESS:
       return {
         ...state,
         currentBoard: {
@@ -241,18 +293,18 @@ export const BoardReducer = (state = InitialState, action: any) => {
         },
         updatingBoard: false,
       };
-    case BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_FAILURE:
+    case TaskActionType.ADD_TEAM_MEMBER_IN_BOARD_FAILURE:
       return {
         ...state,
         updatingBoard: false,
         boardError: action.payload,
       };
-    case BoardActionTypes.CREATE_COLUMN_START:
+    case TaskActionType.CREATE_COLUMN_START:
       return {
         ...state,
         fetchingColumn: true,
       };
-    case BoardActionTypes.CREATE_COLUMN_SUCCESS:
+    case TaskActionType.CREATE_COLUMN_SUCCESS:
       return {
         ...state,
         currentBoard: {
@@ -261,18 +313,18 @@ export const BoardReducer = (state = InitialState, action: any) => {
         },
         fetchingColumn: false,
       };
-    case BoardActionTypes.CREATE_COLUMN_FAILURE:
+    case TaskActionType.CREATE_COLUMN_FAILURE:
       return {
         ...state,
         boardColumnError: action.payload,
         fetchingColumn: false,
       };
-    case BoardActionTypes.UPDATE_COLUMN_START:
+    case TaskActionType.UPDATE_COLUMN_START:
       return {
         ...state,
         updatingColumn: true,
       };
-    case BoardActionTypes.UPDATE_COLUMN_SUCCESS:
+    case TaskActionType.UPDATE_COLUMN_SUCCESS:
       return {
         ...state,
         currentBoard: {
@@ -289,19 +341,19 @@ export const BoardReducer = (state = InitialState, action: any) => {
         },
         updatingColumn: false,
       };
-    case BoardActionTypes.UPDATE_COLUMN_FAILURE:
+    case TaskActionType.UPDATE_COLUMN_FAILURE:
       return {
         ...state,
         boardColumnError: action.payload,
         updatingColumn: false,
       };
-    case BoardActionTypes.CREATE_TASK_START:
+    case TaskActionType.CREATE_TASK_START:
       return {
         ...state,
         creatingTask: true,
         errorOnCreatingTask: '',
       };
-    case BoardActionTypes.CREATE_TASK_SUCCESS:
+    case TaskActionType.CREATE_TASK_SUCCESS:
       return {
         ...state,
         currentBoard: {
@@ -318,18 +370,18 @@ export const BoardReducer = (state = InitialState, action: any) => {
         },
         creatingTask: false,
       };
-    case BoardActionTypes.CREATE_TASK_FAILURE:
+    case TaskActionType.CREATE_TASK_FAILURE:
       return {
         ...state,
         errorOnCreatingTask: action.payload,
         creatingTask: false,
       };
-    case BoardActionTypes.DRAG_AND_DROP_TASK_START:
+    case TaskActionType.DRAG_AND_DROP_TASK_START:
       return {
         ...state,
         dragAndDrop: true,
       };
-    case BoardActionTypes.DRAG_AND_DROP_TASK_SUCCESS:
+    case TaskActionType.DRAG_AND_DROP_TASK_SUCCESS:
       return {
         ...state,
         currentBoard: {
@@ -338,35 +390,35 @@ export const BoardReducer = (state = InitialState, action: any) => {
         },
         dragAndDrop: false,
       };
-    case BoardActionTypes.DRAG_AND_DROP_TASK_FAILURE:
+    case TaskActionType.DRAG_AND_DROP_TASK_FAILURE:
       return {
         ...state,
         dragAndDrop: false,
       };
-    case BoardActionTypes.SELECT_TASK_START:
+    case TaskActionType.SELECT_TASK_START:
       return {
         ...state,
         taskError: '',
         fetchingTask: true,
       };
-    case BoardActionTypes.SELECT_TASK_SUCCESS:
+    case TaskActionType.SELECT_TASK_SUCCESS:
       return {
         ...state,
         currentTask: action.payload,
         fetchingTask: false,
       };
-    case BoardActionTypes.SELECT_TASK_FAILURE:
+    case TaskActionType.SELECT_TASK_FAILURE:
       return {
         ...state,
         taskError: action.payload,
         fetchingTask: false,
       };
-    case BoardActionTypes.UPDATE_TASK_START:
+    case TaskActionType.UPDATE_TASK_START:
       return {
         ...state,
         updatingTask: true,
       };
-    case BoardActionTypes.UPDATE_TASK_SUCCESS:
+    case TaskActionType.UPDATE_TASK_SUCCESS:
       return {
         ...state,
         currentBoard: {
@@ -376,13 +428,13 @@ export const BoardReducer = (state = InitialState, action: any) => {
         currentTask: action.payload.response,
         updatingTask: false,
       };
-    case BoardActionTypes.UPDATE_TASK_FAILURE:
+    case TaskActionType.UPDATE_TASK_FAILURE:
       return {
         ...state,
         taskError: action.payload,
         updatingTask: false,
       };
-    case BoardActionTypes.UPDATE_TASK_TIME_SPENT:
+    case TaskActionType.UPDATE_TASK_TIME_SPENT:
       return {
         ...state,
         currentBoard: {
@@ -419,13 +471,13 @@ export const BoardReducer = (state = InitialState, action: any) => {
               }
             : state.currentTask,
       };
-    case BoardActionTypes.TASK_FILE_UP_START:
+    case TaskActionType.TASK_FILE_UP_START:
       return {
         ...state,
         uploadingTaskFile: true,
         errorOnUploadingTaskFile: '',
       };
-    case BoardActionTypes.TASK_FILE_UP_SUCCESS:
+    case TaskActionType.TASK_FILE_UP_SUCCESS:
       return {
         ...state,
         // currentBoard: {
@@ -459,19 +511,19 @@ export const BoardReducer = (state = InitialState, action: any) => {
         // },
         uploadingTaskFile: false,
       };
-    case BoardActionTypes.TASK_FILE_UP_FAILURE:
+    case TaskActionType.TASK_FILE_UP_FAILURE:
       return {
         ...state,
         uploadingTaskFile: false,
         errorOnUploadingTaskFile: action.payload,
       };
-    case BoardActionTypes.TASK_FILE_DELETE_START:
+    case TaskActionType.TASK_FILE_DELETE_START:
       return {
         ...state,
         deletingTaskFile: true,
         errorOnTaskFileDelete: '',
       };
-    case BoardActionTypes.TASK_FILE_DELETE_SUCCESS:
+    case TaskActionType.TASK_FILE_DELETE_SUCCESS:
       return {
         ...state,
         // currentBoard: {
@@ -504,19 +556,19 @@ export const BoardReducer = (state = InitialState, action: any) => {
         // },
         deletingTaskFile: false,
       };
-    case BoardActionTypes.TASK_FILE_DELETE_FAILURE:
+    case TaskActionType.TASK_FILE_DELETE_FAILURE:
       return {
         ...state,
         errorOnTaskFileDelete: action.payload,
         deletingTaskFile: false,
       };
-    case BoardActionTypes.DELETE_TASK_START:
+    case TaskActionType.DELETE_TASK_START:
       return {
         ...state,
         deletingTask: true,
         errorOnTaskDelete: '',
       };
-    case BoardActionTypes.DELETE_TASK_SUCCESS:
+    case TaskActionType.DELETE_TASK_SUCCESS:
       return {
         ...state,
         currentBoard: {
@@ -536,14 +588,14 @@ export const BoardReducer = (state = InitialState, action: any) => {
         },
         deletingTask: false,
       };
-    case BoardActionTypes.DELETE_TASK_FAILURE: {
+    case TaskActionType.DELETE_TASK_FAILURE: {
       return {
         ...state,
         deletingTask: false,
         errorOnTaskDelete: action.payload,
       };
     }
-    case BoardActionTypes.CLEAR_CURRENT_BOARD: {
+    case TaskActionType.CLEAR_CURRENT_BOARD: {
       return {
         ...state,
         currentBoard: {
@@ -556,17 +608,17 @@ export const BoardReducer = (state = InitialState, action: any) => {
         currentTask: {},
       };
     }
-    case BoardActionTypes.UPDATE_BOARD_LOADING:
+    case TaskActionType.UPDATE_BOARD_LOADING:
       return {
         ...state,
         fetchingBoard: action.payload,
       };
-    case BoardActionTypes.UPDATE_TASK_LOADING:
+    case TaskActionType.UPDATE_TASK_LOADING:
       return {
         ...state,
         fetchingTask: action.payload,
       };
-    case BoardActionTypes.SET_SORT_BY:
+    case TaskActionType.SET_SORT_BY:
       return {
         ...state,
         currentBoard: {
@@ -579,7 +631,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
           ),
         },
       };
-    case BoardActionTypes.SET_FILTER_USERS:
+    case TaskActionType.SET_FILTER_USERS:
       return {
         ...state,
         currentBoard: {
@@ -587,7 +639,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
           filteredUsers: action.payload,
         },
       };
-    case BoardActionTypes.SET_PREFERRED_VIEW:
+    case TaskActionType.SET_PREFERRED_VIEW:
       return {
         ...state,
         currentBoard: {
@@ -595,7 +647,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
           preferredView: action.payload,
         },
       };
-    case BoardActionTypes.UPDATE_CURRENTTASK_COLUMNID:
+    case TaskActionType.UPDATE_CURRENTTASK_COLUMNID:
       return {
         ...state,
         currentTask: {

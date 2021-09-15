@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 import { SubTaskReducer } from './subtask/Reducer';
-import { BoardReducer } from './board/Reducer';
+import { TaskReducer } from './task/Reducer';
 import { TaskMembersReducer } from './taskMembers/Reducer';
 import { CommentReducer } from './comment/Reducer';
 
-export const BoardIndexReducer = combineReducers({
-  boardReducer: BoardReducer,
+export const TaskIndexReducer = combineReducers({
+  taskReducer: TaskReducer,
   subTaskReducer: SubTaskReducer,
   taskMembersReducer: TaskMembersReducer,
   commentReducer: CommentReducer,

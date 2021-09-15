@@ -6,7 +6,7 @@ import { UserReducer } from './user/Reducer';
 import { CompanyReducer } from './company/Reducer';
 import { RoomReducer } from './room/Reducer';
 import { LayoutReducer } from './layout/Reducer';
-import { BoardIndexReducer } from './boardIndexReducer';
+import { TaskIndexReducer } from './taskIndexReducer';
 import { AssociateReducer } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
 import { PusherReducer } from './pusher/Reducer';
@@ -31,7 +31,7 @@ export interface AppState {
   roomReducer: any;
   userReducer: any;
   companyReducer: any;
-  boardIndexReducer: any;
+  taskIndexReducer: any;
   associateReducer: AssociateModel;
   projectReducer: any;
   notificationReducer: any;
@@ -56,7 +56,7 @@ export const rootReducer = combineReducers({
   roomReducer: RoomReducer,
   userReducer: UserReducer,
   companyReducer: CompanyReducer,
-  boardIndexReducer: BoardIndexReducer,
+  taskIndexReducer: TaskIndexReducer,
   associateReducer: AssociateReducer,
   projectReducer: ProjectReducer,
   notificationReducer,

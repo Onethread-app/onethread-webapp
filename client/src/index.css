@@ -94,6 +94,11 @@ a:hover {
   outline: none;
 }
 
+.MuiAvatarGroup-avatar,
+.rbc-row-content {
+  z-index: 0 !important;
+}
+
 .absolute--center {
   top: 50%;
   left: 50%;

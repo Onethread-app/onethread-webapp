@@ -1,4 +1,4 @@
-import { BoardActionTypes } from './Types';
+import { TaskActionType } from './Types';
 import {
   TaskBoard,
   ITask,
@@ -24,106 +24,120 @@ export interface ITaskFileDelete {
 }
 
 export const createBoard = (board: TaskBoard) => ({
-  type: BoardActionTypes.CREATE_BOARD_START,
+  type: TaskActionType.CREATE_BOARD_START,
   payload: board,
 });
 
 export const createBoardSuccess = (response: any) => ({
-  type: BoardActionTypes.CREATE_BOARD_FAILURE,
+  type: TaskActionType.CREATE_BOARD_FAILURE,
   payload: response,
 });
 
 export const createBoardFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.CREATE_BOARD_FAILURE,
+  type: TaskActionType.CREATE_BOARD_FAILURE,
   payload: errorMessage,
 });
 
 export const getAllBoards = () => ({
-  type: BoardActionTypes.GET_ALL_BOARDS_START,
+  type: TaskActionType.GET_ALL_BOARDS_START,
 });
 
 export const getAllBoardsSuccess = (response: any) => ({
-  type: BoardActionTypes.GET_ALL_BOARDS_SUCCESS,
+  type: TaskActionType.GET_ALL_BOARDS_SUCCESS,
   payload: response,
 });
 
 export const getAllBoardsFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.GET_ALL_BOARDS_FAILURE,
+  type: TaskActionType.GET_ALL_BOARDS_FAILURE,
+  payload: errorMessage,
+});
+
+export const getAllUserTasks = () => ({
+  type: TaskActionType.GET_ALL_USER_TASKS_START,
+});
+
+export const getAllUserTasksSuccess = (response: any) => ({
+  type: TaskActionType.GET_ALL_USER_TASKS_SUCCESS,
+  payload: response,
+});
+
+export const getAllUserTasksFailure = (errorMessage: any) => ({
+  type: TaskActionType.GET_ALL_USER_TASKS_FAILURE,
   payload: errorMessage,
 });
 
 export const getSelectedBoard = (boardId: string | undefined) => ({
-  type: BoardActionTypes.SELECT_BOARD_START,
+  type: TaskActionType.SELECT_BOARD_START,
   payload: boardId,
 });
 
 export const getSelectedBoardSuccess = (response: any) => ({
-  type: BoardActionTypes.SELECT_BOARD_SUCCESS,
+  type: TaskActionType.SELECT_BOARD_SUCCESS,
   payload: response,
 });
 
 export const getSelectedBoardFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.SELECT_BOARD_FAILURE,
+  type: TaskActionType.SELECT_BOARD_FAILURE,
   payload: errorMessage,
 });
 
 export const updateBoardName = (name: string) => ({
-  type: BoardActionTypes.UPDATE_BOARD_NAME_START,
+  type: TaskActionType.UPDATE_BOARD_NAME_START,
   payload: name,
 });
 
 export const updateBoardNameSuccess = (response: any) => ({
-  type: BoardActionTypes.UPDATE_BOARD_NAME_SUCCESS,
+  type: TaskActionType.UPDATE_BOARD_NAME_SUCCESS,
   payload: response,
 });
 
 export const updateBoardNameFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.UPDATE_BOARD_NAME_FAILURE,
+  type: TaskActionType.UPDATE_BOARD_NAME_FAILURE,
   payload: errorMessage,
 });
 
 export const createColumn = (columnName: any) => ({
-  type: BoardActionTypes.CREATE_COLUMN_START,
+  type: TaskActionType.CREATE_COLUMN_START,
   payload: columnName,
 });
 
 export const createColumnSuccess = (response: any) => ({
-  type: BoardActionTypes.CREATE_COLUMN_SUCCESS,
+  type: TaskActionType.CREATE_COLUMN_SUCCESS,
   payload: response,
 });
 
 export const createColumnFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.CREATE_COLUMN_FAILURE,
+  type: TaskActionType.CREATE_COLUMN_FAILURE,
   payload: errorMessage,
 });
 
 export const updateColumn = (columnInfo: any) => ({
-  type: BoardActionTypes.UPDATE_COLUMN_START,
+  type: TaskActionType.UPDATE_COLUMN_START,
   payload: columnInfo,
 });
 
 export const updateColumnSuccess = (response: any) => ({
-  type: BoardActionTypes.UPDATE_COLUMN_SUCCESS,
+  type: TaskActionType.UPDATE_COLUMN_SUCCESS,
   payload: response,
 });
 
 export const updateColumnFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.UPDATE_COLUMN_FAILURE,
+  type: TaskActionType.UPDATE_COLUMN_FAILURE,
   payload: errorMessage,
 });
 
 export const createTask = (task: any) => ({
-  type: BoardActionTypes.CREATE_TASK_START,
+  type: TaskActionType.CREATE_TASK_START,
   payload: task,
 });
 
 export const createTaskSuccess = (response: any) => ({
-  type: BoardActionTypes.CREATE_TASK_SUCCESS,
+  type: TaskActionType.CREATE_TASK_SUCCESS,
   payload: response,
 });
 
 export const createTaskFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.CREATE_TASK_FAILURE,
+  type: TaskActionType.CREATE_TASK_FAILURE,
   payload: errorMessage,
 });
 
@@ -133,7 +147,7 @@ export const dragAndDropTask = (
   destinationColumnId: string,
   taskIndexOfDestinationColumn: number,
 ) => ({
-  type: BoardActionTypes.DRAG_AND_DROP_TASK_START,
+  type: TaskActionType.DRAG_AND_DROP_TASK_START,
   taskId,
   sourceColumnId,
   destinationColumnId,
@@ -141,12 +155,12 @@ export const dragAndDropTask = (
 });
 
 export const dragAndDropTaskSuccess = (response: any) => ({
-  type: BoardActionTypes.DRAG_AND_DROP_TASK_SUCCESS,
+  type: TaskActionType.DRAG_AND_DROP_TASK_SUCCESS,
   payload: response,
 });
 
 export const dragAndDropTaskFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.DRAG_AND_DROP_TASK_FAILURE,
+  type: TaskActionType.DRAG_AND_DROP_TASK_FAILURE,
   payload: errorMessage,
 });
 
@@ -154,135 +168,135 @@ export const addTeamMembersIntoBoard = (
   members: Array<string | undefined>,
   boardId: string | undefined,
 ) => ({
-  type: BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_START,
+  type: TaskActionType.ADD_TEAM_MEMBER_IN_BOARD_START,
   members,
   boardId,
 });
 
 export const addTeamMembersIntoBoardSuccess = (response: any) => ({
-  type: BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_SUCCESS,
+  type: TaskActionType.ADD_TEAM_MEMBER_IN_BOARD_SUCCESS,
   payload: response,
 });
 
 export const addTeamMembersIntoBoardFailure = (
   errorMessage: any,
 ) => ({
-  type: BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_FAILURE,
+  type: TaskActionType.ADD_TEAM_MEMBER_IN_BOARD_FAILURE,
   payload: errorMessage,
 });
 
 export const getSelectedTaskDetails = (taskId: string) => ({
-  type: BoardActionTypes.SELECT_TASK_START,
+  type: TaskActionType.SELECT_TASK_START,
   payload: taskId,
 });
 
 export const getSelectedTaskDetailsSuccess = (response: any) => ({
-  type: BoardActionTypes.SELECT_TASK_SUCCESS,
+  type: TaskActionType.SELECT_TASK_SUCCESS,
   payload: response,
 });
 
 export const getSelectedTaskDetailsFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.SELECT_TASK_FAILURE,
+  type: TaskActionType.SELECT_TASK_FAILURE,
   payload: errorMessage,
 });
 
 export const updateTask = (task: ITask) => ({
-  type: BoardActionTypes.UPDATE_TASK_START,
+  type: TaskActionType.UPDATE_TASK_START,
   payload: task,
 });
 
 export const updateTaskSuccess = (response: any) => ({
-  type: BoardActionTypes.UPDATE_TASK_SUCCESS,
+  type: TaskActionType.UPDATE_TASK_SUCCESS,
   payload: response,
 });
 
 export const updateTaskFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.UPDATE_TASK_FAILURE,
+  type: TaskActionType.UPDATE_TASK_FAILURE,
   payload: errorMessage,
 });
 
 export const taskFileUpload = (payload: ITaskFileUpload) => ({
-  type: BoardActionTypes.TASK_FILE_UP_START,
+  type: TaskActionType.TASK_FILE_UP_START,
   payload,
 });
 
 export const taskFileUploadSuccess = (response: any) => ({
-  type: BoardActionTypes.TASK_FILE_UP_SUCCESS,
+  type: TaskActionType.TASK_FILE_UP_SUCCESS,
   payload: response,
 });
 
 export const taskFileUploadFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.TASK_FILE_UP_FAILURE,
+  type: TaskActionType.TASK_FILE_UP_FAILURE,
   payload: errorMessage,
 });
 
 export const taskFileDelete = (payload: ITaskFileDelete) => ({
-  type: BoardActionTypes.TASK_FILE_DELETE_START,
+  type: TaskActionType.TASK_FILE_DELETE_START,
   payload,
 });
 
 export const taskFileDeleteSuccess = (response: any) => ({
-  type: BoardActionTypes.TASK_FILE_DELETE_SUCCESS,
+  type: TaskActionType.TASK_FILE_DELETE_SUCCESS,
   payload: response,
 });
 
 export const taskFileDeleteFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.TASK_FILE_DELETE_FAILURE,
+  type: TaskActionType.TASK_FILE_DELETE_FAILURE,
   payload: errorMessage,
 });
 
 export const deleteTask = (payload: ITaskDelete) => ({
-  type: BoardActionTypes.DELETE_TASK_START,
+  type: TaskActionType.DELETE_TASK_START,
   payload,
 });
 
 export const deleteTaskSuccess = (payload: ITaskDelete) => ({
-  type: BoardActionTypes.DELETE_TASK_SUCCESS,
+  type: TaskActionType.DELETE_TASK_SUCCESS,
   payload,
 });
 
 export const deleteTaskFailure = (errorMessage: any) => ({
-  type: BoardActionTypes.DELETE_TASK_FAILURE,
+  type: TaskActionType.DELETE_TASK_FAILURE,
   payload: errorMessage,
 });
 
 export const clearCurrentBoard = () => ({
-  type: BoardActionTypes.CLEAR_CURRENT_BOARD,
+  type: TaskActionType.CLEAR_CURRENT_BOARD,
 });
 
 export const updateBoardLoading = (loading: boolean) => ({
-  type: BoardActionTypes.UPDATE_BOARD_LOADING,
+  type: TaskActionType.UPDATE_BOARD_LOADING,
   payload: loading,
 });
 
 export const updateTaskLoading = (loading: boolean) => ({
-  type: BoardActionTypes.UPDATE_TASK_LOADING,
+  type: TaskActionType.UPDATE_TASK_LOADING,
   payload: loading,
 });
 
 export const setSortBy = (type: SortTasksBy) => ({
-  type: BoardActionTypes.SET_SORT_BY,
+  type: TaskActionType.SET_SORT_BY,
   payload: type,
 });
 
 export const setFilerUsers = (list: IFilterUser[]) => ({
-  type: BoardActionTypes.SET_FILTER_USERS,
+  type: TaskActionType.SET_FILTER_USERS,
   payload: list,
 });
 
 export const setPreferredView = (
   v: 'board' | 'list' | 'calender',
 ) => ({
-  type: BoardActionTypes.SET_PREFERRED_VIEW,
+  type: TaskActionType.SET_PREFERRED_VIEW,
   payload: v,
 });
 
 export const updateCurrentTaskColumnId = (data) => ({
-  type: BoardActionTypes.UPDATE_CURRENTTASK_COLUMNID,
+  type: TaskActionType.UPDATE_CURRENTTASK_COLUMNID,
   payload: data,
 });
 
 export const updateTaskTimeSpent = (payload: number) => ({
-  type: BoardActionTypes.UPDATE_TASK_TIME_SPENT,
+  type: TaskActionType.UPDATE_TASK_TIME_SPENT,
   payload,
 });

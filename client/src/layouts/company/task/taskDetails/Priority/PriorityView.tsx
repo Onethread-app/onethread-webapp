@@ -40,8 +40,7 @@ export const PriorityViewComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-    priority:
-      state.boardIndexReducer.boardReducer.currentTask.priority,
+    priority: state.taskIndexReducer.taskReducer.currentTask.priority,
   };
 };
 

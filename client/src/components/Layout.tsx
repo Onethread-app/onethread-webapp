@@ -20,7 +20,7 @@ import { getCompanyDetails } from 'stores/company/Actions';
 import {
   getSelectedBoard,
   getSelectedTaskDetails,
-} from 'stores/board/Actions';
+} from 'stores/task/Actions';
 import { getSingleProject } from 'stores/project/Actions';
 import {
   fetchRooms,
@@ -195,16 +195,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       props.history.push(`/notFound`);
     }
 
-    if (
-      !isEmpty(props.company._id) &&
-      !isEmpty(props.project._id) &&
-      !isEmpty(props.boardId) &&
-      taskId &&
-      taskId !== props.taskId
-    ) {
+    if (taskId && taskId !== props.taskId) {
       updateTaskReducer();
     }
-  }, [props.match, props.project._id, props.boardId, props.taskId]);
+  }, [props.match, props.taskId]);
 
   useEffect(() => {
     if (
@@ -659,13 +653,13 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
     rightSidebarOpen: state.layoutReducer.rightSidebar.open,
     project: state.projectReducer.projectDetails,
-    boardId: state.boardIndexReducer.boardReducer.currentBoard._id,
-    taskId: state.boardIndexReducer.boardReducer.currentTask._id,
+    boardId: state.taskIndexReducer.taskReducer.currentBoard._id,
+    taskId: state.taskIndexReducer.taskReducer.currentTask._id,
     companyRooms: state.roomReducer.companyRooms,
     rooms: state.roomReducer.rooms,
     companyLoading: state.companyReducer.loading,
     projectLoading: state.projectReducer.singleProjectLoading,
-    boardLoading: state.boardIndexReducer.boardReducer.fetchingBoard,
+    boardLoading: state.taskIndexReducer.taskReducer.fetchingBoard,
     currentlyTracking: state.timeTrackerReducer.currentlyTracking,
   };
 };

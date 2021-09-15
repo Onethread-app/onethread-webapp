@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Avatar from '@material-ui/core/Avatar/Avatar';
 import UserIcon from 'resources/images/profilePhoto.svg';
 
-import { IBoardMember, ITaskMember } from 'stores/board/Reducer';
+import { IBoardMember, ITaskMember } from 'stores/task/Reducer';
 
 const Container = styled.div`
   padding: 0.5rem 1rem;
@@ -42,6 +42,7 @@ const MemberListDialog = (props: IMemberListDialog) => {
               width: '1.3rem',
               height: '1.3rem',
               borderRadius: '10%',
+              zIndex: 0,
             }}
           />
           <MemberName>{`${member.firstName} ${member.lastName}`}</MemberName>

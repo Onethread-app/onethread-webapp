@@ -152,9 +152,9 @@ const AddSubtaskMember = (props: IAddSubtaskMemberInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     projectId: state.projectReducer.projectDetails._id,
-    addingMember: state.boardIndexReducer.subTaskReducer.addingMember,
+    addingMember: state.taskIndexReducer.subTaskReducer.addingMember,
     errorOnAddingMember:
-      state.boardIndexReducer.subTaskReducer.errorOnAddingMember,
+      state.taskIndexReducer.subTaskReducer.errorOnAddingMember,
   };
 };
 

@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectBoard = (state) =>
-  state.boardIndexReducer.boardReducer.currentBoard;
+  state.taskIndexReducer.taskReducer.currentBoard;
 
 const selectColumns = createSelector(
   [selectBoard],
@@ -9,11 +9,11 @@ const selectColumns = createSelector(
 );
 
 export const getCurrentBoard = (state) =>
-  state.boardIndexReducer.boardReducer.currentBoard;
+  state.taskIndexReducer.taskReducer.currentBoard;
 export const getCurrentBoardId = (state) =>
-  state.boardIndexReducer.boardReducer.currentBoard._id;
+  state.taskIndexReducer.taskReducer.currentBoard._id;
 export const getCurrentTaskId = (state) =>
-  state.boardIndexReducer.boardReducer.currentTask._id;
+  state.taskIndexReducer.taskReducer.currentTask._id;
 
 export const selectColumnName = (colId) =>
   createSelector([selectColumns], (columns) =>

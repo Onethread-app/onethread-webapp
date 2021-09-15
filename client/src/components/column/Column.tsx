@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 
-import { IColumn } from 'stores/board/Reducer';
+import { IColumn } from 'stores/task/Reducer';
 import TasksContainer from 'components/task/TasksContainer';
 
 const ColumnContainer = styled.div`

@@ -31,7 +31,7 @@ import {
   updateSubTaskFailure,
   updateSubTaskSuccess,
 } from './Actions';
-import { getCurrentBoardId } from 'stores/board/Selector';
+import { getCurrentBoardId } from 'stores/task/Selector';
 
 function* createSubtaskAsync({ payload }: any) {
   try {

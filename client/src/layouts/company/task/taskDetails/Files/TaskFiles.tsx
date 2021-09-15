@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IFile } from 'stores/board/Reducer';
-import {
-  taskFileDelete,
-  ITaskFileDelete,
-} from 'stores/board/Actions';
+import { IFile } from 'stores/task/Reducer';
+import { taskFileDelete, ITaskFileDelete } from 'stores/task/Actions';
 import TaskFilesAttach from './TaskFilesAttach';
 import { Icon, Tooltip } from '@blueprintjs/core';
 import { Popover } from '@blueprintjs/core';
@@ -138,10 +135,9 @@ const TaskFiles = (props: ITaskFiles) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    taskFiles: state.boardIndexReducer.boardReducer.currentTask.file,
-    taskId: state.boardIndexReducer.boardReducer.currentTask._id,
-    columnId:
-      state.boardIndexReducer.boardReducer.currentTask.columnId,
+    taskFiles: state.taskIndexReducer.taskReducer.currentTask.file,
+    taskId: state.taskIndexReducer.taskReducer.currentTask._id,
+    columnId: state.taskIndexReducer.taskReducer.currentTask.columnId,
   };
 };
 

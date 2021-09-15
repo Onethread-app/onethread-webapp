@@ -22,12 +22,12 @@ import {
   IFilterUser,
   SortTasksBy,
   TaskBoard,
-} from 'stores/board/Reducer';
+} from 'stores/task/Reducer';
 import {
   setSortBy,
   setFilerUsers,
   setPreferredView,
-} from 'stores/board/Actions';
+} from 'stores/task/Actions';
 import { IProject } from 'stores/project/Reducer';
 
 import {
@@ -106,7 +106,7 @@ const BoardDetails = (props: IBoardDetails) => {
       start: new Date(t.createdAt),
       end: new Date(t.dueDate),
       allDay: true,
-      redirectTo: `/company/${props.company.uniqueName}/project/${t.project}/board/${t.boardId}/task/${t._id}`,
+      redirectTo: `task/${t._id}`,
       ...t,
     }));
     setTasksForCalendarView(cTasks);
@@ -392,8 +392,8 @@ const BoardDetails = (props: IBoardDetails) => {
 
 const mapStateToProps = (state: any) => ({
   company: state.companyReducer.currentCompany,
-  currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
-  fetchingBoard: state.boardIndexReducer.boardReducer.fetchingBoard,
+  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
+  fetchingBoard: state.taskIndexReducer.taskReducer.fetchingBoard,
   currentProject: state.projectReducer.projectDetails,
 });
 

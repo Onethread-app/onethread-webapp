@@ -123,8 +123,8 @@ const DueDateEditor = (props: IDueDateFormProps) => {
 
 const mapStateToProps = (state: any) => ({
   updatingSubTask:
-    state.boardIndexReducer.subTaskReducer.updatingSubTask,
-  errorOnUpdate: state.boardIndexReducer.subTaskReducer.errorOnUpdate,
+    state.taskIndexReducer.subTaskReducer.updatingSubTask,
+  errorOnUpdate: state.taskIndexReducer.subTaskReducer.errorOnUpdate,
 });
 
 export default connect(mapStateToProps, {

@@ -5,7 +5,7 @@ import {
   tokenConfig,
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
-import { BoardActionTypes } from './Types';
+import { TaskActionType } from './Types';
 import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
@@ -38,11 +38,13 @@ import {
   taskFileDeleteSuccess,
   getSelectedTaskDetails,
   updateBoardLoading,
-  updateTaskLoading,
+  // updateTaskLoading,
   updateBoardNameFailure,
   updateBoardNameSuccess,
   dragAndDropTaskFailure,
   updateCurrentTaskColumnId,
+  getAllUserTasksSuccess,
+  getAllUserTasksFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
@@ -101,6 +103,21 @@ export function* getAllBoardsAsync() {
     yield put(getAllBoardsFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
+  }
+}
+
+function* getAllUserTasksAsync() {
+  try {
+    const headers = tokenConfig();
+    if ((headers.headers as any).Authorization) {
+      const response = yield tigrowApi.get(
+        `accounts/task-list?date=${new Date()}`,
+        headers,
+      );
+      yield put(getAllUserTasksSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(getAllUserTasksFailure(returnErrorText(error)));
   }
 }
 
@@ -287,7 +304,7 @@ export function* dragAndDrop({
         icon: 'refresh',
         className: 'bp3-intent-warning b',
         onClick: () => {
-          window.location.reload(false);
+          window.location.reload();
         },
         text: 'Reload',
       },
@@ -318,35 +335,34 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
   try {
     yield put(showLoading());
     const headers = tokenConfig();
-    const projectId = yield select(getProjectId);
-    if (projectId) {
-      if ((headers as any).headers.Authorization && payload) {
-        const res = yield tigrowApi.get(
-          `tasks/${payload}?pid=${projectId}`,
-          headers,
-        );
-        const response = {
-          _id: res.data._id,
-          name: res.data.name,
-          createdAt: res.data.createdAt,
-          dueDate: res.data.dueDate,
-          createdBy:
-            res.data.account.firstName +
-            ' ' +
-            res.data.account.lastName,
-          description: res.data.description,
-          priority: res.data.priority,
-          currentColumnName: res.data.columnId.name,
-          columnId: res.data.columnId._id,
-          file: res.data.file,
-          status: res.data.status,
-          timeSpent: res.data.timeSpent,
-        };
-        yield put(getSelectedTaskDetailsSuccess(response));
-      }
-    } else {
-      yield put(updateTaskLoading(false));
+    // const projectId = yield select(getProjectId);
+    // if (projectId) {
+    if ((headers as any).headers.Authorization && payload) {
+      const res = yield tigrowApi.get(`tasks/${payload}`, headers);
+      console.log(res);
+      const response = {
+        _id: res.data._id,
+        name: res.data.name,
+        createdAt: res.data.createdAt,
+        dueDate: res.data.dueDate,
+        createdBy:
+          res.data.account.firstName +
+          ' ' +
+          res.data.account.lastName,
+        description: res.data.description,
+        priority: res.data.priority,
+        currentColumnName: res.data.columnId.name,
+        columnId: res.data.columnId._id,
+        boardId: res.data.boardId,
+        file: res.data.file,
+        status: res.data.status,
+        timeSpent: res.data.timeSpent,
+      };
+      yield put(getSelectedTaskDetailsSuccess(response));
     }
+    // } else {
+    //   yield put(updateTaskLoading(false));
+    // }
   } catch (error) {
     yield put(getSelectedTaskDetailsFailure(returnErrorText(error)));
   } finally {
@@ -481,92 +497,97 @@ export function* deleteTaskAsync({ payload }: any) {
 }
 
 export function* onCreateBoard() {
-  yield takeEvery(BoardActionTypes.CREATE_BOARD_START, createBoard);
+  yield takeEvery(TaskActionType.CREATE_BOARD_START, createBoard);
 }
 
 export function* onGetAllBoards() {
   yield takeEvery(
-    BoardActionTypes.GET_ALL_BOARDS_START,
+    TaskActionType.GET_ALL_BOARDS_START,
     getAllBoardsAsync,
+  );
+}
+
+export function* onGetAllUserTasks() {
+  yield takeLatest(
+    TaskActionType.GET_ALL_USER_TASKS_START,
+    getAllUserTasksAsync,
   );
 }
 
 export function* onGetSelectedBoard() {
   yield takeLatest(
-    BoardActionTypes.SELECT_BOARD_START,
+    TaskActionType.SELECT_BOARD_START,
     getSelectedBoard,
   );
 }
 
 export function* onUpdateBoardName() {
   yield takeLatest(
-    BoardActionTypes.UPDATE_BOARD_NAME_START,
+    TaskActionType.UPDATE_BOARD_NAME_START,
     updateBoardNameAsync,
   );
 }
 
 export function* onCreateColumn() {
-  yield takeEvery(BoardActionTypes.CREATE_COLUMN_START, createColumn);
+  yield takeEvery(TaskActionType.CREATE_COLUMN_START, createColumn);
 }
 
 export function* onUpdateColumn() {
-  yield takeEvery(BoardActionTypes.UPDATE_COLUMN_START, updateColumn);
+  yield takeEvery(TaskActionType.UPDATE_COLUMN_START, updateColumn);
 }
 
 export function* onAddTeamMembersIntoBoard() {
   yield takeEvery(
-    BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_START,
+    TaskActionType.ADD_TEAM_MEMBER_IN_BOARD_START,
     addTeamMembersIntoBoard,
   );
 }
 
 export function* onCreateTask() {
-  yield takeEvery(BoardActionTypes.CREATE_TASK_START, createTask);
+  yield takeEvery(TaskActionType.CREATE_TASK_START, createTask);
 }
 
 export function* onDragAndDrop() {
   yield takeEvery(
-    BoardActionTypes.DRAG_AND_DROP_TASK_START,
+    TaskActionType.DRAG_AND_DROP_TASK_START,
     dragAndDrop,
   );
 }
 
 export function* onSelectTask() {
   yield takeLatest(
-    BoardActionTypes.SELECT_TASK_START,
+    TaskActionType.SELECT_TASK_START,
     getSelectedTaskDetailsAsync,
   );
 }
 
 export function* onUpdateTask() {
-  yield takeLatest(BoardActionTypes.UPDATE_TASK_START, updateTask);
+  yield takeLatest(TaskActionType.UPDATE_TASK_START, updateTask);
 }
 
 export function* onTaskFileUpload() {
   yield takeEvery(
-    BoardActionTypes.TASK_FILE_UP_START,
+    TaskActionType.TASK_FILE_UP_START,
     taskFileUploadAsync,
   );
 }
 
 export function* onTaskFileDelete() {
   yield takeEvery(
-    BoardActionTypes.TASK_FILE_DELETE_START,
+    TaskActionType.TASK_FILE_DELETE_START,
     taskFileDeleteAsync,
   );
 }
 
 export function* onDeleteTask() {
-  yield takeEvery(
-    BoardActionTypes.DELETE_TASK_START,
-    deleteTaskAsync,
-  );
+  yield takeEvery(TaskActionType.DELETE_TASK_START, deleteTaskAsync);
 }
 
-export default function* boardSaga() {
+export default function* taskSaga() {
   yield all([
     call(onCreateBoard),
     call(onGetAllBoards),
+    call(onGetAllUserTasks),
     call(onGetSelectedBoard),
     call(onUpdateBoardName),
     call(onCreateColumn),

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { isMobileOnly } from 'react-device-detect';
 import Pagination from '@material-ui/lab/Pagination';
-import { ITask } from 'stores/board/Reducer';
+import { ITask } from 'stores/task/Reducer';
 import TaskLitsItem from './TaskLitsItem';
 
 export const TasksContainerDiv = styled.div`
