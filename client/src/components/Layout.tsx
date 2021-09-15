@@ -29,6 +29,7 @@ import {
   getRoomSharedFiles,
   getRoomDiscussions,
 } from 'stores/room/Actions';
+import { addTrackedTime } from 'stores/time-tracker/Action';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -87,6 +88,7 @@ interface LayoutInternalProps
   getRoomMessages: (roomId: string) => void;
   getRoomSharedFiles: (roomId: string) => void;
   getRoomDiscussions: (roomId: string) => void;
+  addTrackedTime: (payload: ICurrentTrack) => void;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -242,6 +244,14 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     const roomId = query.get('roomId') ? query.get('roomId')! : '';
     setQueries({ view, roomId });
   }, [location.search]);
+
+  useEffect(() => {
+    return () => {
+      if (!isEmpty(props.currentlyTracking.name)) {
+        props.addTrackedTime(props.currentlyTracking);
+      }
+    };
+  }, []);
 
   const [leftOpen, setLeftOpen] = useState(true);
   const [scrollTop, setScrollTop] = React.useState(0);
@@ -675,6 +685,7 @@ export const Layout = connect(mapStateToProps, {
   getRoomMembers,
   getRoomMessages,
   getRoomSharedFiles,
+  addTrackedTime,
 })(withRouter(LayoutComponent));
 
 export default Layout;

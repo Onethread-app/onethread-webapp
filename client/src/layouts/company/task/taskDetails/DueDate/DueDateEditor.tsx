@@ -8,7 +8,7 @@ import { ITask } from 'stores/task/Reducer';
 import { useTranslation } from 'react-i18next';
 import DateFnsUtils from '@date-io/date-fns';
 import {
-  KeyboardDatePicker,
+  KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import '../../task.scss';
@@ -54,7 +54,8 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                   {t('app.project.Project-boards.Due-Date')}:
                 </h1>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
+                  <KeyboardDateTimePicker
+                    ampm
                     margin="normal"
                     id="date-picker-dialog"
                     format="MM/dd/yyyy"

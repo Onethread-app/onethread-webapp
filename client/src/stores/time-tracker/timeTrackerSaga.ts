@@ -28,9 +28,11 @@ function* addTrackedTimeAsync({ payload }: any) {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.post(`track/`, payload, headers);
-      yield put(updateProjectTimeSpent(res.data.timeTracker));
-      yield put(updateTaskTimeSpent(res.data.timeTracker));
-      yield put(addTrackedTimeSuccess(res.data.timeTracker));
+      yield all([
+        put(updateProjectTimeSpent(res.data.timeTracker)),
+        put(updateTaskTimeSpent(res.data.timeTracker)),
+        put(addTrackedTimeSuccess(res.data.timeTracker)),
+      ]);
     }
   } catch (error) {
     yield put(addTrackedTimeFailure(returnErrorText(error)));

@@ -177,6 +177,11 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
     }
   }, [creatingTask, props.creatingTask, props.errorOnCreatingTask]);
 
+  const timePickerProps = {
+    showArrowButtons: false,
+    useAmPm: true,
+  };
+
   return (
     <Container>
       <div className="flex justify-end">
@@ -308,6 +313,8 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         formatDate={(date: Date) =>
                           date.toLocaleDateString()
                         }
+                        timePickerProps={timePickerProps}
+                        timePrecision="minute"
                         placeholder="dd/mm/yyyy"
                         parseDate={(str: string) => new Date(str)}
                         onChange={(e) => {
