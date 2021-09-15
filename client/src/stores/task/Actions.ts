@@ -285,7 +285,7 @@ export const setFilerUsers = (list: IFilterUser[]) => ({
 });
 
 export const setPreferredView = (
-  v: 'board' | 'list' | 'calender',
+  v: 'board' | 'list' | 'calendar',
 ) => ({
   type: TaskActionType.SET_PREFERRED_VIEW,
   payload: v,

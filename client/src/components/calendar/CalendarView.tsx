@@ -17,31 +17,13 @@ export interface ITaskForCalendar {
   allDay: boolean;
   redirectTo: string;
   priority: number;
-  timeSpent: number;
-  _id: string;
-  name: string;
-  status: string;
-  columnId: string;
-  boardId: string;
-  project: string;
-  createdAt: Date;
-  dueDate: Date;
-  assignedMembers: [
-    {
-      _id: string;
-      firstName: string;
-      lastName: string;
-      profileImage: string;
-    },
-  ];
-  activityCount: number;
 }
 
-interface ICalenderViewProps {
+interface ICalendarViewProps {
   tasks: ITaskForCalendar[];
 }
 
-const CalendarView = (props: ICalenderViewProps) => {
+const CalendarView = (props: ICalendarViewProps) => {
   const history = useHistory();
 
   return (
