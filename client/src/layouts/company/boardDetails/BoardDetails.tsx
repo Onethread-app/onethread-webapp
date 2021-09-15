@@ -51,12 +51,12 @@ interface IBoardDetails {
   currentProject: IProject;
   setSortBy: (sort: SortTasksBy) => void;
   setFilerUsers: (list: IFilterUser[]) => void;
-  setPreferredView: (v: 'board' | 'list' | 'calender') => void;
+  setPreferredView: (v: 'board' | 'list' | 'calendar') => void;
 }
 
 const BoardDetails = (props: IBoardDetails) => {
   const { t } = useTranslation();
-  const [view, setView] = useState<'board' | 'list' | 'calender'>(
+  const [view, setView] = useState<'board' | 'list' | 'calendar'>(
     props.currentBoard.preferredView ?? 'list',
   );
   const [boardMembers, setBoardMembers] = useState<
@@ -106,14 +106,14 @@ const BoardDetails = (props: IBoardDetails) => {
       start: new Date(t.createdAt),
       end: new Date(t.dueDate),
       allDay: true,
-      redirectTo: `task/${t._id}`,
-      ...t,
+      redirectTo: `/company/${props.company.uniqueName}/project/${t.project}/board/${t.boardId}/task/${t._id}`,
+      priority: t.priority,
     }));
     setTasksForCalendarView(cTasks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentBoard]);
 
-  const handleViewChange = (v: 'board' | 'list' | 'calender') => {
+  const handleViewChange = (v: 'board' | 'list' | 'calendar') => {
     if (props.fetchingBoard === false) {
       clearSort();
       setView(v);
@@ -208,11 +208,11 @@ const BoardDetails = (props: IBoardDetails) => {
 
               <p
                 onClick={() => {
-                  handleViewChange('calender');
+                  handleViewChange('calendar');
                 }}
-                className={`${view === 'calender' && 'active'}`}
+                className={`${view === 'calendar' && 'active'}`}
               >
-                {t('app.project.Tasks.Calender')}
+                {t('app.project.Tasks.Calendar')}
               </p>
             </ViewSelectDiv>
           </div>
@@ -383,7 +383,7 @@ const BoardDetails = (props: IBoardDetails) => {
         <ColumnsContainer />
       ) : view === 'list' ? (
         <TaskList />
-      ) : view === 'calender' ? (
+      ) : view === 'calendar' ? (
         <CalendarView tasks={tasksForCalendarView} />
       ) : null}
     </Container>

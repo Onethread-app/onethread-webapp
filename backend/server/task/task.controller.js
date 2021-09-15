@@ -697,6 +697,8 @@ const taskReminder = async (req, res, next) => {
 
   await Promise.all(
     tomorrowTask.map(async (account) => {
+      if (!todayCounter[account]) todayCounter[account] = 0;
+      if (!tomorrowCounter[account]) tomorrowCounter[account] = 0;
       await triggerMessage(account, {
         notification: {
           title: 'Task Reminder',

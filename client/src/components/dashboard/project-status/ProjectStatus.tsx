@@ -28,6 +28,9 @@ import './ProjectStatus.scss';
 import TasksTable from './TasksTable';
 import { customStyles } from 'layouts/company/settings/Index';
 import ErrorText from 'layouts/company/settings/ErrorText';
+import CalendarView from 'components/calendar/CalendarView';
+
+import { ViewSelectDiv } from 'layouts/company/boardDetails/BoardDetails.styles';
 
 interface Data {
   taskname: string;
@@ -108,6 +111,10 @@ const ProjectStatusComponent = (props) => {
   const [isSubscriptionExpired, setIsSubscriptionExpired] = useState(
     false,
   );
+
+  // Calendar View Task + View
+  const [view, setView] = useState<any>('table');
+  const [calTask, setCalTask] = useState<any[]>([]);
   const history = useHistory();
 
   async function getInfo() {
@@ -122,8 +129,21 @@ const ProjectStatusComponent = (props) => {
         );
         const { data } = response.data;
         const mTask = getModifiedTasks(data.taskCompilation);
+
         setTasks(mTask);
         setfTasks(mTask);
+
+        setCalTask(
+          data.taskCompilation.map((t) => ({
+            title: t.name,
+            start: new Date(t.createdAt),
+            end: new Date(t.dueDate),
+            allDay: true,
+            redirectTo: `/company/${t.company._id}/project/${t.project._id}/board/${t.boardId}/task/${t._id}`,
+            priority: t.priority,
+          })),
+        );
+        // setCalTask(mTask.map(t => ))
         setTotalTasks(data.totalTasks);
         setRunnningProject(data.runningProjects);
         setCompletedProject(data.completedProjects);
@@ -175,6 +195,7 @@ const ProjectStatusComponent = (props) => {
         }
       }
     }
+
     setIsLoading(false);
   }
   useEffect(() => {
@@ -285,11 +306,15 @@ const ProjectStatusComponent = (props) => {
       : history.push(`/${props.user.name}/home`);
   };
 
+  const handleViewChange = (v: 'table' | 'calendar') => {
+    setView(v);
+  };
+
   const { t } = useTranslation();
 
   return (
     <div className="project-status mb5">
-      <div className="mb3 text-center">
+      <div className="text-center">
         <h3
           className="f3-ns f5"
           style={{
@@ -300,6 +325,36 @@ const ProjectStatusComponent = (props) => {
         >
           {t('app.project.Tasks.Task-Status')}
         </h3>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: 10,
+        }}
+      >
+        <ViewSelectDiv
+          fetchingBoard={props.fetchingBoard}
+          className="flex tc"
+        >
+          <p>{t('app.project.Tasks.View')}:</p>
+          <p
+            onClick={() => {
+              handleViewChange('table');
+            }}
+            className={`${view === 'table' && 'active'}`}
+          >
+            {t('app.project.Tasks.Table')}
+          </p>
+          <p
+            onClick={() => {
+              handleViewChange('calendar');
+            }}
+            className={`${view === 'calendar' && 'active'}`}
+          >
+            {t('app.project.Tasks.Calendar')}
+          </p>
+        </ViewSelectDiv>
       </div>
       {isLoading ? (
         <div
@@ -401,19 +456,25 @@ const ProjectStatusComponent = (props) => {
 
           {fTasks.length > 0 && (
             <div className="projects-list w-100">
-              <TasksTable
-                order={order}
-                setOrder={setOrder}
-                orderBy={orderBy}
-                setOrderBy={setOrderBy}
-                selected={selected}
-                setSelected={setSelected}
-                page={page}
-                setPage={setPage}
-                rowsPerPage={rowsPerPage}
-                setRowsPerPage={setRowsPerPage}
-                tasks={fTasks}
-              />
+              {view === 'calendar' && (
+                <CalendarView tasks={calTask} />
+              )}
+
+              {view === 'table' && (
+                <TasksTable
+                  order={order}
+                  setOrder={setOrder}
+                  orderBy={orderBy}
+                  setOrderBy={setOrderBy}
+                  selected={selected}
+                  setSelected={setSelected}
+                  page={page}
+                  setPage={setPage}
+                  rowsPerPage={rowsPerPage}
+                  setRowsPerPage={setRowsPerPage}
+                  tasks={fTasks}
+                />
+              )}
             </div>
           )}
         </div>

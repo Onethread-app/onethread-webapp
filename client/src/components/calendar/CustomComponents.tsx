@@ -17,13 +17,8 @@ const CustomComponents = {
           state: { background: location },
         }}
       >
-        <div
-          className="rbc-task-style"
-          style={{ borderRight: `7px solid ${pColor.value}` }}
-        >
-          {task.name}
-        </div>
-      </Link>
+        {task.title}
+      </div>
     );
   },
 };
