@@ -1,5 +1,5 @@
-import { store } from "Store";
-import { setSubscriptionExpire } from "stores/subscriptionBilling/Actions";
+import { store } from 'Store';
+import { setSubscriptionExpire } from 'stores/subscriptionBilling/Actions';
 import i18next from 'i18next';
 
 export const returnErrorText = (error) => {
@@ -15,7 +15,9 @@ export const returnErrorText = (error) => {
     } else if (data.status === 401) {
       return `${i18next.t('app.Error-text.Unauthorized-user')}`;
     } else if (data.status === 403) {
-      store.dispatch(setSubscriptionExpire());
+      if (data.type === 'SubscriptionExpirationError') {
+        store.dispatch(setSubscriptionExpire());
+      }
       return `${i18next.t('app.Error-text.Access-Error')}`;
     } else if (data.status === 404) {
       return `${i18next.t('app.Error-text.Method-Not-Found')}`;

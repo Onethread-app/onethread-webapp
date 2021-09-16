@@ -14,107 +14,41 @@ router.use('/', subCtrl.subscriptionExpireCheck());
 
 router
   .route('/')
-  .get(
-    authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
-    taskCtrl.list,
-  )
+  .get(authorization, taskCtrl.list)
   .post(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
     SchemaValidator(joiSchema.createTask),
     taskCtrl.create,
   );
 
 router
   .route('/:taskId')
-  .get(
-    authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
-    taskCtrl.get,
-  )
+  .get(authorization, taskCtrl.get)
   .put(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
     SchemaValidator(joiSchema.updateTask),
     taskCtrl.update,
   )
   .delete(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
     SchemaValidator(joiSchema.deleteTask),
     taskCtrl.deleteTask,
   );
 
 router
   .route('/suggest-member')
-  .get(
-    authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
-    taskCtrl.suggestMemberForCreatingTask,
-  );
+  .get(authorization, taskCtrl.suggestMemberForCreatingTask);
 
 router
   .route('/member/:taskId')
-  .get(
-    authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
-    taskCtrl.getMembers,
-  )
+  .get(authorization, taskCtrl.getMembers)
   .post(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
     SchemaValidator(joiSchema.addMember),
     taskCtrl.addMember,
   )
   .delete(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
     SchemaValidator(joiSchema.deleteMember),
     taskCtrl.deleteMember,
   );
@@ -129,16 +63,7 @@ router
 
 router
   .route('/:taskId/suggest-member')
-  .get(
-    authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
-    taskCtrl.suggestMember,
-  );
+  .get(authorization, taskCtrl.suggestMember);
 
 router.param('taskId', taskCtrl.load);
 

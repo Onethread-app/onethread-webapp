@@ -64,7 +64,7 @@ import Modal from 'react-modal';
 import { customStylesForModal } from 'layouts/company/settings/Index';
 
 interface LayoutProps {
-  Component: React.ComponentClass | React.StatelessComponent;
+  Component: React.ComponentClass | React.FunctionComponent;
 }
 
 interface LayoutInternalProps
@@ -156,6 +156,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 
     if (path.includes('cname') === false) {
       dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+      props.setSubscriptionNotExpire();
+      setSubscriptionExpired(false);
     }
 
     if (cname && cname !== props.company.uniqueName) {
@@ -304,12 +306,22 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 
   const closeSubErrorModal = () => {
     setSubscriptionExpired(false);
-    props.company.role === 'superAdmin'
-      ? props.history.push(
-          `/company/${props.company.uniqueName}/settings/`,
-        )
-      : props.history.push(`/${props.user.name}/home`);
+    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    props.setSubscriptionNotExpire();
+    props.history.push(`/${props.user.name}/home`);
   };
+
+  useEffect(() => {
+    if (
+      subscriptionExpired &&
+      props.company.role === 'superAdmin' &&
+      props.match.path.includes('company')
+    ) {
+      props.history.push(
+        `/company/${props.company.uniqueName}/settings/`,
+      );
+    }
+  }, [subscriptionExpired]);
 
   return (
     <div
@@ -683,25 +695,26 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           </MobileOnlyView>
         </>
       )}
-      {subscriptionExpired && (
-        <Modal
-          isOpen={subscriptionExpired}
-          onRequestClose={closeSubErrorModal}
-          style={customStylesForModal}
-          contentLabel="Example Modal"
-        >
-          <ErrorText
-            closeModal={closeSubErrorModal}
-            text={`${
-              props.company.role === 'superAdmin'
-                ? 'Your Subscription has expired'
-                : 'Your Subscription has expired, contact with Super Admin'
-            }`}
-            subtext="To keep using Onethread without interruption you need to pay your
+      {subscriptionExpired === true &&
+        props.company.role !== 'superAdmin' && (
+          <Modal
+            isOpen={subscriptionExpired}
+            onRequestClose={closeSubErrorModal}
+            style={customStylesForModal}
+            contentLabel="Example Modal"
+          >
+            <ErrorText
+              closeModal={closeSubErrorModal}
+              text={`${
+                props.company.role === 'superAdmin'
+                  ? 'Your Subscription has expired'
+                  : 'Your Subscription has expired, contact with Super Admin'
+              }`}
+              subtext="To keep using Onethread without interruption you need to pay your
             dues."
-          />
-        </Modal>
-      )}
+            />
+          </Modal>
+        )}
     </div>
   );
 };
