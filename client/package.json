@@ -34,7 +34,7 @@
     "@types/react-vertical-timeline-component": "^2.3.1",
     "@types/webscopeio__react-textarea-autocomplete": "^2.3.1",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
-    "@typescript-eslint/parser": "^4.26.0",
+    "@typescript-eslint/parser": "^4.29.3",
     "@webscopeio/react-textarea-autocomplete": "^4.6.2",
     "agora-rtc-sdk": "^3.1.1",
     "animate.css": "^3.7.2",
