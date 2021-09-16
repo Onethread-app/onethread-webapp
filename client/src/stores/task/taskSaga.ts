@@ -339,7 +339,6 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
     // if (projectId) {
     if ((headers as any).headers.Authorization && payload) {
       const res = yield tigrowApi.get(`tasks/${payload}`, headers);
-      console.log(res);
       const response = {
         _id: res.data._id,
         name: res.data.name,

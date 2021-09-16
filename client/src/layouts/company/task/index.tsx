@@ -9,9 +9,6 @@ import {
   getSelectedBoard,
 } from 'stores/task/Actions';
 import { isMobileOnly } from 'react-device-detect';
-import Modal from 'react-modal';
-import ErrorText from '../settings/ErrorText';
-import { useTranslation } from 'react-i18next';
 import { ActivityView } from './activity/ActivityView';
 import { TaskDetails } from './taskDetails';
 import TaskInfoViewComponent from './TaskInfoView/Index';
@@ -42,9 +39,7 @@ interface TaskInternalProps {
 }
 
 const TaskPageComponent = (props: TaskInternalProps) => {
-  const [openModal, setOpenModal] = React.useState(false);
   const [loading, setLoading] = useState(true);
-  const { t } = useTranslation();
   // const location: any = useLocation();
   // const params = useParams();
   // const { taskId } = params as any;
@@ -73,13 +68,6 @@ const TaskPageComponent = (props: TaskInternalProps) => {
   //     props.getSelectedBoard(props.currentTask.boardId);
   //   }
   // }, [props.currentBoard._id, props.currentTask]);
-
-  function closeModal() {
-    setOpenModal(false);
-  }
-  useEffect(() => {
-    setOpenModal(props.subscriptiontExpired);
-  }, [props.subscriptiontExpired]);
 
   return (
     <div className="cf h-100" style={{ zIndex: 4 }}>
@@ -115,21 +103,6 @@ const TaskPageComponent = (props: TaskInternalProps) => {
             <TaskInfoViewComponent />
           </div>
         </div>
-      )}
-
-      {openModal && (
-        <Modal
-          isOpen={openModal}
-          onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <ErrorText
-            closeModal={closeModal}
-            text={t('app.company.Settings.Expired')}
-            subtext={t('app.company.Settings.Expired-text')}
-          />
-        </Modal>
       )}
     </div>
   );

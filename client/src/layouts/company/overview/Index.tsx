@@ -6,13 +6,11 @@ import { useParams, NavLink } from 'react-router-dom';
 import { tokenConfig } from 'stores/UtilsActions';
 import './index.scss';
 import Table from './Table/Table';
-import Modal from 'react-modal';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
-import ErrorText from '../settings/ErrorText';
 import moment from 'moment';
 
 export const customStyles = {
@@ -82,13 +80,6 @@ const Index = (props: any) => {
   const [companyUnqName, setCompanyUnqName] = React.useState('');
 
   const { projectId } = useParams<{ projectId: string }>();
-  const [openModal, setOpenModal] = useState(false);
-  function closeModal() {
-    setOpenModal(false);
-  }
-  useEffect(() => {
-    setOpenModal(props.subscriptiontExpired);
-  }, [props.subscriptiontExpired]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -292,20 +283,6 @@ const Index = (props: any) => {
             </>
           </div>
         </>
-      )}
-      {openModal && (
-        <Modal
-          isOpen={openModal}
-          onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <ErrorText
-            closeModal={closeModal}
-            text={t('app.company.Settings.Expired')}
-            subtext={t('app.company.Settings.Expired-text')}
-          />
-        </Modal>
       )}
     </div>
   );

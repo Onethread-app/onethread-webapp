@@ -5,8 +5,6 @@ import { tigrowApi } from 'config';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import Modal from 'react-modal';
 import {
   getCompanyAnnouncement,
   getLatestCompletedTasks,
@@ -26,8 +24,6 @@ import MultiSelectComponent from './MultiSelectComponent';
 // import { Field, Form } from 'react-final-form';
 import './ProjectStatus.scss';
 import TasksTable from './TasksTable';
-import { customStylesForModal } from 'layouts/company/settings/Index';
-import ErrorText from 'layouts/company/settings/ErrorText';
 import CalendarView from 'components/calendar/CalendarView';
 
 import { ViewSelectDiv } from 'layouts/company/boardDetails/BoardDetails.styles';
@@ -108,92 +104,76 @@ const ProjectStatusComponent = (props) => {
 
   // Date time
   const [date, setDate] = useState<any>(null);
-  const [isSubscriptionExpired, setIsSubscriptionExpired] = useState(
-    false,
-  );
 
   // Calendar View Task + View
   const [view, setView] = useState<any>('table');
   const [calTask, setCalTask] = useState<any[]>([]);
-  const history = useHistory();
 
   async function getInfo() {
     setIsLoading(true);
     const headers = tokenConfig();
 
     if (props.company._id) {
-      try {
-        const response = await tigrowApi.get(
-          `company/${props.company._id}/dashboard`,
-          headers,
-        );
-        const { data } = response.data;
-        const mTask = getModifiedTasks(data.taskCompilation);
+      const response = await tigrowApi.get(
+        `company/${props.company._id}/dashboard`,
+        headers,
+      );
+      const { data } = response.data;
+      const mTask = getModifiedTasks(data.taskCompilation);
 
-        setTasks(mTask);
-        setfTasks(mTask);
+      setTasks(mTask);
+      setfTasks(mTask);
 
-        setCalTask(
-          data.taskCompilation.map((t) => ({
-            title: t.name,
-            start: new Date(t.createdAt),
-            end: new Date(t.dueDate),
-            allDay: true,
-            redirectTo: `/company/${t.company._id}/project/${t.project._id}/board/${t.boardId}/task/${t._id}`,
-            priority: t.priority,
-          })),
-        );
-        // setCalTask(mTask.map(t => ))
-        setTotalTasks(data.totalTasks);
-        setRunnningProject(data.runningProjects);
-        setCompletedProject(data.completedProjects);
-        // unique project
-        setUniqueProject(getUniqueList(mTask, 'projectname'));
-        // unique status
-        setUniqueStatus(getUniqueList(mTask, 'status'));
-        // unique priority
-        let uniquePriorityT: any = getUniqueList(mTask, 'priority');
-        uniquePriorityT = uniquePriorityT.map((p) => {
-          const f = priorityColor.find((pc) => pc.code === p.label);
-          if (!f) return null;
-          return {
-            id: f.name,
-            label: f.name,
-          };
-        });
-        setUniquePriority(uniquePriorityT);
-        // Unique members
-        let uniqueMembersT: any[] = [];
-        const uniqueMembersMap = {};
+      setCalTask(
+        data.taskCompilation.map((t) => ({
+          title: t.name,
+          start: new Date(t.createdAt),
+          end: new Date(t.dueDate),
+          allDay: true,
+          redirectTo: `/company/${t.company._id}/project/${t.project._id}/board/${t.boardId}/task/${t._id}`,
+          priority: t.priority,
+        })),
+      );
+      // setCalTask(mTask.map(t => ))
+      setTotalTasks(data.totalTasks);
+      setRunnningProject(data.runningProjects);
+      setCompletedProject(data.completedProjects);
+      // unique project
+      setUniqueProject(getUniqueList(mTask, 'projectname'));
+      // unique status
+      setUniqueStatus(getUniqueList(mTask, 'status'));
+      // unique priority
+      let uniquePriorityT: any = getUniqueList(mTask, 'priority');
+      uniquePriorityT = uniquePriorityT.map((p) => {
+        const f = priorityColor.find((pc) => pc.code === p.label);
+        if (!f) return null;
+        return {
+          id: f.name,
+          label: f.name,
+        };
+      });
+      setUniquePriority(uniquePriorityT);
+      // Unique members
+      let uniqueMembersT: any[] = [];
+      const uniqueMembersMap = {};
 
-        for (let task of mTask) {
-          if (task.members) {
-            const members = task.members.map(
-              (t) => `${t.firstName} ${t.lastName}`,
-            );
-            for (let member of members) {
-              if (uniqueMembersMap[member]) continue;
-              uniqueMembersMap[member] = true;
-              uniqueMembersT.push(member);
-            }
+      for (let task of mTask) {
+        if (task.members) {
+          const members = task.members.map(
+            (t) => `${t.firstName} ${t.lastName}`,
+          );
+          for (let member of members) {
+            if (uniqueMembersMap[member]) continue;
+            uniqueMembersMap[member] = true;
+            uniqueMembersT.push(member);
           }
         }
-        uniqueMembersT = uniqueMembersT.map((m) => ({
-          id: m,
-          label: m,
-        }));
-        setUniqueMembers(uniqueMembersT);
-      } catch (err) {
-        if ((err as any).response.data.status === 403) {
-          await props.setSubscriptionExpire();
-          await props.getCurrentSubscription();
-          props.company.role === 'superAdmin'
-            ? window.location.replace(
-                `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
-              )
-            : setIsSubscriptionExpired(true);
-        }
       }
+      uniqueMembersT = uniqueMembersT.map((m) => ({
+        id: m,
+        label: m,
+      }));
+      setUniqueMembers(uniqueMembersT);
     }
 
     setIsLoading(false);
@@ -299,12 +279,6 @@ const ProjectStatusComponent = (props) => {
     selectedPriority.length === 0 &&
     selectedProjects.length === 0
   );
-
-  const closeSubErrorModal = () => {
-    props.company.role === 'superAdmin'
-      ? history.push(`/company/${props.company.uniqueName}/settings/`)
-      : history.push(`/${props.user.name}/home`);
-  };
 
   const handleViewChange = (v: 'table' | 'calendar') => {
     setView(v);
@@ -478,25 +452,6 @@ const ProjectStatusComponent = (props) => {
             </div>
           )}
         </div>
-      )}
-      {isSubscriptionExpired && (
-        <Modal
-          isOpen={isSubscriptionExpired}
-          onRequestClose={closeSubErrorModal}
-          style={customStylesForModal}
-          contentLabel="Example Modal"
-        >
-          <ErrorText
-            closeModal={closeSubErrorModal}
-            text={`${
-              props.company.role === 'superAdmin'
-                ? 'Your Subscription has expired'
-                : 'Your Subscription has expired, contact with Super Admin'
-            }`}
-            subtext="To keep using Onethread without interruption you need to pay your
-              dues."
-          />
-        </Modal>
       )}
     </div>
   );
