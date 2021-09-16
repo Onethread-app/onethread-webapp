@@ -56,7 +56,12 @@ import { CURRENT_ROOM } from 'stores/room/Types';
 import { useTranslation } from 'react-i18next';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 import { updateDurationPersecond } from 'stores/time-tracker/Action';
+import { setSubscriptionNotExpire } from 'stores/subscriptionBilling/Actions';
 import SuspenseLoader from './loader/SuspenseLoader';
+import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
+import ErrorText from 'layouts/company/settings/ErrorText';
+import Modal from 'react-modal';
+import { customStylesForModal } from 'layouts/company/settings/Index';
 
 interface LayoutProps {
   Component: React.ComponentClass | React.StatelessComponent;
@@ -84,11 +89,13 @@ interface LayoutInternalProps
   boardLoading: boolean;
   rooms: IRoom[];
   currentlyTracking: ICurrentTrack;
+  subscriptiontExpired: boolean;
   getRoomMembers: (roomId: string) => void;
   getRoomMessages: (roomId: string) => void;
   getRoomSharedFiles: (roomId: string) => void;
   getRoomDiscussions: (roomId: string) => void;
   addTrackedTime: (payload: ICurrentTrack) => void;
+  setSubscriptionNotExpire: () => void;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -97,7 +104,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     view: 'default',
     roomId: '',
   });
-  // const [showMenu, setShowMenu] = useState(false);
+  const [subscriptionExpired, setSubscriptionExpired] = useState(
+    false,
+  );
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -144,7 +153,13 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     ) {
       props.history.push(`/notFound`);
     }
+
+    if (path.includes('cname') === false) {
+      dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    }
+
     if (cname && cname !== props.company.uniqueName) {
+      props.setSubscriptionNotExpire();
       updateCompanyReducer();
     }
   }, [props.match, props.company.uniqueName]);
@@ -272,6 +287,30 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     return () => clearInterval(interval);
   }, [props.currentlyTracking.name]);
 
+  useEffect(() => {
+    if (
+      isNil(props.company._id) === false &&
+      isEmpty(props.company._id) === false &&
+      props.subscriptiontExpired === true &&
+      props.match.path.includes('settings') === false
+    ) {
+      setSubscriptionExpired(true);
+    }
+  }, [
+    props.company._id,
+    props.match.path,
+    props.subscriptiontExpired,
+  ]);
+
+  const closeSubErrorModal = () => {
+    setSubscriptionExpired(false);
+    props.company.role === 'superAdmin'
+      ? props.history.push(
+          `/company/${props.company.uniqueName}/settings/`,
+        )
+      : props.history.push(`/${props.user.name}/home`);
+  };
+
   return (
     <div
       className="cf vh-100"
@@ -289,14 +328,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       }
     >
       {loading === true ? (
-        // <div
-        // style={{
-        //   display: 'flex',
-        //   justifyContent: 'center',
-        //   alignItems: 'center',
-        //   height: '100vh',
-        // }}
-        // ></div>
         <SuspenseLoader />
       ) : isEmpty(props.user._id) === true ? (
         <p className="f3 tc fw5 pt4 white">
@@ -652,6 +683,25 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           </MobileOnlyView>
         </>
       )}
+      {subscriptionExpired && (
+        <Modal
+          isOpen={subscriptionExpired}
+          onRequestClose={closeSubErrorModal}
+          style={customStylesForModal}
+          contentLabel="Example Modal"
+        >
+          <ErrorText
+            closeModal={closeSubErrorModal}
+            text={`${
+              props.company.role === 'superAdmin'
+                ? 'Your Subscription has expired'
+                : 'Your Subscription has expired, contact with Super Admin'
+            }`}
+            subtext="To keep using Onethread without interruption you need to pay your
+            dues."
+          />
+        </Modal>
+      )}
     </div>
   );
 };
@@ -671,6 +721,8 @@ const mapStateToProps = (state: any) => {
     projectLoading: state.projectReducer.singleProjectLoading,
     boardLoading: state.taskIndexReducer.taskReducer.fetchingBoard,
     currentlyTracking: state.timeTrackerReducer.currentlyTracking,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
   };
 };
 
@@ -686,6 +738,7 @@ export const Layout = connect(mapStateToProps, {
   getRoomMessages,
   getRoomSharedFiles,
   addTrackedTime,
+  setSubscriptionNotExpire,
 })(withRouter(LayoutComponent));
 
 export default Layout;

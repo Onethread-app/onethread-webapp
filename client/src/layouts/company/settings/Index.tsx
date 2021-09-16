@@ -16,7 +16,7 @@ import ErrorText from './ErrorText';
 import './styles.scss';
 import { useTranslation } from 'react-i18next';
 
-export const customStyles = {
+export const customStylesForModal = {
   content: {
     top: '50%',
     left: '50%',
@@ -187,7 +187,7 @@ const SettingsPagComponent = (
             isOpen={success}
             // onAfterOpen={afterOpenModal}
             onRequestClose={closeModal}
-            style={customStyles}
+            style={customStylesForModal}
             contentLabel="Example Modal"
             // contentLabel="Example Modal"
           >

@@ -26,7 +26,7 @@ import MultiSelectComponent from './MultiSelectComponent';
 // import { Field, Form } from 'react-final-form';
 import './ProjectStatus.scss';
 import TasksTable from './TasksTable';
-import { customStyles } from 'layouts/company/settings/Index';
+import { customStylesForModal } from 'layouts/company/settings/Index';
 import ErrorText from 'layouts/company/settings/ErrorText';
 import CalendarView from 'components/calendar/CalendarView';
 
@@ -300,7 +300,7 @@ const ProjectStatusComponent = (props) => {
     selectedProjects.length === 0
   );
 
-  const closeModal = () => {
+  const closeSubErrorModal = () => {
     props.company.role === 'superAdmin'
       ? history.push(`/company/${props.company.uniqueName}/settings/`)
       : history.push(`/${props.user.name}/home`);
@@ -482,12 +482,12 @@ const ProjectStatusComponent = (props) => {
       {isSubscriptionExpired && (
         <Modal
           isOpen={isSubscriptionExpired}
-          onRequestClose={closeModal}
-          style={customStyles}
+          onRequestClose={closeSubErrorModal}
+          style={customStylesForModal}
           contentLabel="Example Modal"
         >
           <ErrorText
-            closeModal={closeModal}
+            closeModal={closeSubErrorModal}
             text={`${
               props.company.role === 'superAdmin'
                 ? 'Your Subscription has expired'
