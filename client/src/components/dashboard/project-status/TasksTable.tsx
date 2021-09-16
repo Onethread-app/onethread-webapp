@@ -337,7 +337,7 @@ const AppTable = ({
           `/company/${row.companyUniqueName}/project/${row.projectId}/board/${row.boardId}/task/${row.taskId}`,
         );
       } catch (e) {
-        if (e.response.data.status === 403) {
+        if ((e as any).response.data.status === 403) {
           setModalOpen(true);
         }
       }
@@ -379,7 +379,7 @@ const AppTable = ({
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={row._id}
+                      key={index}
                       style={{
                         borderRadius: 10,
                         border: '1px solid #eee',
@@ -422,6 +422,7 @@ const AppTable = ({
                                 name={`${member.firstName} ${member.lastName}`}
                                 _id={member._id}
                                 profileImage={member.profileImage}
+                                key={member._id}
                               />
                             ))}
                           </div>

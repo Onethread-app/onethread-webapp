@@ -13,12 +13,13 @@ export interface Entity {
   _id?: string;
   name: string;
 }
-export const tokenConfig = () => {
-  const token =
-    typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
-      : null;
+
+const token =
+  typeof window !== undefined && localStorage.getItem('tigrow_acc_id')
+    ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+    : null;
+
+const accCheck = () => {
   if (
     !localStorage.getItem('tigrow_acc_id') ||
     !localStorage.getItem('tigrow_real_id')
@@ -32,6 +33,10 @@ export const tokenConfig = () => {
     History.push('/signin');
     window.location.reload();
   }
+};
+
+export const tokenConfig = () => {
+  accCheck();
   return {
     headers: {
       'Content-type': 'application/json',
@@ -52,24 +57,7 @@ export const adminTokenConfig = () => {
 };
 
 export const tokenConfigFIleUpload = () => {
-  const token =
-    typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
-      : null;
-  if (
-    !localStorage.getItem('tigrow_acc_id') ||
-    !localStorage.getItem('tigrow_real_id')
-  ) {
-    localStorage.removeItem('tigrow_acc_id');
-    localStorage.removeItem('tigrow_real_id');
-    toaster.show({
-      message: 'Token is invalid. Please sign in.',
-      intent: 'danger',
-    });
-    History.push('/signin');
-    window.location.reload();
-  }
+  accCheck();
   return {
     headers: {
       'Content-type': 'application/x-www-form-urlencoded',
