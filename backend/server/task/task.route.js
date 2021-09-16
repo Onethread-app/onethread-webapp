@@ -20,6 +20,9 @@ router
     SchemaValidator(joiSchema.createTask),
     taskCtrl.create,
   );
+router
+  .route('/suggest-member')
+  .get(authorization, taskCtrl.suggestMemberForCreatingTask);
 
 router
   .route('/:taskId')
@@ -34,10 +37,6 @@ router
     SchemaValidator(joiSchema.deleteTask),
     taskCtrl.deleteTask,
   );
-
-router
-  .route('/suggest-member')
-  .get(authorization, taskCtrl.suggestMemberForCreatingTask);
 
 router
   .route('/member/:taskId')
@@ -66,5 +65,6 @@ router
   .get(authorization, taskCtrl.suggestMember);
 
 router.param('taskId', taskCtrl.load);
+
 
 module.exports = router;
