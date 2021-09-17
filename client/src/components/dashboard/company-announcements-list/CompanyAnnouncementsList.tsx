@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { companyPermit } from 'stores/UtilsActions';
-import CompanyAnnouncementItem from '../company-announcements-new/CompanyAnnouncementItem';
 import { orderBy } from 'lodash';
+
 import moment from 'moment';
-import Typography from '@material-ui/core/Typography';
-import { Dialog } from '@blueprintjs/core';
+import Typography from '@material-ui/core/Typography/Typography';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
+import { companyPermit } from 'stores/UtilsActions';
+
 import { AnnouncementEditor } from '../../../layouts/dashBoard/announcementEditor';
+import CompanyAnnouncementItem from '../company-announcements-new/CompanyAnnouncementItem';
 
 const CompanyAnnouncementsList = (props: any) => {
+  const { t } = useTranslation();
   const [
     showAnnouncementDialog,
     setShowAnnouncementDialog,
@@ -58,8 +62,6 @@ const CompanyAnnouncementsList = (props: any) => {
     operationalEmployee: 'Operational Employee',
   };
 
-  const { t } = useTranslation();
-
   return (
     <>
       <div className="w-50-ns w-100">
@@ -69,7 +71,6 @@ const CompanyAnnouncementsList = (props: any) => {
             className="justify-center f3-ns f5"
           >
             {t('app.company.Dashboard.Announce')}
-            {/* Company Announcements */}
           </h3>
 
           {companyPermit(props.company.role) && (
@@ -92,7 +93,6 @@ const CompanyAnnouncementsList = (props: any) => {
               </span>
               <span className="ml2-ns">
                 {t('app.company.Dashboard.Create-Announcement')}
-                {/* Create Announcement */}
               </span>
             </button>
           )}
@@ -136,7 +136,6 @@ const CompanyAnnouncementsList = (props: any) => {
               <Typography>
                 {t('app.company.Dashboard.No-Announcement')}
               </Typography>
-              // <Typography>No Announcement</Typography>
             )}
             {props.company.announce.length > 5 && (
               <div className="flex flex-row items-end w-100 justify-end">

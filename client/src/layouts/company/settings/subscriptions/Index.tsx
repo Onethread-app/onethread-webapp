@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { CurrentSubscription } from './CurrentSubscription';
 import SubscriptionList from './SubscriptionList';
 import Checkout from './Checkout';
@@ -19,6 +20,7 @@ export default function Subscriptions() {
   const changeComponentToThis = (changeComponentTo: string) => {
     setChangeComponet(changeComponentTo);
   };
+
   return (
     <div>
       <CurrentSubscription

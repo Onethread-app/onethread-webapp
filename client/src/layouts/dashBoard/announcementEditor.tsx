@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { TextArea, Button } from '@blueprintjs/core';
+import { isEmpty } from 'lodash';
+
+import { TextArea } from '@blueprintjs/core/lib/esm/components/forms/textArea';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 import { ICompany } from 'stores/company/Reducer';
 import { addAnnouncement } from 'stores/company/Actions';
-import { isEmpty } from 'lodash';
-import { useTranslation } from 'react-i18next';
 
 interface AnnouncementEditorProps {
   setShowDialog: (val: boolean) => void;
@@ -16,6 +19,7 @@ interface AnnouncementEditorProps {
 const AnnouncementEditorComponent = (
   props: AnnouncementEditorProps,
 ) => {
+  const { t } = useTranslation();
   const [inputValues, setInputValues] = useState('');
   const [error, setError] = useState(false);
   const [massage, setMessage] = useState(
@@ -35,13 +39,10 @@ const AnnouncementEditorComponent = (
     }
   };
 
-  const { t } = useTranslation();
-
   return (
     <>
       <div className="bg-white pa4">
         <h1 className="f5">{t('app.company.Dashboard.Announce')}</h1>
-        {/* <h1 className="f5">Company Announcement</h1> */}
         <TextArea
           className="mt1"
           id="jobDescription"

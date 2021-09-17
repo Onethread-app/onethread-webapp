@@ -1,12 +1,13 @@
 import React from 'react';
-import { connect } from 'react-redux';
-// import { isEqual } from 'lodash';
-import { Form, Field } from 'react-final-form';
-import { SubmitError } from 'components/final-form/SubmitError';
-import { Button } from '@blueprintjs/core';
-import { Snackbar } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Form, Field } from 'react-final-form';
+import Snackbar from '@material-ui/core/Snackbar/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { SubmitError } from 'components/final-form/SubmitError';
 
 interface IOPtionalRole {
   optionalRole?: [];
@@ -18,10 +19,9 @@ interface IProjectRole {
 }
 
 const GeneralPageComponent = (props: IProjectRole) => {
+  const { t } = useTranslation();
   const [disabled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-
-  const { t } = useTranslation();
 
   return (
     <div className="bl b--black-05 bw1 pl5-ns pl2 ml5-ns h-100">
@@ -45,7 +45,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
             <p className="b f5 mb3">
               {t('app.project.Project-settings.General')}
             </p>
-            {/* <p className="b f5 mb3">General</p> */}
             <div className="mb3 ml2">
               <Field<string>
                 name="optionalRole"
@@ -65,7 +64,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Update-archive')}
-                    {/* Update Archive Project */}
                   </label>
                 )}
               />
@@ -73,7 +71,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
             <p className="b f5 mb3">
               {t('app.project.Project-settings.Preface')}
             </p>
-            {/* <p className="b f5 mb3">Project Preface</p> */}
             <div className="mb3 ml2">
               <Field<string>
                 name="optionalRole"
@@ -93,7 +90,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Update-preface')}
-                    {/* Update info's in Project Preface */}
                   </label>
                 )}
               />
@@ -115,7 +111,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Add-files')}
-                    {/* Add files in Project Preface */}
                   </label>
                 )}
               />
@@ -123,7 +118,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
             <p className="b f5 mb3">
               {t('app.project.Project-settings.Rooms')}
             </p>
-            {/* <p className="b f5 mb3">Rooms</p> */}
             <div className="mb3 ml2">
               <Field<string>
                 name="optionalRole"
@@ -143,7 +137,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Change-members')}
-                    {/* Add/Remove Members in Room */}
                   </label>
                 )}
               />
@@ -165,7 +158,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Room-related')}
-                    {/* Create/Update Room */}
                   </label>
                 )}
               />
@@ -187,7 +179,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Archive-room')}
-                    {/* Archive Room */}
                   </label>
                 )}
               />
@@ -195,7 +186,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
             <p className="b f5 mb3">
               {t('app.project.Project-settings.Board')}
             </p>
-            {/* <p className="b f5 mb3">Board</p> */}
             <div className="mb3 ml2">
               <Field<string>
                 name="optionalRole"
@@ -215,7 +205,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Change-board')}
-                    {/* Create/Update Board */}
                   </label>
                 )}
               />
@@ -237,7 +226,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Change-column')}
-                    {/* Create/Update Column */}
                   </label>
                 )}
               />
@@ -259,7 +247,6 @@ const GeneralPageComponent = (props: IProjectRole) => {
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Assigning')}
-                    {/* Assign/Delete Board Members */}
                   </label>
                 )}
               />
@@ -277,7 +264,9 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 </MuiAlert>
               </Snackbar>
             </div>
-            { props.role && props.role === 'admin' && disabled === false ? (
+            {props.role &&
+            props.role === 'admin' &&
+            disabled === false ? (
               <div>
                 <Button
                   className="w4 grow h2 pointer"

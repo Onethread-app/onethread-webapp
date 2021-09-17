@@ -1,34 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Field } from 'react-final-form';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import {
-  required,
-  checkError,
-  composeValidators,
-  isEmail,
-} from 'components/final-form/utils';
+import { useTranslation } from 'react-i18next';
 import {
   Link,
   NavLink,
   withRouter,
   RouteComponentProps,
 } from 'react-router-dom';
-import { Button, Toaster, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
+import { isEmpty, isEqual } from 'lodash';
+
+import { Form, Field } from 'react-final-form';
+import { Toaster } from '@blueprintjs/core/lib/esm/components/toast/toaster';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 import {
   loginAction,
   LoginModel,
   resendMailForSignup,
 } from '../../stores/auth/Actions';
-import { isEmpty, isEqual } from 'lodash';
-import { SubmitError } from 'components/final-form/SubmitError';
 
 import logo from 'resources/images/onethread-text.png';
 import eyeIcon from './../../resources/images/eye.png';
 import eyeClose from './../../resources/images/eyeClose.png';
 import backgroundImage from './../../resources/images/Bg-png.png';
+
+import {
+  required,
+  checkError,
+  composeValidators,
+  isEmail,
+} from 'components/final-form/utils';
 import { usePushNotifications } from '../../usePushNotifications';
-import { useTranslation } from 'react-i18next';
+import { SubmitError } from 'components/final-form/SubmitError';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 
 interface SignInPageInternalProps {
   loginAction: (login: LoginModel) => any;
@@ -43,6 +48,8 @@ export const SignInPageComponent = (
     AskUserPermission,
     subscribeToPushNotification,
   } = usePushNotifications();
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -102,8 +109,6 @@ export const SignInPageComponent = (
         };
     }
   };
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
 
   useEffect(() => {
     const search = props.location.search;
@@ -135,14 +140,6 @@ export const SignInPageComponent = (
                 'landing.login.about-one-thread-login.content-login',
               )}
             </h3>
-            {/* <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
-              Onethread is designed keeping in mind that Ease of
-              Communication is the key to success for any enterprise.
-              Onethread’s architecture has the key unique element of
-              containerization with its feature called Project which
-              ensures privacy within it, and fluidity to collaborate
-              with external and internal stakeholders.
-            </h3> */}
           </div>
         </div>
       </div>
@@ -175,7 +172,6 @@ export const SignInPageComponent = (
                 ...rest
               }) => (
                 <>
-                  {/* <h1 className="pl3">Sign In</h1> */}
                   <h1 className="pl3 tigrow-lightBlue">
                     {t('landing.login.sign-in-form.sign-in-text')}
                   </h1>
@@ -225,7 +221,6 @@ export const SignInPageComponent = (
                                   fontSize: '18px',
                                   paddingLeft: '40px',
                                 }}
-                                // placeHolder="Email Address"
                                 placeHolder={t(
                                   'landing.login.sign-in-form.email',
                                 )}
@@ -310,7 +305,6 @@ export const SignInPageComponent = (
                                   fontSize: '18px',
                                   paddingLeft: '40px',
                                 }}
-                                // placeHolder="Password"
                                 placeHolder={t(
                                   'landing.login.sign-in-form.password',
                                 )}
@@ -340,7 +334,6 @@ export const SignInPageComponent = (
                       type="submit"
                       disabled={submitting || pristine}
                     >
-                      {/* Sign in */}
                       {t('landing.login.sign-in-form.sign-in-button')}
                     </Button>
                     <div className="tc mv4">
@@ -348,7 +341,6 @@ export const SignInPageComponent = (
                         className="fw9 dt center tigrow-lightBlue"
                         to="/forgot-password"
                       >
-                        {/* Forget Password? */}
                         {t(
                           'landing.login.sign-in-form.forgot-password',
                         )}
@@ -359,7 +351,6 @@ export const SignInPageComponent = (
                         className="fw9 dt center tigrow-lightBlue"
                         to="/signup"
                       >
-                        {/* Don't have an account? */}
                         {t('landing.login.sign-in-form.no-account')}
                       </NavLink>
                     </div>
@@ -375,7 +366,6 @@ export const SignInPageComponent = (
                           padding: '10px 0px',
                         }}
                       >
-                        {/* Sign Up here */}
                         {t(
                           'landing.login.sign-in-form.sign-up button',
                         )}

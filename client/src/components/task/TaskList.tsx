@@ -1,13 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import SettingsIcon from '@material-ui/icons/Settings';
 
-import TasksContainer from './ListTasksContainer';
 import { TaskBoard } from 'stores/task/Reducer';
-import { useTranslation } from 'react-i18next';
+
+import TasksContainer from './ListTasksContainer';
 
 const TaskListContainer = styled.div`
   padding: 1rem;
@@ -84,7 +85,7 @@ const TaskList = (props: ITaskList) => {
           <h3>{t('app.project.Tasks.Due-Date')}</h3>
         </HeaderItem>
         <HeaderItem>
-          <h3>Time Tracker</h3>
+          <h3>{t('app.project.Tasks.Time-Tracker')}</h3>
         </HeaderItem>
         <HeaderItem>
           <h3>{t('app.project.Tasks.Assigned-Member')}</h3>

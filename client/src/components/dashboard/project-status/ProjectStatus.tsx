@@ -1,32 +1,28 @@
-// import { DateInput } from '@blueprintjs/datetime';
-import { DateInput } from '@blueprintjs/datetime';
-import { CircularProgress } from '@material-ui/core';
-import { tigrowApi } from 'config';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { tigrowApi } from 'config';
 import { connect } from 'react-redux';
+
+import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+
 import {
   getCompanyAnnouncement,
   getLatestCompletedTasks,
 } from 'stores/company/Actions';
-// import TasksTable from './TasksTable';
-// import MultiSelectComponent from './MultiSelectComponent';
-// import { priorityColor } from 'stores/UtilsActions';
-// import { useTranslation } from 'react-i18next';
-// import { tigrowApi } from 'config';
 import {
   getCurrentSubscription,
   setSubscriptionExpire,
   setSubscriptionNotExpire,
 } from 'stores/subscriptionBilling/Actions';
 import { priorityColor, tokenConfig } from 'stores/UtilsActions';
-import MultiSelectComponent from './MultiSelectComponent';
-// import { Field, Form } from 'react-final-form';
-import './ProjectStatus.scss';
+
 import TasksTable from './TasksTable';
+import MultiSelectComponent from './MultiSelectComponent';
 import CalendarView from 'components/calendar/CalendarView';
 
 import { ViewSelectDiv } from 'layouts/company/boardDetails/BoardDetails.styles';
+import './ProjectStatus.scss';
 
 interface Data {
   taskname: string;
@@ -72,6 +68,7 @@ const filterSpacing = {
 };
 
 const ProjectStatusComponent = (props) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   // API Data
   const [allTasks, setTasks] = useState<any[]>([]);
@@ -178,6 +175,25 @@ const ProjectStatusComponent = (props) => {
 
     setIsLoading(false);
   }
+
+  const resetHandler = () => {
+    setSelectedStatus([]);
+    setSelectedPriority([]);
+    setSelectedProjects([]);
+    setSelectedAssignee([]);
+    setDate(null);
+  };
+  const didYouFilter = !(
+    selectedStatus.length === 0 &&
+    selectedAssignee.length === 0 &&
+    selectedPriority.length === 0 &&
+    selectedProjects.length === 0
+  );
+
+  const handleViewChange = (v: 'table' | 'calendar') => {
+    setView(v);
+  };
+
   useEffect(() => {
     getInfo();
   }, [props.company._id]);
@@ -265,26 +281,6 @@ const ProjectStatusComponent = (props) => {
   useEffect(() => {
     setRemainingTasks(fTasks.length);
   }, [fTasks]);
-
-  const resetHandler = () => {
-    setSelectedStatus([]);
-    setSelectedPriority([]);
-    setSelectedProjects([]);
-    setSelectedAssignee([]);
-    setDate(null);
-  };
-  const didYouFilter = !(
-    selectedStatus.length === 0 &&
-    selectedAssignee.length === 0 &&
-    selectedPriority.length === 0 &&
-    selectedProjects.length === 0
-  );
-
-  const handleViewChange = (v: 'table' | 'calendar') => {
-    setView(v);
-  };
-
-  const { t } = useTranslation();
 
   return (
     <div className="project-status mb5">

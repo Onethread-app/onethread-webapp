@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+
 import { ITask } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import { connect } from 'react-redux';
-import { Popover } from '@blueprintjs/core';
-import { useTranslation } from 'react-i18next';
-// import { AssignedMembersEditor } from './AssignedMembers/AssignedMembersEditor';
-// import addMembers from 'resources/images/addMembers.png';
+
 import attachFiles from 'resources/images/attachFiles.png';
+
 import TaskFiles from './Files/TaskFiles';
 import TaskFilesAttach from './Files/TaskFilesAttach';
 import { SubTaskView } from '../subTask/SubtaskView';
@@ -24,8 +26,8 @@ interface TaskDetailsInternalProps {
 }
 
 const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
-  const [filePopover, setFilePopover] = useState(false);
   const { t } = useTranslation();
+  const [filePopover, setFilePopover] = useState(false);
 
   const openFilePopover = () => {
     setFilePopover(true);

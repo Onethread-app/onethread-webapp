@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
-import { SendMessageForm } from './messages/SendMessageForm';
-import { MessageList } from './messages/MessageList';
-import { connect } from 'react-redux';
-import { Dialog, Position, Popover } from '@blueprintjs/core';
-import { AddMemberForm } from './members/AddMemberForm';
-import { getRoomMembers, archiveRoom } from 'stores/room/Actions';
+import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import { projectPermit } from 'stores/UtilsActions';
-import { projectRules } from './../../project/settings/projectrules';
-// import { MembersList } from './members/MembersList';
+import { connect } from 'react-redux';
+
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
 import { IRoomReducer } from 'stores/room/Reducer';
-// import memberListIcon from './../../../../resources/images/member-list.svg';
+import { getRoomMembers, archiveRoom } from 'stores/room/Actions';
+import { projectPermit } from 'stores/UtilsActions';
+
 import addMemberIcon from './../../../../resources/images/addMemberIcon.png';
 import settingsIcon from './../../../../resources/images/settings.svg';
 // import videoCallIcon from './../../../../resources/images/video-call.png';
+
+import { AddMemberForm } from './members/AddMemberForm';
 import { VideoCallRequest } from './VideoCallRequest';
-import { useTranslation } from 'react-i18next';
+import { projectRules } from './../../project/settings/projectrules';
+import { SendMessageForm } from './messages/SendMessageForm';
+import { MessageList } from './messages/MessageList';
 
 interface ChatLayoutComponentProps {
   getRoomMembers: (roomId: string) => void;
@@ -31,12 +35,10 @@ interface ChatLayoutComponentProps {
 export const ChatLayoutComponent = (
   props: ChatLayoutComponentProps,
 ) => {
+  const { t } = useTranslation();
   const [showMemberFormDialog, setShowMemberFormDialog] = useState(
     false,
   );
-  // const [showMemberListDialog, setShowMemberListDialog] = useState(
-  //   false,
-  // );
   const [showVideoCallDialog, setShowVideoCallDialog] = useState(
     false,
   );
@@ -45,8 +47,6 @@ export const ChatLayoutComponent = (
     props.projectRole,
     props.optionalRole,
   );
-
-  const { t } = useTranslation();
 
   return (
     <>
@@ -57,25 +57,6 @@ export const ChatLayoutComponent = (
           <div className="flex justify-between items-center ph4-ns ph2 pv2 bb b--tigrowLightGray-1">
             <div>
               <p className="f4 fw7 mv3">{props.currentRoom.name}</p>
-              {/* <div
-                onClick={() =>
-                  setShowMemberListDialog(!showMemberListDialog)
-                }
-                className="ma0 pointer dim flex items-center"
-              >
-                <img
-                  className=""
-                  src={memberListIcon}
-                  width="20px"
-                  height="20px"
-                  style={{}}
-                  color="#34b3e9"
-                  alt=""
-                />
-                <span className="f5 ml2 fw7">
-                  {props.users.length}
-                </span>
-              </div> */}
             </div>
             <div className="flex">
               <div className="pointer">
@@ -250,18 +231,6 @@ export const ChatLayoutComponent = (
           />
         </Dialog>
       )}
-
-      {/* {showMemberListDialog && (
-        <Dialog
-          onClose={() =>
-            setShowMemberListDialog(!showMemberListDialog)
-          }
-          isOpen={showMemberListDialog}
-          style={{ background: '#fff' }}
-        >
-          <MembersList users={props.users} />
-        </Dialog>
-      )} */}
 
       {showMemberFormDialog && (
         <Dialog

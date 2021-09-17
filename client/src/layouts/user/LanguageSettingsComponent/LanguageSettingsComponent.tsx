@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { makeStyles } from '@material-ui/core/styles';
 import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
 import { connect } from 'react-redux';
+
+import FormControl from '@material-ui/core/FormControl/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem/MenuItem';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+
+import { tokenConfig } from 'stores/UtilsActions';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {

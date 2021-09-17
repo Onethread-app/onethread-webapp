@@ -1,22 +1,23 @@
 import React from 'react';
-import {
-  Icon,
-  Button,
-  InputGroup,
-  TextArea,
-} from '@blueprintjs/core';
+import { tigrowApi } from 'config';
+import { isEqual } from 'lodash';
+
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { InputGroup } from '@blueprintjs/core/lib/esm/components/forms/inputGroup';
+import { TextArea } from '@blueprintjs/core/lib/esm/components/forms/textArea';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { IconNames } from '@blueprintjs/icons';
 import { Form, Field } from 'react-final-form';
+import { FORM_ERROR } from 'final-form';
+
+import { tokenConfig } from 'stores/UtilsActions';
+
 import {
   required,
   checkError,
   composeValidators,
   isEmail,
 } from 'components/final-form/utils';
-import { IconNames } from '@blueprintjs/icons';
-import { tokenConfig } from 'stores/UtilsActions';
-import { tigrowApi } from 'config';
-import { isEqual } from 'lodash';
-import { FORM_ERROR } from 'final-form';
 
 interface VideoCallRequestProps {
   setShowVideoCallDialog: React.Dispatch<
@@ -38,7 +39,8 @@ export const VideoCallRequest = (props: VideoCallRequestProps) => {
           props.setShowVideoCallDialog(false);
         }
       }
-    } catch (error) {
+    } catch (error:any) {
+      
       if (isEqual(error.message, 'Network Error')) {
         return { [FORM_ERROR]: 'Network Error' };
       }

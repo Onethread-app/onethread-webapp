@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { ICompany } from 'stores/company/Reducer';
-import {
-  SuggestField,
-  ItemEntityProps,
-} from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
+import { server, tigrowApi } from 'config';
+import { isEmpty, isEqual, map } from 'lodash';
+
+import { Toaster } from '@blueprintjs/core/lib/esm/components/toast/toaster';
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Tag } from '@blueprintjs/core/lib/esm/components/tag/tag';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { ICompany } from 'stores/company/Reducer';
 import { tokenConfig, isEmail } from 'stores/UtilsActions';
-import { Button, Tag, Toaster, Position } from '@blueprintjs/core';
 import {
   addTeamMembers,
   getCompanyMembers,
 } from 'stores/company/Actions';
+
+import {
+  SuggestField,
+  ItemEntityProps,
+} from 'components/fields/SuggestField';
 import { useLiveSearch } from 'components/useLiveSearch';
-import { server, tigrowApi } from 'config';
-import { isEmpty, isEqual, map } from 'lodash';
 
 interface TeamMembersViewProps {
   showDialog: boolean;
@@ -79,7 +85,7 @@ const AddColleaguesFormComponent = (
 
         return { status: false, message: 'Authorization Error' };
       }
-    } catch (error) {
+    } catch (error: any) {
       // tslint:disable-next-line: no-console
 
       return {

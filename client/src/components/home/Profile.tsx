@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import UserIcon from 'resources/images/profilePhoto.svg';
 
@@ -16,8 +16,9 @@ interface IProfile {
 }
 
 const Profile = (props: IProfile) => {
-  const history = useHistory();
   const { t } = useTranslation();
+  const history = useHistory();
+
   return (
     <div className="profile">
       <div className="flex justify-between w-100">

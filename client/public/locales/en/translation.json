@@ -152,6 +152,8 @@
           "first-part": "Completed",
           "second-part": "Projects"
         },
+        "Running-Projects": "Running Projects",
+        "Completed-Projects": "Completed Projects",
         "Number-of-employees": "Total Employees",
         "Number-of-associates": "Total Associates",
         "Update-of-task": "Latest Completed Task",
@@ -493,6 +495,7 @@
         "Priority": "Priority",
         "Status": "Status",
         "Due-date": "Due date",
+        "Time-Tracker": "Time Tracker",
         "Subtask": "Subtask",
         "Task-Details": "Task Details",
         "Assigned-To": "Assigned To",
@@ -572,7 +575,7 @@
     "forms": {
       "Create-company": {
         "Create": "Create Company",
-        "Name": "Comapny Name",
+        "Name": "Comapny Name (Required)",
         "Address": "Company Address",
         "Type": "Please Select a company type",
         "Email": "Company Email Address",

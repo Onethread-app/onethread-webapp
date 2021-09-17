@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ProgressBar,
-  Icon,
-  Checkbox,
-  Popover,
-} from '@blueprintjs/core';
-import { SubTaskCreator, SubTaskDelete } from './SubTaskEditor';
-import AddSubtaskMember from './AddMember';
-import DueDateEditor from './DueDateEditor';
+import { useTranslation } from 'react-i18next';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { ProgressBar } from '@blueprintjs/core/lib/esm/components/progress-bar/progressBar';
+import { Checkbox } from '@blueprintjs/core/lib/esm/components/forms/controls';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { IconNames } from '@blueprintjs/icons';
+// import moment from 'moment';
+
 import { ISubTask } from 'stores/subtask/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import {
   deleteSubTaskMember,
   IPayloadForDeletingMember,
 } from 'stores/subtask/Actions';
-import { connect } from 'react-redux';
 import {
   getAllSubTask,
   createSubTask,
   updateSubTask,
   deleteSubTask,
 } from 'stores/subtask/Actions';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+
 import { Loading } from 'components/Loading';
-import { ICompany } from 'stores/company/Reducer';
 import SubTaskMemberIcon from './SubTaskMemberIcon';
-import { useTranslation } from 'react-i18next';
-// import moment from 'moment';
-import { Dialog } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { SubTaskCreator, SubTaskDelete } from './SubTaskEditor';
+import AddSubtaskMember from './AddMember';
+import DueDateEditor from './DueDateEditor';
 
 interface ISubTaskViewInternalProps {
   subTaskList: ISubTask[];
@@ -47,6 +48,7 @@ interface ISubTaskViewInternalProps {
 export const SubTaskViewPageComponent = (
   props: ISubTaskViewInternalProps & RouteComponentProps,
 ) => {
+  const { t } = useTranslation();
   const [showSubtaskForm, setShowSubTaskForm] = useState(false);
   const [subtask, setsubtask] = useState(Object);
   const [membersPopover, setMembersPopover] = useState({
@@ -74,8 +76,6 @@ export const SubTaskViewPageComponent = (
   // const toggleDueDatePopover = (id: string) => {
   //   setDueDatePopover({ _id: id, open: !dueDatePopover.open });
   // };
-
-  const { t } = useTranslation();
 
   return (
     <>

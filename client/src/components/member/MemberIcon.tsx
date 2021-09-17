@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Popover } from '@blueprintjs/core';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 
 import UserIcon from 'resources/images/profilePhoto.svg';
 
@@ -29,7 +29,6 @@ const MemberIcon = (props: IMemberIcon) => {
               width: props.small ? '20px' : '27px',
               height: props.small ? '20px' : '27px',
               borderRadius: '50%',
-
             }}
           />
         }

@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+
+import moment from 'moment';
+import { IconNames } from '@blueprintjs/icons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
 import { ITask } from 'stores/task/Reducer';
-import { TaskTitleEditor } from './TaskTitleEditor';
 import { ICompany } from 'stores/company/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
-import moment from 'moment';
-import { Icon } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+
+import { TaskTitleEditor } from './TaskTitleEditor';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;

@@ -1,12 +1,16 @@
-import { Button, TextArea } from '@blueprintjs/core';
-import { connect } from 'react-redux';
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { TextArea } from '@blueprintjs/core/lib/esm/components/forms/textArea';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import { Form, Field } from 'react-final-form';
+
+import { ICertificates } from 'stores/company/Reducer';
+import { editCertificate } from 'stores/company/Actions';
+
 import { checkError, maxValue } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { editCertificate } from 'stores/company/Actions';
-import { ICertificates } from 'stores/company/Reducer';
 
 interface ICertificateEditProps {
   setShowDialog: (val: boolean) => void;
@@ -16,7 +20,10 @@ interface ICertificateEditProps {
 
 const CertificateEditComponent = (props: ICertificateEditProps) => {
   const onSubmit = async (values: any) => {
-    const res = await props.editCertificate(values, props.certificate._id);
+    const res = await props.editCertificate(
+      values,
+      props.certificate._id,
+    );
     if (res === 200) {
       props.setShowDialog(false);
     }

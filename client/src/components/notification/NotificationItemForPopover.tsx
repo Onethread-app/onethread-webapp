@@ -1,7 +1,6 @@
 import React from 'react';
+
 import { notificationType } from 'helpers/notification/rule';
-// import { Link } from 'react-router-dom';
-// import { store } from 'Store';
 
 interface INotificationItemForPopover {
   type: string;

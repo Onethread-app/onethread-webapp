@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { sortBy } from 'lodash';
+import styled from 'styled-components';
 // import { tigrowApi } from 'config';
 // import { tokenConfig } from 'stores/UtilsActions';
-import { sortBy } from 'lodash';
-import TaskListContainer from './TaskListContainer';
-// import CircularProgress from '@material-ui/core/CircularProgress';
-import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import { Icon, Popover } from '@blueprintjs/core';
-import styled from 'styled-components';
+
 import moment from 'moment';
-import { connect } from 'react-redux';
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener';
+
 import { getAllUserTasks } from 'stores/task/Actions';
 
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import TaskListContainer from './TaskListContainer';
 
 const SortingDiv = styled.div`
   display: flex;

@@ -1,19 +1,25 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { setProjectAccessForUser } from 'stores/project/Actions';
-import { CompletedProjects } from './CompletedProjects';
-import { MyProject } from './MyProjects';
-import { PendingProjectRequest } from './request/Index';
-import { Tab, Tabs } from '@blueprintjs/core';
-import Navbar from 'components/navbar/Navbar';
 import { isMobileOnly } from 'react-device-detect';
+import { connect } from 'react-redux';
+
+import { Tabs } from '@blueprintjs/core/lib/esm/components/tabs/tabs';
+import { Tab } from '@blueprintjs/core/lib/esm/components/tabs/tab';
+
+import { setProjectAccessForUser } from 'stores/project/Actions';
+
+import { MyProject } from './MyProjects';
+import Navbar from 'components/navbar/Navbar';
+import { PendingProjectRequest } from './request/Index';
+import { CompletedProjects } from './CompletedProjects';
 import ArchivedProjects from './ArchivedProjects';
 
 import './Index.scss';
 
 const _ProjectPage = (props: any) => {
+  const { t } = useTranslation();
+
   React.useEffect(() => {
     if (props.subscriptiontExpired) {
       props.company.role === 'superAdmin'
@@ -30,8 +36,6 @@ const _ProjectPage = (props: any) => {
     props.setProjectAccessForUser(true);
   }, []);
 
-  const { t } = useTranslation();
-
   return (
     <>
       {isMobileOnly && <Navbar type="company" />}
@@ -40,14 +44,12 @@ const _ProjectPage = (props: any) => {
           <Tab
             id="MyProjects"
             title={t('app.company.Projects.My-projects')}
-            // title="My Projects"
             panel={<MyProject />}
             className="outline-0 mt4-ns mt2"
           />
           <Tab
             id="CompletedProjects"
             title={t('app.company.Projects.Completed-projects')}
-            // title="Completed Projects"
             panel={<CompletedProjects />}
             className="outline-0 mt4-ns mt2"
           />
@@ -63,7 +65,6 @@ const _ProjectPage = (props: any) => {
             <Tab
               id="PendingProject"
               title={t('app.company.Projects.Pending Projects')}
-              // title="Pending Projects"
               panel={<PendingProjectRequest />}
               className="outline-0 mt4-ns mt2"
             />

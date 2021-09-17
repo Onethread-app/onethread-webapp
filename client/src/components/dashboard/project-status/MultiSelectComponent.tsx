@@ -1,6 +1,9 @@
-import { Intent, MenuItem } from '@blueprintjs/core';
-import { MultiSelect } from '@blueprintjs/select';
 import React from 'react';
+
+import { Intent } from '@blueprintjs/core/lib/esm/common/intent';
+import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
+import { MultiSelect } from '@blueprintjs/select/lib/esm/components/select/multiSelect';
+
 import './ProjectStatus.scss';
 
 const MultiSelectComponent = ({
@@ -20,7 +23,7 @@ const MultiSelectComponent = ({
       return [...prev.slice(0, index), ...prev.slice(index + 1)];
     });
   };
-  // console.log(container);
+
   return (
     <>
       <MultiSelect

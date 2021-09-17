@@ -1,5 +1,6 @@
 import React from 'react';
-import { EditableText } from '@blueprintjs/core';
+
+import { EditableText } from '@blueprintjs/core/lib/esm/components/editable-text/editableText';
 
 interface IEditableTextComponent {
   maxLength: number;

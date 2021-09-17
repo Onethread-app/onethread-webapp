@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityEditor } from './ActivityEditor';
-import userIcon from './../../../../resources/images/profilePhoto.svg';
-import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { getAllComments } from 'stores/comment/Actions';
-import { Loading } from 'components/Loading';
-import { Icomment } from 'stores/comment/Reducer';
-import moment from 'moment';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import moment from 'moment';
+
+import { Icomment } from 'stores/comment/Reducer';
+import { getAllComments } from 'stores/comment/Actions';
+
+import userIcon from './../../../../resources/images/profilePhoto.svg';
+
+import { Loading } from 'components/Loading';
+import { ActivityEditor } from './ActivityEditor';
 
 interface IActivityViewInternalProps {
   commentList: Icomment[];
@@ -19,6 +23,7 @@ interface IActivityViewInternalProps {
 export const ActivityViewPageComponent = (
   props: IActivityViewInternalProps & RouteComponentProps,
 ) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,8 +33,6 @@ export const ActivityViewPageComponent = (
     }
     getCommentsApi();
   }, [props.currentTaskId]);
-
-  const { t } = useTranslation();
 
   return (
     <div className="flex flex-column pl2 mb5 mb0-ns">
@@ -43,7 +46,6 @@ export const ActivityViewPageComponent = (
       >
         {t('app.project.Project-boards.Activity')}
       </h1>
-      {/* <h1 className="f5 fw7 lh-title black">Activity</h1> */}
       <div
         className={`flex flex-column overflow-y-auto pt2 ${
           !isMobileOnly ? 'bl b--tigrowLightGray-1 pl3' : ''

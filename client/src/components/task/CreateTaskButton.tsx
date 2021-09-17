@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-import { Dialog, Icon } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 
 import CreateTaskDialog from './CreateTaskDialog';
-import { useTranslation } from 'react-i18next';
 
 const CreateTaskButtonDiv = styled.div`
   max-width: 200px;
@@ -31,9 +32,11 @@ interface ICreateTaskButton {
 const CreateTaskButton = (props: ICreateTaskButton) => {
   const { t } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
+
   const handleClick = () => {
     setShowDialog(true);
   };
+
   return (
     <>
       <CreateTaskButtonDiv onClick={handleClick}>

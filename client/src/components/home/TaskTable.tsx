@@ -1,20 +1,18 @@
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  withStyles,
-} from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import React from 'react';
-
 import { useHistory } from 'react-router-dom';
+
+import withStyles from '@material-ui/core/styles/withStyles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import TableCell from '@material-ui/core/TableCell/TableCell';
+import TableRow from '@material-ui/core/TableRow/TableRow';
+import TableHead from '@material-ui/core/TableHead/TableHead';
+import TableSortLabel from '@material-ui/core/TableSortLabel/TableSortLabel';
+import TableContainer from '@material-ui/core/TableContainer/TableContainer';
+import Table from '@material-ui/core/Table/Table';
+import TableBody from '@material-ui/core/TableBody/TableBody';
+import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({

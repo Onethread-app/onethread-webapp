@@ -1,23 +1,22 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { History } from 'history';
 import { isMobileOnly } from 'react-device-detect';
+import { connect } from 'react-redux';
+import { History } from 'history';
 
-import {
-  Button,
-  ButtonGroup,
-  Drawer,
-  Popover,
-  Position,
-  Dialog,
-} from '@blueprintjs/core';
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { Drawer } from '@blueprintjs/core/lib/esm/components/drawer/drawer';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { ButtonGroup } from '@blueprintjs/core/lib/esm/components/button/buttonGroup';
+
+import { User } from 'stores/user/Reducer';
+import { logoutAction } from 'stores/auth/Actions';
 
 import UserIcon from 'resources/images/profilePhoto.svg';
 
-import { logoutAction } from 'stores/auth/Actions';
-import { User } from 'stores/user/Reducer';
 import { MobileListView } from 'layouts/company/MobileListView';
 import ReportForm from 'components/ReportForm';
 
@@ -27,12 +26,12 @@ interface IUserPopoverIcon {
 }
 
 const UserPopoverIcon = (props: IUserPopoverIcon) => {
+  const history = useHistory();
+  const { t } = useTranslation();
   const [showDialog, setShowDialog] = React.useState(false);
   const [showButtonReport, setShowButtonReport] = React.useState(
     false,
   );
-  const history = useHistory();
-  const { t } = useTranslation();
 
   return (
     <>
@@ -93,7 +92,6 @@ const UserPopoverIcon = (props: IUserPopoverIcon) => {
                 }
               >
                 {t('app.company.Settings.Settings')}
-                {/* Settings */}
               </Button>
               <Button
                 className="bp3-minimal outline-0 bp3-popover-dismiss"
@@ -102,7 +100,6 @@ const UserPopoverIcon = (props: IUserPopoverIcon) => {
                 alignText="left"
               >
                 {t('app.user.User-settings.Report-Issue')}
-                {/* Report issue */}
               </Button>
               <Button
                 className="bp3-minimal outline-0 bp3-popover-dismiss"

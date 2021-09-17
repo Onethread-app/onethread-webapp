@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-// import { isEmpty } from 'lodash';
-import styled from 'styled-components';
 import Select from 'react-select';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { tigrowApi } from 'config';
+// import { isEmpty } from 'lodash';
 
 import { Field, Form } from 'react-final-form';
-import { Button } from '@blueprintjs/core';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { DateInput } from '@blueprintjs/datetime';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+
+import { ICompanyTeamMembers } from 'stores/company/Reducer';
+import { createTask } from 'stores/task/Actions';
+import { saveTaskForm } from 'stores/taskForm/Actions';
+import { tokenConfig, priorityColor } from 'stores/UtilsActions';
+
 import {
   checkError,
   composeValidators,
   maxValue,
   required,
 } from 'components/final-form/utils';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 
-import { tigrowApi } from 'config';
-import { createTask } from 'stores/task/Actions';
-import { ICompanyTeamMembers } from 'stores/company/Reducer';
-import { tokenConfig, priorityColor } from 'stores/UtilsActions';
-import { saveTaskForm } from 'stores/taskForm/Actions';
 import './Task.scss';
 
 const Container = styled.div`
@@ -122,6 +124,11 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
     });
   };
 
+  const timePickerProps = {
+    showArrowButtons: false,
+    useAmPm: true,
+  };
+
   useEffect(() => {
     const loadTeamMembers = async () => {
       const headers = tokenConfig();
@@ -176,11 +183,6 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
       props.setShowDialog(false);
     }
   }, [creatingTask, props.creatingTask, props.errorOnCreatingTask]);
-
-  const timePickerProps = {
-    showArrowButtons: false,
-    useAmPm: true,
-  };
 
   return (
     <Container>

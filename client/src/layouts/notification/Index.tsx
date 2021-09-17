@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import { isMobileOnly } from 'react-device-detect';
 
+import moment from 'moment';
+import { User } from 'stores/user/Reducer';
 import {
   seenNotification,
   getNotifications,
 } from 'stores/notifications/Action';
-import { User } from 'stores/user/Reducer';
 
 import NotificationSidebar from 'components/notification/NotificationSidebar';
 import NotificationItem from 'components/notification/NotificationItem';

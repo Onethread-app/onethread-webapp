@@ -1,14 +1,17 @@
-import React from 'react';
-import { User } from 'stores/user/Reducer';
-import { useState } from 'react';
-import { Divider } from '@blueprintjs/core';
-import { BasicInfoForm } from './BasicInfoDetailsEditor';
-import moment from 'moment';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { RightSidebar } from 'components/RightSidebar';
+
+import moment from 'moment';
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
+
+import { User } from 'stores/user/Reducer';
 
 import editIcon from './../../../resources/images/basicInfoEdit.png';
-import { useTranslation } from 'react-i18next';
+
+import { BasicInfoForm } from './BasicInfoDetailsEditor';
+import { RightSidebar } from 'components/RightSidebar';
+
 interface IBasicInfoDetailsViewProps {
   user: User;
 }
@@ -16,22 +19,24 @@ interface IBasicInfoDetailsViewProps {
 const BasicInfoDetailsViewComponent = (
   props: IBasicInfoDetailsViewProps,
 ) => {
-  const [basicInfoForm, setBasicInfoForm] = useState(false);
   const { t } = useTranslation();
+  const [basicInfoForm, setBasicInfoForm] = useState(false);
 
   return (
     <>
       <div className="relative">
         <div className="relative">
           <div className="flex justify-between items-center">
-            <h1 className="f6">{t('app.user.Personal-profile.Email')}</h1>
-            {/* <h1 className="f6">Email</h1> */}
+            <h1 className="f6">
+              {t('app.user.Personal-profile.Email')}
+            </h1>
             <p className="black-60 fw4">{props.user.email}</p>
           </div>
           <Divider />
           <div className="flex justify-between items-center">
-            <h1 className="f6">{t('app.user.Personal-profile.Secondaty')}</h1>
-            {/* <h1 className="f6">Secondary Email</h1> */}
+            <h1 className="f6">
+              {t('app.user.Personal-profile.Secondaty')}
+            </h1>
             <p className="black-60 fw4">
               {props.user.secondaryEmail}
             </p>
@@ -43,20 +48,23 @@ const BasicInfoDetailsViewComponent = (
           </div>
           <Divider /> */}
           <div className="flex justify-between items-center">
-            <h1 className="f6">{t('app.user.Personal-profile.Address')}</h1>
-            {/* <h1 className="f6">Address</h1> */}
+            <h1 className="f6">
+              {t('app.user.Personal-profile.Address')}
+            </h1>
             <p className="black-60 fw4">{props.user.location}</p>
           </div>
           <Divider />
           <div className="flex justify-between items-center">
-            <h1 className="f6">{t('app.user.Personal-profile.Blood')}</h1>
-            {/* <h1 className="f6">Blood Group</h1> */}
+            <h1 className="f6">
+              {t('app.user.Personal-profile.Blood')}
+            </h1>
             <p className="black-60 fw4">{props.user.bloodGroup}</p>
           </div>
           <Divider />
           <div className="flex justify-between items-center">
-            <h1 className="f6">{t('app.user.Personal-profile.Date-of-birth')}</h1>
-            {/* <h1 className="f6">Birthdate</h1> */}
+            <h1 className="f6">
+              {t('app.user.Personal-profile.Date-of-birth')}
+            </h1>
             <p className="black-60 fw4">
               {props.user.birthDate
                 ? moment(props.user.birthDate).format('Do MMMM YYYY')
@@ -65,8 +73,9 @@ const BasicInfoDetailsViewComponent = (
           </div>
           <Divider />
           <div className="flex justify-between items-center">
-            <h1 className="f6">{t('app.user.Personal-profile.Gender')}</h1>
-            {/* <h1 className="f6">Gender</h1> */}
+            <h1 className="f6">
+              {t('app.user.Personal-profile.Gender')}
+            </h1>
             <p className="black-60 fw4">{props.user.gender}</p>
           </div>
           <Divider />

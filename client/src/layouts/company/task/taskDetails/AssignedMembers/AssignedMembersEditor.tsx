@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Field } from 'react-final-form';
-import { SubmitError } from 'components/final-form/SubmitError';
-import { checkError } from 'components/final-form/utils';
-import { SuggestField } from 'components/fields/SuggestField';
-import { Tag, Button, Icon } from '@blueprintjs/core';
-import { tokenConfig } from 'stores/UtilsActions';
-import { useLiveSearch } from 'components/useLiveSearch';
-import { isEmpty } from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
+import { tigrowApi } from 'config';
+
+import { Form, Field } from 'react-final-form';
 import { IconNames } from '@blueprintjs/icons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Tag } from '@blueprintjs/core/lib/esm/components/tag/tag';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 import { ITask } from 'stores/task/Reducer';
+import { IProject } from 'stores/project/Reducer';
 import {
   addTaskMember,
   addTaskMemberSuccess,
   addTaskMemberFailure,
 } from 'stores/taskMembers/Action';
-import { tigrowApi } from 'config';
-import { IProject } from 'stores/project/Reducer';
-import { useTranslation } from 'react-i18next';
+import { tokenConfig } from 'stores/UtilsActions';
+
+import { SubmitError } from 'components/final-form/SubmitError';
+import { checkError } from 'components/final-form/utils';
+import { SuggestField } from 'components/fields/SuggestField';
+import { useLiveSearch } from 'components/useLiveSearch';
 
 interface IMembersFormProps {
   setMembersPopover: (val: boolean) => void;
@@ -34,6 +39,13 @@ interface ICompanyTeamMembers {
 export const AssignedMembersEditorComponent = (
   props: IMembersFormProps,
 ) => {
+  const { t } = useTranslation();
+  const [teamMembers, setTeamMembers]: any = useState([]);
+  const [selectedTeamMember, setSelectedTeamMember] = useState(
+    [] as ICompanyTeamMembers[],
+  );
+  const [username, setUsername] = useState('');
+
   const onSubmit = async (values: any) => {
     const response = await props.addTaskMember(values.member);
     if (props.isEditingTask === false) {
@@ -42,12 +54,6 @@ export const AssignedMembersEditorComponent = (
     }
     return { [response.fieldName]: response.message };
   };
-
-  const [teamMembers, setTeamMembers]: any = useState([]);
-  const [selectedTeamMember, setSelectedTeamMember] = useState(
-    [] as ICompanyTeamMembers[],
-  );
-  const [username, setUsername] = useState('');
 
   const userRequestFactory = async (userName: string) => {
     const headers = tokenConfig();
@@ -66,8 +72,6 @@ export const AssignedMembersEditorComponent = (
   useEffect(() => {
     setTeamMembers(result);
   }, [result]);
-
-  const { t } = useTranslation();
 
   return (
     <Form
@@ -102,7 +106,6 @@ export const AssignedMembersEditorComponent = (
                   <div className="mb1">
                     <p className="fw5" style={{ fontSize: '.8rem' }}>
                       {t('app.project.Project-boards.Assign-Members')}
-                      {/* Assign Members */}
                     </p>
                   </div>
                   <SuggestField

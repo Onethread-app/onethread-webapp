@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Loading } from 'components/Loading';
-import { Card } from '@blueprintjs/core';
-import moment from 'moment';
-import addIcon from '../../../resources/images/addIcon.png';
-import { getAllAssociates } from 'stores/associate/Actions';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { RightSidebar } from 'components/RightSidebar';
-import { AssociateFormEditor } from './AssociateFormEditor';
-import { ICompany } from 'stores/company/Reducer';
-import { Associate } from 'stores/associate/Reducer';
+import { useTranslation } from 'react-i18next';
 import {
   CustomView,
   MobileOnlyView,
   isMobileOnly,
 } from 'react-device-detect';
-import { useTranslation } from 'react-i18next';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { Card } from '@blueprintjs/core/lib/esm/components/card/card';
+import moment from 'moment';
+
+import { ICompany } from 'stores/company/Reducer';
+import { Associate } from 'stores/associate/Reducer';
+import { getAllAssociates } from 'stores/associate/Actions';
+
+import { Loading } from 'components/Loading';
+import { RightSidebar } from 'components/RightSidebar';
+import { AssociateFormEditor } from './AssociateFormEditor';
+import addIcon from '../../../resources/images/addIcon.png';
 
 interface AssociatesPageComponentProps {
   company: ICompany;
@@ -26,6 +29,7 @@ interface AssociatesPageComponentProps {
 export const AssociateListComponent = (
   props: RouteComponentProps & AssociatesPageComponentProps,
 ) => {
+  const { t } = useTranslation();
   const [showAssociateDialog, setShowAssociateDialog] = useState(
     false,
   );
@@ -39,8 +43,6 @@ export const AssociateListComponent = (
     }
     loadAssociates(props.getAllAssociates);
   }, [props.company._id]);
-
-  const { t } = useTranslation();
 
   return (
     <div>
@@ -97,7 +99,6 @@ export const AssociateListComponent = (
                 ))
               ) : (
                 <p>{t('app.company.Partners.No-Partners')}</p>
-                // <p> You are not partnering with anyone yet.</p>
               )}
             </div>
           </CustomView>
@@ -155,7 +156,6 @@ export const AssociateListComponent = (
                 ))
               ) : (
                 <p>{t('app.company.Partners.No-associates')}</p>
-                // <p>No associates available</p>
               )}
             </div>
           </MobileOnlyView>

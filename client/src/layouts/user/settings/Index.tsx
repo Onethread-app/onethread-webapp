@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { Tabs, Tab, Dialog, Button } from '@blueprintjs/core';
-import { ChangePasswordComponent } from 'layouts/user/settings/ChangePasswordComponent';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { Tabs } from '@blueprintjs/core/lib/esm/components/tabs/tabs';
+import { Tab } from '@blueprintjs/core/lib/esm/components/tabs/tab';
+
+import { ChangePasswordComponent } from 'layouts/user/settings/ChangePasswordComponent';
 import { LanguageSettings } from '../LanguageSettingsComponent/LanguageSettingsComponent';
 
 export const ProfileSettingsComponent = () => {
-  const [showDialog, setShowDialog] = useState(false);
   const { t } = useTranslation();
+  const [showDialog, setShowDialog] = useState(false);
 
   return (
     <div className="bl b--black-05 bw1 pl3-ns pl1 vh-50">
@@ -21,7 +26,6 @@ export const ProfileSettingsComponent = () => {
         onClick={() => setShowDialog(true)}
       >
         {t('app.user.User-settings.Password')}
-        {/* Change Password */}
       </Button>
       {showDialog && (
         <Dialog
@@ -48,14 +52,12 @@ const ProfileSettingsPageComponent = () => {
         <Tab
           id="profile_settings"
           title={t('app.user.User-settings.Profile')}
-          // title="Profile Settings"
           panel={<ProfileSettingsComponent />}
           className="outline-0 w-100"
         />
         <Tab
           id="language_settings"
           title={t('app.user.User-settings.Language-Settings')}
-          // title="Language Settings"
           panel={<LanguageSettings />}
           className="outline-0 w-100"
         />
@@ -63,20 +65,6 @@ const ProfileSettingsPageComponent = () => {
     </div>
   );
 };
-
-// const ProfileSettingsPageComponent = () => (
-//   <div className="bg-white mh4 mv5 br3 pa4-ns h-75 shadow-4-ns w-90-ns">
-//     <Tabs id="TabsExample" vertical={true}>
-//       <Tab
-//         id="profile_settings"
-//         // title={t('app.user.User-settings.Profile')}
-//         title="Profile Settings"
-//         panel={<ProfileSettingsComponent />}
-//         className="outline-0 w-100"
-//       />
-//     </Tabs>
-//   </div>
-// );
 
 export const ProfileSettingsPage = connect(
   null,

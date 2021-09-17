@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Toaster } from '@blueprintjs/core';
-import successfulEmailImage from './../../resources/images/successfulEmail.png';
 import { isEqual } from 'lodash';
+
+import { Toaster } from '@blueprintjs/core/lib/esm/components/toast/toaster';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 import { resendMailForSignup } from 'stores/auth/Actions';
+
+import successfulEmailImage from './../../resources/images/successfulEmail.png';
 
 const SignupConfirmationPageComponent = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
-
-  React.useEffect(() => {
-    const em = localStorage.getItem('email');
-    if (em) setEmail(em.replace(/['"]+/g, ''));
-  }, []);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -27,6 +26,11 @@ const SignupConfirmationPageComponent = () => {
     }
     setLoading(false);
   };
+
+  React.useEffect(() => {
+    const em = localStorage.getItem('email');
+    if (em) setEmail(em.replace(/['"]+/g, ''));
+  }, []);
 
   return (
     <div className="fl w-100 pa2">

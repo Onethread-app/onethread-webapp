@@ -1,12 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { isMobileOnly } from 'react-device-detect';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { isMobileOnly } from 'react-device-detect';
 
-import Pagination from '@material-ui/lab/Pagination';
-import useElementSize from 'helpers/hooks/useElementSize';
-
-import ListTaskItem from './ListTaskItem';
+import Pagination from '@material-ui/lab/Pagination/Pagination';
 
 import { ITask, TaskBoard } from 'stores/task/Reducer';
 
@@ -15,6 +12,8 @@ import {
   sortTasksByPriority,
   sortTasksByStatus,
 } from 'helpers/utils';
+import useElementSize from 'helpers/hooks/useElementSize';
+import ListTaskItem from './ListTaskItem';
 
 const TasksContainerDiv = styled.div`
   flex-grow: 1;
@@ -49,6 +48,10 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
   const [tasksToShow, setTasksToShow] = useState<any>([]);
   const containerRef = useRef(null);
   const containerSize = useElementSize(containerRef);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   useEffect(() => {
     if (containerSize.height > 0) {
@@ -127,10 +130,6 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     setTasksToShow(tasks.slice(indexOfFirstItem, indexOfLastItem));
   }, [currentPage, itemsPerPage, tasks]);
-
-  const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-  };
 
   return (
     <TasksContainerDiv ref={containerRef}>

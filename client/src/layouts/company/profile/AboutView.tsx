@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { ICompany } from 'stores/company/Reducer';
 import { useState } from 'react';
+
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
+import { ICompany } from 'stores/company/Reducer';
 import { companyPermit } from 'stores/UtilsActions';
-import { Icon, Dialog } from '@blueprintjs/core';
+
 import { CompanyAboutEditor } from './AboutEditor';
 
 export const CompanyAboutView = (props: { company: ICompany }) => {

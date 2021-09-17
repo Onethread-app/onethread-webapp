@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { isEqual } from 'lodash';
-import { AxiosRequestConfig } from 'axios';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Button } from '@blueprintjs/core';
+import { isEqual } from 'lodash';
 import { tigrowApi } from 'config';
+import { AxiosRequestConfig } from 'axios';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 const EmailVerificationComponent = (props: RouteComponentProps) => {
   const [accountVerified, setAccountVerified] = useState({
@@ -30,7 +31,8 @@ const EmailVerificationComponent = (props: RouteComponentProps) => {
           isAccountVerified: response.data.isAccountVerified,
           message: response.data.message,
         };
-      } catch (error) {
+      } catch (error:any) {
+        
         if (isEqual(error.message, 'Network Error')) {
           setAccountVerified({
             ...accountVerified,

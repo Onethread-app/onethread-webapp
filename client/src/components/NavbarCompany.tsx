@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Drawer, Popover, Position } from '@blueprintjs/core';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { MobileView } from 'react-device-detect';
-import user from '../resources/images/profilePhoto.svg';
-import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
-import { MobileListView } from '../layouts/company/MobileListView';
+
+import ChatIcon from '@material-ui/icons/Chat';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { companySubscriber } from 'helpers/notification/subscribers';
+import Badge from '@material-ui/core/Badge/Badge';
+import { Navbar } from '@blueprintjs/core/lib/esm/components/navbar/navbar';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Drawer } from '@blueprintjs/core/lib/esm/components/drawer/drawer';
+
+import { User } from 'stores/user/Reducer';
+import { IChat, IRoom } from 'stores/room/Reducer';
 import {
   seenNotification,
   getNotifications,
 } from '../stores/notifications/Action';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Badge } from '@material-ui/core';
-import NotificationPopover from 'components/notification/NotificationPopover';
-import { IChat, IRoom } from 'stores/room/Reducer';
-import ChatIcon from '@material-ui/icons/Chat';
 import { fetchRooms, fetchChats } from '../stores/room/Actions';
+
+import user from '../resources/images/profilePhoto.svg';
+
+import { MobileListView } from '../layouts/company/MobileListView';
+import { companySubscriber } from 'helpers/notification/subscribers';
+import NotificationPopover from 'components/notification/NotificationPopover';
 import ChatListItem from './chat/ChatListItem';
 import { compareChats } from './Navbar';
 
@@ -44,6 +51,11 @@ const NavbarCompanyComponent = (
   const query = new URLSearchParams(props.location.search);
   const view = query.get('view');
 
+  const handleSeenNotifications = async () => {
+    // tslint:disable-next-line: no-unused-expression
+    props.seen !== 0 && (await props.seenNotification());
+  };
+
   useEffect(() => {
     if (props.match.path !== '/:username') {
       props.getNotifications();
@@ -53,11 +65,6 @@ const NavbarCompanyComponent = (
     props.fetchChats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleSeenNotifications = async () => {
-    // tslint:disable-next-line: no-unused-expression
-    props.seen !== 0 && (await props.seenNotification());
-  };
 
   return (
     <>

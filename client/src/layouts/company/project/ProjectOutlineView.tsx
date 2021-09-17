@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Icon } from '@blueprintjs/core';
-import { ProjectOutlineEditor } from './ProjectOutlineEditor';
 import { connect } from 'react-redux';
-import { projectRules } from './settings/projectrules';
-import { Text } from '@blueprintjs/core';
+
 import Linkify from 'react-linkify';
+import { Text } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
+import { projectRules } from './settings/projectrules';
 import { componentDecorator } from 'helpers/LinkifyHelper';
+import { ProjectOutlineEditor } from './ProjectOutlineEditor';
 
 interface IProjectDescriptionViewProps {
   headline: string;
@@ -21,6 +23,7 @@ export const _ProjectOutlineView = (
     false,
   );
   const permissions = projectRules(props.role, props.optionalRole);
+
   return (
     <>
       <div

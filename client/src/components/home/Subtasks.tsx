@@ -1,13 +1,13 @@
 import React from 'react';
-
-import { CircularProgress } from '@material-ui/core';
-
-import SubtaskItem from 'components/subtask/SubtaskItem';
-
+import { useTranslation } from 'react-i18next';
 import { tigrowApi } from 'config';
+
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+
 import { tokenConfig } from 'stores/UtilsActions';
 import { sortTasksByDueDate } from 'helpers/utils';
-import { useTranslation } from 'react-i18next';
+
+import SubtaskItem from 'components/subtask/SubtaskItem';
 
 const Subtasks = () => {
   const { t } = useTranslation();
@@ -32,7 +32,6 @@ const Subtasks = () => {
   return (
     <div className="subtasks">
       <h3>{t('app.project.Tasks.Subtasks')}</h3>
-      {/* <h3>Subtasks</h3> */}
       {loading ? (
         <div
           style={{ minHeight: '200px', width: '100%' }}

@@ -1,12 +1,13 @@
 import * as React from 'react';
+import { isString } from 'lodash';
+
 import {
-  InputGroup,
   Icon,
   IconName,
-  Intent,
-  FormGroup,
-} from '@blueprintjs/core';
-import { isString } from 'lodash';
+} from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Intent } from '@blueprintjs/core/lib/esm/common/intent';
+import { InputGroup } from '@blueprintjs/core/lib/esm/components/forms/inputGroup';
+import { FormGroup } from '@blueprintjs/core/lib/esm/components/forms/formGroup';
 
 interface InputGroupFieldProps {
   id: string;

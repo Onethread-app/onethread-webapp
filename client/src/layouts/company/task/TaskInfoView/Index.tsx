@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-// import { useHistory } from 'react-router-dom';
-import { Popover } from '@blueprintjs/core';
-import { DueDateEditor } from '../taskDetails/DueDate/DueDateEditor';
 import { useTranslation } from 'react-i18next';
+// import { useHistory } from 'react-router-dom';
+
 // import CloseIcon from '@material-ui/icons/Close';
-import { AssignedMembersEditor } from '../taskDetails/AssignedMembers/AssignedMembersEditor';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+
 import addMembers from 'resources/images/addMembers.png';
-import { AssignedMembersView } from '../taskDetails/AssignedMembers/AssignedMembersView';
-import { PriorityEditorList } from '../taskDetails/Priority/PriorityEditorList';
+
+import { DueDateEditor } from '../taskDetails/DueDate/DueDateEditor';
 import { TaskStatusEdior } from '../TaskStatusEditor/TaskStatusEdior';
+import { PriorityEditorList } from '../taskDetails/Priority/PriorityEditorList';
+import { AssignedMembersEditor } from '../taskDetails/AssignedMembers/AssignedMembersEditor';
+import { AssignedMembersView } from '../taskDetails/AssignedMembers/AssignedMembersView';
 
 const TaskInfoViewComponent = () => {
   // const history = useHistory();

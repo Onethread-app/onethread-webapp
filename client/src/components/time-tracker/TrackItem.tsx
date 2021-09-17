@@ -1,17 +1,17 @@
 import React from 'react';
 import moment from 'moment';
 
+import { ITrack } from 'stores/time-tracker/Reducer';
+
 import { msToTime } from 'helpers/utils';
 import useWindowSize from 'helpers/hooks/useWindowSize';
-
-import { ITrack } from 'stores/time-tracker/Reducer';
+import TaskStatusTag from 'components/task/TaskStatusTag';
+import MemberIcon from 'components/member/MemberIcon';
 
 import {
   TrackItemContainer,
   TrackPart,
 } from './TrackedListDialog.styles';
-import TaskStatusTag from 'components/task/TaskStatusTag';
-import MemberIcon from 'components/member/MemberIcon';
 
 interface ITrackItem {
   item: ITrack;

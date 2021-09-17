@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
 import CreatableSelect from 'react-select/creatable';
+import { tigrowApi } from 'config';
 
 import { FieldInputProps } from 'react-final-form';
+
+import { tokenConfig } from 'stores/UtilsActions';
+
 import { errorMessgeHandler } from 'components/final-form/utils';
 
 // import { IDepartment } from 'layouts/company/project/CreateProjectForm';
-
-import { tokenConfig } from 'stores/UtilsActions';
-import { tigrowApi } from 'config';
 
 interface ICreatableSingleProps {
   // setSelectedDepartment: ([]) => void;

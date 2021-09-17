@@ -1,5 +1,6 @@
-import moment from 'moment';
 import React from 'react';
+
+import moment from 'moment';
 
 interface IDueDate {
   dueDate: Date;

@@ -1,35 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import {
-  Card,
-  Popover,
-  Button,
-  Menu,
-  MenuItem,
-  Icon,
-  Elevation,
-} from '@blueprintjs/core';
-
-import {
-  DateRangeInput,
-  DateRange,
-  TimePrecision,
-} from '@blueprintjs/datetime';
-
-import { Snackbar, CircularProgress } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
-import Select from 'react-select';
-import moment from 'moment';
-import addIcon from '../../../resources/images/addIcon.png';
-import { RightSidebar } from 'components/RightSidebar';
-import { FormProject } from './CreateProjectForm';
-import { UpdateProject } from './ChangeProjectName';
 import { find, orderBy } from 'lodash';
+import useWindowSize from 'helpers/hooks/useWindowSize';
+
+import moment from 'moment';
+import Select from 'react-select';
+import { DateRange } from '@blueprintjs/datetime/lib/esm/common/dateUtils';
+import { DateRangeInput } from '@blueprintjs/datetime/lib/esm/dateRangeInput';
+import { TimePrecision } from '@blueprintjs/datetime/lib/esm/timePicker';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+import { Card } from '@blueprintjs/core/lib/esm/components/card/card';
+import { Elevation } from '@blueprintjs/core/lib/esm/common/elevation';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Menu } from '@blueprintjs/core/lib/esm/components/menu/menu';
+import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
+import Snackbar from '@material-ui/core/Snackbar/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 import {
   Color,
   unreadMessageNotification,
 } from 'stores/UtilsActions';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { getAllDepartments } from '../../../stores/company/Actions';
 import {
   getAllProjects,
@@ -39,20 +34,22 @@ import {
   getRoleForProject,
 } from '../../../stores/project/Actions';
 import { getAllAssociates } from 'stores/associate/Actions';
+
+import { RightSidebar } from 'components/RightSidebar';
+import { FormProject } from './CreateProjectForm';
+import { UpdateProject } from './ChangeProjectName';
 import { projectRules } from './settings/projectrules';
+import StatusTag from 'components/project/StatusTag';
+import addIcon from '../../../resources/images/addIcon.png';
 
 import './MyProjects.scss';
-import { useTranslation } from 'react-i18next';
-import StatusTag from 'components/project/StatusTag';
-import useWindowSize from 'helpers/hooks/useWindowSize';
 
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
+  const { t } = useTranslation();
   const [showProjectDialog, setShowProjectDialog] = useState(false);
   const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(
     false,
   );
-
-  const { t } = useTranslation();
   const projectsPageSize = useWindowSize();
   const [open, setOpen] = useState(false);
   const [singleProjectLoading, setSingleProjectLoading] = useState(
@@ -69,7 +66,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [currentProjects, setCurrentProjects] = useState<any>([]); // projects in current page
   const [selectedOption, setSelectedOption] = useState({
     label: `${t('app.company.Projects.Everything')}`,
-    // label: 'All',
     value: 'all',
   });
 
@@ -101,16 +97,102 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     },
     // { value: 'extended', label: 'Extended' },
   ];
-  // const statusOptions = [
-  //   { value: 'all', label: 'All' },
-  //   { value: 'ongoing', label: 'Ongoing' },
-  //   { value: 'completed', label: 'Completed' },
-  //   { value: 'not-started', label: 'Not Started' },
-  //   // { value: 'extended', label: 'Extended' },
-  // ];
 
   const indexOfLastProject = currentProjectPage * itemsPerPage;
   const indexOfFirstProject = indexOfLastProject - itemsPerPage;
+
+  const projectArchive = async (pid: string) => {
+    await props.archiveProject(pid);
+    props.getAllProjects();
+  };
+
+  const singleProjectOnClick = (pid: string) => {
+    props.getSingleProject(pid);
+    props.getRoleForProject(pid);
+    props.setCurrentProjectId(pid);
+    setSinglePid(pid);
+    setSingleProjectLoading(true);
+  };
+
+  const getProjectRole = async (pid: string) => {
+    await props.getRoleForProject(pid);
+    setModalOpen(true);
+  };
+  const checkRoleForChangeName = () => {
+    permissions.grantAll
+      ? setShowUpdateNameDialog(true)
+      : permissions.projectModerator.includes('updateProjectPreface')
+      ? setShowUpdateNameDialog(true)
+      : setOpen(true);
+  };
+
+  const checkRoleForArchiveProject = (projectId: string) => {
+    permissions.grantAll
+      ? projectArchive(projectId)
+      : permissions.projectModerator.includes('updateProjectPreface')
+      ? projectArchive(projectId)
+      : setOpen(true);
+  };
+
+  const nextProjectsPage = (e: any) => {
+    e.preventDefault();
+    if (
+      currentProjectPage <
+      Math.ceil(props.projects.length / itemsPerPage)
+    ) {
+      setCurrentProjectPage(currentProjectPage + 1);
+    }
+  };
+
+  const prevProjectsPage = (e: any) => {
+    e.preventDefault();
+    if (currentProjectPage > 1) {
+      setCurrentProjectPage(currentProjectPage - 1);
+    }
+  };
+
+  const handleRangeChange = (range: DateRange) => {
+    setRange(range);
+  };
+
+  const handleSearch = (e: any) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSelect = (selected: any) => {
+    setSelectedOption(selected);
+  };
+
+  const handleClear = () => {
+    setRange([undefined, undefined]);
+    setSelectedOption({ value: 'all', label: 'All' });
+    setAllProjects(orderBy(props.projects, ['createdAt'], ['desc']));
+    setShowClearFilter(false);
+  };
+
+  const noProjectsFound = (
+    <div className={`tc  ${searchValue ? '' : 'mt4 mb5'} `}>
+      <h1 style={{ color: '#34495E' }}>No Projects Found</h1>
+      {!searchValue && props.companyRole !== 'employee' && (
+        <p
+          onClick={() => setShowProjectDialog(true)}
+          className="f5-l pointer dim f4-ns f6 tc"
+          style={{ color: '#85929E', display: 'inline-block' }}
+        >
+          Click here to create a project or click on the{' '}
+          <img
+            src={addIcon}
+            style={{
+              display: 'inline-block',
+              height: '20px',
+            }}
+            alt=""
+          />{' '}
+          icon below
+        </p>
+      )}
+    </div>
+  );
 
   useEffect(() => {
     async function loadProjects() {
@@ -235,99 +317,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     props.errorOnSingleProjectLoading,
   ]);
 
-  const projectArchive = async (pid: string) => {
-    await props.archiveProject(pid);
-    props.getAllProjects();
-  };
-
-  const singleProjectOnClick = (pid: string) => {
-    props.getSingleProject(pid);
-    props.getRoleForProject(pid);
-    props.setCurrentProjectId(pid);
-    setSinglePid(pid);
-    setSingleProjectLoading(true);
-  };
-
-  const getProjectRole = async (pid: string) => {
-    await props.getRoleForProject(pid);
-    setModalOpen(true);
-  };
-  const checkRoleForChangeName = () => {
-    permissions.grantAll
-      ? setShowUpdateNameDialog(true)
-      : permissions.projectModerator.includes('updateProjectPreface')
-      ? setShowUpdateNameDialog(true)
-      : setOpen(true);
-  };
-
-  const checkRoleForArchiveProject = (projectId: string) => {
-    permissions.grantAll
-      ? projectArchive(projectId)
-      : permissions.projectModerator.includes('updateProjectPreface')
-      ? projectArchive(projectId)
-      : setOpen(true);
-  };
-
-  const nextProjectsPage = (e: any) => {
-    e.preventDefault();
-    if (
-      currentProjectPage <
-      Math.ceil(props.projects.length / itemsPerPage)
-    ) {
-      setCurrentProjectPage(currentProjectPage + 1);
-    }
-  };
-
-  const prevProjectsPage = (e: any) => {
-    e.preventDefault();
-    if (currentProjectPage > 1) {
-      setCurrentProjectPage(currentProjectPage - 1);
-    }
-  };
-
-  const handleRangeChange = (range: DateRange) => {
-    setRange(range);
-  };
-
-  const handleSearch = (e: any) => {
-    setSearchValue(e.target.value);
-  };
-
-  const handleSelect = (selected: any) => {
-    setSelectedOption(selected);
-  };
-
-  const handleClear = () => {
-    setRange([undefined, undefined]);
-    setSelectedOption({ value: 'all', label: 'All' });
-    setAllProjects(orderBy(props.projects, ['createdAt'], ['desc']));
-    setShowClearFilter(false);
-  };
-
-  const noProjectsFound = (
-    <div className={`tc  ${searchValue ? '' : 'mt4 mb5'} `}>
-      <h1 style={{ color: '#34495E' }}>No Projects Found</h1>
-      {!searchValue && props.companyRole !== 'employee' && (
-        <p
-          onClick={() => setShowProjectDialog(true)}
-          className="f5-l pointer dim f4-ns f6 tc"
-          style={{ color: '#85929E', display: 'inline-block' }}
-        >
-          Click here to create a project or click on the{' '}
-          <img
-            src={addIcon}
-            style={{
-              display: 'inline-block',
-              height: '20px',
-            }}
-            alt=""
-          />{' '}
-          icon below
-        </p>
-      )}
-    </div>
-  );
-
   return (
     <>
       <div
@@ -381,7 +370,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                 type="text"
                 className="bp3-input"
                 placeholder={t('app.company.Projects.Find')}
-                // placeholder="Search"
                 onChange={(e) => handleSearch(e)}
               />
             </div>
@@ -457,7 +445,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                   text={t(
                                     'app.project.Project-preface.Update-Project',
                                   )}
-                                  // text="Update Project"
                                   onClick={(e: any) =>
                                     checkRoleForChangeName()
                                   }
@@ -467,7 +454,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                   text={t(
                                     'app.project.Project-preface.Archive-Project',
                                   )}
-                                  // text="Archive Project"
                                   onClick={(e: any) =>
                                     checkRoleForArchiveProject(
                                       project._id,
@@ -523,7 +509,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             {t(
                               'app.project.Project-preface.Remaining-Tasks',
                             )}
-                            : {/* Remaining Tasks:{' '} */}
+                            :
                             {`${project.remainingTasks}/${project.totalTasks}`}
                           </span>
                         )}
@@ -533,7 +519,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           style={{ marginTop: '5px' }}
                         >
                           {t('app.project.Project-preface.Deadline')}:{' '}
-                          {/* Deadline:{' '} */}
                           {project.deadline
                             ? moment(project.deadline).format(
                                 'DD/MM/YYYY',

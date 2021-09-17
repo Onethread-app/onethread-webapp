@@ -1,25 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { editUserInfoAction } from 'stores/user/Actions';
-import { Button, RadioGroup, Radio } from '@blueprintjs/core';
-import {
-  InputGroupField,
-  InputGroupFieldWithError,
-} from 'components/fields/InputGroupField';
-import { User } from 'stores/user/Reducer';
-import { saveUserBasicInfoForm } from 'stores/UserBasicInfoDetailsForm/Actions';
-import { DateInput } from '@blueprintjs/datetime';
-import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { isEqual, isEmpty } from 'lodash';
+
 import { Form, Field } from 'react-final-form';
+import { RadioGroup } from '@blueprintjs/core/lib/esm/components/forms/radioGroup';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Radio } from '@blueprintjs/core/lib/esm/components/forms/controls';
+import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
+
+import { User } from 'stores/user/Reducer';
+import { editUserInfoAction } from 'stores/user/Actions';
+import { saveUserBasicInfoForm } from 'stores/UserBasicInfoDetailsForm/Actions';
+
 import {
   checkError,
   isEmail,
   maxValue,
 } from 'components/final-form/utils';
+import {
+  InputGroupField,
+  InputGroupFieldWithError,
+} from 'components/fields/InputGroupField';
 import { DropdownField } from 'components/fields/DropdownField';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { useTranslation } from 'react-i18next';
+
+import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 
 interface IBasicInfoProps {
   setShowDialog: (val: boolean) => void;

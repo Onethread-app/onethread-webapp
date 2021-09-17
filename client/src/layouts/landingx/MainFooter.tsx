@@ -1,14 +1,14 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
+import FBIcon from 'resources/images/icons/fb.png';
+import LinkedInIcon from 'resources/images/icons/linkedin.png';
+import YTIcon from 'resources/images/icons/youtube.png';
 // import LanguageSelector from 'components/LanguageSelector';
 
 // import PcIcon from 'resources/images/icons/pc.png';
 // import AndroidIcon from 'resources/images/icons/android.png';
 // import MacIcon from 'resources/images/icons/mac.png';
-import FBIcon from 'resources/images/icons/fb.png';
-import LinkedInIcon from 'resources/images/icons/linkedin.png';
-import YTIcon from 'resources/images/icons/youtube.png';
-import { useTranslation } from 'react-i18next';
 
 const MainFooter = () => {
   const { t } = useTranslation();
@@ -87,12 +87,8 @@ const MainFooter = () => {
         </div>
       </div>
       <div className="footer-copyright flex items-center w-100">
-        {/* <h1 className="tc w-100">
-          Copyright 2021 Onethread. All rights reserved. Proudly made
-          in Bangladesh.
-        </h1> */}
         <h1 className="tc w-100">
-         {t('landing.homepage.footer.copyright')}
+          {t('landing.homepage.footer.copyright')}
         </h1>
       </div>
     </>

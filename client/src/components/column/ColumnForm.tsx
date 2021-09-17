@@ -1,11 +1,13 @@
 import React from 'react';
-import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
-import { Button } from '@blueprintjs/core';
-import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
-import { createColumn, updateColumn } from 'stores/task/Actions';
-import { TaskBoard, IColumn } from 'stores/task/Reducer';
+import { isEmpty } from 'lodash';
+
 import { Form, Field } from 'react-final-form';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { TaskBoard, IColumn } from 'stores/task/Reducer';
+import { createColumn, updateColumn } from 'stores/task/Actions';
+
 import {
   required,
   checkError,
@@ -13,6 +15,7 @@ import {
   maxValue,
   checkTaskName,
 } from 'components/final-form/utils';
+import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 
 interface ColumnFormProps {
   setShowColumnFormDialog: (val: boolean) => void;

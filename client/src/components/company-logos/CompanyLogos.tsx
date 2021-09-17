@@ -1,4 +1,5 @@
 import React from 'react';
+
 import marketLogo from './../../resources/LandingImages/marketLogo.png';
 import DYSINLogo from './../../resources/LandingImages/DYSINLogo1.png';
 import plummyLogo from './../../resources/LandingImages/plummy.png';

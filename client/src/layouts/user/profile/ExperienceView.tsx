@@ -3,24 +3,29 @@ import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css';
 import { connect } from 'react-redux';
+
 import moment from 'moment';
-import { JobForm } from './JobDetailsEditor';
-import { EducationForm } from './EducationDetailsEditor';
+
+import { User } from 'stores/user/Reducer';
 import {
   editJobExperienceAction,
   editEducationExperienceAction,
 } from 'stores/user/Actions';
-import { User } from 'stores/user/Reducer';
-import { ExperienceEditor } from './ExperienceEditor';
 
 import JobIcon from './../../../resources/images/job.png';
 import EducationIcon from './../../../resources/images/education.png';
 import DefaultSkillImage from './../../../resources/images/skills.png';
-import { RightSidebar } from 'components/RightSidebar';
 import editIcon from './../../../resources/images/editIcon.png';
 import addIcon from './../../../resources/images/addIcon.png';
+
+import { JobForm } from './JobDetailsEditor';
+import { EducationForm } from './EducationDetailsEditor';
+import { ExperienceEditor } from './ExperienceEditor';
+import { RightSidebar } from 'components/RightSidebar';
+
+import 'react-vertical-timeline-component/style.min.css';
+
 interface IExperienceViewProps {
   user: User;
   editJobExperienceAction: (jobInfo: {}, id: string) => {};

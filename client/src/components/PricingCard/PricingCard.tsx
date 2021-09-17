@@ -1,16 +1,17 @@
 import React from 'react';
-import { isMobileOnly } from 'react-device-detect';
-
-import { Dialog } from '@blueprintjs/core';
-import { Snackbar } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
-
-// import { OTButton } from 'components/button/Button';
-import ContactUs from '../contact-us/ContactUs';
-import tick from 'resources/images/tick.svg';
-import './PricingCard.styles.scss';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { isMobileOnly } from 'react-device-detect';
+
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar/Snackbar';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
+import tick from 'resources/images/tick.svg';
+
+import ContactUs from '../contact-us/ContactUs';
+
+import './PricingCard.styles.scss';
 
 interface IPricingCard {
   data: {
@@ -22,6 +23,10 @@ interface IPricingCard {
 }
 
 const PricingCard = (props: IPricingCard) => {
+  const { data } = props;
+  const { t } = useTranslation();
+  const history = useHistory();
+
   const [showContactUs, setShowContactUs] = React.useState(false);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
   const [response, setResponse] = React.useState({
@@ -29,21 +34,16 @@ const PricingCard = (props: IPricingCard) => {
     message: '',
   });
 
+  const signUP = () => {
+    history.push('/signup');
+  };
+
   React.useEffect(() => {
     if (response.status === 201) {
       setShowSnackbar(true);
       setShowContactUs(false);
     }
   }, [response]);
-
-  const { data } = props;
-
-  const { t } = useTranslation();
-
-  const history = useHistory();
-  const signUP = () => {
-    history.push('/signup');
-  };
 
   return (
     <>
@@ -69,7 +69,6 @@ const PricingCard = (props: IPricingCard) => {
                 style={{ height: '49px' }}
                 onClick={() => setShowContactUs(true)}
               >
-                {/* <h3> Contact Us for Quotation</h3> */}
                 <h3>{t('app.company.Pricing.Quotation')}</h3>
               </p>
             ) : (
@@ -86,12 +85,7 @@ const PricingCard = (props: IPricingCard) => {
         <div className="pricing-card-options flex flex-column items-start w-100 ml4">
           {data.options.map((op, i) => (
             <div className="flex items-center mv1" key={i}>
-              <img
-                src={tick}
-                alt=""
-                className="mr1"
-                // style={{ width: '14px', height: '14px' }}
-              />
+              <img src={tick} alt="" className="mr1" />
               <p className="ma0">
                 {t(
                   `app.company.Pricing.${data.type}.option-${i + 1}`,
@@ -100,10 +94,6 @@ const PricingCard = (props: IPricingCard) => {
             </div>
           ))}
         </div>
-
-        {/* <OTButton to="/signup">
-          {t('app.company.Pricing.Start-Free')}
-        </OTButton> */}
 
         <button
           onClick={signUP}

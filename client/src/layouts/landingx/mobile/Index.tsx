@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-
-import MobileNavbar from './Navbar';
-import MainFooter from './MainFooter';
-
-import './Index.styles.scss';
-
-import { OTButton } from 'components/button/Button';
+import { useTranslation } from 'react-i18next';
+import { APP_ID, PAGE_ID, WHATSAPP_URL } from 'config';
 
 import MainLanding from 'resources/images/main-landing.png';
 import CombinedLogo from 'resources/images/combined-logo.png';
@@ -27,15 +22,15 @@ import ProjectPng from 'resources/images/project.png';
 import MeetingPng from 'resources/images/meeting.png';
 import TasksPng from 'resources/images/tasks.png';
 import IntegrationsPng from 'resources/images/integrations.png';
-import { useTranslation } from 'react-i18next';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
 import whatsapp from '../../../resources/images/icons/whatsapp.png';
 import chatIcon from '../../../resources/images/icons/chat.png';
-import { APP_ID, PAGE_ID, WHATSAPP_URL } from 'config';
-// // import ProjectPng from 'resources/images/project.png';
-// import MeetingPng from 'resources/images/meeting.png';
-// import TasksPng from 'resources/images/tasks.png';
-// import IntegrationsPng from 'resources/images/integrations.png';
+
+import { OTButton } from 'components/button/Button';
+import MobileNavbar from './Navbar';
+import MainFooter from './MainFooter';
+
+import './Index.styles.scss';
 
 const MobileIndex = () => {
   const { t } = useTranslation();
@@ -46,40 +41,46 @@ const MobileIndex = () => {
       <MobileNavbar />
       <section className="main-header w-100 relative flex flex-column items-center justify-center mb5">
         <h2 className="heading tc">
-           {t('landing.homepage.main-header.heading.first-part')}<br/>
-           <span style={{ color: '#3484F0' }}>{t('landing.homepage.main-header.heading.second-part')} </span>
-          {/* Collaborate with people on projects <br />
+          {t('landing.homepage.main-header.heading.first-part')}
+          <br />
           <span style={{ color: '#3484F0' }}>
-            with the click of a button
-          </span> */}
+            {t('landing.homepage.main-header.heading.second-part')}{' '}
+          </span>
         </h2>
         <img src={MainLanding} alt="" />
         <h3 className="sub-heading tc mt3">
-          <span className="b"> {t('landing.homepage.main-header.sub-heading.first-part')}</span> {t('landing.homepage.main-header.sub-heading.second-part')}
-          {/* <span className="b">Onethread</span> is a project management
-          tool built from the ground up for multi-team collaboration
-          among startups, agencies and NGOs. */}
+          <span className="b">
+            {' '}
+            {t('landing.homepage.main-header.sub-heading.first-part')}
+          </span>{' '}
+          {t('landing.homepage.main-header.sub-heading.second-part')}
         </h3>
         <OTButton to="/signup">
           {t('landing.homepage.main-header.Sign-Up button')}
-          {/* Create Unlimited Projects For Free */}
         </OTButton>
       </section>
       <section className="second-section w-100 flex relative mb5">
         <div className="unified-tool flex flex-column items-center justify-around w-100 pb3">
           <div className="unified-tool-text tc">
-           {t('landing.homepage.second-section.unified-text.first-part')}{' '}
-            <span className="b">{t('landing.homepage.second-section.unified-text.second-part')}</span>
-            {/* We spend 23% more time in external projects for{' '}
-            <span className="b">lack of a unified tool</span> */}
+            {t(
+              'landing.homepage.second-section.unified-text.first-part',
+            )}{' '}
+            <span className="b">
+              {t(
+                'landing.homepage.second-section.unified-text.second-part',
+              )}
+            </span>
           </div>
           <div className="unified-tool-content flex flex-column justify-start br2">
             <h3 className="unified-tool-content-header tj">
-                <span className="b">{t('landing.homepage.second-section.unified-heading.first-part')} </span> 
-              {t('landing.homepage.second-section.unified-heading.second-part')}
-              {/* <span className="b">Onethread</span> lets you
-              efficiently organize all your projects and communicate
-              with everyone involved in a single platform */}
+              <span className="b">
+                {t(
+                  'landing.homepage.second-section.unified-heading.first-part',
+                )}{' '}
+              </span>
+              {t(
+                'landing.homepage.second-section.unified-heading.second-part',
+              )}
             </h3>
             <div className="unified-tool-content-body">
               <div className="flex items-center">
@@ -87,16 +88,15 @@ const MobileIndex = () => {
                 <p>
                   <span className="b mr1">Messages: </span>
                   {t('landing.homepage.second-section.messages')}
-                  {/* Keep your work and personal inboxes separate */}
                 </p>
               </div>
               <div className="flex items-center">
                 <img src={MessagesIcon} alt="" />
                 <p>
                   <span className="b mr1">Project dashboard: </span>{' '}
-                    {t('landing.homepage.second-section.project-dashboard')}
-                  {/* Task assignment, one-click approvals and project
-                  folders */}
+                  {t(
+                    'landing.homepage.second-section.project-dashboard',
+                  )}
                 </p>
               </div>
               <div className="flex items-center">
@@ -104,14 +104,11 @@ const MobileIndex = () => {
                 <p>
                   <span className="b mr1">Reports: </span>
                   {t('landing.homepage.second-section.reports')}
-                  {/* No more asking “what’s done”. You already know it! */}
                 </p>
               </div>
             </div>
             <h3 className="unified-tool-content-footer tc">
               {t('landing.homepage.second-section.unified-footer')}
-              {/* Read: Get rid of infinite email chains and WhatsApp
-              threads */}
             </h3>
           </div>
         </div>
@@ -125,11 +122,6 @@ const MobileIndex = () => {
           <p>
             {t('landing.homepage.third-section.main-upper-content')}
           </p>
-          {/* <h3>No more deadly email loops.</h3>
-          <p>
-            Forward that very long email chain to your project’s
-            private email address. We got the rest covered.
-          </p> */}
         </div>
         <div className="gif flex items-center justify-center">
           <img src={ReportGif} alt="reportgif" />
@@ -139,11 +131,6 @@ const MobileIndex = () => {
           <p>
             {t('landing.homepage.third-section.main-lower-content')}
           </p>
-          {/* <h3>Real-time task overview</h3>
-          <p>
-            Our tasks panel is built to provide real-time charts and
-            tables to make sure you are aligned with everything
-          </p> */}
         </div>
       </section>
       <section className="teams flex flex-column mb5 tc">
@@ -154,13 +141,7 @@ const MobileIndex = () => {
             {t('landing.homepage.teams.listoftheusers.second-part')}
           </p>
         </h2>
-        {/* <h2>
-          Teams large & small are using Onethread to
-          <br />{' '}
-          <p style={{ color: '#3484F0' }}>
-            3x their output in half the time
-          </p>
-        </h2> */}
+
         <div className="companies flex flex-column items-center justify-center">
           <div className="flex items-center justify-around w-100">
             <img src={Goodybro} alt="goodybro" />
@@ -178,17 +159,21 @@ const MobileIndex = () => {
         </div>
         <OTButton to="/signup">
           {t('landing.homepage.main-header.Sign-Up button')}
-          {/* Create Unlimited Projects For Free */}
         </OTButton>
       </section>
       <section className="product-details flex flex-column items-center justify-center mb5 w-100">
         <div className="header flex flex-column items-center justify-center mb5">
           <img src={CombinedLogo} alt="Onethread" />
           <h2>
-            <span style={{ color: '#3484F0' }}>{t('landing.homepage.product-details.header1.first-part')}</span>
-            {t('landing.homepage.product-details.header1.second-part')}{t('landing.homepage.product-details.header1.third-part')}
-            {/* <span style={{ color: '#3484F0' }}>Everything</span> a
-            project manager dreamed of, in one single package */}
+            <span style={{ color: '#3484F0' }}>
+              {t(
+                'landing.homepage.product-details.header1.first-part',
+              )}
+            </span>
+            {t(
+              'landing.homepage.product-details.header1.second-part',
+            )}
+            {t('landing.homepage.product-details.header1.third-part')}
           </h2>
         </div>
         <div className="options flex flex-column items-center justify-center">
@@ -205,12 +190,6 @@ const MobileIndex = () => {
               <p>
                 {t('landing.homepage.product-details.subheader2')}
               </p>
-              {/* <h3>Never lose track of a project again</h3>
-              <p>
-                Each project gets a separate space with chat threads,
-                tasks and files, powered by an intelligent search
-                engine
-              </p> */}
             </div>
           </div>
           <div className="option">
@@ -226,12 +205,6 @@ const MobileIndex = () => {
               <p>
                 {t('landing.homepage.product-details.subheader3')}
               </p>
-              {/* <h3>Communicate with anyone in your project</h3>
-              <p>
-                Direct messages and group messages, as well as
-                audio-video calls. Oh, we have Zoom, Meet and Teams
-                integrations too!
-              </p> */}
             </div>
           </div>
           <div className="option">
@@ -247,11 +220,6 @@ const MobileIndex = () => {
               <p>
                 {t('landing.homepage.product-details.subheader4')}
               </p>
-              {/* <h3>Manage all tasks from a single dashboard</h3>
-              <p>
-                Create and manage tasks in projects, assign team
-                members, and view them however you like.
-              </p> */}
             </div>
           </div>
           <div className="option">
@@ -267,11 +235,6 @@ const MobileIndex = () => {
               <p>
                 {t('landing.homepage.product-details.subheader5')}
               </p>
-              {/* <h3>Work with your favorite tools</h3>
-              <p>
-                With 500+ integrations, onethread plays nicely with
-                all the tools that we love and use
-              </p> */}
             </div>
           </div>
         </div>

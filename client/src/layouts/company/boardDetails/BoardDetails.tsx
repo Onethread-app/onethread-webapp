@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { isMobileOnly } from 'react-device-detect';
+import { connect } from 'react-redux';
 
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import { Icon, Popover } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 
+import {
+  IFilterUser,
+  SortTasksBy,
+  TaskBoard,
+} from 'stores/task/Reducer';
+import { IProject } from 'stores/project/Reducer';
+import { ICompany } from 'stores/company/Reducer';
+import {
+  setSortBy,
+  setFilerUsers,
+  setPreferredView,
+} from 'stores/task/Actions';
+
+import CalendarView, {
+  ITaskForCalendar,
+} from 'components/calendar/CalendarView';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import ColumnsContainer from 'components/column/ColumnsContainer';
 import TaskList from 'components/task/TaskList';
@@ -13,22 +30,6 @@ import MemberGroup from 'components/member/MemberGroup';
 import MultiSelectComponent from 'components/dashboard/project-status/MultiSelectComponent';
 import CreateTaskButton from 'components/task/CreateTaskButton';
 import PriorityColorList from 'components/task/PriorityColorList';
-import CalendarView, {
-  ITaskForCalendar,
-} from 'components/calendar/CalendarView';
-
-import { ICompany } from 'stores/company/Reducer';
-import {
-  IFilterUser,
-  SortTasksBy,
-  TaskBoard,
-} from 'stores/task/Reducer';
-import {
-  setSortBy,
-  setFilerUsers,
-  setPreferredView,
-} from 'stores/task/Actions';
-import { IProject } from 'stores/project/Reducer';
 
 import {
   Container,
@@ -77,6 +78,14 @@ const BoardDetails = (props: IBoardDetails) => {
     setSelectedAssignee([]);
   };
 
+  const handleViewChange = (v: 'board' | 'list' | 'calendar') => {
+    if (props.fetchingBoard === false) {
+      clearSort();
+      setView(v);
+      props.setPreferredView(v);
+    }
+  };
+
   useEffect(() => {
     props.setFilerUsers(selectedAssignee);
     props.setSortBy(undefined);
@@ -112,14 +121,6 @@ const BoardDetails = (props: IBoardDetails) => {
     setTasksForCalendarView(cTasks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentBoard]);
-
-  const handleViewChange = (v: 'board' | 'list' | 'calendar') => {
-    if (props.fetchingBoard === false) {
-      clearSort();
-      setView(v);
-      props.setPreferredView(v);
-    }
-  };
 
   return (
     <Container className="h-100 ph3 cf flex flex-column">

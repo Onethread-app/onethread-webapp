@@ -1,8 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
 import { priorityColor } from 'stores/UtilsActions';
-import { useTranslation } from 'react-i18next';
 
 const PriorityIcon = styled.span`
   height: 12px;

@@ -1,19 +1,18 @@
 import React from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
+import { connect } from 'react-redux';
 
-import Notification from 'components/notification/NotificationItemForPopover';
-
-import { notificationType } from 'helpers/notification/rule';
-
+import { User } from 'stores/user/Reducer';
 import {
   readNotification,
   getNotifications,
   incrementPageNumber,
   markAllAsRead,
 } from 'stores/notifications/Action';
-import { User } from 'stores/user/Reducer';
+
+import { notificationType } from 'helpers/notification/rule';
+import Notification from 'components/notification/NotificationItemForPopover';
 
 interface INotificationPopover {
   notifications: any;
@@ -25,6 +24,7 @@ interface INotificationPopover {
 }
 
 const NotificationPopover = (props: INotificationPopover) => {
+  const history = useHistory();
   const [
     lastNotificationElement,
     setLastNotificationElement,
@@ -32,15 +32,6 @@ const NotificationPopover = (props: INotificationPopover) => {
   const [notificationToShow, setNotificationToShow] = React.useState<
     any
   >([]);
-  const history = useHistory();
-
-  React.useEffect(() => {
-    setNotificationToShow(
-      props.notifications.filter((noti) => {
-        return noti.read === false;
-      }),
-    );
-  }, [props.notifications]);
 
   const observer = React.useRef(
     new IntersectionObserver(
@@ -56,20 +47,6 @@ const NotificationPopover = (props: INotificationPopover) => {
     ),
   );
 
-  React.useEffect(() => {
-    const currentElement = lastNotificationElement;
-    const currentObserver = observer.current;
-
-    if (currentElement) {
-      currentObserver.observe(currentElement);
-    }
-    return () => {
-      if (currentElement) {
-        currentObserver.unobserve(currentElement);
-      }
-    };
-  }, [lastNotificationElement]);
-
   const onCLickNotification = async (sNotification: any) => {
     props.readNotification(sNotification.notification._id);
     const url = await notificationType[
@@ -84,6 +61,28 @@ const NotificationPopover = (props: INotificationPopover) => {
       notificationToShow.map((notification) => notification._id),
     );
   };
+
+  React.useEffect(() => {
+    setNotificationToShow(
+      props.notifications.filter((noti) => {
+        return noti.read === false;
+      }),
+    );
+  }, [props.notifications]);
+
+  React.useEffect(() => {
+    const currentElement = lastNotificationElement;
+    const currentObserver = observer.current;
+
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [lastNotificationElement]);
 
   return (
     <>

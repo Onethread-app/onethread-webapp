@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { SubTaskCreator } from './SubTaskEditor';
-import { Dialog } from '@blueprintjs/core';
 import { useTranslation } from 'react-i18next';
+
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
 import addSubtask from 'resources/images/clipboard.png';
 
+import { SubTaskCreator } from './SubTaskEditor';
+
 const AddSubTaskButton = () => {
+  const { t } = useTranslation();
   const [subtask, setsubtask] = useState(Object);
   const [showSubtaskForm, setShowSubTaskForm] = useState(false);
-  const { t } = useTranslation();
 
   return (
     <div>

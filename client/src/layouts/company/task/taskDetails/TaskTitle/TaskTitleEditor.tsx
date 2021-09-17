@@ -1,16 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import { Form, Field } from 'react-final-form';
-import { SubmitError } from 'components/final-form/SubmitError';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { EditableText } from '@blueprintjs/core/lib/esm/components/editable-text/editableText';
+
+import { ITask } from 'stores/task/Reducer';
+import { updateTask } from 'stores/task/Actions';
+
 import {
   required,
   checkError,
   maxValue,
   composeValidators,
 } from 'components/final-form/utils';
-import { EditableText, Button, Icon } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { ITask } from 'stores/task/Reducer';
-import { updateTask } from 'stores/task/Actions';
+import { SubmitError } from 'components/final-form/SubmitError';
 
 interface ITaskTitleFormProps {
   setNameEdit: (val: boolean) => void;

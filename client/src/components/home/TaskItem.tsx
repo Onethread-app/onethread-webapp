@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
-import moment from 'moment';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import moment from 'moment';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
 interface ITaskItem {
   task: any;
@@ -11,6 +11,7 @@ interface ITaskItem {
   mini?: boolean;
 }
 const TaskItem = (props: ITaskItem) => {
+  const history = useHistory();
   const [loading, setLoading] = React.useState(true);
   const [assignee, setAssignee] = useState<any | null>(null);
   const [task, setTask] = React.useState({
@@ -23,7 +24,12 @@ const TaskItem = (props: ITaskItem) => {
     boardId: '',
     companyName: '',
   });
-  const history = useHistory();
+
+  const handleClick = () => {
+    history.push(
+      `/company/${task.companyName}/project/${task.projectId}/board/${task.boardId}/task/${task._id}`,
+    );
+  };
 
   React.useEffect(() => {
     if (props.task.taskId) {
@@ -57,11 +63,6 @@ const TaskItem = (props: ITaskItem) => {
     }
   }, [props.task]);
 
-  const handleClick = () => {
-    history.push(
-      `/company/${task.companyName}/project/${task.projectId}/board/${task.boardId}/task/${task._id}`,
-    );
-  };
   return loading ? (
     <div className="task-item w-100">
       <LinearProgress />

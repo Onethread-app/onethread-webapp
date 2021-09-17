@@ -1,12 +1,14 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import NumberFormat from 'react-number-format';
-import Checkbox from '@material-ui/core/Checkbox';
+
 import Modal from 'react-modal';
+import NumberFormat from 'react-number-format';
+import Button from '@material-ui/core/Button/Button';
+import Card from '@material-ui/core/Card/Card';
+import CardContent from '@material-ui/core/CardContent/CardContent';
+import Checkbox from '@material-ui/core/Checkbox/Checkbox';
+import Grid from '@material-ui/core/Grid/Grid';
+import TextField from '@material-ui/core/TextField/TextField';
+
 import { TermsAndCondition } from './TermsAndCondition';
 
 interface NumberFormatCustomProps {
@@ -254,7 +256,7 @@ export default function PortwalletCardSaction(
                     }}
                   />{' '}
                   <div style={{ marginTop: '10px' }}>
-                    <span>I have read and approved Tigrow's</span>{' '}
+                    <span>I have read and approved Onethread's</span>{' '}
                     <span
                       style={{ color: 'blue', cursor: 'pointer' }}
                       onClick={() => openModal()}

@@ -1,8 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Dialog, Popover, Position } from '@blueprintjs/core';
+
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+
 import { CompanyListView } from 'layouts/company/ListView';
 import { CompanySignupForm } from 'layouts/company/Form';
+
 import './CompanyPopoverIcon.scss';
 
 interface ICompanyPopoverIcon {
@@ -10,8 +16,8 @@ interface ICompanyPopoverIcon {
 }
 
 const CompanyPopoverIcon = (props: ICompanyPopoverIcon) => {
-  const [showDialog, setShowDialog] = React.useState(false);
   const { t } = useTranslation();
+  const [showDialog, setShowDialog] = React.useState(false);
 
   return (
     <>

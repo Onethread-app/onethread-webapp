@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Dialog } from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
+import { NavLink } from 'react-router-dom';
+import { MobileView, isMobileOnly } from 'react-device-detect';
 import { connect } from 'react-redux';
+import { upperFirst } from 'lodash';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
-import { AddProjectMemberForm } from './AddProjectMemberForm';
-import { AddProjectAssociateForm } from './AddProjectAssociateForm';
-import { AssociateList } from './AssociateList';
+import { IProjectTeam } from 'stores/project/Reducer';
+import { Associate } from 'stores/associate/Reducer';
 import {
   getProjectTeams,
   changeProjectMemberRole,
   deleteTeamMember,
 } from 'stores/project/Actions';
-import { IProjectTeam } from 'stores/project/Reducer';
+
 import {
   getDivisionName,
   showDepartment,
 } from 'layouts/company/colleagues/Index';
-import { upperFirst } from 'lodash';
-import { Associate } from 'stores/associate/Reducer';
-import { MobileView, isMobileOnly } from 'react-device-detect';
-import { NavLink } from 'react-router-dom';
 import Navbar from 'components/navbar/Navbar';
-import { useTranslation } from 'react-i18next';
 import MemberTable from '../../../../components/MemberTable/MemberTable';
 import SearchOption from 'components/SearchOption/SearchOption';
+import { AddProjectMemberForm } from './AddProjectMemberForm';
+import { AddProjectAssociateForm } from './AddProjectAssociateForm';
+import { AssociateList } from './AssociateList';
+
 import './Index.scss';
 
 interface TeamMember {
@@ -108,7 +113,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             <small style={{ color: 'inherit' }}>
               {t('app.company.Projects.Overview')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact
@@ -123,7 +127,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-preface.Intro')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
             exact
@@ -138,7 +141,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-rooms.Rooms')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
             exact
@@ -153,7 +155,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-boards.Board')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
             exact
@@ -168,7 +169,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-teammates.Team-members')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
             exact
@@ -182,7 +182,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           >
             <small style={{ color: 'inherit' }}>
               {t('app.company.Projects.Project-Settings')}
-              {/* Project Settings */}
             </small>
           </NavLink>
         </div>
@@ -200,7 +199,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               {t('app.project.Project-teammates.Team-members')} (
               {teammatesList.length})
             </h1>
-            // <h1 className="f3">Teammates</h1>
           )}
           <div className="teammates-top-area mb1">
             <SearchOption
@@ -218,7 +216,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               onClick={() => setShowDialog(!showDialog)}
             >
               {t('app.project.Project-teammates.Add-Teammates')}
-              {/* Add Teammates */}
             </Button>
             {props.projectList &&
               props.projectList.map((project) =>
@@ -251,7 +248,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         <h1 className="f4 mv4">
           {t('app.company.Partners.External')}
         </h1>
-        {/* <h1 className="f4 mv4">External Partners</h1> */}
         <AssociateList />
       </div>
 

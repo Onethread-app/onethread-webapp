@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Form, Field } from 'react-final-form';
-import { SubmitError } from 'components/final-form/SubmitError';
-import { Button } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { companyOptionalRole } from 'stores/company/Actions';
-import { isEqual } from 'lodash';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
+
+import { Form, Field } from 'react-final-form';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { SubmitError } from 'components/final-form/SubmitError';
+import { companyOptionalRole } from 'stores/company/Actions';
+
 interface AdminRoleInternalProps {
   companyOptionalRole: (companyRole: any) => void;
   optionalRole: string[];
@@ -13,6 +16,7 @@ interface AdminRoleInternalProps {
 }
 
 const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
+  const { t } = useTranslation();
   const [disabled] = useState(
     isEqual(props.companyRole, 'superAdmin') === false,
   );
@@ -20,8 +24,6 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
   const onSubmit = async (values: any) => {
     await props.companyOptionalRole(values);
   };
-
-  const { t } = useTranslation();
 
   return (
     <div>
@@ -45,7 +47,6 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
             <p className="b f5 mb3">
               {t('app.project.Project-teammates.Admins')}
             </p>
-            {/* <p className="b f5 mb3">Admins</p> */}
             <div className="mb3">
               <Field<string>
                 name="optionalRole"
@@ -65,7 +66,6 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-1')}
-                    {/* Create/Update/Delete Company Announcement */}
                   </label>
                 )}
               />
@@ -87,7 +87,6 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-2')}
-                    {/* Edit Basic/Advanced Information of Profile */}
                   </label>
                 )}
               />
@@ -109,7 +108,6 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-3')}
-                    {/* Archive Projects */}
                   </label>
                 )}
               />
@@ -131,7 +129,6 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-4')}
-                    {/* Add/Delete Project Moderator */}
                   </label>
                 )}
               />
@@ -153,7 +150,6 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-5')}
-                    {/* Message Associates */}
                   </label>
                 )}
               />
@@ -175,7 +171,6 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-6')}
-                    {/* Add/Accept/Reject Requests from Companies to be Associates */}
                   </label>
                 )}
               />
@@ -197,7 +192,6 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-7')}
-                    {/* Accept/Reject Project Request from Associates */}
                   </label>
                 )}
               />

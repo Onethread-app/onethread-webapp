@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as Cookies from 'js-cookie';
-import axios from 'axios';
-import { tokenConfig } from 'stores/UtilsActions';
 import { server } from 'config';
 import styled from 'styled-components';
-import Validator from 'layouts/videoConferences/utils/Validator';
+
+import axios from 'axios';
+
+import { tokenConfig } from 'stores/UtilsActions';
+
 import Link from 'resources/svg/Link.svg';
-import { useTranslation } from 'react-i18next';
+
+import Validator from 'layouts/videoConferences/utils/Validator';
 
 const Container = styled.div`
   height: 100%;
@@ -17,7 +21,7 @@ const H2 = styled.h2`
   font-size: 21.85px;
   line-height: 33px;
   text-transform: uppercase;
-  color: #34B3E9;
+  color: #34b3e9;
   padding: 0;
   margin: 0;
 `;
@@ -42,7 +46,7 @@ const Input = styled.input`
 `;
 
 const LinkBox = styled.div`
-  background: #34B3E9;
+  background: #34b3e9;
   border-radius: 4px;
   height: 38px;
   width: 38px;
@@ -79,11 +83,11 @@ const validate = (val: string) => {
 };
 
 const LinkGeneratorPopup = () => {
+  const { t } = useTranslation();
   const [teamName, setTeamName] = useState('');
   const [conferenceLink, setConferenceLink] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isValid, setIsValid] = useState(false);
-  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setTeamName(e.target.value);
@@ -97,6 +101,7 @@ const LinkGeneratorPopup = () => {
       handleSubmit();
     }
   };
+
   const handleSubmit = () => {
     if (isValid && errorMessage === '') {
       console.log(teamName);
@@ -132,8 +137,7 @@ const LinkGeneratorPopup = () => {
     <Container className="flex flex-column items-center justify-center">
       <H2>{t('app.Video-Conferences.Empowering-teams')}</H2>
       <P>{t('app.Video-Conferences.Enter-name')}</P>
-      {/* <H2>Empowering remote teams</H2>
-      <P>Enter team name and Create link</P> */}
+
       <div className="flex items-center justify-center mt2">
         <Input
           type="text"
@@ -141,7 +145,6 @@ const LinkGeneratorPopup = () => {
           id="teaminput"
           autoFocus
           placeholder={t('app.Video-Conferences.Enter-team-name')}
-          // placeholder="Enter team name"
           value={teamName}
           onKeyDown={handleKeyDown}
           onChange={handleChange}
@@ -158,7 +161,6 @@ const LinkGeneratorPopup = () => {
 
       {conferenceLink && (
         <div className="mt2 w-55">
-          {/* Link: */}
           {t('app.Video-Conferences.Link')}:{' '}
           <a href={conferenceLink} target="_blank" rel="noreferrer">
             {conferenceLink}

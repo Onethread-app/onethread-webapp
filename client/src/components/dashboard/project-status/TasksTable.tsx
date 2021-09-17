@@ -1,28 +1,28 @@
-import { LinearProgress } from '@material-ui/core';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  withStyles,
-} from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import React, { useState } from 'react';
-import MemberIcon from 'components/member/MemberIcon';
-
 import { useHistory } from 'react-router-dom';
-import { priorityColor, tokenConfig } from 'stores/UtilsActions';
 import { useTranslation } from 'react-i18next';
 import Axios from 'axios';
 import { server } from 'config';
-import AlertDialogSlide from './PermissionModal';
+
 import moment from 'moment';
+import withStyles from '@material-ui/core/styles/withStyles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
+import TableCell from '@material-ui/core/TableCell/TableCell';
+import TableRow from '@material-ui/core/TableRow/TableRow';
+import TableHead from '@material-ui/core/TableHead/TableHead';
+import TableSortLabel from '@material-ui/core/TableSortLabel/TableSortLabel';
+import TableContainer from '@material-ui/core/TableContainer/TableContainer';
+import Table from '@material-ui/core/Table/Table';
+import TableBody from '@material-ui/core/TableBody/TableBody';
+import TablePagination from '@material-ui/core/TablePagination/TablePagination';
+
+import { priorityColor, tokenConfig } from 'stores/UtilsActions';
+
+import MemberIcon from 'components/member/MemberIcon';
+import AlertDialogSlide from './PermissionModal';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -155,7 +155,9 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
+  const { t } = useTranslation();
   const { classes, order, orderBy, onRequestSort } = props;
+
   const createSortHandler = (property: keyof Data) => (
     event: React.MouseEvent<unknown>,
   ) => {
@@ -167,43 +169,34 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     label: string;
   }
 
-  const { t } = useTranslation();
-
   const headCells: HeadCell[] = [
     {
       id: 'taskname',
       label: `${t('app.project.Tasks.Task-name')}`,
-      // label: `Task name`,
     },
     {
       id: 'projectname',
       label: `${t('app.project.Tasks.Project-name')}`,
-      // label: `Project name`,
     },
     {
       id: 'members',
       label: `${t('app.project.Tasks.Assignee')}`,
-      // label: `Assignee`,
     },
     {
       id: 'priority',
       label: `${t('app.project.Tasks.Priority')}`,
-      // label: `Priority`,
     },
     {
       id: 'status',
       label: `${t('app.project.Tasks.Status')}`,
-      // label: `Status`,
     },
     {
       id: 'dueDate',
       label: `${t('app.project.Tasks.Due-date')}`,
-      // label: `Due date`,
     },
     {
       id: 'subtask',
       label: `${t('app.project.Tasks.Subtask')}`,
-      // label: 'Subtask',
     },
   ];
 
@@ -336,7 +329,7 @@ const AppTable = ({
         history.push(
           `/company/${row.companyUniqueName}/project/${row.projectId}/board/${row.boardId}/task/${row.taskId}`,
         );
-      } catch (e) {
+      } catch (e:any) {
         if (e.response.data.status === 403) {
           setModalOpen(true);
         }
