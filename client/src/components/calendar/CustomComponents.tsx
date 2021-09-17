@@ -15,7 +15,7 @@ const CustomComponents = {
         style={{ borderRight: `7px solid ${pColor.value}` }}
         onClick={() => history.push(task.redirectTo)}
       >
-        {task.name}
+        {task.title}
       </div>
     );
   },
