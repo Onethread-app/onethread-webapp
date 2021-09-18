@@ -8,7 +8,7 @@
     "@blueprintjs/datetime": "^3.14.0",
     "@blueprintjs/docs-theme": "^3.10.4",
     "@blueprintjs/popover2": "^0.10.1",
-    "@blueprintjs/select": "^3.10.0",
+    "@blueprintjs/select": "^3.17.0",
     "@date-io/date-fns": "1.x",
     "@draft-js-plugins/editor": "^4.1.0",
     "@draft-js-plugins/emoji": "^4.5.4",
