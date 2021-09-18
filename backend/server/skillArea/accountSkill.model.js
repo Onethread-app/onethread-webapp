@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { Schema } = mongoose;
 const accountSkillSchema = mongoose.Schema({
   skillArea: [
@@ -18,7 +19,7 @@ const accountSkillSchema = mongoose.Schema({
 //   { skillArea: 1, accountId: 1 },
 //   { unique: true },
 // );
-let AccountSkill = mongoose.model('AccountSkill', accountSkillSchema);
+const AccountSkill = mongoose.model('AccountSkill', accountSkillSchema);
 
 module.exports = {
   AccountSkill,

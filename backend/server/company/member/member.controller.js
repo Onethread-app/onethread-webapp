@@ -1,8 +1,7 @@
+const chalk = require('chalk');
 const { Member } = require('./member.model');
 const Account = require('../../account/account.model');
-const {
-  Subscription,
-} = require('../../subscription/subscription.model');
+const { Subscription } = require('../../subscription/subscription.model');
 const logger = require('../../../config/winston');
 const {
   sendJSONresponse,
@@ -15,15 +14,12 @@ const {
   memberIndex,
   deleteDocument,
 } = require('../../services/elastic.services');
-const chalk = require('chalk');
 const {
   createMemberAddNotification,
 } = require('../../notification/notification.controller');
 
 const { PendingMember } = require('./pendingMember.model');
-const {
-  sendInviteColleague,
-} = require('../../services/email.services');
+const { sendInviteColleague } = require('../../services/email.services');
 const {
   triggerUnreadNotifications,
 } = require('../../services/webpush.services');
@@ -131,11 +127,11 @@ const addMember = async (req, res, next) => {
     })
       .sort({ _id: -1 })
       .populate('plan', 'maxTier');
-    let members = [];
+    const members = [];
 
     let accounts = [];
 
-    let pendingMembers = [];
+    const pendingMembers = [];
 
     if (req.body.members.length <= planMemberAllow[0].plan.maxTier) {
       let newMembers = req.body.members;
@@ -154,10 +150,7 @@ const addMember = async (req, res, next) => {
       // filter new members
       newMembers = newMembers.filter((newMember) => {
         return !prevMembers.some((prevMemberAccount) => {
-          return (
-            prevMemberAccount.toString() ===
-            newMember.account.toString()
-          );
+          return prevMemberAccount.toString() === newMember.account.toString();
         });
       });
 
@@ -183,10 +176,7 @@ const addMember = async (req, res, next) => {
     }
 
     // invite new members in company
-    if (
-      req.body.pendingTeamMembers.length <=
-      planMemberAllow[0].plan.maxTier
-    ) {
+    if (req.body.pendingTeamMembers.length <= planMemberAllow[0].plan.maxTier) {
       createPendingMembers(req, req.body.pendingTeamMembers);
     }
     return sendJSONresponse(res, 201, {
@@ -263,7 +253,7 @@ const checkInvitedMemberStatus = async (req, res, next) => {
     }).select('-__v -company -createdAt -updatedAt');
 
     return res.status(200).json({
-      status: !pendingMember ? true : false,
+      status: !pendingMember,
       message: !pendingMember
         ? `${req.query.email} can be invited.`
         : `${req.query.email} has already been invited.`,
@@ -328,11 +318,10 @@ const getMemberLoad = async (req, res, next) => {
     if (member) {
       req.member = member;
       return next();
-    } else {
-      return res.status(404).json({
-        message: 'No valid entry found for provided Member ID',
-      });
     }
+    return res.status(404).json({
+      message: 'No valid entry found for provided Member ID',
+    });
   } catch (error) {
     logger.error(`${error}`);
     next(error);
@@ -345,7 +334,7 @@ const getMemberLoad = async (req, res, next) => {
 
 const searchMember = async (req, res, next) => {
   try {
-    const name = req.query.name;
+    const { name } = req.query;
     const companyID = req.company._id;
 
     const existingMembers = await Member.find({
@@ -357,7 +346,7 @@ const searchMember = async (req, res, next) => {
       (member) => member.account,
     );
     if (name) {
-      let body = {
+      const body = {
         size: 200,
         from: 0,
         query: {
@@ -389,11 +378,10 @@ const searchMember = async (req, res, next) => {
         message: `Search complete for ${name}`,
         data: response.hits.hits,
       });
-    } else {
-      return sendErrorResponse(res, 400, 'EmptySearchError', {
-        message: `query error`,
-      });
     }
+    return sendErrorResponse(res, 400, 'EmptySearchError', {
+      message: `query error`,
+    });
   } catch (error) {
     logger.error(`${error}`);
     next(error);
@@ -412,14 +400,14 @@ const bulkInsertMember = async (req, res, next) => {
       isActive: true,
     }).populate('plan', 'maxTier');
 
-    let memberCount = await Member.countDocuments({
+    const memberCount = await Member.countDocuments({
       company: req.company._id,
       removed: false,
     }).exec();
 
-    let emails = req.body;
+    const emails = req.body;
 
-    let tolatCount = emails.length + memberCount;
+    const tolatCount = emails.length + memberCount;
 
     if (tolatCount > planMemberAllow[0].plan.maxTier) {
       return sendJSONresponse(res, 400, {
@@ -433,11 +421,11 @@ const bulkInsertMember = async (req, res, next) => {
       .select('email')
       .exec();
 
-    let haveAccountEmails = haveAccount.map((c) => {
+    const haveAccountEmails = haveAccount.map((c) => {
       return c.email;
     });
 
-    //email need to send
+    // email need to send
     let inviteEmailUsers = emails.filter(
       (el) => !haveAccountEmails.includes(el),
     );
@@ -449,7 +437,7 @@ const bulkInsertMember = async (req, res, next) => {
       .select('email')
       .exec();
 
-    let havePendingAccountEmails = havePendingAccount.map((c) => {
+    const havePendingAccountEmails = havePendingAccount.map((c) => {
       return c.email;
     });
 
@@ -460,7 +448,7 @@ const bulkInsertMember = async (req, res, next) => {
     if (inviteEmailUsers.length > 0)
       createPendingMembers(req, inviteEmailUsers);
 
-    let haveAccountIds = haveAccount.map((c) => {
+    const haveAccountIds = haveAccount.map((c) => {
       return c._id.toString();
     });
 
@@ -492,13 +480,13 @@ const bulkInsertMember = async (req, res, next) => {
       .select('account')
       .exec();
 
-    let haveMemberAccounts = haveMember.map((c) => {
+    const haveMemberAccounts = haveMember.map((c) => {
       return c.account.toString();
     });
 
-    //notify user
+    // notify user
 
-    let notifiyUsersIds = haveAccountIds.filter(
+    const notifiyUsersIds = haveAccountIds.filter(
       (el) => !haveMemberAccounts.includes(el),
     );
 
@@ -507,8 +495,8 @@ const bulkInsertMember = async (req, res, next) => {
     }
 
     return sendJSONresponse(res, 200, {
-      inviteEmailUsers: inviteEmailUsers,
-      notifiyUsersIds: notifiyUsersIds,
+      inviteEmailUsers,
+      notifiyUsersIds,
     });
   } catch (error) {
     logger.error(`Member: ${error}`);
@@ -518,7 +506,7 @@ const bulkInsertMember = async (req, res, next) => {
 
 const createMembers = async (req, notifiyUsersIds) => {
   try {
-    let newMembers = notifiyUsersIds.map((c) => {
+    const newMembers = notifiyUsersIds.map((c) => {
       return {
         account: c,
         company: req.company._id,

@@ -1,11 +1,12 @@
 const httpStatus = require('http-status');
+const { log } = require('debug');
+const _ = require('lodash');
+const chalk = require('chalk');
 const { Associate } = require('./associate.model');
 
 const logger = require('../../config/winston');
 const { BadRequestError } = require('../helpers/APIError');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
-const { log } = require('debug');
-const _ = require('lodash');
 const {
   createPendingAssociateRequest,
   rejectAssociateRequest,
@@ -100,9 +101,7 @@ const acceptPending = async (req, res, next) => {
     });
 
     logger.info(
-      chalk.blueBright(
-        `Elasticsearch document added on ${associateIndex}`,
-      ),
+      chalk.blueBright(`Elasticsearch document added on ${associateIndex}`),
     );
     await acceptAssociateRequest(
       req.headers.companyid,

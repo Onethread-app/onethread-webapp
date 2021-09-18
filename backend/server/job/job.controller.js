@@ -1,6 +1,9 @@
 const JobExperience = require('./job.model');
 const Account = require('../account/account.model');
-const { sendJSONresponse } = require('../helpers/jsonResponse.js');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse.js');
 const logger = require('../../config/winston');
 
 const createJobExperience = async (req, res, next) => {
@@ -47,7 +50,7 @@ const updateJobExperience = async (req, res, next) => {
   }
 };
 
-const getAllJobExperience = async (req, res) => {
+const getAllJobExperience = async (req, res, next) => {
   JobExperience.find({})
     .exec()
     .then((data) => {

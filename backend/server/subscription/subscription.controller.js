@@ -1,26 +1,25 @@
-const { Subscription } = require('./subscription.model');
+const { Subscription } = require("./subscription.model");
 
-const Plan = require('../plan/plan.model');
-const logger = require('../../config/winston.js');
+const Plan = require("../plan/plan.model");
+const logger = require("../../config/winston.js");
 
 const {
   sendJSONresponse,
   sendErrorResponse,
-} = require('../helpers/jsonResponse');
+} = require("../helpers/jsonResponse");
 
 const createSubscriptionForCompany = async (req, res, next) => {
   try {
     const companyId = req.headers.companyid;
     const { plan } = req.body;
     const planValidation = await Plan.findById({ _id: plan }).select(
-      'validity',
+      "validity"
     );
     const subscription = new Subscription({
       company: companyId,
-      plan: plan,
+      plan,
       isActive: true,
-      expireAt:
-        new Date().getTime() + 86400000 * planValidation.validity,
+      expireAt: new Date().getTime() + 86400000 * planValidation.validity,
     });
     await subscription.save();
     logger.info(`Subscription created for ${companyId}`);
@@ -41,7 +40,7 @@ const currentSubscriptionPlan = async (req, res, next) => {
       isActive: true,
     })
       .sort({ _id: -1 })
-      .populate('plan', 'name maxTier pricing')
+      .populate("plan", "name maxTier pricing")
       .exec()
       .then((result) => {
         return sendJSONresponse(res, 200, result[0]);
@@ -60,13 +59,11 @@ const changeSubscriptionPlan = async (req, res, next) => {
         plan: req.body.plan,
       },
     },
-    { safe: true, upsert: true, new: true },
+    { safe: true, upsert: true, new: true }
   )
     .exec()
     .then(() => {
-      logger.info(
-        `Subscription plan changed for ${req.params.companyId}`,
-      );
+      logger.info(`Subscription plan changed for ${req.params.companyId}`);
       return sendJSONresponse(res, 200, {
         message: `Subscription plan changed for ${req.params.companyId}`,
       });
@@ -79,14 +76,14 @@ const changeSubscriptionPlan = async (req, res, next) => {
 
 const renewSubscription = async (req, res, next) => {
   try {
-    let extendDate = req.subscribe;
+    const extendDate = req.subscribe;
     await Subscription.updateOne(
       { company: req.params.companyId, isActive: true },
       { $set: { expireAt: extendDate } },
-      { upsert: true, new: true },
+      { upsert: true, new: true }
     );
     return sendJSONresponse(res, 200, {
-      message: 'Subscription extended',
+      message: "Subscription extended",
     });
   } catch (error) {
     logger.error(`Subscription: ${error}`);
@@ -96,11 +93,10 @@ const renewSubscription = async (req, res, next) => {
 const subscriptionExpireCheck = () => {
   return async (req, res, next) => {
     try {
-      const validCompanyId =
-        req.headers.companyid || req.body.companyId;
+      const validCompanyId = req.headers.companyid || req.body.companyId;
 
       if (!validCompanyId) {
-        return sendErrorResponse(res, 400, 'ValidationError', {
+        return sendErrorResponse(res, 400, "ValidationError", {
           message: `companyId is required`,
         });
       }
@@ -109,7 +105,7 @@ const subscriptionExpireCheck = () => {
         isActive: true,
       }).sort({ _id: -1 });
       if (!subscribe) {
-        return sendErrorResponse(res, 404, 'NotFound', {
+        return sendErrorResponse(res, 404, "NotFound", {
           message: `companyId not found`,
         });
       }
@@ -120,12 +116,9 @@ const subscriptionExpireCheck = () => {
         typeof subscribe[0].expireAt === undefined ||
         subscribe[0].expireAt < today
       ) {
-        return sendErrorResponse(
-          res,
-          403,
-          'SubscriptionExpirationError',
-          { message: 'Your subscription is expired' },
-        );
+        return sendErrorResponse(res, 403, "SubscriptionExpirationError", {
+          message: "Your subscription is expired",
+        });
       }
       req.subscribe = subscribe[0].expireAt;
       next();

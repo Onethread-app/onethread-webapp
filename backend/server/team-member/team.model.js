@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const teamMember = new Schema(
   {
@@ -41,12 +42,9 @@ const teamMember = new Schema(
   },
 );
 
-teamMember.index(
-  { member: 1, account: 1, project: 1 },
-  { unique: true },
-);
+teamMember.index({ member: 1, account: 1, project: 1 }, { unique: true });
 
-let Team = mongoose.model('Team', teamMember);
+const Team = mongoose.model('Team', teamMember);
 
 module.exports = {
   Team,

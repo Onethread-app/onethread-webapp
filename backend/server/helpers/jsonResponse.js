@@ -4,8 +4,8 @@ const sendJSONresponse = function (res, status, content) {
 };
 
 const sendErrorResponse = function (res, status, type, content) {
-  let errorBody = {
-    status: status,
+  const errorBody = {
+    status,
     type: type || 'CustomError',
     errors: [content],
   };

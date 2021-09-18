@@ -27,28 +27,18 @@ const envVarsSchema = Joi.object({
   JWT_REFRESH_EXPIRATION: Joi.string()
     .required()
     .description('JWT refresh token expired'),
-  MONGO_HOST: Joi.string()
-    .required()
-    .description('Mongo DB host url'),
+  MONGO_HOST: Joi.string().required().description('Mongo DB host url'),
   MONGO_PORT: Joi.number().default(27017),
-  REDIS_HOST: Joi.string()
-    .required()
-    .description('Redis DB host url'),
+  REDIS_HOST: Joi.string().required().description('Redis DB host url'),
   REDIS_PASSWORD: Joi.string().required(),
   REDIS_PORT: Joi.number(),
-  EMAIL_ADDRESS: Joi.string()
-    .required()
-    .description('email address required'),
-  EMAIL_PASSWORD: Joi.string()
-    .required()
-    .description('password required'),
+  EMAIL_ADDRESS: Joi.string().required().description('email address required'),
+  EMAIL_PASSWORD: Joi.string().required().description('password required'),
 
   INSTANCE_LOCATOR: Joi.string()
     .required()
     .description('INSTANCE_LOCATOR required'),
-  PUSHER_KEY: Joi.string()
-    .required()
-    .description('PUSHER_KEY required'),
+  PUSHER_KEY: Joi.string().required().description('PUSHER_KEY required'),
   PUSHER_CHANNEL_CLUSTER: Joi.string()
     .required()
     .description('PUSHER_CHANNEL_CLUSTER required'),
@@ -58,21 +48,13 @@ const envVarsSchema = Joi.object({
   AWS_SECRET_ACCESS_KEY: Joi.string()
     .required()
     .description('AWS secret key required'),
-  AWS_SES_KEY: Joi.string()
-    .required()
-    .description('AWS IAM SES key requires'),
+  AWS_SES_KEY: Joi.string().required().description('AWS IAM SES key requires'),
   AWS_SES_ACCESS_KEY: Joi.string()
     .required()
     .description('AWS IAM SES secret key required'),
-  SES_REGION: Joi.string()
-    .required()
-    .description('SES region required'),
-  S3_REGION: Joi.string()
-    .required()
-    .description('S3 region required'),
-  BUCKET_NAME: Joi.string()
-    .required()
-    .description('Bucket Name required'),
+  SES_REGION: Joi.string().required().description('SES region required'),
+  S3_REGION: Joi.string().required().description('S3 region required'),
+  BUCKET_NAME: Joi.string().required().description('Bucket Name required'),
   PUSHER_CHANNEL_APP_ID: Joi.string()
     .required()
     .description('PUSHER_CHANNEL_APP_ID required'),
@@ -82,18 +64,13 @@ const envVarsSchema = Joi.object({
   PUSHER_CHANNEL_SECRET: Joi.string()
     .required()
     .description('PUSHER_CHANNEL_SECRET required'),
-  PUSHER_CHANNEL_CLUSTER: Joi.string()
-    .required()
-    .description('PUSHER_CHANNEL_CLUSTER required'),
   STRIPE_SECRET_KEY: Joi.string()
     .required()
     .description('STRIPE secret key required'),
   APM_SERVICE_NAME: Joi.string()
     .required()
     .description('APM_SERVICE_NAME required'),
-  APM_TOKEN: Joi.string()
-    .required()
-    .description('APM_TOKEN required'),
+  APM_TOKEN: Joi.string().required().description('APM_TOKEN required'),
   APM_URL: Joi.string().required().description('APM_URL required'),
   VAPID_PUBLIC_KEY: Joi.string()
     .required()
@@ -101,9 +78,7 @@ const envVarsSchema = Joi.object({
   VAPID_PRIVATE_KEY: Joi.string()
     .required()
     .description('VAPID_PRIVATE_KEY required'),
-  CLIENT_URL: Joi.string()
-    .required()
-    .description('CLIENT_URL required'),
+  CLIENT_URL: Joi.string().required().description('CLIENT_URL required'),
 })
   .unknown()
   .required();

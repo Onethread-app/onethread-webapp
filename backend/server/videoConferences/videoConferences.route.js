@@ -1,12 +1,11 @@
 const express = require('express');
+
 const router = express.Router({ mergeParams: true });
 const vcCtrl = require('./videoConferences.controller');
-const SchemaValidator = require('./../helpers/joiSchemaValidator');
+const SchemaValidator = require('../helpers/joiSchemaValidator');
 const joiSchema = require('./videoConferences.validation');
 
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+const { authorization } = require('../middlewares/authorizationMiddleware');
 
 // router.route('/get-joinee').get(authorization, vcCtrl.getJoinee);
 router

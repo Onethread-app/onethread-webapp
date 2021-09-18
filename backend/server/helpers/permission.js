@@ -16,10 +16,7 @@ const permit = (...allowed) => {
 const authSelf = (content) => {
   // return a middleware
   return (request, response, next) => {
-    if (
-      request.user._id.toString() ===
-      request[content].account.toString()
-    ) {
+    if (request.user._id.toString() === request[content].account.toString()) {
       next();
     }
     // role is allowed, so continue on the next middleware

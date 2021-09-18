@@ -1,4 +1,4 @@
-let adminFirebase = require('firebase-admin');
+const adminFirebase = require('firebase-admin');
 
 const serviceAccount = require('./serviceAccountKey.json');
 

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const notificationSchema = new Schema(
   {
@@ -14,7 +15,4 @@ const notificationSchema = new Schema(
     timestamps: true,
   },
 );
-module.exports = mongoose.model(
-  'WebPushNotification',
-  notificationSchema,
-);
+module.exports = mongoose.model('WebPushNotification', notificationSchema);

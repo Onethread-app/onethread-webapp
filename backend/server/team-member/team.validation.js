@@ -4,7 +4,7 @@ const Joi = require('@hapi/joi');
 const idSchema = {
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
-    .error((errors) => {
+    .error(() => {
       return {
         message: 'Invalid ID',
       };
@@ -47,11 +47,7 @@ module.exports = {
   }),
   changeRole: Joi.object().keys({
     body: Joi.object().keys({
-      role: Joi.string().valid([
-        'admin',
-        'projectModerator',
-        'member',
-      ]),
+      role: Joi.string().valid(['admin', 'projectModerator', 'member']),
     }),
     params: memberId,
   }),

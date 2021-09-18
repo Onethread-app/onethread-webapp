@@ -14,7 +14,7 @@ const {
   companyMappnig,
   createAssociate,
   associateIndex,
-  associateMapping
+  associateMapping,
 } = require('./server/services/elastic.services');
 const Account = require('./server/account/account.model');
 const { Member } = require('./server/company/member/member.model');

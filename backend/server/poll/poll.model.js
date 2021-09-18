@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const PollSchema = new mongoose.Schema({
   text: {
@@ -38,7 +38,7 @@ const PollSchema = new mongoose.Schema({
     default: false,
   },
   blocked: {
-    //after report admin
+    // after report admin
     type: Boolean,
     default: false,
   },

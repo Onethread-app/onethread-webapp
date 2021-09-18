@@ -1,8 +1,7 @@
 const express = require('express');
+
 const router = express.Router();
-const {
-  authorization,
-} = require('../../middlewares/authorizationMiddleware');
+const { authorization } = require('../../middlewares/authorizationMiddleware');
 const subCtrl = require('../../subscription/subscription.controller');
 const joiSchema = require('./member.validation');
 const memberCtrl = require('./member.controller');

@@ -68,22 +68,21 @@ const create = async (req, res, next) => {
 const list = async (req, res, next) => {
   const { boardId, pid } = req.query;
   await BoardColumn.find({
-    boardId: boardId,
+    boardId,
     removed: false,
   })
     .exec()
     .then((result) => {
       if (result.project === pid) {
         return sendJSONresponse(res, 200, result);
-      } else {
-        return sendErrorResponse(res, 400, 'ValidationError', {
-          message: 'Project ID mismatch',
-        });
       }
+      return sendErrorResponse(res, 400, 'ValidationError', {
+        message: 'Project ID mismatch',
+      });
     })
-    .catch((e) => {
+    .catch((err) => {
       logger.error(`Board column: ${err}`);
-      next(e);
+      next(err);
     });
 };
 
@@ -95,7 +94,7 @@ const update = (req, res, next) => {
     (error, updatedColumn) => {
       if (error) {
         logger.error(`Board column update: ${error}`);
-        next(err);
+        next(error);
       }
       return sendJSONresponse(res, 200, updatedColumn);
     },

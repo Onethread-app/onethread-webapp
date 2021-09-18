@@ -4,14 +4,11 @@ const idSchema = {
   id: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
 };
 
-
-
 const companyId = Joi.object().keys({
   companyId: idSchema.id.required(),
 });
 
 const schema = {
-    
   subscription: idSchema.id,
   gateway: Joi.string(),
   company: idSchema.id,
@@ -40,6 +37,5 @@ module.exports = {
     body: Joi.object().keys({
       amount: schema.amount.required(),
     }),
-    
   }),
 };

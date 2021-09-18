@@ -16,9 +16,7 @@ const schema = {
   account: idSchema.id,
   room: idSchema.id,
   text: Joi.string().max(3500),
-  type: Joi.string()
-    .valid(['text', 'file', 'attachment'])
-    .default('text'),
+  type: Joi.string().valid(['text', 'file', 'attachment']).default('text'),
   files: Joi.array(),
 };
 

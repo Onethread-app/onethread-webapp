@@ -6,7 +6,7 @@ module.exports = {
       issueType: Joi.string().max(40).required(),
       title: Joi.string().max(150).required(),
       issueDetails: Joi.string().max(500).required(),
-      imageUrl: Joi.string()
+      imageUrl: Joi.string(),
     }),
   }),
 };

@@ -1,9 +1,6 @@
-const { APIError } = require('../helpers/APIError');
+const { APIError } = require('./APIError');
 const logger = require('../../config/winston');
-const {
-  sendJSONresponse,
-  sendErrorResponse,
-} = require('../helpers/jsonResponse');
+const { sendJSONresponse, sendErrorResponse } = require('./jsonResponse');
 
 const mongoErrorHandler = (err, req, res, next) => {
   let error = { ...err };
@@ -13,6 +10,7 @@ const mongoErrorHandler = (err, req, res, next) => {
       .split('index: ')[1]
       .split('dup key')[0]
       .split('_')[0];
+    // TODOs: improve this regex
     const keyRegex = err.message.match(/key:\s+{\s+:\s\"(.*)(?=\")/);
     const key = keyRegex ? keyRegex[1] : '';
     const output = {
@@ -31,9 +29,7 @@ const mongoErrorHandler = (err, req, res, next) => {
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {
-    const message = Object.values(err.errors).map(
-      (val) => val.message,
-    );
+    const message = Object.values(err.errors).map((val) => val.message);
     error = new APIError(message, 404);
   }
 

@@ -48,7 +48,7 @@ const designationSchema = mongoose.Schema(
   },
 );
 
-let Designation = mongoose.model('Designation', designationSchema);
+const Designation = mongoose.model('Designation', designationSchema);
 
 module.exports = {
   Designation,

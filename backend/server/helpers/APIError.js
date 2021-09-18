@@ -36,32 +36,19 @@ class APIError extends ExtendableError {
 }
 
 class EmailIdExistError extends ExtendableError {
-  constructor(
-    name,
-    message,
-    status = httpStatus.CONFLICT,
-    isPublic = true,
-  ) {
+  constructor(name, message, status = httpStatus.CONFLICT, isPublic = true) {
     super(name, message, status, isPublic);
   }
 }
 
 class BadRequestError extends ExtendableError {
-  constructor(
-    message,
-    status = httpStatus.BAD_REQUEST,
-    isPublic = true,
-  ) {
+  constructor(message, status = httpStatus.BAD_REQUEST, isPublic = true) {
     super(message, status, isPublic);
   }
 }
 
 class SearchNotMatchError extends ExtendableError {
-  constructor(
-    message,
-    status = httpStatus.NOT_FOUND,
-    isPublic = true,
-  ) {
+  constructor(message, status = httpStatus.NOT_FOUND, isPublic = true) {
     super(message, status, isPublic);
   }
 }

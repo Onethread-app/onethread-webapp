@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 // company schema
 const projectRequestSchema = new Schema(
@@ -44,10 +45,7 @@ const projectRequestSchema = new Schema(
   },
 );
 
-let ProjectRequest = mongoose.model(
-  'ProjectRequest',
-  projectRequestSchema,
-);
+const ProjectRequest = mongoose.model('ProjectRequest', projectRequestSchema);
 
 module.exports = {
   ProjectRequest,

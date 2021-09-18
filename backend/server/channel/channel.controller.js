@@ -10,12 +10,8 @@ const authenticate = async (req, res, next) => {
     user_id: _id,
     user_info: { email, name },
   };
-  const auth = pusherChannel.authenticate(
-    socketId,
-    channel,
-    presenceData,
-  );
-  
+  const auth = pusherChannel.authenticate(socketId, channel, presenceData);
+
   res.send(auth);
 };
 

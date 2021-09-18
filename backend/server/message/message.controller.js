@@ -1,33 +1,31 @@
-const mongoose = require('mongoose');
-const { Message } = require('./message.model');
-const { UserMessage } = require('./userMessage.model');
-const { Room } = require('./../room/room.model');
-const { RoomMember } = require('../room/roomMember.model');
-const Account = require('./../account/account.model');
-const { pusherChannel } = require('../services/pusher.services');
-const File = require('./../file/file.model');
-const {
-  triggerUnreadMessages,
-} = require('../services/webpush.services');
+const mongoose = require("mongoose");
+const { Message } = require("./message.model");
+const { UserMessage } = require("./userMessage.model");
+const { Room } = require("../room/room.model");
+const { RoomMember } = require("../room/roomMember.model");
+const Account = require("../account/account.model");
+const { pusherChannel } = require("../services/pusher.services");
+const File = require("./../file/file.model");
+const { triggerUnreadMessages } = require("../services/webpush.services");
 const {
   sendMessageNotification,
-} = require('../services/notification.services');
+} = require("../services/notification.services");
 // const ElasticsearchService  = require('../../index.elasticsearch');
 // const { messageMapping , messageStructure } = require('../services/elastic.services');
 // const elasticService = new ElasticsearchService();
 // elasticService.createMessages('messages', Message , messageMapping , messageStructure);
-const logger = require('../../config/winston');
+const logger = require("../../config/winston");
 const {
   sendJSONresponse,
   sendErrorResponse,
-} = require('../helpers/jsonResponse');
+} = require("../helpers/jsonResponse");
 
 const unreadMessageCounts = async (req, res, next) => {
   try {
     const rooms = await RoomMember.find({
       account: req.user._id,
       removed: false,
-    }).select('-_id room lastSeen');
+    }).select("-_id room lastSeen");
 
     const roomsUnreadCount = {};
     for (const e of rooms) {
@@ -46,7 +44,7 @@ const unreadMessageCounts = async (req, res, next) => {
         },
         {
           $group: {
-            _id: '$room',
+            _id: "$room",
             count: {
               $sum: 1,
             },
@@ -71,8 +69,8 @@ const unreadMessageCounts = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   // Check for JSON
-  if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {
+  if (!req.is("application/json")) {
+    return sendErrorResponse(res, 406, "ContentTypeError", {
       message: "Expects 'application/json'",
     });
   }
@@ -85,7 +83,7 @@ const create = async (req, res, next) => {
       });
     }
 
-    let files = req.body.files.map((file) => file._id);
+    const files = req.body.files.map((file) => file._id);
 
     const newMessage = new Message({
       text: req.body.text,
@@ -96,32 +94,26 @@ const create = async (req, res, next) => {
     });
 
     const account = await Account.findById(req.user._id).select(
-      'name firstName lastName email profileImage',
+      "name firstName lastName email profileImage"
     );
 
     const message = await newMessage.save();
     const notificationMessage = await message
-      .populate('account', 'firstName lastName profileImage _id')
+      .populate("account", "firstName lastName profileImage _id")
       .execPopulate();
 
     const roomMembers = await RoomMember.find({
       room,
     })
-      .select('account')
+      .select("account")
       .exec();
 
     roomMembers.map(async (member) => {
       const memberMessage = new UserMessage({
         message: message._id,
         receiver: member.account,
-        read:
-          member.account.toString() === req.user._id.toString()
-            ? true
-            : false,
-        seen:
-          member.account.toString() === req.user._id.toString()
-            ? true
-            : false,
+        read: member.account.toString() === req.user._id.toString(),
+        seen: member.account.toString() === req.user._id.toString(),
         room,
       });
       await memberMessage.save();
@@ -129,14 +121,14 @@ const create = async (req, res, next) => {
       sendMessageNotification(
         member.account,
         notificationMessage,
-        req.headers.clientid,
+        req.headers.clientid
       );
       if (member.account.toString() !== req.user._id) {
         await triggerUnreadMessages(member.account);
       }
     });
 
-    pusherChannel.trigger(`private-${req.body.room}`, 'new_message', {
+    pusherChannel.trigger(`private-${req.body.room}`, "new_message", {
       message,
       account,
       files: req.body.files,
@@ -147,7 +139,7 @@ const create = async (req, res, next) => {
       {
         message: message._id,
         room: message.room,
-      },
+      }
     );
 
     // const response =  await elasticService.set('messages' ,'_doc' , {
@@ -182,16 +174,16 @@ const getRoomMessages = async (req, res, next) => {
       room: req.params.roomId,
       removed: false,
     })
-      .select('-__v')
-      .populate('files', '')
+      .select("-__v")
+      .populate("files", "")
       .populate([
         {
-          path: 'account',
-          select: 'name firstName lastName email profileImage',
+          path: "account",
+          select: "name firstName lastName email profileImage",
         },
         {
-          path: 'files',
-          select: 'link s3Key type',
+          path: "files",
+          select: "link s3Key type",
         },
       ])
       .sort({ createdAt: -1 })
@@ -220,19 +212,19 @@ const getRoomFiles = async (req, res, next) => {
 
     const files = await Message.find({
       room: req.params.roomId,
-      type: { $in: ['file', 'attachment'] },
+      type: { $in: ["file", "attachment"] },
       removed: false,
     })
-      .select('-__v')
-      .populate('files', '')
+      .select("-__v")
+      .populate("files", "")
       .populate([
         {
-          path: 'account',
-          select: 'name firstName lastName email profileImage',
+          path: "account",
+          select: "name firstName lastName email profileImage",
         },
         {
-          path: 'files',
-          select: 'link s3Key type',
+          path: "files",
+          select: "link s3Key type",
         },
       ])
       .sort({ createdAt: -1 })
@@ -261,11 +253,11 @@ const getRoomDiscussion = async (req, res, next) => {
 
     const discussion = await Message.find({
       room: req.params.roomId,
-      type: { $in: ['text', 'attachment'] },
+      type: { $in: ["text", "attachment"] },
       discussion: true,
       removed: false,
     })
-      .select('text room createdAt updatedAt')
+      .select("text room createdAt updatedAt")
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit);
@@ -289,20 +281,18 @@ const toggleDiscussion = async (req, res, next) => {
       {
         discussion: req.body.discussion,
       },
-      { new: true },
+      { new: true }
     );
 
     if (!discussion) {
       return res.status(404).json({
-        message: 'No message exists.',
+        message: "No message exists.",
       });
     }
 
     return res.status(200).json({
       message: `Message ${
-        req.body.discussion
-          ? 'highlighted'
-          : 'removed from highlighted'
+        req.body.discussion ? "highlighted" : "removed from highlighted"
       }.`,
       discussion,
     });
@@ -313,11 +303,11 @@ const toggleDiscussion = async (req, res, next) => {
 
 const searchMessage = async (req, res, next) => {
   try {
-    const name = req.query.name;
-    const roomId = req.params.roomId;
+    const { name } = req.query;
+    const { roomId } = req.params;
 
     if (name) {
-      let body = {
+      const body = {
         size: 200,
         from: 0,
         query: {
@@ -333,7 +323,7 @@ const searchMessage = async (req, res, next) => {
               {
                 multi_match: {
                   query: name,
-                  fields: ['text', 'files.s3Key'],
+                  fields: ["text", "files.s3Key"],
                 },
               },
             ],
@@ -346,13 +336,12 @@ const searchMessage = async (req, res, next) => {
       return sendJSONresponse(res, 200, {
         success: true,
         message: `Search complete for ${name}`,
-        data: response.hits.hits,
-      });
-    } else {
-      return sendErrorResponse(res, 400, 'EmptySearchError', {
-        message: `query error`,
+        data: res.hits.hits,
       });
     }
+    return sendErrorResponse(res, 400, "EmptySearchError", {
+      message: `query error`,
+    });
   } catch (error) {
     logger.error(`${error}`);
     next(error);

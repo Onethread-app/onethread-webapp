@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { Schema } = mongoose;
 
 const fileSchema = new mongoose.Schema(
@@ -44,12 +45,7 @@ const fileSchema = new mongoose.Schema(
     },
     imageType: {
       type: String,
-      enum: [
-        'profilePic',
-        'coverPhoto',
-        'company-logo',
-        'company-cover-photo',
-      ],
+      enum: ['profilePic', 'coverPhoto', 'company-logo', 'company-cover-photo'],
     },
     account: {
       type: mongoose.Schema.Types.ObjectId,

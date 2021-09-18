@@ -1,9 +1,8 @@
 const express = require('express');
+
 const router = express.Router();
-const passport = require('passport');
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+
+const { authorization } = require('../middlewares/authorizationMiddleware');
 const skillCtrl = require('./skillArea.controller');
 const paramValidation = require('./skillArea.validation');
 const schemaValidator = require('../helpers/joiSchemaValidator');
@@ -16,9 +15,7 @@ router
     skillCtrl.createSkill,
   );
 
-router
-  .route('/update-skill')
-  .put(authorization, skillCtrl.updateUserSkillInfo);
+router.route('/update-skill').put(authorization, skillCtrl.updateUserSkillInfo);
 router.route('/').get(authorization, skillCtrl.getAllSkill);
 router
   .route('/delete-skill')

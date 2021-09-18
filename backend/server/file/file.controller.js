@@ -10,7 +10,8 @@ const Account = require('../account/account.model');
 const { Company } = require('../company/company.model');
 const { Project } = require('../project/project.model');
 const Task = require('../task/task.model');
-let s3bucket = new AWS.S3({
+
+const s3bucket = new AWS.S3({
   accessKeyId: config.awsAccessKey,
   secretAccessKey: config.awsSecretAccessKey,
   region: config.s3Region,
@@ -48,7 +49,7 @@ const checkMimetype = [
 ];
 
 const profilePicture = async (req, res, next) => {
-  const file = req.file;
+  const { file } = req;
   const userID = req.user._id;
   const fileRename = fileName(userID, file.originalname);
   const params = {
@@ -118,7 +119,7 @@ const profilePicture = async (req, res, next) => {
     });
 };
 const companyLogo = async (req, res, next) => {
-  const file = req.file;
+  const { file } = req;
   const userID = req.user._id;
   const companyID = req.params.companyId;
   const fileRename = fileName(companyID, file.originalname);
@@ -191,14 +192,14 @@ const companyLogo = async (req, res, next) => {
 };
 
 const fileInRooms = async (req, res, next) => {
-  const file = req.file;
+  const { file } = req;
   if (!checkMimetype.includes(file.mimetype)) {
     return sendErrorResponse(res, 400, '', {
       message: 'This file format is not supported',
       fieldName: 'file',
     });
   }
-  const roomID = req.query.roomID;
+  const { roomID } = req.query;
   const userID = req.user._id;
   const params = {
     Bucket: config.bucketName,
@@ -235,7 +236,7 @@ const fileInRooms = async (req, res, next) => {
     });
 };
 const fileInProject = async (req, res, next) => {
-  const file = req.file;
+  const { file } = req;
   if (!checkMimetype.includes(file.mimetype)) {
     return sendErrorResponse(res, 400, '', {
       message: 'This file format is not supported',
@@ -243,7 +244,7 @@ const fileInProject = async (req, res, next) => {
     });
   }
   const userID = req.user._id;
-  const pid = req.query.pid;
+  const { pid } = req.query;
   const pidExist = await Project.findOne({ _id: pid });
   if (pidExist) {
     const params = {
@@ -268,9 +269,7 @@ const fileInProject = async (req, res, next) => {
             project: pid,
           });
           await newFile.save();
-          logger.info(
-            'File Link successfully save to file collection',
-          );
+          logger.info('File Link successfully save to file collection');
           pidExist.files.push(newFile._id);
           await pidExist.save();
           return sendJSONresponse(res, 200, { newFile });
@@ -291,7 +290,7 @@ const fileInProject = async (req, res, next) => {
 
 const fileInTask = async (req, res, next) => {
   try {
-    const file = req.file;
+    const { file } = req;
     if (!checkMimetype.includes(file.mimetype)) {
       return sendErrorResponse(res, 400, '', {
         message: 'This file format is not supported',
@@ -324,9 +323,7 @@ const fileInTask = async (req, res, next) => {
               task: tid,
             });
             await newFile.save();
-            logger.info(
-              'File Link successfully save to file collection',
-            );
+            logger.info('File Link successfully save to file collection');
             tidExist.file.push(newFile._id);
             await tidExist.save();
             return sendJSONresponse(res, 200, newFile);
@@ -369,7 +366,7 @@ const removeFileInTask = async (req, res, next) => {
 };
 
 const reportImage = async (req, res, next) => {
-  const file = req.file;
+  const { file } = req;
   const userID = req.user._id;
   const fileRename = fileName(userID, file.originalname);
   const params = {

@@ -1,13 +1,13 @@
 const express = require('express');
+
 const router = express.Router();
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+const { authorization } = require('../middlewares/authorizationMiddleware');
 const teamValidation = require('./team.validation');
 const teamCtrl = require('./team.controller');
 const projectCtrl = require('../project/project.controller');
 const SchemaValidator = require('../helpers/joiSchemaValidator');
 const subCtrl = require('../subscription/subscription.controller');
+
 router
   .route('/:companyId/search')
   .get(

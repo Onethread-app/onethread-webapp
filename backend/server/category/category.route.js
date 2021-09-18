@@ -1,14 +1,8 @@
 const express = require('express');
-const { validate } = require('express-validation');
-const paramValidation = require('./category.validation');
+
 const router = express.Router();
 const categoryCtrl = require('./category.controller');
-const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', { session: false });
-const { permit, authSelf } = require('./../helpers/permission');
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+
 // authentication
 router
   .route('/')
@@ -27,7 +21,7 @@ router
 router
   .route('/:cid')
   .get(
-    //authorization,
+    // authorization,
     categoryCtrl.getSubCategory,
   )
   .post(
@@ -51,7 +45,7 @@ router.route('/sub-category/:sid').post(
   categoryCtrl.newSubSubCategory,
 );
 router.route('/products/:companyId').get(
-  //authorization,
+  // authorization,
   categoryCtrl.getSubSubCategory,
 );
 

@@ -1,7 +1,8 @@
 const express = require('express');
 const passport = require('passport');
+
 const requireAuth = passport.authenticate('jwt', { session: false });
-const { permit } = require('./../helpers/permission');
+const { permit } = require('../helpers/permission');
 const activityCtrl = require('./activity.controller');
 
 const router = express.Router();

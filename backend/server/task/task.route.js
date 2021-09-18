@@ -1,12 +1,11 @@
 const express = require('express');
 const taskCtrl = require('./task.controller');
-const SchemaValidator = require('./../helpers/joiSchemaValidator');
+const SchemaValidator = require('../helpers/joiSchemaValidator');
 const joiSchema = require('./task.validation');
 const subCtrl = require('../subscription/subscription.controller');
-const projectCtrl = require('../project/project.controller');
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+
+const { authorization } = require('../middlewares/authorizationMiddleware');
+
 const router = express.Router();
 
 router.get('/reminder', taskCtrl.taskReminder);
@@ -14,12 +13,7 @@ router.use('/', subCtrl.subscriptionExpireCheck());
 
 router
   .route('/')
-  .get(authorization, taskCtrl.list)
-  .post(
-    authorization,
-    SchemaValidator(joiSchema.createTask),
-    taskCtrl.create,
-  );
+  .post(authorization, SchemaValidator(joiSchema.createTask), taskCtrl.create);
 router
   .route('/suggest-member')
   .get(authorization, taskCtrl.suggestMemberForCreatingTask);
@@ -27,11 +21,7 @@ router
 router
   .route('/:taskId')
   .get(authorization, taskCtrl.get)
-  .put(
-    authorization,
-    SchemaValidator(joiSchema.updateTask),
-    taskCtrl.update,
-  )
+  .put(authorization, SchemaValidator(joiSchema.updateTask), taskCtrl.update)
   .delete(
     authorization,
     SchemaValidator(joiSchema.deleteTask),
@@ -41,11 +31,7 @@ router
 router
   .route('/member/:taskId')
   .get(authorization, taskCtrl.getMembers)
-  .post(
-    authorization,
-    SchemaValidator(joiSchema.addMember),
-    taskCtrl.addMember,
-  )
+  .post(authorization, SchemaValidator(joiSchema.addMember), taskCtrl.addMember)
   .delete(
     authorization,
     SchemaValidator(joiSchema.deleteMember),
@@ -54,17 +40,12 @@ router
 
 router
   .route('/dragTask')
-  .post(
-    authorization,
-    SchemaValidator(joiSchema.dragTask),
-    taskCtrl.dragTask,
-  );
+  .post(authorization, SchemaValidator(joiSchema.dragTask), taskCtrl.dragTask);
 
 router
   .route('/:taskId/suggest-member')
   .get(authorization, taskCtrl.suggestMember);
 
 router.param('taskId', taskCtrl.load);
-
 
 module.exports = router;

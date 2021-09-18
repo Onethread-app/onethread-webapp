@@ -2,13 +2,11 @@ const express = require('express');
 const boardCtrl = require('./board.controller');
 const projectCtrl = require('../project/project.controller');
 const boardSchema = require('./board.validation');
-const SchemaValidator = require('./../helpers/joiSchemaValidator');
+const SchemaValidator = require('../helpers/joiSchemaValidator');
 const subCtrl = require('../subscription/subscription.controller');
 
 // const authorization = passport.authenticate('jwt', { session: false });
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+const { authorization } = require('../middlewares/authorizationMiddleware');
 
 const router = express.Router();
 

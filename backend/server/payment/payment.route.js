@@ -1,11 +1,10 @@
 const express = require('express');
 const paymentCtrl = require('./payment.controller');
-const SchemaValidator = require('./../helpers/joiSchemaValidator');
+const SchemaValidator = require('../helpers/joiSchemaValidator');
 const paymentSchema = require('./payment.validation');
 const companyCtrl = require('../company/company.controller');
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+const { authorization } = require('../middlewares/authorizationMiddleware');
+
 const router = express.Router();
 
 // For TigrowWebApp users
@@ -17,12 +16,9 @@ const router = express.Router();
 //     paymentCtrl.paymentIntent,
 //   );
 
-  router
+router
   .route('/portwallet/initiate')
-  .post(
-    authorization,
-    paymentCtrl.initiateInvoice,
-  );
+  .post(authorization, paymentCtrl.initiateInvoice);
 
 router
   .route('/total-subscriber')
@@ -45,7 +41,5 @@ router
     companyCtrl.authorizeUser('all', 'superAdmin'),
     paymentCtrl.list,
   );
-
-
 
 module.exports = router;

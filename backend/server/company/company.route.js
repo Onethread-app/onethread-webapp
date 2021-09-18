@@ -1,14 +1,13 @@
 const express = require('express');
+
 const router = express.Router({ mergeParams: true });
 
 // const auth = passport.authenticate('jwt', { session: false });
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+const { authorization } = require('../middlewares/authorizationMiddleware');
 const joiSchema = require('./company.validation');
 const companyCtrl = require('./company.controller');
 const subCtrl = require('../subscription/subscription.controller');
-const SchemaValidator = require('./../helpers/joiSchemaValidator');
+const SchemaValidator = require('../helpers/joiSchemaValidator');
 
 const memberRoutes = require('./member/member.route');
 const deptRoutes = require('./department/department.route');

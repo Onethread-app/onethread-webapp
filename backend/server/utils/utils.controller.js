@@ -1,5 +1,7 @@
 const logger = require(`../../config/winston`);
+
 const Account = require('../account/account.model');
+
 const { sendJSONresponse } = require('../helpers/jsonResponse');
 const crypto = require('crypto');
 
@@ -12,36 +14,35 @@ const EmailIDExist = async (req, res, next) => {
       return sendJSONresponse(res, 409, {
         message: `Email is not unique`,
       });
-    } else {
-      logger.info(`Email is unique`);
-      return sendJSONresponse(res, 200, {
-        message: `Email is unique`,
-      });
     }
+    logger.info(`Email is unique`);
+    return sendJSONresponse(res, 200, {
+      message: `Email is unique`,
+    });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
 
 const changeUserName = async (req, res, next) => {
   try {
-    const name = req.query.name;
-    const username = await Account.findOne({ name: name });
+    const { name } = req.query;
+    const username = await Account.findOne({ name });
     if (username) {
       return sendJSONresponse(res, 409, {
         message: `username already exist`,
       });
-    } else {
-      await Account.updateOne({ _id: id }, { name: name })
-        .select('-password')
-        .exec()
-        .then((user) => {
-          return sendJSONresponse(res, 200, {
-            success: true,
-            message: 'Username Changed',
-          });
-        });
     }
+    await Account.updateOne({ _id: req.user._id }, { name })
+      .select('-password')
+      .exec()
+      .then(() => {
+        return sendJSONresponse(res, 200, {
+          success: true,
+          message: 'Username Changed',
+        });
+      });
   } catch (error) {
     next(error);
   }

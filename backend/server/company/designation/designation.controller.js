@@ -1,7 +1,10 @@
 const { Designation } = require('./designation.model.js');
-const { Member } = require('./../member/member.model');
+const { Member } = require('../member/member.model');
 const logger = require('../../../config/winston.js');
-const { sendJSONresponse } = require('../../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../../helpers/jsonResponse');
 
 const create = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -11,8 +14,8 @@ const create = async (req, res, next) => {
     });
   }
   try {
-    let divisions = ['director', 'cxo'],
-      body = req.body;
+    const divisions = ['director', 'cxo'];
+    const { body } = req;
     if (divisions.includes(req.body.division)) {
       delete body.department;
     }
@@ -32,7 +35,7 @@ const create = async (req, res, next) => {
       designation,
     });
   } catch (err) {
-    logger.error(`Designations: ${err}`)
+    logger.error(`Designations: ${err}`);
     next(err);
   }
 };
@@ -58,7 +61,7 @@ const edit = async (req, res, next) => {
     }
 
     // check division
-    let checkDivisions = ['director', 'cxo'];
+    const checkDivisions = ['director', 'cxo'];
 
     if (checkDivisions.includes(req.body.division)) {
       designation.department = undefined;
@@ -76,7 +79,7 @@ const edit = async (req, res, next) => {
       designation,
     });
   } catch (err) {
-    logger.error(`Designations: ${err}`)
+    logger.error(`Designations: ${err}`);
     next(err);
   }
 };
@@ -99,7 +102,7 @@ const list = async (req, res, next) => {
       message: 'No designations found',
     });
   } catch (error) {
-    logger.error(`Designations: ${error}`)
+    logger.error(`Designations: ${error}`);
     next(error);
   }
 };
@@ -113,13 +116,12 @@ const load = async (req, res, next) => {
     if (member) {
       req.member = member;
       return next();
-    } else {
-      return res.status(404).json({
-        message: 'No valid entry found for provided Member ID',
-      });
     }
+    return res.status(404).json({
+      message: 'No valid entry found for provided Member ID',
+    });
   } catch (error) {
-    logger.error(`Designations: ${error}`)
+    logger.error(`Designations: ${error}`);
     next(error);
   }
 };

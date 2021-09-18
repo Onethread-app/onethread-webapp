@@ -1,13 +1,11 @@
 const express = require('express');
-const passport = require('passport');
 const subTaskCtrl = require('./subtask.controller');
-const SchemaValidator = require('./../../helpers/joiSchemaValidator');
+const SchemaValidator = require('../../helpers/joiSchemaValidator');
 const joiSchema = require('./subtask.validation');
 const subCtrl = require('../../subscription/subscription.controller');
-const {
-  authorization,
-} = require('../../middlewares/authorizationMiddleware');
+const { authorization } = require('../../middlewares/authorizationMiddleware');
 const projectCtrl = require('../../project/project.controller');
+
 const router = express.Router();
 
 router.use('/', subCtrl.subscriptionExpireCheck());

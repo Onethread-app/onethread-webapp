@@ -1,9 +1,7 @@
-'use strict';
-const {
-  Category,
-  SubCategory,
-  SubSubCategory,
-} = require('./category.model');
+const { Category, SubCategory, SubSubCategory } = require('./category.model');
+
+const { sendErrorResponse } = require('../helpers/jsonResponse');
+
 // Create
 const newCategory = async (req, res) => {
   // Check for JSON
@@ -121,12 +119,12 @@ const getCategory = (req, res, next) => {
       const response = {
         type: req.query.type,
         categories: categories.map((doc) => {
-          let result = {
+          const result = {
             _id: doc._id,
             name: doc.name,
           };
           // check for business-category
-          if (doc.name == 'Category of one’s business') {
+          if (doc.name === 'Category of one’s business') {
             result.request = {
               type: 'GET',
               url: '/api/v1/category?type=business-category',
@@ -181,9 +179,9 @@ const getSubSubCategory = (req, res, next) => {
 };
 // Delete
 const deleteCategory = async (req, res, next) => {
-  //category
+  // category
   try {
-    let category = await Category.findOneAndRemove({
+    const category = await Category.findOneAndRemove({
       _id: req.params.cid,
     });
 
@@ -192,23 +190,21 @@ const deleteCategory = async (req, res, next) => {
         message: `No category found with this ID`,
       });
     } else {
-      //sub-category
+      // sub-category
       try {
-        let subcategory = await SubCategory.findOneAndRemove({
+        const subcategory = await SubCategory.findOneAndRemove({
           cid: req.params.cid,
         });
 
         if (subcategory) {
-          //sub-category
+          // sub-category
           try {
-            let subsubcategory = await SubSubCategory.findOneAndRemove(
-              {
-                cid: req.params.cid,
-              },
-            );
+            const subsubcategory = await SubSubCategory.findOneAndRemove({
+              cid: req.params.cid,
+            });
 
             if (subsubcategory) {
-              //sub-category
+              // sub-category
               res.status(200).json({
                 message:
                   'Category deleted with all subcategories and subsubcategories.',

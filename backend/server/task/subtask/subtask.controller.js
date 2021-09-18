@@ -1,23 +1,20 @@
-const SubTask = require('./subtask.model');
-const { Team } = require('../../team-member/team.model');
-const Board = require('../../board/board.model');
-const { addToBoard } = require('../../board/board.controller');
-const logger = require('../../../config/winston');
-const _ = require('lodash');
+const SubTask = require("./subtask.model");
+const { Team } = require("../../team-member/team.model");
+const Board = require("../../board/board.model");
+const { addToBoard } = require("../../board/board.controller");
+const logger = require("../../../config/winston");
+
 const {
   sendJSONresponse,
   sendErrorResponse,
-} = require('../../helpers/jsonResponse');
-const {
-  search,
-  accountIndex,
-} = require('../../services/elastic.services');
+} = require("../../helpers/jsonResponse");
+
 const {
   subTaskAssignNotificationToUsers,
-} = require('../../notification/notification.controller');
+} = require("../../notification/notification.controller");
 const {
   triggerUnreadNotifications,
-} = require('../../services/webpush.services');
+} = require("../../services/webpush.services");
 
 const load = (req, res, next, id) => {
   SubTask.findById(id)
@@ -28,7 +25,7 @@ const load = (req, res, next, id) => {
         return next();
       }
       return res.status(400).json({
-        message: 'No valid entry found for provided SubTask ID',
+        message: "No valid entry found for provided SubTask ID",
       });
     })
     .catch((err) => {
@@ -36,7 +33,7 @@ const load = (req, res, next, id) => {
     });
 };
 
-//create a new subtask
+// create a new subtask
 
 const create = async (req, res, next) => {
   try {
@@ -56,7 +53,11 @@ const create = async (req, res, next) => {
 };
 
 const get = (req, res, next) => {
-  return res.json(req.subTask);
+  try {
+    return res.json(req.subTask);
+  } catch (error) {
+    next(error);
+  }
 };
 
 const update = async (req, res, next) => {
@@ -64,7 +65,7 @@ const update = async (req, res, next) => {
     const newSubTask = await SubTask.findByIdAndUpdate(
       { _id: req.SubTask._id },
       req.body,
-      { new: true },
+      { new: true }
     );
     res.status(200).send(newSubTask);
   } catch (error) {
@@ -75,7 +76,7 @@ const update = async (req, res, next) => {
 const deleteSubtask = async (req, res, next) => {
   try {
     await SubTask.findByIdAndDelete(req.SubTask._id);
-    res.status(200).json({ message: 'SUBTASK DELETED' });
+    res.status(200).json({ message: "SUBTASK DELETED" });
   } catch (error) {
     next(error);
   }
@@ -86,13 +87,13 @@ const list = async (req, res, next) => {
     const { limit = 50, skip = 0, taskId } = req.query;
 
     const subtasks = await SubTask.find({
-      taskId: taskId,
+      taskId,
     })
-      .select('_id name description done assignedMembers dueDate')
+      .select("_id name description done assignedMembers dueDate")
       .populate([
         {
-          path: 'assignedMembers',
-          select: '_id firstName lastName profileImage',
+          path: "assignedMembers",
+          select: "_id firstName lastName profileImage",
         },
       ])
       .sort({ createdAt: -1 })
@@ -109,44 +110,40 @@ const list = async (req, res, next) => {
 const addMember = async (req, res, next) => {
   try {
     const requestedMember = req.body.assignmember;
-    const subTaskId = req.params.subTaskId;
-    const boardId = req.body.boardId;
+    const { subTaskId } = req.params;
+    const { boardId } = req.body;
 
     const subtask = await SubTask.findOne({
       _id: subTaskId,
     });
-    const memberAlreadyExistsInSubtask =
-      subtask.assignedMembers.filter(
-        (assignedMember) => assignedMember._id === requestedMember,
-      );
+    const memberAlreadyExistsInSubtask = subtask.assignedMembers.filter(
+      (assignedMember) => assignedMember._id === requestedMember
+    );
 
     const board = await Board.findOne({
       _id: boardId,
     });
-    const boardMembers = board.members.map((member) =>
-      member.toString(),
-    );
-    const memberAlreadyExistsInBoard =
-      boardMembers.includes(requestedMember);
+    const boardMembers = board.members.map((member) => member.toString());
+    const memberAlreadyExistsInBoard = boardMembers.includes(requestedMember);
 
     if (memberAlreadyExistsInSubtask.length > 0) {
-      logger.info('Member already exists');
-      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
-        message: 'Member already exists',
-        fieldName: 'name',
+      logger.info("Member already exists");
+      return sendErrorResponse(res, 409, "DuplicateKeyError", {
+        message: "Member already exists",
+        fieldName: "name",
       });
     } else {
       if (memberAlreadyExistsInBoard) {
         const subTask = await SubTask.findByIdAndUpdate(
           { _id: subTaskId },
           { $push: { assignedMembers: requestedMember } },
-          { safe: true, upsert: true, new: true },
+          { safe: true, upsert: true, new: true }
         )
-          .select('_id assignedMembers')
+          .select("_id assignedMembers")
           .populate([
             {
-              path: 'assignedMembers',
-              select: '_id firstName lastName profileImage',
+              path: "assignedMembers",
+              select: "_id firstName lastName profileImage",
             },
           ])
           .exec();
@@ -160,7 +157,7 @@ const addMember = async (req, res, next) => {
               _id: req.user._id,
               name: req.user.name,
               pusherSock: req.headers.clientid,
-            },
+            }
           );
         }
         return sendJSONresponse(res, 201, subTask);
@@ -169,13 +166,13 @@ const addMember = async (req, res, next) => {
         const subTask = await SubTask.findByIdAndUpdate(
           { _id: subTaskId },
           { $push: { assignedMembers: requestedMember } },
-          { safe: true, upsert: true, new: true },
+          { safe: true, upsert: true, new: true }
         )
-          .select('_id assignedMembers')
+          .select("_id assignedMembers")
           .populate([
             {
-              path: 'assignedMembers',
-              select: '_id firstName lastName profileImage',
+              path: "assignedMembers",
+              select: "_id firstName lastName profileImage",
             },
           ])
           .exec();
@@ -189,12 +186,42 @@ const addMember = async (req, res, next) => {
               _id: req.user._id,
               name: req.user.name,
               pusherSock: req.headers.clientid,
-            },
+            }
           );
         }
         return sendJSONresponse(res, 201, subTask);
       }
+      return sendJSONresponse(res, 201, subTask);
     }
+    await addToBoard(boardId, requestedMember);
+    const subTask = await SubTask.findByIdAndUpdate(
+      { _id: subTaskId },
+      { $push: { assignedMembers: requestedMember } },
+      { safe: true, upsert: true, new: true }
+    )
+      .select("_id assignedMembers")
+      .populate([
+        {
+          path: "assignedMembers",
+          select: "_id firstName lastName profileImage",
+        },
+      ])
+      .exec();
+    if (req.user._id !== requestedMember) {
+      await subTaskAssignNotificationToUsers(
+        req.user._id,
+        req.headers.companyid,
+        subTaskId,
+        requestedMember,
+        {
+          _id: req.user._id,
+          name: req.user.name,
+          pusherSock: req.headers.clientid,
+        }
+      );
+      await triggerUnreadNotifications(requestedMember);
+    }
+    return sendJSONresponse(res, 201, subTask);
   } catch (error) {
     logger.error(`Subtask: ${error}`);
     next(error);
@@ -206,11 +233,11 @@ const getMembers = (req, res, next) => {
     SubTask.find({
       _id: req.params.subTaskId,
     })
-      .select('_id assignedMembers')
+      .select("_id assignedMembers")
       .populate([
         {
-          path: 'assignedMembers',
-          select: '_id firstName lastName profileImage',
+          path: "assignedMembers",
+          select: "_id firstName lastName profileImage",
         },
       ])
       .exec()
@@ -225,18 +252,18 @@ const getMembers = (req, res, next) => {
 
 const deleteMember = async (req, res, next) => {
   try {
-    const memberId = req.query.memberId;
-    const subTaskId = req.params.subTaskId;
+    const { memberId } = req.query;
+    const { subTaskId } = req.params;
     let doesExist = false;
 
     const subTask = await SubTask.findOne({
       _id: subTaskId,
     })
-      .select('assignedMembers')
+      .select("assignedMembers")
       .populate([
         {
-          path: 'assignedMembers',
-          select: '_id',
+          path: "assignedMembers",
+          select: "_id",
         },
       ])
       .exec();
@@ -251,13 +278,13 @@ const deleteMember = async (req, res, next) => {
       await SubTask.findByIdAndUpdate(
         { _id: subTaskId },
         { $pull: { assignedMembers: memberId } },
-        { safe: true, upsert: true, new: true },
+        { safe: true, upsert: true, new: true }
       )
-        .select('_id assignedMembers')
+        .select("_id assignedMembers")
         .populate([
           {
-            path: 'assignedMembers',
-            select: '_id firstName lastName profileImage',
+            path: "assignedMembers",
+            select: "_id firstName lastName profileImage",
           },
         ])
         .exec()
@@ -266,7 +293,7 @@ const deleteMember = async (req, res, next) => {
         });
     } else {
       return sendJSONresponse(res, 404, {
-        message: 'ID does not exist',
+        message: "ID does not exist",
         status: 404,
       });
     }
@@ -278,17 +305,17 @@ const deleteMember = async (req, res, next) => {
 
 const searchMember = async (req, res, next) => {
   try {
-    const subTaskId = req.params.subTaskId;
+    const { subTaskId } = req.params;
 
-    let subTaskMembers = await SubTask.findById(subTaskId)
-      .select('_id assignedMembers')
+    const subTaskMembers = await SubTask.findById(subTaskId)
+      .select("_id assignedMembers")
       .exec();
 
-    let projectMembers = await Team.find({
+    const projectMembers = await Team.find({
       project: req.query.pid,
     })
-      .select('_id account')
-      .populate('account', '_id name')
+      .select("_id account")
+      .populate("account", "_id name")
       .exec();
 
     let members = projectMembers.filter(({ account }) => {

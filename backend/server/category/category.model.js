@@ -1,13 +1,12 @@
-'use strict';
-
 const mongoose = require('mongoose');
+
 mongoose.plugin((schema) => {
   schema.options.usePushEach = true;
 });
-//let timestamp = require("mongoose-timestamp");
+// let timestamp = require("mongoose-timestamp");
 
 // defining all the fields of main category
-let categorySchema = mongoose.Schema({
+const categorySchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -22,18 +21,12 @@ let categorySchema = mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: [
-      'company',
-      'business-category',
-      'business',
-      'emp',
-      'job-seeker',
-    ],
+    enum: ['company', 'business-category', 'business', 'emp', 'job-seeker'],
   },
 });
 
 // defining all the fields of sub-category
-let subCategorySchema = mongoose.Schema({
+const subCategorySchema = mongoose.Schema({
   cid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
@@ -52,7 +45,7 @@ let subCategorySchema = mongoose.Schema({
 });
 
 // defining all the fields of sub-sub-category
-let subSubCategorySchema = mongoose.Schema({
+const subSubCategorySchema = mongoose.Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
@@ -79,15 +72,12 @@ let subSubCategorySchema = mongoose.Schema({
 // subCategorySchema.plugin(timestamp);
 // subSubCategorySchema.plugin(timestamp);
 
-let Category = (module.exports = mongoose.model(
-  'Category',
-  categorySchema,
-));
-let SubCategory = (module.exports = mongoose.model(
+const Category = (module.exports = mongoose.model('Category', categorySchema));
+const SubCategory = (module.exports = mongoose.model(
   'SubCategory',
   subCategorySchema,
 ));
-let SubSubCategory = (module.exports = mongoose.model(
+const SubSubCategory = (module.exports = mongoose.model(
   'SubSubCategory',
   subSubCategorySchema,
 ));

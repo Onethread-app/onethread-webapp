@@ -1,8 +1,6 @@
 const express = require('express');
 
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+const { authorization } = require('../middlewares/authorizationMiddleware');
 
 const SchemaValidator = require('../helpers/joiSchemaValidator');
 const timeTrackerSchema = require('./time-tracker.validation');

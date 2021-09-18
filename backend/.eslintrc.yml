@@ -1,0 +1,71 @@
+env:
+  browser: true
+  commonjs: true
+  es6: true
+extends:
+  - airbnb-base
+  - plugin:prettier/recommended
+plugins:
+  - prettier
+globals:
+  Atomics: readonly
+  SharedArrayBuffer: readonly
+parserOptions:
+  ecmaVersion: 2018
+rules:
+  prettier/prettier:
+    - error
+    - trailingComma: all
+      bracketSpacing: true
+      singleQuote: true
+      printWidth: 80
+      tabWidth: 2
+      endOfLine: 'lf'
+      arrowParens: 'always'
+      Arrow Function Parentheses: 'always'
+
+  # styling
+  newline-before-return: 0
+  prefer-const: 1
+  no-new-object: 2
+  no-underscore-dangle: 0
+  object-shorthand: 1
+  import/no-useless-path-segments: 1
+  prefer-template: 0
+  import/newline-after-import: 1
+  consistent-return: 1
+  prefer-destructuring: 1
+  no-else-return: 1
+  spaced-comment: 1
+  array-callback-return: 1
+  no-param-reassign: 1
+  lonely-if: 0
+  no-plusplus: 0
+  no-await-in-loop: 0
+  no-restricted-syntax: 0
+  no-unused-vars: 0
+  no-lonely-if: 0
+  import/extensions: 0
+  no-useless-escape: 0
+  no-unused-expressions: 0
+  no-prototype-builtins: 0
+  max-classes-per-file: 0
+  radix: 0
+  func-names: 0
+  import/order: 0
+  no-shadow: 0
+  no-undef: 2
+  no-multi-assign: 0
+  new-cap: 0
+  no-global-assign: 0
+  no-use-before-define:
+    0
+    # - functions: true
+    #   classes: true
+    #   variables: true
+
+  ### ES6 ###
+
+  ### Best practices ###
+  yoda: error
+  curly: 0

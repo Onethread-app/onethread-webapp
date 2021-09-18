@@ -10,12 +10,7 @@ const planId = Joi.object().keys({
 });
 
 const schema = {
-  name: Joi.string().valid([
-    'trial',
-    'small',
-    'medium',
-    'enterprise',
-  ]),
+  name: Joi.string().valid(['trial', 'small', 'medium', 'enterprise']),
   maxTier: Joi.number(),
   description: Joi.string().max(2500).allow(''),
   pricing: Joi.number(),

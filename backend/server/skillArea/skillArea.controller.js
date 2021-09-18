@@ -1,47 +1,43 @@
-const SkillArea = require('./skillArea.model');
-const { AccountSkill } = require('./accountSkill.model');
-const Account = require('../account/account.model');
-const logger = require('../../config/winston.js');
-const chalk = require('chalk');
+const chalk = require("chalk");
+const SkillArea = require("./skillArea.model");
+const Account = require("../account/account.model");
+const logger = require("../../config/winston.js");
+
 const {
   sendJSONresponse,
   sendErrorResponse,
-} = require('../helpers/jsonResponse');
+} = require("../helpers/jsonResponse");
 
 // all services
 const {
   setDocument,
   skillIndex,
   search,
-} = require('../services/elastic.services');
+} = require("../services/elastic.services");
 
 const createSkill = async (req, res, next) => {
-  if (!req.is('application/json')) {
+  if (!req.is("application/json")) {
     return res.send("Expects 'application/json'");
   }
 
   const skill = req.body.name;
-  // const skillExist = await SkillArea.findOne({ name: skill });
-  // if (skillExist) {
-  //   return sendJSONresponse(res, 200);
-  // }
   const newSkill = new SkillArea();
   newSkill.name = skill;
   newSkill.account.push(req.user._id);
   newSkill
     .save()
-    .then(async (skill) => {
+    .then(async (s) => {
       const skillInfo = {};
-      skillInfo._id = skill._id;
-      skillInfo.name = skill.name;
-      await setDocument(skillIndex, '_doc', {
+      skillInfo._id = s._id;
+      skillInfo.name = s.name;
+      await setDocument(skillIndex, "_doc", {
         mongo_id: skillInfo._id,
         name: skillInfo.name,
         account: skillInfo.accountId,
       });
       return sendJSONresponse(res, 201, {
         success: true,
-        message: 'new skill created',
+        message: "new skill created",
         skillInfo,
       });
     })
@@ -97,21 +93,20 @@ const getSkillInfo = async (req, res) => {
   const skill = req.params.id;
 
   SkillArea.findOne({ _id: skill })
-    .populate('accountId')
+    .populate("accountId")
     .exec()
     .then((result) => {
       if (result) {
         return sendJSONresponse(res, 200, {
           success: true,
-          msg: 'Skillset get',
+          msg: "Skillset get",
           skillArea: result,
         });
-      } else {
-        return sendJSONresponse(res, 404, {
-          success: false,
-          msg: '404 not found',
-        });
       }
+      return sendJSONresponse(res, 404, {
+        success: false,
+        msg: "404 not found",
+      });
     })
     .catch((err) => {
       logger.error(`error : ${err}`);
@@ -122,7 +117,7 @@ const getSkillInfo = async (req, res) => {
     });
 };
 
-const getAllSkill = async (req, res) => {
+const getAllSkill = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   SkillArea.find({})
 
@@ -134,18 +129,17 @@ const getAllSkill = async (req, res) => {
           success: true,
           SkillArea: results,
         });
-      } else {
-        res.status(404).json({ message: 'No Basic-info found' });
       }
+      res.status(404).json({ message: "No Basic-info found" });
     })
     .catch((err) => {
       next(err);
     });
 };
 
-const updateSkillInfo = async (req, res) => {
-  if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {
+const updateSkillInfo = async (req, res, next) => {
+  if (!req.is("application/json")) {
+    return sendErrorResponse(res, 406, "ContentTypeError", {
       message: "Expects 'application/json'",
     });
   }
@@ -156,16 +150,15 @@ const updateSkillInfo = async (req, res) => {
       if (result) {
         return sendJSONresponse(res, 201, {
           success: true,
-          message: 'Successfully update',
+          message: "Successfully update",
           result,
         });
-      } else {
-        logger.error('404 document not found');
-        return sendJSONresponse(res, 404, {
-          success: false,
-          message: 'Document not found',
-        });
       }
+      logger.error("404 document not found");
+      return sendJSONresponse(res, 404, {
+        success: false,
+        message: "Document not found",
+      });
     })
     .catch((err) => {
       next(err);
@@ -182,33 +175,33 @@ const skillLoad = async (req, res, next, id) => {
         next();
       } else {
         return res.status(400).json({
-          message: 'No valid entry found for provided ID',
+          message: "No valid entry found for provided ID",
         });
       }
     })
     .catch((err) => {
-      return next(err);
+      next(err);
     });
 };
 
 const searchSkillSet = async (req, res, next) => {
   try {
-    const name = req.query.name;
+    const { name } = req.query;
     const userId = req.user._id;
     const userSkill = await Account.findOne({ _id: userId });
     const userskillId = userSkill.skillArea;
     // const
-    if (name === '') {
+    if (name === "") {
       return sendErrorResponse(res, 200, {});
     }
 
     await SkillArea.find({
       $and: [
-        { name: { $regex: new RegExp(name), $options: 'i' } },
+        { name: { $regex: new RegExp(name), $options: "i" } },
         { _id: { $nin: userskillId } },
       ],
     })
-      .select('-accountId')
+      .select("-accountId")
       .then((data) => {
         logger.info(`Search complete ${name}`);
         return sendJSONresponse(res, 200, {
@@ -300,11 +293,11 @@ const updateUserSkillInfo = async (req, res, next) => {
     const userID = req.user.email;
     const user = await Account.updateOne(
       { email: userID },
-      { $addToSet: { skillArea: skillId } },
+      { $addToSet: { skillArea: skillId } }
     );
     const userSkill = await Account.findOne({
       email: userID,
-    }).populate('skillArea', '_id name');
+    }).populate("skillArea", "_id name");
     const skillList = userSkill.skillArea;
     return sendJSONresponse(res, 200, { skillList });
   } catch (error) {
@@ -332,7 +325,7 @@ const updateUserSkillInfo = async (req, res, next) => {
 
 const deleteSkillInfoFromAccount = async (req, res, next) => {
   try {
-    const skillId = req.query.skillId;
+    const { skillId } = req.query;
     const userId = req.user._id;
     const user = await Account.findOneAndUpdate(
       { _id: userId },
@@ -341,9 +334,9 @@ const deleteSkillInfoFromAccount = async (req, res, next) => {
         safe: true,
         upsert: true,
         new: true,
-      },
-    ).populate('skillArea', 'name');
-    const skillArea = user.skillArea;
+      }
+    ).populate("skillArea", "name");
+    const { skillArea } = user;
     return sendJSONresponse(res, 200, { skillArea });
   } catch (error) {
     next(error);
