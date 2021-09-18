@@ -5,7 +5,7 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.48.0",
-    "@blueprintjs/datetime": "^3.14.0",
+    "@blueprintjs/datetime": "^3.23.7",
     "@blueprintjs/docs-theme": "^3.10.4",
     "@blueprintjs/popover2": "^0.10.1",
     "@blueprintjs/select": "^3.10.0",
