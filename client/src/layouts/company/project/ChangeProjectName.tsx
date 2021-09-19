@@ -35,6 +35,7 @@ interface UpdateProjectInternalProps extends UpdateProjectProps {
     projectId: string,
     color: string,
     deadline: Date,
+    budget: number,
   ) => any;
   isLoading: boolean;
   updatingProject: boolean;
@@ -52,6 +53,7 @@ const UpdateProjectComponent = (
         props.projectId,
         values.color,
         values.deadline ? values.deadline : new Date(props.deadline),
+        values.budget,
       );
     } else {
       await props.updateProject(
@@ -59,6 +61,7 @@ const UpdateProjectComponent = (
         props.projectId,
         values.color,
         values.deadline,
+        values.budget,
       );
     }
     if (
@@ -68,7 +71,6 @@ const UpdateProjectComponent = (
       props.setShowDialog(false);
     }
   };
-
   return (
     <Form
       onSubmit={onSubmit}
@@ -157,6 +159,30 @@ const UpdateProjectComponent = (
                     {meta.error || meta.submitError}
                   </small>
                 )}
+              </div>
+            )}
+          />
+          <Field<string>
+            name="budget"
+            validate={composeValidators(required, maxValue(32))}
+            render={({ input, meta }) => (
+              <div
+                className={` ${checkError(meta) ? 'mb2' : 'mb3'} mt2`}
+              >
+                <InputGroupFieldWithLabel
+                  id="budget"
+                  value={input.value}
+                  onChange={input.onChange}
+                  style={{
+                    boxShadow: 'none',
+                    fontSize: '18px',
+                  }}
+                  error={
+                    checkError(meta) &&
+                    (meta.error || meta.submitError)
+                  }
+                  label="Budget"
+                />
               </div>
             )}
           />
