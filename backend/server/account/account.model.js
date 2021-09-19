@@ -22,12 +22,12 @@ const accountsSchema = new mongoose.Schema(
     firstName: {
       type: String,
       trim: true,
-      required: true,
+      // required: true,
     },
     lastName: {
       type: String,
       trim: true,
-      required: true,
+      // required: true,
     },
     position: {
       type: String,
@@ -48,7 +48,7 @@ const accountsSchema = new mongoose.Schema(
     salt: String,
     password: {
       type: String,
-      required: true,
+      // required: true,
     },
     role: {
       type: String,
@@ -62,7 +62,7 @@ const accountsSchema = new mongoose.Schema(
     },
     contactNo: {
       type: String,
-      required: false,
+      // required: false,
       unique: true,
     },
     gender: {
@@ -133,65 +133,25 @@ const accountsSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
 accountsSchema.index(
   { email: 1, secondaryEmail: 1 },
   { unique: true },
 );
-accountsSchema.pre('save', function (next) {
-  const account = this;
 
-  // only hash the password if it has been modified (or is new)
-  if (!account.isModified('password')) {
+accountsSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  try {
+    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+    this.password = await bcrypt.hash(this.password, salt);
     return next();
+  } catch (error) {
+    return next(error);
   }
-
-  // generate a salt
-  // promise function ES6 style
-  return new Promise((resolve, reject) =>
-    // Generate hash's random salt
-    bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
-      if (err) {
-        return reject(err);
-      }
-
-      // Now, with the given salt, generate the hash
-      bcrypt.hash(account.password, salt, (err, hash) => {
-        if (err) {
-          return reject(err);
-        }
-        // Hash generated successfully!
-        account.password = hash;
-        return resolve(hash);
-      });
-    }),
-  );
 });
 
-// TODOS: Convert into promise based function
-accountsSchema.methods.comparePassword = function (
-  candidatePassword,
-  cb,
-) {
-  // promise based
-  // return new Promise((resolve, reject) =>
-  //   bcrypt.compare(
-  //     candidatePassword,
-  //     this.password,
-  //     (err, isMatch) => {
-  //       if (err) {
-  //         return reject(err);
-  //       }
-  //       return isMatch ? resolve(isMatch) : reject();
-  //     },
-  //   ),
-  // );
-  // es5 style
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) {
-      return cb(err);
-    }
-    cb(null, isMatch);
-  });
+accountsSchema.methods.comparePassword = async function (data) {
+  return bcrypt.compare(data, this.password);
 };
 
 module.exports = mongoose.model('Account', accountsSchema);

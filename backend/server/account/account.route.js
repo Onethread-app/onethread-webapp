@@ -11,12 +11,36 @@ const {
 const {
   authentication,
 } = require('../middlewares/authenticationMiddleware');
+
 router
   .route('/invite-signup')
   .post(
     schemaValidator(paramValidation.inviteSignup),
     accountCtrl.inviteSignup,
   );
+
+router
+  .route('/resend-email')
+  .post(
+    schemaValidator(paramValidation.resendEmail),
+    accountCtrl.resendEmail,
+  );
+
+router
+  .route('/verify-account/:token')
+  .get(
+    schemaValidator(paramValidation.getAccessTokenForVerifyAccount),
+    accountCtrl.getAccessTokenForVerifyAccount,
+  );
+
+router
+  .route('/update')
+  .put(
+    authorization,
+    schemaValidator(paramValidation.update),
+    accountCtrl.accountUpdate,
+  );
+
 // authentication
 router
   .route('/signup')
@@ -24,11 +48,7 @@ router
     schemaValidator(paramValidation.register),
     accountCtrl.register,
   );
-router.route('/resend-email').post(accountCtrl.resendEmail);
-router.get(
-  '/verify-account/:token',
-  accountCtrl.getAccessTokenForVerifyAccount,
-);
+
 router
   .route('/login')
   .post(
@@ -57,13 +77,7 @@ router
   .route('/daily-progress')
   .get(authorization, accountCtrl.userDailyProgress);
 router.route('/timeline').get(authorization, accountCtrl.timeline);
-router
-  .route('/update')
-  .put(
-    authorization,
-    schemaValidator(paramValidation.update),
-    accountCtrl.accountUpdate,
-  );
+
 router
   .route('/logout')
   .post(
@@ -90,11 +104,8 @@ router
 router.route('/refresh').post(accountCtrl.tokenRefresh);
 
 router
-  .route("/save-language")
-  .post(
-    authorization,
-    accountCtrl.saveLanguage,
-  );
+  .route('/save-language')
+  .post(authorization, accountCtrl.saveLanguage);
 
 // for admin
 // router

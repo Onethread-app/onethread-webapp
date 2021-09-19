@@ -79,83 +79,179 @@ const options = [
   },
 ];
 
-// get today's tasks for user
-const getTodaysTask = async (req) => {
+const generateToken = () => {
+  const token = crypto.randomBytes(20).toString('hex');
+  return crypto.createHash('sha256').update(token).digest('hex');
+};
+
+const genAuthToken = (user) => {
+  const payLoad = {
+    email: user.email,
+    name: user.name,
+    _id: user._id,
+  };
+  const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
+    expiresIn: config.accessTokenExpire,
+  });
+  const refreshToken = jwt.sign(payLoad, config.refreshTokenSecret, {
+    expiresIn: config.refreshTokenExpire,
+  });
+
+  return [accessToken, refreshToken];
+};
+
+const makeUnqName = (firstName, lastName, c) => {
+  return `${createSlug(firstName)}-${createSlug(lastName)}-${c + 1}`;
+};
+
+const inviteSignup = async (req, res, next) => {
   try {
-    let startToday = new Date(req.query.date);
-    startToday.setHours(0, 0, 0, 0);
-    let endToday = new Date();
-    endToday.setHours(23, 59, 59, 999);
-    const taskList = await Task.find({
-      dueDate: { $gte: startToday, $lt: endToday },
-    }).sort({ createdAt: -1 });
-    let taskId = taskList.map((e) => e._id);
-    const assignToUserToday = await TaskAssign.find({
-      taskId: taskId,
-      assignedPerson: req.user._id,
-    })
-      .select('taskId')
-      .populate(options);
-    const assignByUserToday = await TaskAssign.find({
-      taskId: taskId,
-      account: req.user._id,
-      assignedPerson: { $nin: { _id: req.user._id } },
-    })
-      .sort({ createdAt: -1 })
-      .select('taskId')
-      .populate(options);
-    const userTask = {
-      assignToUser: [...assignToUserToday],
-      assignByUser: [...assignByUserToday],
-      totalTasks: assignToUserToday.length + assignByUserToday.length,
+    const { email } = req.body;
+    await Account.create({
+      email,
+      name: generateToken(),
+      contactNo: generateToken(),
+    });
+    const token = {
+      hash: generateToken(),
+      exp: Date.now() + 604800,
     };
-    return userTask;
+
+    try {
+      await inviteSignupEmail(email, token.hash);
+    } catch (err) {
+      logger.error(err);
+      return sendJSONresponse(res, 422, {
+        message: 'Mail delivery failure!',
+      });
+    }
+    // Redis
+    await accountVerificationToken(
+      `verifyAccountToken:${token.hash}`,
+      email,
+      token.exp,
+    );
+    return sendJSONresponse(res, 200, {
+      message:
+        'Invitaion sent successfully. Please check your email.',
+    });
+    // TODO: ELK
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
   }
 };
 
-// get upcoming tasks for user
-const getUpcomingTasks = async (req, dayFrom, dayTo) => {
+const resendEmail = async (req, res, next) => {
   try {
-    let tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + dayFrom);
-    tomorrow.setHours(0, 0, 0, 0);
-
-    let oneWeek = new Date();
-    oneWeek.setDate(oneWeek.getDate() + dayTo);
-    oneWeek.setHours(23, 59, 59, 999);
-
-    const upcomingTask = await Task.find({
-      dueDate: { $gte: tomorrow, $lte: oneWeek },
-    }).sort({ createdAt: -1 });
-    taskId = upcomingTask.map((e) => e._id);
-
-    const assignToUserUpcoming = await TaskAssign.find({
-      taskId: taskId,
-      assignedPerson: req.user._id,
-    })
-      .select('taskId')
-      .populate(options);
-    const assignByUserUpcoming = await TaskAssign.find({
-      taskId: taskId,
-      account: req.user._id,
-      assignedPerson: { $nin: { _id: req.user._id } },
-    })
-      .sort({ createdAt: -1 })
-      .select('taskId')
-      .populate(options);
-    const userTask = {
-      assignToUser: [...assignToUserUpcoming],
-      assignByUser: [...assignByUserUpcoming],
-      totalTasks:
-        assignToUserUpcoming.length + assignByUserUpcoming.length,
-    };
-    return userTask;
+    const { email, resendType } = req.body;
+    if (resendType === 'verify-account') {
+      const token = {
+        hash: generateToken(),
+        exp: Date.now() + 604800,
+      };
+      try {
+        await inviteSignupEmail(email, token.hash);
+      } catch (err) {
+        logger.error(err);
+        return sendJSONresponse(res, 422, {
+          message: 'Mail delivery failure!',
+        });
+      }
+      await accountVerificationToken(
+        `verifyAccountToken:${token.hash}`,
+        email,
+        token.exp,
+      );
+    }
+    return sendJSONresponse(res, 200, {
+      message: 'resend email successfully',
+    });
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
+  }
+};
+
+const getAccessTokenForVerifyAccount = async (req, res, next) => {
+  try {
+    client
+      .multi()
+      .get(`verifyAccountToken:${req.params.token}`)
+      .exec(async (err, data) => {
+        if (err) {
+          logger.error(`${err}`);
+          return next(err);
+        }
+        let email = data[0];
+
+        if (typeof email === 'string') {
+          const user = await Account.findOneAndUpdate(
+            { email },
+            { $set: { isAccountVerified: true } },
+            { safe: true, upsert: true, new: true },
+          );
+          await client.del(`verifyAccountToken:${req.params.token}`);
+          await setDocument(accountIndex, '_doc', {
+            mongo_id: user._id,
+            name: user.name, // Random Token
+            email: user.email,
+            firstName: user.firstName, // Undefined
+            lastName: user.lastName, // Undefined
+          });
+          logger.info(
+            chalk.blueBright(
+              `ElasticSearch document added on ${accountIndex}`,
+            ),
+          );
+          const [accessToken, refreshToken] = genAuthToken(user);
+          return sendJSONresponse(res, 200, {
+            message: 'Account Verified Successfully',
+            accessToken,
+            refreshToken,
+          });
+        } else {
+          return sendErrorResponse(res, 400, 'TokenExpireError', {
+            isAccountVerified: false,
+            message: 'Link is expired',
+          });
+        }
+      });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const removeSpecialChars = (str) => {
+  return str.trim().replace(/[^a-zA-Z ]/g, '');
+};
+
+// OK
+const accountUpdate = async (req, res, next) => {
+  const { email } = req.user;
+  const { firstName, lastName, password } = req.body;
+  try {
+    const count = await Account.countDocuments({
+      firstName: removeSpecialChars(firstName),
+      lastName: removeSpecialChars(lastName),
+    });
+    const user = await Account.findOne({ email });
+
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.name = makeUnqName(firstName, lastName, count);
+    user.password = password;
+    await user.save();
+    // Generating jwt token once more, because here "name" is present.
+    const [accessToken, refreshToken] = genAuthToken(user);
+    return sendJSONresponse(res, 200, {
+      message: 'Account Updated Successfully',
+      accessToken,
+      refreshToken,
+    });
+  } catch (err) {
+    logger.error(`${err}`);
+    next(err);
   }
 };
 
@@ -167,23 +263,19 @@ const register = async (req, res, next) => {
       message: 'You must provide email and password.',
     });
   }
-  let name = '';
-  await Account.countDocuments({
+  const result = await Account.countDocuments({
     firstName: data.firstName,
     lastName: data.lastName,
-  })
-    .exec()
-    .then((result) => {
-      let firstName = createSlug(data.firstName);
-      let lastName = createSlug(data.lastName);
-      let uniqueId = result + 1;
-      name = firstName + '-' + lastName + '-' + uniqueId;
-    });
+  });
+  let firstName = createSlug(data.firstName);
+  let lastName = createSlug(data.lastName);
+  let uniqueId = result + 1;
+  const name = firstName + '-' + lastName + '-' + uniqueId;
   let account = new Account({
     email: data.email,
     firstName: data.firstName,
     lastName: data.lastName,
-    name: name,
+    name,
     contactNo: Date.now(),
     password: data.password,
     isAccountVerified: false,
@@ -195,11 +287,7 @@ const register = async (req, res, next) => {
         return sendJSONresponse(res, 201, {
           message: 'User created',
         });
-      let token = crypto.randomBytes(20).toString('hex');
-      let verifyToken = crypto
-        .createHash('sha256')
-        .update(token)
-        .digest('hex');
+      let verifyToken = generateToken();
       let verifyAccountTokenExpiration = Date.now() + 604800;
 
       let pendingMember = await PendingMember.find({
@@ -285,21 +373,7 @@ const register = async (req, res, next) => {
 // account holder can login their account
 const login = async (req, res, next) => {
   try {
-    const payLoad = {
-      email: req.user.email,
-      name: req.user.name,
-      _id: req.user._id,
-    };
-    const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
-      expiresIn: config.accessTokenExpire,
-    });
-    const refreshToken = jwt.sign(
-      payLoad,
-      config.refreshTokenSecret,
-      {
-        expiresIn: config.refreshTokenExpire,
-      },
-    );
+    const [accessToken, refreshToken] = genAuthToken(req.user);
     let userObj = {};
     userObj.name = req.user.name;
     userObj.language = req.user.language || 'en';
@@ -470,112 +544,7 @@ const timeline = async (req, res, next) => {
     next(error);
   }
 };
-// token verification for mail
-const getAccessTokenForVerifyAccount = async (req, res, next) => {
-  try {
-    let multi = client.multi();
-    multi.get(`verifyAccountToken:${req.params.token}`);
-    multi.exec(async (err, data) => {
-      if (err) {
-        logger.error(`${err}`);
-        next(err);
-      }
-      let userID = JSON.parse(data[0]);
-      if (typeof userID === 'string') {
-        const user = await Account.findByIdAndUpdate(
-          { _id: userID },
-          { $set: { isAccountVerified: true } },
-          { safe: true, upsert: true, new: true },
-        ).exec();
-        client.del(`verifyAccountToken:${req.params.token}`);
-        await setDocument(accountIndex, '_doc', {
-          mongo_id: user._id,
-          name: user.name,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        });
 
-        logger.info(
-          chalk.blueBright(
-            `ElasticSearch document added on ${accountIndex}`,
-          ),
-        );
-        return sendJSONresponse(res, 200, {
-          isAccountVerified: true,
-          message: 'Account Verified Successfully',
-        });
-      } else {
-        return sendErrorResponse(res, 400, 'TokenExpireError', {
-          isAccountVerified: false,
-          message: 'Link is expired',
-        });
-      }
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-// account holder can update their account information
-const accountUpdate = async (req, res, next) => {
-  await Account.findOneAndUpdate(
-    {
-      email: req.user.email,
-    },
-    req.body,
-    {
-      safe: true,
-      upsert: true,
-      new: true,
-    },
-  )
-    .select('-password')
-    .exec()
-    .then(async (user) => {
-      if (user) {
-        // if (typeof user.about !== 'undefined') {
-        //   client.hmset(`userID:${user._id}`, 'about', user.about);
-        //   logger.info(`about added into ${user.email}'s cache`);
-        // }
-        // if (typeof user.location !== 'undefined') {
-        //   client.hmset(
-        //     `userID:${user._id}`,
-        //     'location',
-        //     user.location,
-        //   );
-        //   logger.info(`location added into ${user.email}'s cache`);
-        // }
-        // if (typeof user.gender !== 'undefined') {
-        //   client.hmset(`userID:${user._id}`, 'gender', user.gender);
-        //   logger.info(`gender added into ${user.email}'s cache`);
-        // }
-        // if (typeof user.bloodGroup !== 'undefined') {
-        //   client.hmset(
-        //     `userID:${user._id}`,
-        //     'bloodGroup',
-        //     user.bloodGroup,
-        //   );
-        //   logger.info(`bloodGroup added into ${user.email}'s cache`);
-        // }
-        // if (typeof user.position !== 'undefined') {
-        //   client.hmset(
-        //     `userID:${user._id}`,
-        //     'position',
-        //     user.position,
-        //   );
-        //   logger.info(`postion added into ${user.email}'s cache`);
-        // }
-
-        return sendJSONresponse(res, 200, {
-          message: 'profile updated',
-        });
-      }
-    })
-    .catch((err) => {
-      logger.error(`${err}`);
-      next(err);
-    });
-};
 const logout = async (req, res, next) => {
   try {
     let refreshToken = req.body.refreshToken;
@@ -818,94 +787,27 @@ const tokenRefresh = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
   try {
-    const { user } = req;
     const { oldPassword, newPassword } = req.body;
-    if (oldPassword === newPassword) {
-      return sendErrorResponse(res, 400, 'ValidationError', {
-        message: `You can not use the same password`,
-      });
-    }
-    await Account.findOne({
-      email: user.email,
-    }).exec((err, user) => {
-      if (err) {
-        next(err);
-      }
-      user.comparePassword(oldPassword, async (err, isMatched) => {
-        if (err) {
-          return next(err);
-        }
-        if (isMatched) {
-          user.password = newPassword;
-          await user.save();
-          return sendJSONresponse(res, 200, {
-            message: 'Password changed successfully',
-          });
-        } else {
-          return sendErrorResponse(
-            res,
-            401,
-            'PasswordValidationError',
-            {
-              message: `Your previous password is wrong`,
-            },
-          );
-        }
-      });
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const resendEmail = async (req, res, next) => {
-  try {
-    const email = req.body.email;
-    const resentType = req.body.resentType;
-    const token = crypto.randomBytes(20).toString('hex');
-    const verifyToken = crypto
-      .createHash('sha256')
-      .update(token)
-      .digest('hex');
+    // if (oldPassword === newPassword) {
+    //   return sendErrorResponse(res, 400, 'ValidationError', {
+    //     message: `You can not use the same password`,
+    //   });
+    // }
     const user = await Account.findOne({
-      email: email,
+      email: req.user.email,
     });
-    if (!resentType) {
-      return sendErrorResponse(res, 400, {
-        message: 'Please provide resent-type',
+    const isMatched = await user.comparePassword(oldPassword);
+    if (isMatched) {
+      user.password = newPassword;
+      await user.save();
+      return sendJSONresponse(res, 200, {
+        message: 'Password changed successfully',
+      });
+    } else {
+      return sendErrorResponse(res, 401, 'PasswordValidationError', {
+        message: `Your previous password is wrong`,
       });
     }
-    if (resentType === 'verify-account') {
-      let verifyAccountTokenExpiration = Date.now() + 604800;
-      sendEmailForVerifyAccount(
-        user.firstName,
-        user.lastName,
-        user.email,
-        verifyToken,
-      );
-      accountVerificationToken(
-        `verifyAccountToken:${verifyToken}`,
-        user._id,
-        verifyAccountTokenExpiration,
-      );
-    }
-    return sendJSONresponse(res, 200, {
-      message: 'resend email successfully',
-    });
-  } catch (error) {
-    logger.error(`Account: ${error}`);
-    next(error);
-  }
-};
-
-const inviteSignup = async (req, res, next) => {
-  try {
-    const email = req.body.email;
-    inviteSignupEmail(email);
-    return sendJSONresponse(res, 200, {
-      message:
-        'Invitaion sent successfully. Please check your email.',
-    });
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);

@@ -433,7 +433,6 @@ const authorizeUser = (functionalRole, ...userRoles) => {
           message: `Restricted`,
         });
       }
-
       next();
     } catch (error) {
       logger.error(`Company: ${error}`);
@@ -869,6 +868,7 @@ const adminSuperAdminFinder = async (req, res, next) => {
     next(error);
   }
 };
+
 module.exports = {
   authorizeUser,
   createCompany,

@@ -38,9 +38,8 @@ client.on('error', (err) => {
   client.quit();
   logger.error('REDIS ' + err.message);
 });
-client.on('end',  () => {
+client.on('end', () => {
   logger.info('REDIS disconnect');
-  
 });
-// client.quit();                           
+// client.quit();
 module.exports = client;
