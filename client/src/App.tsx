@@ -98,6 +98,17 @@ const Meeting = lazy(
 );
 const Success = lazy(() => import('components/Success'));
 const Feedback = lazy(() => import('layouts/feedback/Feedback'));
+const UserInfo = lazy(() => import('layouts/userInfo/Index'));
+const CreateCompany = lazy(
+  () => import('layouts/createCompany/Index'),
+);
+const SearchCompany = lazy(
+  () => import('layouts/searchCompany/Index'),
+);
+const AddMembers = lazy(() => import('layouts/addMembers/Index'));
+const JoinCompanyPage = lazy(
+  () => import('layouts/joinCompany/Index'),
+);
 
 const PrivateRoute = (props: {
   component: any;
@@ -235,6 +246,15 @@ const App = () => {
               isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
             }
           />
+          <Route path="/user-info" component={UserInfo} />
+          <Route path="/create-company" component={CreateCompany} />
+          <Route path="/search-company" component={SearchCompany} />
+          <Route path="/add-members" component={AddMembers} />
+          <Route
+            path="/join/:companyId"
+            component={JoinCompanyPage}
+          />
+
           <PrivateRoute exact path="/" component={Demo} />
           <PrivateRoute
             path="/:username"

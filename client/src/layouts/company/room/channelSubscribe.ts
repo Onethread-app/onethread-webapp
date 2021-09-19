@@ -53,8 +53,8 @@ export const userSubscriber = async () => {
   // Pusher.logToConsole = true;
   const token =
     typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+    localStorage.getItem('ot_access_id')
+      ? JSON.parse(localStorage.getItem('ot_access_id')!)
       : null;
 
   const user: User = await store.getState().userReducer.user;
@@ -81,7 +81,6 @@ export const userSubscriber = async () => {
   pusher.connection.bind('error', (err: any) => {
     if (err.error.data.code === 4004) {
       // tslint:disable-next-line: no-console
-      
     }
   });
 
@@ -128,14 +127,14 @@ export const roomSubscribe = async (roomId: string) => {
 
   // presenceChannel.bind('pusher:subscription_succeeded', async (data: any) => {
   //   // tslint:disable-next-line: no-console
-  //   
+  //
   //   presenceChannel.bind('pusher:member_added', (member: any) => {
   //     // tslint:disable-next-line: no-console
-  //     
+  //
   //   });
   //   presenceChannel.bind('pusher:member_removed', (member: any) => {
   //     // tslint:disable-next-line: no-console
-  //     
+  //
   //   });
   // });
   channel.bind('pusher:subscription_succeeded', async () => {

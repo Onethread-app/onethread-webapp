@@ -60,6 +60,12 @@ import {
   clearCompanyError,
   updateCompanyLoading,
   companyOptionalRoleFailure,
+  requestToJoinCompanySuccess,
+  requestToJoinCompanyFailure,
+  getCompanySearchResultSuccess,
+  getCompanySearchResultFailure,
+  getCompanyPublicInformationSuccess,
+  getCompanyPublicInformationFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
@@ -96,7 +102,7 @@ export function* createCompanyAsync({ companyData }: any) {
       ]);
     }
   } catch (error) {
-    yield put(createCompanyActionFailure(returnErrorText(error)));
+    yield put(createCompanyActionFailure(error));
   }
 }
 
@@ -519,6 +525,11 @@ export function* inviteColleagueInBulkAsync({ payload }: any) {
           put(getCompanyPendingMembers()),
           put(getCompanyMembers()),
         ]);
+        Toaster.create().show({
+          message: `Invitation sent to ${payload.length} emails.`,
+          timeout: 3000,
+          intent: 'success',
+        });
       }
     }
   } catch (error) {
@@ -560,6 +571,65 @@ export function* getLatestCompletedTasksAsync() {
     }
   } catch (error) {
     yield put(getLatestCompletedTasksFailure(returnErrorText(error)));
+  }
+}
+
+export function* getCompanySearchResultsAsync(action: {
+  payload: string;
+}) {
+  try {
+    const headers = tokenConfig();
+    const response = yield tigrowApi.get(
+      `/company/find?name=${action.payload}`,
+      headers,
+    );
+    if (response.status === 200) {
+      yield put(getCompanySearchResultSuccess(response.data.data));
+    }
+  } catch (error) {
+    yield put(getCompanySearchResultFailure(returnErrorText(error)));
+  }
+}
+
+export function* requestToJoinCompanyAsync(action: {
+  payload: string;
+}) {
+  try {
+    const headers = tokenConfig();
+    const response = yield tigrowApi.post(
+      `/company/${action.payload}/members/join-request`,
+      {},
+      headers,
+    );
+    yield put(requestToJoinCompanySuccess(response.data));
+    Toaster.create().show({
+      message: `Join request was successful`,
+      timeout: 3000,
+      intent: 'success',
+    });
+  } catch (error: any) {
+    yield put(requestToJoinCompanyFailure(returnErrorText(error)));
+  }
+}
+
+export function* getCompanyPublicInformationAsync(action: {
+  payload: string;
+}) {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(
+        `/company/${action.payload}/public`,
+        headers,
+      );
+      // console.log(action.payload, response.data);
+
+      yield put(getCompanyPublicInformationSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(
+      getCompanyPublicInformationFailure(returnErrorText(error)),
+    );
   }
 }
 
@@ -731,6 +801,27 @@ export function* onGetLatestCompletedTasks() {
   );
 }
 
+export function* getCompanySearchResultsAsyncHandler() {
+  yield takeEvery(
+    CompanyActionTypes.FIND_COMPANY_BY_NAME_START,
+    getCompanySearchResultsAsync,
+  );
+}
+
+export function* requestToJoinCompanyAsyncHandler() {
+  yield takeEvery(
+    CompanyActionTypes.JOIN_COMPANY_REQUEST_START,
+    requestToJoinCompanyAsync,
+  );
+}
+
+export function* getCompanyPublicInformationHandler() {
+  yield takeEvery(
+    CompanyActionTypes.PUBLIC_COMPANY_DETAILS_START,
+    getCompanyPublicInformationAsync,
+  );
+}
+
 export default function* companySaga() {
   yield all([
     call(onCreateCompany),
@@ -757,5 +848,8 @@ export default function* companySaga() {
     call(onEditCompanyCertificate),
     call(onGetLatestCompletedTasks),
     call(onDeleteCompanyMember),
+    call(getCompanySearchResultsAsyncHandler),
+    call(requestToJoinCompanyAsyncHandler),
+    call(getCompanyPublicInformationHandler),
   ]);
 }
