@@ -16,6 +16,7 @@ const schema = {
   memberId: idSchema.id,
   description: Joi.string().max(2500).allow(''),
   outline: Joi.string().max(5000).allow(''),
+  budget: Joi.number().min(0),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
   deadline: Joi.date(),
@@ -100,6 +101,7 @@ module.exports = {
       name: schema.name.required(),
       color: schema.color,
       deadline: schema.deadline,
+      budget: schema.budget,
     }),
     query: Joi.object().keys({
       pid: schema.pid.required(),

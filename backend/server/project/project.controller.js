@@ -677,7 +677,8 @@ const getProjectDetails = async (req, res, next) => {
       .select('outline description color name status totalSpent');
 
     const members = await Team.find({
-      project: req.query.pid, removed: false
+      project: req.query.pid,
+      removed: false,
     }).populate('account', 'name profileImage');
 
     let projectObj = {
@@ -701,6 +702,7 @@ const updateProject = async (req, res, next) => {
           name: req.body.name,
           color: req.body.color,
           deadline: req.body.deadline,
+          budget: req.body.budget,
           status,
         },
       },
@@ -1066,10 +1068,10 @@ const projectOverview = async (req, res, next) => {
         deadline: project.deadline,
         lead: project.concernedAdmin
           ? nameWordCapitalize(
-            project.concernedAdmin.firstName +
-            ' ' +
-            project.concernedAdmin.lastName,
-          )
+              project.concernedAdmin.firstName +
+                ' ' +
+                project.concernedAdmin.lastName,
+            )
           : null,
         startingDate: project.createdAt,
         companyUniqueName: project.company.uniqueName,
@@ -1111,10 +1113,10 @@ const projectOverview = async (req, res, next) => {
       taskInf.assign =
         assignedTo && assignedTo.assignedPerson
           ? nameWordCapitalize(
-            assignedTo.assignedPerson.firstName +
-            ' ' +
-            assignedTo.assignedPerson.lastName,
-          )
+              assignedTo.assignedPerson.firstName +
+                ' ' +
+                assignedTo.assignedPerson.lastName,
+            )
           : null;
 
       taskInf.boardName = task.boardId.name;
@@ -1127,15 +1129,17 @@ const projectOverview = async (req, res, next) => {
   }
 };
 
-
 const deleteTeamMember = async (req, res, next) => {
   try {
-    await Team.updateOne({
-      _id: req.params.accountId,
-      project: req.params.projectId
-    }, {
-      $set: { removed: true }
-    });
+    await Team.updateOne(
+      {
+        _id: req.params.accountId,
+        project: req.params.projectId,
+      },
+      {
+        $set: { removed: true },
+      },
+    );
 
     return res.status(200).json({
       message: 'member deleted successfully',
@@ -1144,8 +1148,7 @@ const deleteTeamMember = async (req, res, next) => {
     logger.error(`${error}`);
     next(error);
   }
-}
-
+};
 
 module.exports = {
   calculateProjectStatus,
