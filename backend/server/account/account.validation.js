@@ -16,8 +16,18 @@ const subTaskId = Joi.object().keys({
 });
 
 const schema = {
-  firstName: Joi.string().trim().lowercase().min(2).max(32),
-  lastName: Joi.string().required().lowercase().min(2).max(32),
+  firstName: Joi.string()
+    .trim()
+    .lowercase()
+    .min(2)
+    .max(32)
+    .regex(/^[a-z ,.'-]+$/i),
+  lastName: Joi.string()
+    .required()
+    .lowercase()
+    .min(2)
+    .max(32)
+    .regex(/^[a-z ,.'-]+$/i),
   email: Joi.string()
     .regex(
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -25,11 +35,9 @@ const schema = {
     .lowercase()
     .min(3)
     .max(62),
-  password: Joi.string()
-    .regex(
-      /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
-    )
-    .required(),
+  password: Joi.string().regex(
+    /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
+  ),
   isAccountVerified: Joi.boolean(),
   birthDate: Joi.date(),
   contactNo: Joi.string(),
@@ -52,23 +60,38 @@ const schema = {
   subscriptionId: Joi.string().allow(null),
 };
 module.exports = {
-  register: Joi.object().keys({
+  resendEmail: Joi.object().keys({
     body: Joi.object().keys({
-      firstName: schema.firstName.required(),
-      lastName: schema.lastName,
-      email: schema.email,
-      password: schema.password,
-      isAccountVerified: schema.isAccountVerified,
-      // contactNo: schema.contactNo,
-      // .regex(/^(\+?(880)[0-9]{10})$/)
-      // // .required()
-      // .error((error) => {
-      //   return {
-      //     message: 'contactNo is not a valid format',
-      //   };
-      // }),
+      email: schema.email.required(),
     }),
   }),
+  signup: Joi.object().keys({
+    body: Joi.object().keys({
+      email: schema.email.required(),
+    }),
+  }),
+  getAccessTokenForVerifyAccount: Joi.object().keys({
+    params: Joi.object().keys({
+      token: Joi.string(),
+    }),
+  }),
+  // register: Joi.object().keys({
+  //   body: Joi.object().keys({
+  //     firstName: schema.firstName.required(),
+  //     lastName: schema.lastName,
+  //     email: schema.email,
+  //     password: schema.password.required(),
+  //     isAccountVerified: schema.isAccountVerified,
+  //     // contactNo: schema.contactNo,
+  //     // .regex(/^(\+?(880)[0-9]{10})$/)
+  //     // // .required()
+  //     // .error((error) => {
+  //     //   return {
+  //     //     message: 'contactNo is not a valid format',
+  //     //   };
+  //     // }),
+  //   }),
+  // }),
   login: Joi.object().keys({
     body: Joi.object().keys({
       email: schema.email.required(),
@@ -86,25 +109,26 @@ module.exports = {
       about: schema.about,
       gender: schema.gender,
       secondaryEmail: schema.email.allow(''),
+      firstName: schema.firstName,
+      lastName: schema.lastName,
+      password: schema.password.required(),
     }),
   }),
   resetPassword: Joi.object().keys({
     body: Joi.object().keys({
-      password: schema.password,
+      password: schema.password.required(),
       token: Joi.string(),
     }),
   }),
   changePassword: Joi.object().keys({
     body: Joi.object().keys({
-      newPassword: schema.password,
-      oldPassword: schema.password,
+      oldPassword: schema.password.required(),
+      newPassword: schema.password
+        .disallow(Joi.ref('oldPassword'))
+        .required(),
     }),
   }),
-  inviteSignup: Joi.object().keys({
-    body: Joi.object().keys({
-      email: schema.email.required(),
-    }),
-  }),
+
   logout: Joi.object().keys({
     body: Joi.object().keys({
       refreshToken: schema.refreshToken,

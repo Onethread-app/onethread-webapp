@@ -32,7 +32,7 @@ export const createCompanyActionSuccess = (response: any) => ({
 
 export const createCompanyActionFailure = (errorMessage: any) => ({
   type: CompanyActionTypes.CREATE_COMPANY_FAILURE,
-  payload: errorMessage,
+  payload: errorMessage || true,
 });
 
 export const getCompanyMembers = () => ({
@@ -399,17 +399,15 @@ export const clearCompanyError = () => ({
   type: CompanyActionTypes.CLEAR_COMPANY_ERROR,
 });
 
-export const clearAddDepartmentError = () => async (
-  dispatch: any,
-) => {
-  dispatch({ type: CLEAR_ADD_DEPARTMENT_ERROR });
-};
+export const clearAddDepartmentError =
+  () => async (dispatch: any) => {
+    dispatch({ type: CLEAR_ADD_DEPARTMENT_ERROR });
+  };
 
-export const clearChangeCompanyNameError = () => async (
-  dispatch: any,
-) => {
-  dispatch({ type: CLEAR_CHANGE_COMPANY_NAME_ERROR });
-};
+export const clearChangeCompanyNameError =
+  () => async (dispatch: any) => {
+    dispatch({ type: CLEAR_CHANGE_COMPANY_NAME_ERROR });
+  };
 
 export const updateCompanyLoading = (loading: boolean) => ({
   type: CompanyActionTypes.UPDATE_COMPANY_LOADING,
@@ -418,4 +416,51 @@ export const updateCompanyLoading = (loading: boolean) => ({
 
 export const clearErrorOnCompanyCreate = () => ({
   type: CompanyActionTypes.CLEAR_ERROR_ON_COMPANY_CREATE,
+});
+
+export const requestToJoinCompanyStart = (response: string) => ({
+  type: CompanyActionTypes.JOIN_COMPANY_REQUEST_START,
+  payload: response,
+});
+
+export const requestToJoinCompanySuccess = (response) => ({
+  type: CompanyActionTypes.JOIN_COMPANY_REQUEST_SUCCESS,
+  payload: response,
+});
+
+export const requestToJoinCompanyFailed = (response: string) => ({
+  type: CompanyActionTypes.JOIN_COMPANY_REQUEST_FAILED,
+  payload: response,
+});
+
+export const getCompanySearchResultStart = (response: string) => ({
+  type: CompanyActionTypes.FIND_COMPANY_BY_NAME_START,
+  payload: response,
+});
+
+export const getCompanySearchResultSuccess = (response) => ({
+  type: CompanyActionTypes.FIND_COMPANY_BY_NAME_SUCCESS,
+  payload: response,
+});
+
+export const getCompanySearchResultFailed = (response: string) => ({
+  type: CompanyActionTypes.FIND_COMPANY_BY_NAME_FAILED,
+  payload: response,
+});
+
+export const getCompanyPublicInformation = (response: string) => ({
+  type: CompanyActionTypes.PUBLIC_COMPANY_DETAILS_START,
+  payload: response,
+});
+
+export const getCompanyPublicInformationSuccess = (response) => ({
+  type: CompanyActionTypes.PUBLIC_COMPANY_DETAILS_SUCCESS,
+  payload: response,
+});
+
+export const getCompanyPublicInformationFailed = (
+  response: string,
+) => ({
+  type: CompanyActionTypes.PUBLIC_COMPANY_DETAILS_FAILED,
+  payload: response,
 });

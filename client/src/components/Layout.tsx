@@ -211,7 +211,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     ) {
       updateBoardReducer();
     }
-    props.fetchRooms();
+    // props.fetchRooms();
   }, [props.match, props.project._id, props.boardId]);
 
   useEffect(() => {
@@ -350,8 +350,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
             className="fw9 dt center tigrow-lightBlue pt4"
             to="/signin"
             onClick={() => {
-              localStorage.removeItem('tigrow_acc_id');
-              localStorage.removeItem('tigrow_real_id');
+              localStorage.removeItem('ot_access_id');
+              localStorage.removeItem('ot_refresh_id');
             }}
           >
             {t('landing.login.sign-in-form.sign-in-button')}

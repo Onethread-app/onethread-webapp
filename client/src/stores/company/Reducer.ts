@@ -189,12 +189,14 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         creatingCompany: true,
         errorOnCreatingCompany: '',
+        companyCreated: false,
       };
     case CompanyActionTypes.CREATE_COMPANY_SUCCESS:
       return {
         ...state,
         currentCompany: action.payload.company,
         creatingCompany: false,
+        companyCreated: true,
       };
     case CompanyActionTypes.CREATE_COMPANY_FAILURE:
       return {
@@ -586,6 +588,68 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           uniqueName: action.payload.company.uniqueName,
           role: action.payload.role,
         },
+      };
+    case CompanyActionTypes.FIND_COMPANY_BY_NAME_START:
+      return {
+        ...state,
+        companySearchLoading: true,
+        companySearchSuccess: false,
+        companySearchFailed: false,
+      };
+    case CompanyActionTypes.FIND_COMPANY_BY_NAME_SUCCESS:
+      return {
+        ...state,
+        companySearchResults: action.payload,
+        companySearchLoading: false,
+        companySearchSuccess: true,
+      };
+    case CompanyActionTypes.FIND_COMPANY_BY_NAME_FAILED:
+      return {
+        ...state,
+        companySearchFailed: action.payload,
+        companySearchLoading: false,
+        companySearchSuccess: false,
+      };
+    case CompanyActionTypes.JOIN_COMPANY_REQUEST_START:
+      return {
+        ...state,
+        companyJoinRequestLoading: true,
+        companyJoinRequestSuccess: false,
+        companyJoinRequestFailed: '',
+      };
+    case CompanyActionTypes.JOIN_COMPANY_REQUEST_SUCCESS:
+      return {
+        ...state,
+        companyJoinRequestLoading: false,
+        companyJoinRequestSuccess: true,
+      };
+    case CompanyActionTypes.JOIN_COMPANY_REQUEST_FAILED:
+      return {
+        ...state,
+        companyJoinRequestLoading: false,
+        companyJoinRequestFailed: action.payload,
+      };
+    case CompanyActionTypes.PUBLIC_COMPANY_DETAILS_START:
+      return {
+        ...state,
+        publicInformationLoading: true,
+        publicInformationSuccess: false,
+        publicInformationError: '',
+      };
+    case CompanyActionTypes.PUBLIC_COMPANY_DETAILS_SUCCESS:
+      return {
+        ...state,
+        currentCompany: action.payload,
+        publicInformationLoading: false,
+        publicInformationSuccess: true,
+        publicInformationError: '',
+      };
+    case CompanyActionTypes.PUBLIC_COMPANY_DETAILS_FAILED:
+      return {
+        ...state,
+        publicInformationLoading: false,
+        publicInformationSuccess: false,
+        publicInformationError: action.payload,
       };
     default:
       return state;

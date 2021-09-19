@@ -25,6 +25,7 @@ import { UserBasicInfoFormReducer } from './UserBasicInfoDetailsForm/Reducer';
 import { CompanyBasicInfoFormReducer } from './companyBasicInfoForm/Reducer';
 
 import { loadingBarReducer } from 'react-redux-loading-bar';
+import { AuthReducer } from './auth/Reducer';
 
 export interface AppState {
   layoutReducer: any;
@@ -76,4 +77,5 @@ export const rootReducer = combineReducers({
   jobDetailsFormReducer: JobDetailsFormReducer,
   eduDetailsFormReducer: EduDetailsFormReducer,
   companyBasicInfoFormReducer: CompanyBasicInfoFormReducer,
+  authReducer: AuthReducer,
 });

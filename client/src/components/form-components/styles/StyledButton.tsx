@@ -12,14 +12,8 @@ const StyledButton = styled.button`
   transition: all 500ms ease-in-out;
   font-weight: bold;
 
-  &:hover {
-    color: var(--primary-bg-color, #34b3e9);
-    background-color: var(--primary-color, #fff);
-    border-color: var(--primary-bg-color, #34b3e9);
-  }
-
   &::disabled {
-    color: var(--dark-color, black);
+    color: var(--disabled-color, black);
     background-color: var(--disabled-bg-color, gray);
     border-color: var(--disabled-bg-color, gray);
     cursor: not-allowed;
