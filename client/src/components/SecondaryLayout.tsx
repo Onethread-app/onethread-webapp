@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
 import { useSelector } from 'react-redux';

@@ -1,4 +1,3 @@
-import React from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
 // import { connect } from 'react-redux';

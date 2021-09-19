@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { connect } from 'react-redux';
 import styled from 'styled-components';

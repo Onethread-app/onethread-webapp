@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { APP_ID, PAGE_ID, WHATSAPP_URL } from 'config';

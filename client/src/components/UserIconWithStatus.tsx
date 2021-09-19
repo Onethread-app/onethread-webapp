@@ -1,5 +1,3 @@
-import React from 'react';
-
 import UserIcon from './../resources/images/profilePhoto.svg';
 
 export const UserIconWithStatus = () => {

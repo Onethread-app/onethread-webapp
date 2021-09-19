@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,7 @@ import { SubmitError } from 'components/final-form/SubmitError';
 
 const BoardPageComponent = (props: any) => {
   const { t } = useTranslation();
-  const [disabled] = React.useState(false);
+  const [disabled] = useState(false);
 
   return (
     <div className="bl b--black-05 bw1 pl5 ml5 h5">

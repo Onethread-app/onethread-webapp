@@ -1,5 +1,3 @@
-import React from 'react';
-
 import TaskPage from 'layouts/company/task';
 
 import { ModalWrapper, Modal } from './TaskModal.styles';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
@@ -42,7 +42,7 @@ const _CurrentSubscription = (
   const classes = useStyles();
   const { t } = useTranslation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.getCurrentSubscription();
   }, []);
 

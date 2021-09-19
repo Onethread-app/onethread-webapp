@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { find, orderBy } from 'lodash';
@@ -44,9 +44,8 @@ const CompletedProjectsComponent = (
   props: any & RouteComponentProps,
 ) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
-  const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(
-    false,
-  );
+  const [showUpdateNameDialog, setShowUpdateNameDialog] =
+    useState(false);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);

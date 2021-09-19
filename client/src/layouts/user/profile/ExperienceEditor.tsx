@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 

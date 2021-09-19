@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
 import { connect } from 'react-redux';
@@ -25,15 +25,13 @@ interface INotificationPopover {
 
 const NotificationPopover = (props: INotificationPopover) => {
   const history = useHistory();
-  const [
-    lastNotificationElement,
-    setLastNotificationElement,
-  ] = React.useState<null | HTMLUnknownElement>(null);
-  const [notificationToShow, setNotificationToShow] = React.useState<
-    any
-  >([]);
+  const [lastNotificationElement, setLastNotificationElement] =
+    useState<null | HTMLUnknownElement>(null);
+  const [notificationToShow, setNotificationToShow] = useState<any>(
+    [],
+  );
 
-  const observer = React.useRef(
+  const observer = useRef(
     new IntersectionObserver(
       async (entries) => {
         const first = entries[0];
@@ -62,7 +60,7 @@ const NotificationPopover = (props: INotificationPopover) => {
     );
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setNotificationToShow(
       props.notifications.filter((noti) => {
         return noti.read === false;
@@ -70,7 +68,7 @@ const NotificationPopover = (props: INotificationPopover) => {
     );
   }, [props.notifications]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const currentElement = lastNotificationElement;
     const currentObserver = observer.current;
 

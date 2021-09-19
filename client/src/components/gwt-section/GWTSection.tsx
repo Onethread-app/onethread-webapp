@@ -1,5 +1,3 @@
-import React from 'react';
-
 import smile from './../../resources/LandingImages/Smile.png';
 
 import { TiButton } from 'components/button/Button';

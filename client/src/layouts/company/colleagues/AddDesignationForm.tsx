@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';

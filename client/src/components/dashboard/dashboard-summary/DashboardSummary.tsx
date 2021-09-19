@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DashboardChart from '../dashboard-chart/DashboardChart';
@@ -16,17 +16,12 @@ const fontColor = {
 export const DashboardSummary = (props) => {
   const { t } = useTranslation();
   const { projectCompilation } = props.stat;
-  const [runningProjectsVal, setRunningProjectVal] = React.useState(
-    0,
-  );
-  const [
-    completedProjectsVal,
-    setCompletedProjectsVal,
-  ] = React.useState(0);
+  const [runningProjectsVal, setRunningProjectVal] = useState(0);
+  const [completedProjectsVal, setCompletedProjectsVal] = useState(0);
   const runningProjects = runningProjectsVal;
   const completedProjects = completedProjectsVal;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (projectCompilation) {
       const projectStats = projectCompilation.map((project) => {
         return (

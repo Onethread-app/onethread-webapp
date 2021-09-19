@@ -1,5 +1,3 @@
-import React from 'react';
-
 import BlankCompany from 'resources/svg/blank-company.svg';
 
 const CompanyItem = () => {

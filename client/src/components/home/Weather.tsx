@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
@@ -11,18 +11,18 @@ interface IWeather {
 }
 
 const Weather = (props: IWeather) => {
-  const [weatherData, setWeatherData] = React.useState({
+  const [weatherData, setWeatherData] = useState({
     temp: localStorage.getItem('temp'),
     condition: localStorage.getItem('condition'),
     iconCode: localStorage.getItem('iconCode'),
     city: localStorage.getItem('city'),
     country: localStorage.getItem('country'),
   });
-  const [greeting, setGreeting] = React.useState('');
-  const [currentHour] = React.useState(
+  const [greeting, setGreeting] = useState('');
+  const [currentHour] = useState(
     new Date().getHours().toLocaleString(),
   );
-  const [today] = React.useState(String(new Date().getDate()));
+  const [today] = useState(String(new Date().getDate()));
 
   const getWeatherData = async () => {
     const locationData = await getLocation();
@@ -73,7 +73,7 @@ const Weather = (props: IWeather) => {
     localStorage.setItem('lastSavedDate', today);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const lastSavedHour = localStorage.getItem('lastSavedHour');
     const lastSavedDate = localStorage.getItem('lastSavedDate');
     if (lastSavedDate && lastSavedHour) {

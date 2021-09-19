@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import styled from 'styled-components';

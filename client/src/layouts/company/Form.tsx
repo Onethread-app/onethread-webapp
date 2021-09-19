@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -59,7 +59,8 @@ const CompanySignupFormComponent = (
 
   const emailValidation = (email: string) => {
     if (email !== '') {
-      const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const regexForEmailValidation =
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (email.match(regexForEmailValidation)) {
         return true;
       } else {
@@ -127,14 +128,14 @@ const CompanySignupFormComponent = (
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentCompanyName(props.companyName);
     return () => {
       props.clearErrorOnCompanyCreate();
     };
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       loading &&
       props.creatingCompany === false &&
@@ -147,7 +148,7 @@ const CompanySignupFormComponent = (
     }
   }, [props.creatingCompany]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.errorOnCreatingCompany) {
       setLoading(false);
     }
@@ -183,8 +184,7 @@ const CompanySignupFormComponent = (
               } else if (values.name.length > 32) {
                 const companyNameError = {
                   ...errors,
-                  name:
-                    'Company name must be less than 32 character.',
+                  name: 'Company name must be less than 32 character.',
                 };
                 setErrors(companyNameError);
               } else {

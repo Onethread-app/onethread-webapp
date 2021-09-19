@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
@@ -103,15 +103,13 @@ const ColleaguesPageComponent = (props: Colleagues) => {
     showDialogForInviteColleague,
     setshowDialogForInviteColleague,
   ] = useState(false);
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
   const [pendingList, setPendingList] = useState<
     ICompanyPendingMembers[][]
   >([]);
-  const [members, setMembers] = React.useState<ICompanyMembers[]>([]);
-  const [colleaguesList, setColleaguesList] = React.useState<any[]>(
-    [],
-  );
-  const [rows, setRows] = React.useState<any[]>(colleaguesList);
+  const [members, setMembers] = useState<ICompanyMembers[]>([]);
+  const [colleaguesList, setColleaguesList] = useState<any[]>([]);
+  const [rows, setRows] = useState<any[]>(colleaguesList);
 
   useEffect(() => {
     setRows(colleaguesList);

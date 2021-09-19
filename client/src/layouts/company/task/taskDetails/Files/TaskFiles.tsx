@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
@@ -27,7 +27,7 @@ const TaskFiles = (props: ITaskFiles) => {
   const { t } = useTranslation();
   const [filePopover, setFilePopover] = useState(false);
 
-  const [showDelete, setShowDelete] = React.useState({
+  const [showDelete, setShowDelete] = useState({
     value: false,
     _id: '',
   });

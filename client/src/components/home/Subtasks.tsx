@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tigrowApi } from 'config';
 
@@ -11,10 +11,10 @@ import SubtaskItem from 'components/subtask/SubtaskItem';
 
 const Subtasks = () => {
   const { t } = useTranslation();
-  const [subTasks, setSubtasks] = React.useState<any>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [subTasks, setSubtasks] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getUsersSubtasks = async () => {
       const headers = tokenConfig();
       if ((headers.headers as any).Authorization) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { tigrowApi } from 'config';
 
@@ -15,7 +15,7 @@ interface ISuccess {
 function _Success(props: ISuccess) {
   const headers = tokenConfig();
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function successCall() {
       const search = window.location.search;
       const params = new URLSearchParams(search);

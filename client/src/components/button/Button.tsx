@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -85,8 +85,7 @@ export const OTButton = (props: IOTButton) => {
       cursor: 'pointer',
     },
   };
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.style) {
       styles = { ...styles, ...props.style };
     }

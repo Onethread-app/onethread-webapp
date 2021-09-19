@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isMobileOnly } from 'react-device-detect';
 import { connect } from 'react-redux';
@@ -23,7 +23,7 @@ interface ProfilePageProps {
 const CompanyProfilePageComponent = (props: ProfilePageProps) => {
   const { t } = useTranslation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.subscriptiontExpired) {
       props.company.role === 'superAdmin'
         ? window.location.replace(

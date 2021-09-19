@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Linkify from 'react-linkify';
 import { connect } from 'react-redux';
 
@@ -19,9 +19,8 @@ interface IProjectDescriptionViewProps {
 export const _ProjectDescriptionView = (
   props: IProjectDescriptionViewProps,
 ) => {
-  const [editDescriptionDialog, setEditDescriptionDialog] = useState(
-    false,
-  );
+  const [editDescriptionDialog, setEditDescriptionDialog] =
+    useState(false);
   const permissions = projectRules(props.role, props.optionalRole);
   return (
     <>

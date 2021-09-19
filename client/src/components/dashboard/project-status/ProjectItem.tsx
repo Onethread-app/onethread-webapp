@@ -1,8 +1,7 @@
-import React from 'react';
-
+import { useState } from 'react';
 import moment from 'moment';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Theme } from '@material-ui/core/styles/createTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
@@ -36,16 +35,10 @@ interface IProjectItem {
   index: number;
 }
 const ProjectItem = (props: IProjectItem) => {
-  const [showAllMembers, setShowAllMembers] = React.useState(false);
+  const [showAllMembers, setShowAllMembers] = useState(false);
 
-  const {
-    name,
-    status,
-    deadline,
-    members,
-    doneTask,
-    taskNumbers,
-  } = props.project;
+  const { name, status, deadline, members, doneTask, taskNumbers } =
+    props.project;
 
   return (
     <>

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ProjectLists = () => {
   return (
     <div className="project-lists">

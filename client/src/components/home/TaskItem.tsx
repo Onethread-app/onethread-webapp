@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
 
@@ -12,9 +12,9 @@ interface ITaskItem {
 }
 const TaskItem = (props: ITaskItem) => {
   const history = useHistory();
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
   const [assignee, setAssignee] = useState<any | null>(null);
-  const [task, setTask] = React.useState({
+  const [task, setTask] = useState({
     _id: '',
     name: '',
     deadline: '',
@@ -31,16 +31,10 @@ const TaskItem = (props: ITaskItem) => {
     );
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.task.taskId) {
-      const {
-        name,
-        dueDate,
-        boardId,
-        project,
-        status,
-        _id,
-      } = props.task.taskId;
+      const { name, dueDate, boardId, project, status, _id } =
+        props.task.taskId;
       const { assignedPerson, account } = props.task;
       const assignedPersonId = assignedPerson._id.toString();
       const accountId = account._id.toString();

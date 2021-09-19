@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Position } from '@blueprintjs/core/lib/esm/common/position';
@@ -17,7 +17,7 @@ interface ICompanyPopoverIcon {
 
 const CompanyPopoverIcon = (props: ICompanyPopoverIcon) => {
   const { t } = useTranslation();
-  const [showDialog, setShowDialog] = React.useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   return (
     <>

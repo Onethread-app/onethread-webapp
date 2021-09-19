@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 
@@ -10,7 +10,7 @@ import LinkGeneratorPopup from 'components/conference/LinkGeneratorPopup';
 
 const VideoConference = () => {
   const { t } = useTranslation();
-  const [showDialog, setShowDialog] = React.useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   return (
     <div className="video-conference">

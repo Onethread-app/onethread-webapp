@@ -1,4 +1,3 @@
-import React from 'react';
 // import { connect } from 'react-redux';
 
 // import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';

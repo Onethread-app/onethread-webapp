@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';

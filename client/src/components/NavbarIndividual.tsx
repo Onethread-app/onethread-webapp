@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 
 import { Navbar } from '@blueprintjs/core/lib/esm/components/navbar/navbar';

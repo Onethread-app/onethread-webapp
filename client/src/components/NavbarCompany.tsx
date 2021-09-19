@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { MobileView } from 'react-device-detect';
 import { connect } from 'react-redux';

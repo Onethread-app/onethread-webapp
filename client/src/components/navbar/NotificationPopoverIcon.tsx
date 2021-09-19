@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 
 import Badge from '@material-ui/core/Badge/Badge';

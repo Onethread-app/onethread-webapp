@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { withRouter } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
@@ -20,7 +20,7 @@ import './Index.scss';
 const _ProjectPage = (props: any) => {
   const { t } = useTranslation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.subscriptiontExpired) {
       props.company.role === 'superAdmin'
         ? window.location.replace(
@@ -32,7 +32,7 @@ const _ProjectPage = (props: any) => {
     }
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.setProjectAccessForUser(true);
   }, []);
 

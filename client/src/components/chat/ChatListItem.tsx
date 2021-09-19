@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { find } from 'lodash';
@@ -20,12 +20,12 @@ interface IChatListItem {
 const ChatListItem = (props: IChatListItem) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [queries, setQueries] = React.useState<RoomQueries>({
+  const [queries, setQueries] = useState<RoomQueries>({
     view: 'default',
     roomId: '',
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const query = new URLSearchParams(history.location.search);
     const view =
       query.get('view') && query.get('view') === 'mobile'

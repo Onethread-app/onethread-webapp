@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Axios from 'axios';
@@ -7,7 +7,7 @@ import { server } from 'config';
 import moment from 'moment';
 import withStyles from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Theme } from '@material-ui/core/styles/createTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import TableCell from '@material-ui/core/TableCell/TableCell';
@@ -158,11 +158,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   const { t } = useTranslation();
   const { classes, order, orderBy, onRequestSort } = props;
 
-  const createSortHandler = (property: keyof Data) => (
-    event: React.MouseEvent<unknown>,
-  ) => {
-    onRequestSort(event, property);
-  };
+  const createSortHandler =
+    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, property);
+    };
 
   interface HeadCell {
     id: keyof Data;
@@ -329,7 +328,7 @@ const AppTable = ({
         history.push(
           `/company/${row.companyUniqueName}/project/${row.projectId}/board/${row.boardId}/task/${row.taskId}`,
         );
-      } catch (e:any) {
+      } catch (e: any) {
         if (e.response.data.status === 403) {
           setModalOpen(true);
         }
@@ -512,7 +511,7 @@ const AppTable = ({
           count={tasks.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
+          onPageChange={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </div>

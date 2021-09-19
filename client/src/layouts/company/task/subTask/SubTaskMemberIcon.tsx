@@ -1,5 +1,4 @@
-import React from 'react';
-
+import { useState } from 'react';
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 import { Tooltip } from '@blueprintjs/core/lib/esm/components/tooltip/tooltip';
 
@@ -18,7 +17,7 @@ interface ISubtaskMemberIcon {
 }
 
 const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const handleRemove = async () => {
     if (props.subTaskId) {
       const payload = {

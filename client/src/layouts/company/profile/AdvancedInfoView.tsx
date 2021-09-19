@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
@@ -26,21 +26,14 @@ interface AdvancedInfoInternalProps {
 const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
   const { t } = useTranslation();
   const [showProductDialog, setShowProductDialog] = useState(false);
-  const [showCertificateDialog, setShowCertificateDialog] = useState(
-    false,
-  );
-  const [
-    showCertificateEditDialog,
-    setShowCertificateEditDialog,
-  ] = useState(false);
-  const [
-    showOrganizationDialog,
-    setShowOrganizationDialog,
-  ] = useState(false);
-  const [
-    showOrganizationEditDialog,
-    setShowOrganizationEditDialog,
-  ] = useState(false);
+  const [showCertificateDialog, setShowCertificateDialog] =
+    useState(false);
+  const [showCertificateEditDialog, setShowCertificateEditDialog] =
+    useState(false);
+  const [showOrganizationDialog, setShowOrganizationDialog] =
+    useState(false);
+  const [showOrganizationEditDialog, setShowOrganizationEditDialog] =
+    useState(false);
   const [org, setOrg] = useState({} as IOrg);
   const [certificate, setCertificate] = useState({
     _id: '',

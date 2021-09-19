@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -20,13 +20,13 @@ interface IFeedbackForm {
 
 const FeedbackForm = (props: IFeedbackForm) => {
   const { t } = useTranslation();
-  const [sliderValue, setSliderValue] = React.useState(1);
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
-  const [response, setResponse] = React.useState({
+  const [sliderValue, setSliderValue] = useState(1);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [response, setResponse] = useState({
     status: 0,
     message: '',
   });
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     bug: '',
     improve: '',
     usefulFeature: '',
@@ -76,7 +76,7 @@ const FeedbackForm = (props: IFeedbackForm) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     let timeout: any;
     if (response.status === 201) {
       timeout = setTimeout(() => {

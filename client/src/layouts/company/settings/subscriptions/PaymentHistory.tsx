@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
@@ -27,7 +27,7 @@ interface IPaymentHistory {
 const _PaymentHistory = (props: IPaymentHistory) => {
   const { t } = useTranslation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.getPaymentHistory();
   }, []);
 

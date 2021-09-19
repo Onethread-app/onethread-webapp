@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
@@ -20,8 +20,8 @@ interface IProjectRole {
 
 const GeneralPageComponent = (props: IProjectRole) => {
   const { t } = useTranslation();
-  const [disabled] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [disabled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="bl b--black-05 bw1 pl5-ns pl2 ml5-ns h-100">

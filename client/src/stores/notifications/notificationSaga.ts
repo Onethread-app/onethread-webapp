@@ -62,7 +62,7 @@ function* readNotification(action) {
         headers,
       );
     }
-  } catch (error) {
+  } catch (error: any) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
     } else {
@@ -103,7 +103,7 @@ function* seenNotification() {
       yield tigrowApi.get(`notifications/seen`, headers);
     }
     // put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
-  } catch (error) {
+  } catch (error: any) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
     } else {
@@ -135,7 +135,7 @@ function* webPushNotification(action) {
       );
     }
     put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
-  } catch (error) {
+  } catch (error: any) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
     } else {

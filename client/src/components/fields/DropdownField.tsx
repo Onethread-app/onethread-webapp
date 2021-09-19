@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { isEqual } from 'lodash';
 
 import { HTMLSelect } from '@blueprintjs/core/lib/esm/components/html-select/htmlSelect';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { orderBy } from 'lodash';
 
@@ -13,15 +13,11 @@ import CompanyAnnouncementItem from '../company-announcements-new/CompanyAnnounc
 
 const CompanyAnnouncementsList = (props: any) => {
   const { t } = useTranslation();
-  const [
-    showAnnouncementDialog,
-    setShowAnnouncementDialog,
-  ] = useState(false);
+  const [showAnnouncementDialog, setShowAnnouncementDialog] =
+    useState(false);
 
-  const [
-    currentAnnouncementPage,
-    setCurrentAnnouncementPage,
-  ] = useState(1);
+  const [currentAnnouncementPage, setCurrentAnnouncementPage] =
+    useState(1);
 
   const [announcementItemsPerPage] = useState(3);
 

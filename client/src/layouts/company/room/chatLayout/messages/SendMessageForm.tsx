@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { isMobileOnly } from 'react-device-detect';
 import { connect, useDispatch } from 'react-redux';
 import { trim, isEqual, isEmpty } from 'lodash';
 
 import { MentionData } from '@draft-js-plugins/mention';
-import Picker from 'emoji-mart/dist-es/components/picker/picker';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
@@ -34,8 +33,6 @@ import {
 } from '../../channelSubscribe';
 import { FileUpload } from './fileUpload';
 import MessageInput from './MessageInput';
-
-import 'emoji-mart/css/emoji-mart.css';
 
 interface SendMessageFormProps {
   sendRoomMessage: (data: {
@@ -172,15 +169,6 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
     });
   };
 
-  const addEmoji = (emoji: any) => {
-    const t = `${text} ${emoji.native}`;
-    setText(t);
-    dispatch({
-      type: TOGGLE_EMOJI_PICKER,
-      payload: false,
-    });
-  };
-
   const checkClickOutside = (e: any) => {
     const node = ReactDOM.findDOMNode(emojiRef.current);
     if (node && !node.contains(e.target)) {
@@ -240,15 +228,16 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
 
       {/* Emoji picker */}
       {props.emojiPicker ? (
-        <Picker
-          set="twitter"
-          onSelect={addEmoji}
-          emoji="sunglasses"
-          title="Onethread app"
-          autoFocus={true}
-          color="#34b3e9"
-          ref={emojiRef}
-        />
+        // <Picker
+        //   set="twitter"
+        //   onSelect={addEmoji}
+        //   emoji="sunglasses"
+        //   title="Onethread app"
+        //   autoFocus={true}
+        //   color="#34b3e9"
+        //   ref={emojiRef}
+        // />
+        <> </>
       ) : null}
       <div
         className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`}

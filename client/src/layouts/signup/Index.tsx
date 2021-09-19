@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Link,
   NavLink,
@@ -30,8 +30,7 @@ import {
 } from 'components/final-form/utils';
 import { isValidEmail } from 'helpers/utils';
 import { SubmitError } from 'components/final-form/SubmitError';
-// import ReactFlagsSelect from 'react-flags-select';
-import 'react-flags-select/css/react-flags-select.css';
+
 // import { allCountryList } from './countryCode';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import InputTooltip from 'components/input-tooltip/InputTooltip';

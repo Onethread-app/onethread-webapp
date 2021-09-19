@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import useHover from 'helpers/hooks/useHover';

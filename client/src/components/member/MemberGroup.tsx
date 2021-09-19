@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Theme } from '@material-ui/core/styles/createTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Avatar from '@material-ui/core/Avatar/Avatar';

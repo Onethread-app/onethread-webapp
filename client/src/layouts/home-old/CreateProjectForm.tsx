@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button, HTMLSelect , Icon } from '@blueprintjs/core';
+import { useState, useEffect } from 'react';
+import { Button, HTMLSelect, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Field, Form } from 'react-final-form';
 import { InputGroupField } from 'components/fields/InputGroupField';
@@ -27,12 +27,11 @@ interface ProjectAddInternalProps extends ProjectAddProps {
 export const ProjectAddComponent = (
   props: ProjectAddInternalProps,
 ) => {
-
   // const [admins, setAdmins] = useState([]);
   // const [selectedAdmins, setSelectedAdmins] = useState(
   //   [] as Entity[],
   // );
-  
+
   // const [search, setSearch] = useState('');
 
   // const userRequestFactory = async (userName: string) => {
@@ -66,8 +65,7 @@ export const ProjectAddComponent = (
   const [, setCompany] = useState('');
 
   useEffect(() => {
-
-    const getCompanies = async() => {
+    const getCompanies = async () => {
       const headers = tokenConfig();
       const response = await tigrowApi.get(
         `company/user-role-company`,
@@ -75,11 +73,10 @@ export const ProjectAddComponent = (
       );
 
       setRoleCompany(response.data);
-      return response.data ;
+      return response.data;
     };
 
     getCompanies();
-
   }, []);
 
   const { t } = useTranslation();
@@ -100,7 +97,9 @@ export const ProjectAddComponent = (
         <form className="pa4-ns pa2" onSubmit={handleSubmit}>
           <SubmitError errorMessage={submitError} />
           <div>
-            <h1 className="f5 lh-copy">{t('app.forms.Start-project.Create-project')}</h1>
+            <h1 className="f5 lh-copy">
+              {t('app.forms.Start-project.Create-project')}
+            </h1>
             {/* <h1 className="f5 lh-copy">Create Project</h1> */}
             <div className="mb4">
               <Field<string>
@@ -124,46 +123,52 @@ export const ProjectAddComponent = (
                 )}
               />
             </div>
-              <div className="mb4">
-                <div className="flex">
-                  <div className=" f5 pa1 bb b--lightBlue">
-                    <Icon icon={'briefcase'} className="tigrow-lightBlue" />
-                  </div>
-                  <Field<string>
-                    name="company"
-                    validate={required}
-                    render={({ input, meta }) => (
-                      <HTMLSelect
-                        fill={true}
-                        minimal={true}
-                        onChange={(e) => {
-                          setCompany(e.target.value);
-                          input.onChange(e.target.value);
-                        }}
-                        value={input.value}
-                        className=" bb b--lightBlue"
-                        style={{
-                          boxShadow: 'none',
-                          borderRadius: '0px',
-                          backgroundColor: 'white',
-                          flex: '1',
-                          outline: 'none',
-                        }}
-                      >
-                        <option selected value="">
-                          {t('app.forms.Start-project.Type')} 
-                          {/* Please select a company */}
-                      </option>
-                        {props.user && roleCompany.map((c: any) => (
-                          <option value={c.company._id}>{c.company.name}</option>
-                        ))}
-                      </HTMLSelect>
-                    )}
+            <div className="mb4">
+              <div className="flex">
+                <div className=" f5 pa1 bb b--lightBlue">
+                  <Icon
+                    icon={'briefcase'}
+                    className="tigrow-lightBlue"
                   />
                 </div>
+                <Field<string>
+                  name="company"
+                  validate={required}
+                  render={({ input, meta }) => (
+                    <HTMLSelect
+                      fill={true}
+                      minimal={true}
+                      onChange={(e) => {
+                        setCompany(e.target.value);
+                        input.onChange(e.target.value);
+                      }}
+                      value={input.value}
+                      className=" bb b--lightBlue"
+                      style={{
+                        boxShadow: 'none',
+                        borderRadius: '0px',
+                        backgroundColor: 'white',
+                        flex: '1',
+                        outline: 'none',
+                      }}
+                    >
+                      <option selected value="">
+                        {t('app.forms.Start-project.Type')}
+                        {/* Please select a company */}
+                      </option>
+                      {props.user &&
+                        roleCompany.map((c: any) => (
+                          <option value={c.company._id}>
+                            {c.company.name}
+                          </option>
+                        ))}
+                    </HTMLSelect>
+                  )}
+                />
               </div>
-              <div>
-                {/* <Field<string>
+            </div>
+            <div>
+              {/* <Field<string>
                   name="admin"
                   validate={required}
                   render={({ input, meta }) => (
@@ -245,10 +250,10 @@ export const ProjectAddComponent = (
                     </div>
                   )}
                 /> */}
-              </div>
+            </div>
           </div>
           <div className="flex justify-end">
-          <Button
+            <Button
               className="w4 grow h2 pointer mr3"
               style={{
                 background: '#3F61C5',
@@ -276,7 +281,6 @@ export const ProjectAddComponent = (
             >
               cancel
             </Button>
-            
           </div>
         </form>
       )}
@@ -290,7 +294,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const ProjectAdd = connect(
-  mapStateToProps,
-  {createProject}
-)(ProjectAddComponent);
+export const ProjectAdd = connect(mapStateToProps, { createProject })(
+  ProjectAddComponent,
+);

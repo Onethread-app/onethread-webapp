@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 
 import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';

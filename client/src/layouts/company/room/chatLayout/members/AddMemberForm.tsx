@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { isEqual, isEmpty } from 'lodash';
 import { tigrowApi } from 'config';
@@ -64,7 +64,7 @@ const AddMemberFormComponent = (
       } else {
         // tslint:disable-next-line: no-console
       }
-    } catch (error:any) {
+    } catch (error: any) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
       } else {
@@ -89,7 +89,7 @@ const AddMemberFormComponent = (
     return;
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch({ type: room.CLEAR_STATUS_CODE });
 
     return () => {

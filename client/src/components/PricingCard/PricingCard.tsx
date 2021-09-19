@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
@@ -27,9 +27,9 @@ const PricingCard = (props: IPricingCard) => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const [showContactUs, setShowContactUs] = React.useState(false);
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
-  const [response, setResponse] = React.useState({
+  const [showContactUs, setShowContactUs] = useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [response, setResponse] = useState({
     status: 0,
     message: '',
   });
@@ -38,7 +38,7 @@ const PricingCard = (props: IPricingCard) => {
     history.push('/signup');
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (response.status === 201) {
       setShowSnackbar(true);
       setShowContactUs(false);

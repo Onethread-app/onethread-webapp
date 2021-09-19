@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { isEqual, orderBy } from 'lodash';
 import styled from 'styled-components';
@@ -51,11 +51,9 @@ interface IColumnsContainerInternalProps {
 }
 
 const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
-  const [columns, setColumns] = React.useState<IColumn[]>([]);
-  const [
-    showColumnFormDialog,
-    setShowColumnFormDialog,
-  ] = React.useState(false);
+  const [columns, setColumns] = useState<IColumn[]>([]);
+  const [showColumnFormDialog, setShowColumnFormDialog] =
+    useState(false);
 
   const dragEnd = (result: DropResult) => {
     if (!result.destination) {
@@ -97,7 +95,7 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const cols = orderBy(props.columns, ['positionInBoard']);
     setColumns(cols);
   }, [props.columns]);

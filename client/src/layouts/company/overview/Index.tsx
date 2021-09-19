@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import { useParams, NavLink } from 'react-router-dom';
 import { MobileView, isMobileOnly } from 'react-device-detect';
@@ -76,12 +76,12 @@ const Index = (props: any) => {
 
   const [tasks, setTasks] = useState<any[]>([]);
 
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('dueDate');
-  const [selected, setSelected] = React.useState<string[]>([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [companyUnqName, setCompanyUnqName] = React.useState('');
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<keyof Data>('dueDate');
+  const [selected, setSelected] = useState<string[]>([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [companyUnqName, setCompanyUnqName] = useState('');
 
   const { projectId } = useParams<{ projectId: string }>();
 

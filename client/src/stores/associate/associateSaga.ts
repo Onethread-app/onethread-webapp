@@ -150,7 +150,7 @@ function* getAllPendingAssociates() {
         payload: associates,
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
     } else {

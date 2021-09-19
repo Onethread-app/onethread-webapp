@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { find } from 'lodash';
 
@@ -35,14 +35,10 @@ interface IArchivedProjects {
 }
 
 const ArchivedProjects = (props: IArchivedProjects) => {
-  const [deleteProjectIndex, setDeleteProjectIndex] = React.useState(
-    '',
-  );
-  const [
-    deleteProjectDialog,
-    setDeleteProjectDialog,
-  ] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [deleteProjectIndex, setDeleteProjectIndex] = useState('');
+  const [deleteProjectDialog, setDeleteProjectDialog] =
+    useState(false);
+  const [loading, setLoading] = useState(false);
 
   // const permissions = projectRules(props.role, props.optionalRole);
 
@@ -62,12 +58,12 @@ const ArchivedProjects = (props: IArchivedProjects) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.getProjectArchive();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       loading === true &&
       props.deletingProject === false &&

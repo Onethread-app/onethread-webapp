@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Button from '@material-ui/core/Button/Button';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import DialogActions from '@material-ui/core/DialogActions/DialogActions';

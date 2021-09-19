@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -34,10 +34,9 @@ const TrackedListDialog = (props: ITrackedListDialog) => {
     gettingList,
   } = props;
   const [loading, setLoading] = useState(false);
-  const [
-    anchorEl,
-    setAnchorEl,
-  ] = React.useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(
+    null,
+  );
 
   const open = Boolean(anchorEl);
   const id = open ? 'tracked-list' : undefined;

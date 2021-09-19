@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { Icon, Dialog, Button } from '@blueprintjs/core';
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
@@ -33,7 +33,9 @@ export const CompanyListComponent = (
         {props.user.companies && props.user.companies.length > 0 ? (
           <>
             {/* <h1 className="f3-ns f5 white pt4">Places You Work</h1> */}
-            <h1 className="f3-ns f5 white pt4">{t('app.homepage.Work-place')}</h1>
+            <h1 className="f3-ns f5 white pt4">
+              {t('app.homepage.Work-place')}
+            </h1>
             <div className="flex">
               <div
                 className="overflow-x-auto w-85 pv1 justify-start"
@@ -87,9 +89,9 @@ export const CompanyListComponent = (
                         <h1 className="f6 f5-ns lh-title white ws-break">
                           {c.company.name}{' '}
                         </h1>
-                        <h2 className="f6-ns f7 fw4 mt0 mb0 white ws-break">{`${t('app.homepage.Position')}: ${addSpace(
-                          c.role,
-                        )}`}</h2>
+                        <h2 className="f6-ns f7 fw4 mt0 mb0 white ws-break">{`${t(
+                          'app.homepage.Position',
+                        )}: ${addSpace(c.role)}`}</h2>
                         {/* <h2 className="f6-ns f7 fw4 mt0 mb0 white ws-break">{`Role: ${addSpace(
                           c.role,
                         )}`}</h2> */}

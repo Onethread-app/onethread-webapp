@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
@@ -26,10 +26,10 @@ interface ITaskFilesAttachInternalProps
 const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
   const { t } = useTranslation();
   const sizeLimit = 25;
-  const [imageName, setImageName] = React.useState({}) as any;
-  const [imageSelected, setImageSelected] = React.useState({}) as any;
-  const [imageError, setImageError] = React.useState('');
-  const [fileLoading, setFileLoading] = React.useState(false);
+  const [imageName, setImageName] = useState({}) as any;
+  const [imageSelected, setImageSelected] = useState({}) as any;
+  const [imageError, setImageError] = useState('');
+  const [fileLoading, setFileLoading] = useState(false);
   // const [imageError, setImageError] = useState('');
 
   const checkMimetype = [
@@ -98,7 +98,7 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
     setFileLoading(true);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       fileLoading &&
       props.uploadingTaskFile === false &&

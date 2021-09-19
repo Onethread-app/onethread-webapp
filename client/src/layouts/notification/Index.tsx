@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 
@@ -22,25 +22,25 @@ interface INotificationPage {
 }
 
 const NotificationPage = (props: INotificationPage) => {
-  const [activeTab, setActiveTab] = React.useState(0);
-  const [notificationToShow, setNotificationToShow] = React.useState<
-    any
-  >([]);
-  const [miliSecondsInADay] = React.useState(86400000);
-  const [miliSecondsInAWeek] = React.useState(604800016);
-  const [miliSecondsInAMonth] = React.useState(2629800000);
+  const [activeTab, setActiveTab] = useState(0);
+  const [notificationToShow, setNotificationToShow] = useState<any>(
+    [],
+  );
+  const [miliSecondsInADay] = useState(86400000);
+  const [miliSecondsInAWeek] = useState(604800016);
+  const [miliSecondsInAMonth] = useState(2629800000);
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.getNotifications();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.seenNotification();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notificationToShow]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const today = moment(new Date());
 
     switch (activeTab) {
