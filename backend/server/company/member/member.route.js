@@ -6,10 +6,24 @@ const {
 const subCtrl = require('../../subscription/subscription.controller');
 const joiSchema = require('./member.validation');
 const memberCtrl = require('./member.controller');
+const { authorizeUser } = require('../company.controller');
 
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
 router.use('/', subCtrl.subscriptionExpireCheck());
+
+router
+  .route('/join-request')
+  .post(authorization, memberCtrl.sendJoinRequest);
+
+router
+  .route('/:memberId/accept-request')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.acceptJoinRequest),
+    authorizeUser('all', 'admin', 'superAdmin'),
+    memberCtrl.acceptJoinRequest,
+  );
 
 router.route('/search').get(authorization, memberCtrl.searchMember);
 
@@ -23,15 +37,12 @@ router
   )
   .get(authorization, memberCtrl.list);
 
-  router
-  .route('/bulk')
-  .post(
-    authorization,
-    // TODO: member validations
-     SchemaValidator(joiSchema.bulkMember),
-    memberCtrl.bulkInsertMember,
-  );
-  
+router.route('/bulk').post(
+  authorization,
+  // TODO: member validations
+  SchemaValidator(joiSchema.bulkMember),
+  memberCtrl.bulkInsertMember,
+);
 
 router.route('/pending').get(authorization, memberCtrl.pendingList);
 
@@ -42,6 +53,12 @@ router
     SchemaValidator(joiSchema.checkInvitedMemberStatus),
     memberCtrl.checkInvitedMemberStatus,
   );
+
+router.route('/join-request').post(memberCtrl.sendJoinRequest);
+
+router
+  .route('/accept-request')
+  .post(authorization, memberCtrl.acceptJoinRequest);
 
 router
   .route('/:memberId')

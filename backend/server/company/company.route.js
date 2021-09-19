@@ -28,12 +28,22 @@ router
 router
   .route('/user-role-company')
   .get(authorization, companyCtrl.adminSuperAdminFinder);
+
+// TODO: Route name must change
 router
   .route('/search')
   .get(
     authorization,
     SchemaValidator(joiSchema.search),
     companyCtrl.searchCompany,
+  );
+
+router
+  .route('/find')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.find),
+    companyCtrl.FindCompanyAtBeginning,
   );
 // get company
 router.route('/:cname').get(

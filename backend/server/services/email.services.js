@@ -99,8 +99,8 @@ module.exports.sendEmailForVerifyAccount = async (
   });
 };
 
-module.exports.inviteSignupEmail = async (email) => {
-  const link = `${host}/signup?email=${email}`;
+module.exports.signupMail = async (email, token) => {
+  const link = `${host}/signup?email=${email}&token=${token}`;
   const mailOptions = {
     from: config.emailAddress,
     to: email,
@@ -111,13 +111,7 @@ module.exports.inviteSignupEmail = async (email) => {
     },
   };
 
-  return transporter.sendMail(mailOptions, function (err, res) {
-    if (err) {
-      logger.error(' Message send to failed ' + err);
-    } else {
-      logger.info(`send confirmation mail to user successfully`);
-    }
-  });
+  return transporter.sendMail(mailOptions);
 };
 
 module.exports.sendInviteColleague = async (
@@ -159,7 +153,7 @@ module.exports.contactSaleMail = async (email, subject, message) => {
       /* required */
       CcAddresses: [
         'contact@onethread.app',
-        'orvi@onethread.app'
+        'orvi@onethread.app',
         /* more items */
       ],
       ToAddresses: [
@@ -199,7 +193,6 @@ module.exports.contactSaleMail = async (email, subject, message) => {
       logger.info(data.MessageId);
     })
     .catch((err) => {
-      console.log(err)
       logger.error(err, err.stack);
     });
 };
