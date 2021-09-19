@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
 import { APP_ID, PAGE_ID, WHATSAPP_URL } from 'config';
 
 import Logo from 'resources/images/onethread-logo-main.png';
@@ -26,42 +29,157 @@ import IntegrationsPng from 'resources/images/integrations.png';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
 import whatsapp from '../../resources/images/icons/whatsapp.png';
 import chatIcon from '../../resources/images/icons/chat.png';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import MobileIndex from './mobile/Index';
 import Navbar from './Navbar';
 import MainFooter from './MainFooter';
 import { OTButton } from 'components/button/Button';
 
-import './Index.styles.scss';
+import { SubmitError } from 'components/final-form/SubmitError';
+import { userClearState, userSignupStart } from 'stores/auth/Actions';
 
-const NewLanding = () => {
+import './Index.styles.scss';
+import { Field, Form } from 'react-final-form';
+import {
+  checkError,
+  composeValidators,
+  required,
+} from 'components/final-form/utils';
+import { StyledError } from 'components/form-components/Index.styles';
+import {
+  StyledContainer,
+  StyledDiv,
+  StyledInput,
+  StyledButton,
+} from './Index.styles';
+
+const NewLanding = ({
+  userSignupStart,
+  error,
+  singupLoading,
+  userClearState,
+}) => {
   const { t } = useTranslation();
   const [showChat, setShowChat] = useState(false);
+  const [email, setEmail] = useState<string>('');
+  const signupRef = useRef<HTMLIFrameElement>(null);
+  const history = useHistory();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleSignup = (values: { email: string }) => {
+    setLoading(true);
+    userSignupStart(values.email.trim());
+    setEmail(values.email.trim());
+  };
+
+  useEffect(() => {
+    if (!singupLoading && error === '') {
+      setLoading(false);
+      localStorage.setItem('email', JSON.stringify(email));
+      history.push('/signup-confirmation');
+      userClearState();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email, history, singupLoading, error]);
+
+  useEffect(() => {
+    if (error) {
+      setLoading(false);
+      signupRef.current?.focus();
+    }
+  }, [error]);
 
   return isMobileOnly ? (
     <MobileIndex />
   ) : (
     <div className="landing w-100">
       <Navbar />
-      <section className="main-header w-100 relative flex flex-column items-center">
-        <h2 className="heading tc">
-          {t('landing.homepage.main-header.heading.first-part')}
-          <br />
-          <span style={{ color: '#3484F0' }}>
-            {t('landing.homepage.main-header.heading.second-part')}
-          </span>
-        </h2>
-        <img src={MainLanding} alt="" />
-        <h3 className="sub-heading tc">
-          <span className="b">
-            {' '}
-            {t('landing.homepage.main-header.sub-heading.first-part')}
-          </span>{' '}
-          {t('landing.homepage.main-header.sub-heading.second-part')}
-        </h3>
-        <OTButton to="/signup">
-          {t('landing.homepage.main-header.Sign-Up button')}
-        </OTButton>
+      <section className="main-header w-100 relative flex flex-column items-start">
+        <div className="flex flex-row">
+          <div className="flex flex-column w-100">
+            <h2 className="heading tc">
+              {t('landing.homepage.main-header.heading.first-part')}
+              <br />
+              <span style={{ color: '#3484F0' }}>
+                {t(
+                  'landing.homepage.main-header.heading.second-part',
+                )}
+              </span>
+            </h2>
+            <h3 className="sub-heading tc">
+              <span className="b">
+                {' '}
+                {t(
+                  'landing.homepage.main-header.sub-heading.first-part',
+                )}
+              </span>{' '}
+              {t(
+                'landing.homepage.main-header.sub-heading.second-part',
+              )}
+            </h3>
+          </div>
+          <img src={MainLanding} alt="" className="w-100 cover" />
+        </div>
+        <StyledContainer>
+          <Form
+            onSubmit={handleSignup}
+            render={({
+              handleSubmit,
+              form,
+              submitting,
+              pristine,
+              values,
+              submitError,
+              hasValidationErrors,
+              ...rest
+            }) => (
+              <form onSubmit={handleSubmit} className="form">
+                <label>
+                  Create your first project now, it’s free!
+                </label>
+                <Field
+                  name="email"
+                  type="email"
+                  validate={composeValidators(required)}
+                  render={({ input, meta }) => {
+                    return (
+                      <>
+                        <StyledDiv className="flex flex-row ">
+                          <StyledInput
+                            {...input}
+                            placeholder="Please provide a valid email address"
+                            error={checkError(meta)}
+                            ref={signupRef}
+                          />
+                          <StyledButton type="submit">
+                            {loading ? (
+                              <CircularProgress size="1rem" />
+                            ) : (
+                              'Sign up'
+                            )}
+                          </StyledButton>
+                        </StyledDiv>
+                        {checkError(meta) && (
+                          <StyledError
+                            errorMessage={
+                              meta.error || meta.submitError
+                            }
+                          />
+                        )}
+                        <SubmitError errorMessage={error} />
+                      </>
+                    );
+                  }}
+                />
+              </form>
+            )}
+          />
+          {/* <div>
+            or Sign up with <StyledButton>Google</StyledButton>
+            <StyledButton>Facebook</StyledButton>
+          </div> */}
+        </StyledContainer>
       </section>
       <section className="second-section w-100 flex relative">
         <div className="unified-tool flex items-center justify-around w-100">
@@ -289,4 +407,12 @@ const NewLanding = () => {
   );
 };
 
-export default NewLanding;
+const mapStateToProps = (state: any) => ({
+  singupLoading: state.authReducer?.signupLoading,
+  error: state.authReducer?.signupError,
+});
+
+export default connect(mapStateToProps, {
+  userSignupStart,
+  userClearState,
+})(NewLanding);

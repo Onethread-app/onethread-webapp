@@ -150,6 +150,9 @@ module.exports = {
   search: Joi.object().keys({
     query: sname,
   }),
+  find: Joi.object().keys({
+    query: sname,
+  }),
   dashboard: Joi.object().keys({
     params: companyId,
   }),

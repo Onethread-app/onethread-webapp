@@ -456,3 +456,28 @@
   right: 20px;
   z-index: 5;
 }
+
+.form {
+  margin-left: 5rem;
+  margin-right: auto;
+  font-size: inherit;
+
+  label {
+    margin-bottom: 0.5rem;
+  }
+
+  input {
+    width: 363px;
+    height: auto;
+    left: 55px;
+    top: 473px;
+
+    border: 1px solid #c9c9c9;
+    box-sizing: border-box;
+    border-radius: 6px;
+  }
+
+  button {
+    margin-left: 4px;
+  }
+}

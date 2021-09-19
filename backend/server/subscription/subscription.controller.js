@@ -96,6 +96,14 @@ const renewSubscription = async (req, res, next) => {
 const subscriptionExpireCheck = () => {
   return async (req, res, next) => {
     try {
+      const validCompanyId =
+        req.headers.companyid || req.body.companyId;
+
+      if (!validCompanyId) {
+        return sendErrorResponse(res, 400, 'ValidationError', {
+          message: `companyId is required`,
+        });
+      }
       const subscribe = await Subscription.find({
         company: req.headers.companyid || req.body.companyId,
         isActive: true,
