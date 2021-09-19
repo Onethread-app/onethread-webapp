@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
@@ -143,10 +143,11 @@ export const AssignedMembersEditorComponent = (
                             interactive={true}
                             style={{ background: '#707070' }}
                             onRemove={(e) => {
-                              const filteredItems = selectedTeamMember.filter(
-                                (selectedItem) =>
-                                  item.name !== selectedItem.name,
-                              );
+                              const filteredItems =
+                                selectedTeamMember.filter(
+                                  (selectedItem) =>
+                                    item.name !== selectedItem.name,
+                                );
                               setSelectedTeamMember([
                                 ...filteredItems,
                               ]);

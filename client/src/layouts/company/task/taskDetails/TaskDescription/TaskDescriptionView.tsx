@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import Linkify from 'react-linkify';
@@ -20,9 +20,8 @@ export const TaskDescriptionViewComponent = (
   props: TaskDescriptionViewInternalProps,
 ) => {
   const { t } = useTranslation();
-  const [editDescriptionDialog, setEditDescriptionDialog] = useState(
-    false,
-  );
+  const [editDescriptionDialog, setEditDescriptionDialog] =
+    useState(false);
 
   return (
     <>

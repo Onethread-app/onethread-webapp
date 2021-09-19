@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import {
   CustomView,
@@ -102,16 +102,15 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [leftOpen, setLeftOpen] = useState(true);
-  const [scrollTop, setScrollTop] = React.useState(0);
+  const [scrollTop, setScrollTop] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [queries, setQueries] = useState<RoomQueries>({
     view: 'default',
     roomId: '',
   });
-  const [subscriptionExpired, setSubscriptionExpired] = useState(
-    false,
-  );
+  const [subscriptionExpired, setSubscriptionExpired] =
+    useState(false);
 
   const updateCompanyReducer = () => {
     props.getCompanyDetails((props.match.params as any).cname);

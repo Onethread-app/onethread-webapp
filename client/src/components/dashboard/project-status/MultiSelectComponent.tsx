@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Intent } from '@blueprintjs/core/lib/esm/common/intent';
 import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
 import { MultiSelect } from '@blueprintjs/select/lib/esm/components/select/multiSelect';

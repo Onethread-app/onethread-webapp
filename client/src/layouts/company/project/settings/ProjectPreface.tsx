@@ -1,10 +1,10 @@
-import React from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Field } from 'react-final-form';
 
 const PrefacePageComponent = (props: any) => {
-  const [disabled] = React.useState(false);
+  const [disabled] = useState(false);
 
   return (
     <div>

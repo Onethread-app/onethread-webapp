@@ -1,9 +1,8 @@
-import { Loading } from 'components/Loading';
-import ErrorText from 'layouts/company/settings/ErrorText';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
+
 import { ICompany } from 'stores/company/Reducer';
 import { getProjectsIndividual } from 'stores/project/Actions';
 import { IMember } from 'stores/project/Reducer';
@@ -11,9 +10,12 @@ import { setExpireMassage } from 'stores/subscriptionBilling/Actions';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { User } from 'stores/user/Reducer';
 import { webPush } from '../../stores/notifications/Action';
+
+import { Loading } from 'components/Loading';
 import { CompanyList } from './CompanyList';
 import { ProjectList } from './ProjectList';
 import { VideoConference } from './VideoList';
+import ErrorText from 'layouts/company/settings/ErrorText';
 
 const customStyles = {
   content: {
@@ -42,7 +44,7 @@ export const HomePageComponent = (
   props: HomePageComponentProps & RouteComponentProps,
 ) => {
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = React.useState(false);
+  const [success, setSuccess] = useState(false);
 
   function closeModal() {
     setSuccess(false);

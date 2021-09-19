@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';

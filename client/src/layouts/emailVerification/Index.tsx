@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
 import { isEqual } from 'lodash';
@@ -31,8 +31,7 @@ const EmailVerificationComponent = (props: RouteComponentProps) => {
           isAccountVerified: response.data.isAccountVerified,
           message: response.data.message,
         };
-      } catch (error:any) {
-        
+      } catch (error: any) {
         if (isEqual(error.message, 'Network Error')) {
           setAccountVerified({
             ...accountVerified,

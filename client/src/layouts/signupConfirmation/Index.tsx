@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { isEqual } from 'lodash';
 
@@ -27,7 +27,7 @@ const SignupConfirmationPageComponent = () => {
     setLoading(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const em = localStorage.getItem('email');
     if (em) setEmail(em.replace(/['"]+/g, ''));
   }, []);

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { priorityColor } from 'stores/UtilsActions';
 
 const CustomComponents = {

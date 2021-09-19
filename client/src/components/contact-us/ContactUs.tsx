@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { tigrowApi } from 'config';
 
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
@@ -14,7 +14,7 @@ interface IContactUs {
 }
 
 const ContactUs = (props: IContactUs) => {
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -44,7 +44,7 @@ const ContactUs = (props: IContactUs) => {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       values.firstName &&
       values.lastName &&

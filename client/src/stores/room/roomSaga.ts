@@ -73,7 +73,7 @@ function* createRoom({ payload }) {
       ]);
       yield roomSubscribe(response.data.room._id);
     }
-  } catch (error) {
+  } catch (error: any) {
     yield put(createRoomFailure(returnErrorText(error)));
     yield put({
       type: room.RESPONSE_STATUS_CODE,
@@ -141,7 +141,7 @@ function* addRoomMembers({ data, selectedRoomMember }) {
         payload: response.status,
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     yield put(addRoomMembersFailure(returnErrorText(error)));
     yield put({
       type: room.RESPONSE_STATUS_CODE,

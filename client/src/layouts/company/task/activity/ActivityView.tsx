@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';

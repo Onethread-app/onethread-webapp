@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -7,7 +7,7 @@ import useWindowSize from 'helpers/hooks/useWindowSize';
 
 import moment from 'moment';
 import Select from 'react-select';
-import { DateRange } from '@blueprintjs/datetime/lib/esm/common/dateUtils';
+import { DateRange } from '@blueprintjs/datetime/lib/esm/common/dateRange';
 import { DateRangeInput } from '@blueprintjs/datetime/lib/esm/dateRangeInput';
 import { TimePrecision } from '@blueprintjs/datetime/lib/esm/timePicker';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
@@ -47,14 +47,12 @@ import './MyProjects.scss';
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const { t } = useTranslation();
   const [showProjectDialog, setShowProjectDialog] = useState(false);
-  const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(
-    false,
-  );
+  const [showUpdateNameDialog, setShowUpdateNameDialog] =
+    useState(false);
   const projectsPageSize = useWindowSize();
   const [open, setOpen] = useState(false);
-  const [singleProjectLoading, setSingleProjectLoading] = useState(
-    false,
-  );
+  const [singleProjectLoading, setSingleProjectLoading] =
+    useState(false);
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
   const [singlePid, setSinglePid] = useState('');
@@ -69,10 +67,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     value: 'all',
   });
 
-  const [range, setRange] = useState<DateRange>([
-    undefined,
-    undefined,
-  ]);
+  const [range, setRange] = useState<DateRange>([null, null]);
   const [searchValue, setSearchValue] = useState('');
   const [itemsPerPage] = useState(
     projectsPageSize.height > 768 ? 16 : 12,
@@ -164,7 +159,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   };
 
   const handleClear = () => {
-    setRange([undefined, undefined]);
+    setRange([null, null]);
     setSelectedOption({ value: 'all', label: 'All' });
     setAllProjects(orderBy(props.projects, ['createdAt'], ['desc']));
     setShowClearFilter(false);

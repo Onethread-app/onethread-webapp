@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { notificationType } from 'helpers/notification/rule';
 
 interface INotificationItemForPopover {

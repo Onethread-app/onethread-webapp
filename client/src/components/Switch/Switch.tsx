@@ -1,5 +1,3 @@
-import React from 'react';
-
 import './Switch.styles.scss';
 
 const Switch = ({ isToggle, onToggle }) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -55,7 +55,7 @@ interface IColumnProps {
 }
 
 const Column = (props: IColumnProps) => {
-  const [columnName] = React.useState(
+  const [columnName] = useState(
     props.column.name.toLowerCase().split(' ').join('-'),
   );
 

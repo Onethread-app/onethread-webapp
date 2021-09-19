@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { isEqual, isEmpty, lowerCase } from 'lodash';
 import { tigrowApi, server } from 'config';
@@ -43,8 +43,7 @@ export const SkillEdit = (props: SkillEditProps) => {
       } else {
         // tslint:disable-next-line: no-console
       }
-    } catch (error:any) {
-      
+    } catch (error: any) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
       } else {

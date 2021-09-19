@@ -5,7 +5,8 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import 'animate.css/animate.min.css';
 import 'normalize.css/normalize.css';
-import * as React from 'react';
+
+import { Suspense } from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -29,9 +30,9 @@ ReactDOM.render(
     <PersistGate loading={null} persistor={persistor}>
       <Elements stripe={stripePromise}>
         <BrowserRouter>
-          <React.Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading />}>
             <App />
-          </React.Suspense>
+          </Suspense>
         </BrowserRouter>
       </Elements>
     </PersistGate>

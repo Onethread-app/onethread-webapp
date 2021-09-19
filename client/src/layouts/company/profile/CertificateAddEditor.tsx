@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 
 import { TextArea } from '@blueprintjs/core/lib/esm/components/forms/textArea';

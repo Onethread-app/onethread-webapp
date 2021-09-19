@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
@@ -25,9 +25,8 @@ interface DepartmentViewProps {
 
 const DepartmentViewComponent = (props: DepartmentViewProps) => {
   const { t } = useTranslation();
-  const [showDialogDepartment, setShowDialogDepartment] = useState(
-    false,
-  );
+  const [showDialogDepartment, setShowDialogDepartment] =
+    useState(false);
 
   useEffect(() => {
     props.getAllDepartments();

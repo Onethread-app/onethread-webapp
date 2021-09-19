@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Toaster } from '@blueprintjs/core/lib/esm/components/toast/toaster';
@@ -22,7 +22,7 @@ export const AppToaster = Toaster.create({
 });
 
 const UserInput = (props: IUserInputInternalProps) => {
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = useState('');
   const handleChange = (e: any) => {
     setEmail(e.target.value);
   };

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import {
   NavLink,
   withRouter,
@@ -58,9 +58,9 @@ interface ISideBarProps {
 
 const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = React.useState('');
+  const [activeTab, setActiveTab] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.type === 'default'
       ? setActiveTab('user-profile')
       : setActiveTab('company-dashboard');

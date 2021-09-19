@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { tigrowApi } from 'config';
@@ -30,9 +30,8 @@ const validation = {
 };
 const ResetPasswordComponent = (props: RouteComponentProps) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(
-    false,
-  );
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
 
   const handleResetPassword = async (values: any) => {
     try {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import CreatableSelect from 'react-select/creatable';
 import { tigrowApi } from 'config';
@@ -28,11 +28,11 @@ interface IOptions {
 }
 
 const CreatableSingle = (props: ICreatableSingleInternalProps) => {
-  const [departmentOptions, setDepartmentOptions] = React.useState<
+  const [departmentOptions, setDepartmentOptions] = useState<
     IOptions[]
   >([]);
 
-  const [selectedDepartment, setSelectedDepartment] = React.useState<
+  const [selectedDepartment, setSelectedDepartment] = useState<
     IOptions[]
   >([]);
 
@@ -52,7 +52,7 @@ const CreatableSingle = (props: ICreatableSingleInternalProps) => {
     setSelectedDepartment(newValue);
   };
 
-  // React.useEffect(() => {
+  // useEffect(() => {
   //   if (props.departments) {
   //     const deptOptions = Array.from(props.departments, (dept) => {
   //       return { value: dept._id, label: dept.name };
@@ -61,7 +61,7 @@ const CreatableSingle = (props: ICreatableSingleInternalProps) => {
   //   }
   // }, [props.departments]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (departmentOptions) {
       departmentOptions.map(async (dept) => {
         if (dept.__isNew__) {
@@ -102,7 +102,7 @@ const CreatableSingle = (props: ICreatableSingleInternalProps) => {
     }
   }, [departmentOptions]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedDepartment) {
       props.input.onChange(
         selectedDepartment.map((dept: any) => dept.value),

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import './SuspenseLoader.styles.scss';
 
 interface ISuspenseLoader {

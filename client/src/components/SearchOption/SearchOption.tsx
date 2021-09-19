@@ -1,11 +1,10 @@
-import React from 'react';
-
 import SearchBar from 'material-ui-search-bar';
+import { useState } from 'react';
 
 import './SearchOption.scss';
 
 const SearchOption = ({ list, rows, setRows }: any) => {
-  const [searched, setSearched] = React.useState<string>('');
+  const [searched, setSearched] = useState<string>('');
   const requestSearch = (searchedVal: string) => {
     if (searchedVal === '') {
       setRows(list);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import { MobileView, isMobileOnly } from 'react-device-detect';
@@ -53,11 +53,10 @@ interface TeamMember {
 const ProjectTeamPageComponent = (props: TeamMember) => {
   const { t } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
-  const [showAssociateDialog, setShowAssociateDialog] = useState(
-    false,
-  );
+  const [showAssociateDialog, setShowAssociateDialog] =
+    useState(false);
   const [teammatesList, setTeammatesList] = useState<any[]>([]);
-  const [rows, setRows] = React.useState<any[]>(teammatesList);
+  const [rows, setRows] = useState<any[]>(teammatesList);
 
   useEffect(() => {
     setRows(teammatesList);

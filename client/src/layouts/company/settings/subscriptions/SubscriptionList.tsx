@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -43,10 +43,10 @@ const useStyles = makeStyles({
 });
 
 const _SubscriptionList = (props: ISubscriptionList) => {
-  const [dense] = React.useState(true);
+  const [dense] = useState(true);
   const classes = useStyles();
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.getSubscription();
   }, []);
 

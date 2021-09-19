@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
@@ -36,12 +36,10 @@ export const ChatLayoutComponent = (
   props: ChatLayoutComponentProps,
 ) => {
   const { t } = useTranslation();
-  const [showMemberFormDialog, setShowMemberFormDialog] = useState(
-    false,
-  );
-  const [showVideoCallDialog, setShowVideoCallDialog] = useState(
-    false,
-  );
+  const [showMemberFormDialog, setShowMemberFormDialog] =
+    useState(false);
+  const [showVideoCallDialog, setShowVideoCallDialog] =
+    useState(false);
 
   const permissions = projectRules(
     props.projectRole,

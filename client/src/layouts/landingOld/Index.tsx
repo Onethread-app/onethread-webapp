@@ -1,4 +1,3 @@
-import React from 'react';
 import { Navbar, Alignment } from '@blueprintjs/core';
 import { EmailVerificationForm } from './EmailVerificationForm';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   required,
   composeValidators,
@@ -24,7 +23,7 @@ const EmailVerificationFormComponent = (
       if (response.status === 200) {
         props.history.push('/signup?email=' + values.email);
       }
-    } catch (error) {
+    } catch (error: any) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
       } else if (error.response.status === 409) {

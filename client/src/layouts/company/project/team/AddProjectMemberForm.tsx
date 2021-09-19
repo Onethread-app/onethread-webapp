@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { tigrowApi } from 'config';
@@ -63,8 +63,7 @@ const AddProjectMemberFormComponent = (
       } else {
         // tslint:disable-next-line: no-console
       }
-    } catch (error:any) {
-      
+    } catch (error: any) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
       } else {

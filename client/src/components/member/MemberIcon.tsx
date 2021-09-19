@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 
 import UserIcon from 'resources/images/profilePhoto.svg';

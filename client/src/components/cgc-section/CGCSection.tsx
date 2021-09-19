@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 interface ICgcProps {

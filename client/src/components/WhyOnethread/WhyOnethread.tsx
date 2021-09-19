@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Paper from '@material-ui/core/Paper/Paper';

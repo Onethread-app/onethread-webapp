@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { isMobileOnly } from 'react-device-detect';
@@ -28,10 +28,8 @@ interface IUserPopoverIcon {
 const UserPopoverIcon = (props: IUserPopoverIcon) => {
   const history = useHistory();
   const { t } = useTranslation();
-  const [showDialog, setShowDialog] = React.useState(false);
-  const [showButtonReport, setShowButtonReport] = React.useState(
-    false,
-  );
+  const [showDialog, setShowDialog] = useState(false);
+  const [showButtonReport, setShowButtonReport] = useState(false);
 
   return (
     <>

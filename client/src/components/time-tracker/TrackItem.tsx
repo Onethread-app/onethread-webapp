@@ -1,4 +1,3 @@
-import React from 'react';
 import moment from 'moment';
 
 import { ITrack } from 'stores/time-tracker/Reducer';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { isMobileOnly, MobileOnlyView } from 'react-device-detect';
@@ -59,7 +59,7 @@ const ViewContent = ({ selectedTab }) => {
 
 const MobileView = () => {
   const { t } = useTranslation();
-  const [selectedTab, setSelectedTab] = React.useState(1);
+  const [selectedTab, setSelectedTab] = useState(1);
   const liClasses = 'pv2';
 
   return (
@@ -109,12 +109,12 @@ const SettingsPagComponent = (
   props: SettingsPageProps & RouteComponentProps,
 ) => {
   const { t } = useTranslation();
-  const [success, setSuccess] = React.useState(false);
+  const [success, setSuccess] = useState(false);
 
   function closeModal() {
     setSuccess(false);
   }
-  React.useEffect(() => {
+  useEffect(() => {
     setSuccess(props.subscriptiontExpired);
   }, [props.subscriptiontExpired]);
 

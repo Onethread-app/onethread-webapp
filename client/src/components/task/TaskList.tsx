@@ -1,4 +1,3 @@
-import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';

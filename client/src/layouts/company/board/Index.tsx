@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { isMobileOnly, MobileView } from 'react-device-detect';
@@ -188,9 +188,8 @@ const TaskPageComponent = (
   props: IBoardListViewInternalProps & RouteComponentProps,
 ) => {
   const { t } = useTranslation();
-  const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(
-    false,
-  );
+  const [showTaskBoardDialog, setShowTaskBoardDialog] =
+    useState(false);
   const [updTaskBoardDialog, setUpdTaskBoardDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [singleBoardLoading, setSingleBoardLoading] = useState(false);

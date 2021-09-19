@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   CustomView,
@@ -30,9 +30,8 @@ export const AssociateListComponent = (
   props: RouteComponentProps & AssociatesPageComponentProps,
 ) => {
   const { t } = useTranslation();
-  const [showAssociateDialog, setShowAssociateDialog] = useState(
-    false,
-  );
+  const [showAssociateDialog, setShowAssociateDialog] =
+    useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

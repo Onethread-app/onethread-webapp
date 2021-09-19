@@ -1,6 +1,5 @@
 /* eslint-disable */
 
-import React from 'react';
 import { merge } from 'lodash';
 import AgoraRTC from 'agora-rtc-sdk';
 import { withRouter } from 'react-router';
@@ -9,23 +8,23 @@ import './canvas.css';
 import '../../assets/fonts/css/icons.css';
 
 const tile_canvas = {
-  '1': ['span 12/span 24'],
-  '2': ['span 12/span 12/13/25', 'span 12/span 12/13/13'],
-  '3': ['span 6/span 12', 'span 6/span 12', 'span 6/span 12/7/19'],
-  '4': [
+  1: ['span 12/span 24'],
+  2: ['span 12/span 12/13/25', 'span 12/span 12/13/13'],
+  3: ['span 6/span 12', 'span 6/span 12', 'span 6/span 12/7/19'],
+  4: [
     'span 6/span 12',
     'span 6/span 12',
     'span 6/span 12',
     'span 6/span 12/7/13',
   ],
-  '5': [
+  5: [
     'span 3/span 4/13/9',
     'span 3/span 4/13/13',
     'span 3/span 4/13/17',
     'span 3/span 4/13/21',
     'span 9/span 16/10/21',
   ],
-  '6': [
+  6: [
     'span 3/span 4/13/7',
     'span 3/span 4/13/11',
     'span 3/span 4/13/15',
@@ -33,7 +32,7 @@ const tile_canvas = {
     'span 3/span 4/13/23',
     'span 9/span 16/10/21',
   ],
-  '7': [
+  7: [
     'span 3/span 4/13/5',
     'span 3/span 4/13/9',
     'span 3/span 4/13/13',
@@ -71,11 +70,11 @@ class AgoraCanvas extends React.Component {
       screen: true,
     });
     this.client.init($.appId, () => {
-      // 
+      //
       this.subscribeStreamEvents();
       this.client.join($.appId, $.channel, $.uid, (uid) => {
-        // 
-        // 
+        //
+        //
         // create local stream
         // It is not recommended to setState in function addStream
         this.localStream = this.streamInit(
@@ -88,13 +87,13 @@ class AgoraCanvas extends React.Component {
             if ($.attendeeMode !== 'audience') {
               this.addStream(this.localStream, true);
               this.client.publish(this.localStream, (err) => {
-                // 
+                //
               });
             }
             this.setState({ readyState: true });
           },
           (err) => {
-            // 
+            //
             this.setState({ readyState: true });
           },
         );
@@ -194,10 +193,10 @@ class AgoraCanvas extends React.Component {
     this.client &&
       this.client.leave(
         () => {
-          // 
+          //
         },
         () => {
-          // 
+          //
         },
       );
   }
@@ -228,37 +227,37 @@ class AgoraCanvas extends React.Component {
     let rt = this;
     rt.client.on('stream-added', function (evt) {
       let stream = evt.stream;
-      // 
-      // 
-      // 
+      //
+      //
+      //
       rt.client.subscribe(stream, function (err) {
-        // 
+        //
       });
     });
 
     rt.client.on('peer-leave', function (evt) {
-      // 
-      // 
-      // 
+      //
+      //
+      //
       rt.removeStream(evt.uid);
     });
 
     rt.client.on('stream-subscribed', function (evt) {
       let stream = evt.stream;
-      // 
-      // 
+      //
+      //
       // console.log(
       //   'Subscribe remote stream successfully: ' + stream.getId(),
       // );
-      // 
+      //
       rt.addStream(stream);
     });
 
     rt.client.on('stream-removed', function (evt) {
       let stream = evt.stream;
-      // 
-      // 
-      // 
+      //
+      //
+      //
       rt.removeStream(stream.getId());
     });
   };
@@ -326,7 +325,7 @@ class AgoraCanvas extends React.Component {
     } else if (this.state.displayMode === 'share') {
       // do nothing or alert, tbd
     } else {
-      // 
+      //
     }
   };
 
@@ -338,9 +337,8 @@ class AgoraCanvas extends React.Component {
       return;
     }
     let list;
-    let id = this.state.streamList[
-      this.state.streamList.length - 1
-    ].getId();
+    let id =
+      this.state.streamList[this.state.streamList.length - 1].getId();
     list = Array.from(
       document.querySelectorAll(`.ag-item:not(#ag-item-${id})`),
     );
@@ -363,10 +361,10 @@ class AgoraCanvas extends React.Component {
       this.client &&
         this.client.leave(
           () => {
-            // 
+            //
           },
           () => {
-            // 
+            //
           },
         );
     } finally {
@@ -390,13 +388,11 @@ class AgoraCanvas extends React.Component {
       screenStream.init(
         () => {
           this.addStream(screenStream, true);
-          this.client.publish(screenStream, (err) => {
-            
-          });
+          this.client.publish(screenStream, (err) => {});
           this.setState({ screenshare: true });
         },
         (err) => {
-          // 
+          //
           this.setState({ readyState: true });
         },
       );

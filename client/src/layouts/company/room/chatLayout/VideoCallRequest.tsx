@@ -1,4 +1,3 @@
-import React from 'react';
 import { tigrowApi } from 'config';
 import { isEqual } from 'lodash';
 
@@ -39,8 +38,7 @@ export const VideoCallRequest = (props: VideoCallRequestProps) => {
           props.setShowVideoCallDialog(false);
         }
       }
-    } catch (error:any) {
-      
+    } catch (error: any) {
       if (isEqual(error.message, 'Network Error')) {
         return { [FORM_ERROR]: 'Network Error' };
       }

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { tigrowApi } from '../../../../config';
@@ -119,9 +119,9 @@ interface ICheckout {
 }
 
 function _Checkout(props: ICheckout) {
-  const [value] = React.useState('bangladesh');
-  const [success, setSuccess] = React.useState(false);
-  const [formValues, setFormValues] = React.useState({
+  const [value] = useState('bangladesh');
+  const [success, setSuccess] = useState(false);
+  const [formValues, setFormValues] = useState({
     name: '',
     email: '',
     phone: '',
@@ -130,14 +130,14 @@ function _Checkout(props: ICheckout) {
     state: '',
     house: '',
   });
-  const [showPortwallet, setShowPortwallet] = React.useState(true);
-  const [showBkash, setShowBkash] = React.useState(false);
-  const [couponClick, setCouponClick] = React.useState(false);
-  const [couponCode, setCouponCode] = React.useState('');
-  const [discountPrice, setDiscountPrice] = React.useState(0);
-  const [total, setTotal] = React.useState(0);
-  const [finalAmount, setFinalAmount] = React.useState(0);
-  const [totalMembers, setTotalMembers] = React.useState(0);
+  const [showPortwallet, setShowPortwallet] = useState(true);
+  const [showBkash, setShowBkash] = useState(false);
+  const [couponClick, setCouponClick] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [discountPrice, setDiscountPrice] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [finalAmount, setFinalAmount] = useState(0);
+  const [totalMembers, setTotalMembers] = useState(0);
   const stripe = useStripe();
   const elements = useElements();
   const headers = tokenConfig();
@@ -238,26 +238,26 @@ function _Checkout(props: ICheckout) {
   //   setValue((event.target as HTMLInputElement).value);
   // };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const loadMembers = async () => {
       await props.getTotalMembers();
     };
     loadMembers();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.totalMembers > 0) {
       setTotalMembers(props.totalMembers);
     }
   }, [props.totalMembers]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (totalMembers) {
       setTotal(props.plan.pricing * totalMembers);
     }
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.coupon && couponClick) {
       setDiscountPrice(
         Number(
@@ -270,7 +270,7 @@ function _Checkout(props: ICheckout) {
     }
   }, [props.coupon, total]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (discountPrice > 0) {
       setFinalAmount(Number((total - discountPrice).toFixed(2)));
     } else {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
@@ -33,7 +33,7 @@ interface INavbarInternalProps extends INavbar {
 const Navbar = (props: INavbarInternalProps) => {
   const match = useRouteMatch();
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.getNotifications();
     companySubscriber(props.companyId);
     props.fetchChats();

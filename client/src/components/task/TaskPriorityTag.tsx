@@ -1,4 +1,3 @@
-import React from 'react';
 import { find } from 'lodash';
 
 import { priorityColor } from 'stores/UtilsActions';

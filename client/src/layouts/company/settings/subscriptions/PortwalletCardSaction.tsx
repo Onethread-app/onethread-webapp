@@ -1,5 +1,4 @@
-import React from 'react';
-
+import { ChangeEvent, useState } from 'react';
 import Modal from 'react-modal';
 import NumberFormat from 'react-number-format';
 import Button from '@material-ui/core/Button/Button';
@@ -79,7 +78,7 @@ const ErrorLabel = () => {
 export default function PortwalletCardSaction(
   props: IPortwalletCardSaction,
 ) {
-  const [formValues, setFormValues] = React.useState({
+  const [formValues, setFormValues] = useState({
     name: '',
     email: '',
     phone: '',
@@ -88,10 +87,10 @@ export default function PortwalletCardSaction(
     state: '',
     house: '',
   });
-  const [error, setError] = React.useState(false);
-  const [emailValidation, setEmailValidation] = React.useState(false);
-  const [checked, setChecked] = React.useState(false);
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [error, setError] = useState(false);
+  const [emailValidation, setEmailValidation] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   function openModal() {
     setIsOpen(true);
@@ -100,9 +99,7 @@ export default function PortwalletCardSaction(
     setIsOpen(false);
   }
 
-  const handleTermsCheck = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleTermsCheck = (event: ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
   const handleChange = (e) => {
@@ -114,7 +111,8 @@ export default function PortwalletCardSaction(
     }));
   };
   function validateEmail(email) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
   function checkAllInput() {

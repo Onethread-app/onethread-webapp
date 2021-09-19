@@ -1,4 +1,3 @@
-import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 
 import tick from './../../resources/LandingImages/tick.svg';

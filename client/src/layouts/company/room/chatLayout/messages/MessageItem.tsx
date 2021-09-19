@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useSelector, connect } from 'react-redux';
 
 import moment from 'moment';

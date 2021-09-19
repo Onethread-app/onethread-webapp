@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener';
 
 import ProfilePic from 'resources/svg/ProfilePic.svg';

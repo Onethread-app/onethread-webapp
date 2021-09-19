@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { IRoomFile } from 'stores/room/Reducer';
 
 import DownloadIcon from './../../../../../resources/images/file-download.svg';

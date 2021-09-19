@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch, connect } from 'react-redux';
@@ -41,9 +41,8 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
     roomId: '',
   });
 
-  const [showMemberListDialog, setShowMemberListDialog] = useState(
-    false,
-  );
+  const [showMemberListDialog, setShowMemberListDialog] =
+    useState(false);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);

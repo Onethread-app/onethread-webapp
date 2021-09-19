@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
@@ -40,9 +40,8 @@ const ChangePasswordComponentView = (
 ) => {
   const [showPasswordOld, setShowPasswordOld] = useState(false);
   const [showPasswordNew, setShowPasswordNew] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(
-    false,
-  );
+  const [showPasswordConfirm, setShowPasswordConfirm] =
+    useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleChangePassword = async (changePasswordInfo: {}) => {
