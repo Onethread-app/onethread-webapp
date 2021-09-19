@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 
 import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+import Tooltip from '@material-ui/core/Tooltip/Tooltip';
+import ListIcon from '@material-ui/icons/List';
+import DateRangeIcon from '@material-ui/icons/DateRange';
 
 import {
   getCompanyAnnouncement,
@@ -305,7 +308,7 @@ const ProjectStatusComponent = (props) => {
       >
         <ViewSelectDiv
           fetchingBoard={props.fetchingBoard}
-          className="flex tc"
+          className="flex items-center tc"
         >
           <p>{t('app.project.Tasks.View')}:</p>
           <p
@@ -314,7 +317,9 @@ const ProjectStatusComponent = (props) => {
             }}
             className={`${view === 'table' && 'active'}`}
           >
-            {t('app.project.Tasks.Table')}
+            <Tooltip title="List" placement="top">
+              <ListIcon />
+            </Tooltip>
           </p>
           <p
             onClick={() => {
@@ -322,7 +327,9 @@ const ProjectStatusComponent = (props) => {
             }}
             className={`${view === 'calendar' && 'active'}`}
           >
-            {t('app.project.Tasks.Calendar')}
+            <Tooltip title="Calendar" placement="top">
+              <DateRangeIcon />
+            </Tooltip>
           </p>
         </ViewSelectDiv>
       </div>
