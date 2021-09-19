@@ -2,6 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const Account = require('../account/account.model');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
+const logger = require('../../config/winston');
 
 // Setup options of local strategy
 const localOptions = {
@@ -15,31 +16,30 @@ const localOptions = {
 // Create local strategy
 const localLogin = new LocalStrategy(
   localOptions,
-  (req, email, password, done) => {
-    Account.findOne({ email })
-      .populate('jobExperience education skillArea', '_id name')
-      .exec((err, user) => {
-        if (err) {
-          return done(err);
-        }
-        if (!user) {
-          return done(null, false, {
-            message: 'invalid email or password',
-          });
-        }
-        // compare passwords - is 'password' equal to user.password?
-        user.comparePassword(password, (err, isMatch) => {
-          if (err) {
-            return done(err);
-          }
-          if (!isMatch) {
-            return done(null, false, {
-              message: 'invalid email or password',
-            });
-          }
-          return done(null, user);
+  async (req, email, password, done) => {
+    try {
+      const user = await Account.findOne({ email }).populate(
+        'jobExperience education skillArea',
+        '_id name',
+      );
+      if (!user) {
+        logger.error(`No user found!`);
+        return done(null, false, {
+          message: 'invalid email or password',
         });
-      });
+      }
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        logger.error(`Password is not matching!`);
+        return done(null, false, {
+          message: 'invalid email or password',
+        });
+      }
+      return done(null, user);
+    } catch (err) {
+      logger.error(`Account: ${err}`);
+      return done(err);
+    }
   },
 );
 
