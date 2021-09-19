@@ -71,20 +71,30 @@ const TasksComponent = (props: any) => {
   const sortTasksByDueDate = (tasks, orderBy) => {
     setTasks([]);
     return tasks.sort((a, b) => {
-      if (a.dueDate < b.dueDate) return orderBy === 'asc' ? 1 : -1;
-      else if (a.dueDate > b.dueDate)
+      if (new Date(a.dueDate) < new Date(b.dueDate))
+        return orderBy === 'asc' ? 1 : -1;
+      else if (new Date(a.dueDate) > new Date(b.dueDate))
         return orderBy === 'asc' ? -1 : 1;
       else return 0;
     });
   };
 
-  const sortTasksByPriority = (tasks, orderBy) => {
+  const sortTasksByDefault = (tasks, orderBy, sortedBy) => {
     setTasks([]);
-    return tasks.sort((a, b) =>
-      orderBy === 'asc'
-        ? a.priority - b.priority
-        : b.priority - a.priority,
-    );
+    const cI = (a) => {
+      // case-insensitive
+      if (typeof a === 'string') return a.toLowerCase();
+      return a;
+    };
+    if (orderBy === 'asc') {
+      return tasks.sort(function (a, b) {
+        return cI(a[sortedBy]) > cI(b[sortedBy]) ? 1 : -1;
+      });
+    } else {
+      return tasks.sort(function (a, b) {
+        return cI(a[sortedBy]) > cI(b[sortedBy]) ? -1 : +1;
+      });
+    }
   };
 
   const sortTasksByStatus = (tasks: any, orderBy: any) => {
@@ -320,21 +330,6 @@ const TasksComponent = (props: any) => {
     props.userTasks,
   ]);
 
-  // useEffect(() => {
-  //   const getTasks = async () => {
-  //     const headers = tokenConfig();
-  //     if ((headers.headers as any).Authorization) {
-  //       const response = await tigrowApi.get(
-  //         `accounts/task-list?date=${new Date()}`,
-  //         headers,
-  //       );
-  //       setTasksAll(response.data);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   getTasks();
-  // }, []);
-
   useEffect(() => {
     if (loading === false) {
       if (assign === 'to-me') {
@@ -367,12 +362,10 @@ const TasksComponent = (props: any) => {
   useEffect(() => {
     if (sortedBy === 'dueDate') {
       setTasks(sortTasksByDueDate([...tasks], orderBy));
-    }
-    if (sortedBy === 'priority') {
-      setTasks(sortTasksByPriority([...tasks], orderBy));
-    }
-    if (sortedBy === 'status') {
+    } else if (sortedBy === 'status') {
       setTasks(sortTasksByStatus([...tasks], orderBy));
+    } else {
+      setTasks(sortTasksByDefault([...tasks], orderBy, sortedBy));
     }
   }, [sortedBy, orderBy]);
 
@@ -752,7 +745,12 @@ const TasksComponent = (props: any) => {
         </div>
       </div>
       <div className="tasks-list w-100">
-        <TaskListContainer tasks={tasks} loading={loading} />
+        <TaskListContainer
+          tasks={tasks}
+          loading={loading}
+          setSortedBy={setSortedBy}
+          setOrderBy={setOrderBy}
+        />
       </div>
     </div>
   );

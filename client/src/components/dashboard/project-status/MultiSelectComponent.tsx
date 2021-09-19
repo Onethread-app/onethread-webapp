@@ -20,7 +20,6 @@ const MultiSelectComponent = ({
       return [...prev.slice(0, index), ...prev.slice(index + 1)];
     });
   };
-  // console.log(container);
   return (
     <>
       <MultiSelect
