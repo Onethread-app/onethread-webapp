@@ -1,3 +1,4 @@
+import { Component } from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
 // import { connect } from 'react-redux';
@@ -7,7 +8,7 @@ import AgoraVideoCall from '../../components/AgoraVideoCall';
 import { AGORA_APP_ID } from '../../agora.config';
 // import { getVideoConferencesJoinee } from 'stores/auth/Actions';
 
-class Meeting extends React.Component {
+class Meeting extends Component {
   constructor(props) {
     super(props);
     const query = new URLSearchParams(props.history.location.search);

@@ -1,3 +1,4 @@
+import { Component } from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
 // import Pusher from 'pusher-js';
@@ -9,7 +10,7 @@ import Axios from 'axios';
 import { tokenConfig } from 'stores/UtilsActions';
 import { server } from 'config';
 
-class Index extends React.Component {
+class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -119,7 +120,7 @@ class Index extends React.Component {
   }
 }
 
-class InputChannel extends React.Component {
+class InputChannel extends Component {
   constructor(props) {
     super(props);
     this.state = {
