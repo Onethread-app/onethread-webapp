@@ -63,6 +63,8 @@ export const ViewSelectDiv = styled.div`
       cursor: ${(props) =>
         props.fetchingBoard ? 'not-allowed' : 'pointer'};
       padding: 0.25rem 0.5rem;
+      display: flex;
+      align-items: center;
     }
 
     &.active {

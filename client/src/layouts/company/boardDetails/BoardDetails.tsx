@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import Tooltip from '@material-ui/core/Tooltip/Tooltip';
+import ListIcon from '@material-ui/icons/List';
+import ViewWeekIcon from '@material-ui/icons/ViewWeek';
+import DateRangeIcon from '@material-ui/icons/DateRange';
 
 import {
   IFilterUser,
@@ -186,7 +190,7 @@ const BoardDetails = (props: IBoardDetails) => {
           <div className="flex justify-center">
             <ViewSelectDiv
               fetchingBoard={props.fetchingBoard}
-              className="flex"
+              className="flex items-center"
             >
               <p>{t('app.project.Tasks.View')}:</p>
               <p
@@ -195,25 +199,29 @@ const BoardDetails = (props: IBoardDetails) => {
                 }}
                 className={`${view === 'list' && 'active'}`}
               >
-                {t('app.project.Tasks.List')}
+                <Tooltip title="List" placement="top">
+                  <ListIcon />
+                </Tooltip>
               </p>
-
               <p
                 onClick={() => {
                   handleViewChange('board');
                 }}
                 className={`${view === 'board' && 'active'}`}
               >
-                {t('app.project.Tasks.Board')}
+                <Tooltip title="Board" placement="top">
+                  <ViewWeekIcon />
+                </Tooltip>
               </p>
-
               <p
                 onClick={() => {
                   handleViewChange('calendar');
                 }}
                 className={`${view === 'calendar' && 'active'}`}
               >
-                {t('app.project.Tasks.Calendar')}
+                <Tooltip title="Calendar" placement="top">
+                  <DateRangeIcon />
+                </Tooltip>
               </p>
             </ViewSelectDiv>
           </div>
