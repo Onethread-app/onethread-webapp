@@ -90,6 +90,9 @@ const projectSchema = new Schema(
       type: Number,
       default: 0,
     },
+    budget: {
+      type: Number,
+    },
     version: {
       type: Number,
       default: 0,
