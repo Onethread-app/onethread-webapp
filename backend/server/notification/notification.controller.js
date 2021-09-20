@@ -636,6 +636,7 @@ module.exports.addTeamMateIntoRoomNotification = async (
     newMembers = newMembers.map((m) => {
       return { account: m.account };
     });
+    //TODOs: duplicate code
     newMembers.forEach(async (member) => {
       notifications = notifications.map(async (m) => {
         let userNoti = await UserNotification.create({
