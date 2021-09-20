@@ -1,8 +1,9 @@
-import React from 'react';
-import { isEqual } from 'lodash';
 import { connect } from 'react-redux';
-import { RoomListItem } from './RoomListItem';
+import { isEqual } from 'lodash';
+
 import { IRoom, IRoomReducer } from 'stores/room/Reducer';
+
+import { RoomListItem } from './RoomListItem';
 
 interface IRoomListComponentProps {
   currentRoom?: IRoomReducer['currentRoom'];

@@ -1,25 +1,24 @@
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Dialog,
-  Menu,
-  MenuItem,
-  Popover,
-} from '@blueprintjs/core';
-import { find } from 'lodash';
-import moment from 'moment';
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { ICompany } from 'stores/company/Reducer';
-// import { projectRules } from './settings/projectrules';
-import { Color } from 'stores/UtilsActions';
+import { find } from 'lodash';
 
+import moment from 'moment';
+import { Card } from '@blueprintjs/core/lib/esm/components/card/card';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Menu } from '@blueprintjs/core/lib/esm/components/menu/menu';
+import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { ButtonGroup } from '@blueprintjs/core/lib/esm/components/button/buttonGroup';
+
+import { ICompany } from 'stores/company/Reducer';
+import { Color } from 'stores/UtilsActions';
 import {
   unarchiveProject,
   deleteProject,
   getProjectArchive,
 } from '../../../stores/project/Actions';
+
 import NoProjectsFound from 'NoProjectsFound';
 
 interface IArchivedProjects {
@@ -36,14 +35,10 @@ interface IArchivedProjects {
 }
 
 const ArchivedProjects = (props: IArchivedProjects) => {
-  const [deleteProjectIndex, setDeleteProjectIndex] = React.useState(
-    '',
-  );
-  const [
-    deleteProjectDialog,
-    setDeleteProjectDialog,
-  ] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [deleteProjectIndex, setDeleteProjectIndex] = useState('');
+  const [deleteProjectDialog, setDeleteProjectDialog] =
+    useState(false);
+  const [loading, setLoading] = useState(false);
 
   // const permissions = projectRules(props.role, props.optionalRole);
 
@@ -63,12 +58,12 @@ const ArchivedProjects = (props: IArchivedProjects) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.getProjectArchive();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       loading === true &&
       props.deletingProject === false &&

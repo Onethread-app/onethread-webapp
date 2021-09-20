@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Tabs, Tab, Divider } from '@blueprintjs/core';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { AssociateBasicInfoView } from './AssociateBasicInfoView';
-import { BreadCrumbs } from 'components/fields/Breadcrumbs';
-import { ICompany } from 'stores/company/Reducer';
-import { Loading } from 'components/Loading';
-import { getSelectedAssociate } from 'stores/associate/Actions';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { isEmpty } from 'lodash';
+
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
+import { Tabs } from '@blueprintjs/core/lib/esm/components/tabs/tabs';
+import { Tab } from '@blueprintjs/core/lib/esm/components/tabs/tab';
 import moment from 'moment';
+
+import { ICompany } from 'stores/company/Reducer';
+import { getSelectedAssociate } from 'stores/associate/Actions';
 import { Associate } from 'stores/associate/Reducer';
+
+import { Loading } from 'components/Loading';
+import { BreadCrumbs } from 'components/fields/Breadcrumbs';
+import { AssociateBasicInfoView } from './AssociateBasicInfoView';
 
 interface AssociatesDetailsViewInternalProps {
   company: ICompany;

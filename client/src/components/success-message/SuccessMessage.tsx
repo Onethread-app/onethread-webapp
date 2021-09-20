@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import Snackbar, { SnackbarOrigin } from '@material-ui/core/Snackbar';
+
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Theme } from '@material-ui/core/styles/createTheme';
+import Snackbar, {
+  SnackbarOrigin,
+} from '@material-ui/core/Snackbar/Snackbar';
+
 import { resetContactFormResponse } from '../../stores/landing/Actions';
 
 export interface State extends SnackbarOrigin {
@@ -24,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SuccessMessageComponent = (props) => {
   const classes = useStyles();
-  const [state, setState] = React.useState<State>({
+  const [state, setState] = useState<State>({
     open: true,
     vertical: 'top',
     horizontal: 'center',

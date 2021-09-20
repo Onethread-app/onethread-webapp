@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Popover from '@material-ui/core/Popover/Popover';
 
+import { ITrack } from 'stores/time-tracker/Reducer';
+import { getTaskTrackers } from 'stores/time-tracker/Action';
 import useWindowSize from 'helpers/hooks/useWindowSize';
 import { msToTime } from 'helpers/utils';
-import { getTaskTrackers } from 'stores/time-tracker/Action';
-import { ITrack } from 'stores/time-tracker/Reducer';
+
+import TrackItem from './TrackItem';
 
 import {
   TrackedListDialogContainer,
   TrackItemListContainer,
 } from './TrackedListDialog.styles';
-import TrackItem from './TrackItem';
 
 interface ITrackedListDialog {
   timerHover: boolean;
@@ -24,6 +25,7 @@ interface ITrackedListDialog {
 }
 
 const TrackedListDialog = (props: ITrackedListDialog) => {
+  const windowSize = useWindowSize();
   const {
     timerHover,
     trackList,
@@ -32,11 +34,20 @@ const TrackedListDialog = (props: ITrackedListDialog) => {
     gettingList,
   } = props;
   const [loading, setLoading] = useState(false);
-  const [
-    anchorEl,
-    setAnchorEl,
-  ] = React.useState<HTMLButtonElement | null>(null);
-  const windowSize = useWindowSize();
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(
+    null,
+  );
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'tracked-list' : undefined;
+
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     getTaskTrackers();
@@ -48,17 +59,6 @@ const TrackedListDialog = (props: ITrackedListDialog) => {
       setLoading(false);
     }
   }, [gettingList, loading, trackList]);
-
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'tracked-list' : undefined;
 
   return (
     <div className="self-end">

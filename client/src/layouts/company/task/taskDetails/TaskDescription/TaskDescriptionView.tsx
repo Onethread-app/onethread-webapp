@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { TaskDescriptionEditor } from './TaskDescriptionEditor';
-import { Icon } from '@blueprintjs/core';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import Linkify from 'react-linkify';
+
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
 import { ITask } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import Linkify from 'react-linkify';
+
 import { componentDecorator } from 'helpers/LinkifyHelper';
-import { useTranslation } from 'react-i18next';
+import { TaskDescriptionEditor } from './TaskDescriptionEditor';
 
 interface TaskDescriptionViewInternalProps {
   description?: ITask['description'];
@@ -16,11 +19,9 @@ interface TaskDescriptionViewInternalProps {
 export const TaskDescriptionViewComponent = (
   props: TaskDescriptionViewInternalProps,
 ) => {
-  const [editDescriptionDialog, setEditDescriptionDialog] = useState(
-    false,
-  );
-
   const { t } = useTranslation();
+  const [editDescriptionDialog, setEditDescriptionDialog] =
+    useState(false);
 
   return (
     <>
@@ -81,7 +82,6 @@ export const TaskDescriptionViewComponent = (
         <p className="pr2">
           {t('app.project.Project-boards.No-description')}
         </p>
-        // <p className="pr2">Description has not been given yet</p>
       )}
     </>
   );

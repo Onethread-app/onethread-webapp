@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { priorityColor } from 'stores/UtilsActions';
-import { connect } from 'react-redux';
-import { updateTask } from 'stores/task/Actions';
-import { ITask } from 'stores/task/Reducer';
-import styled from 'styled-components';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+
+import { ITask } from 'stores/task/Reducer';
+import { updateTask } from 'stores/task/Actions';
+import { priorityColor } from 'stores/UtilsActions';
 
 interface IPriorityEditorProps {
   updateTask: (task: ITask) => any;
@@ -42,14 +43,10 @@ const TagSelectPriority = styled.select`
 export const PriorityEditorListComponent = (
   props: IPriorityEditorProps,
 ) => {
-  // console.log('code', props.colorCode);
+  const { t } = useTranslation();
   const [selectedPriority, setSelectedPriority] = useState<any>({
     value: props.colorCode,
   });
-
-  useEffect(() => {
-    setSelectedPriority(props.colorCode);
-  }, [props.colorCode]);
 
   const handlePriorityChange = async (e) => {
     setSelectedPriority(e.target.value);
@@ -63,7 +60,9 @@ export const PriorityEditorListComponent = (
     e.stopPropagation();
   };
 
-  const { t } = useTranslation();
+  useEffect(() => {
+    setSelectedPriority(props.colorCode);
+  }, [props.colorCode]);
 
   return (
     <div className="task-info-items">

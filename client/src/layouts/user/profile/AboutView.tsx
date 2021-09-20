@@ -1,25 +1,27 @@
-import { User } from 'stores/user/Reducer';
-import React, { useState } from 'react';
-import { AboutEdit } from './AboutEditor';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
+import { User } from 'stores/user/Reducer';
+
 import editIcon from '../../../resources/images/editIcon.png';
+
+import { AboutEdit } from './AboutEditor';
 import { RightSidebar } from 'components/RightSidebar';
-import { useTranslation } from 'react-i18next';
+
 interface IAboutViewProps {
   user: User;
 }
 
 const AboutViewComponent = (props: IAboutViewProps) => {
-  const [showDialogAbout, setShowDialogAbout] = useState(false);
   const { t } = useTranslation();
+  const [showDialogAbout, setShowDialogAbout] = useState(false);
 
   return (
     <>
       <div className="cf ">
         <h1 className="f5 lh-copy dib tigrow-lightGray-1 ws-break">
           {t('app.user.Personal-profile.About')}
-          {/* About */}
         </h1>
         <img
           src={editIcon}

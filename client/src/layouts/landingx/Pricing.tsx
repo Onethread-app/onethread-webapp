@@ -1,12 +1,11 @@
-import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
-import pricingData from 'resources/PricingData.json';
+import { useTranslation } from 'react-i18next';
 
+import pricingData from 'resources/PricingData.json';
 import Navbar from './Navbar';
 import PricingCard from 'components/PricingCard/PricingCard';
 import MainFooter from './MainFooter';
 import MobilePricingPage from './mobile/Pricing';
-import { useTranslation } from 'react-i18next';
 import WhyOnethread from 'components/WhyOnethread/WhyOnethread';
 
 const PricingPage = () => {

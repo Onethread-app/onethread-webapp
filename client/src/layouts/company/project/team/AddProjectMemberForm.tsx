@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { tigrowApi } from 'config';
+import { isNil, isEqual } from 'lodash';
+
+import { Tag } from '@blueprintjs/core/lib/esm/components/tag/tag';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { tokenConfig } from 'stores/UtilsActions';
+import { addProjectTeams } from 'stores/project/Actions';
+
 import {
   SuggestField,
   ItemEntityProps,
 } from 'components/fields/SuggestField';
-import { connect } from 'react-redux';
-import { tokenConfig } from 'stores/UtilsActions';
-import { Button, Tag } from '@blueprintjs/core';
-import { addProjectTeams } from 'stores/project/Actions';
-import { tigrowApi } from 'config';
-import { isNil, isEqual } from 'lodash';
-import { useTranslation } from 'react-i18next';
 
 interface ProjectTeamMembersProps {
   showDialog: boolean;
@@ -35,6 +39,7 @@ interface ProjectTeamMembersInternalProps
 const AddProjectMemberFormComponent = (
   props: ProjectTeamMembersInternalProps,
 ) => {
+  const { t } = useTranslation();
   const [suggestedMembers, setSuggestedMembers]: any = useState([]);
   const [selectedTeamMember, setSelectedTeamMember] = useState(
     [] as ItemEntityProps[],
@@ -58,7 +63,7 @@ const AddProjectMemberFormComponent = (
       } else {
         // tslint:disable-next-line: no-console
       }
-    } catch (error) {
+    } catch (error: any) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
       } else {
@@ -76,15 +81,12 @@ const AddProjectMemberFormComponent = (
     }
   }, [props.projectId, props.companyId]);
 
-  const { t } = useTranslation();
-
   return (
     <div className="pa3">
       <div className="w-100">
         <h1 className="f5 tigrow-darkBlue">
           {t('app.project.Project-teammates.Add-Teammates')}
         </h1>
-        {/* <h1 className="f5 tigrow-darkBlue">Add Teammates</h1> */}
         <SuggestField
           items={suggestedMembers}
           selectedItems={selectedTeamMember}

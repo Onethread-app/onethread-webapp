@@ -1,11 +1,14 @@
-import { Button, TextArea } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import React from 'react';
+
+import { TextArea } from '@blueprintjs/core/lib/esm/components/forms/textArea';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import { Form, Field } from 'react-final-form';
+
+import { addCertificate } from 'stores/company/Actions';
+
 import { checkError, maxValue } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { addCertificate } from 'stores/company/Actions';
 
 interface ICertificateAddProps {
   setShowDialog: (val: boolean) => void;

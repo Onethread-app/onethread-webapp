@@ -1,38 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  Popover,
-  Position,
-  ButtonGroup,
-  Dialog,
-} from '@blueprintjs/core';
+import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router';
 import { isMobileOnly } from 'react-device-detect';
 import { connect } from 'react-redux';
 import { upperFirst } from 'lodash';
-import { NavLink } from 'react-router-dom';
-import { logoutAction } from 'stores/auth/Actions';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { useTranslation } from 'react-i18next';
+
 import { History } from 'history';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { ButtonGroup } from '@blueprintjs/core/lib/esm/components/button/buttonGroup';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 import ChatIcon from '@material-ui/icons/Chat';
-import user from '../resources/images/profilePhoto.svg';
+import Badge from '@material-ui/core/Badge/Badge';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+
 import { User } from 'stores/user/Reducer';
-import { CompanyListView } from '../layouts/company/ListView';
-import { CompanySignupForm } from '../layouts/company/Form';
-import NotificationPopover from 'components/notification/NotificationPopover';
-import { companySubscriber } from '../helpers/notification/subscribers';
+import { IRoom, IChat } from '../stores/room/Reducer';
 import {
   seenNotification,
   clearSeen,
   getNotifications,
 } from '../stores/notifications/Action';
-import { Badge } from '@material-ui/core';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import { fetchRooms, fetchChats } from '../stores/room/Actions';
-import { IRoom, IChat } from '../stores/room/Reducer';
+import { logoutAction } from 'stores/auth/Actions';
+
 import logo from 'resources/images/onethread-text.png';
-import ChatListItem from 'components/chat/ChatListItem';
-import { useTranslation } from 'react-i18next';
+import user from '../resources/images/profilePhoto.svg';
+
 import ReportForm from 'components/ReportForm';
+import ChatListItem from 'components/chat/ChatListItem';
+import { CompanySignupForm } from '../layouts/company/Form';
+import { CompanyListView } from '../layouts/company/ListView';
+import { companySubscriber } from '../helpers/notification/subscribers';
+import NotificationPopover from 'components/notification/NotificationPopover';
 
 interface NavbarTopInternalProps {
   user: User;
@@ -61,8 +63,15 @@ export const compareChats = (a: any, b: any) => {
 const NavbarTopComponent = (
   props: NavbarTopInternalProps & RouteComponentProps,
 ) => {
+  const { t } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
   const [showButtonReport, setShowButtonReport] = useState(false);
+
+  const handleSeenNotifications = async () => {
+    props.seen !== 0 && (await props.seenNotification());
+    // props.getNotifications();
+  };
+
   useEffect(() => {
     props.getNotifications();
     companySubscriber(props.companyId);
@@ -70,13 +79,6 @@ const NavbarTopComponent = (
     props.fetchChats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleSeenNotifications = async () => {
-    props.seen !== 0 && (await props.seenNotification());
-    // props.getNotifications();
-  };
-
-  const { t } = useTranslation();
 
   return (
     <>
@@ -219,7 +221,6 @@ const NavbarTopComponent = (
                   color:
                     props.type === 'home' ? 'white' : 'dark-gray',
                 }}
-                // text="My Companies"
                 text={t('app.homepage.My-Companies')}
               />
             }
@@ -266,7 +267,6 @@ const NavbarTopComponent = (
                   }
                 >
                   {t('app.company.Settings.Settings')}
-                  {/* Settings */}
                 </Button>
                 <Button
                   className="bp3-minimal outline-0 bp3-popover-dismiss"
@@ -275,7 +275,6 @@ const NavbarTopComponent = (
                   alignText="left"
                 >
                   {t('app.user.User-settings.Report-Issue')}
-                  {/* Report issue */}
                 </Button>
                 <Button
                   className="bp3-minimal outline-0 bp3-popover-dismiss"
@@ -286,7 +285,6 @@ const NavbarTopComponent = (
                   alignText="left"
                 >
                   {t('app.user.User-settings.Logout')}
-                  {/* Logout */}
                 </Button>
               </ButtonGroup>
             }

@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
-import { InputGroupFieldWithError } from '../../components/fields/InputGroupField';
-import { Button } from '@blueprintjs/core';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { tigrowApi } from 'config';
+
 import { Form, Field } from 'react-final-form';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import lockIcon from './../../resources/images/lock.png';
+import eyeIcon from './../../resources/images/eye.png';
+
 import { SubmitError } from 'components/final-form/SubmitError';
+import { InputGroupFieldWithError } from '../../components/fields/InputGroupField';
 import {
   errorMessgeHandler,
   composeValidators,
@@ -11,13 +18,8 @@ import {
   checkError,
   passwordValidation,
 } from 'components/final-form/utils';
-
-import lockIcon from './../../resources/images/lock.png';
-import eyeIcon from './../../resources/images/eye.png';
-// import questionIcon from './../../resources/images/question.png';
-import { Link } from 'react-router-dom';
-import { tigrowApi } from 'config';
 import InputTooltip from 'components/input-tooltip/InputTooltip';
+
 const validation = {
   rules: [
     'At least 1 capital letter',
@@ -28,9 +30,8 @@ const validation = {
 };
 const ResetPasswordComponent = (props: RouteComponentProps) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(
-    false,
-  );
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
 
   const handleResetPassword = async (values: any) => {
     try {

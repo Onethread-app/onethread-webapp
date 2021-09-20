@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+
+import { IconNames } from '@blueprintjs/icons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Tooltip } from '@blueprintjs/core/lib/esm/components/tooltip/tooltip';
+
 import { IFile } from 'stores/task/Reducer';
 import { taskFileDelete, ITaskFileDelete } from 'stores/task/Actions';
+
 import TaskFilesAttach from './TaskFilesAttach';
-import { Icon, Tooltip } from '@blueprintjs/core';
-import { Popover } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
-import { useTranslation } from 'react-i18next';
 
 interface ITaskFiles {
   taskFiles: IFile[];
@@ -20,7 +24,10 @@ interface ITaskFiles {
 }
 
 const TaskFiles = (props: ITaskFiles) => {
-  const [showDelete, setShowDelete] = React.useState({
+  const { t } = useTranslation();
+  const [filePopover, setFilePopover] = useState(false);
+
+  const [showDelete, setShowDelete] = useState({
     value: false,
     _id: '',
   });
@@ -33,10 +40,6 @@ const TaskFiles = (props: ITaskFiles) => {
     };
     props.taskFileDelete(payload);
   };
-
-  const { t } = useTranslation();
-
-  const [filePopover, setFilePopover] = useState(false);
 
   return (
     <div className="w-100">

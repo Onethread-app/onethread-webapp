@@ -1,12 +1,17 @@
-import { User } from 'stores/user/Reducer';
-import { Divider, Button, TextArea } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { editUserInfoAction } from 'stores/user/Actions';
-import React from 'react';
-import { Form, Field } from 'react-final-form';
-import { checkError, maxValue } from 'components/final-form/utils';
 import { isEmpty } from 'lodash';
+
+import { Form, Field } from 'react-final-form';
+import { TextArea } from '@blueprintjs/core/lib/esm/components/forms/textArea';
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { User } from 'stores/user/Reducer';
+import { editUserInfoAction } from 'stores/user/Actions';
+
+import { checkError, maxValue } from 'components/final-form/utils';
 import { SubmitError } from 'components/final-form/SubmitError';
+
 interface AboutEditComponentProps {
   setShowDialog: (val: boolean) => void;
 }

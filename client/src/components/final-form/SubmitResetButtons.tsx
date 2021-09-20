@@ -1,5 +1,4 @@
-import React from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 interface ISubmitAndResetButtonsProps {
   reset: (initialValues?: object | undefined) => void;

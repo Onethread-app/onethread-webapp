@@ -1,8 +1,12 @@
-import React from 'react';
 import { connect } from 'react-redux';
-import { Navbar, Icon, Drawer } from '@blueprintjs/core';
+
+import { Navbar } from '@blueprintjs/core/lib/esm/components/navbar/navbar';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Drawer } from '@blueprintjs/core/lib/esm/components/drawer/drawer';
+
 import { MobileListView } from 'layouts/company/MobileListView';
 // import MobileSidebar from 'components/MobileSidebar/MobileSidebar';
+
 interface NavbarProps {
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;

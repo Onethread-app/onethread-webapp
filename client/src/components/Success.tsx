@@ -1,13 +1,10 @@
-import React from 'react';
-// import CheckIcon from '@material-ui/icons/Check';
-import successImage from '../resources/images/paymentSuccess.png';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
-// import Button from '@material-ui/core/Button';
 
-// import { createBrowserHistory } from 'history';
-// const History = createBrowserHistory();
+import { tokenConfig } from 'stores/UtilsActions';
+
+import successImage from '../resources/images/paymentSuccess.png';
 
 interface ISuccess {
   text: string;
@@ -18,7 +15,7 @@ interface ISuccess {
 function _Success(props: ISuccess) {
   const headers = tokenConfig();
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function successCall() {
       const search = window.location.search;
       const params = new URLSearchParams(search);

@@ -1,21 +1,20 @@
-import React from 'react';
+import { useEffect } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
+import moment from 'moment';
+import { History } from 'history';
 import { connect } from 'react-redux';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid/Grid';
+import Button from '@material-ui/core/Button/Button';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 
+import { ICompany } from 'stores/company/Reducer';
 import {
   changeCompanyName,
   clearChangeCompanyNameError,
 } from '../../../../stores/company/Actions';
-import { ICompany } from 'stores/company/Reducer';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { History } from 'history';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
 import { getCurrentSubscription } from '../../../../stores/subscriptionBilling/Actions';
-import moment from 'moment';
-import { useTranslation } from 'react-i18next';
-// import { companyPermit } from 'stores/UtilsActions';
 
 interface CurrentSubscription {
   company: ICompany;
@@ -41,24 +40,25 @@ const _CurrentSubscription = (
   props: CurrentSubscription & RouteComponentProps,
 ) => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.getCurrentSubscription();
   }, []);
-
-  const { t } = useTranslation();
 
   return (
     <div>
       <div>
-        <h3>  </h3>
-        {/* <h3>Subscriptions and Billings</h3> */}
+        <h3>
+          {t('app.company.Subscription-And-Billing.Subscription')}
+        </h3>
       </div>
       {props.currentComonent === 'base' && (
         <div>
           <div className="pt1">
-            <h4>{t('app.company.Subscription-And-Billing.Current')}</h4>
-            {/* <h4>Current Subscription Plan</h4> */}
+            <h4>
+              {t('app.company.Subscription-And-Billing.Current')}
+            </h4>
             <Grid container spacing={3}>
               <Grid item xs={7}>
                 <label className="pl1">
@@ -77,22 +77,25 @@ const _CurrentSubscription = (
                   }
                 >
                   {t('app.company.Subscription-And-Billing.Change')}
-                  {/* Change */}
                 </Button>
               </Grid>
             </Grid>
           </div>
           <div>
-            <h4>{t('app.company.Subscription-And-Billing.Payment-date')}</h4>
-            {/* <h4>Payment Due Date</h4> */}
+            <h4>
+              {t('app.company.Subscription-And-Billing.Payment-date')}
+            </h4>
             <label className="pl1">
               {props.dueDate &&
                 moment(props.dueDate).format('MMMM Do YYYY')}
             </label>
           </div>
           <div>
-            <h4>{t('app.company.Subscription-And-Billing.Payment-history')}</h4>
-            {/* <h4>Payment History</h4> */}
+            <h4>
+              {t(
+                'app.company.Subscription-And-Billing.Payment-history',
+              )}
+            </h4>
             <Grid container spacing={3}>
               <Grid item xs={7}>
                 <label className="pl1">
@@ -100,8 +103,9 @@ const _CurrentSubscription = (
                     moment(props.lastPayment).format('MMMM Do YYYY')
                   ) : (
                     <label className="b moon-gray">
-                      {t('app.company.Subscription-And-Billing.No-Payment')}
-                      {/* No Payments Has Been Made */}
+                      {t(
+                        'app.company.Subscription-And-Billing.No-Payment',
+                      )}
                     </label>
                   )}
                 </label>
@@ -115,8 +119,9 @@ const _CurrentSubscription = (
                     props.changeComponentTo('paymentHistory')
                   }
                 >
-                  {t('app.company.Subscription-And-Billing.View-history')}
-                  {/* View all history */}
+                  {t(
+                    'app.company.Subscription-And-Billing.View-history',
+                  )}
                 </Button>
               </Grid>
             </Grid>

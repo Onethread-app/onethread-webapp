@@ -1,19 +1,22 @@
-import React from 'react';
-import { Icon, Button } from '@blueprintjs/core';
-import { Entity } from 'stores/UtilsActions';
+import { connect } from 'react-redux';
+
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { IconNames } from '@blueprintjs/icons';
 import { Form, Field } from 'react-final-form';
+
+import { ICompanyMembers } from 'stores/company/Reducer';
+import { Entity } from 'stores/UtilsActions';
+
+import { Condition } from 'components/final-form/Condition';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { DropdownFieldWithError } from 'components/fields/DropdownField';
 import {
   required,
   checkError,
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import { IconNames } from '@blueprintjs/icons';
-import { Condition } from 'components/final-form/Condition';
-import { ICompanyMembers } from 'stores/company/Reducer';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { DropdownFieldWithError } from 'components/fields/DropdownField';
-import { connect } from 'react-redux';
 
 interface AddDesignationFormProps {
   member: ICompanyMembers | undefined;
@@ -23,6 +26,7 @@ interface AddDesignationFormProps {
   divisions: Entity[];
   departments: Entity[];
 }
+
 interface AddDesignationFormInternalProps
   extends AddDesignationFormProps {
   isLoading: boolean;

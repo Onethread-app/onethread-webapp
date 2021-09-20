@@ -1,25 +1,26 @@
-import React from 'react';
-import { isMobileOnly } from 'react-device-detect';
-
-import { Dialog } from '@blueprintjs/core';
-import CreateProjectDialog from 'components/project/CreateProjectDialog';
-import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
-import { CircularProgress } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
+import { tigrowApi } from 'config';
+
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+
+import { tokenConfig } from 'stores/UtilsActions';
+
+import CreateProjectDialog from 'components/project/CreateProjectDialog';
 
 const Projects = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [searchInput, setSearchInput] = React.useState('');
-  const [showDialog, setShowDialog] = React.useState(false);
-  const [projectList, setProjectList] = React.useState<any>([]);
-  const [
-    filteredProjectList,
-    setFilteredProjectList,
-  ] = React.useState<any>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchInput, setSearchInput] = useState('');
+  const [showDialog, setShowDialog] = useState(false);
+  const [projectList, setProjectList] = useState<any>([]);
+  const [filteredProjectList, setFilteredProjectList] = useState<any>(
+    [],
+  );
 
   const arrayTrim = (a) => {
     if (a.length > 10) a.length = 10;
@@ -40,10 +41,6 @@ const Projects = () => {
     }
   };
 
-  React.useEffect(() => {
-    getProjectLists();
-  }, []);
-
   const handleFilter = (e) => {
     const { value } = e.target;
     setSearchInput(value);
@@ -52,6 +49,10 @@ const Projects = () => {
     );
     setFilteredProjectList(lists);
   };
+
+  useEffect(() => {
+    getProjectLists();
+  }, []);
 
   return (
     <>

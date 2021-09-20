@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import { useTranslation } from 'react-i18next';
-import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
-import { Snackbar } from '@material-ui/core';
+
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import FormControl from '@material-ui/core/FormControl/FormControl';
+import Select from '@material-ui/core/Select/Select';
+import MenuItem from '@material-ui/core/MenuItem/MenuItem';
+import Snackbar from '@material-ui/core/Snackbar/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { Spinner } from '@blueprintjs/core';
+import { Spinner } from '@blueprintjs/core/lib/esm/components/spinner/spinner';
+
+import { tokenConfig } from 'stores/UtilsActions';
 import { saveReportForm } from 'stores/reportForm/Actions';
 
 const useStyles = makeStyles((theme) => ({

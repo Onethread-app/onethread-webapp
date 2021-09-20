@@ -1,7 +1,8 @@
-import React from 'react';
-import { Button } from '@blueprintjs/core';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 interface IButtonProps {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
@@ -84,8 +85,7 @@ export const OTButton = (props: IOTButton) => {
       cursor: 'pointer',
     },
   };
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.style) {
       styles = { ...styles, ...props.style };
     }
@@ -119,7 +119,7 @@ export const CreateCompany = () => {
     font-size: 16.376px;
     line-height: 20px;
     background: #ffffff;
-    color: #34B3E9;
+    color: #34b3e9;
   `;
   return <Button>Create Company</Button>;
 };

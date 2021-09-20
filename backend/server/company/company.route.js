@@ -142,6 +142,15 @@ router
     companyCtrl.latestCompletedTasks,
   );
 
+router
+  .route('/:companyId/all-tasks')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.getAllTasks),
+    subCtrl.subscriptionExpireCheck(),
+    companyCtrl.allCompanytasks,
+  );
+
 // companies list for individual user
 router
   .route('/individual/:account')

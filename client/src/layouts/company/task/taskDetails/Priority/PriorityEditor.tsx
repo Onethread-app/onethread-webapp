@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
-import { Form, Field } from 'react-final-form';
-import { SubmitError } from 'components/final-form/SubmitError';
-import { Icon, Button } from '@blueprintjs/core';
-import { isEqual } from 'lodash';
-import { IconNames } from '@blueprintjs/icons';
-import { priorityColor } from 'stores/UtilsActions';
-import { connect } from 'react-redux';
-import { updateTask } from 'stores/task/Actions';
-import { ITask } from 'stores/task/Reducer';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
+
+import { Form, Field } from 'react-final-form';
+import { IconNames } from '@blueprintjs/icons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { ITask } from 'stores/task/Reducer';
+import { updateTask } from 'stores/task/Actions';
+import { priorityColor } from 'stores/UtilsActions';
+
+import { SubmitError } from 'components/final-form/SubmitError';
 
 interface IPriorityEditorProps {
   setPriorityPopover: (val: boolean) => void;
@@ -20,16 +24,15 @@ interface IPriorityEditorProps {
 export const PriorityEditorComponent = (
   props: IPriorityEditorProps,
 ) => {
+  const { t } = useTranslation();
+  const [labelColor, setLabelColor] = useState(props.colorCode);
+
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
     if (response && !props.updatingTask) {
       props.setPriorityPopover(false);
     }
   };
-
-  const [labelColor, setLabelColor] = useState(props.colorCode);
-
-  const { t } = useTranslation();
 
   return (
     <div>
@@ -67,7 +70,6 @@ export const PriorityEditorComponent = (
                         'app.project.Project-boards.Choose-Priority',
                       )}
                     </h3>
-                    {/* <h3 className="f5 mt0">Choose Priority</h3> */}
                     <div className="mt4">
                       {priorityColor.map((color) => (
                         <div className="pr2" key={color.code}>

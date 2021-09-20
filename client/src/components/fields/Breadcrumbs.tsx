@@ -1,10 +1,12 @@
-import * as React from 'react';
-import { Icon, Breadcrumbs, Breadcrumb } from '@blueprintjs/core';
 import {
   Link,
   withRouter,
   RouteComponentProps,
 } from 'react-router-dom';
+
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Breadcrumb } from '@blueprintjs/core/lib/esm/components/breadcrumbs/breadcrumb';
+import { Breadcrumbs } from '@blueprintjs/core/lib/esm/components/breadcrumbs/breadcrumbs';
 
 interface BreadCrumbsItemProps {
   text: string;

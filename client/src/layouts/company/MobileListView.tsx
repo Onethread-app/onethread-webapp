@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
-import { getCompanyDetails } from 'stores/company/Actions';
-import { History } from 'history';
-import { getAllCompaniesByUserId } from 'stores/user/Actions';
-import { User, ICompanyByUser } from 'stores/user/Reducer';
-import { Loading } from 'components/Loading';
-import { getNotifications } from '../../stores/notifications/Action';
-
-import CompanyIcon from './../../resources/images/CompanyIcon.svg';
-import { Dialog, Button, Icon } from '@blueprintjs/core';
-import { CompanySignupForm } from './Form';
-import user from './../../resources/images/profilePhoto.svg';
+import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { logoutAction } from 'stores/auth/Actions';
+import { useHistory } from 'react-router';
+import { connect, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import ReportForm from '../../components/ReportForm';
+
+import { History } from 'history';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
+import { User, ICompanyByUser } from 'stores/user/Reducer';
+import { getCompanyDetails } from 'stores/company/Actions';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
+import { getNotifications } from '../../stores/notifications/Action';
+import { logoutAction } from 'stores/auth/Actions';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+
+import user from './../../resources/images/profilePhoto.svg';
+import CompanyIcon from './../../resources/images/CompanyIcon.svg';
+
+import { CompanySignupForm } from './Form';
+import { Loading } from 'components/Loading';
+import ReportForm from '../../components/ReportForm';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -38,14 +43,21 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
 export const ListViewComponent = (
   props: CompanyListViewInternalProps,
 ) => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [showButton, setShowButton] = useState(false);
   const [showButtonReport, setShowButtonReport] = useState(false);
   const [gettingDetails, setGettingDetails] = useState(false);
   const [companyName, setCompanyName] = useState('');
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const history = useHistory();
+
+  const handleClick = (name: string) => {
+    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    props.getCompanyDetails(name);
+    setCompanyName(name);
+    setGettingDetails(true);
+  };
 
   useEffect(() => {
     if (loading === true) {
@@ -74,13 +86,6 @@ export const ListViewComponent = (
     props.gettingCompanyDetails,
     props.errorOnGettingCompanyDetails,
   ]);
-
-  const handleClick = (name: string) => {
-    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
-    props.getCompanyDetails(name);
-    setCompanyName(name);
-    setGettingDetails(true);
-  };
 
   return (
     <>
@@ -224,7 +229,6 @@ export const ListViewComponent = (
           className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
         >
           {t('app.forms.Create-company.Create')}
-          {/* Create Company */}
         </button>
       </div>
       {showButton && (

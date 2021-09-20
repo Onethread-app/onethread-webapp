@@ -1,6 +1,6 @@
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import moment from 'moment';
 
 import { notificationType } from 'helpers/notification/rule';

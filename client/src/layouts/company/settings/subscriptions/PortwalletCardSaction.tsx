@@ -1,12 +1,13 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import NumberFormat from 'react-number-format';
-import Checkbox from '@material-ui/core/Checkbox';
+import { ChangeEvent, useState } from 'react';
 import Modal from 'react-modal';
+import NumberFormat from 'react-number-format';
+import Button from '@material-ui/core/Button/Button';
+import Card from '@material-ui/core/Card/Card';
+import CardContent from '@material-ui/core/CardContent/CardContent';
+import Checkbox from '@material-ui/core/Checkbox/Checkbox';
+import Grid from '@material-ui/core/Grid/Grid';
+import TextField from '@material-ui/core/TextField/TextField';
+
 import { TermsAndCondition } from './TermsAndCondition';
 
 interface NumberFormatCustomProps {
@@ -77,7 +78,7 @@ const ErrorLabel = () => {
 export default function PortwalletCardSaction(
   props: IPortwalletCardSaction,
 ) {
-  const [formValues, setFormValues] = React.useState({
+  const [formValues, setFormValues] = useState({
     name: '',
     email: '',
     phone: '',
@@ -86,10 +87,10 @@ export default function PortwalletCardSaction(
     state: '',
     house: '',
   });
-  const [error, setError] = React.useState(false);
-  const [emailValidation, setEmailValidation] = React.useState(false);
-  const [checked, setChecked] = React.useState(false);
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [error, setError] = useState(false);
+  const [emailValidation, setEmailValidation] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   function openModal() {
     setIsOpen(true);
@@ -98,9 +99,7 @@ export default function PortwalletCardSaction(
     setIsOpen(false);
   }
 
-  const handleTermsCheck = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleTermsCheck = (event: ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
   const handleChange = (e) => {
@@ -112,7 +111,8 @@ export default function PortwalletCardSaction(
     }));
   };
   function validateEmail(email) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
   function checkAllInput() {
@@ -254,7 +254,7 @@ export default function PortwalletCardSaction(
                     }}
                   />{' '}
                   <div style={{ marginTop: '10px' }}>
-                    <span>I have read and approved Tigrow's</span>{' '}
+                    <span>I have read and approved Onethread's</span>{' '}
                     <span
                       style={{ color: 'blue', cursor: 'pointer' }}
                       onClick={() => openModal()}

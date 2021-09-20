@@ -1,10 +1,13 @@
-import React from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 
-import { Position, Toaster, Intent } from '@blueprintjs/core';
+import { Toaster } from '@blueprintjs/core/lib/esm/components/toast/toaster';
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Intent } from '@blueprintjs/core/lib/esm/common/intent';
 
 import { inviteUserToSignUp } from 'stores/auth/Actions';
 import { isValidEmail } from 'helpers/utils';
+
 interface IUserInput {
   color: string;
 }
@@ -19,7 +22,7 @@ export const AppToaster = Toaster.create({
 });
 
 const UserInput = (props: IUserInputInternalProps) => {
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = useState('');
   const handleChange = (e: any) => {
     setEmail(e.target.value);
   };

@@ -1,21 +1,20 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
 import LoadingBar from 'react-redux-loading-bar';
 
+import { User } from 'stores/user/Reducer';
+import { fetchChats } from 'stores/room/Actions';
+import { getNotifications } from 'stores/notifications/Action';
+
 import Logo from 'resources/images/onethread-text.png';
 
+import { companySubscriber } from 'helpers/notification/subscribers';
 import NotificationPopoverIcon from './NotificationPopoverIcon';
 import ChatPopoverIcon from './ChatPopoverIcon';
 import CompanyPopoverIcon from './CompanyPopoverIcon';
 import UserPopoverIcon from './UserPopoverIcon';
-
-import { getNotifications } from 'stores/notifications/Action';
-import { fetchChats } from 'stores/room/Actions';
-import { User } from 'stores/user/Reducer';
-
-import { companySubscriber } from 'helpers/notification/subscribers';
 
 interface INavbar {
   type: string;
@@ -32,13 +31,14 @@ interface INavbarInternalProps extends INavbar {
 }
 
 const Navbar = (props: INavbarInternalProps) => {
-  React.useEffect(() => {
+  const match = useRouteMatch();
+
+  useEffect(() => {
     props.getNotifications();
     companySubscriber(props.companyId);
     props.fetchChats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const match = useRouteMatch();
 
   return (
     <div

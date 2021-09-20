@@ -1,39 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   useHistory,
   // useLocation,
   // Link,
 } from 'react-router-dom';
+import { Draggable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Draggable } from 'react-beautiful-dnd';
 import { find } from 'lodash';
 
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import {
-  Button,
-  ButtonGroup,
-  Dialog,
-  Icon,
-  Menu,
-  MenuItem,
-  Popover,
-} from '@blueprintjs/core';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Menu } from '@blueprintjs/core/lib/esm/components/menu/menu';
+import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { ButtonGroup } from '@blueprintjs/core/lib/esm/components/button/buttonGroup';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import ForumIcon from '@material-ui/icons/Forum';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
-import MemberGroup from 'components/member/MemberGroup';
-import TaskPriorityTag from './TaskPriorityTag';
-
+import { ITask } from 'stores/task/Reducer';
 import {
   getSelectedTaskDetails,
   deleteTask,
   ITaskDelete,
 } from 'stores/task/Actions';
-import { ITask } from 'stores/task/Reducer';
-import DueDate from './DueDate';
 import { priorityColor } from 'stores/UtilsActions';
+
+import DueDate from './DueDate';
+import TaskPriorityTag from './TaskPriorityTag';
+import MemberGroup from 'components/member/MemberGroup';
 
 const ThirdRow = styled.div`
   overflow: hidden;
@@ -109,12 +107,23 @@ interface IColumnTaskItemInternalProps extends IColumnTaskItem {
 
 const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   const { task } = props;
+  const history = useHistory();
+  // const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [taskDelete, setTaskDelete] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
-  const history = useHistory();
-  // const location = useLocation();
+
+  const handleClick = () => {
+    props.getSelectedTaskDetails(task._id);
+    setLoading(true);
+  };
+
+  const handleTaskDelete = () => {
+    const payload = { taskId: task._id, columnId: task.columnId };
+    props.deleteTask(payload);
+    setDeletingTask(true);
+  };
 
   useEffect(() => {
     if (
@@ -138,17 +147,6 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
       setShowPopover(false);
     }
   }, [deletingTask, props.deletingTask, props.errorOnTaskDelete]);
-
-  const handleClick = () => {
-    props.getSelectedTaskDetails(task._id);
-    setLoading(true);
-  };
-
-  const handleTaskDelete = () => {
-    const payload = { taskId: task._id, columnId: task.columnId };
-    props.deleteTask(payload);
-    setDeletingTask(true);
-  };
 
   return (
     <>

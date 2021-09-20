@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import styled from 'styled-components';
 import _ from 'lodash';
 
-import { DateInput } from '@blueprintjs/datetime';
-import { Color } from 'stores/UtilsActions';
-import { Icon } from '@blueprintjs/core';
+import moment from 'moment';
 import CreatableSelect from 'react-select/creatable';
+import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 
+import { ICompanyByUser, User } from 'stores/user/Reducer';
 import { saveProjectForm } from 'stores/projectForm/Actions';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { createProjectInCompany } from 'stores/project/Actions';
-import { ICompanyByUser, User } from 'stores/user/Reducer';
+import { Color } from 'stores/UtilsActions';
 import {
   createCompanyAction,
   clearErrorOnCompanyCreate,
 } from 'stores/company/Actions';
-import { useTranslation } from 'react-i18next';
 
 const CONTAINER = styled.div`
   form {

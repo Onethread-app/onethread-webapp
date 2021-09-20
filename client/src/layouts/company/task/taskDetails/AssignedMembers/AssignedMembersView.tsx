@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { getAllMembers } from 'stores/taskMembers/Action';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Loading } from 'components/Loading';
-import { ITaskMember } from 'stores/taskMembers/Reducer';
-import { AssignedMemeberListEditor } from './AssignedMemeberListEditor';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { ITaskMember } from 'stores/taskMembers/Reducer';
+import { getAllMembers } from 'stores/taskMembers/Action';
+
+import { Loading } from 'components/Loading';
+import { AssignedMemeberListEditor } from './AssignedMemeberListEditor';
 
 interface IAssignedMembersViewComponentInternalProps {
   getAllMembers: () => void;
@@ -17,8 +19,8 @@ export const AssignedMembersViewComponent = (
   props: IAssignedMembersViewComponentInternalProps &
     RouteComponentProps,
 ) => {
-  const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getAllTaskMembers() {

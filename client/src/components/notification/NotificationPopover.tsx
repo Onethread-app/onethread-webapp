@@ -1,19 +1,18 @@
-import React from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
+import { connect } from 'react-redux';
 
-import Notification from 'components/notification/NotificationItemForPopover';
-
-import { notificationType } from 'helpers/notification/rule';
-
+import { User } from 'stores/user/Reducer';
 import {
   readNotification,
   getNotifications,
   incrementPageNumber,
   markAllAsRead,
 } from 'stores/notifications/Action';
-import { User } from 'stores/user/Reducer';
+
+import { notificationType } from 'helpers/notification/rule';
+import Notification from 'components/notification/NotificationItemForPopover';
 
 interface INotificationPopover {
   notifications: any;
@@ -25,24 +24,14 @@ interface INotificationPopover {
 }
 
 const NotificationPopover = (props: INotificationPopover) => {
-  const [
-    lastNotificationElement,
-    setLastNotificationElement,
-  ] = React.useState<null | HTMLUnknownElement>(null);
-  const [notificationToShow, setNotificationToShow] = React.useState<
-    any
-  >([]);
   const history = useHistory();
+  const [lastNotificationElement, setLastNotificationElement] =
+    useState<null | HTMLUnknownElement>(null);
+  const [notificationToShow, setNotificationToShow] = useState<any>(
+    [],
+  );
 
-  React.useEffect(() => {
-    setNotificationToShow(
-      props.notifications.filter((noti) => {
-        return noti.read === false;
-      }),
-    );
-  }, [props.notifications]);
-
-  const observer = React.useRef(
+  const observer = useRef(
     new IntersectionObserver(
       async (entries) => {
         const first = entries[0];
@@ -55,20 +44,6 @@ const NotificationPopover = (props: INotificationPopover) => {
       { threshold: 1 },
     ),
   );
-
-  React.useEffect(() => {
-    const currentElement = lastNotificationElement;
-    const currentObserver = observer.current;
-
-    if (currentElement) {
-      currentObserver.observe(currentElement);
-    }
-    return () => {
-      if (currentElement) {
-        currentObserver.unobserve(currentElement);
-      }
-    };
-  }, [lastNotificationElement]);
 
   const onCLickNotification = async (sNotification: any) => {
     props.readNotification(sNotification.notification._id);
@@ -84,6 +59,28 @@ const NotificationPopover = (props: INotificationPopover) => {
       notificationToShow.map((notification) => notification._id),
     );
   };
+
+  useEffect(() => {
+    setNotificationToShow(
+      props.notifications.filter((noti) => {
+        return noti.read === false;
+      }),
+    );
+  }, [props.notifications]);
+
+  useEffect(() => {
+    const currentElement = lastNotificationElement;
+    const currentObserver = observer.current;
+
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [lastNotificationElement]);
 
   return (
     <>

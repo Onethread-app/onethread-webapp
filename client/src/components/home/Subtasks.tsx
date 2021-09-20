@@ -1,20 +1,20 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { tigrowApi } from 'config';
 
-import { CircularProgress } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+
+import { tokenConfig } from 'stores/UtilsActions';
+import { sortTasksByDueDate } from 'helpers/utils';
 
 import SubtaskItem from 'components/subtask/SubtaskItem';
 
-import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
-import { sortTasksByDueDate } from 'helpers/utils';
-import { useTranslation } from 'react-i18next';
-
 const Subtasks = () => {
   const { t } = useTranslation();
-  const [subTasks, setSubtasks] = React.useState<any>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [subTasks, setSubtasks] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getUsersSubtasks = async () => {
       const headers = tokenConfig();
       if ((headers.headers as any).Authorization) {
@@ -32,7 +32,6 @@ const Subtasks = () => {
   return (
     <div className="subtasks">
       <h3>{t('app.project.Tasks.Subtasks')}</h3>
-      {/* <h3>Subtasks</h3> */}
       {loading ? (
         <div
           style={{ minHeight: '200px', width: '100%' }}

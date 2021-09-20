@@ -1,17 +1,14 @@
-import React from 'react';
+import { useState } from 'react';
 import moment from 'moment';
-
-import {
-  createStyles,
-  withStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { Theme } from '@material-ui/core/styles/createTheme';
+import createStyles from '@material-ui/core/styles/createStyles';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 
 import StatusTag from 'components/project/StatusTag';
 import MemberIcon from 'components/member/MemberIcon';
-import { Dialog } from '@blueprintjs/core';
 import MembersList from './MembersList';
 
 const BorderLinearProgress = withStyles((theme: Theme) =>
@@ -38,16 +35,10 @@ interface IProjectItem {
   index: number;
 }
 const ProjectItem = (props: IProjectItem) => {
-  const [showAllMembers, setShowAllMembers] = React.useState(false);
+  const [showAllMembers, setShowAllMembers] = useState(false);
 
-  const {
-    name,
-    status,
-    deadline,
-    members,
-    doneTask,
-    taskNumbers,
-  } = props.project;
+  const { name, status, deadline, members, doneTask, taskNumbers } =
+    props.project;
 
   return (
     <>

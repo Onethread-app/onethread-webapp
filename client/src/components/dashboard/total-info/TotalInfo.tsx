@@ -1,8 +1,8 @@
-import React from 'react';
 import teamLight from 'resources/images/sidebarTeam-light.svg';
 import associatesLight from 'resources/images/sideBarAssociates-light.svg';
 
 import './TotalInfo.scss';
+
 const primaryColor = {
   color: '#3484F0',
 };

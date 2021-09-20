@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Button, Divider } from '@blueprintjs/core';
-import { Loading } from 'components/Loading';
+import { useTranslation } from 'react-i18next';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
+
+import { IPendingProject } from 'stores/project/Reducer';
 import {
   getAllPendingProjects,
   acceptPendingProject,
   rejectPendingProject,
 } from 'stores/project/Actions';
-import { IPendingProject } from 'stores/project/Reducer';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+
+import { Loading } from 'components/Loading';
 
 interface IProjectRequestComponent {
   PendingProjects: IPendingProject[];
@@ -22,10 +26,13 @@ interface IProjectRequestComponent {
 const ProjectRequestComponent = (
   props: IProjectRequestComponent & RouteComponentProps,
 ) => {
+  const { t } = useTranslation();
+  const [acceptLoading, setAcceptLoading] = useState(false);
+  const [rejectLoading, setRejectLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     // get all pending projects
-
     async function loadPendingProjects(
       getAllPendingProjects: () => void,
     ) {
@@ -37,11 +44,6 @@ const ProjectRequestComponent = (
     }
     loadPendingProjects(props.getAllPendingProjects);
   }, []);
-
-  const [acceptLoading, setAcceptLoading] = useState(false);
-  const [rejectLoading, setRejectLoading] = useState(false);
-
-  const { t } = useTranslation();
 
   return (
     <div>
@@ -119,7 +121,6 @@ const ProjectRequestComponent = (
               {t('app.company.Projects.No-pending-projects')}
             </h1>
           </div>
-          // <h1 className="f5 fw4">No pending Projects</h1>
         )
       ) : (
         <Loading />

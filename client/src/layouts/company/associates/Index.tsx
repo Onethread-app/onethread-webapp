@@ -1,14 +1,18 @@
-import React from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { isMobileOnly } from 'react-device-detect';
+
+import { Tab } from '@blueprintjs/core/lib/esm/components/tabs/tab';
+import { Tabs } from '@blueprintjs/core/lib/esm/components/tabs/tabs';
+
+import { User } from 'stores/user/Reducer';
+import { ICompany } from 'stores/company/Reducer';
+import { companyPermit } from 'stores/UtilsActions';
+
+import Navbar from 'components/navbar/Navbar';
 import { AssociateList } from './AssociateList';
 import { PendingAssociateList } from './PendingAssociateList';
-import { connect } from 'react-redux';
-import { User } from 'stores/user/Reducer';
-import Navbar from 'components/navbar/Navbar';
-import { ICompany } from 'stores/company/Reducer';
-import { useTranslation } from 'react-i18next';
-import { isMobileOnly } from 'react-device-detect';
-import { companyPermit } from 'stores/UtilsActions';
 
 interface AssociatesPageProps {
   user: User;
@@ -17,7 +21,9 @@ interface AssociatesPageProps {
 }
 
 const AssociatesPageComponent = (props: AssociatesPageProps) => {
-  React.useEffect(() => {
+  const { t } = useTranslation();
+
+  useEffect(() => {
     if (props.subscriptiontExpired) {
       props.company.role === 'superAdmin'
         ? window.location.replace(
@@ -28,8 +34,6 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
           );
     }
   }, []);
-
-  const { t } = useTranslation();
 
   return (
     <>

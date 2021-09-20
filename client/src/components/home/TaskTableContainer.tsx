@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
-import Pagination from '@material-ui/lab/Pagination';
+import styled from 'styled-components';
+
+import Pagination from '@material-ui/lab/Pagination/Pagination';
+
 import { ITask } from 'stores/task/Reducer';
+
 import TaskLitsItem from './TaskLitsItem';
 
 export const TasksContainerDiv = styled.div`
@@ -31,6 +34,10 @@ const TaskTableContainer = (props: any) => {
   const [tasks, setTasks] = useState<any>([]);
   const [tasksToShow, setTasksToShow] = useState<any>([]);
 
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
   useEffect(() => {
     setTasks(props.tasks);
   }, [props.tasks]);
@@ -46,10 +53,6 @@ const TaskTableContainer = (props: any) => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     setTasksToShow(tasks.slice(indexOfFirstItem, indexOfLastItem));
   }, [currentPage, itemsPerPage, tasks]);
-
-  const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-  };
 
   return (
     <>

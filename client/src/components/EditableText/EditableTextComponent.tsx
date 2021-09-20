@@ -1,5 +1,5 @@
-import React from 'react';
-import { EditableText } from '@blueprintjs/core';
+import { useEffect, useState } from 'react';
+import { EditableText } from '@blueprintjs/core/lib/esm/components/editable-text/editableText';
 
 interface IEditableTextComponent {
   maxLength: number;
@@ -12,9 +12,9 @@ interface IEditableTextComponent {
 }
 
 const EditableTextComponent = (props: IEditableTextComponent) => {
-  const [value, setValue] = React.useState<string>('');
+  const [value, setValue] = useState<string>('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     setValue(props.initialValue);
   }, [props.initialValue]);
 

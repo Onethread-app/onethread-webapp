@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import addIcon from '../../../resources/images/addIcon.png';
-import editIcon from '../../../resources/images/editIcon.png';
-import { RightSidebar } from 'components/RightSidebar';
-import { Divider } from '@blueprintjs/core';
-import { ProductEdit } from './ProductEditor';
-import { CertificateAdd } from './CertificateAddEditor';
-import { OrganizationAdd } from './ParentOrganizationAddEditor';
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
+
 import { ICompany, IOrg } from 'stores/company/Reducer';
 import { getAllProduct } from 'stores/company/Actions';
 import { companyPermit } from 'stores/UtilsActions';
+
+import { RightSidebar } from 'components/RightSidebar';
+import { ProductEdit } from './ProductEditor';
+import { CertificateAdd } from './CertificateAddEditor';
+import { OrganizationAdd } from './ParentOrganizationAddEditor';
 import { OrganizationEditEditor } from './ParentOrganizationEditEditor';
 import { CertificateEdit } from './CertificateEditEditor';
-import { useTranslation } from 'react-i18next';
+
+import addIcon from '../../../resources/images/addIcon.png';
+import editIcon from '../../../resources/images/editIcon.png';
 
 interface AdvancedInfoInternalProps {
   company?: ICompany;
@@ -21,24 +24,23 @@ interface AdvancedInfoInternalProps {
 }
 
 const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
+  const { t } = useTranslation();
   const [showProductDialog, setShowProductDialog] = useState(false);
-  const [showCertificateDialog, setShowCertificateDialog] = useState(
-    false,
-  );
-  const [showCertificateEditDialog, setShowCertificateEditDialog] = useState(
-    false,
-  );
-  const [
-    showOrganizationDialog,
-    setShowOrganizationDialog,
-  ] = useState(false);
-  const [showOrganizationEditDialog, setShowOrganizationEditDialog] = useState(false);
+  const [showCertificateDialog, setShowCertificateDialog] =
+    useState(false);
+  const [showCertificateEditDialog, setShowCertificateEditDialog] =
+    useState(false);
+  const [showOrganizationDialog, setShowOrganizationDialog] =
+    useState(false);
+  const [showOrganizationEditDialog, setShowOrganizationEditDialog] =
+    useState(false);
   const [org, setOrg] = useState({} as IOrg);
   const [certificate, setCertificate] = useState({
     _id: '',
     name: '',
-    description: ''
+    description: '',
   });
+
   useEffect(() => {
     async function getAPI() {
       try {
@@ -50,25 +52,22 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
     getAPI();
   }, []);
 
- const { t } = useTranslation();
-
   return (
     <>
       <div className="w-100 mb6">
         <div>
           <div className="flex justify-between">
-            <h1 className="f5">{t('app.company.Company-profile.Service')}</h1>
-            {/* <h1 className="f5">Products/Services</h1> */}
-            {
-              companyPermit(props.company!.role) && (
-                <img
-              src={addIcon}
-              width="38"
-              className="br2 pointer fr mv1"
-              onClick={() => setShowProductDialog(true)}
-            />
-              )
-            }  
+            <h1 className="f5">
+              {t('app.company.Company-profile.Service')}
+            </h1>
+            {companyPermit(props.company!.role) && (
+              <img
+                src={addIcon}
+                width="38"
+                className="br2 pointer fr mv1"
+                onClick={() => setShowProductDialog(true)}
+              />
+            )}
           </div>
           <Divider />
           {props.company &&
@@ -85,20 +84,17 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         </div>
         <div className="mt4">
           <div className="flex justify-between">
-            <h1 className="f5">{t('app.company.Company-profile.Certificates')}</h1>
-            {/* <h1 className="f5">Certificates</h1> */}
-            {
-              companyPermit(props.company!.role) && (
-                <img
-              src={addIcon}
-              width="38"
-              className="br2 pointer fr mv1"
-              onClick={() => setShowCertificateDialog(true)}
-            />
-
-              )
-            }
-            
+            <h1 className="f5">
+              {t('app.company.Company-profile.Certificates')}
+            </h1>
+            {companyPermit(props.company!.role) && (
+              <img
+                src={addIcon}
+                width="38"
+                className="br2 pointer fr mv1"
+                onClick={() => setShowCertificateDialog(true)}
+              />
+            )}
           </div>
           <Divider />
           {props.company &&
@@ -115,25 +111,21 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
                   </div>
                 </div>
                 <div>
-                  {
-                    companyPermit(props.company!.role) && (
-                      <img
-                        src={editIcon}
-                        width="38"
-                        className="br2 pointer"
-                        onClick={() => {
-                          setShowCertificateEditDialog(true);
-                          setCertificate(
-                            {
-                              _id: certificate._id,
-                              name: certificate.name,
-                              description: certificate.description
-                            }
-                          );
-                        }}
-                      />
-                    )
-                  }
+                  {companyPermit(props.company!.role) && (
+                    <img
+                      src={editIcon}
+                      width="38"
+                      className="br2 pointer"
+                      onClick={() => {
+                        setShowCertificateEditDialog(true);
+                        setCertificate({
+                          _id: certificate._id,
+                          name: certificate.name,
+                          description: certificate.description,
+                        });
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             ))
@@ -143,34 +135,31 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         </div>
         <div className="mt4">
           <div className="flex justify-between">
-            <h1 className="f5">{t('app.company.Company-profile.Parent')}</h1>
-            {/* <h1 className="f5">Member of Parent Organizations</h1> */}
-            {
-              companyPermit(props.company!.role) && (
-                <img
-              src={addIcon}
-              width="38"
-              className="br2 pointer fr mv1"
-              onClick={() => setShowOrganizationDialog(true)}
-            />
-
-              )
-            }
-            
+            <h1 className="f5">
+              {t('app.company.Company-profile.Parent')}
+            </h1>
+            {companyPermit(props.company!.role) && (
+              <img
+                src={addIcon}
+                width="38"
+                className="br2 pointer fr mv1"
+                onClick={() => setShowOrganizationDialog(true)}
+              />
+            )}
           </div>
           <Divider />
           <div className="outline-0">
             {props.company &&
             props.company.parentcom &&
             props.company.parentcom.length > 0 ? (
-              props.company.parentcom.map((parentcom: any, index: any) => (
-                <div className="flex justify-between">
-                <h1 key={index} className="f5 fw4">
-                  {parentcom}
-                </h1>
-                  <div>
-                    {
-                      companyPermit(props.company!.role) && (
+              props.company.parentcom.map(
+                (parentcom: any, index: any) => (
+                  <div className="flex justify-between">
+                    <h1 key={index} className="f5 fw4">
+                      {parentcom}
+                    </h1>
+                    <div>
+                      {companyPermit(props.company!.role) && (
                         <img
                           src={editIcon}
                           alt="edit"
@@ -181,11 +170,11 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
                             setOrg({ ind: index, name: parentcom });
                           }}
                         />
-                      )
-                    }
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))
+                ),
+              )
             ) : (
               <p className="f5">No organizations</p>
             )}
@@ -244,7 +233,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           </div>
         </RightSidebar>
       )}
-       {showOrganizationEditDialog && (
+      {showOrganizationEditDialog && (
         <RightSidebar
           onClose={() =>
             setShowOrganizationDialog(!showOrganizationDialog)

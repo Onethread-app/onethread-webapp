@@ -1,17 +1,21 @@
-import Axios from 'axios';
-import { Loading } from 'components/Loading';
-import { server } from 'config';
-import React, { useEffect, useState } from 'react';
-import { useParams, NavLink } from 'react-router-dom';
-import { tokenConfig } from 'stores/UtilsActions';
-import './index.scss';
-import Table from './Table/Table';
-import { MobileView, isMobileOnly } from 'react-device-detect';
+import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
-import Navbar from 'components/navbar/Navbar';
+import { useParams, NavLink } from 'react-router-dom';
+import { MobileView, isMobileOnly } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import Axios from 'axios';
+import { server } from 'config';
+
 import moment from 'moment';
+
+import { tokenConfig } from 'stores/UtilsActions';
+
+import Table from './Table/Table';
+import { Loading } from 'components/Loading';
+import Navbar from 'components/navbar/Navbar';
+
+import './index.scss';
 
 export const customStyles = {
   content: {
@@ -72,12 +76,12 @@ const Index = (props: any) => {
 
   const [tasks, setTasks] = useState<any[]>([]);
 
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('dueDate');
-  const [selected, setSelected] = React.useState<string[]>([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [companyUnqName, setCompanyUnqName] = React.useState('');
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<keyof Data>('dueDate');
+  const [selected, setSelected] = useState<string[]>([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [companyUnqName, setCompanyUnqName] = useState('');
 
   const { projectId } = useParams<{ projectId: string }>();
 
@@ -124,7 +128,6 @@ const Index = (props: any) => {
                 <small style={{ color: 'inherit' }}>
                   {t('app.company.Projects.Overview')}
                 </small>
-                {/* <small style={{ color: 'inherit' }}>Overview</small> */}
               </NavLink>
               <NavLink
                 exact
@@ -139,7 +142,6 @@ const Index = (props: any) => {
                 <small style={{ color: 'inherit' }}>
                   {t('app.project.Project-preface.Intro')}
                 </small>
-                {/* <small style={{ color: 'inherit' }}>Preface</small> */}
               </NavLink>
               <NavLink
                 exact
@@ -154,7 +156,6 @@ const Index = (props: any) => {
                 <small style={{ color: 'inherit' }}>
                   {t('app.project.Project-rooms.Rooms')}
                 </small>
-                {/* <small style={{ color: 'inherit' }}>Room</small> */}
               </NavLink>
               <NavLink
                 exact
@@ -169,7 +170,6 @@ const Index = (props: any) => {
                 <small style={{ color: 'inherit' }}>
                   {t('app.project.Project-boards.Board')}
                 </small>
-                {/* <small style={{ color: 'inherit' }}>Boards</small> */}
               </NavLink>
               <NavLink
                 exact
@@ -184,7 +184,6 @@ const Index = (props: any) => {
                 <small style={{ color: 'inherit' }}>
                   {t('app.project.Project-teammates.Team-members')}
                 </small>
-                {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
               </NavLink>
               <NavLink
                 exact
@@ -198,7 +197,6 @@ const Index = (props: any) => {
               >
                 <small style={{ color: 'inherit' }}>
                   {t('app.company.Projects.Project-Settings')}
-                  {/* Project Settings */}
                 </small>
               </NavLink>
             </div>
@@ -208,17 +206,14 @@ const Index = (props: any) => {
             <div>
               <ProjectInfo
                 context={t('app.company.Projects.Name')}
-                // context="Starting date: "
                 data={name}
               />
               <ProjectInfo
                 context={t('app.company.Projects.Beginning')}
-                // context="Starting date: "
                 data={moment(startingDate).format('MMM DD, YYYY')}
               />
               <ProjectInfo
                 context={t('app.company.Projects.Finish')}
-                // context="End date: "
                 data={
                   deadline
                     ? moment(deadline).format('MMM DD, YYYY')
@@ -227,12 +222,10 @@ const Index = (props: any) => {
               />
               <ProjectInfo
                 context={t('app.company.Projects.Lead')}
-                // context="Lead"
                 data={lead}
               />
               <ProjectInfo
                 context={t('app.company.Projects.Status')}
-                // context="Status"
                 data={status.replace(/-|\s/g, ' ')}
                 dataStyle={{
                   fontWeight: 'normal',
@@ -256,10 +249,6 @@ const Index = (props: any) => {
               {!tasks.length ? (
                 <div className="tc pt3">
                   <h2>{t('app.company.Projects.Not-available')}</h2>
-                  {/* <h2>
-                    No task available. Please, create some tasks in
-                    board.
-                  </h2> */}
                 </div>
               ) : (
                 <>

@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
-import { Button, Dialog } from '@blueprintjs/core';
-import { InputGroupField } from 'components/fields/InputGroupField';
+import { useState } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import { isEqual, isEmpty } from 'lodash';
+
+import { History } from 'history';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { ICompany } from 'stores/company/Reducer';
+import { companyPermit } from 'stores/UtilsActions';
 import {
   changeCompanyName,
   clearChangeCompanyNameError,
 } from '../../../../stores/company/Actions';
-import { ICompany } from 'stores/company/Reducer';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { isEqual, isEmpty } from 'lodash';
-import { History } from 'history';
-import { companyPermit } from 'stores/UtilsActions';
-import { useTranslation } from 'react-i18next';
+
+import { InputGroupField } from 'components/fields/InputGroupField';
 
 interface DetailsViewProps {
   company: ICompany;
@@ -25,19 +29,16 @@ interface DetailsViewProps {
 const GeneralViewComponent = (
   props: DetailsViewProps & RouteComponentProps,
 ) => {
+  const { t } = useTranslation();
   const [companyName, setCompanyName] = useState(props.company.name);
   const [errors, setErrors] = useState('');
-
   const [showDialog, setShowDialog] = useState(false);
-
-  const { t } = useTranslation();
 
   return (
     <div className="fl w-100">
       <div className="fl w-100 pr3">
         <div className="fl w-100 w-50-m w-60-l">
           <p className="b">{t('app.company.Company-profile.Name')}</p>
-          {/* <p className="b">Company Name</p> */}
           <p className="mb0 f4-ns f6">{props.company.name}</p>
         </div>
         {companyPermit(props.company.role) &&
@@ -47,7 +48,6 @@ const GeneralViewComponent = (
                 type="submit"
                 className="grow pointer outline-0 shadow-0 h2 changecompanybutton"
                 text={t('app.company.Settings.Change-Name')}
-                // text="Change Company Name"
                 style={{
                   background: '#34b3e9',
                   color: 'white',
@@ -69,7 +69,6 @@ const GeneralViewComponent = (
           <form className="pa4">
             <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
               {t('app.company.Settings.Change-Name')}
-              {/* Change Company Name */}
             </h1>
             <div>
               {props.errorCompanyName ? (
@@ -139,9 +138,12 @@ const GeneralViewComponent = (
                     setShowDialog(false);
                   } else if (isEmpty(errors)) {
                     const response = (await props.changeCompanyName(
-                      companyName
+                      companyName,
                     )) as any;
-                    if (response && props.changeCompanyNameLoading === false) {
+                    if (
+                      response &&
+                      props.changeCompanyNameLoading === false
+                    ) {
                       props.history.push(
                         `/company/${companyName}/settings`,
                       );

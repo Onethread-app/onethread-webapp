@@ -1,14 +1,15 @@
-import React from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { Form, Field } from 'react-final-form';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 import { SubmitError } from 'components/final-form/SubmitError';
-import { Button } from '@blueprintjs/core';
-import { useTranslation } from 'react-i18next';
 
 const RoomPageComponent = (props: any) => {
-  const [disabled] = React.useState(false);
   const { t } = useTranslation();
+  const [disabled] = useState(false);
 
   return (
     <div className="bl b--black-05 bw1 pl5 ml5 h5">
@@ -33,7 +34,6 @@ const RoomPageComponent = (props: any) => {
             <p className="b f5 mb3">
               {t('app.project.Project-teammates.Admins')}
             </p>
-            {/* <p className="b f5 mb3">Admins</p> */}
             <div className="mb3">
               <Field<string>
                 name="optionalRole"

@@ -1,32 +1,38 @@
-// import { DateInput } from '@blueprintjs/datetime';
-import { DateInput } from '@blueprintjs/datetime';
-import { CircularProgress } from '@material-ui/core';
-import { tigrowApi } from 'config';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { tigrowApi } from 'config';
 import { connect } from 'react-redux';
+import { isMobileOnly } from 'react-device-detect';
+
+import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+import Tooltip from '@material-ui/core/Tooltip/Tooltip';
+import ListIcon from '@material-ui/icons/List';
+import ShareIcon from '@material-ui/icons/Share';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
 import {
   getCompanyAnnouncement,
   getLatestCompletedTasks,
 } from 'stores/company/Actions';
-// import TasksTable from './TasksTable';
-// import MultiSelectComponent from './MultiSelectComponent';
-// import { priorityColor } from 'stores/UtilsActions';
-// import { useTranslation } from 'react-i18next';
-// import { tigrowApi } from 'config';
 import {
   getCurrentSubscription,
   setSubscriptionExpire,
   setSubscriptionNotExpire,
 } from 'stores/subscriptionBilling/Actions';
 import { priorityColor, tokenConfig } from 'stores/UtilsActions';
-import MultiSelectComponent from './MultiSelectComponent';
-// import { Field, Form } from 'react-final-form';
-import './ProjectStatus.scss';
+
 import TasksTable from './TasksTable';
+import MultiSelectComponent from './MultiSelectComponent';
 import CalendarView from 'components/calendar/CalendarView';
+import ExportTasks, {
+  ICompanyTask,
+} from 'components/export-tasks/ExportTasks';
 
 import { ViewSelectDiv } from 'layouts/company/boardDetails/BoardDetails.styles';
+import { ExportDiv } from './ProjectStatus.styles';
+import './ProjectStatus.scss';
 
 interface Data {
   taskname: string;
@@ -72,6 +78,7 @@ const filterSpacing = {
 };
 
 const ProjectStatusComponent = (props) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   // API Data
   const [allTasks, setTasks] = useState<any[]>([]);
@@ -108,6 +115,32 @@ const ProjectStatusComponent = (props) => {
   // Calendar View Task + View
   const [view, setView] = useState<any>('table');
   const [calTask, setCalTask] = useState<any[]>([]);
+
+  // export tasks
+  const [openExportDialog, setOpenExportDialog] =
+    useState<boolean>(false);
+  const [loadingExportTasks, setLoadingExportTasks] =
+    useState<boolean>(false);
+  const [tasksForExport, setTasksForExport] = useState<
+    ICompanyTask[]
+  >([]);
+
+  useEffect(() => {
+    const getAllTasks = async () => {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const response = await tigrowApi.get(
+          `/company/${props.company._id}/all-tasks`,
+          headers,
+        );
+        setTasksForExport(response.data.taskCompilation);
+        setLoadingExportTasks(false);
+      }
+    };
+    if (loadingExportTasks === true) {
+      getAllTasks();
+    }
+  }, [loadingExportTasks, props.company._id]);
 
   async function getInfo() {
     setIsLoading(true);
@@ -178,6 +211,25 @@ const ProjectStatusComponent = (props) => {
 
     setIsLoading(false);
   }
+
+  const resetHandler = () => {
+    setSelectedStatus([]);
+    setSelectedPriority([]);
+    setSelectedProjects([]);
+    setSelectedAssignee([]);
+    setDate(null);
+  };
+  const didYouFilter = !(
+    selectedStatus.length === 0 &&
+    selectedAssignee.length === 0 &&
+    selectedPriority.length === 0 &&
+    selectedProjects.length === 0
+  );
+
+  const handleViewChange = (v: 'table' | 'calendar') => {
+    setView(v);
+  };
+
   useEffect(() => {
     getInfo();
   }, [props.company._id]);
@@ -266,26 +318,6 @@ const ProjectStatusComponent = (props) => {
     setRemainingTasks(fTasks.length);
   }, [fTasks]);
 
-  const resetHandler = () => {
-    setSelectedStatus([]);
-    setSelectedPriority([]);
-    setSelectedProjects([]);
-    setSelectedAssignee([]);
-    setDate(null);
-  };
-  const didYouFilter = !(
-    selectedStatus.length === 0 &&
-    selectedAssignee.length === 0 &&
-    selectedPriority.length === 0 &&
-    selectedProjects.length === 0
-  );
-
-  const handleViewChange = (v: 'table' | 'calendar') => {
-    setView(v);
-  };
-
-  const { t } = useTranslation();
-
   return (
     <div className="project-status mb5">
       <div className="text-center">
@@ -300,16 +332,11 @@ const ProjectStatusComponent = (props) => {
           {t('app.project.Tasks.Task-Status')}
         </h3>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginBottom: 10,
-        }}
-      >
+      <div className={`flex items-center justify-between mb2 w-100`}>
+        <div className={`w-third`}></div>
         <ViewSelectDiv
           fetchingBoard={props.fetchingBoard}
-          className="flex tc"
+          className="flex items-center tc w-third"
         >
           <p>{t('app.project.Tasks.View')}:</p>
           <p
@@ -318,7 +345,9 @@ const ProjectStatusComponent = (props) => {
             }}
             className={`${view === 'table' && 'active'}`}
           >
-            {t('app.project.Tasks.Table')}
+            <Tooltip title="List" placement="top">
+              <ListIcon />
+            </Tooltip>
           </p>
           <p
             onClick={() => {
@@ -326,9 +355,27 @@ const ProjectStatusComponent = (props) => {
             }}
             className={`${view === 'calendar' && 'active'}`}
           >
-            {t('app.project.Tasks.Calendar')}
+            <Tooltip title="Calendar" placement="top">
+              <DateRangeIcon />
+            </Tooltip>
           </p>
         </ViewSelectDiv>
+        <div className={`w-third flex justify-end`}>
+          {isLoading === false && (
+            <Tooltip title="Export Tasks" placement="top">
+              <ExportDiv
+                className={`${isLoading ? '' : 'pointer'}`}
+                onClick={() => {
+                  setOpenExportDialog(true);
+                  setLoadingExportTasks(true);
+                }}
+              >
+                <ShareIcon />
+                Export Tasks
+              </ExportDiv>
+            </Tooltip>
+          )}
+        </div>
       </div>
       {isLoading ? (
         <div
@@ -452,6 +499,27 @@ const ProjectStatusComponent = (props) => {
             </div>
           )}
         </div>
+      )}
+      {openExportDialog && (
+        <Dialog
+          isOpen={openExportDialog}
+          onClose={() => setOpenExportDialog(false)}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          style={{
+            width: isMobileOnly ? '95%' : '420px',
+            maxWidth: '420px',
+            height: '173px',
+            background: '#ffffff',
+            borderRadius: '20px',
+          }}
+        >
+          <ExportTasks
+            loading={loadingExportTasks}
+            data={tasksForExport}
+            name={props.company.uniqueName}
+          />
+        </Dialog>
       )}
     </div>
   );

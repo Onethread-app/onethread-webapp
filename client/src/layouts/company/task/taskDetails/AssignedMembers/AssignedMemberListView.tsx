@@ -1,8 +1,9 @@
-import React from 'react';
-import { AssignedMemeberListEditor } from './AssignedMemeberListEditor';
-import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 import { ITaskMember } from 'stores/taskMembers/Reducer';
+
+import { AssignedMemeberListEditor } from './AssignedMemeberListEditor';
 
 interface IAssignedMemberListViewComponentInternalProps {
   taskMemberList: ITaskMember[];

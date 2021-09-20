@@ -1,16 +1,17 @@
-import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
 import { Form, Field } from 'react-final-form';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers/MuiPickersUtilsProvider';
+import { KeyboardDateTimePicker } from '@material-ui/pickers/DateTimePicker/DateTimePicker';
+
+import { ITask } from 'stores/task/Reducer';
+import { updateTask } from 'stores/task/Actions';
+
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
-import { updateTask } from 'stores/task/Actions';
-import { connect } from 'react-redux';
-import { ITask } from 'stores/task/Reducer';
-import { useTranslation } from 'react-i18next';
-import DateFnsUtils from '@date-io/date-fns';
-import {
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
+
 import '../../task.scss';
 
 interface IDueDateFormProps {

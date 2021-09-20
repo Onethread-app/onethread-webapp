@@ -1,20 +1,25 @@
-import React from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
-import { GeneralView } from './companyName/General';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { isMobileOnly, MobileOnlyView } from 'react-device-detect';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+
+import Modal from 'react-modal';
+import { Tabs } from '@blueprintjs/core/lib/esm/components/tabs/tabs';
+import { Tab } from '@blueprintjs/core/lib/esm/components/tabs/tab';
+
+import { User } from 'stores/user/Reducer';
+import { getNotifications } from '../../../stores/notifications/Action';
+
+import { companySubscriber } from 'helpers/notification/subscribers';
 import { DepartmentView } from './department/View';
 import { AdminRoleView } from './adminRole/View';
-import { isMobileOnly, MobileOnlyView } from 'react-device-detect';
-import { User } from 'stores/user/Reducer';
-import { connect } from 'react-redux';
-import { companySubscriber } from 'helpers/notification/subscribers';
-import { getNotifications } from '../../../stores/notifications/Action';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { GeneralView } from './companyName/General';
 import Navbar from 'components/navbar/Navbar';
 import Subscriptions from './subscriptions/Index';
-import Modal from 'react-modal';
 import ErrorText from './ErrorText';
+
 import './styles.scss';
-import { useTranslation } from 'react-i18next';
 
 export const customStylesForModal = {
   content: {
@@ -53,10 +58,9 @@ const ViewContent = ({ selectedTab }) => {
 };
 
 const MobileView = () => {
-  const [selectedTab, setSelectedTab] = React.useState(1);
-  const liClasses = 'pv2';
-
   const { t } = useTranslation();
+  const [selectedTab, setSelectedTab] = useState(1);
+  const liClasses = 'pv2';
 
   return (
     <MobileOnlyView>
@@ -69,7 +73,6 @@ const MobileView = () => {
             onClick={() => setSelectedTab(1)}
           >
             {t('app.company.Settings.General')}
-            {/* General */}
           </li>
           <li
             className={
@@ -78,7 +81,6 @@ const MobileView = () => {
             onClick={() => setSelectedTab(2)}
           >
             {t('app.company.Settings.Role-Permission')}
-            {/* Role Permission */}
           </li>
           <li
             className={
@@ -87,7 +89,6 @@ const MobileView = () => {
             onClick={() => setSelectedTab(3)}
           >
             {t('app.company.Settings.Departments')}
-            {/* Departments */}
           </li>
           <li
             className={
@@ -96,7 +97,6 @@ const MobileView = () => {
             onClick={() => setSelectedTab(4)}
           >
             {t('app.company.Settings.Subscription')}
-            {/* Subscription And Billing */}
           </li>
         </ul>
       </div>
@@ -108,15 +108,15 @@ const MobileView = () => {
 const SettingsPagComponent = (
   props: SettingsPageProps & RouteComponentProps,
 ) => {
-  const [success, setSuccess] = React.useState(false);
+  const { t } = useTranslation();
+  const [success, setSuccess] = useState(false);
+
   function closeModal() {
     setSuccess(false);
   }
-  React.useEffect(() => {
+  useEffect(() => {
     setSuccess(props.subscriptiontExpired);
   }, [props.subscriptiontExpired]);
-
-  const { t } = useTranslation();
 
   return (
     <>
@@ -127,7 +127,6 @@ const SettingsPagComponent = (
             <h3 className="f3 b">
               {t('app.company.Settings.Settings')}
             </h3>
-            // <h3 className="f3 b">Settings</h3>
           )}
         </div>
         {isMobileOnly ? (
@@ -144,7 +143,6 @@ const SettingsPagComponent = (
                 isMobileOnly ? '' : 'bl'
               } bw1 ml3-ns ml1 w-100`}
               title={t('app.company.Settings.General')}
-              // title="General"
               panel={<GeneralView />}
               className="outline-0 f6-ns f7"
             />
@@ -154,7 +152,6 @@ const SettingsPagComponent = (
                 isMobileOnly ? '' : 'bl'
               } bw1 ml3-ns ml1 w-100`}
               title={t('app.company.Settings.Role-Permission')}
-              // title="Role Permissions"
               panel={<AdminRoleView />}
               className="outline-0 f6-ns f7"
             />
@@ -174,7 +171,6 @@ const SettingsPagComponent = (
                   isMobileOnly ? '' : 'bl'
                 } bw1 ml3-ns ml1 w-100`}
                 title={t('app.company.Settings.Subscription')}
-                // title="Subscriptions and Billing"
                 panel={<Subscriptions />}
                 className="outline-0 f6-ns f7"
               />
@@ -189,15 +185,11 @@ const SettingsPagComponent = (
             onRequestClose={closeModal}
             style={customStylesForModal}
             contentLabel="Example Modal"
-            // contentLabel="Example Modal"
           >
             <ErrorText
               closeModal={closeModal}
               text={t('app.company.Settings.Expired')}
               subtext={t('app.company.Settings.Expired-text')}
-              // text="Your Subscription has expired"
-              // subtext="To keep using Onethread without interruption you need to pay your
-              // dues."
             />
           </Modal>
         )}

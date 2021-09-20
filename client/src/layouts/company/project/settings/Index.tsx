@@ -1,19 +1,22 @@
-import React from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { GeneralPage } from './General';
-import { updateProjectRole } from '../../../../stores/project/Actions';
+import { useTranslation } from 'react-i18next';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { Tabs } from '@blueprintjs/core/lib/esm/components/tabs/tabs';
+import { Tab } from '@blueprintjs/core/lib/esm/components/tabs/tab';
+
+import { updateProjectRole } from '../../../../stores/project/Actions';
+
+import { GeneralPage } from './General';
 import Navbar from 'components/navbar/Navbar';
-import { useTranslation } from 'react-i18next';
 
 const ProjectSettingsPageComponent = (props: any) => {
+  const { t } = useTranslation();
+
   const onSubmit = async (values: any) => {
     await props.updateProjectRole(values.optionalRole);
   };
-
-  const { t } = useTranslation();
 
   return (
     <>
@@ -30,7 +33,6 @@ const ProjectSettingsPageComponent = (props: any) => {
             <small style={{ color: 'inherit' }}>
               {t('app.company.Projects.Overview')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact
@@ -42,7 +44,6 @@ const ProjectSettingsPageComponent = (props: any) => {
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-preface.Intro')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
             exact
@@ -54,7 +55,6 @@ const ProjectSettingsPageComponent = (props: any) => {
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-rooms.Rooms')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
             exact
@@ -66,7 +66,6 @@ const ProjectSettingsPageComponent = (props: any) => {
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-boards.Board')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
             exact
@@ -78,7 +77,6 @@ const ProjectSettingsPageComponent = (props: any) => {
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-teammates.Team-members')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
             exact
@@ -89,7 +87,6 @@ const ProjectSettingsPageComponent = (props: any) => {
           >
             <small style={{ color: 'inherit' }}>
               {t('app.company.Projects.Project-Settings')}
-              {/* Project Settings */}
             </small>
           </NavLink>
         </div>
@@ -99,17 +96,14 @@ const ProjectSettingsPageComponent = (props: any) => {
           <h3 className="f3 ma0">
             {t('app.company.Projects.Project-Settings')}
           </h3>
-          // <h3 className="f3 ma0">Project Settings</h3>
         )}
         <h3 className="f5 mv4">
           {t('app.project.Project-settings.Moderator')}
         </h3>
-        {/* <h3 className="f5 mv4">Project Moderator</h3> */}
         <Tabs id="TabsExample" vertical={true}>
           <Tab
             id="general"
             title={t('app.project.Project-settings.Permission')}
-            // title="Permission"
             panel={<GeneralPage onSubmit={onSubmit} />}
             className="outline-0 w-100"
           />

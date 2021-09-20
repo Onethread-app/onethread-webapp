@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Loading } from 'components/Loading';
-import { Card } from '@blueprintjs/core';
-import { getProjectAssociates } from 'stores/project/Actions';
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { ICompany } from 'stores/company/Reducer';
-import { Associate } from 'stores/associate/Reducer';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   CustomView,
   MobileOnlyView,
   isMobileOnly,
 } from 'react-device-detect';
-import { useTranslation } from 'react-i18next';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { Card } from '@blueprintjs/core/lib/esm/components/card/card';
+
+import { ICompany } from 'stores/company/Reducer';
+import { Associate } from 'stores/associate/Reducer';
+import { getProjectAssociates } from 'stores/project/Actions';
+
+import { Loading } from 'components/Loading';
 
 interface AssociatesPageComponentProps {
   company: ICompany;
@@ -23,6 +26,7 @@ interface AssociatesPageComponentProps {
 export const AssociateListComponent = (
   props: RouteComponentProps & AssociatesPageComponentProps,
 ) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -35,8 +39,6 @@ export const AssociateListComponent = (
       loadAssociates(props.getProjectAssociates);
     }
   }, [props.projectId]);
-
-  const { t } = useTranslation();
 
   return (
     <div>
@@ -96,7 +98,6 @@ export const AssociateListComponent = (
                 )
               ) : (
                 <p>{t('app.company.Partners.No-associates')}</p>
-                // <p>No associates available</p>
               )}
             </div>
           </CustomView>
@@ -151,7 +152,6 @@ export const AssociateListComponent = (
                 )
               ) : (
                 <p>{t('app.company.Partners.No-associates')}</p>
-                // <p>No associates available</p>
               )}
             </div>
           </MobileOnlyView>

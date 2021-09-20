@@ -1,16 +1,17 @@
-import React from 'react';
-import { SubmitError } from 'components/final-form/SubmitError';
-import { Form, Field } from 'react-final-form';
-import { required, checkError } from 'components/final-form/utils';
-import { Button } from '@blueprintjs/core';
-
-// import userIcon from 'resources/images/profilePhoto.svg';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { createComment } from 'stores/comment/Actions';
-import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Icomment } from 'stores/comment/Reducer';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Form, Field } from 'react-final-form';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { Icomment } from 'stores/comment/Reducer';
+import { createComment } from 'stores/comment/Actions';
+
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { required, checkError } from 'components/final-form/utils';
+import { SubmitError } from 'components/final-form/SubmitError';
+// import userIcon from 'resources/images/profilePhoto.svg';
 
 interface ICommentReplyInternalProps {
   createComment: (text: Icomment['text']) => any;
@@ -19,14 +20,14 @@ interface ICommentReplyInternalProps {
 export const ActivityEditorPageComponent = (
   props: ICommentReplyInternalProps & RouteComponentProps,
 ) => {
+  const { t } = useTranslation();
+
   const onSubmit = async (values: any) => {
     const response = await props.createComment(values.text);
     if (response && !props.isCreating) {
       values.text = '';
     }
   };
-
-  const { t } = useTranslation();
 
   return (
     <div className="w-100">
@@ -61,8 +62,9 @@ export const ActivityEditorPageComponent = (
                       value={input.value}
                       onChange={input.onChange}
                       className="br2"
-                      placeHolder={t('app.project.Project-boards.Write-comment')}
-                      // placeHolder="Write comment"
+                      placeHolder={t(
+                        'app.project.Project-boards.Write-comment',
+                      )}
                       style={{
                         height: '40px',
                         background: '#D4D4D47A',
@@ -104,9 +106,9 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const ActivityEditor = connect(mapStateToProps, { createComment })(
-  withRouter(ActivityEditorPageComponent),
-);
+export const ActivityEditor = connect(mapStateToProps, {
+  createComment,
+})(withRouter(ActivityEditorPageComponent));
 
 // export const CommentReply = () => {
 //   const onSubmit = async (values: any) => {

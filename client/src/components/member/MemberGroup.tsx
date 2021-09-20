@@ -1,17 +1,16 @@
-import React from 'react';
-
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles/createTheme';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import Avatar from '@material-ui/core/Avatar/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup/AvatarGroup';
-import Avatar from '@material-ui/core/Avatar';
-import { Popover } from '@blueprintjs/core';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+
+import { IBoardMember, ITaskMember } from 'stores/task/Reducer';
+
+import UserIcon from 'resources/images/profilePhoto.svg';
 
 import MemberListDialog from './MemberListDialog';
-import UserIcon from 'resources/images/profilePhoto.svg';
-import { IBoardMember, ITaskMember } from 'stores/task/Reducer';
+
 import './Icon.scss';
 
 const useStyles = makeStyles((theme: Theme) =>

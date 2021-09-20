@@ -1,15 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
+import { useEffect, useRef, useState } from 'react';
+import { isMobileOnly } from 'react-device-detect';
 import { connect, useDispatch } from 'react-redux';
+
+import moment from 'moment';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
+import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
 import {
   getRoomMessages,
   updateLastSeen,
 } from '../../../../../stores/room/Actions';
-import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
 import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
-import { Icon } from '@blueprintjs/core';
-import { isMobileOnly } from 'react-device-detect';
-import moment from 'moment';
+
+import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 
 interface MessageListProps {
   updateLastSeen: (roomId: string) => void;
@@ -34,6 +37,7 @@ export const MessageListComponent = (props: MessageListProps) => {
   const callUpdateLastSeen = async (roomId: string) => {
     await props.updateLastSeen(roomId);
   };
+
   const scrollToBottom = () => {
     // TODO send message read trigger
     if (props.messages.length) {
@@ -68,15 +72,6 @@ export const MessageListComponent = (props: MessageListProps) => {
       await props.getRoomMessages(props.currentRoom._id, limit, n);
     }
   };
-
-  useEffect(() => {
-    setFirst(false);
-    setLimit(15);
-    setSkip(0);
-    dispatch({ type: ALL_MESSAGE_RECEIVED, payload: false });
-  }, [props.currentRoom._id]);
-
-  useEffect(scrollToBottom, [props.messages]);
 
   const checkGroup = (
     cm: IRoomMessage,
@@ -123,6 +118,15 @@ export const MessageListComponent = (props: MessageListProps) => {
 
     await setAllMessages(groupArrays);
   };
+
+  useEffect(() => {
+    setFirst(false);
+    setLimit(15);
+    setSkip(0);
+    dispatch({ type: ALL_MESSAGE_RECEIVED, payload: false });
+  }, [props.currentRoom._id]);
+
+  useEffect(scrollToBottom, [props.messages]);
 
   useEffect(() => {
     groupMessages();

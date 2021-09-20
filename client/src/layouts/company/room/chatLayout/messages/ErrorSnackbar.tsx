@@ -1,8 +1,11 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState, useEffect } from 'react';
 
-import Snackbar, { SnackbarOrigin } from '@material-ui/core/Snackbar';
+import Snackbar, {
+  SnackbarOrigin,
+} from '@material-ui/core/Snackbar/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Theme } from '@material-ui/core/styles/createTheme';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -26,14 +29,14 @@ const ErrorSnackbar = (props: {
   setMessageError: Dispatch<SetStateAction<string>>;
 }) => {
   const classes = useStyles();
-  const [state, setState] = React.useState<State>({
+  const [state, setState] = useState<State>({
     open: true,
     vertical: 'top',
     horizontal: 'center',
   });
   const { vertical, horizontal, open } = state;
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {}, 5000);
     return () => clearTimeout(timer);
   }, []);

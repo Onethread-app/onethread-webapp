@@ -1,8 +1,10 @@
-import { Popover, Tooltip } from '@blueprintjs/core';
-import React from 'react';
+import { useState } from 'react';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Tooltip } from '@blueprintjs/core/lib/esm/components/tooltip/tooltip';
+
 import { ICompany } from 'stores/company/Reducer';
-import { IPayloadForDeletingMember } from 'stores/subtask/Actions';
 import { ISubtaskMember } from 'stores/subtask/Reducer';
+import { IPayloadForDeletingMember } from 'stores/subtask/Actions';
 import { projectPermit } from 'stores/UtilsActions';
 
 interface ISubtaskMemberIcon {
@@ -15,7 +17,7 @@ interface ISubtaskMemberIcon {
 }
 
 const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const handleRemove = async () => {
     if (props.subTaskId) {
       const payload = {

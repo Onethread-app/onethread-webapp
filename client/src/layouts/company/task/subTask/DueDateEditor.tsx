@@ -1,18 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Form, Field } from 'react-final-form';
-// import { SubmitError } from 'components/final-form/SubmitError';
-import { checkError } from 'components/final-form/utils';
-// import { Icon } from '@blueprintjs/core';
-// import { IconNames } from '@blueprintjs/icons';
-import { updateSubTask } from 'stores/subtask/Actions';
-import { ISubTask } from 'stores/subtask/Reducer';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Form, Field } from 'react-final-form';
 import DateFnsUtils from '@date-io/date-fns';
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
+import { KeyboardDatePicker } from '@material-ui/pickers/DatePicker/DatePicker';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers/MuiPickersUtilsProvider';
+
+import { ISubTask } from 'stores/subtask/Reducer';
+import { updateSubTask } from 'stores/subtask/Actions';
+
+import { checkError } from 'components/final-form/utils';
+
 import '../task.scss';
 
 interface IDueDateFormProps {
@@ -24,7 +22,7 @@ interface IDueDateFormProps {
 }
 
 const DueDateEditor = (props: IDueDateFormProps) => {
-  // const [loading, setLoading] = React.useState(false);
+  const { t } = useTranslation();
 
   const onSubmit = (values: any) => {
     props.updateSubTask({
@@ -32,19 +30,6 @@ const DueDateEditor = (props: IDueDateFormProps) => {
       dueDate: values.dueDate,
     });
   };
-
-  // React.useEffect(() => {
-  //   if (
-  //     loading === true &&
-  //     props.updatingSubTask === false &&
-  //     props.errorOnUpdate === ''
-  //   ) {
-  //     props.setDueDatePopover({ _id: '', open: false });
-  //   }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [loading, props.updatingSubTask, props.errorOnUpdate]);
-
-  const { t } = useTranslation();
 
   return (
     <Form
@@ -63,33 +48,10 @@ const DueDateEditor = (props: IDueDateFormProps) => {
         ...rest
       }) => (
         <form className="mh1" onSubmit={handleSubmit}>
-          {/* <div className="flex justify-end">
-            <Icon
-              icon={IconNames.CROSS}
-              iconSize={20}
-              className="grow pointer"
-              onClick={(e: any) =>
-                props.setDueDatePopover({ _id: '', open: false })
-              }
-            />
-          </div>
-          <div>
-            <SubmitError errorMessage={submitError} />
-          </div> */}
           <Field<string>
             name="dueDate"
             render={({ input, meta }) => (
               <>
-                {/* <label
-                  style={{
-                    marginBottom: '5px',
-                    display: 'block',
-                  }}
-                >
-                  Due Date
-                  {t('app.project.Project-boards.Due-Date')}
-                </label> */}
-
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     id="date-picker-dialog"

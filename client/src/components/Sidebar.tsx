@@ -1,16 +1,29 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import {
   NavLink,
   withRouter,
   RouteComponentProps,
 } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Tooltip } from '@blueprintjs/core/lib/esm/components/tooltip/tooltip';
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
+
 import { User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import { connect } from 'react-redux';
+import { ICompanyRoom } from 'stores/room/Reducer';
+import {
+  companyPermit,
+  unreadMessageNotification,
+} from 'stores/UtilsActions';
+import {
+  clearProjectReducer,
+  openProjectFIle,
+} from 'stores/project/Actions';
 
 import logo from 'resources/images/onethread-text.png';
 import tigrowLogo from '../resources/images/TiGrowLogoFinal.png';
-// import individualProfile from '../resources/images/sidebarIndividualProfile.svg';
 import sidebarProfile from '../resources/images/sidebarProfile.svg';
 import sidebarProfileLight from '../resources/images/sidebarProfile-light.svg';
 import room from '../resources/images/sidebarRoom.svg';
@@ -27,24 +40,9 @@ import dashboard from '../resources/images/sideBarDashboard.svg';
 import dashboardLight from '../resources/images/sideBarDashboard-light.svg';
 import feedback from '../resources/images/feedback.svg';
 import feedbackLight from '../resources/images/feedback-light.svg';
-
 import preface from '../resources/images/sideBarPreface.svg';
 import settingsProject from '../resources/images/sidebarProjectSettings.svg';
 import teamProject from '../resources/images/sidebarProjectTeam.svg';
-
-import { Tooltip, Divider } from '@blueprintjs/core';
-import {
-  companyPermit,
-  unreadMessageNotification,
-} from 'stores/UtilsActions';
-// import { isEmpty } from 'lodash';
-import { ICompanyRoom } from 'stores/room/Reducer';
-import {
-  clearProjectReducer,
-  openProjectFIle,
-} from 'stores/project/Actions';
-import { useTranslation } from 'react-i18next';
-// import { withRouter } from 'react-router';
 
 interface ISideBarProps {
   user: User;
@@ -59,15 +57,14 @@ interface ISideBarProps {
 }
 
 const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
-  const [activeTab, setActiveTab] = React.useState('');
+  const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     props.type === 'default'
       ? setActiveTab('user-profile')
       : setActiveTab('company-dashboard');
   }, [props.type]);
-
-  const { t } = useTranslation();
 
   return (
     <div
@@ -116,8 +113,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
               </span>
             ) : (
               <Tooltip
-                content={<p className="mb0">{t('app.company.Company-profile.Individual')}</p>}
-                // content={<p className="mb0">Individual Profile</p>}
+                content={
+                  <p className="mb0">
+                    {t('app.company.Company-profile.Individual')}
+                  </p>
+                }
                 position="right"
               >
                 <span className="ml3 pa1 bg-white">
@@ -141,7 +141,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 }}
               >
                 {t('app.user.Personal-profile.Profile')}
-                {/* Profile */}
               </span>
             )}
           </NavLink>
@@ -171,8 +170,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">{t('app.company.Dashboard.Headline')}</p>}
-                    // content={<p className="mb0">Dashboard</p>}
+                    content={
+                      <p className="mb0">
+                        {t('app.company.Dashboard.Headline')}
+                      </p>
+                    }
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -194,7 +196,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     style={{ color: 'inherit' }}
                   >
                     {t('app.company.Dashboard.Headline')}
-                    {/* Dashboard */}
                   </span>
                 )}
               </NavLink>
@@ -221,8 +222,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 </span>
               ) : (
                 <Tooltip
-                  content={<p className="mb0">{t('app.homepage.Projects')}</p>}
-                  // content={<p className="mb0">Projects</p>}
+                  content={
+                    <p className="mb0">
+                      {t('app.homepage.Projects')}
+                    </p>
+                  }
                   position="right"
                 >
                   <span className="ml3 pa1 bg-white">
@@ -245,7 +249,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     style={{ color: 'inherit' }}
                   >
                     {t('app.homepage.Projects')}
-                    {/* Projects */}
                   </span>
                   {props.companyRooms &&
                   unreadMessageNotification(
@@ -309,8 +312,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">{t('app.company.Projects.Overview')}</p>}
-                      // content={<p className="mb0">Overview</p>}
+                      content={
+                        <p className="mb0">
+                          {t('app.company.Projects.Overview')}
+                        </p>
+                      }
                       position="right"
                     >
                       <span className="pl3">
@@ -329,7 +335,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       style={{ color: 'inherit' }}
                     >
                       {t('app.company.Projects.Overview')}
-                      {/* Overview */}
                     </span>
                   )}
                 </NavLink>
@@ -352,8 +357,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">{t('app.project.Project-preface.Intro')}</p>}
-                      // content={<p className="mb0">Preface</p>}
+                      content={
+                        <p className="mb0">
+                          {t('app.project.Project-preface.Intro')}
+                        </p>
+                      }
                       position="right"
                     >
                       <span className="pl3">
@@ -372,7 +380,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       style={{ color: 'inherit' }}
                     >
                       {t('app.project.Project-preface.Intro')}
-                      {/* Preface */}
                     </span>
                   )}
                 </NavLink>
@@ -394,8 +401,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">{t('app.project.Project-rooms.Rooms')}</p>}
-                      // content={<p className="mb0">Rooms</p>}
+                      content={
+                        <p className="mb0">
+                          {t('app.project.Project-rooms.Rooms')}
+                        </p>
+                      }
                       position="right"
                     >
                       <span className="pl3">
@@ -415,7 +425,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         style={{ color: 'inherit' }}
                       >
                         {t('app.project.Project-rooms.Rooms')}
-                        {/* Rooms */}
                       </span>
                       {props.companyRooms &&
                       unreadMessageNotification(
@@ -450,8 +459,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">{t('app.project.Project-boards.Board')}</p>}
-                      // content={<p className="mb0">Boards</p>}
+                      content={
+                        <p className="mb0">
+                          {t('app.project.Project-boards.Board')}
+                        </p>
+                      }
                       position="right"
                     >
                       <span className="pl3">
@@ -470,7 +482,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       style={{ color: 'inherit' }}
                     >
                       {t('app.project.Project-boards.Board')}
-                      {/* Boards */}
                     </span>
                   )}
                 </NavLink>
@@ -492,8 +503,13 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">{t('app.project.Project-teammates.Team-members')}</p>}
-                      // content={<p className="mb0">Teammates</p>}
+                      content={
+                        <p className="mb0">
+                          {t(
+                            'app.project.Project-teammates.Team-members',
+                          )}
+                        </p>
+                      }
                       position="right"
                     >
                       <span className="pl3">
@@ -511,8 +527,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
-                      {t('app.project.Project-teammates.Team-members')}
-                      {/* Teammates */}
+                      {t(
+                        'app.project.Project-teammates.Team-members',
+                      )}
                     </span>
                   )}
                 </NavLink>
@@ -535,8 +552,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   ) : (
                     <Tooltip
                       content={
-                        <p className="mb0">{t('app.company.Projects.Project-Settings')}</p>
-                        // <p className="mb0">Project Settings</p>
+                        <p className="mb0">
+                          {t('app.company.Projects.Project-Settings')}
+                        </p>
                       }
                       position="right"
                     >
@@ -556,7 +574,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       style={{ color: 'inherit' }}
                     >
                       {t('app.company.Projects.Project-Settings')}
-                      {/* Project Settings */}
                     </span>
                   )}
                 </NavLink>
@@ -586,8 +603,13 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">{t('app.company.Company-profile.Company-profile')}</p>}
-                    // content={<p className="mb0">Company Profile</p>}
+                    content={
+                      <p className="mb0">
+                        {t(
+                          'app.company.Company-profile.Company-profile',
+                        )}
+                      </p>
+                    }
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -609,7 +631,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     style={{ color: 'inherit' }}
                   >
                     {t('app.company.Company-profile.Company-profile')}
-                    {/*Company Profile */}
                   </span>
                 )}
               </NavLink>
@@ -638,8 +659,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">{t('app.company.Colleagues.Colleagues')}</p>}
-                    // content={<p className="mb0">Colleagues</p>}
+                    content={
+                      <p className="mb0">
+                        {t('app.company.Colleagues.Colleagues')}
+                      </p>
+                    }
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -661,7 +685,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     style={{ color: 'inherit' }}
                   >
                     {t('app.company.Colleagues.Colleagues')}
-                    {/* Colleagues */}
                   </span>
                 )}
               </NavLink>
@@ -689,8 +712,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">{t('app.company.Partners.Partners')}</p>}
-                    // content={<p className="mb0">Partners</p>}
+                    content={
+                      <p className="mb0">
+                        {t('app.company.Partners.Partners')}
+                      </p>
+                    }
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -712,7 +738,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     style={{ color: 'inherit' }}
                   >
                     {t('app.company.Partners.Partners')}
-                    {/* Partners */}
                   </span>
                 )}
               </NavLink>
@@ -740,8 +765,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">{t('app.company.Settings.Settings')}</p>}
-                    // content={<p className="mb0">Settings</p>}
+                    content={
+                      <p className="mb0">
+                        {t('app.company.Settings.Settings')}
+                      </p>
+                    }
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -791,8 +819,11 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">{t('app.company.Feedback.Feedback')}</p>}
-                    // content={<p className="mb0">Feedback</p>}
+                    content={
+                      <p className="mb0">
+                        {t('app.company.Feedback.Feedback')}
+                      </p>
+                    }
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -814,7 +845,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     style={{ color: 'inherit' }}
                   >
                     {t('app.company.Feedback.Feedback')}
-                    {/* Feedback */}
                   </span>
                 )}
               </NavLink>

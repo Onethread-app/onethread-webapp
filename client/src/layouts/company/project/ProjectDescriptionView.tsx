@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Icon } from '@blueprintjs/core';
-import { ProjectDescriptionEditor } from './ProjectDescriptionEditor';
-import { connect } from 'react-redux';
-import { projectRules } from './settings/projectrules';
-import { Text } from '@blueprintjs/core';
+import { useState } from 'react';
 import Linkify from 'react-linkify';
+import { connect } from 'react-redux';
+
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Text } from '@blueprintjs/core';
+
+import { projectRules } from './settings/projectrules';
 import { componentDecorator } from 'helpers/LinkifyHelper';
+import { ProjectDescriptionEditor } from './ProjectDescriptionEditor';
 
 interface IProjectDescriptionViewProps {
   headline: string;
@@ -17,9 +19,8 @@ interface IProjectDescriptionViewProps {
 export const _ProjectDescriptionView = (
   props: IProjectDescriptionViewProps,
 ) => {
-  const [editDescriptionDialog, setEditDescriptionDialog] = useState(
-    false,
-  );
+  const [editDescriptionDialog, setEditDescriptionDialog] =
+    useState(false);
   const permissions = projectRules(props.role, props.optionalRole);
   return (
     <>

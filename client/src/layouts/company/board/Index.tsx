@@ -1,25 +1,22 @@
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Dialog,
-  Elevation,
-  Menu,
-  MenuItem,
-  Popover,
-} from '@blueprintjs/core';
+import { useEffect, useState } from 'react';
 import Axios from 'axios';
-import { Loading } from 'components/Loading';
-import { NavbarCompany } from 'components/NavbarCompany';
-import { RightSidebar } from 'components/RightSidebar';
-import { server } from 'config';
-import { find } from 'lodash';
-import React, { useEffect, useState } from 'react';
-import { isMobileOnly, MobileView } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
+import { isMobileOnly, MobileView } from 'react-device-detect';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { server } from 'config';
+import { find } from 'lodash';
+
+import { Card } from '@blueprintjs/core/lib/esm/components/card/card';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Menu } from '@blueprintjs/core/lib/esm/components/menu/menu';
+import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { ButtonGroup } from '@blueprintjs/core/lib/esm/components/button/buttonGroup';
+import { Elevation } from '@blueprintjs/core/lib/esm/common/elevation';
+
 import {
   clearCurrentBoard,
   getAllBoards,
@@ -30,10 +27,14 @@ import { getAllDepartments } from 'stores/company/Actions';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
 import { Color, tokenConfig } from 'stores/UtilsActions';
-import addIcon from '../../../resources/images/addIcon.png';
-import { projectRules } from '../project/settings/projectrules';
+
 import { FormBoard } from './Form';
 import { UpdateFormBoard } from './UpdateForm';
+import { projectRules } from '../project/settings/projectrules';
+import { Loading } from 'components/Loading';
+import { NavbarCompany } from 'components/NavbarCompany';
+import { RightSidebar } from 'components/RightSidebar';
+import addIcon from '../../../resources/images/addIcon.png';
 
 interface IBoardCardComponent {
   boardList: TaskBoard[];
@@ -117,7 +118,6 @@ const BoardCard = withRouter(
                         text={t(
                           'app.project.Project-boards.Update-Board',
                         )}
-                        // text="Update Board"
                         onClick={() => props.handleUpdate(board)}
                       />
                       <MenuItem
@@ -125,7 +125,6 @@ const BoardCard = withRouter(
                         text={t(
                           'app.project.Project-boards.Delete-Board',
                         )}
-                        // text="Delete Board"
                         onClick={() =>
                           props.handleDialogChange(board._id)
                         }
@@ -160,7 +159,6 @@ const BoardCard = withRouter(
                     style={{ fontSize: '0.7rem' }}
                   >
                     {t('app.project.Project-boards.Total-Members')}
-                    {/* Total Members */}
                   </p>
                   <p className="fw8">
                     {board.members ? board.members.length : 0}
@@ -172,7 +170,6 @@ const BoardCard = withRouter(
                     style={{ fontSize: '0.7rem' }}
                   >
                     {t('app.project.Project-boards.Remaining-Tasks')}
-                    {/* Remaining Tasks */}
                   </p>
                   <p className="fw8">
                     {`${board.remainingTasks}/${board.totalTasks}`}
@@ -190,17 +187,22 @@ const BoardCard = withRouter(
 const TaskPageComponent = (
   props: IBoardListViewInternalProps & RouteComponentProps,
 ) => {
-  const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(
-    false,
-  );
+  const { t } = useTranslation();
+  const [showTaskBoardDialog, setShowTaskBoardDialog] =
+    useState(false);
   const [updTaskBoardDialog, setUpdTaskBoardDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [singleBoardLoading, setSingleBoardLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [dialogBoardId, setDialogBoardId] = useState(null);
   const [selectedBoard, setSelectedBoard] = useState(null);
+  const [department] = useState('');
 
   const permissions = projectRules(props.role, props.optionalRole);
+
+  const boards = props.boardList.filter(
+    (board) => board.department === department,
+  );
 
   const handleUpdate = (board) => {
     setSelectedBoard(board);
@@ -243,6 +245,30 @@ const TaskPageComponent = (
       } catch (e) {}
     }
   };
+
+  const noBoardsFound = (
+    <div
+      onClick={() => setShowTaskBoardDialog(true)}
+      className="tc pointer dim"
+    >
+      <h1 style={{ color: '#34495E' }}>No Boards Found</h1>
+      <p
+        className="f5-l f4-ns f6 tc"
+        style={{ color: '#85929E', display: 'inline-block' }}
+      >
+        Click here to create a board or click on the{' '}
+        <img
+          src={addIcon}
+          style={{
+            display: 'inline-block',
+            height: '20px',
+          }}
+          alt=""
+        />{' '}
+        icon below
+      </p>
+    </div>
+  );
 
   useEffect(() => {
     props.clearCurrentBoard();
@@ -306,44 +332,12 @@ const TaskPageComponent = (
     props.currentBoard._id,
   ]);
 
-  const [department] = useState('');
-  const boards = props.boardList.filter(
-    (board) => board.department === department,
-  );
-
-  const noBoardsFound = (
-    <div
-      onClick={() => setShowTaskBoardDialog(true)}
-      className="tc pointer dim"
-    >
-      <h1 style={{ color: '#34495E' }}>No Boards Found</h1>
-      <p
-        className="f5-l f4-ns f6 tc"
-        style={{ color: '#85929E', display: 'inline-block' }}
-      >
-        Click here to create a board or click on the{' '}
-        <img
-          src={addIcon}
-          style={{
-            display: 'inline-block',
-            height: '20px',
-          }}
-          alt=""
-        />{' '}
-        icon below
-      </p>
-    </div>
-  );
-
-  const { t } = useTranslation();
-
   return (
     <>
       <MobileView>
         <NavbarCompany
           title={t('app.project.Project-boards.Board')}
         />
-        {/* <NavbarCompany title="Board" /> */}
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -355,7 +349,6 @@ const TaskPageComponent = (
             <small style={{ color: 'inherit' }}>
               {t('app.company.Projects.Overview')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact
@@ -367,7 +360,6 @@ const TaskPageComponent = (
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-preface.Intro')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
             exact
@@ -377,7 +369,6 @@ const TaskPageComponent = (
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Room</small>
-            {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
             exact
@@ -389,7 +380,6 @@ const TaskPageComponent = (
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-boards.Board')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
             exact
@@ -401,7 +391,6 @@ const TaskPageComponent = (
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-teammates.Team-members')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
             exact
@@ -412,7 +401,6 @@ const TaskPageComponent = (
           >
             <small style={{ color: 'inherit' }}>
               {t('app.company.Projects.Project-Settings')}
-              {/* Project Settings */}
             </small>
           </NavLink>
         </div>
@@ -423,7 +411,6 @@ const TaskPageComponent = (
             {isMobileOnly ? undefined : (
               <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
                 {t('app.project.Project-boards.Board')}
-                {/* Board */}
               </h3>
             )}
           </div>
@@ -432,7 +419,6 @@ const TaskPageComponent = (
             style={{ color: '#6B6B6B', fontSize: '18px' }}
           >
             {t('app.project.Project-boards.My-boards')}
-            {/* My Boards */}
           </p>
           <div className="overflow-auto">
             {loading === false ? (
@@ -445,7 +431,6 @@ const TaskPageComponent = (
                     gridTemplateRows: 'repeat(2, 150px)',
                   }}
                 >
-                  {/* TODO make one */}
                   {department ? (
                     <BoardCard
                       boardList={boards}
@@ -554,13 +539,10 @@ const TaskPageComponent = (
           style={{ borderColor: '#F55B7F' }}
         >
           <h4 style={{ marginBottom: 13 }}>
-            {/* Delete Board */}
             {t('app.project.Project-boards.Delete-Board')}
           </h4>
-          {/* <h4 style={{ marginBottom: 13 }}>Delete Board</h4> */}
           <p style={{ marginBottom: 10 }}>
             {t('app.project.Project-boards.Delete-text')}
-            {/* Are you sure you want to delete this board? */}
           </p>
           <ButtonGroup
             minimal={true}
@@ -572,7 +554,6 @@ const TaskPageComponent = (
               onClick={() => handleDeleteDialog(dialogBoardId)}
             >
               {t('app.project.Project-boards.Yes-delete')}
-              {/* Yes. Delete */}
             </Button>
             <Button
               icon="undo"
@@ -580,7 +561,6 @@ const TaskPageComponent = (
               intent="primary"
             >
               {t('app.project.Project-boards.Keep')}
-              {/* No. Keep it */}
             </Button>
           </ButtonGroup>
         </div>

@@ -1,11 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isMobileOnly } from 'react-device-detect';
+import { connect } from 'react-redux';
 
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import { Icon, Popover } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import Tooltip from '@material-ui/core/Tooltip/Tooltip';
+import ListIcon from '@material-ui/icons/List';
+import ViewWeekIcon from '@material-ui/icons/ViewWeek';
+import DateRangeIcon from '@material-ui/icons/DateRange';
 
+import {
+  IFilterUser,
+  SortTasksBy,
+  TaskBoard,
+} from 'stores/task/Reducer';
+import { IProject } from 'stores/project/Reducer';
+import { ICompany } from 'stores/company/Reducer';
+import {
+  setSortBy,
+  setFilerUsers,
+  setPreferredView,
+} from 'stores/task/Actions';
+
+import CalendarView, {
+  ITaskForCalendar,
+} from 'components/calendar/CalendarView';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import ColumnsContainer from 'components/column/ColumnsContainer';
 import TaskList from 'components/task/TaskList';
@@ -13,22 +34,6 @@ import MemberGroup from 'components/member/MemberGroup';
 import MultiSelectComponent from 'components/dashboard/project-status/MultiSelectComponent';
 import CreateTaskButton from 'components/task/CreateTaskButton';
 import PriorityColorList from 'components/task/PriorityColorList';
-import CalendarView, {
-  ITaskForCalendar,
-} from 'components/calendar/CalendarView';
-
-import { ICompany } from 'stores/company/Reducer';
-import {
-  IFilterUser,
-  SortTasksBy,
-  TaskBoard,
-} from 'stores/task/Reducer';
-import {
-  setSortBy,
-  setFilerUsers,
-  setPreferredView,
-} from 'stores/task/Actions';
-import { IProject } from 'stores/project/Reducer';
 
 import {
   Container,
@@ -77,6 +82,14 @@ const BoardDetails = (props: IBoardDetails) => {
     setSelectedAssignee([]);
   };
 
+  const handleViewChange = (v: 'board' | 'list' | 'calendar') => {
+    if (props.fetchingBoard === false) {
+      clearSort();
+      setView(v);
+      props.setPreferredView(v);
+    }
+  };
+
   useEffect(() => {
     props.setFilerUsers(selectedAssignee);
     props.setSortBy(undefined);
@@ -112,14 +125,6 @@ const BoardDetails = (props: IBoardDetails) => {
     setTasksForCalendarView(cTasks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentBoard]);
-
-  const handleViewChange = (v: 'board' | 'list' | 'calendar') => {
-    if (props.fetchingBoard === false) {
-      clearSort();
-      setView(v);
-      props.setPreferredView(v);
-    }
-  };
 
   return (
     <Container className="h-100 ph3 cf flex flex-column">
@@ -185,7 +190,7 @@ const BoardDetails = (props: IBoardDetails) => {
           <div className="flex justify-center">
             <ViewSelectDiv
               fetchingBoard={props.fetchingBoard}
-              className="flex"
+              className="flex items-center"
             >
               <p>{t('app.project.Tasks.View')}:</p>
               <p
@@ -194,25 +199,29 @@ const BoardDetails = (props: IBoardDetails) => {
                 }}
                 className={`${view === 'list' && 'active'}`}
               >
-                {t('app.project.Tasks.List')}
+                <Tooltip title="List" placement="top">
+                  <ListIcon />
+                </Tooltip>
               </p>
-
               <p
                 onClick={() => {
                   handleViewChange('board');
                 }}
                 className={`${view === 'board' && 'active'}`}
               >
-                {t('app.project.Tasks.Board')}
+                <Tooltip title="Board" placement="top">
+                  <ViewWeekIcon />
+                </Tooltip>
               </p>
-
               <p
                 onClick={() => {
                   handleViewChange('calendar');
                 }}
                 className={`${view === 'calendar' && 'active'}`}
               >
-                {t('app.project.Tasks.Calendar')}
+                <Tooltip title="Calendar" placement="top">
+                  <DateRangeIcon />
+                </Tooltip>
               </p>
             </ViewSelectDiv>
           </div>

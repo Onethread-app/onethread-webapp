@@ -1,13 +1,13 @@
-import React from 'react';
 import { connect } from 'react-redux';
 
-import { Popover, Position } from '@blueprintjs/core';
-import { Badge } from '@material-ui/core';
+import Badge from '@material-ui/core/Badge/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-
-import NotificationPopover from 'components/notification/NotificationPopover';
+import { Position } from '@blueprintjs/core/lib/esm/common/position';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 
 import { seenNotification } from 'stores/notifications/Action';
+
+import NotificationPopover from 'components/notification/NotificationPopover';
 
 interface INotificationIcon {
   type: string;

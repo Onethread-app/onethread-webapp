@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Dialog } from '@blueprintjs/core';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
+import { ICompany } from 'stores/company/Reducer';
 import {
   addDepartment,
   getAllDepartments,
   clearAddDepartmentError,
 } from '../../../../stores/company/Actions';
-import { ICompany } from 'stores/company/Reducer';
+
 import { Loading } from 'components/Loading';
 import { DepartmentEditor } from './Editor';
-import { useTranslation } from 'react-i18next';
 
 interface DepartmentViewProps {
   company: ICompany;
@@ -20,15 +24,13 @@ interface DepartmentViewProps {
 }
 
 const DepartmentViewComponent = (props: DepartmentViewProps) => {
-  const [showDialogDepartment, setShowDialogDepartment] = useState(
-    false,
-  );
+  const { t } = useTranslation();
+  const [showDialogDepartment, setShowDialogDepartment] =
+    useState(false);
 
   useEffect(() => {
     props.getAllDepartments();
   }, []);
-
-  const { t } = useTranslation();
 
   return (
     <>
@@ -37,7 +39,6 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
           <h1 className="f6 lh-copy">
             {t('app.company.Departments.Departments')}
           </h1>
-          {/* <h1 className="f6 lh-copy">Departments</h1> */}
           <Button
             type="submit"
             className="grow pointer addDepartment h2"
@@ -49,7 +50,6 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
             onClick={() => setShowDialogDepartment(true)}
           >
             {t('app.company.Departments.Add-department')}
-            {/* Add Department */}
           </Button>
         </div>
         <div className="mt4">
@@ -62,7 +62,6 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
             ))
           ) : (
             <p>{t('app.company.Departments.No-departments')}</p>
-            // <p>No departments</p>
           )}
         </div>
       </div>

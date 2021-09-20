@@ -1,10 +1,13 @@
-import * as React from 'react';
-import { ICompany } from 'stores/company/Reducer';
 import { useState } from 'react';
-import { Divider, Button, TextArea } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { editCompanyAboutAction } from 'stores/company/Actions';
 import { isEmpty } from 'lodash';
+
+import { TextArea } from '@blueprintjs/core/lib/esm/components/forms/textArea';
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { ICompany } from 'stores/company/Reducer';
+import { editCompanyAboutAction } from 'stores/company/Actions';
 
 interface CompanyAboutEditComponentProps {
   setShowDialog: (val: boolean) => void;

@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { isEqual, isEmpty, lowerCase } from 'lodash';
+import { tigrowApi, server } from 'config';
+
+import { Tag } from '@blueprintjs/core/lib/esm/components/tag/tag';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { tokenConfig } from 'stores/UtilsActions';
+
+import { useLiveSearch } from 'components/useLiveSearch';
 import {
   ItemEntityProps,
   SuggestField,
 } from 'components/fields/SuggestField';
-import { tokenConfig } from 'stores/UtilsActions';
-import { Tag, Button } from '@blueprintjs/core';
-import { isEqual, isEmpty, lowerCase } from 'lodash';
-import { useLiveSearch } from 'components/useLiveSearch';
-import { useSelector } from 'react-redux';
-import { tigrowApi, server } from 'config';
+
 interface SkillEditProps {
   addSkillAction: (skillSet: string[]) => void;
   setShowDialog: (val: boolean) => void;
@@ -38,7 +43,7 @@ export const SkillEdit = (props: SkillEditProps) => {
       } else {
         // tslint:disable-next-line: no-console
       }
-    } catch (error) {
+    } catch (error: any) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
       } else {

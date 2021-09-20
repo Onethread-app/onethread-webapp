@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dialog, Button, Popover } from '@blueprintjs/core';
 import { getProjectsIndividual } from 'stores/project/Actions';
@@ -93,7 +93,9 @@ export const ProjectListComponent = (
   return (
     <>
       <div className="flex justify-between items-center mv2">
-        <h1 className="f3-ns f5 dark-gray">{t('app.homepage.Projects')}</h1>
+        <h1 className="f3-ns f5 dark-gray">
+          {t('app.homepage.Projects')}
+        </h1>
         {/* <h1 className="f3-ns f5 dark-gray">Projects</h1> */}
         <div className="flex items-center">
           <div className="db-ns dn">
@@ -154,15 +156,21 @@ export const ProjectListComponent = (
           <CustomView condition={!isMobileOnly}>
             <Grid container>
               <Grid item xs>
-                <div className="b">{t('app.homepage.Project-name')}</div>
+                <div className="b">
+                  {t('app.homepage.Project-name')}
+                </div>
                 {/* <div className="b">Name</div> */}
               </Grid>
               <Grid item xs>
-                <div className="b">{t('app.homepage.Project-type')}</div>
+                <div className="b">
+                  {t('app.homepage.Project-type')}
+                </div>
                 {/* <div className="b">Type</div> */}
               </Grid>
               <Grid item xs>
-                <div className="b">{t('app.homepage.Project-lead')}</div>
+                <div className="b">
+                  {t('app.homepage.Project-lead')}
+                </div>
                 {/* <div className="b">Lead</div> */}
               </Grid>
             </Grid>

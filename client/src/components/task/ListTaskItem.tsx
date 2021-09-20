@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   // Link,
   useHistory,
@@ -7,32 +7,30 @@ import {
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Menu } from '@blueprintjs/core/lib/esm/components/menu/menu';
+import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { ButtonGroup } from '@blueprintjs/core/lib/esm/components/button/buttonGroup';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ForumIcon from '@material-ui/icons/Forum';
-import {
-  Button,
-  ButtonGroup,
-  Dialog,
-  Icon,
-  Menu,
-  MenuItem,
-  Popover,
-} from '@blueprintjs/core';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
-import MemberGroup from 'components/member/MemberGroup';
-import DueDate from './DueDate';
-import TaskPriorityTag from './TaskPriorityTag';
-import Timer from 'components/timer/Timer';
-
+import { IColumn, ITask } from 'stores/task/Reducer';
 import {
   dragAndDropTask,
   deleteTask,
   ITaskDelete,
   getSelectedTaskDetails,
 } from 'stores/task/Actions';
-import { IColumn, ITask } from 'stores/task/Reducer';
+
+import DueDate from './DueDate';
+import Timer from 'components/timer/Timer';
+import TaskPriorityTag from './TaskPriorityTag';
+import MemberGroup from 'components/member/MemberGroup';
 
 const TaskItemContainer = styled.div`
   width: 100%;
@@ -136,6 +134,8 @@ interface IListTaskItemInternalProps extends IListTaskItemProps {
 
 const ListTaskItem = (props: IListTaskItemInternalProps) => {
   const { task, columns } = props;
+  const history = useHistory();
+  // const location = useLocation();
   const [tick, setTick] = useState(false);
   const [statusOptions, setStatusOptions] = useState<ISelectOption[]>(
     [],
@@ -150,8 +150,53 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
   const [showPopover, setShowPopover] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
-  const history = useHistory();
-  // const location = useLocation();
+
+  const handleClick = () => {
+    props.getSelectedTaskDetails(task._id);
+    setLoading(true);
+  };
+
+  const handleTick = (e) => {
+    e.stopPropagation();
+    if (task.status !== 'done') {
+      setTick(!tick);
+      const doneCol = columns.filter(
+        (col) => col.name.toLowerCase() === 'done',
+      );
+      props.dragAndDropTask(
+        task._id,
+        task.columnId,
+        doneCol[0]._id,
+        0,
+      );
+    }
+  };
+
+  const handleStatusClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  const handleStatusChange = (e) => {
+    const selected = statusOptions.filter(
+      (op) => op.value === e.target.value,
+    );
+    if (selected[0]) {
+      setSelectedOption(selected[0]);
+      props.dragAndDropTask(
+        task._id,
+        task.columnId,
+        e.target.value,
+        0,
+      );
+    }
+  };
+
+  const handleTaskDelete = () => {
+    const payload = { taskId: task._id, columnId: task.columnId };
+    props.deleteTask(payload);
+    setDeletingTask(true);
+  };
 
   useEffect(() => {
     setSelectedOption((prev) => {
@@ -209,53 +254,6 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
       setShowPopover(false);
     }
   }, [deletingTask, props.deletingTask, props.errorOnTaskDelete]);
-
-  const handleClick = () => {
-    props.getSelectedTaskDetails(task._id);
-    setLoading(true);
-  };
-
-  const handleTick = (e) => {
-    e.stopPropagation();
-    if (task.status !== 'done') {
-      setTick(!tick);
-      const doneCol = columns.filter(
-        (col) => col.name.toLowerCase() === 'done',
-      );
-      props.dragAndDropTask(
-        task._id,
-        task.columnId,
-        doneCol[0]._id,
-        0,
-      );
-    }
-  };
-
-  const handleStatusClick = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-  };
-
-  const handleStatusChange = (e) => {
-    const selected = statusOptions.filter(
-      (op) => op.value === e.target.value,
-    );
-    if (selected[0]) {
-      setSelectedOption(selected[0]);
-      props.dragAndDropTask(
-        task._id,
-        task.columnId,
-        e.target.value,
-        0,
-      );
-    }
-  };
-
-  const handleTaskDelete = () => {
-    const payload = { taskId: task._id, columnId: task.columnId };
-    props.deleteTask(payload);
-    setDeletingTask(true);
-  };
 
   return (
     // <Link

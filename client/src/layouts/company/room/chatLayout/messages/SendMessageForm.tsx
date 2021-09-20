@@ -1,36 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, Dialog } from '@blueprintjs/core';
+import { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
+import { isMobileOnly } from 'react-device-detect';
 import { connect, useDispatch } from 'react-redux';
 import { trim, isEqual, isEmpty } from 'lodash';
-import { sendRoomMessage } from 'stores/room/Actions';
-import 'emoji-mart/css/emoji-mart.css';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {
-  TOGGLE_EMOJI_PICKER,
-  CLEAR_FILE_UPLOAD,
-  DELETE_ONE_PENDING_FILE,
-} from 'stores/room/Types';
-import ReactDOM from 'react-dom';
-import { Picker } from 'emoji-mart';
-import { FileUpload } from './fileUpload';
+
+import { MentionData } from '@draft-js-plugins/mention';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
 import {
   IRoomPendingFile,
   IRoomReducer,
   ITypingUsers,
 } from 'stores/room/Reducer';
+import { User } from 'stores/user/Reducer';
+import { sendRoomMessage } from 'stores/room/Actions';
+import {
+  TOGGLE_EMOJI_PICKER,
+  CLEAR_FILE_UPLOAD,
+  DELETE_ONE_PENDING_FILE,
+} from 'stores/room/Types';
+
 // import SmileIcon from './../../../../../resources/images/Emoji.svg';
 import SendIcon from './../../../../../resources/images/Send.svg';
 import AttachmentIcon from './../../../../../resources/images/attachment.svg';
+
+import { capitalizeFirstLetter } from 'helpers/utils';
 import {
   isTypingStartTrigger,
   isTypingStopTrigger,
 } from '../../channelSubscribe';
-import { User } from 'stores/user/Reducer';
-import { isMobileOnly } from 'react-device-detect';
-import { capitalizeFirstLetter } from 'helpers/utils';
-
+import { FileUpload } from './fileUpload';
 import MessageInput from './MessageInput';
-import { MentionData } from '@draft-js-plugins/mention';
 
 interface SendMessageFormProps {
   sendRoomMessage: (data: {
@@ -71,30 +73,6 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
   const [typingTimer, setTypingTimer] = useState<any>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [typingInterval] = useState(1000);
-
-  useEffect(() => {
-    if (props.roomUsers.length > 0) {
-      const m = props.roomUsers.map((user) => {
-        const cF = capitalizeFirstLetter(user.firstName);
-        const cL = capitalizeFirstLetter(user.lastName);
-        return {
-          name: `${cF} ${cL}`,
-          title: user.name,
-          avatar: user.profileImage
-            ? user.profileImage
-            : 'https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg',
-        };
-      });
-      setMentions(m);
-    }
-  }, [props.roomUsers]);
-
-  useEffect(() => {
-    setText('');
-    setTextError('');
-    setShowFileDialog(false);
-    dispatch({ type: CLEAR_FILE_UPLOAD });
-  }, [props.currentRoom._id]);
 
   const resetMessage = (_text: string) => {
     const resetText = _text.replace(/(\r\n|\n|\r)/gm, '');
@@ -191,21 +169,36 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
     });
   };
 
-  const addEmoji = (emoji: any) => {
-    const t = `${text} ${emoji.native}`;
-    setText(t);
-    dispatch({
-      type: TOGGLE_EMOJI_PICKER,
-      payload: false,
-    });
-  };
-
   const checkClickOutside = (e: any) => {
     const node = ReactDOM.findDOMNode(emojiRef.current);
     if (node && !node.contains(e.target)) {
       toggleEmojiPicker();
     }
   };
+
+  useEffect(() => {
+    if (props.roomUsers.length > 0) {
+      const m = props.roomUsers.map((user) => {
+        const cF = capitalizeFirstLetter(user.firstName);
+        const cL = capitalizeFirstLetter(user.lastName);
+        return {
+          name: `${cF} ${cL}`,
+          title: user.name,
+          avatar: user.profileImage
+            ? user.profileImage
+            : 'https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg',
+        };
+      });
+      setMentions(m);
+    }
+  }, [props.roomUsers]);
+
+  useEffect(() => {
+    setText('');
+    setTextError('');
+    setShowFileDialog(false);
+    dispatch({ type: CLEAR_FILE_UPLOAD });
+  }, [props.currentRoom._id]);
 
   useEffect(() => {
     document.addEventListener('click', checkClickOutside);
@@ -235,15 +228,16 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
 
       {/* Emoji picker */}
       {props.emojiPicker ? (
-        <Picker
-          set="twitter"
-          onSelect={addEmoji}
-          emoji="sunglasses"
-          title="Onethread app"
-          autoFocus={true}
-          color="#34b3e9"
-          ref={emojiRef}
-        />
+        // <Picker
+        //   set="twitter"
+        //   onSelect={addEmoji}
+        //   emoji="sunglasses"
+        //   title="Onethread app"
+        //   autoFocus={true}
+        //   color="#34b3e9"
+        //   ref={emojiRef}
+        // />
+        <> </>
       ) : null}
       <div
         className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`}

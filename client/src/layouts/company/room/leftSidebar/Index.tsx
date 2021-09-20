@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import { RoomList } from './RoomList';
-import { connect, useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { CreateForm } from './Form';
+import { useTranslation } from 'react-i18next';
+import { isMobileOnly } from 'react-device-detect';
+import { connect, useDispatch } from 'react-redux';
+
 import { clearRoomError } from 'stores/room/Actions';
-import { RightSidebar } from 'components/RightSidebar';
-import { InputGroupField } from 'components/fields/InputGroupField';
-// import { projectRules } from './../../project/settings/projectrules';
+import { room } from 'stores/room/Types';
+
 import createIcon from './../../../../resources/images/create.svg';
 import searchIcon from './../../../../resources/images/search.svg';
-import { isMobileOnly } from 'react-device-detect';
-import { room } from 'stores/room/Types';
-import { useTranslation } from 'react-i18next';
+
+import { RoomList } from './RoomList';
+import { CreateForm } from './Form';
+import { RightSidebar } from 'components/RightSidebar';
+import { InputGroupField } from 'components/fields/InputGroupField';
 import { Loading } from 'components/Loading';
+// import { projectRules } from './../../project/settings/projectrules';
 
 interface RoomSideBarComponentProps {
   projectRole?: string;
@@ -27,6 +30,7 @@ interface RoomSideBarInternalProps
   gettingRooms: boolean;
 }
 const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
+  const { t } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const dispatch = useDispatch();
@@ -34,8 +38,6 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
   //   props.projectRole,
   //   props.optionalRole,
   // );
-
-  const { t } = useTranslation();
 
   return (
     <>
@@ -48,7 +50,6 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           <h3 className="tigrow-darkGray">
             {t('app.project.Project-rooms.Rooms')}
           </h3>
-          {/* <h3 className="tigrow-darkGray">Rooms</h3> */}
           {props.projectRole && props.optionalRole && (
             <span
               className="bp3-icon grow pointer"
@@ -72,7 +73,6 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
             id="roomName"
             value={searchKeyword}
             placeHolder={t('app.project.Project-rooms.Find-room')}
-            // placeHolder="Search for Rooms"
             className="pv1 ba b--light-silver br3"
             style={{
               paddingLeft: '36px',

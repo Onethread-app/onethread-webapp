@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { MobileView, isMobileOnly } from 'react-device-detect';
 
 import FeedbackForm from 'components/feedback/FeedbackForm';

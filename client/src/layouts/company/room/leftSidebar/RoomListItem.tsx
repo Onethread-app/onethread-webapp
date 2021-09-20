@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch, connect } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { isMobileOnly } from 'react-device-detect';
 import { useHistory, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch, connect } from 'react-redux';
+
+import { Drawer } from '@blueprintjs/core/lib/esm/components/drawer/drawer';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
 import { IRoom, IRoomReducer } from 'stores/room/Reducer';
 import { CHANGE_ROOM } from 'stores/room/Types';
-import { RoomQueries, RoomPage } from '../Index';
-import { isMobileOnly } from 'react-device-detect';
-import { Drawer } from '@blueprintjs/core';
-import { Dialog } from '@blueprintjs/core';
+
 import memberListIcon from './../../../../resources/images/member-list.svg';
+
 import { MembersList } from '../chatLayout/members/MembersList';
+import { RoomQueries, RoomPage } from '../Index';
 
 interface RoomListItemProps {
   room: IRoom;
@@ -20,7 +24,6 @@ interface RoomListItemProps {
 }
 
 const RoomListItemComponent = (props: RoomListItemProps) => {
-  const [showDialog, setShowDialog] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
@@ -31,15 +34,15 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
         props.room._id
       ],
   );
+  const [showDialog, setShowDialog] = useState(false);
 
   const [queries, setQueries] = useState<RoomQueries>({
     view: 'default',
     roomId: '',
   });
 
-  const [showMemberListDialog, setShowMemberListDialog] = useState(
-    false,
-  );
+  const [showMemberListDialog, setShowMemberListDialog] =
+    useState(false);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);

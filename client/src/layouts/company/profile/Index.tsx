@@ -1,14 +1,18 @@
-import React from 'react';
-import { BasicInfoDetailsView } from 'layouts/company/profile/BasicInformationView';
-import { CoverPhoto } from 'components/cover-photo/CoverPhoto';
-import { Tabs, Tab } from '@blueprintjs/core';
-import { AdvancedInfo } from './AdvancedInfoView';
-import { User } from 'stores/user/Reducer';
-import { connect } from 'react-redux';
-import Navbar from 'components/navbar/Navbar';
-import { ICompany } from 'stores/company/Reducer';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isMobileOnly } from 'react-device-detect';
+import { connect } from 'react-redux';
+
+import { Tabs } from '@blueprintjs/core/lib/esm/components/tabs/tabs';
+import { Tab } from '@blueprintjs/core/lib/esm/components/tabs/tab';
+
+import { User } from 'stores/user/Reducer';
+import { ICompany } from 'stores/company/Reducer';
+
+import Navbar from 'components/navbar/Navbar';
+import { AdvancedInfo } from './AdvancedInfoView';
+import { CoverPhoto } from 'components/cover-photo/CoverPhoto';
+import { BasicInfoDetailsView } from 'layouts/company/profile/BasicInformationView';
 
 interface ProfilePageProps {
   user: User;
@@ -17,7 +21,9 @@ interface ProfilePageProps {
 }
 
 const CompanyProfilePageComponent = (props: ProfilePageProps) => {
-  React.useEffect(() => {
+  const { t } = useTranslation();
+
+  useEffect(() => {
     if (props.subscriptiontExpired) {
       props.company.role === 'superAdmin'
         ? window.location.replace(
@@ -29,8 +35,6 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
     }
   }, []);
 
-  const { t } = useTranslation();
-
   return (
     <>
       {isMobileOnly && <Navbar type="company" />}
@@ -40,14 +44,12 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
           <Tab
             id="basic_info"
             title={t('app.company.Company-profile.Basic')}
-            // title="Basic Information"
             panel={<BasicInfoDetailsView />}
             className="outline-0"
           />
           <Tab
             id="advance_info"
             title={t('app.company.Company-profile.Advanced')}
-            // title="Advanced Information"
             panel={<AdvancedInfo />}
             className="outline-0"
           />

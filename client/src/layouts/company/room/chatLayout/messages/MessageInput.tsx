@@ -1,4 +1,4 @@
-import React, {
+import {
   ReactElement,
   useCallback,
   useMemo,
@@ -6,6 +6,8 @@ import React, {
   useState,
 } from 'react';
 import { connect, useDispatch } from 'react-redux';
+import { trim } from 'lodash';
+
 import {
   DraftHandleValue,
   EditorState,
@@ -21,21 +23,19 @@ import createMentionPlugin, {
 import createEmojiPlugin, {
   defaultTheme,
 } from '@draft-js-plugins/emoji';
-import { trim } from 'lodash';
-
-import SendIcon from '@material-ui/icons/Send';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
+import SendIcon from '@material-ui/icons/Send';
 
-import { sendRoomMessage } from 'stores/room/Actions';
 import { IRoomPendingFile, IRoomReducer } from 'stores/room/Reducer';
+import { sendRoomMessage } from 'stores/room/Actions';
 import { CLEAR_FILE_UPLOAD } from 'stores/room/Types';
+
+import ErrorSnackbar from './ErrorSnackbar';
 
 import editorStyles from './CustomMentionEditor.module.css';
 import '@draft-js-plugins/mention/lib/plugin.css';
 import '@draft-js-plugins/emoji/lib/plugin.css';
 import './MessageInput.scss';
-
-import ErrorSnackbar from './ErrorSnackbar';
 
 interface ICustomMentionEditor {
   currentRoom: IRoomReducer['currentRoom'];

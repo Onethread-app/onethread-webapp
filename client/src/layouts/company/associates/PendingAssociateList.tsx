@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Divider } from '@blueprintjs/core';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
+
 import {
   getAllPendingAssociates,
   acceptPendingAssociate,
   rejectPendingAssociate,
 } from 'stores/associate/Actions';
-import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
 import { Associate } from 'stores/associate/Reducer';
-import { useTranslation } from 'react-i18next';
+
+import { Loading } from 'components/Loading';
 
 interface AssociatesPageComponentProps {
   company: ICompany;
@@ -23,6 +27,7 @@ interface AssociatesPageComponentProps {
 export const PendingAssociateListComponent = (
   props: AssociatesPageComponentProps & RouteComponentProps,
 ) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [acceptLoading, setAcceptLoading] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
@@ -35,8 +40,6 @@ export const PendingAssociateListComponent = (
     }
     loadAssociates(props.getAllPendingAssociates);
   }, []);
-
-  const { t } = useTranslation();
 
   return (
     <>
@@ -120,7 +123,6 @@ export const PendingAssociateListComponent = (
             ))
           ) : (
             <p>{t('app.company.Partners.No-Pending')}</p>
-            // <p>No pending request available</p>
           )}
         </div>
       </div>

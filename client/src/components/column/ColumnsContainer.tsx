@@ -1,20 +1,21 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 import { isEqual, orderBy } from 'lodash';
+import styled from 'styled-components';
 import {
   DragDropContext,
   Droppable,
   DropResult,
 } from 'react-beautiful-dnd';
-import { Icon } from '@blueprintjs/core';
+
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
+import { IColumn, TaskBoard } from 'stores/task/Reducer';
+import { dragAndDropTask, updateColumn } from 'stores/task/Actions';
 
 import Column from 'components/column/Column';
 import { RightSidebar } from 'components/RightSidebar';
 import { ColumnForm } from 'components/column/ColumnForm';
-
-import { dragAndDropTask, updateColumn } from 'stores/task/Actions';
-import { IColumn, TaskBoard } from 'stores/task/Reducer';
 
 const ColumnsContainerDiv = styled.div`
   gap: 1.25rem;
@@ -36,6 +37,7 @@ const AddColumnButton = styled.div`
   border-radius: 8px;
   cursor: pointer;
 `;
+
 interface IColumnsContainerInternalProps {
   columns: IColumn[];
   currentBoard: TaskBoard;
@@ -49,16 +51,9 @@ interface IColumnsContainerInternalProps {
 }
 
 const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
-  const [columns, setColumns] = React.useState<IColumn[]>([]);
-  const [
-    showColumnFormDialog,
-    setShowColumnFormDialog,
-  ] = React.useState(false);
-
-  React.useEffect(() => {
-    const cols = orderBy(props.columns, ['positionInBoard']);
-    setColumns(cols);
-  }, [props.columns]);
+  const [columns, setColumns] = useState<IColumn[]>([]);
+  const [showColumnFormDialog, setShowColumnFormDialog] =
+    useState(false);
 
   const dragEnd = (result: DropResult) => {
     if (!result.destination) {
@@ -99,6 +94,11 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
       setColumns(newCols);
     }
   };
+
+  useEffect(() => {
+    const cols = orderBy(props.columns, ['positionInBoard']);
+    setColumns(cols);
+  }, [props.columns]);
 
   return (
     <DragDropContext

@@ -1,7 +1,17 @@
-import { Divider, Button, Icon } from '@blueprintjs/core';
+import { useState } from 'react';
 import { connect } from 'react-redux';
-import React, { useState } from 'react';
+import { isEqual } from 'lodash';
+
+import moment from 'moment';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
 import { Form, Field } from 'react-final-form';
+
+import { Color } from 'stores/UtilsActions';
+import { updateProject } from '../../../stores/project/Actions';
+
 import {
   checkError,
   maxValue,
@@ -10,12 +20,7 @@ import {
 } from 'components/final-form/utils';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
-import { updateProject } from '../../../stores/project/Actions';
 
-import { Color } from 'stores/UtilsActions';
-import { isEqual } from 'lodash';
-import { DateInput } from '@blueprintjs/datetime';
-import moment from 'moment';
 interface UpdateProjectProps {
   setShowDialog: (val: boolean) => void;
   projectId: string;
@@ -30,6 +35,7 @@ interface UpdateProjectInternalProps extends UpdateProjectProps {
     projectId: string,
     color: string,
     deadline: Date,
+    budget: number,
   ) => any;
   isLoading: boolean;
   updatingProject: boolean;
@@ -47,6 +53,7 @@ const UpdateProjectComponent = (
         props.projectId,
         values.color,
         values.deadline ? values.deadline : new Date(props.deadline),
+        values.budget,
       );
     } else {
       await props.updateProject(
@@ -54,6 +61,7 @@ const UpdateProjectComponent = (
         props.projectId,
         values.color,
         values.deadline,
+        values.budget,
       );
     }
     if (
@@ -63,7 +71,6 @@ const UpdateProjectComponent = (
       props.setShowDialog(false);
     }
   };
-
   return (
     <Form
       onSubmit={onSubmit}
@@ -152,6 +159,30 @@ const UpdateProjectComponent = (
                     {meta.error || meta.submitError}
                   </small>
                 )}
+              </div>
+            )}
+          />
+          <Field<string>
+            name="budget"
+            validate={composeValidators(required, maxValue(32))}
+            render={({ input, meta }) => (
+              <div
+                className={` ${checkError(meta) ? 'mb2' : 'mb3'} mt2`}
+              >
+                <InputGroupFieldWithLabel
+                  id="budget"
+                  value={input.value}
+                  onChange={input.onChange}
+                  style={{
+                    boxShadow: 'none',
+                    fontSize: '18px',
+                  }}
+                  error={
+                    checkError(meta) &&
+                    (meta.error || meta.submitError)
+                  }
+                  label="Budget"
+                />
               </div>
             )}
           />

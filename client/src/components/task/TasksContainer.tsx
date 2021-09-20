@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Droppable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Droppable } from 'react-beautiful-dnd';
-
-import ColumnTaskItem from 'components/task/ColumnTaskItem';
-
-import useWindowSize from 'helpers/hooks/useWindowSize';
 
 import { IColumn, ITask, TaskBoard } from 'stores/task/Reducer';
+
 import {
   sortTasksByDueDate,
   sortTasksByPriority,
 } from 'helpers/utils';
+import useWindowSize from 'helpers/hooks/useWindowSize';
+import ColumnTaskItem from 'components/task/ColumnTaskItem';
 
 const TasksContainerDiv = styled.div`
   gap: 0.75rem;

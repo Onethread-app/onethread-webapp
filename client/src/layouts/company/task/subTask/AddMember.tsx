@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Form, Field } from 'react-final-form';
-import { SubmitError } from 'components/final-form/SubmitError';
-import { checkError } from 'components/final-form/utils';
-import { SuggestField } from 'components/fields/SuggestField';
-import { Button, Icon } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
-
-import { useLiveSearch } from 'components/useLiveSearch';
-import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
+
+import { Form, Field } from 'react-final-form';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { IconNames } from '@blueprintjs/icons';
 
 import {
   addSubTaskMember,
   IPayloadForAddingMember,
 } from 'stores/subtask/Actions';
+import { tokenConfig } from 'stores/UtilsActions';
+
+import { SubmitError } from 'components/final-form/SubmitError';
+import { checkError } from 'components/final-form/utils';
+import { SuggestField } from 'components/fields/SuggestField';
+import { useLiveSearch } from 'components/useLiveSearch';
 
 interface IAddSubtaskMember {
   setMembersPopover: React.Dispatch<

@@ -1,6 +1,6 @@
-import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import styled from 'styled-components';
+
 import TaskListSkeleton from './TaskListSkeleton';
 import TaskTableContainer from './TaskTableContainer';
 

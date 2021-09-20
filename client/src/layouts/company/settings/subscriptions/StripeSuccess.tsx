@@ -1,4 +1,3 @@
-import React from 'react';
 import successImage from '../../../../resources/images/paymentSuccess.png';
 
 interface IStripeSuccess {

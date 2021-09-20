@@ -1,7 +1,8 @@
-import React from 'react';
-import { IRoomReducer } from 'stores/room/Reducer';
 import { useSelector } from 'react-redux';
+
+import { IRoomReducer } from 'stores/room/Reducer';
 import { IPusherReducer } from 'stores/pusher/Reducer';
+
 interface MembersListProps {
   users: IRoomReducer['users'];
 }

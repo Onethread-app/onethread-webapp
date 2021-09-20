@@ -580,44 +580,49 @@ const parentOrg = async (req, res, next) => {
   }
 };
 
-const dashBoard = async (req, res, next) => {
+const companyTasks = async (allProjectIds, withDone = false) => {
   try {
-    const companyId = req.params.companyId;
     let taskCompilation = [];
-    let projectList = await Project.find({
-      $or: [{ company: companyId }, { associate: companyId }],
-      removed: false,
-      hasDeleted: false,
-    }).select('_id name status deadline');
+    let tasks = [];
 
-    let completedProjects = projectList.filter(
-      (p) => p.status === 'completed',
-    ).length;
-    let runningProjects = projectList.length - completedProjects;
-    const allProjectIds = projectList.map((p) => p._id);
-
-    const totalTasks = await Task.countDocuments({
-      project: { $in: allProjectIds },
-    });
-
-    const tasks = await Task.find({
-      project: { $in: allProjectIds },
-      status: { $ne: 'done' },
-    })
-      .sort({ priority: 0 })
-      .select(
-        '_id name status dueDate project boardId priority createdAt',
-      )
-      .populate({
-        path: 'project',
-        select: '_id name',
-        populate: [
-          {
-            path: 'company',
-            select: '_id uniqueName',
-          },
-        ],
-      });
+    if (withDone) {
+      tasks = await Task.find({
+        project: { $in: allProjectIds },
+      })
+        .sort({ priority: 0 })
+        .select(
+          '_id name status dueDate project boardId priority createdAt',
+        )
+        .populate({
+          path: 'project',
+          select: '_id name',
+          populate: [
+            {
+              path: 'company',
+              select: '_id uniqueName',
+            },
+          ],
+        });
+    } else {
+      tasks = await Task.find({
+        project: { $in: allProjectIds },
+        status: { $ne: 'done' },
+      })
+        .sort({ priority: 0 })
+        .select(
+          '_id name status dueDate project boardId priority createdAt',
+        )
+        .populate({
+          path: 'project',
+          select: '_id name',
+          populate: [
+            {
+              path: 'company',
+              select: '_id uniqueName',
+            },
+          ],
+        });
+    }
 
     await Promise.all(
       tasks.map(async (task) => {
@@ -659,6 +664,54 @@ const dashBoard = async (req, res, next) => {
     taskCompilation.sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
     );
+    return taskCompilation;
+  } catch (error) {
+    logger.error(`Compnay: ${error}`);
+    return error;
+  }
+};
+
+const allCompanytasks = async (req, res, next) => {
+  try {
+    const companyId = req.params.companyId;
+    const projectList = await Project.find({
+      $or: [{ company: companyId }, { associate: companyId }],
+      removed: false,
+      hasDeleted: false,
+    }).exec();
+    const allProjectIds = projectList.map((p) => p._id);
+    const taskCompilation = await companyTasks(allProjectIds, true);
+    return sendJSONresponse(res, 200, {
+      success: true,
+      taskCompilation,
+    });
+  } catch (error) {
+    logger.error(`Company: ${error}`);
+    next(error);
+  }
+};
+
+const dashBoard = async (req, res, next) => {
+  try {
+    const companyId = req.params.companyId;
+    let projectList = await Project.find({
+      $or: [{ company: companyId }, { associate: companyId }],
+      removed: false,
+      hasDeleted: false,
+    }).select('_id name status deadline');
+
+    let completedProjects = projectList.filter(
+      (p) => p.status === 'completed',
+    ).length;
+    let runningProjects = projectList.length - completedProjects;
+    const allProjectIds = projectList.map((p) => p._id);
+
+    const totalTasks = await Task.countDocuments({
+      project: { $in: allProjectIds },
+    });
+
+    const taskCompilation = await companyTasks(allProjectIds);
+
     return sendJSONresponse(res, 200, {
       success: true,
       data: {
@@ -836,4 +889,5 @@ module.exports = {
   allNoticesForCompany,
   adminSuperAdminFinder,
   editCertification,
+  allCompanytasks,
 };

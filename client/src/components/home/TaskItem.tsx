@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
-import moment from 'moment';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import moment from 'moment';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
 interface ITaskItem {
   task: any;
@@ -11,9 +11,10 @@ interface ITaskItem {
   mini?: boolean;
 }
 const TaskItem = (props: ITaskItem) => {
-  const [loading, setLoading] = React.useState(true);
+  const history = useHistory();
+  const [loading, setLoading] = useState(true);
   const [assignee, setAssignee] = useState<any | null>(null);
-  const [task, setTask] = React.useState({
+  const [task, setTask] = useState({
     _id: '',
     name: '',
     deadline: '',
@@ -23,18 +24,17 @@ const TaskItem = (props: ITaskItem) => {
     boardId: '',
     companyName: '',
   });
-  const history = useHistory();
 
-  React.useEffect(() => {
+  const handleClick = () => {
+    history.push(
+      `/company/${task.companyName}/project/${task.projectId}/board/${task.boardId}/task/${task._id}`,
+    );
+  };
+
+  useEffect(() => {
     if (props.task.taskId) {
-      const {
-        name,
-        dueDate,
-        boardId,
-        project,
-        status,
-        _id,
-      } = props.task.taskId;
+      const { name, dueDate, boardId, project, status, _id } =
+        props.task.taskId;
       const { assignedPerson, account } = props.task;
       const assignedPersonId = assignedPerson._id.toString();
       const accountId = account._id.toString();
@@ -57,11 +57,6 @@ const TaskItem = (props: ITaskItem) => {
     }
   }, [props.task]);
 
-  const handleClick = () => {
-    history.push(
-      `/company/${task.companyName}/project/${task.projectId}/board/${task.boardId}/task/${task._id}`,
-    );
-  };
   return loading ? (
     <div className="task-item w-100">
       <LinearProgress />

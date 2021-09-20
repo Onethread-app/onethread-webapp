@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { getCompanyDetails } from 'stores/company/Actions';
-// import { History } from 'history';
-import { getAllCompaniesByUserId } from 'stores/user/Actions';
-import { User, ICompanyByUser } from 'stores/user/Reducer';
-import { Loading } from 'components/Loading';
-// import { isCompanyLoading } from 'stores/company/Selector';
+import { useTranslation } from 'react-i18next';
+import { connect, useDispatch } from 'react-redux';
 
-import CompanyIcon from './../../resources/images/CompanyIcon.svg';
+import { User, ICompanyByUser } from 'stores/user/Reducer';
+import { getCompanyDetails } from 'stores/company/Actions';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
-import { useTranslation } from 'react-i18next';
+
+import CompanyIcon from './../../resources/images/CompanyIcon.svg';
+
+import { Loading } from 'components/Loading';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -31,11 +31,19 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
 export const ListViewComponent = (
   props: CompanyListViewInternalProps,
 ) => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [gettingDetails, setGettingDetails] = useState(false);
   const [companyName, setCompanyName] = useState('');
-  const dispatch = useDispatch();
-  const history = useHistory();
+
+  const handleClick = (name: string) => {
+    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    props.getCompanyDetails(name);
+    setCompanyName(name);
+    setGettingDetails(true);
+  };
 
   useEffect(() => {
     props.getAllCompaniesByUserId(props.user._id);
@@ -67,13 +75,6 @@ export const ListViewComponent = (
     props.errorOnGettingCompanyDetails,
   ]);
 
-  const handleClick = (name: string) => {
-    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
-    props.getCompanyDetails(name);
-    setCompanyName(name);
-    setGettingDetails(true);
-  };
-  const { t } = useTranslation();
   return (
     <>
       <div

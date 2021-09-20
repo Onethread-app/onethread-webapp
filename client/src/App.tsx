@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense, lazy } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { withRouter } from 'react-router';
 import {
   Link,
@@ -21,78 +21,78 @@ const NewLanding = lazy(() => import('layouts/landingx/Index'));
 const SignInPage = lazy(() => import('layouts/signin/Index'));
 const SignUpPage = lazy(() => import('layouts/signup/Index'));
 const PricingPage = lazy(() => import('layouts/landingx/Pricing'));
-const EmailVerificationPage = lazy(() =>
-  import('layouts/emailVerification/Index'),
+const EmailVerificationPage = lazy(
+  () => import('layouts/emailVerification/Index'),
 );
-const ForgotPasswordPage = lazy(() =>
-  import('layouts/forgotPassword/Index'),
+const ForgotPasswordPage = lazy(
+  () => import('layouts/forgotPassword/Index'),
 );
-const ResetPasswordPage = lazy(() =>
-  import('layouts/resetPassword/Index'),
+const ResetPasswordPage = lazy(
+  () => import('layouts/resetPassword/Index'),
 );
-const SignupConfirmationPage = lazy(() =>
-  import('layouts/signupConfirmation/Index'),
+const SignupConfirmationPage = lazy(
+  () => import('layouts/signupConfirmation/Index'),
 );
 const Layout = lazy(() => import('components/Layout'));
 const FeedPage = lazy(() => import('layouts/company/feed/Index'));
 const HomePage = lazy(() => import('layouts/home/Index'));
 const DashboardView = lazy(() => import('layouts/dashBoard/Index'));
-const ColleaguesPage = lazy(() =>
-  import('layouts/company/colleagues/Index'),
+const ColleaguesPage = lazy(
+  () => import('layouts/company/colleagues/Index'),
 );
 const BoardPage = lazy(() => import('layouts/company/board/Index'));
-const AssociatesDetailsView = lazy(() =>
-  import('layouts/company/associateDetails/Index'),
+const AssociatesDetailsView = lazy(
+  () => import('layouts/company/associateDetails/Index'),
 );
-const OverviewPage = lazy(() =>
-  import('layouts/company/overview/Index'),
+const OverviewPage = lazy(
+  () => import('layouts/company/overview/Index'),
 );
-const AssociatesPage = lazy(() =>
-  import('layouts/company/associates/Index'),
+const AssociatesPage = lazy(
+  () => import('layouts/company/associates/Index'),
 );
-const CompanyProfilePage = lazy(() =>
-  import('layouts/company/profile/Index'),
+const CompanyProfilePage = lazy(
+  () => import('layouts/company/profile/Index'),
 );
-const ProjectPage = lazy(() =>
-  import('layouts/company/project/Index'),
+const ProjectPage = lazy(
+  () => import('layouts/company/project/Index'),
 );
-const ProjectPrefaceView = lazy(() =>
-  import('layouts/company/project/ProjectPrefaceView'),
+const ProjectPrefaceView = lazy(
+  () => import('layouts/company/project/ProjectPrefaceView'),
 );
-const ProjectSettingsPage = lazy(() =>
-  import('layouts/company/project/settings/Index'),
+const ProjectSettingsPage = lazy(
+  () => import('layouts/company/project/settings/Index'),
 );
-const ProjectTeamPage = lazy(() =>
-  import('layouts/company/project/team/Index'),
+const ProjectTeamPage = lazy(
+  () => import('layouts/company/project/team/Index'),
 );
 const RoomPage = lazy(() => import('layouts/company/room/Index'));
-const RoomPageMobile = lazy(() =>
-  import('layouts/company/room/IndexMobile'),
+const RoomPageMobile = lazy(
+  () => import('layouts/company/room/IndexMobile'),
 );
-const SettingsPage = lazy(() =>
-  import('layouts/company/settings/Index'),
+const SettingsPage = lazy(
+  () => import('layouts/company/settings/Index'),
 );
-const BoardDetails = lazy(() =>
-  import('layouts/company/boardDetails/BoardDetails'),
+const BoardDetails = lazy(
+  () => import('layouts/company/boardDetails/BoardDetails'),
 );
 const TaskPage = lazy(() => import('layouts/company/task'));
 // const TaskModal = lazy(() =>
 //   import('components/task/Modal/TaskModal'),
 // );
-const UserProfilePage = lazy(() =>
-  import('layouts/user/profile/Index'),
+const UserProfilePage = lazy(
+  () => import('layouts/user/profile/Index'),
 );
-const ProfileSettingsPage = lazy(() =>
-  import('layouts/user/settings/Index'),
+const ProfileSettingsPage = lazy(
+  () => import('layouts/user/settings/Index'),
 );
-const NotificationPage = lazy(() =>
-  import('layouts/notification/Index'),
+const NotificationPage = lazy(
+  () => import('layouts/notification/Index'),
 );
-const VideoConferences = lazy(() =>
-  import('layouts/videoConferences/pages/index/index'),
+const VideoConferences = lazy(
+  () => import('layouts/videoConferences/pages/index/index'),
 );
-const Meeting = lazy(() =>
-  import('layouts/videoConferences/pages/meeting'),
+const Meeting = lazy(
+  () => import('layouts/videoConferences/pages/meeting'),
 );
 const Success = lazy(() => import('components/Success'));
 const Feedback = lazy(() => import('layouts/feedback/Feedback'));

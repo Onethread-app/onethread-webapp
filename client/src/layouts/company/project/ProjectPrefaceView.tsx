@@ -1,18 +1,22 @@
-import * as React from 'react';
-import { ProjectDescriptionView } from './ProjectDescriptionView';
-import DownloadIcon from './../../../resources/images/Download.svg';
-import { Button, Dialog } from '@blueprintjs/core';
-import user from '../../../resources/images/profilePhoto.svg';
 import { useState } from 'react';
-import { FileUpload } from './fileUpload';
-import { connect } from 'react-redux';
-import { ProjectOutlineView } from './ProjectOutlineView';
-import { projectRules } from './settings/projectrules';
-import { NavLink } from 'react-router-dom';
-import { MobileView } from 'react-device-detect';
-import { User } from 'stores/user/Reducer';
-import Navbar from 'components/navbar/Navbar';
 import { useTranslation } from 'react-i18next';
+import { MobileView } from 'react-device-detect';
+import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
+import { User } from 'stores/user/Reducer';
+
+import { projectRules } from './settings/projectrules';
+import { FileUpload } from './fileUpload';
+import { ProjectOutlineView } from './ProjectOutlineView';
+import Navbar from 'components/navbar/Navbar';
+import { ProjectDescriptionView } from './ProjectDescriptionView';
+
+import user from '../../../resources/images/profilePhoto.svg';
+import DownloadIcon from './../../../resources/images/Download.svg';
 
 interface ProjectPrefaceProps {
   description: string;
@@ -29,14 +33,12 @@ interface ProjectPrefaceProps {
 export const ProjectPrefaceViewComponent = (
   props: ProjectPrefaceProps,
 ) => {
+  const { t } = useTranslation();
   const [showFileDialog, setShowFileDialog] = useState(false);
+  const permissions = projectRules(props.role, props.optionalRole);
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
-
-  const permissions = projectRules(props.role, props.optionalRole);
-
-  const { t } = useTranslation();
 
   return (
     <>
@@ -56,7 +58,6 @@ export const ProjectPrefaceViewComponent = (
             <small style={{ color: 'inherit' }}>
               {t('app.company.Projects.Overview')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact
@@ -71,7 +72,6 @@ export const ProjectPrefaceViewComponent = (
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-preface.Intro')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
             exact
@@ -86,7 +86,6 @@ export const ProjectPrefaceViewComponent = (
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-rooms.Rooms')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
             exact
@@ -101,7 +100,6 @@ export const ProjectPrefaceViewComponent = (
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-boards.Board')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
             exact
@@ -116,7 +114,6 @@ export const ProjectPrefaceViewComponent = (
             <small style={{ color: 'inherit' }}>
               {t('app.project.Project-teammates.Team-members')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
             exact
@@ -130,7 +127,6 @@ export const ProjectPrefaceViewComponent = (
           >
             <small style={{ color: 'inherit' }}>
               {t('app.company.Projects.Project-Settings')}
-              {/* Project Settings */}
             </small>
           </NavLink>
         </div>
@@ -138,19 +134,16 @@ export const ProjectPrefaceViewComponent = (
       <h1 className="f3 ph5-ns ph4">
         {t('app.project.Project-preface.Intro')}
       </h1>
-      {/* <h1 className="f3 ph5-ns ph4">Preface</h1> */}
       <div className="flex-ns w-100 ph4-ns">
         <div className="h-auto w-70-ns ph4">
           <div className="w-90-ns">
             <ProjectDescriptionView
               headline={t('app.project.Project-preface.Details')}
-              // headline={'Project Description'}
               description={props.description}
             />
             <ProjectOutlineView
               projectOutline={props.outline}
               headline={t('app.project.Project-preface.Outline')}
-              // headline={'Project Outline'}
             />
           </div>
         </div>
@@ -159,7 +152,6 @@ export const ProjectPrefaceViewComponent = (
             <h1 className="f6">
               {t('app.project.Project-preface.Media')}
             </h1>
-            {/* <h1 className="f6">Shared Files</h1> */}
             {props.files.map((file: any) => (
               <div className="flex items-center justify-between">
                 <h1
@@ -206,14 +198,12 @@ export const ProjectPrefaceViewComponent = (
                 onClick={() => setShowFileDialog(true)}
               >
                 {t('app.project.Project-preface.Upload')}
-                {/* Upload Files */}
               </Button>
             )}
           </div>
 
           <h1 className="f6 pb2">
             {t('app.project.Project-preface.Team')} (
-            {/* Project Members ( */}
             {props.projectMembers && props.projectMembers.length})
           </h1>
           {props.projectMembers &&
@@ -241,8 +231,7 @@ export const ProjectPrefaceViewComponent = (
                         ? `${t(
                             'app.project.Project-settings.Moderator',
                           )}`
-                        : /*? 'Project Moderator'*/
-                          capitalizeFirstLetter(member.role)}
+                        : capitalizeFirstLetter(member.role)}
                     </h1>
                   </div>
                 </article>

@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { deleteMember } from 'stores/taskMembers/Action';
-import { connect } from 'react-redux';
+import { useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 import { ITaskMember } from 'stores/taskMembers/Reducer';
-import { Button, Popover } from '@blueprintjs/core';
+import { deleteMember } from 'stores/taskMembers/Action';
 
 interface IAssignedMemeberListEditorComponentProps {
   assignMemberId: ITaskMember['_id'];

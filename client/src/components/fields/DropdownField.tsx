@@ -1,12 +1,11 @@
-import * as React from 'react';
-import {
-  HTMLSelect,
-  IconName,
-  FormGroup,
-  Intent,
-} from '@blueprintjs/core';
-import { Entity } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
+
+import { HTMLSelect } from '@blueprintjs/core/lib/esm/components/html-select/htmlSelect';
+import { FormGroup } from '@blueprintjs/core/lib/esm/components/forms/formGroup';
+import { Intent } from '@blueprintjs/core/lib/esm/common/intent';
+import { IconName } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
+import { Entity } from 'stores/UtilsActions';
 
 interface DropdownFieldProps {
   id: string;
@@ -49,17 +48,16 @@ export const DropdownField = (props: DropdownFieldProps) => (
         outline: 'none',
       }}
     >
+      {props.placeholder ? (
+        <option selected value="">
+          {props.placeholder}
+        </option>
+      ) : (
+        <option selected value="">
+          Please select a value
+        </option>
+      )}
 
-    {
-      props.placeholder ? 
-      <option selected value="">
-       {props.placeholder}
-      </option> :
-      <option selected value="">
-        Please select a value
-     </option>
-    }
-      
       {props.options.map((opt) => (
         <option
           value={opt._id}

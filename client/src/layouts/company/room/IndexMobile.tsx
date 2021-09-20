@@ -1,22 +1,25 @@
-import React, { useEffect } from 'react';
-import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
-import { connect } from 'react-redux';
-import { IRoomReducer, IRoom } from 'stores/room/Reducer';
-import { getRooms } from 'stores/room/Actions';
+import { useEffect } from 'react';
 import {
   withRouter,
   RouteComponentProps,
   NavLink,
 } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import Pusher from 'pusher-js/types/src/core/pusher';
+
+import { ICompany } from 'stores/company/Reducer';
+import { IRoomReducer, IRoom } from 'stores/room/Reducer';
+import { getRooms } from 'stores/room/Actions';
 import {
   getSingleProject,
   setCurrentProjectId,
   getRoleForProject,
 } from '../../../stores/project/Actions';
-import Pusher from 'pusher-js';
+
 import Navbar from 'components/navbar/Navbar';
-import { ICompany } from 'stores/company/Reducer';
-import { useTranslation } from 'react-i18next';
+import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 
 export interface RoomQueries {
   view: 'default' | 'mobile';
@@ -38,15 +41,9 @@ interface RoomPageComponentProps extends RouteComponentProps {
 }
 
 const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
+  const { t } = useTranslation();
   const query = new URLSearchParams(props.location.search);
   const view = query.get('view');
-
-  // get all rooms
-  useEffect(() => {
-    if (props.companyId && props.projectId) {
-      props.getRooms();
-    }
-  }, [props.companyId, props.projectId]);
 
   if (props.projectId === '') {
     const { projectId } = props.match.params as any;
@@ -55,7 +52,12 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
     props.getRoleForProject(projectId);
   }
 
-  const { t } = useTranslation();
+  // get all rooms
+  useEffect(() => {
+    if (props.companyId && props.projectId) {
+      props.getRooms();
+    }
+  }, [props.companyId, props.projectId]);
 
   return (
     <>
@@ -70,71 +72,116 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
               background: '#34b3e9',
               color: 'white',
             }}
-            style={{ color: 'darkGray' }}
+            style={{
+              color: 'darkGray',
+            }}
           >
-            <small style={{ color: 'inherit' }}>
+            <small
+              style={{
+                color: 'inherit',
+              }}
+            >
               {t('app.company.Projects.Overview')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
-            style={{ color: 'darkGray' }}
+            activeStyle={{
+              background: '#34b3e9',
+              color: 'white',
+            }}
+            style={{
+              color: 'darkGray',
+            }}
           >
-            <small style={{ color: 'inherit' }}>
+            <small
+              style={{
+                color: 'inherit',
+              }}
+            >
               {t('app.project.Project-preface.Intro')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
-            style={{ color: 'darkGray' }}
+            activeStyle={{
+              background: '#34b3e9',
+              color: 'white',
+            }}
+            style={{
+              color: 'darkGray',
+            }}
           >
-            <small style={{ color: 'inherit' }}>
+            <small
+              style={{
+                color: 'inherit',
+              }}
+            >
               {t('app.project.Project-rooms.Rooms')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
-            style={{ color: 'darkGray' }}
+            activeStyle={{
+              background: '#34b3e9',
+              color: 'white',
+            }}
+            style={{
+              color: 'darkGray',
+            }}
           >
-            <small style={{ color: 'inherit' }}>
+            <small
+              style={{
+                color: 'inherit',
+              }}
+            >
               {t('app.project.Project-boards.Board')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
-            style={{ color: 'darkGray' }}
+            activeStyle={{
+              background: '#34b3e9',
+              color: 'white',
+            }}
+            style={{
+              color: 'darkGray',
+            }}
           >
-            <small style={{ color: 'inherit' }}>
+            <small
+              style={{
+                color: 'inherit',
+              }}
+            >
               {t('app.project.Project-teammates.Team-members')}
             </small>
-            {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
-            style={{ color: 'darkGray' }}
+            activeStyle={{
+              background: '#34b3e9',
+              color: 'white',
+            }}
+            style={{
+              color: 'darkGray',
+            }}
           >
-            <small style={{ color: 'inherit' }}>
+            <small
+              style={{
+                color: 'inherit',
+              }}
+            >
               {t('app.company.Projects.Project-Settings')}
-              {/* Project Settings */}
             </small>
           </NavLink>
         </div>

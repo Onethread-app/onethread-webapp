@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { Button } from '@blueprintjs/core';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { tigrowApi } from 'config';
+
 import { AxiosRequestConfig } from 'axios';
 import { Form, Field } from 'react-final-form';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import forgotPass from './../../resources/images/forgotPassword.png';
+
 import {
   composeValidators,
   required,
   isEmail,
   checkError,
 } from 'components/final-form/utils';
-import { errorMessgeHandler } from 'components/final-form/utils';
 import { SubmitError } from 'components/final-form/SubmitError';
+import { errorMessgeHandler } from 'components/final-form/utils';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 
-import forgotPass from './../../resources/images/forgotPassword.png';
-import { Link } from 'react-router-dom';
-import { tigrowApi } from 'config';
 interface ForgotPasswordProps {
   setEmailComponentView: (val: boolean) => void;
 }

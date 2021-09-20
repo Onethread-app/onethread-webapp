@@ -1,4 +1,3 @@
-import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 
 interface INotificationSidebar {
@@ -20,28 +19,24 @@ const NotificationSidebar = (props: INotificationSidebar) => {
         onClick={() => props.setActiveTab(0)}
       >
         Today
-        {/* Today */}
       </div>
       <div
         className={props.activeTab === 1 ? 'active' : ''}
         onClick={() => props.setActiveTab(1)}
       >
         Past Week
-        {/* Past Week */}
       </div>
       <div
         className={props.activeTab === 2 ? 'active' : ''}
         onClick={() => props.setActiveTab(2)}
       >
         Past Month
-        {/* Past Month */}
       </div>
       <div
         className={props.activeTab === 3 ? 'active' : ''}
         onClick={() => props.setActiveTab(3)}
       >
         All
-        {/* All */}
       </div>
     </div>
   );

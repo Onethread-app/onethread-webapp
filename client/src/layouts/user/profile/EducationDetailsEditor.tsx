@@ -1,24 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Field, Form } from 'react-final-form';
 import { DateInput } from '@blueprintjs/datetime';
-import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { Checkbox, TextArea, Button } from '@blueprintjs/core';
+import { TextArea } from '@blueprintjs/core/lib/esm/components/forms/textArea';
+import { Checkbox } from '@blueprintjs/core/lib/esm/components/forms/controls';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
+import { IExperience } from 'stores/user/Reducer';
+import {
+  addEducationExperienceAction,
+  editEducationExperienceAction,
+} from 'stores/user/Actions';
+import { saveEduDetailsForm } from 'stores/EduDetailsFrom/Actions';
+
 import {
   required,
   checkError,
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import { Field, Form } from 'react-final-form';
-import { connect } from 'react-redux';
-import {
-  addEducationExperienceAction,
-  editEducationExperienceAction,
-} from 'stores/user/Actions';
-import { IExperience } from 'stores/user/Reducer';
-import { saveEduDetailsForm } from 'stores/EduDetailsFrom/Actions';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { useTranslation } from 'react-i18next';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+
+import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 
 interface IEduFormProps {
   setShowDialog: (val: boolean) => void;

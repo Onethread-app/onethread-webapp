@@ -1,13 +1,14 @@
-import React from 'react';
-import { Grid } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
-import Button from '@material-ui/core/Button';
-// import CheckIcon from '@material-ui/icons/Check';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { getPaymentHistory } from '../../../../stores/subscriptionBilling/Actions';
-import { connect } from 'react-redux';
-import moment from 'moment';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import moment from 'moment';
+import Button from '@material-ui/core/Button/Button';
+import Grid from '@material-ui/core/Grid/Grid';
+import Card from '@material-ui/core/Card/Card';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+
+import { getPaymentHistory } from '../../../../stores/subscriptionBilling/Actions';
 
 interface IHistory {
   _id: string;
@@ -24,12 +25,11 @@ interface IPaymentHistory {
 }
 
 const _PaymentHistory = (props: IPaymentHistory) => {
-  // const classes = useStyles();
-  React.useEffect(() => {
+  const { t } = useTranslation();
+
+  useEffect(() => {
     props.getPaymentHistory();
   }, []);
-
-  const { t } = useTranslation();
 
   return (
     <div>
@@ -37,32 +37,37 @@ const _PaymentHistory = (props: IPaymentHistory) => {
         <div>
           <div className="mb1">
             <Button
-              //   className={classes.button}
               startIcon={<ArrowBackIosIcon />}
               onClick={() => props.changeComponentTo('base')}
             >
               {t('app.company.Subscription-And-Billing.Current')}
-              {/* subscription and billing */}
             </Button>
           </div>
-          <h4>{t('app.company.Subscription-And-Billing.Payment-history')}</h4>
-          {/* <h4>Payment History</h4> */}
+          <h4>
+            {t(
+              'app.company.Subscription-And-Billing.Payment-history',
+            )}
+          </h4>
           <Grid container spacing={3}>
             <Grid item xs={6} sm={3}>
-              <div className="b">{t('app.company.Subscription-And-Billing.Invoice')}</div>
-              {/* <div className="b">Invoice No.</div> */}
+              <div className="b">
+                {t('app.company.Subscription-And-Billing.Invoice')}
+              </div>
             </Grid>
             <Grid item xs={6} sm={3}>
-              <div className="b">{t('app.company.Subscription-And-Billing.Date')}</div>
-              {/* <div className="b">Date</div> */}
+              <div className="b">
+                {t('app.company.Subscription-And-Billing.Date')}
+              </div>
             </Grid>
             <Grid item xs={6} sm={3}>
-              <div className="b">{t('app.company.Subscription-And-Billing.Status')}</div>
-              {/* <div className="b">Payment Status</div> */}
+              <div className="b">
+                {t('app.company.Subscription-And-Billing.Status')}
+              </div>
             </Grid>
             <Grid item xs={6} sm={3}>
-              <div className="b">{t('app.company.Subscription-And-Billing.Amount')}</div>
-              {/* <div className="b">Amount</div> */}
+              <div className="b">
+                {t('app.company.Subscription-And-Billing.Amount')}
+              </div>
             </Grid>
           </Grid>
           {props.paymentHistory &&

@@ -1,21 +1,26 @@
-import React, { useState } from 'react';
-import { ICompany } from 'stores/company/Reducer';
-import { User } from 'stores/user/Reducer';
-import { Dialog, Button } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { ProfilePicture } from 'components/profile-picture/ProfilePicture';
-import coverPic from 'resources/images/coverPhoto.png';
-import { ImageEdit } from 'components/image-editor/ImageEditor';
-import editIcon from '../../resources/images/editIcon.png';
-import { PositionEditor } from 'layouts/user/profile/PositionEditor';
-import { RightSidebar } from 'components/RightSidebar';
+import { useState } from 'react';
 import {
   CustomView,
   MobileOnlyView,
   isMobileOnly,
 } from 'react-device-detect';
-import { companyPermit } from 'stores/UtilsActions';
 import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+
+import { ICompany } from 'stores/company/Reducer';
+import { User } from 'stores/user/Reducer';
+import { companyPermit } from 'stores/UtilsActions';
+
+import coverPic from 'resources/images/coverPhoto.png';
+import editIcon from '../../resources/images/editIcon.png';
+
+import { ImageEdit } from 'components/image-editor/ImageEditor';
+import { PositionEditor } from 'layouts/user/profile/PositionEditor';
+import { ProfilePicture } from 'components/profile-picture/ProfilePicture';
+import { RightSidebar } from 'components/RightSidebar';
 
 interface ICoverPhotoProps {
   company?: ICompany;
@@ -123,8 +128,7 @@ const CompanyCustomView = (props: ICompanyProps) => {
                 style={{ marginTop: '10rem' }}
               >
                 <h1 className="f6 ma0 ws-break ttc">
-                {t('app.company.Company-profile.Total-Employee')}
-                  {/* Total Employee */}
+                  {t('app.company.Company-profile.Total-Employee')}
                 </h1>
                 <h1 className="f3-l f4 fw4 ma0 ws-break tc">
                   {props.company.totalMember
@@ -137,8 +141,7 @@ const CompanyCustomView = (props: ICompanyProps) => {
                 style={{ marginTop: '10rem' }}
               >
                 <h1 className="f6 ma0 ws-break ttc">
-                    {t('app.company.Company-profile.Associates')}
-                  {/* Total Partners */}
+                  {t('app.company.Company-profile.Associates')}
                 </h1>
                 <h1 className="f3-l f4 fw4 ma0 ws-break tc ">
                   {props.company.totalAssociate
@@ -156,8 +159,9 @@ const CompanyCustomView = (props: ICompanyProps) => {
           style={{ marginTop: '5rem' }}
         >
           <div className="">
-            <h1 className="f7 ma0 ws-break ttc">{t('app.company.Company-profile.Total-Employee')}</h1>
-            {/* <h1 className="f7 ma0 ws-break ttc">Total Employee</h1> */}
+            <h1 className="f7 ma0 ws-break ttc">
+              {t('app.company.Company-profile.Total-Employee')}
+            </h1>
             <h1 className="fw4 ma0 ws-break tc">
               {props.company.totalMember
                 ? props.company.totalMember
@@ -165,8 +169,9 @@ const CompanyCustomView = (props: ICompanyProps) => {
             </h1>
           </div>
           <div className="">
-            <h1 className="f7 ma0 ws-break ttc">{t('app.company.Company-profile.Associates')}</h1>
-            {/* <h1 className="f7 ma0 ws-break ttc">Partners</h1> */}
+            <h1 className="f7 ma0 ws-break ttc">
+              {t('app.company.Company-profile.Associates')}
+            </h1>
             <h1 className="fw4 ma0 ws-break tc ">
               {props.company.totalAssociate
                 ? props.company.totalAssociate
@@ -193,7 +198,6 @@ const ChangeButton = (props: IChangeButtonProps) => {
             onClick={() => props.setShowDialogPicture(true)}
           >
             {t('app.user.Personal-profile.Cover')}
-            {/* Change Cover */}
           </Button>
         )}
       </div>
@@ -209,7 +213,6 @@ const ChangeButton = (props: IChangeButtonProps) => {
           onClick={() => props.setShowDialogPicture(true)}
         >
           {t('app.user.Personal-profile.Cover')}
-          {/* Change Cover */}
         </Button>
       </div>
     );

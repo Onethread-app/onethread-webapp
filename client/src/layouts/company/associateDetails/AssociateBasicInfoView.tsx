@@ -1,5 +1,4 @@
-import React from 'react';
-import { Divider } from '@blueprintjs/core';
+import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
 import { ICompany } from 'stores/company/Reducer';
 
 export const AssociateBasicInfoView = (props: {

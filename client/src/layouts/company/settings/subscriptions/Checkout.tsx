@@ -1,45 +1,42 @@
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import { Grid } from '@material-ui/core';
+import { useEffect, useState } from 'react';
+import Modal from 'react-modal';
+import { connect } from 'react-redux';
+import { tigrowApi } from '../../../../config';
 
+import Grid from '@material-ui/core/Grid/Grid';
+import Card from '@material-ui/core/Card/Card';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import CheckIcon from '@material-ui/icons/Check';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
-// import CheckIcon from '@material-ui/icons/Check';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { makeStyles } from '@material-ui/core/styles';
-import {
-  createSubscription,
-  checkCouponValidity,
-  getTotalMembers,
-} from '../../../../stores/subscriptionBilling/Actions';
 import TextField from '@material-ui/core/TextField';
-
-import { connect } from 'react-redux';
 import {
   useStripe,
   useElements,
   CardElement,
 } from '@stripe/react-stripe-js';
-// import axios from 'axios';
-import Modal from 'react-modal';
-// import { getPaymentIntent } from '../../../../stores/subscriptionBilling/Actions';
+
+import {
+  createSubscription,
+  checkCouponValidity,
+  getTotalMembers,
+} from '../../../../stores/subscriptionBilling/Actions';
 import {
   tokenConfig,
   portWalletCheckout,
 } from '../../../../stores/UtilsActions';
-import { tigrowApi } from '../../../../config';
+import { stripeCheckout } from 'stores/UtilsActions';
 
-// import { StripeCardElementChangeEvent } from '@stripe/stripe-js';
+import PortwalletIcon from '../../../../resources/LandingImages/portwallet.svg';
+import BkashIcon from '../../../../resources/LandingImages/bkash.svg';
 
 import StripeCardSection from './StripeCardSection';
 import PortwalletCardSaction from './PortwalletCardSaction';
 import StripeSuccess from './StripeSuccess';
-import { stripeCheckout } from 'stores/UtilsActions';
 import BkashCards from './BkashCards';
-import PortwalletIcon from '../../../../resources/LandingImages/portwallet.svg';
-import BkashIcon from '../../../../resources/LandingImages/bkash.svg';
-import CheckIcon from '@material-ui/icons/Check';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+
 import './subscription.scss';
 
 const useStyles = makeStyles({
@@ -122,9 +119,9 @@ interface ICheckout {
 }
 
 function _Checkout(props: ICheckout) {
-  const [value] = React.useState('bangladesh');
-  const [success, setSuccess] = React.useState(false);
-  const [formValues, setFormValues] = React.useState({
+  const [value] = useState('bangladesh');
+  const [success, setSuccess] = useState(false);
+  const [formValues, setFormValues] = useState({
     name: '',
     email: '',
     phone: '',
@@ -133,14 +130,14 @@ function _Checkout(props: ICheckout) {
     state: '',
     house: '',
   });
-  const [showPortwallet, setShowPortwallet] = React.useState(true);
-  const [showBkash, setShowBkash] = React.useState(false);
-  const [couponClick, setCouponClick] = React.useState(false);
-  const [couponCode, setCouponCode] = React.useState('');
-  const [discountPrice, setDiscountPrice] = React.useState(0);
-  const [total, setTotal] = React.useState(0);
-  const [finalAmount, setFinalAmount] = React.useState(0);
-  const [totalMembers, setTotalMembers] = React.useState(0);
+  const [showPortwallet, setShowPortwallet] = useState(true);
+  const [showBkash, setShowBkash] = useState(false);
+  const [couponClick, setCouponClick] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [discountPrice, setDiscountPrice] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [finalAmount, setFinalAmount] = useState(0);
+  const [totalMembers, setTotalMembers] = useState(0);
   const stripe = useStripe();
   const elements = useElements();
   const headers = tokenConfig();
@@ -169,46 +166,6 @@ function _Checkout(props: ICheckout) {
     await props.checkCouponValidity(couponCode);
   };
 
-  React.useEffect(() => {
-    const loadMembers = async () => {
-      await props.getTotalMembers();
-    };
-    loadMembers();
-  }, []);
-
-  React.useEffect(() => {
-    if (props.totalMembers > 0) {
-      setTotalMembers(props.totalMembers);
-    }
-  }, [props.totalMembers]);
-
-  React.useEffect(() => {
-    if (totalMembers) {
-      setTotal(props.plan.pricing * totalMembers);
-    }
-  });
-
-  React.useEffect(() => {
-    if (props.coupon && couponClick) {
-      setDiscountPrice(
-        Number(
-          (
-            (total * props.coupon.coupon.discountPercent) /
-            100
-          ).toFixed(2),
-        ),
-      );
-    }
-  }, [props.coupon, total]);
-
-  React.useEffect(() => {
-    if (discountPrice > 0) {
-      setFinalAmount(Number((total - discountPrice).toFixed(2)));
-    } else {
-      setFinalAmount(total);
-    }
-  }, [total, discountPrice]);
-
   // to-do add type
   const getPortWalletFormData = (e: any) => {
     const { id, value } = e.target;
@@ -234,7 +191,10 @@ function _Checkout(props: ICheckout) {
 
     const getSubscription = await tigrowApi.post(
       'subscriptions',
-      { companyId: props.company, plan: props.plan._id },
+      {
+        companyId: props.company,
+        plan: props.plan._id,
+      },
       headers,
     );
     props.createSubscription(getSubscription.data.subscription);
@@ -277,6 +237,47 @@ function _Checkout(props: ICheckout) {
   // ) => {
   //   setValue((event.target as HTMLInputElement).value);
   // };
+
+  useEffect(() => {
+    const loadMembers = async () => {
+      await props.getTotalMembers();
+    };
+    loadMembers();
+  }, []);
+
+  useEffect(() => {
+    if (props.totalMembers > 0) {
+      setTotalMembers(props.totalMembers);
+    }
+  }, [props.totalMembers]);
+
+  useEffect(() => {
+    if (totalMembers) {
+      setTotal(props.plan.pricing * totalMembers);
+    }
+  });
+
+  useEffect(() => {
+    if (props.coupon && couponClick) {
+      setDiscountPrice(
+        Number(
+          (
+            (total * props.coupon.coupon.discountPercent) /
+            100
+          ).toFixed(2),
+        ),
+      );
+    }
+  }, [props.coupon, total]);
+
+  useEffect(() => {
+    if (discountPrice > 0) {
+      setFinalAmount(Number((total - discountPrice).toFixed(2)));
+    } else {
+      setFinalAmount(total);
+    }
+  }, [total, discountPrice]);
+
   return (
     <div className="Checkout">
       {props.currentComponent === 'checkOut' && (
@@ -311,7 +312,9 @@ function _Checkout(props: ICheckout) {
                 }
               }}
               type="number"
-              inputProps={{ min: props.totalMembers }}
+              inputProps={{
+                min: props.totalMembers,
+              }}
             />
           </div>
           <div className="couponCode mt3">
@@ -337,12 +340,20 @@ function _Checkout(props: ICheckout) {
               {couponClick && !props.checkingValidity ? (
                 props.couponValid ? (
                   <div className="mt4 o-70 flex flex-row items-center">
-                    <CheckIcon style={{ color: '#38C671' }} />
+                    <CheckIcon
+                      style={{
+                        color: '#38C671',
+                      }}
+                    />
                     <label>{`Coupon Code ${couponCode} applied successfully`}</label>
                   </div>
                 ) : (
                   <div className="mt4 o-70 flex flex-row items-center">
-                    <ErrorOutlineIcon style={{ color: '#f73947' }} />
+                    <ErrorOutlineIcon
+                      style={{
+                        color: '#f73947',
+                      }}
+                    />
                     <label>{`Coupon Code ${couponCode} is not valid`}</label>
                   </div>
                 )
@@ -354,7 +365,12 @@ function _Checkout(props: ICheckout) {
           <Grid xs={12} sm={6}>
             <div className="shadow-1 totalBill">
               <br />
-              <h4 className="b" style={{ color: '#34b3e9' }}>
+              <h4
+                className="b"
+                style={{
+                  color: '#34b3e9',
+                }}
+              >
                 Package Name
               </h4>
               <Grid justify="space-between" container>
@@ -401,16 +417,30 @@ function _Checkout(props: ICheckout) {
           <h3 className="mt4">Select Payment Method</h3>
 
           {value === 'international' && (
-            <div style={{ marginTop: '10px' }}>
+            <div
+              style={{
+                marginTop: '10px',
+              }}
+            >
               <label className="b mt5">Card Details</label>
               <div className="mt3">
                 <Grid container>
                   <Grid item xs={6}>
-                    <Card style={{ marginTop: '10px' }}>
-                      <CardContent style={{ marginTop: '12px' }}>
+                    <Card
+                      style={{
+                        marginTop: '10px',
+                      }}
+                    >
+                      <CardContent
+                        style={{
+                          marginTop: '12px',
+                        }}
+                      >
                         <StripeCardSection />
                         <Button
-                          style={{ marginTop: '15px' }}
+                          style={{
+                            marginTop: '15px',
+                          }}
                           fullWidth
                           onClick={(e) => handleSubmit(e)}
                           variant="contained"

@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { userSubscriber } from 'layouts/company/room/channelSubscribe';
+import { isMobileOnly } from 'react-device-detect';
+import { useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
+
 import { User } from 'stores/user/Reducer';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
+
 import TimerWatch from './timer/TimerWatch';
-import { isMobileOnly } from 'react-device-detect';
+import { userSubscriber } from 'layouts/company/room/channelSubscribe';
 
 interface SecondaryLayoutProps {
   Component: React.ComponentClass | React.StatelessComponent;
