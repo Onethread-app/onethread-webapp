@@ -150,10 +150,10 @@ const ReactMultiEmail = ({
     >
       <StyledDiv
         onFocus={() => {
-          inputRef.current.focus();
+          inputRef.current?.focus();
         }}
         onClick={() => {
-          inputRef.current.focus();
+          inputRef.current?.focus();
         }}
       >
         {emails.map((email) => (
