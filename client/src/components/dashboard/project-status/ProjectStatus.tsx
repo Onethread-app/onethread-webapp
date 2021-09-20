@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { tigrowApi } from 'config';
 import { connect } from 'react-redux';
+import { isMobileOnly } from 'react-device-detect';
 
 import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import ListIcon from '@material-ui/icons/List';
+import ShareIcon from '@material-ui/icons/Share';
 import DateRangeIcon from '@material-ui/icons/DateRange';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 
 import {
   getCompanyAnnouncement,
@@ -23,8 +26,12 @@ import { priorityColor, tokenConfig } from 'stores/UtilsActions';
 import TasksTable from './TasksTable';
 import MultiSelectComponent from './MultiSelectComponent';
 import CalendarView from 'components/calendar/CalendarView';
+import ExportTasks, {
+  ICompanyTask,
+} from 'components/export-tasks/ExportTasks';
 
 import { ViewSelectDiv } from 'layouts/company/boardDetails/BoardDetails.styles';
+import { ExportDiv } from './ProjectStatus.styles';
 import './ProjectStatus.scss';
 
 interface Data {
@@ -108,6 +115,32 @@ const ProjectStatusComponent = (props) => {
   // Calendar View Task + View
   const [view, setView] = useState<any>('table');
   const [calTask, setCalTask] = useState<any[]>([]);
+
+  // export tasks
+  const [openExportDialog, setOpenExportDialog] =
+    useState<boolean>(false);
+  const [loadingExportTasks, setLoadingExportTasks] =
+    useState<boolean>(false);
+  const [tasksForExport, setTasksForExport] = useState<
+    ICompanyTask[]
+  >([]);
+
+  useEffect(() => {
+    const getAllTasks = async () => {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const response = await tigrowApi.get(
+          `/company/${props.company._id}/all-tasks`,
+          headers,
+        );
+        setTasksForExport(response.data.taskCompilation);
+        setLoadingExportTasks(false);
+      }
+    };
+    if (loadingExportTasks === true) {
+      getAllTasks();
+    }
+  }, [loadingExportTasks, props.company._id]);
 
   async function getInfo() {
     setIsLoading(true);
@@ -299,16 +332,11 @@ const ProjectStatusComponent = (props) => {
           {t('app.project.Tasks.Task-Status')}
         </h3>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginBottom: 10,
-        }}
-      >
+      <div className={`flex items-center justify-between mb2 w-100`}>
+        <div className={`w-third`}></div>
         <ViewSelectDiv
           fetchingBoard={props.fetchingBoard}
-          className="flex items-center tc"
+          className="flex items-center tc w-third"
         >
           <p>{t('app.project.Tasks.View')}:</p>
           <p
@@ -332,6 +360,22 @@ const ProjectStatusComponent = (props) => {
             </Tooltip>
           </p>
         </ViewSelectDiv>
+        <div className={`w-third flex justify-end`}>
+          {isLoading === false && (
+            <Tooltip title="Export Tasks" placement="top">
+              <ExportDiv
+                className={`${isLoading ? '' : 'pointer'}`}
+                onClick={() => {
+                  setOpenExportDialog(true);
+                  setLoadingExportTasks(true);
+                }}
+              >
+                <ShareIcon />
+                Export Tasks
+              </ExportDiv>
+            </Tooltip>
+          )}
+        </div>
       </div>
       {isLoading ? (
         <div
@@ -455,6 +499,27 @@ const ProjectStatusComponent = (props) => {
             </div>
           )}
         </div>
+      )}
+      {openExportDialog && (
+        <Dialog
+          isOpen={openExportDialog}
+          onClose={() => setOpenExportDialog(false)}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          style={{
+            width: isMobileOnly ? '95%' : '420px',
+            maxWidth: '420px',
+            height: '173px',
+            background: '#ffffff',
+            borderRadius: '20px',
+          }}
+        >
+          <ExportTasks
+            loading={loadingExportTasks}
+            data={tasksForExport}
+            name={props.company.uniqueName}
+          />
+        </Dialog>
       )}
     </div>
   );
