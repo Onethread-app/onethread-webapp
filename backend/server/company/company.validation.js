@@ -153,6 +153,9 @@ module.exports = {
   dashboard: Joi.object().keys({
     params: companyId,
   }),
+  getAllTasks: Joi.object().keys({
+    params: companyId,
+  }),
   createNotice: Joi.object().keys({
     params: companyId,
     body: Joi.object().keys({

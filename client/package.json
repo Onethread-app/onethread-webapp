@@ -55,6 +55,7 @@
     "react-beautiful-dnd": "^11.0.5",
     "react-big-calendar": "^0.35.0",
     "react-chartjs-2": "^2.10.0",
+    "react-csv": "^2.0.3",
     "react-device-detect": "^1.11.14",
     "react-dom": "^17.0.2",
     "react-facebook-message-us": "^0.0.1",
