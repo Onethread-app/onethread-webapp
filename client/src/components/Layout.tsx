@@ -16,6 +16,7 @@ import {
 import Modal from 'react-modal';
 import { connect, useDispatch } from 'react-redux';
 import { isEmpty, isEqual, isNil } from 'lodash';
+import { useBeforeunload } from 'react-beforeunload';
 
 import { Navbar } from '@blueprintjs/core/lib/esm/components/navbar/navbar';
 
@@ -272,26 +273,23 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   }, [location.search]);
 
   useEffect(() => {
-    return () => {
-      if (!isEmpty(props.currentlyTracking.name)) {
-        props.addTrackedTime(props.currentlyTracking);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     let interval;
 
-    if (props.currentlyTracking.name) {
+    if (!!props.currentlyTracking.start_time) {
       interval = setInterval(() => {
-        dispatch(updateDurationPersecond());
+        if (!!props.currentlyTracking.start_time) {
+          const difference =
+            new Date().getTime() -
+            new Date(props.currentlyTracking.start_time).getTime();
+          dispatch(updateDurationPersecond(difference));
+        }
       }, 1000);
     } else {
       clearInterval(interval);
     }
 
     return () => clearInterval(interval);
-  }, [props.currentlyTracking.name]);
+  }, [props.currentlyTracking.start_time]);
 
   useEffect(() => {
     if (
@@ -319,6 +317,13 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       );
     }
   }, [subscriptionExpired]);
+
+  useBeforeunload((event) => {
+    if (props.currentlyTracking.name !== '') {
+      event.preventDefault();
+      props.addTrackedTime(props.currentlyTracking);
+    }
+  });
 
   return (
     <div

@@ -92,7 +92,7 @@ export const TimeTrackerReducer = (
         ...state,
         currentlyTracking: {
           ...state.currentlyTracking,
-          duration: state.currentlyTracking.duration + 1000,
+          duration: action.payload,
         },
       };
     case TimeTrackerTypes.ADD_TRACKED_TIME_START:
@@ -106,6 +106,7 @@ export const TimeTrackerReducer = (
           project: '',
           company: '',
           duration: 0,
+          start_time: null,
         },
         addingTrack: true,
         errorOnAddingTrack: '',
