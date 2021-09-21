@@ -14,6 +14,7 @@ const transporter = nodemailer.createTransport({
     user: config.emailAddress,
     pass: config.emailPassword,
   },
+  from: config.emailAddress,
 });
 
 let host = ``;
@@ -50,6 +51,7 @@ module.exports.sendEmailForResetPassword = async (
   let name = firstName + ' ' + lastName;
   const fullName = capitalizeName(name);
   const mailOptions = {
+    from: config.emailAddress,
     to: emailID,
     subject: 'Generated Token For Reset Password',
     template: 'resetPassword-confirmation',
@@ -78,6 +80,7 @@ module.exports.sendEmailForVerifyAccount = async (
   let name = firstName + ' ' + lastName;
   const fullName = capitalizeName(name);
   const mailOptions = {
+    from: config.emailAddress,
     to: emailID,
     subject: 'Please confirm your Email account',
     template: 'signup-confirmation',
@@ -99,6 +102,7 @@ module.exports.sendEmailForVerifyAccount = async (
 module.exports.inviteSignupEmail = async (email) => {
   const link = `${host}/signup?email=${email}`;
   const mailOptions = {
+    from: config.emailAddress,
     to: email,
     subject: 'Invitation To Join Onethread',
     template: 'invitation-signup',
@@ -124,6 +128,7 @@ module.exports.sendInviteColleague = async (
   const link = `${host}/signup`;
 
   const mailOptions = {
+    from: config.emailAddress,
     to: emailList,
     subject: 'Invitation to join company',
     html: `
