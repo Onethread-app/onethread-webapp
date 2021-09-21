@@ -35,6 +35,7 @@ export const getTaskTrackersFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
-export const updateDurationPersecond = () => ({
+export const updateDurationPersecond = (duration: number) => ({
   type: TimeTrackerTypes.UPDATE_DURATION_PER_SECOND,
+  payload: duration,
 });
