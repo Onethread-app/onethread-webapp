@@ -337,7 +337,6 @@ const searchTeamMember = async (req, res, next) => {
     return sendJSONresponse(res, 200, {
       teams,
     });
-
   } catch (error) {
     logger.error(`${error}`);
     next(error);

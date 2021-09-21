@@ -1,14 +1,14 @@
 {
-  "name": "tigrow_frontend",
-  "version": "2.4.4",
+  "name": "onethread",
+  "version": "2.5.0",
   "homepage": "https://www.onethread.app/",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^3.48.0",
-    "@blueprintjs/datetime": "^3.23.7",
+    "@blueprintjs/core": "^3.24.0",
+    "@blueprintjs/datetime": "^3.15.2",
     "@blueprintjs/docs-theme": "^3.10.4",
     "@blueprintjs/popover2": "^0.10.1",
-    "@blueprintjs/select": "^3.17.0",
+    "@blueprintjs/select": "^3.12.0",
     "@date-io/date-fns": "1.x",
     "@draft-js-plugins/editor": "^4.1.0",
     "@draft-js-plugins/emoji": "^4.5.4",
@@ -106,7 +106,7 @@
     "test": "react-scripts test",
     "build:dev": "env-cmd -f .env.development react-scripts start",
     "build:test": "env-cmd -f .env.test react-scripts build",
-    "build:prod": "env-cmd -f .env.production react-scripts build",
+    "build:prod": "GENERATE_SOURCEMAP=false env-cmd -f env.production react-scripts build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
