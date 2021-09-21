@@ -2196,7 +2196,21 @@
     lz-string "^1.4.4"
     pretty-format "^26.6.2"
 
-"@testing-library/jest-dom@^5.11.5":
+"@testing-library/dom@^8.0.0":
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.5.0.tgz#56e31331015f943a68c6ec27e259fdf16c69ab7d"
+  integrity sha512-O0fmHFaPlqaYCpa/cBL0cvroMridb9vZsMLacgIqrlxj+fd+bGF8UfAgwsLCHRF84KLBafWlm9CuOvxeNTlodw==
+  dependencies:
+    "@babel/code-frame" "^7.10.4"
+    "@babel/runtime" "^7.12.5"
+    "@types/aria-query" "^4.2.0"
+    aria-query "^4.2.2"
+    chalk "^4.1.0"
+    dom-accessibility-api "^0.5.6"
+    lz-string "^1.4.4"
+    pretty-format "^27.0.2"
+
+"@testing-library/jest-dom@^5.11.5", "@testing-library/jest-dom@^5.14.1":
   version "5.14.1"
   resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-5.14.1.tgz#8501e16f1e55a55d675fe73eecee32cdaddb9766"
   integrity sha512-dfB7HVIgTNCxH22M1+KU6viG5of2ldoA5ly8Ar8xkezKHKXjRvznCdbMbqjYGgO2xjRbwnR+rR8MLUIqF3kKbQ==
@@ -2218,6 +2232,14 @@
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@testing-library/dom" "^7.28.1"
+
+"@testing-library/react@^12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-12.1.0.tgz#3e9a4002b0b8f986a738a2f88fc458b5af319f35"
+  integrity sha512-Ge3Ht3qXE82Yv9lyPpQ7ZWgzo/HgOcHu569Y4ZGWcZME38iOFiOg87qnu6hTEa8jTJVL7zYovnvD3GE2nsNIoQ==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@testing-library/dom" "^8.0.0"
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -2482,6 +2504,13 @@
     "@types/react" "*"
     "@types/react-dom" "*"
     "@types/react-transition-group" "*"
+
+"@types/react-test-renderer@^17.0.1":
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-17.0.1.tgz#3120f7d1c157fba9df0118dae20cb0297ee0e06b"
+  integrity sha512-3Fi2O6Zzq/f3QR9dRnlnHso9bMl7weKCviFmfF6B4LS1Uat6Hkm15k0ZAQuDz+UBq6B3+g+NM6IT2nr5QgPzCw==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-text-mask@^5.4.3":
   version "5.4.9"
@@ -10700,7 +10729,7 @@ pretty-format@^26.6.0, pretty-format@^26.6.2:
     ansi-styles "^4.0.0"
     react-is "^17.0.1"
 
-pretty-format@^27.0.0, pretty-format@^27.2.0:
+pretty-format@^27.0.0, pretty-format@^27.0.2, pretty-format@^27.2.0:
   version "27.2.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.2.0.tgz#ee37a94ce2a79765791a8649ae374d468c18ef19"
   integrity sha512-KyJdmgBkMscLqo8A7K77omgLx5PWPiXJswtTtFV7XgVZv2+qPk6UivpXXO+5k6ZEbWIbLoKdx1pZ6ldINzbwTA==
@@ -11149,15 +11178,15 @@ react-input-autosize@^3.0.0:
   dependencies:
     prop-types "^15.5.8"
 
+"react-is@^16.12.0 || ^17.0.0", "react-is@^16.8.0 || ^17.0.0", react-is@^17.0.1, react-is@^17.0.2:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
+  integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+
 react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
-
-"react-is@^16.8.0 || ^17.0.0", react-is@^17.0.1:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
-  integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
 react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -11377,6 +11406,14 @@ react-select@^4.1.0:
     react-input-autosize "^3.0.0"
     react-transition-group "^4.3.0"
 
+react-shallow-renderer@^16.13.1:
+  version "16.14.1"
+  resolved "https://registry.yarnpkg.com/react-shallow-renderer/-/react-shallow-renderer-16.14.1.tgz#bf0d02df8a519a558fd9b8215442efa5c840e124"
+  integrity sha512-rkIMcQi01/+kxiTE9D3fdS959U1g7gs+/rborw++42m1O9FAQiNI/UNRZExVUoAOprn4umcXf+pFRou8i4zuBg==
+  dependencies:
+    object-assign "^4.1.1"
+    react-is "^16.12.0 || ^17.0.0"
+
 react-simple-chatbot@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/react-simple-chatbot/-/react-simple-chatbot-0.6.1.tgz#30d08083e0b0283b78b84312df674e2cd6ac6703"
@@ -11403,6 +11440,16 @@ react-spring@^9.0.0:
     "@react-spring/three" "~9.2.0"
     "@react-spring/web" "~9.2.0"
     "@react-spring/zdog" "~9.2.0"
+
+react-test-renderer@^17.0.2:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-17.0.2.tgz#4cd4ae5ef1ad5670fc0ef776e8cc7e1231d9866c"
+  integrity sha512-yaQ9cB89c17PUb0x6UfWRs7kQCorVdHlutU1boVPEsB8IDZH6n9tHxMacc3y0JoXOJUsZb/t/Mb8FUWMKaM7iQ==
+  dependencies:
+    object-assign "^4.1.1"
+    react-is "^17.0.2"
+    react-shallow-renderer "^16.13.1"
+    scheduler "^0.20.2"
 
 react-text-mask@^5.4.3:
   version "5.4.3"

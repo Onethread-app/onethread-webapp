@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-const StyledButton = styled.button`
+const StyledButton = styled.button.attrs({
+  'data-testid': 'styled-button',
+})`
   background: var(--primary-bg-color, #34b3e9);
   width: fit-content;
   padding: 1rem;
@@ -27,3 +29,7 @@ const StyledButton = styled.button`
 `;
 
 export default StyledButton;
+
+export const TestButton = ({ label }) => (
+  <StyledButton>{label}</StyledButton>
+);
