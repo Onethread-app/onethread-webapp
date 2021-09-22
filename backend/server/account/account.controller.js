@@ -12,7 +12,7 @@ const client = require('../../index.redis');
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
-  inviteSignupEmail,
+  signupMail,
 } = require('../services/email.services');
 const {
   addTokenToBlackList,
@@ -104,7 +104,7 @@ const makeUnqName = (firstName, lastName, c) => {
   return `${createSlug(firstName)}-${createSlug(lastName)}-${c + 1}`;
 };
 
-const inviteSignup = async (req, res, next) => {
+const signup = async (req, res, next) => {
   try {
     const { email } = req.body;
     await Account.create({
@@ -118,7 +118,7 @@ const inviteSignup = async (req, res, next) => {
     };
 
     try {
-      await inviteSignupEmail(email, token.hash);
+      await signupMail(email, token.hash);
     } catch (err) {
       logger.error(err);
       return sendJSONresponse(res, 422, {
@@ -144,26 +144,24 @@ const inviteSignup = async (req, res, next) => {
 
 const resendEmail = async (req, res, next) => {
   try {
-    const { email, resendType } = req.body;
-    if (resendType === 'verify-account') {
-      const token = {
-        hash: generateToken(),
-        exp: Date.now() + 604800,
-      };
-      try {
-        await inviteSignupEmail(email, token.hash);
-      } catch (err) {
-        logger.error(err);
-        return sendJSONresponse(res, 422, {
-          message: 'Mail delivery failure!',
-        });
-      }
-      await accountVerificationToken(
-        `verifyAccountToken:${token.hash}`,
-        email,
-        token.exp,
-      );
+    const { email } = req.body;
+    const token = {
+      hash: generateToken(),
+      exp: Date.now() + 604800,
+    };
+    try {
+      await signupMail(email, token.hash);
+    } catch (err) {
+      logger.error(err);
+      return sendJSONresponse(res, 422, {
+        message: 'Mail delivery failure!',
+      });
     }
+    await accountVerificationToken(
+      `verifyAccountToken:${token.hash}`,
+      email,
+      token.exp,
+    );
     return sendJSONresponse(res, 200, {
       message: 'resend email successfully',
     });
@@ -218,6 +216,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
         }
       });
   } catch (err) {
+    logger.error(`Account: ${err}`);
     next(err);
   }
 };
@@ -242,12 +241,8 @@ const accountUpdate = async (req, res, next) => {
     user.name = makeUnqName(firstName, lastName, count);
     user.password = password;
     await user.save();
-    // Generating jwt token once more, because here "name" is present.
-    const [accessToken, refreshToken] = genAuthToken(user);
     return sendJSONresponse(res, 200, {
       message: 'Account Updated Successfully',
-      accessToken,
-      refreshToken,
     });
   } catch (err) {
     logger.error(`${err}`);
@@ -256,112 +251,112 @@ const accountUpdate = async (req, res, next) => {
 };
 
 // create a new account for individual users
-const register = async (req, res, next) => {
-  const data = req.body;
-  if (!data.email || !data.password) {
-    return sendJSONresponse(res, 400, {
-      message: 'You must provide email and password.',
-    });
-  }
-  const result = await Account.countDocuments({
-    firstName: data.firstName,
-    lastName: data.lastName,
-  });
-  let firstName = createSlug(data.firstName);
-  let lastName = createSlug(data.lastName);
-  let uniqueId = result + 1;
-  const name = firstName + '-' + lastName + '-' + uniqueId;
-  let account = new Account({
-    email: data.email,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    name,
-    contactNo: Date.now(),
-    password: data.password,
-    isAccountVerified: false,
-  });
-  await account
-    .save()
-    .then(async (user) => {
-      if (user.isAccountVerified)
-        return sendJSONresponse(res, 201, {
-          message: 'User created',
-        });
-      let verifyToken = generateToken();
-      let verifyAccountTokenExpiration = Date.now() + 604800;
+// const register = async (req, res, next) => {
+//   const data = req.body;
+//   if (!data.email || !data.password) {
+//     return sendJSONresponse(res, 400, {
+//       message: 'You must provide email and password.',
+//     });
+//   }
+//   const result = await Account.countDocuments({
+//     firstName: data.firstName,
+//     lastName: data.lastName,
+//   });
+//   let firstName = createSlug(data.firstName);
+//   let lastName = createSlug(data.lastName);
+//   let uniqueId = result + 1;
+//   const name = firstName + '-' + lastName + '-' + uniqueId;
+//   let account = new Account({
+//     email: data.email,
+//     firstName: data.firstName,
+//     lastName: data.lastName,
+//     name,
+//     contactNo: Date.now(),
+//     password: data.password,
+//     isAccountVerified: false,
+//   });
+//   await account
+//     .save()
+//     .then(async (user) => {
+//       if (user.isAccountVerified)
+//         return sendJSONresponse(res, 201, {
+//           message: 'User created',
+//         });
+//       let verifyToken = generateToken();
+//       let verifyAccountTokenExpiration = Date.now() + 604800;
 
-      let pendingMember = await PendingMember.find({
-        email: account.email,
-      }).select('-__v -createdAt -updatedAt');
+//       let pendingMember = await PendingMember.find({
+//         email: account.email,
+//       }).select('-__v -createdAt -updatedAt');
 
-      if (pendingMember.length > 0) {
-        let pendingMemberToMember = pendingMember.map((m) => {
-          return { account: account._id, company: m.company };
-        });
+//       if (pendingMember.length > 0) {
+//         let pendingMemberToMember = pendingMember.map((m) => {
+//           return { account: account._id, company: m.company };
+//         });
 
-        const pendingMemberToMemberAccounts =
-          pendingMemberToMember.map((member) => member.account);
-        const pendingMemberToMemberCompany =
-          pendingMemberToMember.map((member) => member.company);
+//         const pendingMemberToMemberAccounts =
+//           pendingMemberToMember.map((member) => member.account);
+//         const pendingMemberToMemberCompany =
+//           pendingMemberToMember.map((member) => member.company);
 
-        await Member.create(pendingMemberToMember);
+//         await Member.create(pendingMemberToMember);
 
-        const elasticIndexedMembers = await Member.find({
-          account: { $in: pendingMemberToMemberAccounts },
-          company: { $in: pendingMemberToMemberCompany },
-        }).populate({
-          path: 'account',
-          select: '_id name firstName lastName email',
-        });
+//         const elasticIndexedMembers = await Member.find({
+//           account: { $in: pendingMemberToMemberAccounts },
+//           company: { $in: pendingMemberToMemberCompany },
+//         }).populate({
+//           path: 'account',
+//           select: '_id name firstName lastName email',
+//         });
 
-        const memberStructure = (data) => {
-          return {
-            mongo_id: data.mongo_id,
-            account: data.account,
-            company: data.company,
-          };
-        };
+//         const memberStructure = (data) => {
+//           return {
+//             mongo_id: data.mongo_id,
+//             account: data.account,
+//             company: data.company,
+//           };
+//         };
 
-        await bulkInsert(
-          memberIndex,
-          elasticIndexedMembers,
-          memberStructure,
-        );
-        logger.info(
-          chalk.blueBright(
-            `ElasticSearch successfully documented with bulk on ${memberIndex}`,
-          ),
-        );
+//         await bulkInsert(
+//           memberIndex,
+//           elasticIndexedMembers,
+//           memberStructure,
+//         );
+//         logger.info(
+//           chalk.blueBright(
+//             `ElasticSearch successfully documented with bulk on ${memberIndex}`,
+//           ),
+//         );
 
-        await PendingMember.updateMany(
-          { email: account.email },
-          {
-            removed: true,
-          },
-        );
-      }
+//         await PendingMember.updateMany(
+//           { email: account.email },
+//           {
+//             removed: true,
+//           },
+//         );
+//       }
 
-      sendEmailForVerifyAccount(
-        user.firstName,
-        user.lastName,
-        user.email,
-        verifyToken,
-      );
-      accountVerificationToken(
-        `verifyAccountToken:${verifyToken}`,
-        user._id,
-        verifyAccountTokenExpiration,
-      );
-      return sendJSONresponse(res, 201, {
-        message: 'User created',
-        token: verifyToken,
-      });
-    })
-    .catch((err) => {
-      logger.error(`Account: ${err}`);
-      next(err);
-    });
-};
+//       sendEmailForVerifyAccount(
+//         user.firstName,
+//         user.lastName,
+//         user.email,
+//         verifyToken,
+//       );
+//       accountVerificationToken(
+//         `verifyAccountToken:${verifyToken}`,
+//         user._id,
+//         verifyAccountTokenExpiration,
+//       );
+//       return sendJSONresponse(res, 201, {
+//         message: 'User created',
+//         token: verifyToken,
+//       });
+//     })
+//     .catch((err) => {
+//       logger.error(`Account: ${err}`);
+//       next(err);
+//     });
+// };
 /**
  * Returns jwt token if valid uname and password is provided
  * @param req
@@ -516,6 +511,7 @@ const skillArea = async (req, res, next) => {
       user: user,
     });
   } catch (error) {
+    logger.error(`Account: ${error}`);
     next(error);
   }
 };
@@ -956,7 +952,7 @@ const saveLanguage = async (req, res, next) => {
 };
 
 module.exports = {
-  register,
+  // register,
   resendEmail,
   login,
   logout,
@@ -969,7 +965,7 @@ module.exports = {
   resetPassword,
   changePassword,
   skillArea,
-  inviteSignup,
+  signup,
   userTaskList,
   userSubtasks,
   subtaskMarkAsDone,

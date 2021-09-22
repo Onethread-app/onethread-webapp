@@ -13,11 +13,8 @@ const {
 } = require('../middlewares/authenticationMiddleware');
 
 router
-  .route('/invite-signup')
-  .post(
-    schemaValidator(paramValidation.inviteSignup),
-    accountCtrl.inviteSignup,
-  );
+  .route('/signup')
+  .post(schemaValidator(paramValidation.signup), accountCtrl.signup);
 
 router
   .route('/resend-email')
@@ -39,14 +36,6 @@ router
     authorization,
     schemaValidator(paramValidation.update),
     accountCtrl.accountUpdate,
-  );
-
-// authentication
-router
-  .route('/signup')
-  .post(
-    schemaValidator(paramValidation.register),
-    accountCtrl.register,
   );
 
 router

@@ -99,7 +99,7 @@ module.exports.sendEmailForVerifyAccount = async (
   });
 };
 
-module.exports.inviteSignupEmail = async (email, token) => {
+module.exports.signupMail = async (email, token) => {
   const link = `${host}/signup?email=${email}&token=${token}`;
   const mailOptions = {
     from: config.emailAddress,

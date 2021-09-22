@@ -58,13 +58,14 @@ const changeRole = async (req, res, next) => {
 
 const sendJoinRequest = async (req, res, next) => {
   try {
-    await Member.create({
+    const member = await Member.create({
       account: req.user._id,
       company: req.headers.companyid,
       isApproved: false,
     });
     return sendJSONresponse(res, 201, {
       message: 'Member join sucessful. please wait for approval',
+      memberId: member._id,
     });
   } catch (error) {
     logger.error(`${error}`);

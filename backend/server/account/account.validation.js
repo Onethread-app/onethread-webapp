@@ -63,10 +63,9 @@ module.exports = {
   resendEmail: Joi.object().keys({
     body: Joi.object().keys({
       email: schema.email.required(),
-      resendType: Joi.string().valid('verify-account').required(),
     }),
   }),
-  inviteSignup: Joi.object().keys({
+  signup: Joi.object().keys({
     body: Joi.object().keys({
       email: schema.email.required(),
     }),
@@ -76,23 +75,23 @@ module.exports = {
       token: Joi.string(),
     }),
   }),
-  register: Joi.object().keys({
-    body: Joi.object().keys({
-      firstName: schema.firstName.required(),
-      lastName: schema.lastName,
-      email: schema.email,
-      password: schema.password.required(),
-      isAccountVerified: schema.isAccountVerified,
-      // contactNo: schema.contactNo,
-      // .regex(/^(\+?(880)[0-9]{10})$/)
-      // // .required()
-      // .error((error) => {
-      //   return {
-      //     message: 'contactNo is not a valid format',
-      //   };
-      // }),
-    }),
-  }),
+  // register: Joi.object().keys({
+  //   body: Joi.object().keys({
+  //     firstName: schema.firstName.required(),
+  //     lastName: schema.lastName,
+  //     email: schema.email,
+  //     password: schema.password.required(),
+  //     isAccountVerified: schema.isAccountVerified,
+  //     // contactNo: schema.contactNo,
+  //     // .regex(/^(\+?(880)[0-9]{10})$/)
+  //     // // .required()
+  //     // .error((error) => {
+  //     //   return {
+  //     //     message: 'contactNo is not a valid format',
+  //     //   };
+  //     // }),
+  //   }),
+  // }),
   login: Joi.object().keys({
     body: Joi.object().keys({
       email: schema.email.required(),

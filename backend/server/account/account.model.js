@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const logger = require('../../config/winston');
 
 const SALT_WORK_FACTOR = 10;
 
@@ -22,12 +23,10 @@ const accountsSchema = new mongoose.Schema(
     firstName: {
       type: String,
       trim: true,
-      // required: true,
     },
     lastName: {
       type: String,
       trim: true,
-      // required: true,
     },
     position: {
       type: String,
@@ -48,7 +47,6 @@ const accountsSchema = new mongoose.Schema(
     salt: String,
     password: {
       type: String,
-      // required: true,
     },
     role: {
       type: String,
@@ -62,7 +60,6 @@ const accountsSchema = new mongoose.Schema(
     },
     contactNo: {
       type: String,
-      // required: false,
       unique: true,
     },
     gender: {
@@ -146,6 +143,7 @@ accountsSchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
     return next();
   } catch (error) {
+    logger.error(`Account: ${error}`);
     return next(error);
   }
 });

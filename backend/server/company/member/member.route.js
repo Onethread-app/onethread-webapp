@@ -12,6 +12,19 @@ const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
 router.use('/', subCtrl.subscriptionExpireCheck());
 
+router
+  .route('/join-request')
+  .post(authorization, memberCtrl.sendJoinRequest);
+
+router
+  .route('/:memberId/accept-request')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.acceptJoinRequest),
+    authorizeUser('all', 'admin', 'superAdmin'),
+    memberCtrl.acceptJoinRequest,
+  );
+
 router.route('/search').get(authorization, memberCtrl.searchMember);
 
 router
@@ -66,19 +79,6 @@ router
     authorization,
     SchemaValidator(joiSchema.changeRole),
     memberCtrl.changeRole,
-  );
-
-router
-  .route('/join-request')
-  .post(authorization, memberCtrl.sendJoinRequest);
-
-router
-  .route('/:memberId/accept-request')
-  .post(
-    authorization,
-    SchemaValidator(joiSchema.acceptJoinRequest),
-    authorizeUser('all', 'admin', 'superAdmin'),
-    memberCtrl.acceptJoinRequest,
   );
 
 router.param('memberId', memberCtrl.getMemberLoad);
