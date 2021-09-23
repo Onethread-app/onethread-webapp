@@ -41,33 +41,33 @@ const AnnouncementEditorComponent = (
 
   return (
     <>
-      <div className="bg-white pa4">
-        <h1 className="f5">{t('app.company.Dashboard.Announce')}</h1>
+      <div className='bg-white pa4'>
+        <h1 className='f5'>{t('app.company.Dashboard.Announce')}</h1>
         <TextArea
-          className="mt1"
-          id="jobDescription"
+          className='mt1'
+          id='jobDescription'
           style={{
             resize: 'none',
             minHeight: '50px',
             maxHeight: '150px',
           }}
-          fill={true}
-          growVertically={true}
+          fill
+          growVertically
           value={inputValues}
-          placeholder="Write Something (max 500)"
+          placeholder='Write Something (max 500)'
           onChange={(event) => {
             setInputValues(event.target.value);
           }}
         />
-        {error ? <h5 className="red">{massage}</h5> : ''}
-        <div className="flex justify-end mv2">
+        {error ? <h5 className='red'>{massage}</h5> : ''}
+        <div className='flex justify-end mv2'>
           <Button
-            type="submit"
+            type='submit'
             onClick={(e: any) => {
               e.preventDefault();
               validateInput();
             }}
-            className="w4 grow h2 pointer mr3"
+            className='w4 grow h2 pointer mr3'
             style={{
               background: '#34b3e9',
               outline: 'none',
@@ -77,7 +77,7 @@ const AnnouncementEditorComponent = (
             Submit
           </Button>
           <Button
-            className="w4 grow h2 pointer"
+            className='w4 grow h2 pointer'
             style={{
               background: '#fff',
               outline: 'none',
@@ -97,11 +97,9 @@ const AnnouncementEditorComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+});
 
 export const AnnouncementEditor = connect(mapStateToProps, {
   addAnnouncement,

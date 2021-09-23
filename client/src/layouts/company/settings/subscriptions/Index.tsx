@@ -10,8 +10,7 @@ interface IPlan {
   pricing: number;
 }
 export default function Subscriptions() {
-  const [changeComponent, setChangeComponet] =
-    useState<string>('base');
+  const [changeComponent, setChangeComponet] = useState<string>('base');
   const [plan, setPlan] = useState<IPlan>({ _id: '', pricing: 0 });
   const getPlan = (planId) => {
     setPlan(planId);

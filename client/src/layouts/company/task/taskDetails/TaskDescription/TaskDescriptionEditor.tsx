@@ -51,55 +51,53 @@ export const TaskDescriptionEditorComponent = (
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="pr2">
+            <div className='pr2'>
               <SubmitError errorMessage={submitError} />
             </div>
-            <div className="pr2 pt2">
+            <div className='pr2 pt2'>
               <Field<string>
-                name="description"
+                name='description'
                 validate={composeValidators(required, maxValue(5000))}
                 render={({ input, meta }) => (
                   <div>
                     <EditableText
-                      multiline={true}
+                      multiline
                       minLines={3}
                       maxLines={5}
                       value={input.value}
                       onChange={input.onChange}
-                      className="outline"
-                      placeholder=""
+                      className='outline'
+                      placeholder=''
                     />
                     {checkError(meta) && (
-                      <p className="mv2" style={{ color: 'red' }}>
+                      <p className='mv2' style={{ color: 'red' }}>
                         {meta.error || meta.submitError}
                       </p>
                     )}
                   </div>
                 )}
               />
-              <div className="flex justify-end mt2">
+              <div className='flex justify-end mt2'>
                 <Button
-                  className="mr2"
-                  type="submit"
+                  className='mr2'
+                  type='submit'
                   style={{ background: '#34b3e9' }}
                   loading={submitting}
-                  icon={
+                  icon={(
                     <Icon
-                      icon="tick"
+                      icon='tick'
                       iconSize={20}
                       style={{ color: 'white' }}
                     />
-                  }
+                  )}
                   disabled={submitting || pristine}
                 />
                 <Button
                   style={{ background: 'transparent' }}
-                  icon="cross"
-                  onClick={() =>
-                    props.setEditDescriptionDialog(
-                      !props.editDescriptionDialog,
-                    )
-                  }
+                  icon='cross'
+                  onClick={() => props.setEditDescriptionDialog(
+                    !props.editDescriptionDialog,
+                  )}
                 />
               </div>
             </div>
@@ -110,13 +108,11 @@ export const TaskDescriptionEditorComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    description:
+const mapStateToProps = (state: any) => ({
+  description:
       state.taskIndexReducer.taskReducer.currentTask.description,
-    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
-  };
-};
+  updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+});
 
 export const TaskDescriptionEditor = connect(mapStateToProps, {
   updateTask,

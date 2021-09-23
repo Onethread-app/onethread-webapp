@@ -58,31 +58,30 @@ const FileUploadComponent = (props: IFileUploadInternalProps) => {
           setImageName('');
           setImageError('This file format is not supported');
           return false;
-        } else if (file.size / 1024 / 1024 > sizeLimit) {
+        } if (file.size / 1024 / 1024 > sizeLimit) {
           setImageName('');
           setImageError(
             `File size can't be greater than ${sizeLimit} MB`,
           );
           return false;
-        } else {
-          const data = new FormData();
-          data.append('file', file, file.name);
-          setImageName(file);
-          setImageSelected(data);
-          setImageError('');
-          return data;
         }
+        const data = new FormData();
+        data.append('file', file, file.name);
+        setImageName(file);
+        setImageSelected(data);
+        setImageError('');
+        return data;
       }
     }
     return false;
   };
 
   return (
-    <div className="pa3 cf">
-      <h1 className="f5 tigrow-lightBlue">Upload File</h1>
-      <label className="bp3-file-input .modifier bp3-fill">
-        <input type="file" onChange={(e) => imageChangeHandler(e)} />
-        <span className="bp3-file-upload-input">
+    <div className='pa3 cf'>
+      <h1 className='f5 tigrow-lightBlue'>Upload File</h1>
+      <label className='bp3-file-input .modifier bp3-fill'>
+        <input type='file' onChange={(e) => imageChangeHandler(e)} />
+        <span className='bp3-file-upload-input'>
           {imageName.name ? (
             imageName.name
           ) : (
@@ -93,9 +92,9 @@ const FileUploadComponent = (props: IFileUploadInternalProps) => {
       {imageError ? (
         <small style={{ color: 'red' }}>{imageError}</small>
       ) : null}
-      <div className="flex justify-end mt3">
+      <div className='flex justify-end mt3'>
         <Button
-          className="w4 grow h2 pointer mr3"
+          className='w4 grow h2 pointer mr3'
           style={{
             background: '#fff',
             outline: 'none',
@@ -113,20 +112,20 @@ const FileUploadComponent = (props: IFileUploadInternalProps) => {
           cancel
         </Button>
         <Button
-          type="submit"
-          className="w4 grow h2 pointer"
+          type='submit'
+          className='w4 grow h2 pointer'
           style={
             imageName && isEmpty(imageName.name) === false
               ? {
-                  background: '#34b3e9',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#34b3e9',
+                outline: 'none',
+                color: 'white',
+              }
               : {
-                  background: '#011b1b2e',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#011b1b2e',
+                outline: 'none',
+                color: 'white',
+              }
           }
           onClick={async (e: any) => {
             e.preventDefault();
@@ -142,9 +141,7 @@ const FileUploadComponent = (props: IFileUploadInternalProps) => {
             setImageLoading(false);
           }}
           disabled={
-            imageLoading === true || isEmpty(imageName.name)
-              ? true
-              : false
+            !!(imageLoading === true || isEmpty(imageName.name))
           }
         >
           {imageLoading ? <Spinner size={15} /> : 'Save'}

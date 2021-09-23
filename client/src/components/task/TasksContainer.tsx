@@ -15,11 +15,9 @@ import ColumnTaskItem from 'components/task/ColumnTaskItem';
 const TasksContainerDiv = styled.div`
   gap: 0.75rem;
   display: flex;
-  max-height: ${(props) =>
-    props.windowSize.height < 1080 ? '360px' : '560px'};
+  max-height: ${(props) => (props.windowSize.height < 1080 ? '360px' : '560px')};
   padding: 0.5rem 0.35rem;
-  min-height: ${(props) =>
-    props.windowSize.height < 1080 ? '360px' : '560px'};
+  min-height: ${(props) => (props.windowSize.height < 1080 ? '360px' : '560px')};
 
   &::-webkit-scrollbar {
     display: none;
@@ -64,10 +62,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
       setTasks(
         sortTasksByPriority([...tasks], props.currentBoard.orderBy),
       );
-    } else {
-      if (props.column.tasks) setTasks(props.column.tasks);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    } else if (props.column.tasks) setTasks(props.column.tasks);
   }, [
     props.column,
     props.currentBoard.orderBy,
@@ -77,9 +72,11 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
   useEffect(() => {
     if (props.currentBoard.filteredUsers!.length > 0) {
       const filteredTasks: ITask[] = [];
+      // eslint-disable-next-line no-restricted-syntax
       for (const task of props.column.tasks!) {
         let found = false;
         if (task?.assignedMembers) {
+          // eslint-disable-next-line no-restricted-syntax
           for (const member of task.assignedMembers) {
             const res = props.currentBoard.filteredUsers.find(
               (fUser) => fUser.id === member._id,
@@ -95,18 +92,16 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
         }
       }
       setTasks(filteredTasks);
-    } else {
-      if (props.column.tasks) setTasks(props.column.tasks);
-    }
+    } else if (props.column.tasks) setTasks(props.column.tasks);
   }, [props.currentBoard.filteredUsers]);
 
   return (
-    <Droppable droppableId={props.column._id} type="task">
+    <Droppable droppableId={props.column._id} type='task'>
       {(provided, snapshot) => {
         const allowedProps = { ref: provided.innerRef };
         return (
           <TasksContainerDiv
-            className={`flex flex-column h-100 overflow-x-hidden overflow-y-auto`}
+            className='flex flex-column h-100 overflow-x-hidden overflow-y-auto'
             windowSize={windowSize}
             isDraggingOver={snapshot.isDraggingOver}
             {...provided.droppableProps}

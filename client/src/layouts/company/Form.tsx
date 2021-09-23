@@ -59,16 +59,13 @@ const CompanySignupFormComponent = (
 
   const emailValidation = (email: string) => {
     if (email !== '') {
-      const regexForEmailValidation =
-        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (email.match(regexForEmailValidation)) {
         return true;
-      } else {
-        return false;
       }
-    } else {
-      return true;
+      return false;
     }
+    return true;
   };
 
   const emptyValueCheck = () => {
@@ -79,28 +76,26 @@ const CompanySignupFormComponent = (
       }
       setErrors(e);
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   const emptyErrorCheck = () => {
     if (
-      isEmpty(errors.name) &&
-      isEmpty(errors.address) &&
-      isEmpty(errors.type) &&
-      isEmpty(errors.email) &&
-      isEmpty(errors.legalOwnerMail) &&
-      isEmpty(errors.legalOwnerName)
+      isEmpty(errors.name)
+      && isEmpty(errors.address)
+      && isEmpty(errors.type)
+      && isEmpty(errors.email)
+      && isEmpty(errors.legalOwnerMail)
+      && isEmpty(errors.legalOwnerName)
     ) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   const handleChange = (name: string) => (event: any) => {
-    const value = event.target.value;
+    const { value } = event.target;
     setValues({ ...values, [name]: value });
   };
 
@@ -113,9 +108,8 @@ const CompanySignupFormComponent = (
   const checkLegalOwnerMail = () => {
     if (isEqual(values.email, values.legalOwnerMail)) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   const handleCreateCompany = async (e: any) => {
@@ -137,10 +131,10 @@ const CompanySignupFormComponent = (
 
   useEffect(() => {
     if (
-      loading &&
-      props.creatingCompany === false &&
-      props.errorOnCreatingCompany === '' &&
-      props.companyName !== currentCompanyName
+      loading
+      && props.creatingCompany === false
+      && props.errorOnCreatingCompany === ''
+      && props.companyName !== currentCompanyName
     ) {
       setLoading(false);
       props.setShowDialog(false);
@@ -155,18 +149,18 @@ const CompanySignupFormComponent = (
   }, [props.errorOnCreatingCompany]);
 
   return (
-    <form className="fl w-100 pa4">
-      <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
+    <form className='fl w-100 pa4'>
+      <h1 className='f5 lh-title ml2 tigrow-lightBlue mb4'>
         {t('app.forms.Create-company.Create')}
       </h1>
       <div className={` ${errors.name ? 'mb3' : 'mb4'}`}>
-        <div className="flex">
+        <div className='flex'>
           <InputGroupField
-            id="companyName"
+            id='companyName'
             value={values.name}
             onChange={handleChange('name')}
             placeHolder={t('app.forms.Create-company.Name')}
-            leftIcon="briefcase"
+            leftIcon='briefcase'
             style={{
               boxShadow: 'none',
             }}
@@ -206,13 +200,13 @@ const CompanySignupFormComponent = (
         )}
       </div>
       <div className={` ${errors.address ? 'mb3' : 'mb4'}`}>
-        <div className="flex">
+        <div className='flex'>
           <InputGroupField
-            id="companyAddress"
+            id='companyAddress'
             value={values.address}
             onChange={handleChange('address')}
             placeHolder={t('app.forms.Create-company.Address')}
-            leftIcon="map-marker"
+            leftIcon='map-marker'
             style={{
               boxShadow: 'none',
             }}
@@ -285,13 +279,13 @@ const CompanySignupFormComponent = (
       </div> */}
 
       <div className={` ${errors.email ? 'mb3' : 'mb4'}`}>
-        <div className="flex">
+        <div className='flex'>
           <InputGroupField
-            id="companyMail"
+            id='companyMail'
             value={values.email}
             onChange={handleChange('email')}
             placeHolder={t('app.forms.Create-company.Email')}
-            leftIcon="envelope"
+            leftIcon='envelope'
             style={{
               boxShadow: 'none',
             }}
@@ -327,19 +321,19 @@ const CompanySignupFormComponent = (
         )}
       </div>
 
-      <div className="mb4">
-        <div className="flex">
+      <div className='mb4'>
+        <div className='flex'>
           <InputGroupField
-            id="legalOwnerName"
+            id='legalOwnerName'
             value={values.legalOwnerName}
             onChange={handleChange('legalOwnerName')}
             placeHolder={t('app.forms.Create-company.Legal-name')}
-            leftIcon="mugshot"
+            leftIcon='mugshot'
             style={{
               boxShadow: 'none',
             }}
-            className={'br0 bb b--lightBlue'}
-            leftIconColor="#34b3e9"
+            className='br0 bb b--lightBlue'
+            leftIconColor='#34b3e9'
             validationOnBlur={() => {
               if (values.legalOwnerName.length > 32) {
                 const legalOwnerNameError = {
@@ -366,13 +360,13 @@ const CompanySignupFormComponent = (
       </div>
 
       <div className={` ${errors.legalOwnerMail ? 'mb3' : 'mb4'}`}>
-        <div className="flex">
+        <div className='flex'>
           <InputGroupField
-            id="legalOwnerMail"
+            id='legalOwnerMail'
             value={values.legalOwnerMail}
             onChange={handleChange('legalOwnerMail')}
             placeHolder={t('app.forms.Create-company.Legal-email')}
-            leftIcon="envelope"
+            leftIcon='envelope'
             style={{
               boxShadow: 'none',
             }}
@@ -384,8 +378,8 @@ const CompanySignupFormComponent = (
             }`}
             validationOnBlur={() => {
               if (
-                checkLegalOwnerMail() &&
-                !isEmpty(values.legalOwnerMail)
+                checkLegalOwnerMail()
+                && !isEmpty(values.legalOwnerMail)
               ) {
                 const ownerEmailError = {
                   ...errors,
@@ -417,9 +411,9 @@ const CompanySignupFormComponent = (
           ''
         )}
       </div>
-      <div className="flex justify-end">
+      <div className='flex justify-end'>
         <Button
-          className="w4 grow h2 pointer mr3"
+          className='w4 grow h2 pointer mr3'
           style={{
             background: '#fff',
             outline: 'none',
@@ -435,8 +429,8 @@ const CompanySignupFormComponent = (
           cancel
         </Button>
         <Button
-          type="submit"
-          className="w4 grow h2 pointer"
+          type='submit'
+          className='w4 grow h2 pointer'
           style={{
             background: '#34b3e9',
             outline: 'none',
@@ -454,14 +448,12 @@ const CompanySignupFormComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    companyName: state.companyReducer.currentCompany.uniqueName,
-    creatingCompany: state.companyReducer.creatingCompany,
-    errorOnCreatingCompany:
+const mapStateToProps = (state: any) => ({
+  companyName: state.companyReducer.currentCompany.uniqueName,
+  creatingCompany: state.companyReducer.creatingCompany,
+  errorOnCreatingCompany:
       state.companyReducer.errorOnCreatingCompany,
-  };
-};
+});
 
 export const CompanySignupForm = connect(mapStateToProps, {
   createCompanyAction,

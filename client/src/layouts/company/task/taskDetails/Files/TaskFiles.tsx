@@ -42,8 +42,8 @@ const TaskFiles = (props: ITaskFiles) => {
   };
 
   return (
-    <div className="w-100">
-      <div className="flex justify-between items-center w-100">
+    <div className='w-100'>
+      <div className='flex justify-between items-center w-100'>
         <h1
           style={{
             color: '#323030',
@@ -52,8 +52,11 @@ const TaskFiles = (props: ITaskFiles) => {
             width: '100%',
           }}
         >
-          {t('app.project.Project-preface.Media')} (
-          {props.taskFiles && props.taskFiles!.length!})
+          {t('app.project.Project-preface.Media')}
+          {' '}
+          (
+          {props.taskFiles && props.taskFiles!.length!}
+          )
         </h1>
         <div>
           <Popover
@@ -61,17 +64,17 @@ const TaskFiles = (props: ITaskFiles) => {
             content={
               <TaskFilesAttach setFilePopover={setFilePopover} />
             }
-            target={
+            target={(
               <Icon
                 style={{
                   color: '#323030',
                 }}
                 icon={IconNames.PLUS}
                 iconSize={20}
-                className="pointer"
+                className='pointer'
                 onClick={() => setFilePopover(!filePopover)}
               />
-            }
+            )}
           />
         </div>
       </div>
@@ -85,16 +88,12 @@ const TaskFiles = (props: ITaskFiles) => {
           props.taskFiles.map((file) => (
             <div
               key={file._id}
-              className="flex items-center justify-between pr2"
-              onMouseEnter={() =>
-                setShowDelete({ value: true, _id: file._id })
-              }
-              onMouseLeave={() =>
-                setShowDelete({ value: false, _id: '' })
-              }
+              className='flex items-center justify-between pr2'
+              onMouseEnter={() => setShowDelete({ value: true, _id: file._id })}
+              onMouseLeave={() => setShowDelete({ value: false, _id: '' })}
             >
               <h1
-                className="f6 fw4 w-80"
+                className='f6 fw4 w-80'
                 style={{
                   wordBreak: 'break-word',
                   wordWrap: 'break-word',
@@ -102,12 +101,12 @@ const TaskFiles = (props: ITaskFiles) => {
               >
                 {file.s3Key.split('/')[1]}
               </h1>
-              <div className="flex items-center justify-center">
+              <div className='flex items-center justify-center'>
                 {showDelete.value && showDelete._id === file._id && (
-                  <Tooltip content="Delete" intent="danger">
+                  <Tooltip content='Delete' intent='danger'>
                     <Icon
-                      icon="cross"
-                      className="blue pointer mr2"
+                      icon='cross'
+                      className='blue pointer mr2'
                       iconSize={14}
                       onClick={() => {
                         handleDelete(file._id);
@@ -115,34 +114,32 @@ const TaskFiles = (props: ITaskFiles) => {
                     />
                   </Tooltip>
                 )}
-                <Tooltip content="Download" intent="primary">
+                <Tooltip content='Download' intent='primary'>
                   <a
                     href={file.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target='_blank'
+                    rel='noopener noreferrer'
                     download
                   >
-                    <Icon icon="import" className="" iconSize={14} />
+                    <Icon icon='import' className='' iconSize={14} />
                   </a>
                 </Tooltip>
               </div>
             </div>
           ))
         ) : (
-          <h1 className="f6">{t('app.project.Tasks.No-Files')}</h1>
+          <h1 className='f6'>{t('app.project.Tasks.No-Files')}</h1>
         )}
       </div>
     </div>
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    taskFiles: state.taskIndexReducer.taskReducer.currentTask.file,
-    taskId: state.taskIndexReducer.taskReducer.currentTask._id,
-    columnId: state.taskIndexReducer.taskReducer.currentTask.columnId,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  taskFiles: state.taskIndexReducer.taskReducer.currentTask.file,
+  taskId: state.taskIndexReducer.taskReducer.currentTask._id,
+  columnId: state.taskIndexReducer.taskReducer.currentTask.columnId,
+});
 
 export default connect(mapStateToProps, {
   taskFileDelete,

@@ -15,7 +15,7 @@ const EmailVerificationComponent = (props: RouteComponentProps) => {
   });
 
   useEffect(() => {
-    const token = (props.match.params as any).token;
+    const { token } = props.match.params as any;
 
     async function getUserId(userToken: string) {
       let responsedata = accountVerified;
@@ -52,25 +52,25 @@ const EmailVerificationComponent = (props: RouteComponentProps) => {
   }, []);
 
   return (
-    <div className="mt5">
-      {isEqual(accountVerified.status, 200) === true &&
-      accountVerified.isAccountVerified === true ? (
+    <div className='mt5'>
+      {isEqual(accountVerified.status, 200) === true
+      && accountVerified.isAccountVerified === true ? (
         <>
-          <p className="tc f3 fw5">{accountVerified.message}</p>
-          <p className="tc">
-            <Link to={`/signin`}>
-              <Button text="Sign in" />
+          <p className='tc f3 fw5'>{accountVerified.message}</p>
+          <p className='tc'>
+            <Link to='/signin'>
+              <Button text='Sign in' />
             </Link>
           </p>
         </>
-      ) : isEqual(accountVerified.status, undefined) === false &&
-        accountVerified.isAccountVerified === false ? (
-        <p className="tc f3 fw5 red">{accountVerified.message}</p>
-      ) : (
-        <p className="tc f3 fw5 blue">
-          Your mail is verifying now....
-        </p>
-      )}
+        ) : isEqual(accountVerified.status, undefined) === false
+        && accountVerified.isAccountVerified === false ? (
+          <p className='tc f3 fw5 red'>{accountVerified.message}</p>
+          ) : (
+            <p className='tc f3 fw5 blue'>
+              Your mail is verifying now....
+            </p>
+          )}
     </div>
   );
 };

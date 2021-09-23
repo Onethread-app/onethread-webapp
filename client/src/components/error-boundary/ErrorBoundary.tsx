@@ -16,6 +16,7 @@ interface State {
 }
 
 class ErrorBoundary extends Component<Props, State> {
+  // eslint-disable-next-line react/state-in-constructor
   public state: State = {
     hasErrored: false,
   };
@@ -33,10 +34,12 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasErrored) {
       return (
         <ErrorImageOverlay>
-          <ErrorImageContainer imageUrl="https://i.imgur.com/qIufhof.png" />
+          <ErrorImageContainer imageUrl='https://i.imgur.com/qIufhof.png' />
           <ErrorImageText>
-            Sorry, this page is broken. <br />
-            <Link to="/">Back To Home</Link>
+            Sorry, this page is broken.
+            {' '}
+            <br />
+            <Link to='/'>Back To Home</Link>
           </ErrorImageText>
         </ErrorImageOverlay>
       );

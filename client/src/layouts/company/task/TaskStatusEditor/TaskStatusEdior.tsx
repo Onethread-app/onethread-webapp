@@ -22,12 +22,11 @@ interface TaskInfoInternalProps {
 }
 
 const TagSelect = styled.select`
-  background-color: ${(props) =>
-    props.status === 'done'
-      ? '#2EB67D'
-      : props.status === 'in-progress'
+  background-color: ${(props) => (props.status === 'done'
+    ? '#2EB67D'
+    : props.status === 'in-progress'
       ? '#08A0F7'
-      : '#FFA800'};
+      : '#FFA800')};
   color: #f5f8fa;
   border: none;
   border-radius: 3px;
@@ -66,37 +65,31 @@ const TaskStatusEdiorComponent = (props: TaskInfoInternalProps) => {
 
   useEffect(() => {
     if (currentTask?.status) {
-      setSelectedOption((prev) => {
-        return {
-          ...prev,
-          label: currentTask!.status
-            .toLowerCase()
-            .split('-')
-            .join(' '),
-        };
-      });
+      setSelectedOption((prev) => ({
+        ...prev,
+        label: currentTask!.status
+          .toLowerCase()
+          .split('-')
+          .join(' '),
+      }));
     }
   }, [currentTask!.status]);
 
   useEffect(() => {
     if (currentTask?.columnId) {
-      setSelectedOption((prev) => {
-        return {
-          ...prev,
-          value: currentTask!.columnId!,
-        };
-      });
+      setSelectedOption((prev) => ({
+        ...prev,
+        value: currentTask!.columnId!,
+      }));
     }
   }, [currentTask!.columnId]);
 
   useEffect(() => {
     if (columns) {
-      const statusFromColumnName = columns.map((col) => {
-        return {
-          value: col._id,
-          label: col.name,
-        };
-      });
+      const statusFromColumnName = columns.map((col) => ({
+        value: col._id,
+        label: col.name,
+      }));
       setStatusOptions(statusFromColumnName);
     }
   }, [columns]);
@@ -121,11 +114,11 @@ const TaskStatusEdiorComponent = (props: TaskInfoInternalProps) => {
     }
   };
   return (
-    <div className="task-info-items">
-      <h1 className="f6">Status:</h1>
+    <div className='task-info-items'>
+      <h1 className='f6'>Status:</h1>
       <TagSelect
-        name="status"
-        id="boardTagStatus"
+        name='status'
+        id='boardTagStatus'
         status={selectedOption.label
           .toLowerCase()
           .split(' ')
@@ -144,12 +137,10 @@ const TaskStatusEdiorComponent = (props: TaskInfoInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentTask: state.taskIndexReducer.taskReducer.currentTask,
-    columns: state.taskIndexReducer.taskReducer.currentBoard.columns,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentTask: state.taskIndexReducer.taskReducer.currentTask,
+  columns: state.taskIndexReducer.taskReducer.currentBoard.columns,
+});
 
 export const TaskStatusEdior = connect(mapStateToProps, {
   dragAndDropTask,

@@ -53,12 +53,10 @@ const AddProjectMemberFormComponent = (
           `/teams/${props.companyId}/search?pid=${props.projectId}`,
           headers,
         );
-        const formatResponse = response.data.teams.map((e: any) => {
-          return {
-            ...e.account,
-            memberId: e._id,
-          };
-        });
+        const formatResponse = response.data.teams.map((e: any) => ({
+          ...e.account,
+          memberId: e._id,
+        }));
         setSuggestedMembers(formatResponse);
       } else {
         // tslint:disable-next-line: no-console
@@ -74,50 +72,50 @@ const AddProjectMemberFormComponent = (
 
   useEffect(() => {
     if (
-      isNil(props.projectId) === false &&
-      isNil(props.companyId) === false
+      isNil(props.projectId) === false
+      && isNil(props.companyId) === false
     ) {
       getSuggestionsForRoomMembers();
     }
   }, [props.projectId, props.companyId]);
 
   return (
-    <div className="pa3">
-      <div className="w-100">
-        <h1 className="f5 tigrow-darkBlue">
+    <div className='pa3'>
+      <div className='w-100'>
+        <h1 className='f5 tigrow-darkBlue'>
           {t('app.project.Project-teammates.Add-Teammates')}
         </h1>
         <SuggestField
           items={suggestedMembers}
           selectedItems={selectedTeamMember}
           setSelectedItems={setSelectedTeamMember}
-          multipleItemSelect={true}
+          multipleItemSelect
         />
       </div>
 
-      <div className="w-100 mb2">
+      <div className='w-100 mb2'>
         {selectedTeamMember.map((item) => (
           <Tag
             key={item._id}
-            className="ma1 pa2"
+            className='ma1 pa2'
             style={{ backgroundColor: '#3b5998', color: 'white' }}
-            interactive={true}
+            interactive
             onRemove={(e) => {
               const filteredItems = selectedTeamMember.filter(
                 (selectedItem) => item.name !== selectedItem.name,
               );
               setSelectedTeamMember([...filteredItems]);
             }}
-            large={true}
+            large
           >
             {item.name}
           </Tag>
         ))}
       </div>
 
-      <div className="flex justify-end mt3">
+      <div className='flex justify-end mt3'>
         <Button
-          className="grow h2 pointer white bp3-minimal w4 mr3"
+          className='grow h2 pointer white bp3-minimal w4 mr3'
           style={{
             background: '#fff',
             outline: 'none',
@@ -129,19 +127,17 @@ const AddProjectMemberFormComponent = (
           Cancel
         </Button>
         <Button
-          className="grow h2 pointer white bp3-minimal w4 outline-0"
+          className='grow h2 pointer white bp3-minimal w4 outline-0'
           style={{ backgroundColor: '#3b5998', color: 'white' }}
           disabled={selectedTeamMember.length === 0}
           onClick={async () => {
             const data = {
               project: props.projectId,
               company: props.companyId,
-              members: selectedTeamMember.map((m: any) => {
-                return {
-                  account: m._id,
-                  member: m.memberId,
-                };
-              }),
+              members: selectedTeamMember.map((m: any) => ({
+                account: m._id,
+                member: m.memberId,
+              })),
             };
 
             await props.addProjectTeams(data, selectedTeamMember);
@@ -158,13 +154,11 @@ const AddProjectMemberFormComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    companyId: state.companyReducer.currentCompany._id,
-    projectId: state.projectReducer.projectDetails._id,
-    isLoading: state.projectReducer.addTeamMemberLoading,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  companyId: state.companyReducer.currentCompany._id,
+  projectId: state.projectReducer.projectDetails._id,
+  isLoading: state.projectReducer.addTeamMemberLoading,
+});
 
 export const AddProjectMemberForm = connect(mapStateToProps, {
   addProjectTeams,

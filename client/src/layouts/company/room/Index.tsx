@@ -21,15 +21,15 @@ import {
   getRoomDiscussions,
   updateLastSeen,
 } from 'stores/room/Actions';
+import { CURRENT_ROOM } from 'stores/room/Types';
+
+import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
+import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
 import {
   getSingleProject,
   setCurrentProjectId,
   getRoleForProject,
 } from '../../../stores/project/Actions';
-import { CURRENT_ROOM } from 'stores/room/Types';
-
-import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
-import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
 import { RoomRightSidebar } from './rightSIdebar/Index';
 
 export interface RoomQueries {
@@ -90,9 +90,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
   // }
 
   const roomSwitch = async (roomId: string) => {
-    const currentRoom = props.rooms.filter((room) =>
-      isEqual(room._id, roomId),
-    );
+    const currentRoom = props.rooms.filter((room) => isEqual(room._id, roomId));
     if (currentRoom.length > 0) {
       dispatch({ type: CURRENT_ROOM, payload: currentRoom[0] });
       await props.getRoomMessages(roomId);
@@ -116,10 +114,9 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
   // get roomId and view option from query
   useEffect(() => {
     const query = new URLSearchParams(props.location.search);
-    const view =
-      query.get('view') && query.get('view') === 'mobile'
-        ? 'mobile'
-        : 'default';
+    const view = query.get('view') && query.get('view') === 'mobile'
+      ? 'mobile'
+      : 'default';
     const roomId = query.get('roomId') ? query.get('roomId')! : '';
     setQueries({ view, roomId });
   }, [props.location.search]);
@@ -127,9 +124,9 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
   // fetch room infos
   useEffect(() => {
     if (
-      !isEmpty(queries.roomId) &&
-      props.pusherInstance !== undefined &&
-      props.rooms.length > 0
+      !isEmpty(queries.roomId)
+      && props.pusherInstance !== undefined
+      && props.rooms.length > 0
     ) {
       if (!isEmpty(props.currentRoom._id)) {
         callUpdateLastSeen(props.currentRoom._id);
@@ -148,7 +145,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
         <CustomView condition={!isMobileOnly}>
           {queries.view === 'default' && (
             <div
-              className="overflow-hidden t-25-a bg-white br b--tigrowLightGray-1 h-100"
+              className='overflow-hidden t-25-a bg-white br b--tigrowLightGray-1 h-100'
               style={{
                 borderBottomLeftRadius: '0.5rem',
                 width: isOpenLeftSidebar ? '320px' : '16px',
@@ -161,25 +158,23 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             </div>
           )}
         </CustomView>
-        <div className="relative flex justify-center items-center flex-grow-1">
+        <div className='relative flex justify-center items-center flex-grow-1'>
           <CustomView condition={!isMobileOnly}>
             {queries.view === 'default' && (
               <Icon
-                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer"
+                className='absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer'
                 icon={
                   isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'
                 }
                 iconSize={17}
-                onClick={() =>
-                  setIsOpenLeftSidebar(!isOpenLeftSidebar)
-                }
+                onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)}
               />
             )}
           </CustomView>
           <MobileView>
             <Icon
-              className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left-0 pointer"
-              icon="arrow-left"
+              className='absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left-0 pointer'
+              icon='arrow-left'
               iconSize={17}
               onClick={() => {
                 // tslint:disable-next-line: no-unused-expression
@@ -190,10 +185,10 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               }}
             />
           </MobileView>
-          {isEmpty(props.currentRoom.name) === false &&
-            isEmpty(props.currentRoom._id) === false && (
+          {isEmpty(props.currentRoom.name) === false
+            && isEmpty(props.currentRoom._id) === false && (
               <Icon
-                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer"
+                className='absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer'
                 icon={
                   isOpenRightSidebar ? 'arrow-right' : 'arrow-left'
                 }
@@ -203,13 +198,13 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                   setShowDialog(!showDialog);
                 }}
               />
-            )}
+          )}
           <ChatLayout />
         </div>
-        {isEmpty(props.currentRoom.name) === false &&
-          isEmpty(props.currentRoom._id) === false && (
+        {isEmpty(props.currentRoom.name) === false
+          && isEmpty(props.currentRoom._id) === false && (
             <div
-              className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
+              className='overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl'
               style={{
                 borderBottomRightRadius: '0.5rem',
                 width: isOpenRightSidebar
@@ -217,15 +212,15 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                     ? '0px'
                     : '400px'
                   : isMobileOnly
-                  ? '0px'
-                  : '16px',
+                    ? '0px'
+                    : '16px',
                 minWidth: isOpenRightSidebar
                   ? isMobileOnly
                     ? '0px'
                     : '400px'
                   : isMobileOnly
-                  ? '0px'
-                  : '16px',
+                    ? '0px'
+                    : '16px',
               }}
             >
               {isMobileOnly ? (
@@ -234,7 +229,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                   isOpen={showDialog}
                   canOutsideClickClose={false}
                   style={{ width: '100%' }}
-                  title=""
+                  title=''
                 >
                   <div>
                     <RoomRightSidebar isOpen={isOpenRightSidebar} />
@@ -244,22 +239,20 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 <RoomRightSidebar isOpen={isOpenRightSidebar} />
               )}
             </div>
-          )}
+        )}
       </div>
     </>
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentRoom: state.roomReducer.currentRoom,
-    companyId: state.companyReducer.currentCompany._id,
-    projectId: state.projectReducer.projectDetails._id,
-    rooms: state.roomReducer.rooms,
-    pusherInstance: state.pusherReducer.pusherInstance,
-    uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentRoom: state.roomReducer.currentRoom,
+  companyId: state.companyReducer.currentCompany._id,
+  projectId: state.projectReducer.projectDetails._id,
+  rooms: state.roomReducer.rooms,
+  pusherInstance: state.pusherReducer.pusherInstance,
+  uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
+});
 
 export const RoomPage = connect(mapStateToProps, {
   getRoomMembers,

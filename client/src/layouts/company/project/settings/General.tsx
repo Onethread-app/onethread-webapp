@@ -24,7 +24,7 @@ const GeneralPageComponent = (props: IProjectRole) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="bl b--black-05 bw1 pl5-ns pl2 ml5-ns h-100">
+    <div className='bl b--black-05 bw1 pl5-ns pl2 ml5-ns h-100'>
       <Form
         onSubmit={props.onSubmit}
         initialValues={{ optionalRole: props.optionalRole }}
@@ -38,17 +38,17 @@ const GeneralPageComponent = (props: IProjectRole) => {
           hasValidationErrors,
           ...rest
         }) => (
-          <form className="fl w-100" onSubmit={handleSubmit}>
-            <div className="mb3">
+          <form className='fl w-100' onSubmit={handleSubmit}>
+            <div className='mb3'>
               <SubmitError errorMessage={submitError} />
             </div>
-            <p className="b f5 mb3">
+            <p className='b f5 mb3'>
               {t('app.project.Project-settings.General')}
             </p>
-            <div className="mb3 ml2">
+            <div className='mb3 ml2'>
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -56,11 +56,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="updateArchiveProject"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='updateArchiveProject'
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Update-archive')}
@@ -68,13 +68,13 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
             </div>
-            <p className="b f5 mb3">
+            <p className='b f5 mb3'>
               {t('app.project.Project-settings.Preface')}
             </p>
-            <div className="mb3 ml2">
+            <div className='mb3 ml2'>
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -82,11 +82,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="updateProjectPreface"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='updateProjectPreface'
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Update-preface')}
@@ -94,8 +94,8 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -103,11 +103,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="addFileProject"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='addFileProject'
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Add-files')}
@@ -115,13 +115,13 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
             </div>
-            <p className="b f5 mb3">
+            <p className='b f5 mb3'>
               {t('app.project.Project-settings.Rooms')}
             </p>
-            <div className="mb3 ml2">
+            <div className='mb3 ml2'>
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -129,11 +129,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="addRemoveMemberRoom"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='addRemoveMemberRoom'
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Change-members')}
@@ -141,8 +141,8 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -150,11 +150,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="createUpdateRoom"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='createUpdateRoom'
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Room-related')}
@@ -162,8 +162,8 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -171,11 +171,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="archiveRoom"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='archiveRoom'
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Archive-room')}
@@ -183,13 +183,13 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
             </div>
-            <p className="b f5 mb3">
+            <p className='b f5 mb3'>
               {t('app.project.Project-settings.Board')}
             </p>
-            <div className="mb3 ml2">
+            <div className='mb3 ml2'>
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -197,11 +197,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="createUpdateBoard"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='createUpdateBoard'
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Change-board')}
@@ -209,8 +209,8 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -218,11 +218,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="createUpdateColumn"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='createUpdateColumn'
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Change-column')}
@@ -230,8 +230,8 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -239,11 +239,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="assignDeleteMemberBoard"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='assignDeleteMemberBoard'
                       disabled={disabled}
                     />
                     {t('app.project.Project-settings.Assigning')}
@@ -259,31 +259,31 @@ const GeneralPageComponent = (props: IProjectRole) => {
                   horizontal: 'center',
                 }}
               >
-                <MuiAlert severity="success">
+                <MuiAlert severity='success'>
                   Role Updated Successfully
                 </MuiAlert>
               </Snackbar>
             </div>
-            {props.role &&
-            props.role === 'admin' &&
-            disabled === false ? (
+            {props.role
+            && props.role === 'admin'
+            && disabled === false ? (
               <div>
                 <Button
-                  className="w4 grow h2 pointer"
+                  className='w4 grow h2 pointer'
                   style={{
                     background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
                   loading={submitting}
-                  type="submit"
+                  type='submit'
                   disabled={submitting || pristine}
                   onClick={() => setOpen(true)}
                 >
                   Save
                 </Button>
               </div>
-            ) : undefined}
+              ) : undefined}
           </form>
         )}
       />
@@ -293,11 +293,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
 
 const mapStateToProps = (state: any) => ({
   role:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.role,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.role,
   optionalRole:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.project.optionalRole,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.project.optionalRole,
 });
 export const GeneralPage = connect(
   mapStateToProps,

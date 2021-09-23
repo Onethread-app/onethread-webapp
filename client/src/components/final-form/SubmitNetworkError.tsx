@@ -5,7 +5,7 @@ export const SubmitNetworkError = () => (
   <div>
     {/* {props.errorMessage && */}
     <div
-      className="flex"
+      className='flex'
       style={{
         backgroundColor: '#D85858',
         paddingLeft: '10px',
@@ -15,18 +15,18 @@ export const SubmitNetworkError = () => (
       <p style={{ color: '#ffffff', paddingLeft: '10px' }}>
         Network Error. Please check your internet connection
       </p>
-      <div className="flex justify-end">
+      <div className='flex justify-end'>
         <Icon
           style={{ backgroundColor: '#D85858', color: '#ffffff' }}
           icon={IconNames.REFRESH}
           iconSize={20}
-          className="grow pointer pl2 pr2"
+          className='grow pointer pl2 pr2'
         />
         <Icon
           style={{ backgroundColor: '#D85858', color: '#ffffff' }}
           icon={IconNames.DELETE}
           iconSize={20}
-          className="grow pointer pl2 pr2"
+          className='grow pointer pl2 pr2'
         />
       </div>
     </div>

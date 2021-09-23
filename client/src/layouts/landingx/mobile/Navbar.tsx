@@ -41,7 +41,7 @@ const Menu = ({ setOpen }) => {
 
   useEffect(() => {
     getLocation().then((data) => {
-      const country = data.data.country;
+      const { country } = data.data;
 
       localStorage.setItem('city', data.data.city);
       localStorage.setItem('country', country);
@@ -57,15 +57,17 @@ const Menu = ({ setOpen }) => {
   }, []);
 
   return (
-    <animated.div style={props} className="overlay-menu">
-      <div className="flex flex-column">
+    <animated.div style={props} className='overlay-menu'>
+      <div className='flex flex-column'>
         <span
-          className="cross-menu justify-end"
+          className='cross-menu justify-end'
           onClick={handleClose}
+          role='button'
+          tabIndex={0}
         >
           <CloseIcon />
         </span>
-        <ul className="flex flex-column items-center justify-center w-100 h-100">
+        <ul className='flex flex-column items-center justify-center w-100 h-100'>
           <li>
             <Switch
               isToggle={isToggle}
@@ -74,26 +76,26 @@ const Menu = ({ setOpen }) => {
           </li>
           <li>
             <a
-              href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
-              target="_blank"
-              rel="noreferrer"
+              href='https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA'
+              target='_blank'
+              rel='noreferrer'
             >
               {t('app.Navbar.How-It-Works')}
             </a>
           </li>
           <li>
-            <NavLink to="/pricing">{t('app.Navbar.Pricing')}</NavLink>
+            <NavLink to='/pricing'>{t('app.Navbar.Pricing')}</NavLink>
           </li>
           <li>
-            <a href="https://blog.onethread.app/" rel="noreferrer">
+            <a href='https://blog.onethread.app/' rel='noreferrer'>
               {t('app.Navbar.Blog')}
             </a>
           </li>
           <li>
-            <NavLink to="/signin">{t('app.Navbar.Login')}</NavLink>
+            <NavLink to='/signin'>{t('app.Navbar.Login')}</NavLink>
           </li>
           <li>
-            <NavLink to="/signup" className="b">
+            <NavLink to='/signup' className='b'>
               {t('app.Navbar.SignUp')}
             </NavLink>
           </li>
@@ -109,12 +111,12 @@ const MobileNavbar = () => {
     setOpen(true);
   };
   return (
-    <div className="navbar flex items-center justify-between w-100">
-      <NavLink to="/">
-        <img src={DarkLogo} alt="Onethread" />
+    <div className='navbar flex items-center justify-between w-100'>
+      <NavLink to='/'>
+        <img src={DarkLogo} alt='Onethread' />
       </NavLink>
       <Hamburger
-        className="hamburger-menu content-end"
+        className='hamburger-menu content-end'
         onClick={handleClick}
       />
       {open && <Menu setOpen={setOpen} />}

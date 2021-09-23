@@ -80,8 +80,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
       initialValues={{
         email: props.userInfo.email,
         secondaryEmail:
-          props.userInfo.secondaryEmail ||
-          defaultValues.secondaryEmail,
+          props.userInfo.secondaryEmail
+          || defaultValues.secondaryEmail,
         // contactNo: props.userInfo.contactNo.substring(3),
         location: props.userInfo.location || defaultValues.location,
         gender: props.userInfo.gender || defaultValues.gender,
@@ -93,7 +93,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
       validate={(values: any) => {
         const errors = {} as any;
         if (isEqual(values.email, values.secondaryEmail)) {
-          errors.secondaryEmail = `You can't use same Primary Email and Secondary Email`;
+          errors.secondaryEmail = 'You can\'t use same Primary Email and Secondary Email';
         }
         // if (values.contactNo && values.contactNo.length !== 11) {
         //   errors.contactNo = 'Not more or less than 11 character';
@@ -110,31 +110,31 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="fl w-100 ph4 pt5" onSubmit={handleSubmit}>
+        <form className='fl w-100 ph4 pt5' onSubmit={handleSubmit}>
           <SubmitError errorMessage={submitError} />
-          <h1 className="f5 lh-title white mb4">
+          <h1 className='f5 lh-title white mb4'>
             Edit Basic Information
           </h1>
           <Field<string>
-            name="email"
+            name='email'
             render={({ input, meta }) => (
-              <div className="mb4">
+              <div className='mb4'>
                 <label>{t('app.user.Personal-profile.Email')}</label>
                 <InputGroupField
-                  id="email"
-                  className="mt1 bg-white"
+                  id='email'
+                  className='mt1 bg-white'
                   value={input.value}
                   onChange={input.onChange}
                   style={{
                     boxShadow: 'none',
                   }}
-                  disabled={true}
+                  disabled
                 />
               </div>
             )}
           />
           <Field<string>
-            name="secondaryEmail"
+            name='secondaryEmail'
             validate={values.secondaryEmail ? isEmail : undefined}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
@@ -142,8 +142,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                   {t('app.user.Personal-profile.Secondaty')}
                 </label>
                 <InputGroupFieldWithError
-                  id="secondaryEmail"
-                  className="mt1"
+                  id='secondaryEmail'
+                  className='mt1'
                   value={input.value}
                   onChange={(e) => {
                     input.onChange(e);
@@ -153,10 +153,10 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                     boxShadow: 'none',
                   }}
                   error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
+                    checkError(meta)
+                    && (meta.error || meta.submitError)
                   }
-                  autoFocus={true}
+                  autoFocus
                 />
               </div>
             )}
@@ -188,7 +188,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             )}
           /> */}
           <Field<string>
-            name="location"
+            name='location'
             validate={maxValue(120)}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
@@ -196,7 +196,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                   {t('app.user.Personal-profile.Address')}
                 </label>
                 <InputGroupFieldWithError
-                  id="location"
+                  id='location'
                   value={input.value}
                   onChange={(e) => {
                     input.onChange(e);
@@ -205,22 +205,22 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                   style={{
                     boxShadow: 'none',
                   }}
-                  className="mt1"
+                  className='mt1'
                   error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
+                    checkError(meta)
+                    && (meta.error || meta.submitError)
                   }
                 />
               </div>
             )}
           />
-          <div className="mb4">
+          <div className='mb4'>
             <label>{t('app.user.Personal-profile.Blood')}</label>
             <Field<string>
-              name="bloodGroup"
+              name='bloodGroup'
               render={({ input, meta }) => (
                 <DropdownField
-                  id="bloodGroup"
+                  id='bloodGroup'
                   selectedValue={input.value}
                   options={[
                     { _id: 'A+', name: 'A+' },
@@ -236,23 +236,21 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                     input.onChange(e);
                     handleChange('bloodGroup', e.target.value);
                   }}
-                  className="bn"
+                  className='bn'
                 />
               )}
             />
           </div>
           <Field<string>
-            name="birthDate"
+            name='birthDate'
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>
                   {t('app.user.Personal-profile.Date-of-birth')}
                 </label>
                 <DateInput
-                  className="bg-white"
-                  formatDate={(date: Date) =>
-                    date.toLocaleDateString()
-                  }
+                  className='bg-white'
+                  formatDate={(date: Date) => date.toLocaleDateString()}
                   parseDate={(str: string) => new Date(str)}
                   onChange={(e) => {
                     input.onChange(e);
@@ -272,7 +270,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                   disabled={false}
                 />
                 {checkError(meta) && (
-                  <small className="mv3" style={{ color: 'red' }}>
+                  <small className='mv3' style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
                   </small>
                 )}
@@ -280,18 +278,18 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             )}
           />
           <Field<string>
-            name="gender"
-            type="radio"
+            name='gender'
+            type='radio'
             render={({ input, meta }) => (
               <RadioGroup
-                name="gender"
+                name='gender'
                 label={t('app.user.Personal-profile.Gender')}
                 onChange={(e: any) => {
                   input.onChange(e);
                   handleChange('gender', e.target.value);
                 }}
-                inline={true}
-                className="tigrow-lightBlue outline-0"
+                inline
+                className='tigrow-lightBlue outline-0'
                 selectedValue={values.gender}
               >
                 {['female', 'male', 'others'].map((item: any) => (
@@ -306,22 +304,22 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
               </RadioGroup>
             )}
           />
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <Button
-              className="w4 grow h2 pointer mr3"
+              className='w4 grow h2 pointer mr3'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
             >
               Save
             </Button>
             <Button
-              className="w4 grow h2 pointer"
+              className='w4 grow h2 pointer'
               style={{
                 background: '#fff',
                 outline: 'none',
@@ -342,12 +340,10 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    userInfo: state.userReducer.user,
-    previousData: state.userBasicInfoFormReducer.data,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  userInfo: state.userReducer.user,
+  previousData: state.userBasicInfoFormReducer.data,
+});
 
 export const BasicInfoForm = connect(mapStateToProps, {
   editInfoAction: editUserInfoAction,

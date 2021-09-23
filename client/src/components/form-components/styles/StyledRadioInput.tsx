@@ -14,15 +14,13 @@ const RadioInput = styled.input`
   width: fit-content;
 `;
 
-const StyledRadioInput = ({ input, meta, ...rest }: Props) => {
-  return (
-    <>
-      <RadioInput {...input} {...rest} type="radio" />
-      {checkError(meta) ? (
-        <StyledError errorMessage={meta.error || meta.submitError} />
-      ) : null}
-    </>
-  );
-};
+const StyledRadioInput = ({ input, meta, ...rest }: Props) => (
+  <>
+    <RadioInput {...input} {...rest} type='radio' />
+    {checkError(meta) ? (
+      <StyledError errorMessage={meta.error || meta.submitError} />
+    ) : null}
+  </>
+);
 
 export default StyledRadioInput;

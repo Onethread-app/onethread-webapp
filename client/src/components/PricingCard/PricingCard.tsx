@@ -52,20 +52,20 @@ const PricingCard = (props: IPricingCard) => {
           data.type === 'startup' && 'pricing-card-startup'
         }`}
       >
-        <div className="pricing-card-package">
+        <div className='pricing-card-package'>
           {data.type === 'startup' && (
-            <div className="pricing-plan-badge">
+            <div className='pricing-plan-badge'>
               {t('app.company.Pricing.startup-discount')}
             </div>
           )}
 
-          <h3 className="pricing-card-package-name">
+          <h3 className='pricing-card-package-name'>
             {t(`app.company.Pricing.${data.type}.name`)}
           </h3>
-          <p className="pricing-card-package-price">
+          <p className='pricing-card-package-price'>
             {data.type === 'enterprise' ? (
               <p
-                className="flex items-center justify-center pointer contact-us-text"
+                className='flex items-center justify-center pointer contact-us-text'
                 style={{ height: '49px' }}
                 onClick={() => setShowContactUs(true)}
               >
@@ -73,7 +73,7 @@ const PricingCard = (props: IPricingCard) => {
               </p>
             ) : (
               <p
-                className="flex items-center justify-center"
+                className='flex items-center justify-center'
                 style={{ height: '49px', fontSize: '25px' }}
               >
                 {t(`app.company.Pricing.${data.type}.price`)}
@@ -82,11 +82,11 @@ const PricingCard = (props: IPricingCard) => {
           </p>
         </div>
 
-        <div className="pricing-card-options flex flex-column items-start w-100 ml4">
+        <div className='pricing-card-options flex flex-column items-start w-100 ml4'>
           {data.options.map((op, i) => (
-            <div className="flex items-center mv1" key={i}>
-              <img src={tick} alt="" className="mr1" />
-              <p className="ma0">
+            <div className='flex items-center mv1' key={i}>
+              <img src={tick} alt='' className='mr1' />
+              <p className='ma0'>
                 {t(
                   `app.company.Pricing.${data.type}.option-${i + 1}`,
                 )}
@@ -129,7 +129,7 @@ const PricingCard = (props: IPricingCard) => {
             background: '#fff',
             width: isMobileOnly ? '350px' : '600px',
           }}
-          canOutsideClickClose={true}
+          canOutsideClickClose
         >
           <div>
             <ContactUs

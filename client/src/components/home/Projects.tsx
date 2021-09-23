@@ -32,7 +32,7 @@ const Projects = () => {
     const headers = tokenConfig();
     if ((headers.headers as any).Authorization) {
       const response = await tigrowApi.get(
-        `projects/list/overview`,
+        'projects/list/overview',
         headers,
       );
       setProjectList([...response.data.projectList]);
@@ -56,23 +56,23 @@ const Projects = () => {
 
   return (
     <>
-      <div className="your-projects">
+      <div className='your-projects'>
         <div>
           <h3 style={{ fontSize: 18, fontWeight: 'bold' }}>
             {t('app.company.Projects.My-projects')}
           </h3>
         </div>
-        <div className="flex flex-column justify-center">
+        <div className='flex flex-column justify-center'>
           <input
-            type="text"
-            className="search-project"
+            type='text'
+            className='search-project'
             placeholder={t('app.company.Projects.Search-projects')}
             value={searchInput}
             onChange={handleFilter}
           />
           {isLoading ? (
             <div
-              className="flex justify-center mt2 w-100"
+              className='flex justify-center mt2 w-100'
               style={{ paddingTop: 25, paddingBottom: 30 }}
             >
               <CircularProgress
@@ -98,11 +98,9 @@ const Projects = () => {
                     cursor: 'pointer',
                     color: '#333',
                   }}
-                  onClick={() =>
-                    history.push(
-                      `/company/${p.companyUniqueName}/project/${p._id}/overview`,
-                    )
-                  }
+                  onClick={() => history.push(
+                    `/company/${p.companyUniqueName}/project/${p._id}/overview`,
+                  )}
                 >
                   <span
                     style={{
@@ -112,7 +110,8 @@ const Projects = () => {
                     }}
                   >
                     #
-                  </span>{' '}
+                  </span>
+                  {' '}
                   {p.name}
                 </p>
               ))}
@@ -128,8 +127,8 @@ const Projects = () => {
         <Dialog
           isOpen={showDialog}
           onClose={() => setShowDialog(false)}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
+          canEscapeKeyClose
+          canOutsideClickClose
           style={{
             width: isMobileOnly ? '95%' : '544px',
             maxWidth: '508px',

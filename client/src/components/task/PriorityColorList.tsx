@@ -15,9 +15,11 @@ const PriorityIcon = styled.span`
 const PriorityColorList = () => {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center mb2">
-      <span className="mr2">
-        {t('app.project.Tasks.Task-Priority')}:{' '}
+    <div className='flex items-center mb2'>
+      <span className='mr2'>
+        {t('app.project.Tasks.Task-Priority')}
+        :
+        {' '}
       </span>
       {priorityColor.map((priority) => (
         <PriorityIcon

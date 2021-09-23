@@ -26,18 +26,18 @@ const NotificationPopoverIcon = (
   };
   return (
     <Popover
-      popoverClassName="bg-white"
+      popoverClassName='bg-white'
       position={Position.BOTTOM}
       content={<NotificationPopover />}
-      target={
-        <div className="mr2 pointer">
+      target={(
+        <div className='mr2 pointer'>
           <Badge
             badgeContent={props.seen}
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'right',
             }}
-            color="secondary"
+            color='secondary'
           >
             <NotificationsIcon
               style={{
@@ -47,7 +47,7 @@ const NotificationPopoverIcon = (
             />
           </Badge>
         </div>
-      }
+      )}
     />
   );
 };

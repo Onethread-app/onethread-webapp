@@ -33,7 +33,7 @@ export const InputGroupField = (props: InputGroupFieldProps) => (
     className={props.className}
     id={props.id}
     autoFocus={props.autoFocus}
-    fill={true}
+    fill
     type={props.type ? props.type : 'text'}
     readOnly={props.readOnly}
     placeholder={props.placeHolder}
@@ -58,8 +58,8 @@ export const InputGroupField = (props: InputGroupFieldProps) => (
       props.error
         ? Intent.DANGER
         : props.intent
-        ? props.intent
-        : Intent.NONE
+          ? props.intent
+          : Intent.NONE
     }
     disabled={props.disabled}
     onKeyPress={props.keypress}
@@ -72,7 +72,7 @@ export const InputGroupFieldWithError = (
   <>
     <InputGroupField {...props} />
     {props.error && (
-      <small className="mv3" style={{ color: 'red' }}>
+      <small className='mv3' style={{ color: 'red' }}>
         {props.error}
       </small>
     )}
@@ -92,11 +92,11 @@ export const InputGroupFieldWithLabel = (
   <FormGroup
     inline={props.inline}
     intent={props.error ? Intent.DANGER : Intent.NONE}
-    label={
-      <div className="fw5" style={{ fontSize: '.8rem' }}>
+    label={(
+      <div className='fw5' style={{ fontSize: '.8rem' }}>
         {props.label}
       </div>
-    }
+    )}
     helperText={props.error ? props.error : props.helperText}
     labelFor={props.id}
   >

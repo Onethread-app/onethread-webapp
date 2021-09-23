@@ -13,18 +13,14 @@ import CompanyAnnouncementItem from '../company-announcements-new/CompanyAnnounc
 
 const CompanyAnnouncementsList = (props: any) => {
   const { t } = useTranslation();
-  const [showAnnouncementDialog, setShowAnnouncementDialog] =
-    useState(false);
+  const [showAnnouncementDialog, setShowAnnouncementDialog] = useState(false);
 
-  const [currentAnnouncementPage, setCurrentAnnouncementPage] =
-    useState(1);
+  const [currentAnnouncementPage, setCurrentAnnouncementPage] = useState(1);
 
   const [announcementItemsPerPage] = useState(3);
 
-  const indexOfLastAnnouncement =
-    currentAnnouncementPage * announcementItemsPerPage;
-  const indexOfFirstAnnouncement =
-    indexOfLastAnnouncement - announcementItemsPerPage;
+  const indexOfLastAnnouncement = currentAnnouncementPage * announcementItemsPerPage;
+  const indexOfFirstAnnouncement = indexOfLastAnnouncement - announcementItemsPerPage;
 
   let currentAnnouncements: any;
 
@@ -60,21 +56,19 @@ const CompanyAnnouncementsList = (props: any) => {
 
   return (
     <>
-      <div className="w-50-ns w-100">
-        <div className="flex justify-between items-center">
+      <div className='w-50-ns w-100'>
+        <div className='flex justify-between items-center'>
           <h3
             style={{ color: '#34b3e9' }}
-            className="justify-center f3-ns f5"
+            className='justify-center f3-ns f5'
           >
             {t('app.company.Dashboard.Announce')}
           </h3>
 
           {companyPermit(props.company.role) && (
             <button
-              onClick={() =>
-                setShowAnnouncementDialog(!showAnnouncementDialog)
-              }
-              className="bp3-button w5 h2 pointer fr"
+              onClick={() => setShowAnnouncementDialog(!showAnnouncementDialog)}
+              className='bp3-button w5 h2 pointer fr'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
@@ -83,18 +77,18 @@ const CompanyAnnouncementsList = (props: any) => {
             >
               <span>
                 <img
-                  src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/mic.svg"
-                  alt="announcement"
+                  src='https://tigrowresources.s3-ap-southeast-1.amazonaws.com/mic.svg'
+                  alt='announcement'
                 />
               </span>
-              <span className="ml2-ns">
+              <span className='ml2-ns'>
                 {t('app.company.Dashboard.Create-Announcement')}
               </span>
             </button>
           )}
         </div>
         {props.company.announce && (
-          <div className="w-100-l w-100 pa3 shadow-1 br2">
+          <div className='w-100-l w-100 pa3 shadow-1 br2'>
             {props.company.announce.length > 0 ? (
               currentAnnouncements.map((announcement: any) => (
                 <CompanyAnnouncementItem
@@ -102,12 +96,12 @@ const CompanyAnnouncementsList = (props: any) => {
                   content={announcement.text}
                   key={announcement._id}
                   divison={
-                    announcement.memberId &&
-                    announcement.memberId.designations.length > 0
+                    announcement.memberId
+                    && announcement.memberId.designations.length > 0
                       ? designationMap[
-                          announcement.memberId.designations[0]
-                            .division
-                        ]
+                        announcement.memberId.designations[0]
+                          .division
+                      ]
                       : announcement.memberId.role
                   }
                   firstName={
@@ -121,8 +115,8 @@ const CompanyAnnouncementsList = (props: any) => {
                       : null
                   }
                   position={
-                    announcement.memberId &&
-                    announcement.memberId.designations.length > 0
+                    announcement.memberId
+                    && announcement.memberId.designations.length > 0
                       ? announcement.memberId.designations[0].position
                       : announcement.memberId.role
                   }
@@ -134,32 +128,35 @@ const CompanyAnnouncementsList = (props: any) => {
               </Typography>
             )}
             {props.company.announce.length > 5 && (
-              <div className="flex flex-row items-end w-100 justify-end">
+              <div className='flex flex-row items-end w-100 justify-end'>
                 <div
-                  className="f6 fw5 flex flex-row items-center"
+                  className='f6 fw5 flex flex-row items-center'
                   style={{ color: '#BBBBBB' }}
                 >
                   {currentAnnouncementPage > 1 && (
                     <span
-                      className="mr2 pointer f4"
+                      className='mr2 pointer f4'
                       style={{ color: '#656565' }}
                       onClick={prevAnnouncementPage}
                     >
                       &lt;
                     </span>
                   )}
-                  {currentAnnouncementPage} of{' '}
+                  {currentAnnouncementPage}
+                  {' '}
+                  of
+                  {' '}
                   {Math.ceil(
-                    props.company.announce.length /
-                      announcementItemsPerPage,
+                    props.company.announce.length
+                      / announcementItemsPerPage,
                   )}
-                  {currentAnnouncementPage <
-                    Math.ceil(
-                      props.company.announce.length /
-                        announcementItemsPerPage,
+                  {currentAnnouncementPage
+                    < Math.ceil(
+                      props.company.announce.length
+                        / announcementItemsPerPage,
                     ) && (
                     <span
-                      className="ml2 pointer f4"
+                      className='ml2 pointer f4'
                       style={{ color: '#656565' }}
                       onClick={nextAnnouncementPage}
                     >
@@ -174,12 +171,10 @@ const CompanyAnnouncementsList = (props: any) => {
       </div>
       {showAnnouncementDialog && (
         <Dialog
-          onClose={() =>
-            setShowAnnouncementDialog(!showAnnouncementDialog)
-          }
+          onClose={() => setShowAnnouncementDialog(!showAnnouncementDialog)}
           isOpen={showAnnouncementDialog}
           style={{ background: '#fff' }}
-          canOutsideClickClose={true}
+          canOutsideClickClose
         >
           <div>
             <AnnouncementEditor

@@ -23,12 +23,10 @@ export const DashboardSummary = (props) => {
 
   useEffect(() => {
     if (projectCompilation) {
-      const projectStats = projectCompilation.map((project) => {
-        return (
-          project.taskNumbers > 0 &&
-          project.taskNumbers === project.doneTask
-        );
-      });
+      const projectStats = projectCompilation.map((project) => (
+        project.taskNumbers > 0
+          && project.taskNumbers === project.doneTask
+      ));
 
       const totalCompletedProjects = projectStats.reduce(
         (acc, cur) => {
@@ -42,28 +40,27 @@ export const DashboardSummary = (props) => {
 
       setCompletedProjectsVal(totalCompletedProjects);
 
-      const totalRunningProjects =
-        projectStats.length - totalCompletedProjects;
+      const totalRunningProjects = projectStats.length - totalCompletedProjects;
 
       setRunningProjectVal(totalRunningProjects);
     }
   }, [projectCompilation]);
 
   return (
-    <div className="flex flex-row-ns flex-column">
-      <div className="w-30-l w-100 b--black-05 br-l bn bw1 summary-wrapper">
-        <div className="w-100-ns w-50 ma4-ns ma3 inline-items">
-          <div className="mr0-ns mr2">
+    <div className='flex flex-row-ns flex-column'>
+      <div className='w-30-l w-100 b--black-05 br-l bn bw1 summary-wrapper'>
+        <div className='w-100-ns w-50 ma4-ns ma3 inline-items'>
+          <div className='mr0-ns mr2'>
             <img
-              src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/revision.svg"
-              alt="revision"
+              src='https://tigrowresources.s3-ap-southeast-1.amazonaws.com/revision.svg'
+              alt='revision'
             />
           </div>
           <h3
-            className="w-50-ns w-100 f5-ns f7 fw7 midWidth flex items-center"
+            className='w-50-ns w-100 f5-ns f7 fw7 midWidth flex items-center'
             style={fontColor}
           >
-            <div className="flex flex-column">
+            <div className='flex flex-column'>
               <span>
                 {t(
                   'app.company.Dashboard.Ongoing-projects.first-part',
@@ -75,23 +72,23 @@ export const DashboardSummary = (props) => {
                 )}
               </span>
             </div>
-            <span className="fr f2-ns f3 pl3" style={primaryColor}>
+            <span className='fr f2-ns f3 pl3' style={primaryColor}>
               {runningProjects}
             </span>
           </h3>
         </div>
-        <div className="w-100-ns w-50 ma4-ns ma3 inline-items">
-          <div className="mr0-ns mr2">
+        <div className='w-100-ns w-50 ma4-ns ma3 inline-items'>
+          <div className='mr0-ns mr2'>
             <img
-              src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/completed.svg"
-              alt="completed"
+              src='https://tigrowresources.s3-ap-southeast-1.amazonaws.com/completed.svg'
+              alt='completed'
             />
           </div>
           <h3
-            className="w-50-ns w-100 f5-ns f7 fw7 midWidth flex items-center"
+            className='w-50-ns w-100 f5-ns f7 fw7 midWidth flex items-center'
             style={fontColor}
           >
-            <div className="flex flex-column">
+            <div className='flex flex-column'>
               <span>
                 {t(
                   'app.company.Dashboard.Finished-projects.first-part',
@@ -103,13 +100,13 @@ export const DashboardSummary = (props) => {
                 )}
               </span>
             </div>
-            <span className="fr f2-ns f3 pl3" style={primaryColor}>
+            <span className='fr f2-ns f3 pl3' style={primaryColor}>
               {completedProjects}
             </span>
           </h3>
         </div>
       </div>
-      <div className="w-70-l w-100 chart-height-mobile">
+      <div className='w-70-l w-100 chart-height-mobile'>
         <DashboardChart
           runningProjects={runningProjects}
           completedProjects={completedProjects}

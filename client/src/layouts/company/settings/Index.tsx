@@ -9,13 +9,13 @@ import { Tabs } from '@blueprintjs/core/lib/esm/components/tabs/tabs';
 import { Tab } from '@blueprintjs/core/lib/esm/components/tabs/tab';
 
 import { User } from 'stores/user/Reducer';
+import { companySubscriber } from 'helpers/notification/subscribers';
+import Navbar from 'components/navbar/Navbar';
 import { getNotifications } from '../../../stores/notifications/Action';
 
-import { companySubscriber } from 'helpers/notification/subscribers';
 import { DepartmentView } from './department/View';
 import { AdminRoleView } from './adminRole/View';
 import { GeneralView } from './companyName/General';
-import Navbar from 'components/navbar/Navbar';
 import Subscriptions from './subscriptions/Index';
 import ErrorText from './ErrorText';
 
@@ -42,10 +42,9 @@ interface SettingsPageProps {
   subscriptiontExpired: boolean;
 }
 
-const ViewContent = ({ selectedTab }) => {
-  return (
-    <div>
-      {
+const ViewContent = ({ selectedTab }) => (
+  <div>
+    {
         {
           1: <GeneralView />,
           2: <AdminRoleView />,
@@ -53,9 +52,8 @@ const ViewContent = ({ selectedTab }) => {
           4: <Subscriptions />,
         }[selectedTab]
       }
-    </div>
-  );
-};
+  </div>
+);
 
 const MobileView = () => {
   const { t } = useTranslation();
@@ -64,8 +62,8 @@ const MobileView = () => {
 
   return (
     <MobileOnlyView>
-      <div className="mobile-nav w-100 tc">
-        <ul className="flex flex-column list pl0">
+      <div className='mobile-nav w-100 tc'>
+        <ul className='flex flex-column list pl0'>
           <li
             className={
               liClasses + (selectedTab === 1 ? ' activeNav' : '')
@@ -120,11 +118,11 @@ const SettingsPagComponent = (
 
   return (
     <>
-      {isMobileOnly && <Navbar type="company" />}
-      <div className="fl w-100 pl4-ns pr2-ns ph3 pb4 mt5 mt0-ns">
-        <div className="fl w-100">
+      {isMobileOnly && <Navbar type='company' />}
+      <div className='fl w-100 pl4-ns pr2-ns ph3 pb4 mt5 mt0-ns'>
+        <div className='fl w-100'>
           {isMobileOnly ? undefined : (
-            <h3 className="f3 b">
+            <h3 className='f3 b'>
               {t('app.company.Settings.Settings')}
             </h3>
           )}
@@ -133,46 +131,46 @@ const SettingsPagComponent = (
           <MobileView />
         ) : (
           <Tabs
-            id="TabsExample"
-            className="fl w-100 min-vh-75"
-            vertical={isMobileOnly ? false : true}
+            id='TabsExample'
+            className='fl w-100 min-vh-75'
+            vertical={!isMobileOnly}
           >
             <Tab
-              id="General"
+              id='General'
               panelClassName={`b--black-05 ${
                 isMobileOnly ? '' : 'bl'
               } bw1 ml3-ns ml1 w-100`}
               title={t('app.company.Settings.General')}
               panel={<GeneralView />}
-              className="outline-0 f6-ns f7"
+              className='outline-0 f6-ns f7'
             />
             <Tab
-              id="admin_role_permissions"
+              id='admin_role_permissions'
               panelClassName={`b--black-05 ${
                 isMobileOnly ? '' : 'bl'
               } bw1 ml3-ns ml1 w-100`}
               title={t('app.company.Settings.Role-Permission')}
               panel={<AdminRoleView />}
-              className="outline-0 f6-ns f7"
+              className='outline-0 f6-ns f7'
             />
             <Tab
-              id="department"
+              id='department'
               panelClassName={`b--black-05 ${
                 isMobileOnly ? '' : 'bl'
               } bw1 ml3-ns ml1 w-100`}
               title={t('app.company.Settings.Departments')}
               panel={<DepartmentView />}
-              className="outline-0 f6-ns f7"
+              className='outline-0 f6-ns f7'
             />
             {props.companyRole === 'superAdmin' && (
               <Tab
-                id="subscription"
+                id='subscription'
                 panelClassName={`b--black-05 ${
                   isMobileOnly ? '' : 'bl'
                 } bw1 ml3-ns ml1 w-100`}
                 title={t('app.company.Settings.Subscription')}
                 panel={<Subscriptions />}
-                className="outline-0 f6-ns f7"
+                className='outline-0 f6-ns f7'
               />
             )}
           </Tabs>
@@ -182,11 +180,13 @@ const SettingsPagComponent = (
           <Modal
             isOpen={success}
             // onAfterOpen={afterOpenModal}
+            // eslint-disable-next-line react/jsx-no-bind
             onRequestClose={closeModal}
             style={customStylesForModal}
-            contentLabel="Example Modal"
+            contentLabel='Example Modal'
           >
             <ErrorText
+              // eslint-disable-next-line react/jsx-no-bind
               closeModal={closeModal}
               text={t('app.company.Settings.Expired')}
               subtext={t('app.company.Settings.Expired-text')}
@@ -198,17 +198,15 @@ const SettingsPagComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-    companyId: state.companyReducer.currentCompany._id,
-    notifications: state.notificationReducer.allNotifications,
-    read: state.notificationReducer.read,
-    companyRole: state.companyReducer.currentCompany.role,
-    subscriptiontExpired:
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+  companyId: state.companyReducer.currentCompany._id,
+  notifications: state.notificationReducer.allNotifications,
+  read: state.notificationReducer.read,
+  companyRole: state.companyReducer.currentCompany.role,
+  subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
-  };
-};
+});
 export const SettingsPage = connect(mapStateToProps, {
   companySubscriber,
   getNotifications,

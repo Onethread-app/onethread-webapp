@@ -13,15 +13,15 @@ const LanguageSelector = () => {
     //   English
     //   <input type="radio" value="bn" name="language" /> Bangla
     // </div>
-    <div className="tc bb b--white mt5 flex justify-center">
+    <div className='tc bb b--white mt5 flex justify-center'>
       <p
-        className="white fw6 f5 pointer dim"
+        className='white fw6 f5 pointer dim'
         onClick={() => changeLanguage('en')}
       >
         English
       </p>
       <p
-        className="white f5 ml4 pointer dim"
+        className='white f5 ml4 pointer dim'
         onClick={() => changeLanguage('bn')}
       >
         বাংলা

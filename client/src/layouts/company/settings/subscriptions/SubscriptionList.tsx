@@ -54,7 +54,7 @@ const _SubscriptionList = (props: ISubscriptionList) => {
     <div>
       {props.currentComponent === 'subscriptionList' && (
         <div>
-          <div className="mb1">
+          <div className='mb1'>
             <Button
               className={classes.button}
               startIcon={<ArrowBackIosIcon />}
@@ -64,79 +64,85 @@ const _SubscriptionList = (props: ISubscriptionList) => {
             </Button>
           </div>
           <Grid container>
-            {props.subscriptions.map((subscription, i) => {
-              return (
-                <Grid container spacing={2} key={subscription._id}>
-                  <Grid item sm={12} md={6} lg={4}>
-                    <Card style={{ marginBottom: '10px' }}>
-                      <Grid container spacing={3}>
-                        <Grid item xs={6}>
-                          <CardContent>
-                            <h3
-                              style={{
-                                color: '#34b3e9',
-                                marginBottom: '0',
+            {props.subscriptions.map((subscription, i) => (
+              <Grid container spacing={2} key={subscription._id}>
+                <Grid item sm={12} md={6} lg={4}>
+                  <Card style={{ marginBottom: '10px' }}>
+                    <Grid container spacing={3}>
+                      <Grid item xs={6}>
+                        <CardContent>
+                          <h3
+                            style={{
+                              color: '#34b3e9',
+                              marginBottom: '0',
+                            }}
+                          >
+                            {subscription.name.toUpperCase()}
+                          </h3>
+                          <List dense={dense}>
+                            <ListItem>
+                              <ListItemIcon>
+                                <CheckIcon />
+                              </ListItemIcon>
+                              <div>
+                                Maximum user
+                                {' '}
+                                {subscription.maxTier}
+                              </div>
+                            </ListItem>
+                            <ListItem>
+                              <ListItemIcon>
+                                <CheckIcon />
+                              </ListItemIcon>
+                              <div>
+                                Validity
+                                {' '}
+                                {subscription.validity}
+                                {' '}
+                                days
+                              </div>
+                            </ListItem>
+                            ,
+                          </List>
+                        </CardContent>
+                      </Grid>
+
+                      <Grid item xs={6}>
+                        <CardActions className='h-100 v-mid'>
+                          <div className='mt4 center'>
+                            <h3 className='mb1'>
+                              $
+                              {subscription.pricing}
+                            </h3>
+                            {subscription.pricing !== 0 && (
+                            <>
+                              <span className='fw6'>Or</span>
+                              <h3 className='mt1'>
+                                BDT
+                                {' '}
+                                {subscription.pricing * 85}
+                              </h3>
+                            </>
+                            )}
+                            <Button
+                              className={classes.button}
+                              variant='contained'
+                              color='primary'
+                              onClick={async () => {
+                                await props.getPlan(subscription);
+                                props.changeComponentTo('checkOut');
                               }}
                             >
-                              {subscription.name.toUpperCase()}
-                            </h3>
-                            <List dense={dense}>
-                              <ListItem>
-                                <ListItemIcon>
-                                  <CheckIcon />
-                                </ListItemIcon>
-                                <div>
-                                  Maximum user {subscription.maxTier}
-                                </div>
-                              </ListItem>
-                              <ListItem>
-                                <ListItemIcon>
-                                  <CheckIcon />
-                                </ListItemIcon>
-                                <div>
-                                  Validity {subscription.validity}{' '}
-                                  days
-                                </div>
-                              </ListItem>
-                              ,
-                            </List>
-                          </CardContent>
-                        </Grid>
-
-                        <Grid item xs={6}>
-                          <CardActions className="h-100 v-mid">
-                            <div className="mt4 center">
-                              <h3 className="mb1">
-                                ${subscription.pricing}
-                              </h3>
-                              {subscription.pricing !== 0 && (
-                                <>
-                                  <span className="fw6">Or</span>
-                                  <h3 className="mt1">
-                                    BDT {subscription.pricing * 85}
-                                  </h3>
-                                </>
-                              )}
-                              <Button
-                                className={classes.button}
-                                variant="contained"
-                                color="primary"
-                                onClick={async () => {
-                                  await props.getPlan(subscription);
-                                  props.changeComponentTo('checkOut');
-                                }}
-                              >
-                                Pay Bill
-                              </Button>
-                            </div>
-                          </CardActions>
-                        </Grid>
+                              Pay Bill
+                            </Button>
+                          </div>
+                        </CardActions>
                       </Grid>
-                    </Card>
-                  </Grid>
+                    </Grid>
+                  </Card>
                 </Grid>
-              );
-            })}
+              </Grid>
+            ))}
           </Grid>
           <Grid container>
             <Grid item xs={4}>

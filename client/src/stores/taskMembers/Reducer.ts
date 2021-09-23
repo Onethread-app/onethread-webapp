@@ -81,8 +81,7 @@ export const TaskMembersReducer = (
       return {
         ...state,
         taskMemberList: state.taskMemberList.filter(
-          (taskMember: ITaskMember) =>
-            taskMember._id !== action.payload,
+          (taskMember: ITaskMember) => taskMember._id !== action.payload,
         ),
         isEditingTask: false,
       };

@@ -89,46 +89,46 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
             props.values && props.values.name
               ? props.values.name
               : defaultValues.companyName
-              ? defaultValues.companyName
-              : '',
+                ? defaultValues.companyName
+                : '',
           positionName:
             props.values && props.values.qualification
               ? props.values.qualification
               : defaultValues.positionName
-              ? defaultValues.positionName
-              : '',
+                ? defaultValues.positionName
+                : '',
           // TODO: Date type must be used instead of string
           startYear:
             props.values && props.values.startYear
               ? props.values.startYear
               : defaultValues.startYear
-              ? defaultValues.startYear
-              : '',
+                ? defaultValues.startYear
+                : '',
           endingYear:
             props.values && props.values.endingYear
               ? props.values.endingYear
               : defaultValues.endingYear
-              ? defaultValues.endingYear
-              : '',
+                ? defaultValues.endingYear
+                : '',
           currentlyWork:
             props.values && props.values.currentStatus
               ? props.values.currentStatus
               : defaultValues.currentlyWork
-              ? defaultValues.currentlyWork
-              : false,
+                ? defaultValues.currentlyWork
+                : false,
           jobDescription:
             props.values && props.values.description
               ? props.values.description
               : defaultValues.jobDescription
-              ? defaultValues.jobDescription
-              : '',
+                ? defaultValues.jobDescription
+                : '',
         }}
         validate={(values: any) => {
           const errors = {} as any;
           if (
-            values.startYear !== '' &&
-            values.endingYear === '' &&
-            values.currentlyWork === false
+            values.startYear !== ''
+            && values.endingYear === ''
+            && values.currentlyWork === false
           ) {
             errors.endingYear = 'required';
             errors.currentlyWork = 'required';
@@ -145,12 +145,12 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
           hasValidationErrors,
           ...rest
         }) => (
-          <form className="fl w-100" onSubmit={handleSubmit}>
-            <div className="mb3">
+          <form className='fl w-100' onSubmit={handleSubmit}>
+            <div className='mb3'>
               <SubmitError errorMessage={submitError} />
             </div>
             <Field<string>
-              name="companyName"
+              name='companyName'
               validate={composeValidators(required, maxValue(32))}
               render={({ input, meta }) => (
                 <div
@@ -158,8 +158,8 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                 >
                   <label>{t('app.user.User-job.Company-name')}</label>
                   <InputGroupFieldWithError
-                    id="companyName"
-                    className="mt1"
+                    id='companyName'
+                    className='mt1'
                     value={input.value}
                     onChange={(e) => {
                       input.onChange(e);
@@ -169,16 +169,16 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                       boxShadow: 'none',
                     }}
                     error={
-                      checkError(meta) &&
-                      (meta.error || meta.submitError)
+                      checkError(meta)
+                      && (meta.error || meta.submitError)
                     }
-                    autoFocus={true}
+                    autoFocus
                   />
                 </div>
               )}
             />
             <Field<string>
-              name="positionName"
+              name='positionName'
               validate={composeValidators(required, maxValue(32))}
               render={({ input, meta }) => (
                 <div
@@ -188,8 +188,8 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                     {t('app.user.User-job.Position-name')}
                   </label>
                   <InputGroupFieldWithError
-                    id="positionName"
-                    className="mt1"
+                    id='positionName'
+                    className='mt1'
                     value={input.value}
                     onChange={(e) => {
                       input.onChange(e);
@@ -199,15 +199,15 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                       boxShadow: 'none',
                     }}
                     error={
-                      checkError(meta) &&
-                      (meta.error || meta.submitError)
+                      checkError(meta)
+                      && (meta.error || meta.submitError)
                     }
                   />
                 </div>
               )}
             />
             <Field<string>
-              name="startYear"
+              name='startYear'
               validate={required}
               render={({ input, meta }) => (
                 <div
@@ -215,9 +215,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                 >
                   <label>{t('app.user.User-job.Start-year')}</label>
                   <DateInput
-                    formatDate={(date: Date) =>
-                      date.toLocaleDateString()
-                    }
+                    formatDate={(date: Date) => date.toLocaleDateString()}
                     parseDate={(str: string) => new Date(str)}
                     onChange={(e) => {
                       input.onChange(e);
@@ -240,7 +238,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                     }
                   />
                   {checkError(meta) && (
-                    <small className="mv3" style={{ color: 'red' }}>
+                    <small className='mv3' style={{ color: 'red' }}>
                       {meta.error || meta.submitError}
                     </small>
                   )}
@@ -248,16 +246,14 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
               )}
             />
             <Field<string>
-              name="endingYear"
+              name='endingYear'
               render={({ input, meta }) => (
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <label>{t('app.user.User-job.End')}</label>
                   <DateInput
-                    formatDate={(date: Date) =>
-                      date.toLocaleDateString()
-                    }
+                    formatDate={(date: Date) => date.toLocaleDateString()}
                     parseDate={(str: string) => new Date(str)}
                     onChange={(e) => {
                       input.onChange(e);
@@ -266,9 +262,9 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                     disabled={
                       new Date(
                         values.startYear,
-                      ).toLocaleDateString() ===
-                        new Date().toLocaleDateString() ||
-                      values.startYear === ''
+                      ).toLocaleDateString()
+                        === new Date().toLocaleDateString()
+                      || values.startYear === ''
                         ? true
                         : values.currentlyWork
                     }
@@ -289,7 +285,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                     }}
                   />
                   {checkError(meta) && (
-                    <small className="mv3" style={{ color: 'red' }}>
+                    <small className='mv3' style={{ color: 'red' }}>
                       {meta.error || meta.submitError}
                     </small>
                   )}
@@ -297,15 +293,15 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
               )}
             />
             <Field<string>
-              name="jobDescription"
+              name='jobDescription'
               render={({ input, meta }) => (
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <label>{t('app.user.User-job.Description')}</label>
                   <TextArea
-                    className="mt1"
-                    id="jobDescription"
+                    className='mt1'
+                    id='jobDescription'
                     value={input.value}
                     onChange={(e) => {
                       input.onChange(e);
@@ -316,11 +312,11 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                       minHeight: '50px',
                       maxHeight: '150px',
                     }}
-                    fill={true}
-                    growVertically={true}
+                    fill
+                    growVertically
                   />
                   {checkError(meta) && (
-                    <small className="mv3" style={{ color: 'red' }}>
+                    <small className='mv3' style={{ color: 'red' }}>
                       {meta.error || meta.submitError}
                     </small>
                   )}
@@ -328,15 +324,15 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
               )}
             />
             <Field<string>
-              name="currentlyWork"
-              type="checkbox"
+              name='currentlyWork'
+              type='checkbox'
               render={({ input, meta }) => (
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <Checkbox
-                    id="currentlyWork"
-                    className="white"
+                    id='currentlyWork'
+                    className='white'
                     value={input.value}
                     onChange={(e) => {
                       input.onChange(e);
@@ -349,32 +345,32 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
                     }}
                     checked={values.currentlyWork}
                     label={t('app.user.User-job.Current-work')}
-                    disabled={values.startYear === '' ? true : false}
+                    disabled={values.startYear === ''}
                   />
                   {checkError(meta) && (
-                    <small className="mv3" style={{ color: 'red' }}>
+                    <small className='mv3' style={{ color: 'red' }}>
                       {meta.error || meta.submitError}
                     </small>
                   )}
                 </div>
               )}
             />
-            <div className="flex justify-end">
+            <div className='flex justify-end'>
               <Button
-                className="w4 grow h2 pointer mr3"
+                className='w4 grow h2 pointer mr3'
                 style={{
                   background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
                 loading={submitting}
-                type="submit"
+                type='submit'
                 disabled={submitting || pristine}
               >
                 Save
               </Button>
               <Button
-                className="w4 grow h2 pointer"
+                className='w4 grow h2 pointer'
                 style={{
                   background: '#fff',
                   outline: 'none',
@@ -396,11 +392,9 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    previousData: state.jobDetailsFormReducer.data,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  previousData: state.jobDetailsFormReducer.data,
+});
 
 export const JobForm = connect(mapStateToProps, {
   addJobExperienceAction,

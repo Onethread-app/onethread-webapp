@@ -7,7 +7,7 @@ import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 import { resendMailForSignup } from 'stores/auth/Actions';
 
-import successfulEmailImage from './../../resources/images/successfulEmail.png';
+import successfulEmailImage from '../../resources/images/successfulEmail.png';
 
 const SignupConfirmationPageComponent = () => {
   const [loading, setLoading] = useState(false);
@@ -33,28 +33,29 @@ const SignupConfirmationPageComponent = () => {
   }, []);
 
   return (
-    <div className="fl w-100 pa2">
-      <div className="fl w-100" style={{ height: '90vh' }}>
-        <div className="flex flex-column h-100 items-center justify-center f3-l f4-m f5 fw5">
+    <div className='fl w-100 pa2'>
+      <div className='fl w-100' style={{ height: '90vh' }}>
+        <div className='flex flex-column h-100 items-center justify-center f3-l f4-m f5 fw5'>
           <p>
-            <img src={successfulEmailImage} />
+            <img src={successfulEmailImage} alt='' />
           </p>
-          <p className="tc">
-            We have sent an email with a confirmation link to{' '}
+          <p className='tc'>
+            We have sent an email with a confirmation link to
+            {' '}
             <strong>{email}</strong>
             <br />
             Please allow 5-10 minutes for this message to arrive.
             <br />
             The link will be valid for next 45 minutes.
-            <h4>Haven't got any mail?</h4>
+            <h4>Haven&#39;t got any mail?</h4>
             <br />
             Please, check your spam folder.
-            <h4>Still, Didn't get any mail?</h4>
+            <h4>Still, Didn&#39;t get any mail?</h4>
             Submit your issue at contact@onethread.app
           </p>
           <Button
-            className="br3 f5 f4-m f3-l fw6 mt3 ph4 pv3"
-            text="Resend mail"
+            className='br3 f5 f4-m f3-l fw6 mt3 ph4 pv3'
+            text='Resend mail'
             onClick={onSubmit}
             loading={loading}
             disabled={loading}
@@ -62,14 +63,14 @@ const SignupConfirmationPageComponent = () => {
         </div>
       </div>
       <div
-        className="fl pl4 pl2-l pt3 w-100"
+        className='fl pl4 pl2-l pt3 w-100'
         style={{ height: '10vh' }}
       >
-        <Link to={`/signin`}>
+        <Link to='/signin'>
           <Button
-            text="Back to Sign In"
-            minimal={true}
-            icon="arrow-left"
+            text='Back to Sign In'
+            minimal
+            icon='arrow-left'
           />
         </Link>
       </div>

@@ -25,6 +25,9 @@ import {
   Color,
   unreadMessageNotification,
 } from 'stores/UtilsActions';
+import { getAllAssociates } from 'stores/associate/Actions';
+import { RightSidebar } from 'components/RightSidebar';
+import StatusTag from 'components/project/StatusTag';
 import { getAllDepartments } from '../../../stores/company/Actions';
 import {
   getAllProjects,
@@ -33,13 +36,10 @@ import {
   setCurrentProjectId,
   getRoleForProject,
 } from '../../../stores/project/Actions';
-import { getAllAssociates } from 'stores/associate/Actions';
 
-import { RightSidebar } from 'components/RightSidebar';
 import { FormProject } from './CreateProjectForm';
 import { UpdateProject } from './ChangeProjectName';
 import { projectRules } from './settings/projectrules';
-import StatusTag from 'components/project/StatusTag';
 import addIcon from '../../../resources/images/addIcon.png';
 
 import './MyProjects.scss';
@@ -47,12 +47,10 @@ import './MyProjects.scss';
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const { t } = useTranslation();
   const [showProjectDialog, setShowProjectDialog] = useState(false);
-  const [showUpdateNameDialog, setShowUpdateNameDialog] =
-    useState(false);
+  const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(false);
   const projectsPageSize = useWindowSize();
   const [open, setOpen] = useState(false);
-  const [singleProjectLoading, setSingleProjectLoading] =
-    useState(false);
+  const [singleProjectLoading, setSingleProjectLoading] = useState(false);
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
   const [singlePid, setSinglePid] = useState('');
@@ -117,23 +115,23 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     permissions.grantAll
       ? setShowUpdateNameDialog(true)
       : permissions.projectModerator.includes('updateProjectPreface')
-      ? setShowUpdateNameDialog(true)
-      : setOpen(true);
+        ? setShowUpdateNameDialog(true)
+        : setOpen(true);
   };
 
   const checkRoleForArchiveProject = (projectId: string) => {
     permissions.grantAll
       ? projectArchive(projectId)
       : permissions.projectModerator.includes('updateProjectPreface')
-      ? projectArchive(projectId)
-      : setOpen(true);
+        ? projectArchive(projectId)
+        : setOpen(true);
   };
 
   const nextProjectsPage = (e: any) => {
     e.preventDefault();
     if (
-      currentProjectPage <
-      Math.ceil(props.projects.length / itemsPerPage)
+      currentProjectPage
+      < Math.ceil(props.projects.length / itemsPerPage)
     ) {
       setCurrentProjectPage(currentProjectPage + 1);
     }
@@ -171,18 +169,20 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
       {!searchValue && props.companyRole !== 'employee' && (
         <p
           onClick={() => setShowProjectDialog(true)}
-          className="f5-l pointer dim f4-ns f6 tc"
+          className='f5-l pointer dim f4-ns f6 tc'
           style={{ color: '#85929E', display: 'inline-block' }}
         >
-          Click here to create a project or click on the{' '}
+          Click here to create a project or click on the
+          {' '}
           <img
             src={addIcon}
             style={{
               display: 'inline-block',
               height: '20px',
             }}
-            alt=""
-          />{' '}
+            alt=''
+          />
+          {' '}
           icon below
         </p>
       )}
@@ -204,8 +204,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
 
   useEffect(() => {
     if (
-      loadingProjects === true &&
-      props.gettingAllProjects === false
+      loadingProjects === true
+      && props.gettingAllProjects === false
     ) {
       setProjectsLoaded(true);
     }
@@ -218,11 +218,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   useEffect(() => {
     if (searchValue) {
       setCurrentProjectPage(1);
-      const filteredProjects = allProjects.filter((project: any) =>
-        project.name
-          .toLowerCase()
-          .includes(searchValue.toLowerCase()),
-      );
+      const filteredProjects = allProjects.filter((project: any) => project.name
+        .toLowerCase()
+        .includes(searchValue.toLowerCase()));
       setFilteredProjects(filteredProjects);
     } else setFilteredProjects(allProjects);
   }, [allProjects, searchValue]);
@@ -236,41 +234,39 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   useEffect(() => {
     setCurrentProjectPage(1);
     if (
-      range[0] === undefined &&
-      range[1] === undefined &&
-      selectedOption.value === 'all'
+      range[0] === undefined
+      && range[1] === undefined
+      && selectedOption.value === 'all'
     ) {
       setAllProjects(
         orderBy(props.projects, ['createdAt'], ['desc']),
       );
       setShowClearFilter(false);
     } else if (
-      range[0] === undefined &&
-      range[1] === undefined &&
-      selectedOption.value !== 'all'
+      range[0] === undefined
+      && range[1] === undefined
+      && selectedOption.value !== 'all'
     ) {
       const filteredProjects = props.projects.filter(
-        (project: any) => {
-          return project.status === selectedOption.value;
-        },
+        (project: any) => project.status === selectedOption.value,
       );
       setAllProjects(filteredProjects);
       setShowClearFilter(true);
     } else if (
-      range[0] !== undefined &&
-      range[1] !== undefined &&
-      selectedOption.value === 'all'
+      range[0] !== undefined
+      && range[1] !== undefined
+      && selectedOption.value === 'all'
     ) {
       let filteredProjects: any;
       if (range[0] && range[1]) {
+        // eslint-disable-next-line consistent-return
         filteredProjects = props.projects.filter((project: any) => {
           if (range[0] && range[1]) {
             return (
-              project.createdAt > range[0].toISOString() &&
-              project.createdAt < range[1].toISOString()
+              project.createdAt > range[0].toISOString()
+              && project.createdAt < range[1].toISOString()
             );
           }
-          return;
         });
         setAllProjects(filteredProjects);
         setShowClearFilter(true);
@@ -278,15 +274,15 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     } else {
       let filteredProjects: any;
       if (range[0] && range[1]) {
+        // eslint-disable-next-line consistent-return
         filteredProjects = props.projects.filter((project: any) => {
           if (range[0] && range[1]) {
             return (
-              project.createdAt > range[0].toISOString() &&
-              project.createdAt < range[1].toISOString() &&
-              project.status === selectedOption.value
+              project.createdAt > range[0].toISOString()
+              && project.createdAt < range[1].toISOString()
+              && project.status === selectedOption.value
             );
           }
-          return;
         });
         setAllProjects(filteredProjects);
         setShowClearFilter(true);
@@ -296,16 +292,15 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
 
   useEffect(() => {
     if (
-      singleProjectLoading === true &&
-      props.singleProjectLoading === false &&
-      props.errorOnSingleProjectLoading === ''
+      singleProjectLoading === true
+      && props.singleProjectLoading === false
+      && props.errorOnSingleProjectLoading === ''
     ) {
       setSingleProjectLoading(false);
       props.history.push(
         `/company/${props.company.uniqueName}/project/${singlePid}/overview`,
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     singleProjectLoading,
     props.singleProjectLoading,
@@ -315,15 +310,15 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   return (
     <>
       <div
-        className="h-100 overflow-y-auto my-projects"
+        className='h-100 overflow-y-auto my-projects'
         style={{ maxHeight: '100%' }}
       >
-        <div className="flex flex-column relative">
+        <div className='flex flex-column relative'>
           <div
-            className="projects-filter mh1 mt1 mb3 self-start flex flex-row-l flex-column items-center justify-between w-90"
+            className='projects-filter mh1 mt1 mb3 self-start flex flex-row-l flex-column items-center justify-between w-90'
             style={{ gap: '.5rem' }}
           >
-            <div className="flex flex-row-l flex-column items-center filter mb0-ns mb2">
+            <div className='flex flex-row-l flex-column items-center filter mb0-ns mb2'>
               <Select
                 options={statusOptions}
                 value={selectedOption}
@@ -342,15 +337,15 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
               />
               {showClearFilter && (
                 <Button
-                  icon={
+                  icon={(
                     <Icon
-                      icon="refresh"
+                      icon='refresh'
                       style={{
                         color: '#fff',
                         background: '#34b3e9',
                       }}
                     />
-                  }
+                  )}
                   onClick={handleClear}
                   style={{
                     height: '38px',
@@ -359,11 +354,11 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                 />
               )}
             </div>
-            <div className="bp3-input-group .modifier">
-              <span className="bp3-icon bp3-icon-search"></span>
+            <div className='bp3-input-group .modifier'>
+              <span className='bp3-icon bp3-icon-search' />
               <input
-                type="text"
-                className="bp3-input"
+                type='text'
+                className='bp3-input'
                 placeholder={t('app.company.Projects.Find')}
                 onChange={(e) => handleSearch(e)}
               />
@@ -373,12 +368,12 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
             style={
               projectsLoaded && filteredProjects.length > 0
                 ? {
-                    display: 'grid',
-                    gridTemplateColumns:
+                  display: 'grid',
+                  gridTemplateColumns:
                       'repeat(auto-fit, minmax(200px, 265px))',
-                    gridAutoRows: '135px',
-                    gridGap: '10px 10px',
-                  }
+                  gridAutoRows: '135px',
+                  gridGap: '10px 10px',
+                }
                 : {}
             }
           >
@@ -386,11 +381,11 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
               <CircularProgress />
             ) : filteredProjects.length > 0 ? (
               currentProjects.map((project: any) => (
-                <div className="pa1" key={project._id}>
+                <div className='pa1' key={project._id}>
                   <Card
                     key={project._id}
-                    className="h-100"
-                    interactive={true}
+                    className='h-100'
+                    interactive
                     elevation={Elevation.TWO}
                     style={{
                       paddingLeft: '0px',
@@ -398,17 +393,17 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       cursor: 'default',
                     }}
                   >
-                    <div className="flex flex-column">
-                      <div className="flex items-start">
+                    <div className='flex flex-column'>
+                      <div className='flex items-start'>
                         <h3
                           style={{
                             borderLeft: `5px solid 
                               ${
                                 find(Color, ['code', project.color])
                                   ? find(Color, [
-                                      'code',
-                                      project.color,
-                                    ])!.value
+                                    'code',
+                                    project.color,
+                                  ])!.value
                                   : 'white'
                               }`,
                             paddingLeft: '20px',
@@ -426,41 +421,37 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             e.preventDefault();
                             singleProjectOnClick(project._id);
                           }}
-                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
+                          className='mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer'
                         >
                           {project.name}
                         </h3>
                         <Popover
-                          className="w-10"
+                          className='w-10'
                           content={
                             modalOpen ? (
-                              <Menu className="pa2">
+                              <Menu className='pa2'>
                                 <MenuItem
-                                  className="pa1"
+                                  className='pa1'
                                   text={t(
                                     'app.project.Project-preface.Update-Project',
                                   )}
-                                  onClick={(e: any) =>
-                                    checkRoleForChangeName()
-                                  }
+                                  onClick={(e: any) => checkRoleForChangeName()}
                                 />
                                 <MenuItem
-                                  className="pa1 red"
+                                  className='pa1 red'
                                   text={t(
                                     'app.project.Project-preface.Archive-Project',
                                   )}
-                                  onClick={(e: any) =>
-                                    checkRoleForArchiveProject(
-                                      project._id,
-                                    )
-                                  }
+                                  onClick={(e: any) => checkRoleForArchiveProject(
+                                    project._id,
+                                  )}
                                 />
                               </Menu>
                             ) : (
                               'Loading..'
                             )
                           }
-                          target={
+                          target={(
                             <Button
                               style={{
                                 transform: 'rotate(90deg)',
@@ -468,37 +459,35 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                 msTransform: 'rotate(90deg)',
                                 WebkitTransform: 'rotate(90deg)',
                               }}
-                              icon="more"
-                              minimal={true}
-                              className="outline-0"
-                              onClick={(e: any) =>
-                                getProjectRole(project._id)
-                              }
+                              icon='more'
+                              minimal
+                              className='outline-0'
+                              onClick={(e: any) => getProjectRole(project._id)}
                             />
-                          }
+                          )}
                         />
-                        {props.companyRooms &&
-                        unreadMessageNotification(
+                        {props.companyRooms
+                        && unreadMessageNotification(
                           props.companyRooms,
                           'project',
                           project._id,
                         ) ? (
                           <span
-                            className="ml1 br-100 bg-red"
+                            className='ml1 br-100 bg-red'
                             style={{ width: '7px', height: '7px' }}
-                          ></span>
-                        ) : null}
+                          />
+                          ) : null}
                       </div>
                       <div
-                        className="flex flex-column items-start mt2"
+                        className='flex flex-column items-start mt2'
                         style={{ paddingLeft: '25px' }}
                       >
-                        <div className="flex items-center justify-between w-100">
+                        <div className='flex items-center justify-between w-100'>
                           <StatusTag status={project.status} />
                         </div>
                         {project.status !== 'not-started' && (
                           <span
-                            className="f7 fw5 mr2"
+                            className='f7 fw5 mr2'
                             style={{ marginTop: '1.5px' }}
                           >
                             {t(
@@ -510,14 +499,16 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                         )}
 
                         <p
-                          className="f7 fw5"
+                          className='f7 fw5'
                           style={{ marginTop: '5px' }}
                         >
-                          {t('app.project.Project-preface.Deadline')}:{' '}
+                          {t('app.project.Project-preface.Deadline')}
+                          :
+                          {' '}
                           {project.deadline
                             ? moment(project.deadline).format(
-                                'DD/MM/YYYY',
-                              )
+                              'DD/MM/YYYY',
+                            )
                             : 'Not Set'}
                         </p>
                       </div>
@@ -540,9 +531,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                   </Card>
                   {showUpdateNameDialog && (
                     <RightSidebar
-                      onClose={() =>
-                        setShowUpdateNameDialog(!showUpdateNameDialog)
-                      }
+                      onClose={() => setShowUpdateNameDialog(!showUpdateNameDialog)}
                     >
                       <UpdateProject
                         projectName={props.currentProject.name}
@@ -563,15 +552,15 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
               noProjectsFound
             )}
           </div>
-          {projectsLoaded === true &&
-            filteredProjects.length > itemsPerPage && (
-              <div className="flex flex-row items-center w-100 justify-center mt3">
+          {projectsLoaded === true
+            && filteredProjects.length > itemsPerPage && (
+              <div className='flex flex-row items-center w-100 justify-center mt3'>
                 <div
-                  className="f6 fw5 flex flex-row items-center"
+                  className='f6 fw5 flex flex-row items-center'
                   style={{ color: '#BBBBBB' }}
                 >
                   <Icon
-                    icon="circle-arrow-left"
+                    icon='circle-arrow-left'
                     iconSize={25}
                     onClick={prevProjectsPage}
                     className={`mr2 ${
@@ -584,22 +573,25 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           : '#656565',
                     }}
                   />
-                  {currentProjectPage} of{' '}
+                  {currentProjectPage}
+                  {' '}
+                  of
+                  {' '}
                   {Math.ceil(filteredProjects.length / itemsPerPage)}
                   <Icon
-                    icon="circle-arrow-right"
+                    icon='circle-arrow-right'
                     iconSize={25}
                     onClick={nextProjectsPage}
                     className={`ml2 ${
-                      currentProjectPage <
-                        Math.ceil(
+                      currentProjectPage
+                        < Math.ceil(
                           filteredProjects.length / itemsPerPage,
                         ) && 'pointer'
                     }`}
                     style={{
                       color:
-                        currentProjectPage <
-                        Math.ceil(
+                        currentProjectPage
+                        < Math.ceil(
                           filteredProjects.length / itemsPerPage,
                         )
                           ? '#34b3e9'
@@ -608,7 +600,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                   />
                 </div>
               </div>
-            )}
+          )}
         </div>
         {projectsLoaded && props.company.role !== 'employee' && (
           <div>
@@ -622,7 +614,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                 boxShadow: '0px 6px 6px #00000029',
                 borderRadius: '50%',
               }}
-              alt=""
+              alt=''
             />
           </div>
         )}
@@ -639,7 +631,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
         autoHideDuration={4000}
         onClose={() => setOpen(false)}
       >
-        <MuiAlert severity="error">
+        <MuiAlert severity='error'>
           You are not allowed to do this change!
         </MuiAlert>
       </Snackbar>
@@ -657,14 +649,14 @@ const mapStateToProps = (state: any) => ({
   company: state.companyReducer.currentCompany,
   companyRooms: state.roomReducer.companyRooms,
   role:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.role,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.role,
   optionalRole:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.project.optionalRole,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.project.optionalRole,
   currentProject:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.project,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.project,
   companyRole: state.companyReducer.currentCompany.role,
 });
 

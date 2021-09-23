@@ -13,13 +13,11 @@ import { ICompany } from 'stores/company/Reducer';
 
 import './InviteColleagueView.scss';
 
-const ErrorLabel = () => {
-  return (
-    <div style={{ margin: '5px', color: 'red' }}>
-      <label>Required</label>
-    </div>
-  );
-};
+const ErrorLabel = () => (
+  <div style={{ margin: '5px', color: 'red' }}>
+    <label>Required</label>
+  </div>
+);
 
 const useStyles = makeStyles({
   button: {
@@ -53,8 +51,7 @@ function _InviteColleagueView(
   const [emailValidation, setEmailValidation] = useState(false);
 
   const validateEmail = (email) => {
-    const re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
@@ -143,9 +140,7 @@ function _InviteColleagueView(
           }}
         >
           <div
-            onClick={() =>
-              props.setshowDialogForInviteColleague(false)
-            }
+            onClick={() => props.setshowDialogForInviteColleague(false)}
             style={{ textAlign: 'right', cursor: 'pointer' }}
           >
             <CloseIcon />
@@ -179,14 +174,14 @@ function _InviteColleagueView(
             flexDirection: 'column',
           }}
         >
-          <label className="b mt3 mb3">Invite Your Teammates</label>
+          <label className='b mt3 mb3'>Invite Your Teammates</label>
           {inputType === 'single' && (
             <div>
               <TextField
-                id="email"
-                placeholder="e.g. jon@gmail.com"
-                variant="outlined"
-                fullWidth={true}
+                id='email'
+                placeholder='e.g. jon@gmail.com'
+                variant='outlined'
+                fullWidth
                 onChange={handleEmail}
               />
               {error && <ErrorLabel />}
@@ -219,14 +214,14 @@ function _InviteColleagueView(
           )}
           {inputType === 'multiple' && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div className="container">
-                <div className="comment">
+              <div className='container'>
+                <div className='comment'>
                   <textarea
-                    className="textinput"
-                    placeholder="e.g. jon@gmail.com, demo@outlook.com"
+                    className='textinput'
+                    placeholder='e.g. jon@gmail.com, demo@outlook.com'
                     rows={4}
                     onChange={handleEmail}
-                  ></textarea>
+                  />
                 </div>
               </div>
               <div>
@@ -302,38 +297,36 @@ function _InviteColleagueView(
                 }}
               >
                 <Button
-                  fullWidth={true}
+                  fullWidth
                   className={classes.button}
-                  component="label"
+                  component='label'
                 >
-                  <AttachmentIcon fontSize="small" color="primary" />
-                  <div className="b" style={{ marginLeft: '3px' }}>
+                  <AttachmentIcon fontSize='small' color='primary' />
+                  <div className='b' style={{ marginLeft: '3px' }}>
                     Attach CSV
                   </div>
-                  <input type="file" style={{ display: 'none' }} />
+                  <input type='file' style={{ display: 'none' }} />
                 </Button>
               </div>
             </CSVReader>
           </div>
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             onClick={invateColleague}
           >
             Invite
           </Button>
-          {loading && <LinearProgress color="secondary" />}
+          {loading && <LinearProgress color='secondary' />}
         </div>
       </div>
     </div>
   );
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    invitingColleague: state.companyReducer.invitingColleague,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  invitingColleague: state.companyReducer.invitingColleague,
+});
 
 export const InviteColleagueView = connect(
   mapStateToProps,

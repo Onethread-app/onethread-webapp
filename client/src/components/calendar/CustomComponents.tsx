@@ -9,7 +9,7 @@ const CustomComponents = {
 
     return (
       <div
-        className="rbc-task-style"
+        className='rbc-task-style'
         style={{ borderRight: `7px solid ${pColor.value}` }}
         onClick={() => history.push(task.redirectTo)}
       >

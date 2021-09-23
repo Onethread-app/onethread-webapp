@@ -19,17 +19,19 @@ const Profile = (props: IProfile) => {
   const history = useHistory();
 
   return (
-    <div className="profile">
-      <div className="flex justify-between w-100">
+    <div className='profile'>
+      <div className='flex justify-between w-100'>
         <div>
           <h3
-            className="pointer"
+            className='pointer'
             onClick={() => history.push(`/${props.userName}`)}
           >
             {t('app.user.Personal-profile.My-Profile')}
           </h3>
           <p>
-            {Math.round(props.complete)}%{' '}
+            {Math.round(props.complete)}
+            %
+            {' '}
             {t('app.user.Personal-profile.Completed')}
           </p>
         </div>
@@ -45,13 +47,16 @@ const Profile = (props: IProfile) => {
           }}
         />
       </div>
-      <div className="ttc tc">
+      <div className='ttc tc'>
         <h3>{`${props.firstName} ${props.lastName}`}</h3>
         <p>{props.position}</p>
       </div>
-      <div className="team">
-        {t('app.user.Personal-profile.Team')} :{' '}
-        {('0' + (props.teamNumber + 1)).slice(-2)}
+      <div className='team'>
+        {t('app.user.Personal-profile.Team')}
+        {' '}
+        :
+        {' '}
+        {(`0${props.teamNumber + 1}`).slice(-2)}
       </div>
     </div>
   );

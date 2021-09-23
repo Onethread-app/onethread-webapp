@@ -47,18 +47,18 @@ const DueDateEditor = (props: IDueDateFormProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="mh1" onSubmit={handleSubmit}>
+        <form className='mh1' onSubmit={handleSubmit}>
           <Field<string>
-            name="dueDate"
+            name='dueDate'
             render={({ input, meta }) => (
               <>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
-                    id="date-picker-dialog"
-                    format="MM/dd/yyyy"
+                    id='date-picker-dialog'
+                    format='MM/dd/yyyy'
                     value={input.value ? new Date(input.value) : null}
                     onChange={input.onChange}
-                    className="due-date-input due-date-subtask"
+                    className='due-date-input due-date-subtask'
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
                     }}
@@ -70,7 +70,7 @@ const DueDateEditor = (props: IDueDateFormProps) => {
                   />
                 </MuiPickersUtilsProvider>
                 {checkError(meta) && (
-                  <small className="mv3" style={{ color: 'red' }}>
+                  <small className='mv3' style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
                   </small>
                 )}

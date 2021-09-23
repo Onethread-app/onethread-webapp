@@ -1,5 +1,5 @@
 export const projectRules = (role, optinalRole) => ({
-  grantAll: role === 'admin' ? true : false,
+  grantAll: role === 'admin',
   projectModerator: optinalRole,
   member: [''],
 });

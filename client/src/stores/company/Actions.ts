@@ -242,8 +242,8 @@ export const companyOptionalRoleFailure = (errorMessage: any) => ({
 });
 
 export const getCompanyPendingMembers = (
-  limit: number = 100,
-  skip: number = 0,
+  limit = 100,
+  skip = 0,
 ) => ({
   type: CompanyActionTypes.GET_ALL_COMPANY_PENDING_MEMBERS_START,
   limit,

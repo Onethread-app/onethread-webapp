@@ -1,3 +1,4 @@
+import { Entity } from 'stores/UtilsActions';
 import {
   COMPANY_DEPARTMENT_LOADING,
   COMPANY_REDUCER_LOADING,
@@ -11,7 +12,6 @@ import {
   SET_INITIAL_CURRENT_COMPANY,
   CompanyActionTypes,
 } from './Types';
-import { Entity } from 'stores/UtilsActions';
 
 export interface IOrg {
   ind: number;
@@ -247,8 +247,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         currentCompany: {
           ...state.currentCompany,
           members: state.currentCompany.members.filter(
-            (member: ICompanyMembers) =>
-              member._id !== action.payload,
+            (member: ICompanyMembers) => member._id !== action.payload,
           ),
         },
         loading: false,
@@ -412,9 +411,8 @@ export const CompanyReducer = (state = InitialState, action: any) => {
                   ...member,
                   role: action.payload.role,
                 };
-              } else {
-                return member;
               }
+              return member;
             },
           ),
         },

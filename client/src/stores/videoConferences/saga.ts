@@ -1,9 +1,9 @@
+import { takeLatest, put, call } from 'redux-saga/effects';
 import {
   GET_VIDEO_CONFERENCE_SUCCESS,
   GET_VIDEO_CONFERENCE_FAIL,
   GET_VIDEO_CONFERENCE_MAIN,
 } from './Types';
-import { takeLatest, put, call } from 'redux-saga/effects';
 import AxiosServices from '../../networks/AxiosService';
 import ApiServices from '../../networks/ApiServices';
 import Toaster from '../toast/Types';

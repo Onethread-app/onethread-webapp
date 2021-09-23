@@ -20,13 +20,12 @@ export const TaskDescriptionViewComponent = (
   props: TaskDescriptionViewInternalProps,
 ) => {
   const { t } = useTranslation();
-  const [editDescriptionDialog, setEditDescriptionDialog] =
-    useState(false);
+  const [editDescriptionDialog, setEditDescriptionDialog] = useState(false);
 
   return (
     <>
       <div
-        className="flex justify-between"
+        className='flex justify-between'
         style={{ height: '50px' }}
       >
         <h1
@@ -37,9 +36,10 @@ export const TaskDescriptionViewComponent = (
             lineHeight: '28px',
           }}
         >
-          {t('app.project.Project-boards.Description')}:
+          {t('app.project.Project-boards.Description')}
+          :
         </h1>
-        <div className="pr2 pt1">
+        <div className='pr2 pt1'>
           {props.company ? (
             <Icon
               className={
@@ -47,7 +47,7 @@ export const TaskDescriptionViewComponent = (
                   ? 'fr tigrow-lightBlue pointer'
                   : 'fr silver pointer'
               }
-              icon="edit"
+              icon='edit'
               onClick={() => {
                 setEditDescriptionDialog(!editDescriptionDialog);
               }}
@@ -58,14 +58,12 @@ export const TaskDescriptionViewComponent = (
       {editDescriptionDialog ? (
         <TaskDescriptionEditor
           editDescriptionDialog={editDescriptionDialog}
-          setEditDescriptionDialog={(e) =>
-            setEditDescriptionDialog(!editDescriptionDialog)
-          }
+          setEditDescriptionDialog={(e) => setEditDescriptionDialog(!editDescriptionDialog)}
         />
       ) : props.description ? (
         <Linkify componentDecorator={componentDecorator}>
           <p
-            className="pr2 ws-break"
+            className='pr2 ws-break'
             style={{
               whiteSpace: 'pre-line',
               maxHeight: '160px',
@@ -79,7 +77,7 @@ export const TaskDescriptionViewComponent = (
           </p>
         </Linkify>
       ) : (
-        <p className="pr2">
+        <p className='pr2'>
           {t('app.project.Project-boards.No-description')}
         </p>
       )}
@@ -87,13 +85,11 @@ export const TaskDescriptionViewComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    description:
+const mapStateToProps = (state: any) => ({
+  description:
       state.taskIndexReducer.taskReducer.currentTask.description,
-    company: state.companyReducer.currentCompany,
-  };
-};
+  company: state.companyReducer.currentCompany,
+});
 
 export const TaskDescriptionView = connect(
   mapStateToProps,

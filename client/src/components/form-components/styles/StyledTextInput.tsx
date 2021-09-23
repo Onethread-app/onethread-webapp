@@ -16,15 +16,13 @@ const TextInput = styled.input`
   vertical-align: middle;
 `;
 
-const StyledTextInput = ({ input, meta, ...rest }: Props) => {
-  return (
-    <>
-      <TextInput type="text" {...input} {...rest} />
-      {checkError(meta) ? (
-        <StyledError errorMessage={meta.error || meta.submitError} />
-      ) : null}
-    </>
-  );
-};
+const StyledTextInput = ({ input, meta, ...rest }: Props) => (
+  <>
+    <TextInput type='text' {...input} {...rest} />
+    {checkError(meta) ? (
+      <StyledError errorMessage={meta.error || meta.submitError} />
+    ) : null}
+  </>
+);
 
 export default StyledTextInput;

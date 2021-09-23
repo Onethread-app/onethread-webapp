@@ -40,8 +40,7 @@ const ChangePasswordComponentView = (
 ) => {
   const [showPasswordOld, setShowPasswordOld] = useState(false);
   const [showPasswordNew, setShowPasswordNew] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] =
-    useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleChangePassword = async (changePasswordInfo: {}) => {
@@ -87,8 +86,7 @@ const ChangePasswordComponentView = (
       validate={(values: any) => {
         const errors = {} as any;
         if (isEqual(values.newPassword, values.oldPassword)) {
-          errors.newPassword =
-            'Old and New Password must be different';
+          errors.newPassword = 'Old and New Password must be different';
         }
         if (!isEqual(values.newPassword, values.confirmPassword)) {
           errors.confirmPassword = 'Mismatch Password';
@@ -105,44 +103,42 @@ const ChangePasswordComponentView = (
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="pa4" onSubmit={handleSubmit}>
+        <form className='pa4' onSubmit={handleSubmit}>
           {showSuccessMessage && (
-            <h3 className="green">
-              "Your password has been changed Successfully"
+            <h3 className='green'>
+              `Your password has been changed Successfully`
             </h3>
           )}
           <SubmitError errorMessage={submitError} />
-          <h1 className="f5 lh-copy  mb4 tigrow-lightBlue">
+          <h1 className='f5 lh-copy  mb4 tigrow-lightBlue'>
             Change Password
           </h1>
           <div>
-            <h1 className="f6">Old Password</h1>
+            <h1 className='f6'>Old Password</h1>
             <Field<string>
-              name="oldPassword"
+              name='oldPassword'
               validate={required}
               render={({ input, meta }) => (
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <InputGroupFieldWithError
-                    id="oldPassword"
+                    id='oldPassword'
                     type={`${showPasswordOld ? 'text' : 'password'}`}
                     value={input.value}
                     onChange={input.onChange}
-                    placeHolder="Old Password"
-                    leftIcon="lock"
-                    rightElement={
+                    placeHolder='Old Password'
+                    leftIcon='lock'
+                    rightElement={(
                       <Icon
                         icon={
                           showPasswordOld ? 'eye-open' : 'eye-off'
                         }
-                        color="#34b3e9"
-                        onClick={(e) =>
-                          setShowPasswordOld(!showPasswordOld)
-                        }
-                        className="pt2 pr2 pointer"
+                        color='#34b3e9'
+                        onClick={(e) => setShowPasswordOld(!showPasswordOld)}
+                        className='pt2 pr2 pointer'
                       />
-                    }
+                    )}
                     className={`br0 mt1 ${
                       checkError(meta)
                         ? 'bb b--red'
@@ -155,8 +151,8 @@ const ChangePasswordComponentView = (
                       boxShadow: 'none',
                     }}
                     error={
-                      checkError(meta) &&
-                      (meta.error || meta.submitError)
+                      checkError(meta)
+                      && (meta.error || meta.submitError)
                     }
                   />
                 </div>
@@ -164,9 +160,9 @@ const ChangePasswordComponentView = (
             />
           </div>
           <div>
-            <h1 className="f6">New Password</h1>
+            <h1 className='f6'>New Password</h1>
             <Field<string>
-              name="newPassword"
+              name='newPassword'
               validate={composeValidators(
                 required,
                 passwordValidation,
@@ -176,53 +172,51 @@ const ChangePasswordComponentView = (
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <InputGroupFieldWithError
-                    id="newPassword"
+                    id='newPassword'
                     type={`${showPasswordNew ? 'text' : 'password'}`}
                     value={input.value}
                     onChange={input.onChange}
-                    placeHolder="New Password"
-                    leftIcon="lock"
-                    rightElement={
+                    placeHolder='New Password'
+                    leftIcon='lock'
+                    rightElement={(
                       <span>
                         <Icon
                           icon={
                             showPasswordNew ? 'eye-open' : 'eye-off'
                           }
-                          color="#34b3e9"
-                          onClick={(e) =>
-                            setShowPasswordNew(!showPasswordNew)
-                          }
-                          className="pt2 pr2 pointer"
+                          color='#34b3e9'
+                          onClick={(e) => setShowPasswordNew(!showPasswordNew)}
+                          className='pt2 pr2 pointer'
                         />
                         <span
                           style={{
                             position: 'absolute',
                             left: '40px',
                           }}
-                          className="hidden-small"
+                          className='hidden-small'
                         >
                           <InputTooltip
-                            content="Choose a password at least 8 characters long"
-                            direction="right"
+                            content='Choose a password at least 8 characters long'
+                            direction='right'
                             validations={validation}
                           >
                             <span
-                              role="img"
-                              aria-label="question mark"
+                              role='img'
+                              aria-label='question mark'
                               style={{
                                 position: 'absolute',
                                 top: '7px',
                               }}
                             >
                               <img
-                                src="https://svgshare.com/i/Q3c.svg"
-                                alt="question mark logo"
+                                src='https://svgshare.com/i/Q3c.svg'
+                                alt='question mark logo'
                               />
                             </span>
                           </InputTooltip>
                         </span>
                       </span>
-                    }
+                    )}
                     className={`br0 mt1 ${
                       checkError(meta)
                         ? 'bb b--red'
@@ -235,8 +229,8 @@ const ChangePasswordComponentView = (
                       boxShadow: 'none',
                     }}
                     error={
-                      checkError(meta) &&
-                      (meta.error || meta.submitError)
+                      checkError(meta)
+                      && (meta.error || meta.submitError)
                     }
                   />
                 </div>
@@ -244,35 +238,33 @@ const ChangePasswordComponentView = (
             />
           </div>
           <div>
-            <h1 className="f6">Confirm Password</h1>
+            <h1 className='f6'>Confirm Password</h1>
             <Field<string>
-              name="confirmPassword"
+              name='confirmPassword'
               validate={required}
               render={({ input, meta }) => (
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
                 >
                   <InputGroupFieldWithError
-                    id="confirmPassword"
+                    id='confirmPassword'
                     type={`${
                       showPasswordConfirm ? 'text' : 'password'
                     }`}
                     value={input.value}
                     onChange={input.onChange}
-                    placeHolder="Confirm Password"
-                    leftIcon="lock"
-                    rightElement={
+                    placeHolder='Confirm Password'
+                    leftIcon='lock'
+                    rightElement={(
                       <Icon
                         icon={
                           showPasswordConfirm ? 'eye-open' : 'eye-off'
                         }
-                        color="#34b3e9"
-                        onClick={(e) =>
-                          setShowPasswordConfirm(!showPasswordConfirm)
-                        }
-                        className="pt2 pr2 pointer"
+                        color='#34b3e9'
+                        onClick={(e) => setShowPasswordConfirm(!showPasswordConfirm)}
+                        className='pt2 pr2 pointer'
                       />
-                    }
+                    )}
                     className={`br0 mt1 ${
                       checkError(meta)
                         ? 'bb b--red'
@@ -285,17 +277,17 @@ const ChangePasswordComponentView = (
                       boxShadow: 'none',
                     }}
                     error={
-                      checkError(meta) &&
-                      (meta.error || meta.submitError)
+                      checkError(meta)
+                      && (meta.error || meta.submitError)
                     }
                   />
                 </div>
               )}
             />
           </div>
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <Button
-              className="w4 grow h2 pointer mr3"
+              className='w4 grow h2 pointer mr3'
               style={{
                 background: '#fff',
                 outline: 'none',
@@ -310,14 +302,14 @@ const ChangePasswordComponentView = (
               cancel
             </Button>
             <Button
-              className="w4 grow h2 pointer"
+              className='w4 grow h2 pointer'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
             >
               Save

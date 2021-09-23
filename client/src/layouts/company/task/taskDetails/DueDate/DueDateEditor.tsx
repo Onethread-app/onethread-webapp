@@ -44,26 +44,27 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="w-100" onSubmit={handleSubmit}>
+        <form className='w-100' onSubmit={handleSubmit}>
           <div>
             <SubmitError errorMessage={submitError} />
           </div>
           <Field<string>
-            name="dueDate"
+            name='dueDate'
             render={({ input, meta }) => (
-              <div className="task-info-items">
-                <h1 className="f6">
-                  {t('app.project.Project-boards.Due-Date')}:
+              <div className='task-info-items'>
+                <h1 className='f6'>
+                  {t('app.project.Project-boards.Due-Date')}
+                  :
                 </h1>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDateTimePicker
                     ampm
-                    margin="normal"
-                    id="date-picker-dialog"
-                    format="MM/dd/yyyy"
+                    margin='normal'
+                    id='date-picker-dialog'
+                    format='MM/dd/yyyy'
                     value={input.value ? new Date(input.value) : null}
                     onChange={input.onChange}
-                    className="task-due-date"
+                    className='task-due-date'
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
                     }}
@@ -77,7 +78,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                 </MuiPickersUtilsProvider>
 
                 {checkError(meta) && (
-                  <small className="mv3" style={{ color: 'red' }}>
+                  <small className='mv3' style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
                   </small>
                 )}
@@ -90,12 +91,10 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    dueDate: state.taskIndexReducer.taskReducer.currentTask.dueDate,
-    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  dueDate: state.taskIndexReducer.taskReducer.currentTask.dueDate,
+  updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+});
 
 export const DueDateEditor = connect(mapStateToProps, { updateTask })(
   DueDateEditorComponent,

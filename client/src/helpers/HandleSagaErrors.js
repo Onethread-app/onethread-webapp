@@ -10,22 +10,21 @@ export const returnErrorText = (error) => {
     );
     if (data.type === 'Network Error') {
       return `${i18next.t('app.Error-text.Network-Error')}`;
-    } else if (data.status === 400) {
+    } if (data.status === 400) {
       return `${i18next.t('app.Error-text.Bad-Request')}`;
-    } else if (data.status === 401) {
+    } if (data.status === 401) {
       return `${i18next.t('app.Error-text.Unauthorized-user')}`;
-    } else if (data.status === 403) {
+    } if (data.status === 403) {
       if (data.type === 'SubscriptionExpirationError') {
         store.dispatch(setSubscriptionExpire());
       }
       return `${i18next.t('app.Error-text.Access-Error')}`;
-    } else if (data.status === 404) {
+    } if (data.status === 404) {
       return `${i18next.t('app.Error-text.Method-Not-Found')}`;
-    } else if (data.status === 409) {
+    } if (data.status === 409) {
       return `${i18next.t('app.Error-text.Duplicate-Value')}`;
-    } else {
-      return data.type;
     }
+    return data.type;
   }
 };
 

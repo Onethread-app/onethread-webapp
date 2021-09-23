@@ -49,17 +49,17 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="fl w-100 ph4 pt6" onSubmit={handleSubmit}>
+        <form className='fl w-100 ph4 pt6' onSubmit={handleSubmit}>
           <SubmitError errorMessage={submitError} />
-          <h1 className="f5 lh-copy white">About</h1>
+          <h1 className='f5 lh-copy white'>About</h1>
           <Field<string>
-            name="about"
+            name='about'
             validate={maxValue(2000)}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <TextArea
-                  id="description"
-                  className="mt1"
+                  id='description'
+                  className='mt1'
                   value={input.value}
                   onChange={input.onChange}
                   style={{
@@ -67,11 +67,11 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
                     minHeight: '50px',
                     maxHeight: '150px',
                   }}
-                  fill={true}
-                  growVertically={true}
+                  fill
+                  growVertically
                 />
                 {checkError(meta) && (
-                  <small className="mv3" style={{ color: 'red' }}>
+                  <small className='mv3' style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
                   </small>
                 )}
@@ -79,22 +79,22 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
             )}
           />
           <Divider />
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <Button
-              className="w4 grow h2 pointer mr3"
+              className='w4 grow h2 pointer mr3'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
             >
               Save
             </Button>
             <Button
-              className="w4 grow h2 pointer"
+              className='w4 grow h2 pointer'
               style={{
                 background: '#fff',
                 outline: 'none',
@@ -114,11 +114,9 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
     />
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+});
 
 export const AboutEdit = connect(mapStateToProps, {
   editInfoAction: editUserInfoAction,

@@ -49,6 +49,7 @@ export const ProductEditComponent = (
       if (response.status === 201) {
         props.setShowDialog(false);
       }
+    // eslint-disable-next-line no-empty
     } catch (error) {}
   };
 
@@ -57,10 +58,11 @@ export const ProductEditComponent = (
       const headers = tokenConfig();
       try {
         const response = await tigrowApi.get(
-          `category?type=business-category`,
+          'category?type=business-category',
           headers,
         );
         await setCategory(response.data.categories);
+      // eslint-disable-next-line no-empty
       } catch (error) {}
     }
     getAPI();
@@ -75,6 +77,7 @@ export const ProductEditComponent = (
           headers,
         );
         await setSubCategory(response.data.subcategories);
+      // eslint-disable-next-line no-empty
       } catch (error) {}
     }
     if (selectcategory !== '') {
@@ -95,55 +98,55 @@ export const ProductEditComponent = (
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="ph4 pt6" onSubmit={handleSubmit}>
+        <form className='ph4 pt6' onSubmit={handleSubmit}>
           <SubmitError errorMessage={submitError} />
           <div>
-            <h1 className="f5 lh-copy">Add Products/Services</h1>
-            <div className="mb4">
+            <h1 className='f5 lh-copy'>Add Products/Services</h1>
+            <div className='mb4'>
               <label>Product Type</label>
               <Field<string>
-                name="productType"
+                name='productType'
                 validate={required}
                 render={({ input, meta }) => (
                   <DropdownField
-                    id="productType"
+                    id='productType'
                     selectedValue={input.value}
                     options={category}
                     onChange={(e) => {
                       setSelectedCategory(e.target.value);
                       input.onChange(e.target.value);
                     }}
-                    className="bn"
+                    className='bn'
                   />
                 )}
               />
             </div>
-            <div className="mb4">
+            <div className='mb4'>
               <label>Product Sub Categories</label>
               <Field<string>
-                name="productSubCategories"
+                name='productSubCategories'
                 validate={required}
                 render={({ input, meta }) => (
                   <DropdownField
-                    id="productSubCategories"
+                    id='productSubCategories'
                     selectedValue={input.value}
                     options={subcategory}
                     onChange={input.onChange}
-                    className="bn"
+                    className='bn'
                   />
                 )}
               />
             </div>
-            <div className="mb4">
+            <div className='mb4'>
               <label>Product Name</label>
               <Field<string>
-                name="name"
+                name='name'
                 validate={required}
                 render={({ input, meta }) => (
-                  <div className="mb4">
+                  <div className='mb4'>
                     <InputGroupField
-                      id="name"
-                      className="mt1 bg-white"
+                      id='name'
+                      className='mt1 bg-white'
                       value={input.value}
                       onChange={input.onChange}
                       style={{
@@ -155,22 +158,22 @@ export const ProductEditComponent = (
               />
             </div>
           </div>
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <Button
-              className="w4 grow h2 pointer mr3"
+              className='w4 grow h2 pointer mr3'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
             >
               Save
             </Button>
             <Button
-              className="w4 grow h2 pointer"
+              className='w4 grow h2 pointer'
               style={{
                 background: '#fff',
                 outline: 'none',
@@ -191,11 +194,9 @@ export const ProductEditComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+});
 
 export const ProductEdit = connect(
   mapStateToProps,

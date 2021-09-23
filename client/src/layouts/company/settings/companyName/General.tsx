@@ -10,12 +10,11 @@ import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 import { ICompany } from 'stores/company/Reducer';
 import { companyPermit } from 'stores/UtilsActions';
+import { InputGroupField } from 'components/fields/InputGroupField';
 import {
   changeCompanyName,
   clearChangeCompanyNameError,
 } from '../../../../stores/company/Actions';
-
-import { InputGroupField } from 'components/fields/InputGroupField';
 
 interface DetailsViewProps {
   company: ICompany;
@@ -35,18 +34,18 @@ const GeneralViewComponent = (
   const [showDialog, setShowDialog] = useState(false);
 
   return (
-    <div className="fl w-100">
-      <div className="fl w-100 pr3">
-        <div className="fl w-100 w-50-m w-60-l">
-          <p className="b">{t('app.company.Company-profile.Name')}</p>
-          <p className="mb0 f4-ns f6">{props.company.name}</p>
+    <div className='fl w-100'>
+      <div className='fl w-100 pr3'>
+        <div className='fl w-100 w-50-m w-60-l'>
+          <p className='b'>{t('app.company.Company-profile.Name')}</p>
+          <p className='mb0 f4-ns f6'>{props.company.name}</p>
         </div>
-        {companyPermit(props.company.role) &&
-          isEqual(props.company.role, 'superAdmin') && (
-            <div className="fl w-100 w-50-m w-40-l mv4">
+        {companyPermit(props.company.role)
+          && isEqual(props.company.role, 'superAdmin') && (
+            <div className='fl w-100 w-50-m w-40-l mv4'>
               <Button
-                type="submit"
-                className="grow pointer outline-0 shadow-0 h2 changecompanybutton"
+                type='submit'
+                className='grow pointer outline-0 shadow-0 h2 changecompanybutton'
                 text={t('app.company.Settings.Change-Name')}
                 style={{
                   background: '#34b3e9',
@@ -55,7 +54,7 @@ const GeneralViewComponent = (
                 onClick={() => setShowDialog(true)}
               />
             </div>
-          )}
+        )}
       </div>
 
       {showDialog && (
@@ -64,26 +63,26 @@ const GeneralViewComponent = (
           isOpen
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
-          className="ma2"
+          className='ma2'
         >
-          <form className="pa4">
-            <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
+          <form className='pa4'>
+            <h1 className='f5 lh-title ml2 tigrow-lightBlue mb4'>
               {t('app.company.Settings.Change-Name')}
             </h1>
             <div>
               {props.errorCompanyName ? (
-                <small className="red">
+                <small className='red'>
                   {props.errorCompanyName}
                 </small>
               ) : (
                 ''
               )}
               <div className={`${errors ? 'mb3' : 'mb4'}`}>
-                <div className="flex">
+                <div className='flex'>
                   <InputGroupField
-                    id="companyName"
+                    id='companyName'
                     value={companyName}
-                    leftIcon="envelope"
+                    leftIcon='envelope'
                     className={`br0 ${
                       errors || props.errorCompanyName
                         ? 'bb b--red'
@@ -114,16 +113,16 @@ const GeneralViewComponent = (
                   />
                 </div>
                 {errors ? (
-                  <small className="red">{errors}</small>
+                  <small className='red'>{errors}</small>
                 ) : (
                   ''
                 )}
               </div>
             </div>
-            <div className="flex justify-end">
+            <div className='flex justify-end'>
               <Button
-                type="submit"
-                className="w4 grow h2 pointer mr3"
+                type='submit'
+                className='w4 grow h2 pointer mr3'
                 style={{
                   background: '#34b3e9',
                   outline: 'none',
@@ -141,8 +140,8 @@ const GeneralViewComponent = (
                       companyName,
                     )) as any;
                     if (
-                      response &&
-                      props.changeCompanyNameLoading === false
+                      response
+                      && props.changeCompanyNameLoading === false
                     ) {
                       props.history.push(
                         `/company/${companyName}/settings`,
@@ -155,7 +154,7 @@ const GeneralViewComponent = (
                 Change
               </Button>
               <Button
-                className="w4 grow h2 pointer"
+                className='w4 grow h2 pointer'
                 style={{
                   background: '#fff',
                   outline: 'none',
@@ -179,14 +178,12 @@ const GeneralViewComponent = (
     </div>
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    errorCompanyName: state.companyReducer.error,
-    changeCompanyNameLoading:
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  errorCompanyName: state.companyReducer.error,
+  changeCompanyNameLoading:
       state.companyReducer.changeCompanyNameLoading,
-  };
-};
+});
 
 export const GeneralView = connect(mapStateToProps, {
   changeCompanyName,

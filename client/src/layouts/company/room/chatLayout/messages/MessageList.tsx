@@ -6,13 +6,13 @@ import moment from 'moment';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 
 import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
+import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
+
+import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 import {
   getRoomMessages,
   updateLastSeen,
 } from '../../../../../stores/room/Actions';
-import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
-
-import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 
 interface MessageListProps {
   updateLastSeen: (roomId: string) => void;
@@ -46,21 +46,19 @@ export const MessageListComponent = (props: MessageListProps) => {
 
     // On new message, scroll to bottom
     if (
-      messagesEndRef &&
-      messagesEndRef.current &&
-      messagesEndRef.current.scrollTop +
-        messagesEndRef.current.clientHeight +
-        messagesEndRef.current.clientHeight * 0.3 >=
-        messagesEndRef.current.scrollHeight
+      messagesEndRef
+      && messagesEndRef.current
+      && messagesEndRef.current.scrollTop
+        + messagesEndRef.current.clientHeight
+        + messagesEndRef.current.clientHeight * 0.3
+        >= messagesEndRef.current.scrollHeight
     ) {
-      messagesEndRef.current.scrollTop =
-        messagesEndRef.current.scrollHeight;
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
 
     // On enter the room, scroll to bottom
     if (messagesEndRef && messagesEndRef.current && !first) {
-      messagesEndRef.current.scrollTop =
-        messagesEndRef.current.scrollHeight;
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
       setFirst(true);
     }
   };
@@ -83,13 +81,12 @@ export const MessageListComponent = (props: MessageListProps) => {
       showPicAndName: true,
     };
 
-    obj.message =
-      currIndex !== arr.length - 1 &&
-      cm.account._id === arr[currIndex + 1].account._id;
+    obj.message = currIndex !== arr.length - 1
+      && cm.account._id === arr[currIndex + 1].account._id;
 
     if (
-      currIndex > 0 &&
-      cm.account._id === arr[currIndex - 1].account._id
+      currIndex > 0
+      && cm.account._id === arr[currIndex - 1].account._id
     ) {
       obj.showPicAndName = false;
       return obj;
@@ -99,7 +96,7 @@ export const MessageListComponent = (props: MessageListProps) => {
   };
 
   const groupMessages = async () => {
-    const messages = props!.messages;
+    const { messages } = props!;
     const groups = messages.reduce((groups, message) => {
       const date = moment(message.createdAt).format('MMM DD');
       if (!groups[date]) {
@@ -109,12 +106,10 @@ export const MessageListComponent = (props: MessageListProps) => {
       return groups;
     }, {});
 
-    const groupArrays = Object.keys(groups).map((date) => {
-      return {
-        date,
-        messages: groups[date],
-      };
-    });
+    const groupArrays = Object.keys(groups).map((date) => ({
+      date,
+      messages: groups[date],
+    }));
 
     await setAllMessages(groupArrays);
   };
@@ -134,23 +129,23 @@ export const MessageListComponent = (props: MessageListProps) => {
 
   return (
     <div
-      id="message-container"
-      className="flex flex-column flex-grow-1 overflow-y-auto ph1 pt2 mb2"
+      id='message-container'
+      className='flex flex-column flex-grow-1 overflow-y-auto ph1 pt2 mb2'
       ref={messagesEndRef}
       style={{ marginBottom: isMobileOnly ? '6.5rem' : '' }}
     >
       {props.allMessages === false && props.messages.length > 0 ? (
         <div
-          className="flex justify-center items-center"
+          className='flex justify-center items-center'
           onClick={loadMoreMessages}
         >
           <h6
-            className="pv1 ph2 mv0 white br2 pointer flex justify-center items-center"
+            className='pv1 ph2 mv0 white br2 pointer flex justify-center items-center'
             style={{
               backgroundColor: 'rgb(92, 108, 142)',
             }}
           >
-            <Icon icon="upload" iconSize={18} />
+            <Icon icon='upload' iconSize={18} />
             <span
               style={{
                 fontSize: '11px',
@@ -164,44 +159,38 @@ export const MessageListComponent = (props: MessageListProps) => {
       ) : undefined}
 
       {allMessages.length
-        ? allMessages.map((group) => {
-            return (
-              <>
-                <div className="flex justify-center items-center pv2">
-                  <small className="tigrow-darkGray">
-                    {group.date}
-                  </small>
-                </div>
-                {group.messages.map(
-                  (
-                    message: IRoomMessage,
-                    index: number,
-                    arr: IRoomMessage[],
-                  ) => {
-                    return (
-                      <MessageItem
-                        key={index}
-                        message={message}
-                        group={checkGroup(message, index, arr)}
-                      />
-                    );
-                  },
-                )}
-              </>
-            );
-          })
+        ? allMessages.map((group) => (
+          <>
+            <div className='flex justify-center items-center pv2'>
+              <small className='tigrow-darkGray'>
+                {group.date}
+              </small>
+            </div>
+            {group.messages.map(
+              (
+                message: IRoomMessage,
+                index: number,
+                arr: IRoomMessage[],
+              ) => (
+                <MessageItem
+                  key={index}
+                  message={message}
+                  group={checkGroup(message, index, arr)}
+                />
+              ),
+            )}
+          </>
+        ))
         : ''}
     </div>
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentRoom: state.roomReducer.currentRoom,
-    messages: state.roomReducer.messages,
-    allMessages: state.roomReducer.allMessages,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentRoom: state.roomReducer.currentRoom,
+  messages: state.roomReducer.messages,
+  allMessages: state.roomReducer.allMessages,
+});
 
 export const MessageList = connect(mapStateToProps, {
   getRoomMessages,

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
-import { tigrowApi } from '../../../../config';
 
 import Grid from '@material-ui/core/Grid/Grid';
 import Card from '@material-ui/core/Card/Card';
@@ -19,15 +18,16 @@ import {
 } from '@stripe/react-stripe-js';
 
 import {
+  stripeCheckout,
+  tokenConfig,
+  portWalletCheckout,
+} from 'stores/UtilsActions';
+import {
   createSubscription,
   checkCouponValidity,
   getTotalMembers,
 } from '../../../../stores/subscriptionBilling/Actions';
-import {
-  tokenConfig,
-  portWalletCheckout,
-} from '../../../../stores/UtilsActions';
-import { stripeCheckout } from 'stores/UtilsActions';
+import { tigrowApi } from '../../../../config';
 
 import PortwalletIcon from '../../../../resources/LandingImages/portwallet.svg';
 import BkashIcon from '../../../../resources/LandingImages/bkash.svg';
@@ -142,17 +142,6 @@ function _Checkout(props: ICheckout) {
   const elements = useElements();
   const headers = tokenConfig();
 
-  const CouponButton = () => {
-    const classes = useStyles();
-    return (
-      <div>
-        <Button onClick={handleCouponApply} className={classes.root}>
-          Apply
-        </Button>
-      </div>
-    );
-  };
-
   const handleCouponChange = (e) => {
     e.preventDefault();
     setCouponClick(false);
@@ -164,6 +153,17 @@ function _Checkout(props: ICheckout) {
     e.preventDefault();
     setCouponClick(true);
     await props.checkCouponValidity(couponCode);
+  };
+
+  const CouponButton = () => {
+    const classes = useStyles();
+    return (
+      <div>
+        <Button onClick={handleCouponApply} className={classes.root}>
+          Apply
+        </Button>
+      </div>
+    );
   };
 
   // to-do add type
@@ -198,12 +198,10 @@ function _Checkout(props: ICheckout) {
       headers,
     );
     props.createSubscription(getSubscription.data.subscription);
-    const getway =
-      value === 'international' ? 'stripe' : 'portwallet';
+    const getway = value === 'international' ? 'stripe' : 'portwallet';
 
-    const stripeSuccess =
-      value === 'international' &&
-      (await stripeCheckout(
+    const stripeSuccess = value === 'international'
+      && (await stripeCheckout(
         stripe,
         props.company,
         getway,
@@ -215,21 +213,21 @@ function _Checkout(props: ICheckout) {
         finalAmount,
       ));
     stripeSuccess && setSuccess(stripeSuccess);
-    value === 'bangladesh' &&
-      (props.coupon
+    value === 'bangladesh'
+      && (props.coupon
         ? portWalletCheckout(
-            formValues,
-            finalAmount * 85,
-            props.plan._id,
-            props.companyName,
-            props.coupon._id,
-          )
+          formValues,
+          finalAmount * 85,
+          props.plan._id,
+          props.companyName,
+          props.coupon._id,
+        )
         : portWalletCheckout(
-            formValues,
-            finalAmount * 85,
-            props.plan._id,
-            props.companyName,
-          ));
+          formValues,
+          finalAmount * 85,
+          props.plan._id,
+          props.companyName,
+        ));
   };
 
   // const handleChange = (
@@ -262,8 +260,8 @@ function _Checkout(props: ICheckout) {
       setDiscountPrice(
         Number(
           (
-            (total * props.coupon.coupon.discountPercent) /
-            100
+            (total * props.coupon.coupon.discountPercent)
+            / 100
           ).toFixed(2),
         ),
       );
@@ -279,10 +277,10 @@ function _Checkout(props: ICheckout) {
   }, [total, discountPrice]);
 
   return (
-    <div className="Checkout">
+    <div className='Checkout'>
       {props.currentComponent === 'checkOut' && (
         <div>
-          <div className="mb1">
+          <div className='mb1'>
             <Button
               //   className={classes.button}
               startIcon={<ArrowBackIosIcon />}
@@ -295,15 +293,15 @@ function _Checkout(props: ICheckout) {
               Subscription Plan
             </Button>
           </div>
-          <div className="mt3 flex flex-column">
-            <label htmlFor="team-members" className="fw6 mb2">
+          <div className='mt3 flex flex-column'>
+            <label htmlFor='team-members' className='fw6 mb2'>
               Company Members
             </label>
             <TextField
-              autoComplete="off"
-              className="w-30-ns w-70"
-              id="outlined-basic"
-              variant="outlined"
+              autoComplete='off'
+              className='w-30-ns w-70'
+              id='outlined-basic'
+              variant='outlined'
               defaultValue={totalMembers}
               error={totalMembers < props.totalMembers}
               onChange={(e) => {
@@ -311,16 +309,18 @@ function _Checkout(props: ICheckout) {
                   setTotalMembers(Number(e.target.value));
                 }
               }}
-              type="number"
+              type='number'
               inputProps={{
                 min: props.totalMembers,
               }}
             />
           </div>
-          <div className="couponCode mt3">
-            <label className="fw6">Coupon Code</label> <br />
-            <form className="mt2">
-              <div className="flex">
+          <div className='couponCode mt3'>
+            <label className='fw6'>Coupon Code</label>
+            {' '}
+            <br />
+            <form className='mt2'>
+              <div className='flex'>
                 <TextField
                   onChange={handleCouponChange}
                   onKeyPress={(ev) => {
@@ -329,17 +329,17 @@ function _Checkout(props: ICheckout) {
                       handleCouponApply(ev);
                     }
                   }}
-                  autoComplete="off"
-                  className="w-30-ns w-70 mr5"
-                  id="outlined-basic"
-                  variant="outlined"
+                  autoComplete='off'
+                  className='w-30-ns w-70 mr5'
+                  id='outlined-basic'
+                  variant='outlined'
                 />
-                <div className="w1"></div>
+                <div className='w1' />
                 <CouponButton />
               </div>
               {couponClick && !props.checkingValidity ? (
                 props.couponValid ? (
-                  <div className="mt4 o-70 flex flex-row items-center">
+                  <div className='mt4 o-70 flex flex-row items-center'>
                     <CheckIcon
                       style={{
                         color: '#38C671',
@@ -348,7 +348,7 @@ function _Checkout(props: ICheckout) {
                     <label>{`Coupon Code ${couponCode} applied successfully`}</label>
                   </div>
                 ) : (
-                  <div className="mt4 o-70 flex flex-row items-center">
+                  <div className='mt4 o-70 flex flex-row items-center'>
                     <ErrorOutlineIcon
                       style={{
                         color: '#f73947',
@@ -361,42 +361,44 @@ function _Checkout(props: ICheckout) {
             </form>
           </div>
 
-          <h3 className="mt4">Total Payable Bill</h3>
+          <h3 className='mt4'>Total Payable Bill</h3>
           <Grid xs={12} sm={6}>
-            <div className="shadow-1 totalBill">
+            <div className='shadow-1 totalBill'>
               <br />
               <h4
-                className="b"
+                className='b'
                 style={{
                   color: '#34b3e9',
                 }}
               >
                 Package Name
               </h4>
-              <Grid justify="space-between" container>
+              <Grid justify='space-between' container>
                 <Grid item>
-                  <h4 className="">Workspaces</h4>
+                  <h4 className=''>Workspaces</h4>
                 </Grid>
                 <Grid item>
                   <h4>
-                    <span className="mr2 fw4 f7">{`${totalMembers}x`}</span>
-                    ${props.plan.pricing}
+                    <span className='mr2 fw4 f7'>{`${totalMembers}x`}</span>
+                    $
+                    {props.plan.pricing}
                   </h4>
                 </Grid>
               </Grid>
 
               {discountPrice > 0 && (
-                <div className="flex justify-between">
+                <div className='flex justify-between'>
                   <h4>Discount</h4>
                   <h4>
-                    <span className="mr1">-</span>$
+                    <span className='mr1'>-</span>
+                    $
                     {discountPrice.toFixed(2)}
                   </h4>
                 </div>
               )}
 
               <Grid
-                justify="space-between"
+                justify='space-between'
                 container
                 style={{
                   backgroundColor: '#34b3e9',
@@ -404,17 +406,20 @@ function _Checkout(props: ICheckout) {
                 }}
               >
                 <Grid item>
-                  <h4 className="b">Total</h4>
+                  <h4 className='b'>Total</h4>
                 </Grid>
 
                 <Grid item>
-                  <h4>${finalAmount}</h4>
+                  <h4>
+                    $
+                    {finalAmount}
+                  </h4>
                 </Grid>
               </Grid>
             </div>
           </Grid>
 
-          <h3 className="mt4">Select Payment Method</h3>
+          <h3 className='mt4'>Select Payment Method</h3>
 
           {value === 'international' && (
             <div
@@ -422,8 +427,8 @@ function _Checkout(props: ICheckout) {
                 marginTop: '10px',
               }}
             >
-              <label className="b mt5">Card Details</label>
-              <div className="mt3">
+              <label className='b mt5'>Card Details</label>
+              <div className='mt3'>
                 <Grid container>
                   <Grid item xs={6}>
                     <Card
@@ -443,8 +448,8 @@ function _Checkout(props: ICheckout) {
                           }}
                           fullWidth
                           onClick={(e) => handleSubmit(e)}
-                          variant="contained"
-                          color="primary"
+                          variant='contained'
+                          color='primary'
                         >
                           Pay Now
                         </Button>
@@ -456,7 +461,7 @@ function _Checkout(props: ICheckout) {
             </div>
           )}
           {value === 'bangladesh' && (
-            <div className="mt4">
+            <div className='mt4'>
               <Button
                 onClick={() => {
                   setShowPortwallet(true);
@@ -503,11 +508,12 @@ function _Checkout(props: ICheckout) {
         <Modal
           isOpen={success}
           // onAfterOpen={afterOpenModal}
+          // eslint-disable-next-line react/jsx-no-bind
           onRequestClose={closeModal}
           style={customStyles}
-          contentLabel="Example Modal"
+          contentLabel='Example Modal'
         >
-          <StripeSuccess text="We have recieved your payment" />
+          <StripeSuccess text='We have recieved your payment' />
         </Modal>
       )}
     </div>

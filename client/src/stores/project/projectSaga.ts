@@ -1,15 +1,24 @@
-import { all, put, call, select } from 'redux-saga/effects';
+import {
+  all, put, call, select,
+} from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 import {
   tokenConfig,
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
+import { getCompanyId } from 'stores/company/Selector';
+import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
+import { Toaster } from '@blueprintjs/core';
 import {
-  PROJECT,
-  ProjectActionTypes,
-  CLEAR_PROJECT_REDUCER_STATE,
-} from './Types';
+  getCurrentUserId,
+  getUserCompanyList,
+} from 'stores/user/Selector';
+import { clearCurrentBoard, getAllBoards } from 'stores/task/Actions';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { IPendingProject } from './Reducer';
+import { getPendingProjects, getProjectId } from './Selector';
 import {
   createProjectSuccess,
   createProjectFailure,
@@ -67,22 +76,17 @@ import {
   updateProjectLoading,
   deleteProjectFailure,
   deleteProjectSuccess,
+  deleteTeamMemberSuccess,
+  deleteTeamMemberFailure,
 } from './Actions';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { getCompanyId } from 'stores/company/Selector';
-import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
-import { getPendingProjects, getProjectId } from './Selector';
-import { IPendingProject } from './Reducer';
-import { Toaster } from '@blueprintjs/core';
 import {
-  getCurrentUserId,
-  getUserCompanyList,
-} from 'stores/user/Selector';
-import { clearCurrentBoard, getAllBoards } from 'stores/task/Actions';
-import { returnErrorText } from 'helpers/HandleSagaErrors';
+  PROJECT,
+  ProjectActionTypes,
+  CLEAR_PROJECT_REDUCER_STATE,
+} from './Types';
 
-const takeEvery: any = Eff.takeEvery;
-const takeLatest: any = Eff.takeLatest;
+const { takeEvery } = Eff;
+const { takeLatest } = Eff;
 
 export function* createProjectAsync({ payload }: any) {
   try {
@@ -137,7 +141,7 @@ export function* createProjectInCompanyAsync({ payload }: any) {
         companyId,
       };
       yield tigrowApi.post(
-        `projects/create-project`,
+        'projects/create-project',
         reqBody,
         headers,
       );
@@ -244,8 +248,8 @@ export function* updateProjectAsync({
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: projectName,
-        color: color,
-        deadline: deadline,
+        color,
+        deadline,
       };
       const response = yield tigrowApi.put(
         `projects/change-title?pid=${projectId}`,
@@ -389,8 +393,8 @@ export function* acceptPendingProjectAsync({ pending }: any) {
     const companyID = yield select(getCompanyId);
     const pendingProjects = yield select(getPendingProjects);
     if (
-      (headers as any).headers.Authorization &&
-      pending.project._id
+      (headers as any).headers.Authorization
+      && pending.project._id
     ) {
       const reqBody = {
         size: pending.size,
@@ -404,8 +408,7 @@ export function* acceptPendingProjectAsync({ pending }: any) {
 
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter(
-          (pendingProject: IPendingProject) =>
-            pendingProject.project._id !== pending.project._id,
+          (pendingProject: IPendingProject) => pendingProject.project._id !== pending.project._id,
         );
         yield all([
           put(acceptPendingProjectSuccess()),
@@ -413,7 +416,7 @@ export function* acceptPendingProjectAsync({ pending }: any) {
           put(addProject(pending.project)),
         ]);
         Toaster.create().show({
-          message: `Successfully accepted`,
+          message: 'Successfully accepted',
           timeout: 3000,
           intent: 'success',
         });
@@ -438,15 +441,14 @@ export function* rejectPendingProjectAsync({ projectId }: any) {
 
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter(
-          (pending: IPendingProject) =>
-            pending.project._id !== projectId,
+          (pending: IPendingProject) => pending.project._id !== projectId,
         );
         yield all([
           put(rejectPendingProjectSuccess()),
           put(getAllPendingProjectsSuccess(currentPendingProjects)),
         ]);
         Toaster.create().show({
-          message: `Successfully rejected`,
+          message: 'Successfully rejected',
           timeout: 3000,
           intent: 'success',
         });
@@ -542,7 +544,7 @@ export function* getProjectAssociatesAsync() {
     const companyId = yield select(getCompanyId);
     if ((headers as any).headers.Authorization) {
       // tslint:disable-next-line:no-string-literal
-      headers['companyid'] = companyId;
+      headers.headers.CompanyId = companyId;
       const response = yield tigrowApi.get(
         `/teams/associate-list?pid=${pid}`,
         headers,
@@ -830,16 +832,6 @@ export function* onDeleteTeamMember() {
     deleteTeamMemberAsync,
   );
 }
-
-export const deleteTeamMemberSuccess = (response: any) => ({
-  type: ProjectActionTypes.DELETE_TEAM_MEMBER_SUCCESS,
-  payload: response,
-});
-
-export const deleteTeamMemberFailure = (errorMessage: any) => ({
-  type: ProjectActionTypes.DELETE_TEAM_MEMBER_FAILURE,
-  payload: errorMessage,
-});
 
 export default function* projectSaga() {
   yield all([

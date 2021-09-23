@@ -50,35 +50,36 @@ const ProjectRequestComponent = (
       {loading === false ? (
         props.PendingProjects && props.PendingProjects.length > 0 ? (
           props.PendingProjects.map((pending) => (
-            <main className="">
-              <article className="dt w-100 pv4 mt2">
-                <div className="dtc w2 w3-ns v-mid">
+            <main className=''>
+              <article className='dt w-100 pv4 mt2'>
+                <div className='dtc w2 w3-ns v-mid'>
                   <img
                     style={{ height: '40px' }}
-                    src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/files-and-folders.svg"
-                    className="db h2 h3-ns"
+                    src='https://tigrowresources.s3-ap-southeast-1.amazonaws.com/files-and-folders.svg'
+                    className='db h2 h3-ns'
+                    alt=''
                   />
                 </div>
-                <div className="dtc v-mid pl3 mw6">
-                  <h1 className="f5 black mv0">
+                <div className='dtc v-mid pl3 mw6'>
+                  <h1 className='f5 black mv0'>
                     {pending.company.name}
                   </h1>
-                  <h1 className="f6 f5-ns fw6 lh-title black mt3 mb0">
+                  <h1 className='f6 f5-ns fw6 lh-title black mt3 mb0'>
                     {pending.project.name}
                   </h1>
-                  <h2 className="f6 fw4 mt0 mb0 black-60">
+                  <h2 className='f6 fw4 mt0 mb0 black-60'>
                     {pending.project.description}
                   </h2>
                 </div>
-                <div className="dtc v-mid">
-                  <form className="w-100 tr">
+                <div className='dtc v-mid'>
+                  <form className='w-100 tr'>
                     <Button
-                      className="w4 grow h2 pointer bp3-minimal mr4"
+                      className='w4 grow h2 pointer bp3-minimal mr4'
                       style={{
                         border: '1px solid silver',
                         outline: 'none',
                       }}
-                      type="submit"
+                      type='submit'
                       loading={rejectLoading}
                       onClick={async () => {
                         setRejectLoading(true);
@@ -91,14 +92,14 @@ const ProjectRequestComponent = (
                       Reject
                     </Button>
                     <Button
-                      className="w4 grow h2 pointer"
+                      className='w4 grow h2 pointer'
                       style={{
                         background: '#34b3e9',
                         outline: 'none',
                         color: 'white',
                         border: 'none',
                       }}
-                      type="submit"
+                      type='submit'
                       loading={acceptLoading}
                       onClick={async (e: any) => {
                         e.preventDefault();
@@ -116,8 +117,8 @@ const ProjectRequestComponent = (
             </main>
           ))
         ) : (
-          <div className="flex flex-column relative">
-            <h1 className="f5 fw4 tc mt4 mb5">
+          <div className='flex flex-column relative'>
+            <h1 className='f5 fw4 tc mt4 mb5'>
               {t('app.company.Projects.No-pending-projects')}
             </h1>
           </div>
@@ -129,12 +130,10 @@ const ProjectRequestComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    companyRole: state.companyReducer.currentCompany.role,
-    PendingProjects: state.projectReducer.pendingProjects,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  companyRole: state.companyReducer.currentCompany.role,
+  PendingProjects: state.projectReducer.pendingProjects,
+});
 
 export const PendingProjectRequest = connect(mapStateToProps, {
   getAllPendingProjects,

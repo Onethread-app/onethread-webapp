@@ -18,12 +18,12 @@ const AutoLogin = (props: RouteComponentProps) => {
       {redirectPath ? (
         <Redirect
           to={
-            redirectPath + (view === 'mobile' ? '?view=' + view : '')
+            redirectPath + (view === 'mobile' ? `?view=${view}` : '')
           }
         />
       ) : (
         <Redirect
-          to={'/' + (view === 'mobile' ? '?view=' + view : '')}
+          to={`/${view === 'mobile' ? `?view=${view}` : ''}`}
         />
       )}
     </>

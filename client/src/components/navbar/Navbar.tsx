@@ -37,19 +37,18 @@ const Navbar = (props: INavbarInternalProps) => {
     props.getNotifications();
     companySubscriber(props.companyId);
     props.fetchChats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div
-      className="top-0 z-2 w-100"
+      className='top-0 z-2 w-100'
       style={{
         position: isMobileOnly ? 'absolute' : 'sticky',
         left: isMobileOnly ? 0 : 'auto',
         right: isMobileOnly ? 0 : 'auto',
       }}
     >
-      <div className="w-100">
+      <div className='w-100'>
         <LoadingBar
           style={{ backgroundColor: '#3484F0', height: '3px' }}
         />
@@ -70,14 +69,14 @@ const Navbar = (props: INavbarInternalProps) => {
       >
         <div>
           {props.type === 'home' ? (
-            <div className="flex items-center ml4">
+            <div className='flex items-center ml4'>
               <div style={{ width: '6rem' }}>
                 <NavLink to={`/${props.user.name}/home`}>
                   <img
                     src={Logo}
-                    className="br2"
+                    className='br2'
                     style={{ background: '#0F0C4E' }}
-                    alt=""
+                    alt=''
                   />
                 </NavLink>
               </div>
@@ -89,12 +88,12 @@ const Navbar = (props: INavbarInternalProps) => {
                 props.type === 'company'
                   ? `/company/${props.uniqueCompanyName}/dashboard`
                   : match.url.includes('/notifications')
-                  ? `/${props.user.name}/notifications`
-                  : `/${props.user.name}`
+                    ? `/${props.user.name}/notifications`
+                    : `/${props.user.name}`
               }
             >
               <div
-                className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
+                className='f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4'
                 style={{
                   textOverflow: 'ellipsis',
                 }}
@@ -102,8 +101,8 @@ const Navbar = (props: INavbarInternalProps) => {
                 {props.type === 'company'
                   ? props.name
                   : match.url.includes('/notifications')
-                  ? 'Notifications'
-                  : ''}
+                    ? 'Notifications'
+                    : ''}
               </div>
             </NavLink>
           )}

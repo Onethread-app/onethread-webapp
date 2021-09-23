@@ -6,10 +6,10 @@ import Linkify from 'react-linkify';
 import { IRoomMessage } from 'stores/room/Reducer';
 import { toggleDiscussionRoom } from 'stores/room/Actions';
 
-import UserIcon from './../../../../../resources/images/profilePhoto.svg';
-import DownloadIcon from './../../../../../resources/images/Download.svg';
-import starIcon from './../../../../../resources/images/colorful-star.svg';
-import muteStarIcon from './../../../../../resources/images/mute-star.svg';
+import UserIcon from '../../../../../resources/images/profilePhoto.svg';
+import DownloadIcon from '../../../../../resources/images/Download.svg';
+import starIcon from '../../../../../resources/images/colorful-star.svg';
+import muteStarIcon from '../../../../../resources/images/mute-star.svg';
 
 // import { handleDownload } from 'helpers/FileDownload';
 
@@ -49,8 +49,8 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 ? props.message.account.profileImage
                 : UserIcon
             }
-            className="v-mid dib"
-            alt="user"
+            className='v-mid dib'
+            alt='user'
             style={{
               width: '32px',
               height: '32px',
@@ -58,14 +58,14 @@ const MessageItemComponent = (props: MessageItemProps) => {
             }}
           />
           <h5
-            className="mv0 ml2 mr2"
+            className='mv0 ml2 mr2'
             style={{
               textTransform: 'capitalize',
             }}
           >
-            {props.message.account.firstName +
-              ' ' +
-              props.message.account.lastName}
+            {`${props.message.account.firstName
+            } ${
+              props.message.account.lastName}`}
           </h5>
           {/* </>
           )} */}
@@ -99,10 +99,10 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 key,
               ) => (
                 <a
-                  target="blank"
+                  target='blank'
                   href={decoratedHref}
                   key={key}
-                  rel="noreferrer"
+                  rel='noreferrer'
                   style={{
                     color: '#323030',
                     textDecoration: 'underline',
@@ -112,9 +112,9 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 </a>
               )}
             >
-              <div className="flex justify-between">
+              <div className='flex justify-between'>
                 <p
-                  className={`mv0 tj break-word`}
+                  className='mv0 tj break-word'
                   style={{
                     color: '#323030',
                     whiteSpace: 'pre-wrap',
@@ -122,7 +122,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 >
                   {props.message.text}
                 </p>
-                <span className="tigrow-darkGray ml3 mt2 f7 mb0">
+                <span className='tigrow-darkGray ml3 mt2 f7 mb0'>
                   {isBeforeToday === true
                     ? moment(props.message.createdAt).format('h:m a')
                     : moment(props.message.createdAt).fromNow()}
@@ -139,7 +139,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
             }}
           >
             <img
-              className="pointer"
+              className='pointer'
               onClick={async () => {
                 await props.toggleDiscussionRoom(
                   { discussion: !props.message.discussion },
@@ -147,7 +147,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 );
               }}
               src={props.message.discussion ? starIcon : muteStarIcon}
-              alt="highlighted-discussion icon"
+              alt='highlighted-discussion icon'
               style={{
                 width: '23px',
                 height: '23px',
@@ -160,58 +160,57 @@ const MessageItemComponent = (props: MessageItemProps) => {
       {/* file */}
       {props.message.files.length
         ? props.message.files.map((file) => (
-            <article
-              key={file._id}
-              className={`db flex items-center ${
-                currentUser ? ' flex-row-reverse mr4' : 'ml4'
-              }
+          <article
+            key={file._id}
+            className={`db flex items-center ${
+              currentUser ? ' flex-row-reverse mr4' : 'ml4'
+            }
             ${props.group.message ? 'mb1' : 'mb3'}`}
+            style={{
+              fontSize: '1.2rem',
+            }}
+          >
+            <div
+              className={`ph3 pv2 br3 mw7 ${
+                currentUser ? 'mr2' : 'ml2'
+              } flex justify-center items-center`}
               style={{
-                fontSize: '1.2rem',
+                backgroundColor: currentUser
+                  ? '#3b5998'
+                  : '#d4d4d47a',
               }}
             >
-              <div
-                className={`ph3 pv2 br3 mw7 ${
-                  currentUser ? 'mr2' : 'ml2'
-                } flex justify-center items-center`}
+              <h4
+                className='mv0 flex justify-center items-center break-word'
                 style={{
-                  backgroundColor: currentUser
-                    ? '#3b5998'
-                    : '#d4d4d47a',
+                  color: currentUser ? 'white' : 'rgb(74, 73, 73)',
+                  whiteSpace: 'pre-wrap',
                 }}
               >
-                <h4
-                  className="mv0 flex justify-center items-center break-word"
-                  style={{
-                    color: currentUser ? 'white' : 'rgb(74, 73, 73)',
-                    whiteSpace: 'pre-wrap',
-                  }}
+                {file.s3Key.split('/')[1]}
+              </h4>
+              <a
+                href={file.link}
+                target='_blank'
+                rel='noopener noreferrer'
+                download
+              >
+                <span
+                  className='flex pl3 pointer'
                 >
-                  {file.s3Key.split('/')[1]}
-                </h4>
-                <a
-                  href={file.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                >
-                  <span
-                    className="flex pl3 pointer"
-                    // onClick={() => handleDownload(file)}
-                  >
-                    <img
-                      src={DownloadIcon}
-                      alt="Download icon"
-                      style={{
-                        width: '23px',
-                        height: '23px',
-                      }}
-                    />
-                  </span>
-                </a>
-              </div>
-            </article>
-          ))
+                  <img
+                    src={DownloadIcon}
+                    alt='Download icon'
+                    style={{
+                      width: '23px',
+                      height: '23px',
+                    }}
+                  />
+                </span>
+              </a>
+            </div>
+          </article>
+        ))
         : null}
     </>
   );

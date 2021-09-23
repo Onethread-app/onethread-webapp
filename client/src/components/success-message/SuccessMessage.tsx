@@ -15,7 +15,7 @@ export interface State extends SnackbarOrigin {
 }
 
 function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -61,7 +61,7 @@ const SuccessMessageComponent = (props) => {
         anchorOrigin={{ vertical, horizontal }}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity="success">
+        <Alert onClose={handleClose} severity='success'>
           Your mail has been sent successfully!
         </Alert>
       </Snackbar>

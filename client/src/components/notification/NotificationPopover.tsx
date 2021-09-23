@@ -25,8 +25,7 @@ interface INotificationPopover {
 
 const NotificationPopover = (props: INotificationPopover) => {
   const history = useHistory();
-  const [lastNotificationElement, setLastNotificationElement] =
-    useState<null | HTMLUnknownElement>(null);
+  const [lastNotificationElement, setLastNotificationElement] = useState<null | HTMLUnknownElement>(null);
   const [notificationToShow, setNotificationToShow] = useState<any>(
     [],
   );
@@ -62,9 +61,7 @@ const NotificationPopover = (props: INotificationPopover) => {
 
   useEffect(() => {
     setNotificationToShow(
-      props.notifications.filter((noti) => {
-        return noti.read === false;
-      }),
+      props.notifications.filter((noti) => noti.read === false),
     );
   }, [props.notifications]);
 
@@ -86,7 +83,7 @@ const NotificationPopover = (props: INotificationPopover) => {
     <>
       {notificationToShow.length > 0 && (
         <p
-          className="pv2 mb0 ml-auto mr2 pointer dim"
+          className='pv2 mb0 ml-auto mr2 pointer dim'
           style={{ width: 'fit-content', color: '#106ba3' }}
           onClick={handleAllRead}
         >
@@ -98,20 +95,19 @@ const NotificationPopover = (props: INotificationPopover) => {
           maxHeight: '300px',
           width: isMobileOnly ? '' : '500px',
         }}
-        className="pv2 br4 overflow-y-auto"
+        className='pv2 br4 overflow-y-auto'
       >
         {notificationToShow.length > 0 ? (
           notificationToShow.map(
-            (sNotification: any, index) =>
-              sNotification.notification && (
-                <div
-                  key={index}
-                  onClick={() => {
-                    onCLickNotification(sNotification);
-                  }}
-                >
-                  {notificationToShow &&
-                  notificationToShow.length === index + 1 ? (
+            (sNotification: any, index) => sNotification.notification && (
+            <div
+              key={index}
+              onClick={() => {
+                onCLickNotification(sNotification);
+              }}
+            >
+              {notificationToShow
+                  && notificationToShow.length === index + 1 ? (
                     <div ref={setLastNotificationElement}>
                       <Notification
                         type={sNotification.notification.type}
@@ -119,15 +115,15 @@ const NotificationPopover = (props: INotificationPopover) => {
                         read={sNotification.read}
                       />
                     </div>
-                  ) : (
-                    <Notification
-                      type={sNotification.notification.type}
-                      text={sNotification.notification.text}
-                      read={sNotification.read}
-                    />
-                  )}
-                </div>
-              ),
+                ) : (
+                  <Notification
+                    type={sNotification.notification.type}
+                    text={sNotification.notification.text}
+                    read={sNotification.read}
+                  />
+                )}
+            </div>
+            ),
           )
         ) : (
           <h3
@@ -135,13 +131,13 @@ const NotificationPopover = (props: INotificationPopover) => {
               maxHeight: '300px',
               textAlign: 'center',
             }}
-            className="pa3 overflow-y-auto moon-gray"
+            className='pa3 overflow-y-auto moon-gray'
           >
             No new notification
           </h3>
         )}
       </div>
-      <div className="tc mv1">
+      <div className='tc mv1'>
         <NavLink to={`/${props.user.name}/notifications`}>
           See All
         </NavLink>

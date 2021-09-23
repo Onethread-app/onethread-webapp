@@ -93,24 +93,22 @@ const BoardDetails = (props: IBoardDetails) => {
   useEffect(() => {
     props.setFilerUsers(selectedAssignee);
     props.setSortBy(undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAssignee]);
 
   useEffect(() => {
     setBoardMembers(
-      props.currentBoard.members.map((member) => {
-        return {
-          id: member._id,
-          label: `${member.firstName} ${member.lastName}`,
-        };
-      }),
+      props.currentBoard.members.map((member) => ({
+        id: member._id,
+        label: `${member.firstName} ${member.lastName}`,
+      })),
     );
-    if (props.currentBoard.columns.length > 0)
+    if (props.currentBoard.columns.length > 0) {
       setTodoColumnId(
         props.currentBoard.columns.filter(
           (col) => col.name.toLowerCase() === 'to do',
         )[0]._id,
       );
+    }
     const colTasks = props.currentBoard.columns
       .map((col) => col.tasks)
       .flat();
@@ -123,15 +121,14 @@ const BoardDetails = (props: IBoardDetails) => {
       priority: t.priority,
     }));
     setTasksForCalendarView(cTasks);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.currentBoard]);
 
   return (
-    <Container className="h-100 ph3 cf flex flex-column">
-      <div className="flex flex-column mb3">
-        <div className="flex flex-wrap justify-between">
+    <Container className='h-100 ph3 cf flex flex-column'>
+      <div className='flex flex-column mb3'>
+        <div className='flex flex-wrap justify-between'>
           <div
-            className="flex flex-column"
+            className='flex flex-column'
             style={{
               width: isMobileOnly ? 'auto' : 'calc(100%/3)',
               flexBasis: isMobileOnly ? '100%' : 'auto',
@@ -140,7 +137,7 @@ const BoardDetails = (props: IBoardDetails) => {
             <BreadCrumbs
               items={[
                 {
-                  text: `Board`,
+                  text: 'Board',
                   href: `/company/${
                     props.company.uniqueName
                   }/project/${props.currentProject!._id}/board`,
@@ -153,7 +150,7 @@ const BoardDetails = (props: IBoardDetails) => {
             />
           </div>
           <ProjectName
-            className="tc"
+            className='tc'
             style={{ width: isMobileOnly ? 'auto' : 'calc(100%/3)' }}
           >
             {props.currentProject.name}
@@ -167,7 +164,7 @@ const BoardDetails = (props: IBoardDetails) => {
             <MemberGroup members={props.currentBoard.members} />
           </div>
         </div>
-        <SecondaryHeader className="flex flex-column flex-row-ns items-center">
+        <SecondaryHeader className='flex flex-column flex-row-ns items-center'>
           <div
             className={`flex items-center ${
               isMobileOnly && 'justify-between'
@@ -187,19 +184,22 @@ const BoardDetails = (props: IBoardDetails) => {
             </TasksNumber>
             <CreateTaskButton columnId={todoColumnId} />
           </div>
-          <div className="flex justify-center">
+          <div className='flex justify-center'>
             <ViewSelectDiv
               fetchingBoard={props.fetchingBoard}
-              className="flex items-center"
+              className='flex items-center'
             >
-              <p>{t('app.project.Tasks.View')}:</p>
+              <p>
+                {t('app.project.Tasks.View')}
+                :
+              </p>
               <p
                 onClick={() => {
                   handleViewChange('list');
                 }}
                 className={`${view === 'list' && 'active'}`}
               >
-                <Tooltip title="List" placement="top">
+                <Tooltip title='List' placement='top'>
                   <ListIcon />
                 </Tooltip>
               </p>
@@ -209,7 +209,7 @@ const BoardDetails = (props: IBoardDetails) => {
                 }}
                 className={`${view === 'board' && 'active'}`}
               >
-                <Tooltip title="Board" placement="top">
+                <Tooltip title='Board' placement='top'>
                   <ViewWeekIcon />
                 </Tooltip>
               </p>
@@ -219,7 +219,7 @@ const BoardDetails = (props: IBoardDetails) => {
                 }}
                 className={`${view === 'calendar' && 'active'}`}
               >
-                <Tooltip title="Calendar" placement="top">
+                <Tooltip title='Calendar' placement='top'>
                   <DateRangeIcon />
                 </Tooltip>
               </p>
@@ -230,24 +230,24 @@ const BoardDetails = (props: IBoardDetails) => {
               isMobileOnly ? 'justify-center' : 'justify-end'
             }`}
           >
-            <div className="flex items-center">
-              {(props.currentBoard.sortBy !== undefined ||
-                selectedAssignee.length > 0) && (
+            <div className='flex items-center'>
+              {(props.currentBoard.sortBy !== undefined
+                || selectedAssignee.length > 0) && (
                 <ClearOutlinedIcon
-                  className="mr2 pointer grow ba br2"
+                  className='mr2 pointer grow ba br2'
                   style={{ color: '#656565', borderColor: '#656565' }}
                   onClick={clearSort}
                 />
               )}
-              <SortingDiv className="flex items-center justify-between">
+              <SortingDiv className='flex items-center justify-between'>
                 <Popover
-                  interactionKind="click"
-                  position="bottom"
-                  popoverClassName="bg-white"
-                  content={
-                    <div className="bg-white ma3">
+                  interactionKind='click'
+                  position='bottom'
+                  popoverClassName='bg-white'
+                  content={(
+                    <div className='bg-white ma3'>
                       <p
-                        className="flex items-center pointer"
+                        className='flex items-center pointer'
                         onClick={() => props.setSortBy('dueDate')}
                         style={{
                           marginRight:
@@ -263,7 +263,7 @@ const BoardDetails = (props: IBoardDetails) => {
                               : 'circle'
                           }
                           iconSize={16}
-                          className="mr2"
+                          className='mr2'
                           color={
                             props.currentBoard.sortBy === 'dueDate'
                               ? '#2EB67D'
@@ -283,7 +283,7 @@ const BoardDetails = (props: IBoardDetails) => {
                         )}
                       </p>
                       <p
-                        className="mr2 flex items-center pointer"
+                        className='mr2 flex items-center pointer'
                         onClick={() => props.setSortBy('priority')}
                         style={{
                           marginRight:
@@ -299,7 +299,7 @@ const BoardDetails = (props: IBoardDetails) => {
                               : 'circle'
                           }
                           iconSize={16}
-                          className="mr2"
+                          className='mr2'
                           color={
                             props.currentBoard.sortBy === 'priority'
                               ? '#2EB67D'
@@ -319,38 +319,38 @@ const BoardDetails = (props: IBoardDetails) => {
                         )}
                       </p>
                     </div>
-                  }
-                  target={
-                    <div className="flex items-center mr3">
+                  )}
+                  target={(
+                    <div className='flex items-center mr3'>
                       <Icon
-                        icon="sort-desc"
-                        className="mr1"
+                        icon='sort-desc'
+                        className='mr1'
                         iconSize={12}
                       />
                       <p>{t('app.project.Tasks.Sort')}</p>
                     </div>
-                  }
+                  )}
                 />
                 <Popover
                   isOpen={filterPopoverOpen}
-                  interactionKind="click"
-                  position="bottom"
-                  popoverClassName="bg-white"
-                  content={
+                  interactionKind='click'
+                  position='bottom'
+                  popoverClassName='bg-white'
+                  content={(
                     <div
-                      className="pa2"
+                      className='pa2'
                       style={{
                         minWidth: '180px',
                         width: '200px',
                         maxWidth: '250px',
                       }}
                     >
-                      <div className="flex items-center justify-between mb2">
-                        <p className="ma0">
+                      <div className='flex items-center justify-between mb2'>
+                        <p className='ma0'>
                           {t('app.project.Tasks.Assignee')}
                         </p>
                         <span
-                          className="bp3-tag pointer bg-light-gray black"
+                          className='bp3-tag pointer bg-light-gray black'
                           onClick={() => setFilterPopoverOpen(false)}
                         >
                           {t('app.project.Tasks.Close')}
@@ -365,22 +365,20 @@ const BoardDetails = (props: IBoardDetails) => {
                         setSelected={setSelectedAssignee}
                       />
                     </div>
-                  }
-                  target={
+                  )}
+                  target={(
                     <div
-                      className="mr2 flex items-center"
-                      onClick={() =>
-                        setFilterPopoverOpen(!filterPopoverOpen)
-                      }
+                      className='mr2 flex items-center'
+                      onClick={() => setFilterPopoverOpen(!filterPopoverOpen)}
                     >
                       <Icon
-                        icon="filter"
-                        className="mr1"
+                        icon='filter'
+                        className='mr1'
                         iconSize={12}
                       />
                       <p>{t('app.project.Tasks.Filter')}</p>
                     </div>
-                  }
+                  )}
                 />
               </SortingDiv>
             </div>

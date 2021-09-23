@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
 import { isMobileOnly } from 'react-device-detect';
 import { connect, useDispatch } from 'react-redux';
 import { trim, isEqual, isEmpty } from 'lodash';
@@ -23,10 +22,10 @@ import {
 } from 'stores/room/Types';
 
 // import SmileIcon from './../../../../../resources/images/Emoji.svg';
-import SendIcon from './../../../../../resources/images/Send.svg';
-import AttachmentIcon from './../../../../../resources/images/attachment.svg';
-
 import { capitalizeFirstLetter } from 'helpers/utils';
+import SendIcon from '../../../../../resources/images/Send.svg';
+import AttachmentIcon from '../../../../../resources/images/attachment.svg';
+
 import {
   isTypingStartTrigger,
   isTypingStopTrigger,
@@ -106,14 +105,13 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
     setText('');
     setTextError('');
 
-    const files =
-      props.pendingFiles && props.pendingFiles.length
-        ? props.pendingFiles.map((file) => ({
-            _id: file._id,
-            link: file.link,
-            s3Key: file.s3Key,
-          }))
-        : [];
+    const files = props.pendingFiles && props.pendingFiles.length
+      ? props.pendingFiles.map((file) => ({
+        _id: file._id,
+        link: file.link,
+        s3Key: file.s3Key,
+      }))
+      : [];
 
     dispatch({ type: CLEAR_FILE_UPLOAD });
     setText('');
@@ -129,20 +127,20 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
   const handleMessageSend = () => {
     const trimmedText = trim(text);
     if (
-      isEmpty(trimmedText) === false &&
-      trimmedText.length <= messageLimit &&
-      props.pendingFiles.length > 0
+      isEmpty(trimmedText) === false
+      && trimmedText.length <= messageLimit
+      && props.pendingFiles.length > 0
     ) {
       sendMessage(trimmedText, 'attachment');
     } else if (
-      isEmpty(trimmedText) === false &&
-      trimmedText.length <= messageLimit &&
-      props.pendingFiles.length === 0
+      isEmpty(trimmedText) === false
+      && trimmedText.length <= messageLimit
+      && props.pendingFiles.length === 0
     ) {
       sendMessage(trimmedText, 'text');
     } else if (
-      isEmpty(trimmedText) === true &&
-      props.pendingFiles.length > 0
+      isEmpty(trimmedText) === true
+      && props.pendingFiles.length > 0
     ) {
       sendMessage(trimmedText, 'file');
     } else if (isEmpty(trimmedText) === true) {
@@ -170,7 +168,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
   };
 
   const checkClickOutside = (e: any) => {
-    const node = ReactDOM.findDOMNode(emojiRef.current);
+    const node = emojiRef.current;
     if (node && !node.contains(e.target)) {
       toggleEmojiPicker();
     }
@@ -212,18 +210,20 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
       {/* typing indicator */}
       {props.typingUsers.length
         ? props.typingUsers.map((user, i: number) => {
-            if (
-              isEmpty(props.currentRoom._id) === false &&
-              isEqual(props.currentRoom._id, user.roomId) === true
-            ) {
-              return (
-                <h6 key={i} className="mv1 pl1">
-                  {user.name} is typing ...
-                </h6>
-              );
-            }
-            return null;
-          })
+          if (
+            isEmpty(props.currentRoom._id) === false
+              && isEqual(props.currentRoom._id, user.roomId) === true
+          ) {
+            return (
+              <h6 key={i} className='mv1 pl1'>
+                {user.name}
+                {' '}
+                is typing ...
+              </h6>
+            );
+          }
+          return null;
+        })
         : ''}
 
       {/* Emoji picker */}
@@ -244,17 +244,17 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
         style={{ width: isMobileOnly ? '100%' : '' }}
       >
         {/* pendingFiles */}
-        <div className="flex w-100 flex-wrap items-center b--black-10 ba">
+        <div className='flex w-100 flex-wrap items-center b--black-10 ba'>
           {props.uploadingFile ? (
             <CircularProgress size={25} style={{ margin: '.5rem' }} />
           ) : props.pendingFiles && props.pendingFiles.length ? (
             props.pendingFiles.map((file) => (
-              <div className="bg-tigrowLightBlue flex pv2 ph3 ma1 br-pill justify-center items-center">
-                <p className="white ma0">
+              <div className='bg-tigrowLightBlue flex pv2 ph3 ma1 br-pill justify-center items-center'>
+                <p className='white ma0'>
                   {file.s3Key.split('/')[1]}
                 </p>
                 <span
-                  className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
+                  className='bp3-tag-remove bp3-icon-delete mh2 w1 h1'
                   style={{
                     backgroundColor: 'white',
                     color: '#34b3e9',
@@ -267,7 +267,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                       payload: file._id,
                     });
                   }}
-                ></span>
+                />
               </div>
             ))
           ) : null}
@@ -275,13 +275,13 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
 
         {/* message error */}
         {isEmpty(textError) === false ? (
-          <h6 className="mv0 pl1 red">{textError}</h6>
+          <h6 className='mv0 pl1 red'>{textError}</h6>
         ) : (
           ''
         )}
-        <div className="sendMessage flex w-100">
+        <div className='sendMessage flex w-100'>
           <div
-            className="w-100"
+            className='w-100'
             // style={{
             //   backgroundColor: '#d4d4d47a',
             //   borderColor: '#d4d4d4ad',
@@ -294,9 +294,9 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
               />
             )}
             <textarea
-              autoFocus={true}
+              autoFocus
               ref={inputMessageRef}
-              className="w-100 pl3 pt3-ns pt2"
+              className='w-100 pl3 pt3-ns pt2'
               style={{
                 resize: 'none',
                 outline: 'none',
@@ -320,8 +320,8 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
               onKeyDown={() => {
                 clearTimeout(typingTimer);
               }}
-              placeholder="Type your message and hit ENTER to send"
-            ></textarea>
+              placeholder='Type your message and hit ENTER to send'
+            />
           </div>
           {/* <Button
               className="bp3-minimal outline-0 toggle-emoji dn"
@@ -338,30 +338,30 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
               </span>
             </Button> */}
           <Button
-            className="bp3-minimal outline-0 dn"
+            className='bp3-minimal outline-0 dn'
             onClick={() => setShowFileDialog(true)}
           >
-            <span className="bp3-icon">
+            <span className='bp3-icon'>
               <img
                 src={AttachmentIcon}
-                width="30px"
-                height="30px"
-                color="#34b3e9"
-                alt=""
+                width='30px'
+                height='30px'
+                color='#34b3e9'
+                alt=''
               />
             </span>
           </Button>
           <Button
-            className="bp3-minimal outline-0 dn"
+            className='bp3-minimal outline-0 dn'
             onClick={handleMessageSend}
           >
-            <span className="bp3-icon">
+            <span className='bp3-icon'>
               <img
                 src={SendIcon}
-                width="30px"
-                height="30px"
-                color="#34b3e9"
-                alt=""
+                width='30px'
+                height='30px'
+                color='#34b3e9'
+                alt=''
               />
             </span>
           </Button>
@@ -369,7 +369,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
       </div>
       {showFileDialog && (
         <Dialog
-          icon="briefcase"
+          icon='briefcase'
           onClose={() => setShowFileDialog(!showFileDialog)}
           isOpen
           style={{ background: '#fff' }}
@@ -384,18 +384,16 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    profileImage: state.userReducer.user.profileImage,
-    currentRoom: state.roomReducer.currentRoom,
-    emojiPicker: state.roomReducer.emojiPicker,
-    typingUsers: state.roomReducer.typing.users,
-    pendingFiles: state.roomReducer.pendingFiles,
-    uploadingFile: state.roomReducer.uploadingFile,
-    roomUsers: state.roomReducer.users,
-    user: state.userReducer.user,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  profileImage: state.userReducer.user.profileImage,
+  currentRoom: state.roomReducer.currentRoom,
+  emojiPicker: state.roomReducer.emojiPicker,
+  typingUsers: state.roomReducer.typing.users,
+  pendingFiles: state.roomReducer.pendingFiles,
+  uploadingFile: state.roomReducer.uploadingFile,
+  roomUsers: state.roomReducer.users,
+  user: state.userReducer.user,
+});
 export const SendMessageForm = connect(mapStateToProps, {
   sendRoomMessage,
 })(SendMessageFormComponent);

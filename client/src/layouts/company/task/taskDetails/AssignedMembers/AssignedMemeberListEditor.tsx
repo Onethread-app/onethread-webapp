@@ -21,19 +21,19 @@ export const AssignedMemeberListEditorComponent = (
   return (
     <Popover
       isOpen={deletePopover}
-      content={
-        <div className="pa3 cf bg-white" style={{ width: '350px' }}>
-          <h1 className="f5">Delete</h1>
+      content={(
+        <div className='pa3 cf bg-white' style={{ width: '350px' }}>
+          <h1 className='f5'>Delete</h1>
           <p>Are you sure want to permanently delete </p>
-          <div className="flex justify-end mt4">
+          <div className='flex justify-end mt4'>
             <Button
-              className="grow h2 pointer white bp3-minimal w4 mr3"
+              className='grow h2 pointer white bp3-minimal w4 mr3'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
-              type="submit"
+              type='submit'
               onClick={async () => {
                 await props.deleteMember(props.assignMemberId);
                 setDeletePopover(false);
@@ -42,7 +42,7 @@ export const AssignedMemeberListEditorComponent = (
               Yes, Delete
             </Button>
             <Button
-              className="grow h2 pointer white bp3-minimal w4"
+              className='grow h2 pointer white bp3-minimal w4'
               style={{
                 background: '#fff',
                 outline: 'none',
@@ -55,24 +55,21 @@ export const AssignedMemeberListEditorComponent = (
             </Button>
           </div>
         </div>
-      }
+      )}
       target={
-        // <Icon
-        //   className="pt3 pointer"
-        //   icon="trash"
-        //   onClick={() => setDeletePopover(true)}
-        // />
-        <Button
-          style={{
-            width: '100%',
-            color: '#5A5A5A',
-            border: '1px solid #B1B1B1',
-            background: 'none',
-          }}
-          onClick={() => setDeletePopover(true)}
-        >
-          Remove
-        </Button>
+        ((
+          <Button
+            style={{
+              width: '100%',
+              color: '#5A5A5A',
+              border: '1px solid #B1B1B1',
+              background: 'none',
+            }}
+            onClick={() => setDeletePopover(true)}
+          >
+            Remove
+          </Button>
+        ))
       }
     />
   );

@@ -12,16 +12,16 @@ import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 import { User, ICompanyByUser } from 'stores/user/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
-import { getNotifications } from '../../stores/notifications/Action';
 import { logoutAction } from 'stores/auth/Actions';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+import { Loading } from 'components/Loading';
+import { getNotifications } from '../../stores/notifications/Action';
 
-import user from './../../resources/images/profilePhoto.svg';
-import CompanyIcon from './../../resources/images/CompanyIcon.svg';
+import user from '../../resources/images/profilePhoto.svg';
+import CompanyIcon from '../../resources/images/CompanyIcon.svg';
 
 import { CompanySignupForm } from './Form';
-import { Loading } from 'components/Loading';
 import ReportForm from '../../components/ReportForm';
 
 interface CompanyListViewProps {
@@ -64,22 +64,20 @@ export const ListViewComponent = (
       props.getAllCompaniesByUserId(props.user._id);
     }
     setLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   useEffect(() => {
     if (
-      gettingDetails === true &&
-      props.gettingCompanyDetails === false &&
-      props.errorOnGettingCompanyDetails === '' &&
-      !!companyName
+      gettingDetails === true
+      && props.gettingCompanyDetails === false
+      && props.errorOnGettingCompanyDetails === ''
+      && !!companyName
     ) {
       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
       setGettingDetails(false);
       history.push(`/company/${companyName}/dashboard`);
       props.setShowDialog(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     companyName,
     gettingDetails,
@@ -92,34 +90,34 @@ export const ListViewComponent = (
       <div>
         <div style={{ backgroundColor: '#34b3e9' }}>
           <Icon
-            icon="delete"
+            icon='delete'
             iconSize={20}
-            className="white ma3 fr"
+            className='white ma3 fr'
             onClick={() => props.setShowDialog(false)}
           />
           <Button
-            className="bp3-minimal outline-0 bp3-popover-dismiss mt5"
+            className='bp3-minimal outline-0 bp3-popover-dismiss mt5'
             onClick={() => {
               history.push(`/${props.user.name}`);
               props.setShowDialog(false);
             }}
           >
-            <div className="dtc w2">
+            <div className='dtc w2'>
               <img
                 src={
                   props.user.profileImage
                     ? props.user.profileImage
                     : user
                 }
-                className="db w2 h2 ba b--white-90 br2"
-                alt=""
+                className='db w2 h2 ba b--white-90 br2'
+                alt=''
               />
             </div>
-            <div className="dtc v-mid pl3 pt2">
-              <h1 className="f6 white ma0">
+            <div className='dtc v-mid pl3 pt2'>
+              <h1 className='f6 white ma0'>
                 {`${props.user.firstName} ${props.user.lastName}`}
               </h1>
-              <h1 className="f7 white ma0 fw4 mb4">
+              <h1 className='f7 white ma0 fw4 mb4'>
                 {props.user.position}
               </h1>
             </div>
@@ -127,95 +125,95 @@ export const ListViewComponent = (
         </div>
         <NavLink
           exact
-          className="w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2"
+          className='w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2'
           activeStyle={{ background: '#34b3e9', color: 'white' }}
           style={{ color: 'black' }}
           to={`/${props.user.name}/settings`}
           onClick={() => props.setShowDialog(false)}
         >
           <Icon
-            icon="cog"
-            className="pr3"
+            icon='cog'
+            className='pr3'
             style={{ color: '#787e8d' }}
           />
           {t('app.user.User-settings.Profile')}
         </NavLink>
         <NavLink
           exact
-          className="w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2"
+          className='w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2'
           activeStyle={{ background: '#34b3e9', color: 'white' }}
           style={{ color: 'black' }}
           to={`/${props.user.name}/home`}
           onClick={() => props.setShowDialog(false)}
         >
           <Icon
-            icon="home"
-            className="pr3"
+            icon='home'
+            className='pr3'
             style={{ color: '#787e8d' }}
           />
           {t('app.user.User-settings.Home')}
         </NavLink>
         <Button
-          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
+          className='bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100'
           onClick={(e: any) => setShowButtonReport(true)}
-          icon="issue"
-          alignText="left"
+          icon='issue'
+          alignText='left'
         >
           {t('app.user.User-settings.Report-Issue')}
         </Button>
         <Button
-          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
+          className='bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100'
           onClick={(e: any) => props.logoutAction(history)}
-          icon="log-in"
-          alignText="left"
+          icon='log-in'
+          alignText='left'
         >
           {t('app.user.User-settings.Logout')}
         </Button>
-        <h1 className="f7 ml3">{t('app.homepage.My-Companies')}</h1>
+        <h1 className='f7 ml3'>{t('app.homepage.My-Companies')}</h1>
         <div
-          className="mw6 center overflow-y-auto pl2"
+          className='mw6 center overflow-y-auto pl2'
           style={{ maxHeight: '18rem' }}
         >
           {loading ? (
             <Loading />
           ) : props.companies && props.companies.length > 0 ? (
-            props.companies &&
-            props.companies.map(
-              (c) =>
-                c.company && (
-                  <article
+            props.companies
+            && props.companies.map(
+              (c) => c.company && (
+              <article
                     // tslint:disable-next-line: max-line-length
-                    className={`dt w-100 hover-bg-black-10 pa1 ${
-                      props.currentCompany === c.company._id
-                        ? 'bg-black-10'
-                        : ''
-                    } mt1 pointer bp3-popover-dismiss`}
-                    onClick={() => handleClick(c.company.uniqueName)}
-                  >
-                    <div className="flex justify-between">
-                      <img
-                        src={
+                className={`dt w-100 hover-bg-black-10 pa1 ${
+                  props.currentCompany === c.company._id
+                    ? 'bg-black-10'
+                    : ''
+                } mt1 pointer bp3-popover-dismiss`}
+                onClick={() => handleClick(c.company.uniqueName)}
+              >
+                <div className='flex justify-between'>
+                  <img
+                    src={
                           c.company.logo
                             ? c.company.logo
                             : CompanyIcon
                         }
-                        className="v-mid dib w-10 br2"
-                        alt="user"
-                        style={{
-                          width: '32px',
-                          height: '32px',
-                          objectFit: 'cover',
-                        }}
-                      />
-                      <div className="dtc v-mid pl3 w-90">
-                        <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">
-                          {c.company.name}{' '}
-                        </h1>
-                        <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
-                      </div>
-                    </div>
-                  </article>
-                ),
+                    className='v-mid dib w-10 br2'
+                    alt='user'
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      objectFit: 'cover',
+                    }}
+                  />
+                  <div className='dtc v-mid pl3 w-90'>
+                    <h1 className='f7 f6-ns fw4 lh-title black mv0 ws-break'>
+                      {c.company.name}
+                      {' '}
+                    </h1>
+                    <h2 className='f6 fw3 mt0 mb0 black-60 ws-break'>{`Role: ${c.role}`}</h2>
+                  </div>
+                </div>
+              </article>
+              ),
             )
           ) : (
             <p>{t('app.homepage.No-Companies')}</p>
@@ -226,7 +224,7 @@ export const ListViewComponent = (
             setShowButton(true);
             // props.setShowDialog(!props.showDialog);
           }}
-          className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
+          className='b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white '
         >
           {t('app.forms.Create-company.Create')}
         </button>
@@ -263,16 +261,14 @@ export const ListViewComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    companies: state.userReducer.user.companies,
-    user: state.userReducer.user,
-    currentCompany: state.companyReducer.currentCompany._id,
-    gettingCompanyDetails: state.companyReducer.gettingCompanyDetails,
-    errorOnGettingCompanyDetails:
+const mapStateToProps = (state: any) => ({
+  companies: state.userReducer.user.companies,
+  user: state.userReducer.user,
+  currentCompany: state.companyReducer.currentCompany._id,
+  gettingCompanyDetails: state.companyReducer.gettingCompanyDetails,
+  errorOnGettingCompanyDetails:
       state.companyReducer.errorOnGettingCompanyDetails,
-  };
-};
+});
 
 export const MobileListView = connect(mapStateToProps, {
   logoutAction,

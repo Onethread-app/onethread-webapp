@@ -1,10 +1,9 @@
-import { isEqual } from 'lodash';
+import { isEqual, includes } from 'lodash';
 import { createBrowserHistory } from 'history';
 import { Toaster } from '@blueprintjs/core';
 import { store } from 'Store';
-import { includes } from 'lodash';
-import { ICompanyRoom } from './room/Reducer';
 import { tigrowApi } from 'config';
+import { ICompanyRoom } from './room/Reducer';
 
 const toaster = Toaster.create();
 
@@ -14,14 +13,13 @@ export interface Entity {
   name: string;
 }
 export const tokenConfig = () => {
-  const token =
-    typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
-      : null;
+  const token = typeof window !== undefined
+    && localStorage.getItem('tigrow_acc_id')
+    ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+    : null;
   if (
-    !localStorage.getItem('tigrow_acc_id') ||
-    !localStorage.getItem('tigrow_real_id')
+    !localStorage.getItem('tigrow_acc_id')
+    || !localStorage.getItem('tigrow_real_id')
   ) {
     localStorage.removeItem('tigrow_acc_id');
     localStorage.removeItem('tigrow_real_id');
@@ -42,24 +40,21 @@ export const tokenConfig = () => {
   };
 };
 
-export const adminTokenConfig = () => {
-  return {
-    headers: {
-      'Content-type': 'application/json',
-      companyid: store.getState().companyReducer.currentCompany._id,
-    },
-  };
-};
+export const adminTokenConfig = () => ({
+  headers: {
+    'Content-type': 'application/json',
+    companyid: store.getState().companyReducer.currentCompany._id,
+  },
+});
 
 export const tokenConfigFIleUpload = () => {
-  const token =
-    typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
-      : null;
+  const token = typeof window !== undefined
+    && localStorage.getItem('tigrow_acc_id')
+    ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+    : null;
   if (
-    !localStorage.getItem('tigrow_acc_id') ||
-    !localStorage.getItem('tigrow_real_id')
+    !localStorage.getItem('tigrow_acc_id')
+    || !localStorage.getItem('tigrow_real_id')
   ) {
     localStorage.removeItem('tigrow_acc_id');
     localStorage.removeItem('tigrow_real_id');
@@ -83,24 +78,22 @@ export const isAuthenticate = () => {
     return false;
   }
   if (
-    localStorage.getItem('tigrow_acc_id') &&
-    localStorage.getItem('tigrow_real_id')
+    localStorage.getItem('tigrow_acc_id')
+    && localStorage.getItem('tigrow_real_id')
   ) {
     return JSON.parse(localStorage.getItem('tigrow_acc_id')!);
-  } else {
-    return false;
   }
+  return false;
 };
 
 export const projectPermit = (companyRole: string): boolean => {
   if (
-    isEqual(companyRole, 'superAdmin') ||
-    isEqual(companyRole, 'admin')
+    isEqual(companyRole, 'superAdmin')
+    || isEqual(companyRole, 'admin')
   ) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 type AdminOptionalPermissioRoles =
@@ -144,9 +137,8 @@ export const passwordValidation = (password: string) => {
   const regex = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
   if (password.match(regex)) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 export const Color = [
@@ -166,10 +158,18 @@ export const priorityColor = [
     value: '#F44135',
     container: '#F9E9E3',
   },
-  { code: 1, name: 'High', value: '#FFA800', container: '#F9EDE3' },
-  { code: 2, name: 'Normal', value: '#08A0F7', container: '#FFF5E3' },
-  { code: 3, name: 'Low', value: '#5387AF', container: '#ECF2F6' },
-  { code: 4, name: 'Lowest', value: '#093F68', container: '#E4EAEE' },
+  {
+    code: 1, name: 'High', value: '#FFA800', container: '#F9EDE3',
+  },
+  {
+    code: 2, name: 'Normal', value: '#08A0F7', container: '#FFF5E3',
+  },
+  {
+    code: 3, name: 'Low', value: '#5387AF', container: '#ECF2F6',
+  },
+  {
+    code: 4, name: 'Lowest', value: '#093F68', container: '#E4EAEE',
+  },
 ];
 
 export const parseJwt = (token: any) => {
@@ -178,9 +178,7 @@ export const parseJwt = (token: any) => {
   const jsonPayload = decodeURIComponent(
     atob(base64)
       .split('')
-      .map((c) => {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      })
+      .map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`)
       .join(''),
   );
   const json = JSON.parse(jsonPayload);
@@ -202,6 +200,7 @@ export const unreadMessageNotification = (
 ): boolean => {
   let unread = false;
   if (companyRooms.length > 0) {
+    // eslint-disable-next-line no-restricted-syntax
     for (const room of companyRooms) {
       if (room[key] === id && room.unreadCount > 0) {
         unread = true;
@@ -234,10 +233,8 @@ export const stripeCheckout = async (
     headers,
   );
   const clientSecret = await response.data.client_secret;
-  // @ts-ignore: Unreachable code error
   const result = await stripe.confirmCardPayment(clientSecret, {
     payment_method: {
-      // @ts-ignore: Unreachable code error
       card: elements.getElement(CardElement),
       billing_details: {
         name: `${userFirstName} ${userLastName}`,
@@ -249,32 +246,32 @@ export const stripeCheckout = async (
     // Show error to your customer (e.g., insufficient funds)
     // console.log(result.error.message);
     return false;
-  } else {
-    // The payment has been processed!
-    if (
-      result.paymentIntent &&
-      result.paymentIntent!.status === 'succeeded'
-    ) {
-      // setSuccess(true);
-      await tigrowApi.post(
-        `payments/${companyId}`,
-        {
-          amount: result.paymentIntent.amount,
-          currency: result.paymentIntent.currency,
-          reference: result.paymentIntent.id,
-          company: companyId,
-          gateway: getway,
-          subscription: getSubscription.data.subscription,
-        },
-        headers,
-      );
-      // Show a success message to your customer
-      // There's a risk of the customer closing the window before callback
-      // execution. Set up a webhook or plugin to listen for the
-      // payment_intent.succeeded event that handles any business critical
-      // post-payment actions.
-    }
   }
+  // The payment has been processed!
+  if (
+    result.paymentIntent
+      && result.paymentIntent!.status === 'succeeded'
+  ) {
+    // setSuccess(true);
+    await tigrowApi.post(
+      `payments/${companyId}`,
+      {
+        amount: result.paymentIntent.amount,
+        currency: result.paymentIntent.currency,
+        reference: result.paymentIntent.id,
+        company: companyId,
+        gateway: getway,
+        subscription: getSubscription.data.subscription,
+      },
+      headers,
+    );
+    // Show a success message to your customer
+    // There's a risk of the customer closing the window before callback
+    // execution. Set up a webhook or plugin to listen for the
+    // payment_intent.succeeded event that handles any business critical
+    // post-payment actions.
+  }
+
   return true;
 };
 
@@ -301,58 +298,55 @@ export const portWalletCheckout = async (
   let response;
   couponId
     ? (response = await tigrowApi.post(
-        'payments/portwallet/initiate',
-        {
-          amount,
-          redirect_url: `${window.location.origin}/company/${companyName}/settings/payment/success`,
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          city: formData.city,
-          state: formData.state,
-          country: 'BD',
-          zipcode: formData.zipCode,
-          adress: formData.house,
-          call: '',
-          currency: 'BDT',
-          product_name: productId,
-          product_description: 'Dummy',
-          coupon: couponId,
-        },
-        headers,
-      ))
+      'payments/portwallet/initiate',
+      {
+        amount,
+        redirect_url: `${window.location.origin}/company/${companyName}/settings/payment/success`,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        city: formData.city,
+        state: formData.state,
+        country: 'BD',
+        zipcode: formData.zipCode,
+        adress: formData.house,
+        call: '',
+        currency: 'BDT',
+        product_name: productId,
+        product_description: 'Dummy',
+        coupon: couponId,
+      },
+      headers,
+    ))
     : (response = await tigrowApi.post(
-        'payments/portwallet/initiate',
-        {
-          amount,
-          redirect_url: `${window.location.origin}/company/${companyName}/settings/payment/success`,
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          city: formData.city,
-          state: formData.state,
-          country: 'BD',
-          zipcode: formData.zipCode,
-          adress: formData.house,
-          call: '',
-          currency: 'BDT',
-          product_name: productId,
-          product_description: 'Dummy',
-        },
-        headers,
-      ));
+      'payments/portwallet/initiate',
+      {
+        amount,
+        redirect_url: `${window.location.origin}/company/${companyName}/settings/payment/success`,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        city: formData.city,
+        state: formData.state,
+        country: 'BD',
+        zipcode: formData.zipCode,
+        adress: formData.house,
+        call: '',
+        currency: 'BDT',
+        product_name: productId,
+        product_description: 'Dummy',
+      },
+      headers,
+    ));
 
-  const paymentUrl = response.data.paymentUrl;
+  const { paymentUrl } = response.data;
   window.location.replace(`${paymentUrl}`);
-  // @ts-ignore: Unreachable code error
 };
-export const capitalizeName = (name: string) => {
-  return name
-    .toLowerCase()
-    .split(' ')
-    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-    .join(' ');
-};
+export const capitalizeName = (name: string) => name
+  .toLowerCase()
+  .split(' ')
+  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+  .join(' ');
 
 export const addSpace = (name: string) => {
   name = name.replace(/([A-Z])/g, ' $1').trim();

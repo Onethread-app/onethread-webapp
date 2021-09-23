@@ -17,6 +17,11 @@ import Badge from '@material-ui/core/Badge/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import { User } from 'stores/user/Reducer';
+import { logoutAction } from 'stores/auth/Actions';
+import logo from 'resources/images/onethread-text.png';
+import ReportForm from 'components/ReportForm';
+import ChatListItem from 'components/chat/ChatListItem';
+import NotificationPopover from 'components/notification/NotificationPopover';
 import { IRoom, IChat } from '../stores/room/Reducer';
 import {
   seenNotification,
@@ -24,17 +29,12 @@ import {
   getNotifications,
 } from '../stores/notifications/Action';
 import { fetchRooms, fetchChats } from '../stores/room/Actions';
-import { logoutAction } from 'stores/auth/Actions';
 
-import logo from 'resources/images/onethread-text.png';
 import user from '../resources/images/profilePhoto.svg';
 
-import ReportForm from 'components/ReportForm';
-import ChatListItem from 'components/chat/ChatListItem';
 import { CompanySignupForm } from '../layouts/company/Form';
 import { CompanyListView } from '../layouts/company/ListView';
 import { companySubscriber } from '../helpers/notification/subscribers';
-import NotificationPopover from 'components/notification/NotificationPopover';
 
 interface NavbarTopInternalProps {
   user: User;
@@ -56,8 +56,8 @@ interface NavbarTopInternalProps {
 
 export const compareChats = (a: any, b: any) => {
   if (a.message.createdAt < b.message.createdAt) return 1;
-  else if (a.message.createdAt > b.message.createdAt) return -1;
-  else return 0;
+  if (a.message.createdAt > b.message.createdAt) return -1;
+  return 0;
 };
 
 const NavbarTopComponent = (
@@ -77,13 +77,12 @@ const NavbarTopComponent = (
     companySubscriber(props.companyId);
     props.fetchRooms();
     props.fetchChats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <div
-        className="top-0 z-2 pr5 pv3 bg-white bb flex justify-between"
+        className='top-0 z-2 pr5 pv3 bg-white bb flex justify-between'
         style={{
           height: '60px',
           borderColor: props.type === 'home' ? '#0F0C4E' : 'white',
@@ -101,12 +100,12 @@ const NavbarTopComponent = (
                 props.type === 'company'
                   ? `/company/${props.uniqueCompanyName}/dashboard`
                   : props.match.url.includes('/notifications')
-                  ? `/${props.user.name}/notifications`
-                  : `/${props.user.name}`
+                    ? `/${props.user.name}/notifications`
+                    : `/${props.user.name}`
               }
             >
               <div
-                className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
+                className='f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4'
                 style={{
                   textOverflow: 'ellipsis',
                 }}
@@ -114,39 +113,39 @@ const NavbarTopComponent = (
                 {props.type === 'company'
                   ? props.uniqueCompanyName
                   : props.match.url.includes('/notifications')
-                  ? 'Notifications'
-                  : ''}
+                    ? 'Notifications'
+                    : ''}
               </div>
             </NavLink>
           ) : (
-            <div className="flex items-center ml4">
+            <div className='flex items-center ml4'>
               <div style={{ width: '6rem' }}>
                 <NavLink to={`/${props.user.name}/home`}>
                   <img
                     src={logo}
-                    className="br2"
+                    className='br2'
                     style={{ background: '#0F0C4E' }}
-                    alt=""
+                    alt=''
                   />
                 </NavLink>
               </div>
             </div>
           )}
         </div>
-        <div className="flex items-center">
+        <div className='flex items-center'>
           <Popover
-            popoverClassName="bg-white"
+            popoverClassName='bg-white'
             position={Position.BOTTOM}
             content={<NotificationPopover />}
-            target={
-              <div className="mr2 pointer">
+            target={(
+              <div className='mr2 pointer'>
                 <Badge
                   badgeContent={props.seen}
                   anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
                   }}
-                  color="secondary"
+                  color='secondary'
                 >
                   <NotificationsIcon
                     style={{
@@ -157,18 +156,18 @@ const NavbarTopComponent = (
                   />
                 </Badge>
               </div>
-            }
+            )}
           />
           <Popover
-            popoverClassName="bg-white"
+            popoverClassName='bg-white'
             position={Position.BOTTOM}
-            content={
+            content={(
               <div
                 style={{
                   maxHeight: '300px',
                   width: isMobileOnly ? '320px' : '420px',
                 }}
-                className={`pt2 pb1 overflow-y-auto`}
+                className='pt2 pb1 overflow-y-auto'
               >
                 {props.chats && props.chats.length ? (
                   props.chats
@@ -177,19 +176,19 @@ const NavbarTopComponent = (
                       <ChatListItem chat={chat} key={index} />
                     ))
                 ) : (
-                  <p className="ph2">No room To Show</p>
+                  <p className='ph2'>No room To Show</p>
                 )}
               </div>
-            }
-            target={
-              <div className="mr3 pointer">
+            )}
+            target={(
+              <div className='mr3 pointer'>
                 <Badge
                   badgeContent={props.totalRoomUnread}
                   anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
                   }}
-                  color="secondary"
+                  color='secondary'
                 >
                   <ChatIcon
                     style={{
@@ -199,21 +198,21 @@ const NavbarTopComponent = (
                   />
                 </Badge>
               </div>
-            }
+            )}
           />
 
           <Popover
-            popoverClassName="bp3-popover-content-sizing bg-white"
+            popoverClassName='bp3-popover-content-sizing bg-white'
             position={Position.BOTTOM}
-            content={
+            content={(
               <CompanyListView
                 showDialog={showDialog}
                 setShowDialog={setShowDialog}
               />
-            }
-            target={
+            )}
+            target={(
               <Button
-                className="bp3-minimal dim f6 f5-l dib mr3 mr4-l outline-0"
+                className='bp3-minimal dim f6 f5-l dib mr3 mr4-l outline-0'
                 style={{
                   fontSize: '0.8rem',
                   fontWeight: 600,
@@ -223,35 +222,33 @@ const NavbarTopComponent = (
                 }}
                 text={t('app.homepage.My-Companies')}
               />
-            }
+            )}
           />
           <Popover
-            popoverClassName="bp3-popover-content-sizing"
+            popoverClassName='bp3-popover-content-sizing'
             position={Position.BOTTOM}
-            content={
+            content={(
               <ButtonGroup
-                minimal={true}
-                className="bp3-vertical bp3-fill"
+                minimal
+                className='bp3-vertical bp3-fill'
               >
                 <Button
-                  className="bp3-minimal outline-0 bp3-popover-dismiss"
-                  onClick={() =>
-                    props.history.push(`/${props.user.name}`)
-                  }
+                  className='bp3-minimal outline-0 bp3-popover-dismiss'
+                  onClick={() => props.history.push(`/${props.user.name}`)}
                 >
-                  <div className="dtc w1 w2-ns">
+                  <div className='dtc w1 w2-ns'>
                     <img
                       src={
                         props.user.profileImage
                           ? props.user.profileImage
                           : user
                       }
-                      alt=""
-                      className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10 "
+                      alt=''
+                      className='db w1 w2-ns h1 h2-ns br-100 ba b--black-10 '
                     />
                   </div>
-                  <div className="dtc v-mid pl3">
-                    <h1 className="f7 f6-ns fw4 lh-title black mv0">
+                  <div className='dtc v-mid pl3'>
+                    <h1 className='f7 f6-ns fw4 lh-title black mv0'>
                       {`${upperFirst(
                         props.user.firstName,
                       )} ${upperFirst(props.user.lastName)}`}
@@ -259,51 +256,47 @@ const NavbarTopComponent = (
                   </div>
                 </Button>
                 <Button
-                  className="bp3-minimal outline-0 bp3-popover-dismiss"
-                  icon="cog"
-                  alignText="left"
-                  onClick={() =>
-                    props.history.push(`/${props.user.name}/settings`)
-                  }
+                  className='bp3-minimal outline-0 bp3-popover-dismiss'
+                  icon='cog'
+                  alignText='left'
+                  onClick={() => props.history.push(`/${props.user.name}/settings`)}
                 >
                   {t('app.company.Settings.Settings')}
                 </Button>
                 <Button
-                  className="bp3-minimal outline-0 bp3-popover-dismiss"
+                  className='bp3-minimal outline-0 bp3-popover-dismiss'
                   onClick={(e: any) => setShowButtonReport(true)}
-                  icon="issue"
-                  alignText="left"
+                  icon='issue'
+                  alignText='left'
                 >
                   {t('app.user.User-settings.Report-Issue')}
                 </Button>
                 <Button
-                  className="bp3-minimal outline-0 bp3-popover-dismiss"
-                  onClick={(e: any) =>
-                    props.logoutAction(props.history)
-                  }
-                  icon="log-in"
-                  alignText="left"
+                  className='bp3-minimal outline-0 bp3-popover-dismiss'
+                  onClick={(e: any) => props.logoutAction(props.history)}
+                  icon='log-in'
+                  alignText='left'
                 >
                   {t('app.user.User-settings.Logout')}
                 </Button>
               </ButtonGroup>
-            }
-            target={
+            )}
+            target={(
               <img
                 src={
                   props.user.profileImage
                     ? props.user.profileImage
                     : user
                 }
-                className="dim v-mid dib br-100 pointer"
+                className='dim v-mid dib br-100 pointer'
                 style={{
                   width: '2rem',
                   height: '2rem',
                   objectFit: 'cover',
                 }}
-                alt="user"
+                alt='user'
               />
-            }
+            )}
           />
         </div>
       </div>
@@ -335,18 +328,16 @@ const NavbarTopComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-    uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
-    companyId: state.companyReducer.currentCompany._id,
-    seen: state.notificationReducer.seen,
-    read: state.notificationReducer.read,
-    chats: state.roomReducer.chats,
-    currentRoom: state.roomReducer.currentRoom,
-    totalRoomUnread: state.roomReducer.totalUnread,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+  uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
+  companyId: state.companyReducer.currentCompany._id,
+  seen: state.notificationReducer.seen,
+  read: state.notificationReducer.read,
+  chats: state.roomReducer.chats,
+  currentRoom: state.roomReducer.currentRoom,
+  totalRoomUnread: state.roomReducer.totalUnread,
+});
 
 export const NavbarTop = connect(mapStateToProps, {
   logoutAction,

@@ -9,9 +9,9 @@ import moment from 'moment';
 import { Icomment } from 'stores/comment/Reducer';
 import { getAllComments } from 'stores/comment/Actions';
 
-import userIcon from './../../../../resources/images/profilePhoto.svg';
-
 import { Loading } from 'components/Loading';
+import userIcon from '../../../../resources/images/profilePhoto.svg';
+
 import { ActivityEditor } from './ActivityEditor';
 
 interface IActivityViewInternalProps {
@@ -35,7 +35,7 @@ export const ActivityViewPageComponent = (
   }, [props.currentTaskId]);
 
   return (
-    <div className="flex flex-column pl2 mb5 mb0-ns">
+    <div className='flex flex-column pl2 mb5 mb0-ns'>
       <h1
         style={{
           color: '#323030',
@@ -54,22 +54,22 @@ export const ActivityViewPageComponent = (
       >
         {loading === false ? (
           props.commentList.map((comment) => (
-            <div key={comment._id} className="flex justify-between">
-              <article className="dt pb2 mt2 w-100">
-                <div className="dtc w2">
+            <div key={comment._id} className='flex justify-between'>
+              <article className='dt pb2 mt2 w-100'>
+                <div className='dtc w2'>
                   <img
                     src={
                       comment.profileImage
                         ? comment.profileImage
                         : userIcon
                     }
-                    className="ba b--black-10 db br-100 w2 h2"
-                    alt=""
+                    className='ba b--black-10 db br-100 w2 h2'
+                    alt=''
                   />
                 </div>
-                <div className="dtc v-mid pl3">
-                  <div className="flex">
-                    <h1 className="f6 fw6 lh-title black mv0">
+                <div className='dtc v-mid pl3'>
+                  <div className='flex'>
+                    <h1 className='f6 fw6 lh-title black mv0'>
                       {comment.name}
                     </h1>
                     {/* <p
@@ -79,11 +79,11 @@ export const ActivityViewPageComponent = (
                       {comment.position}
                     </p> */}
                   </div>
-                  <p className="pt1" style={{ fontSize: '9px' }}>
+                  <p className='pt1' style={{ fontSize: '9px' }}>
                     {moment(comment.createdAt).format('lll')}
                   </p>
                   <p
-                    className="pa2 br3 mt2 ws-break"
+                    className='pa2 br3 mt2 ws-break'
                     style={{
                       backgroundColor: '#F4FBFB',
                     }}
@@ -109,12 +109,10 @@ export const ActivityViewPageComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
-    commentList: state.taskIndexReducer.commentReducer.commentList,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
+  commentList: state.taskIndexReducer.commentReducer.commentList,
+});
 
 export const ActivityView = connect(mapStateToProps, {
   getAllComments,

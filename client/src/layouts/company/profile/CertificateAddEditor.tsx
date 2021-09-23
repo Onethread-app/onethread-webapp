@@ -37,11 +37,11 @@ const CertificateAddComponent = (props: ICertificateAddProps) => {
           hasValidationErrors,
           ...rest
         }) => (
-          <form className="ph4 pt6" onSubmit={handleSubmit}>
+          <form className='ph4 pt6' onSubmit={handleSubmit}>
             <SubmitError errorMessage={submitError} />
-            <h1 className="f5 lh-copy white pb4">Certifications</h1>
+            <h1 className='f5 lh-copy white pb4'>Certifications</h1>
             <Field<string>
-              name="name"
+              name='name'
               validate={maxValue(32)}
               render={({ input, meta }) => (
                 <div
@@ -49,23 +49,23 @@ const CertificateAddComponent = (props: ICertificateAddProps) => {
                 >
                   <label>Certification Name</label>
                   <InputGroupFieldWithError
-                    id="name"
-                    className="mt1 ba"
+                    id='name'
+                    className='mt1 ba'
                     value={input.value}
                     onChange={input.onChange}
                     style={{
                       boxShadow: 'none',
                     }}
                     error={
-                      checkError(meta) &&
-                      (meta.error || meta.submitError)
+                      checkError(meta)
+                      && (meta.error || meta.submitError)
                     }
                   />
                 </div>
               )}
             />
             <Field<string>
-              name="description"
+              name='description'
               validate={maxValue(500)}
               render={({ input, meta }) => (
                 <div
@@ -73,8 +73,8 @@ const CertificateAddComponent = (props: ICertificateAddProps) => {
                 >
                   <label>Description</label>
                   <TextArea
-                    id="description"
-                    className="mt1"
+                    id='description'
+                    className='mt1'
                     value={input.value}
                     onChange={input.onChange}
                     style={{
@@ -82,33 +82,33 @@ const CertificateAddComponent = (props: ICertificateAddProps) => {
                       minHeight: '50px',
                       maxHeight: '150px',
                     }}
-                    fill={true}
-                    growVertically={true}
+                    fill
+                    growVertically
                   />
                   {checkError(meta) && (
-                    <small className="mv3" style={{ color: 'red' }}>
+                    <small className='mv3' style={{ color: 'red' }}>
                       {meta.error || meta.submitError}
                     </small>
                   )}
                 </div>
               )}
             />
-            <div className="flex justify-end">
+            <div className='flex justify-end'>
               <Button
-                className="w4 grow h2 pointer mr3"
+                className='w4 grow h2 pointer mr3'
                 style={{
                   background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
                 loading={submitting}
-                type="submit"
+                type='submit'
                 disabled={submitting || pristine}
               >
                 Save
               </Button>
               <Button
-                className="w4 grow h2 pointer"
+                className='w4 grow h2 pointer'
                 style={{
                   background: '#fff',
                   outline: 'none',

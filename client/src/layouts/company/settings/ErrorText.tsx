@@ -16,12 +16,12 @@ export default function ErrorText(props: IErrorText) {
           props.closeModal();
           props.setExpireMassage && props.setExpireMassage();
         }}
-        className="pointer"
+        className='pointer'
         style={{ float: 'right' }}
       >
         <CloseIcon />
       </div>
-      <img className="center flex" src={expiredIcon} alt="success" />
+      <img className='center flex' src={expiredIcon} alt='success' />
 
       <h1
         style={{

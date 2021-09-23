@@ -5,8 +5,6 @@
 
 // import { StyledTimer, StyledWatch } from './Timer.styles';
 
-const GlobalTimer = () => {
-  return <div>there</div>;
-};
+const GlobalTimer = () => <div>there</div>;
 
 export default GlobalTimer;

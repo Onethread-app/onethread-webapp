@@ -77,7 +77,6 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
       const sortedTasks = sortTasksByStatus(colTasks);
       setTasks(sortedTasks);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     props.currentBoard.sortBy,
     props.currentBoard.orderBy,
@@ -86,15 +85,17 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
 
   useEffect(() => {
     if (
-      props.currentBoard.filteredUsers &&
-      props.currentBoard.filteredUsers.length > 0
+      props.currentBoard.filteredUsers
+      && props.currentBoard.filteredUsers.length > 0
     ) {
       const filteredTasks: ITask[] = [];
+      // eslint-disable-next-line no-restricted-syntax
       for (const task of props.currentBoard.columns
         .map((col) => col.tasks)
         .flat()) {
         let found = false;
         if (task?.assignedMembers) {
+          // eslint-disable-next-line no-restricted-syntax
           for (const member of task.assignedMembers) {
             const res = props.currentBoard.filteredUsers.find(
               (fUser) => fUser.id === member._id,

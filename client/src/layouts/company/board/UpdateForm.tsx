@@ -14,8 +14,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import { getAllDepartments } from 'stores/company/Actions';
 import { Color, tokenConfig } from 'stores/UtilsActions';
-import { getAllBoards } from 'stores/task/Actions';
-import { clearCurrentBoard, createBoard } from 'stores/task/Actions';
+import { getAllBoards, clearCurrentBoard, createBoard } from 'stores/task/Actions';
 
 import {
   checkError,
@@ -52,13 +51,14 @@ const UpdateFormComponent = (props: {
       await props.clearCurrentBoard();
       await props.getAllBoards();
       props.setShowTaskBoardDialog(false);
+    // eslint-disable-next-line no-empty
     } catch (e) {}
     return {};
   };
 
   return (
     <>
-      <div className="pl3" style={{ marginTop: '6rem' }}>
+      <div className='pl3' style={{ marginTop: '6rem' }}>
         <h3>{t('app.project.Project-boards.Update-Board')}</h3>
       </div>
       <Form
@@ -78,16 +78,16 @@ const UpdateFormComponent = (props: {
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="pa3-ns pa2 justify-content w-100">
+            <div className='pa3-ns pa2 justify-content w-100'>
               <Field<string>
-                name="name"
+                name='name'
                 validate={composeValidators(required, maxValue(32))}
                 render={({ input, meta }) => (
                   <div
                     className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
                   >
                     <InputGroupFieldWithLabel
-                      id="name"
+                      id='name'
                       value={input.value}
                       onChange={input.onChange}
                       style={{
@@ -95,32 +95,32 @@ const UpdateFormComponent = (props: {
                         fontSize: '18px',
                       }}
                       error={
-                        checkError(meta) &&
-                        (meta.error || meta.submitError)
+                        checkError(meta)
+                        && (meta.error || meta.submitError)
                       }
                       label={t(
                         'app.project.Project-boards.Board-Name',
                       )}
-                      autoFocus={true}
+                      autoFocus
                     />
                   </div>
                 )}
               />
               <Field<string>
-                name="color"
+                name='color'
                 render={({ input, meta }) => (
-                  <div className="mb3">
+                  <div className='mb3'>
                     <p
-                      className="fw5 mb3"
+                      className='fw5 mb3'
                       style={{ fontSize: '.8rem' }}
                     >
                       {t('app.project.Project-boards.Label')}
                     </p>
-                    <div className="flex">
+                    <div className='flex'>
                       {Color.map((color) => (
-                        <div className="pr2" key={color.code}>
+                        <div className='pr2' key={color.code}>
                           <Icon
-                            className="br2"
+                            className='br2'
                             icon={
                               isEqual(color.code, labelColor) === true
                                 ? 'tick'
@@ -134,8 +134,8 @@ const UpdateFormComponent = (props: {
                             style={{
                               backgroundColor: color.value,
                               border:
-                                isEqual(color.code, labelColor) ===
-                                true
+                                isEqual(color.code, labelColor)
+                                === true
                                   ? '3px solid #ffffff'
                                   : 'none',
                               height: '3rem',
@@ -148,22 +148,22 @@ const UpdateFormComponent = (props: {
                   </div>
                 )}
               />
-              <div className="fr">
+              <div className='fr'>
                 <Button
-                  className="grow pointer white bp3-minimal w4 mr3"
+                  className='grow pointer white bp3-minimal w4 mr3'
                   style={{
                     background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
                   loading={submitting}
-                  type="submit"
+                  type='submit'
                   disabled={submitting || pristine}
                 >
                   {t('app.project.Project-boards.Update')}
                 </Button>
                 <Button
-                  className="w4 grow h2 pointer"
+                  className='w4 grow h2 pointer'
                   style={{
                     background: '#fff',
                     outline: 'none',
@@ -187,14 +187,12 @@ const UpdateFormComponent = (props: {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    departments: state.companyReducer.currentCompany.departments,
-    company: state.companyReducer.currentCompany,
-    currentProject: state.projectReducer.projectDetails,
-    isCreating: state.taskIndexReducer.taskReducer.creatingBoard,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  departments: state.companyReducer.currentCompany.departments,
+  company: state.companyReducer.currentCompany,
+  currentProject: state.projectReducer.projectDetails,
+  isCreating: state.taskIndexReducer.taskReducer.creatingBoard,
+});
 
 export const UpdateFormBoard = connect(mapStateToProps, {
   createBoard,

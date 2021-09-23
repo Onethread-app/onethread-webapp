@@ -61,13 +61,12 @@ export const EditDesignationFormComponent = (
           division: props.member.designations[0].division,
           position: props.member.designations[0].position,
         };
-      } else {
-        return {
-          division: props.member.designations[0].division,
-          department: props.member.designations[0].department._id,
-          position: props.member.designations[0].position,
-        };
       }
+      return {
+        division: props.member.designations[0].division,
+        department: props.member.designations[0].department._id,
+        position: props.member.designations[0].position,
+      };
     }
     return {};
   };
@@ -88,24 +87,24 @@ export const EditDesignationFormComponent = (
         values,
       }) => (
         <div>
-          <div className="flex justify-end pa3">
+          <div className='flex justify-end pa3'>
             <Icon
               icon={IconNames.DELETE}
               iconSize={20}
-              className="grow pointer tigrow-lightBlue"
+              className='grow pointer tigrow-lightBlue'
               onClick={(e: any) => props.setShowDialogEdit(false)}
             />
           </div>
-          <form className="fl w-100 pa4 pt0" onSubmit={handleSubmit}>
-            <h1 className="f5 tigrow-lightBlue">Edit Role</h1>
-            <div className="flex flex-column">
-              <div className="mb4">
+          <form className='fl w-100 pa4 pt0' onSubmit={handleSubmit}>
+            <h1 className='f5 tigrow-lightBlue'>Edit Role</h1>
+            <div className='flex flex-column'>
+              <div className='mb4'>
                 <Field<string>
-                  name="division"
+                  name='division'
                   validate={required}
                   render={({ input, meta }) => (
                     <DropdownFieldWithError
-                      placeholder="Please select a division"
+                      placeholder='Please select a division'
                       id={input.name}
                       selectedValue={input.value}
                       options={
@@ -114,10 +113,10 @@ export const EditDesignationFormComponent = (
                           : ([] as any)
                       }
                       onChange={input.onChange}
-                      leftIcon="id-number"
+                      leftIcon='id-number'
                       error={
-                        checkError(meta) &&
-                        (meta.error || meta.submitError)
+                        checkError(meta)
+                        && (meta.error || meta.submitError)
                       }
                     />
                   )}
@@ -125,36 +124,34 @@ export const EditDesignationFormComponent = (
               </div>
 
               <Condition
-                when="division"
-                validate={(value) => {
-                  return [
-                    'seniorManager',
-                    'middleManager',
-                    'operationalEmployee',
-                  ].includes(value);
-                }}
+                when='division'
+                validate={(value) => [
+                  'seniorManager',
+                  'middleManager',
+                  'operationalEmployee',
+                ].includes(value)}
               >
-                <div className="mb4">
+                <div className='mb4'>
                   <Field<string>
-                    name="department"
+                    name='department'
                     validate={required}
                     render={({ input, meta }) => (
                       <>
                         <DropdownFieldWithError
-                          placeholder="Please select a department"
+                          placeholder='Please select a department'
                           id={input.name}
                           selectedValue={input.value}
                           options={
-                            props.departments &&
-                            props.departments.length > 0
+                            props.departments
+                            && props.departments.length > 0
                               ? props.departments
                               : ([] as any)
                           }
                           onChange={input.onChange}
-                          leftIcon="comparison"
+                          leftIcon='comparison'
                           error={
-                            checkError(meta) &&
-                            (meta.error || meta.submitError)
+                            checkError(meta)
+                            && (meta.error || meta.submitError)
                           }
                         />
                       </>
@@ -164,7 +161,7 @@ export const EditDesignationFormComponent = (
               </Condition>
             </div>
             <Field<string>
-              name="position"
+              name='position'
               validate={composeValidators(required, maxValue(50))}
               render={({ input, meta }) => (
                 <InputGroupFieldWithError
@@ -172,31 +169,31 @@ export const EditDesignationFormComponent = (
                   className={`br0 ${
                     checkError(meta) ? 'bb b--red' : 'bb b--lightBlue'
                   }`}
-                  placeHolder="Position"
+                  placeHolder='Position'
                   value={input.value}
                   onChange={input.onChange}
-                  leftIcon="id-number"
+                  leftIcon='id-number'
                   leftIconColor={`${
                     checkError(meta) ? 'red' : '#34b3e9'
                   }`}
                   style={{ boxShadow: 'none' }}
                   error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
+                    checkError(meta)
+                    && (meta.error || meta.submitError)
                   }
                 />
               )}
             />
-            <div className="tc">
+            <div className='tc'>
               <Button
-                className="grow h2 pointer white bp3-minimal w4 mt4"
+                className='grow h2 pointer white bp3-minimal w4 mt4'
                 style={{
                   background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
                 loading={submitting}
-                type="submit"
+                type='submit'
                 disabled={submitting || pristine}
               >
                 Save
@@ -209,11 +206,9 @@ export const EditDesignationFormComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    isLoading: state.companyReducer.designationLoading,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  isLoading: state.companyReducer.designationLoading,
+});
 
 export const EditDesignationForm = connect(mapStateToProps)(
   EditDesignationFormComponent,

@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { server } from 'config';
 import { useEffect, useState } from 'react';
+import { tokenConfig } from 'stores/UtilsActions';
 import {
   askUserPermission,
   createNotificationSubscription,
@@ -8,7 +9,6 @@ import {
   isPushNotificationSupported,
   registerServiceWorker,
 } from './push-notifications';
-import { tokenConfig } from 'stores/UtilsActions';
 
 const pushNotificationSupported = isPushNotificationSupported();
 

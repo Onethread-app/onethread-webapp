@@ -28,28 +28,26 @@ interface IMemberListDialog {
   members: IBoardMember[] | ITaskMember[];
 }
 
-const MemberListDialog = (props: IMemberListDialog) => {
-  return (
-    <Container>
-      {props.members.map((member: IBoardMember | ITaskMember) => (
-        <MemberContainer key={member._id}>
-          <Avatar
-            alt={`${member.firstName} ${member.lastName}`}
-            src={member.profileImage ?? UserIcon}
-            key={member._id}
-            className="mr2"
-            style={{
-              width: '1.3rem',
-              height: '1.3rem',
-              borderRadius: '10%',
-              zIndex: 0,
-            }}
-          />
-          <MemberName>{`${member.firstName} ${member.lastName}`}</MemberName>
-        </MemberContainer>
-      ))}
-    </Container>
-  );
-};
+const MemberListDialog = (props: IMemberListDialog) => (
+  <Container>
+    {props.members.map((member: IBoardMember | ITaskMember) => (
+      <MemberContainer key={member._id}>
+        <Avatar
+          alt={`${member.firstName} ${member.lastName}`}
+          src={member.profileImage ?? UserIcon}
+          key={member._id}
+          className='mr2'
+          style={{
+            width: '1.3rem',
+            height: '1.3rem',
+            borderRadius: '10%',
+            zIndex: 0,
+          }}
+        />
+        <MemberName>{`${member.firstName} ${member.lastName}`}</MemberName>
+      </MemberContainer>
+    ))}
+  </Container>
+);
 
 export default MemberListDialog;

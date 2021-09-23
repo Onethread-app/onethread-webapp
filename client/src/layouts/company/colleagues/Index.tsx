@@ -30,11 +30,11 @@ import {
 import { companyPermit } from 'stores/UtilsActions';
 
 import Navbar from 'components/navbar/Navbar';
-import { InviteColleagueView } from './InviteColleagueView';
 import { Loading } from 'components/Loading';
-import MemberTable from '../../../components/MemberTable/MemberTable';
 import SearchOption from 'components/SearchOption/SearchOption';
 import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
+import MemberTable from '../../../components/MemberTable/MemberTable';
+import { InviteColleagueView } from './InviteColleagueView';
 
 import './Index.scss';
 
@@ -78,22 +78,20 @@ export const showDepartment = (
   member: ICompanyMembers | IProjectTeam['member'],
 ) => {
   if (
-    member.designations.length &&
-    ['director', 'cxo'].includes(member.designations[0].division) ===
-      false
+    member.designations.length
+    && ['director', 'cxo'].includes(member.designations[0].division)
+      === false
   ) {
     // show department
     if (
-      member.designations[0].department &&
-      member.designations[0].department.name
+      member.designations[0].department
+      && member.designations[0].department.name
     ) {
       return member.designations[0].department.name;
-    } else {
-      return null;
     }
-  } else {
     return null;
   }
+  return null;
 };
 
 const ColleaguesPageComponent = (props: Colleagues) => {
@@ -121,20 +119,20 @@ const ColleaguesPageComponent = (props: Colleagues) => {
       if (props.subscriptiontExpired) {
         props.company.role === 'superAdmin'
           ? window.location.replace(
-              `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
-            )
+            `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+          )
           : window.location.replace(
-              `${window.location.origin}/${props.user.name}/home`,
-            );
+            `${window.location.origin}/${props.user.name}/home`,
+          );
       }
     }
   }, [props.company._id]);
 
   useEffect(() => {
     if (
-      props.company &&
-      props.company.members &&
-      props.company.members.length
+      props.company
+      && props.company.members
+      && props.company.members.length
     ) {
       setMembers(props.company.members);
     }
@@ -142,16 +140,16 @@ const ColleaguesPageComponent = (props: Colleagues) => {
 
   useEffect(() => {
     if (
-      props.company &&
-      props.company.pendingMembers &&
-      props.company.pendingMembers.length
+      props.company
+      && props.company.pendingMembers
+      && props.company.pendingMembers.length
     ) {
       setPendingList(chunk(props.company.pendingMembers, 4));
     }
   }, [props.company]);
 
   useEffect(() => {
-    let colleaguesList = members.map((m: any, i) => ({
+    const colleaguesList = members.map((m: any, i) => ({
       id: m._id,
       name: `${upperFirst(m.account.firstName)}${' '}${upperFirst(
         m.account.lastName,
@@ -162,37 +160,40 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         : null,
       email: m.account.email,
       division: `${
-        m.designations.length > 0 &&
-        getDivisionName[m.designations[0].division]
+        m.designations.length > 0
+        && getDivisionName[m.designations[0].division]
       }`,
       position: `${
         m.designations.length > 0 && m.designations[0].position
       }`,
       role: m.role,
       designations: m.designations,
-      m: m,
+      m,
     }));
     setColleaguesList(colleaguesList);
   }, [members]);
 
   return (
     <>
-      {isMobileOnly && <Navbar type="company" />}
+      {isMobileOnly && <Navbar type='company' />}
       <div
-        className="ph5-ns ph3 pb5 pt5 pt0-ns"
+        className='ph5-ns ph3 pb5 pt5 pt0-ns'
         style={{ background: '#E5E5E5', minHeight: '100%' }}
       >
         <div
-          className="flex justify-between items-center mt2"
+          className='flex justify-between items-center mt2'
           style={{ borderBottom: '2px solid #E0E0E0' }}
         >
           {isMobileOnly ? undefined : (
-            <h1 className="tigrow-lightGray-1">
-              {t('app.company.Colleagues.Colleagues')} (
-              {members.length})
+            <h1 className='tigrow-lightGray-1'>
+              {t('app.company.Colleagues.Colleagues')}
+              {' '}
+              (
+              {members.length}
+              )
             </h1>
           )}
-          <div className="colleagues-top-area">
+          <div className='colleagues-top-area'>
             <SearchOption
               list={colleaguesList}
               rows={rows}
@@ -201,7 +202,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
             {companyPermit(props.company.role) ? (
               <div>
                 <Button
-                  className="grow fr h2 pointer white bp3-minimal ml2 mb1"
+                  className='grow fr h2 pointer white bp3-minimal ml2 mb1'
                   style={{
                     background: '#08A0F7',
                     outline: 'none',
@@ -212,17 +213,15 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                   {t('app.company.Colleagues.Add-Colleagues')}
                 </Button>
                 <Button
-                  className="grow fr h2 pointer white bp3-minimal ml2 mb1"
+                  className='grow fr h2 pointer white bp3-minimal ml2 mb1'
                   style={{
                     background: '#08A0F7',
                     outline: 'none',
                     color: 'white',
                   }}
-                  onClick={() =>
-                    setshowDialogForInviteColleague(
-                      !showDialogForInviteColleague,
-                    )
-                  }
+                  onClick={() => setshowDialogForInviteColleague(
+                    !showDialogForInviteColleague,
+                  )}
                 >
                   {t('app.company.Colleagues.Invite-Colleagues')}
                 </Button>
@@ -233,7 +232,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
 
         {colleaguesList.length && (
           <MemberTable
-            type={'colleagues'}
+            type='colleagues'
             props={props}
             rows={rows}
           />
@@ -242,24 +241,24 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         {/* pending list starts */}
         {companyPermit(props.company.role) ? (
           <>
-            <h1 className="f4 tigrow-lightGray-1">
+            <h1 className='f4 tigrow-lightGray-1'>
               {t('app.company.Colleagues.Invited-Colleagues')}
             </h1>
-            <HTMLTable className="w-100 mv3" striped={true}>
+            <HTMLTable className='w-100 mv3' striped>
               {props.companyLoading ? (
                 <Loading />
               ) : pendingList.length ? (
                 // tslint:disable-next-line: no-shadowed-variable
                 pendingList.map((chunkMembers, i1) => (
-                  <tbody className="bg-white">
+                  <tbody className='bg-white'>
                     {chunkMembers.map((member) => (
-                      <tr className="hide-child" key={i1}>
+                      <tr className='hide-child' key={i1}>
                         <td
                           style={{
                             borderBottom: '1px solid #E8E8E8',
                           }}
                         >
-                          <span className="mr2 f7 f6-ns">
+                          <span className='mr2 f7 f6-ns'>
                             {member.email}
                           </span>
                         </td>
@@ -290,7 +289,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
           horizontal: 'center',
         }}
       >
-        <MuiAlert severity="success">
+        <MuiAlert severity='success'>
           {props.errorOnInvitingColleague === ''
             ? `
             Invitation Successfully Sent To Join ${props.company.name}
@@ -304,7 +303,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
           isOpen={showDialog}
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
-          className="ma2"
+          className='ma2'
         >
           <AddColleaguesForm
             showDialog={showDialog}
@@ -314,15 +313,13 @@ const ColleaguesPageComponent = (props: Colleagues) => {
       )}
       {showDialogForInviteColleague && (
         <Dialog
-          onClose={() =>
-            setshowDialogForInviteColleague(
-              !showDialogForInviteColleague,
-            )
-          }
+          onClose={() => setshowDialogForInviteColleague(
+            !showDialogForInviteColleague,
+          )}
           isOpen={showDialogForInviteColleague}
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
-          className="ma2"
+          className='ma2'
         >
           <InviteColleagueView
             inviteColleagueInBulk={props.inviteColleagueInBulk}
@@ -338,18 +335,16 @@ const ColleaguesPageComponent = (props: Colleagues) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    companyLoading: state.companyReducer.loading,
-    user: state.userReducer.user,
-    subscriptiontExpired:
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  companyLoading: state.companyReducer.loading,
+  user: state.userReducer.user,
+  subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
-    invitingColleague: state.companyReducer.invitingColleague,
-    errorOnInvitingColleague:
+  invitingColleague: state.companyReducer.invitingColleague,
+  errorOnInvitingColleague:
       state.companyReducer.errorOnInvitingColleague,
-  };
-};
+});
 
 export const ColleaguesPage = connect(mapStateToProps, {
   getCompanyMembers,

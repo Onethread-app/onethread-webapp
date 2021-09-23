@@ -1,14 +1,14 @@
-import { default as StyledButton } from './styles/StyledButton';
-import { default as StyledCheckBox } from './styles/StyledCheckBox';
-import { default as StyledError } from './styles/StyledError';
-import { default as StyledMultiCheckBox } from './styles/StyledMultiCheckBox';
-import { default as StyledMultiEmail } from './styles/StyledMultiEmail';
-import { default as StyledMultiSelect } from './styles/StyledMultiSelect';
-import { default as StyledNumberInput } from './styles/StyledNumberInput';
-import { default as StyledRadioInput } from './styles/StyledRadioInput';
-import { default as StyledSelectInput } from './styles/StyledSelectInput';
-import { default as StyledTextArea } from './styles/StyledTextArea';
-import { default as StyledTextInput } from './styles/StyledTextInput';
+import StyledButton from './styles/StyledButton';
+import StyledCheckBox from './styles/StyledCheckBox';
+import StyledError from './styles/StyledError';
+import StyledMultiCheckBox from './styles/StyledMultiCheckBox';
+import StyledMultiEmail from './styles/StyledMultiEmail';
+import StyledMultiSelect from './styles/StyledMultiSelect';
+import StyledNumberInput from './styles/StyledNumberInput';
+import StyledRadioInput from './styles/StyledRadioInput';
+import StyledSelectInput from './styles/StyledSelectInput';
+import StyledTextArea from './styles/StyledTextArea';
+import StyledTextInput from './styles/StyledTextInput';
 
 export {
   StyledError,

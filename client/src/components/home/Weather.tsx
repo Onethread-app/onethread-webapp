@@ -24,6 +24,28 @@ const Weather = (props: IWeather) => {
   );
   const [today] = useState(String(new Date().getDate()));
 
+  const storeWeatherInfo = (
+    temp,
+    condition,
+    iconCode,
+    city,
+    country,
+  ) => {
+    localStorage.setItem('temp', temp);
+    localStorage.setItem('condition', condition);
+    localStorage.setItem('iconCode', iconCode);
+    localStorage.setItem('city', city);
+    localStorage.setItem('country', country);
+  };
+
+  const storeLastSavedTime = () => {
+    localStorage.setItem(
+      'lastSavedHour',
+      currentHour.toLocaleString(),
+    );
+    localStorage.setItem('lastSavedDate', today);
+  };
+
   const getWeatherData = async () => {
     const locationData = await getLocation();
     const cityName = locationData.data.city;
@@ -51,28 +73,6 @@ const Weather = (props: IWeather) => {
     return data;
   };
 
-  const storeWeatherInfo = (
-    temp,
-    condition,
-    iconCode,
-    city,
-    country,
-  ) => {
-    localStorage.setItem('temp', temp);
-    localStorage.setItem('condition', condition);
-    localStorage.setItem('iconCode', iconCode);
-    localStorage.setItem('city', city);
-    localStorage.setItem('country', country);
-  };
-
-  const storeLastSavedTime = () => {
-    localStorage.setItem(
-      'lastSavedHour',
-      currentHour.toLocaleString(),
-    );
-    localStorage.setItem('lastSavedDate', today);
-  };
-
   useEffect(() => {
     const lastSavedHour = localStorage.getItem('lastSavedHour');
     const lastSavedDate = localStorage.getItem('lastSavedDate');
@@ -88,36 +88,42 @@ const Weather = (props: IWeather) => {
     } else if (currentHour < String(17)) {
       setGreeting('Good Afternoon');
     } else setGreeting('Good Evening');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentHour]);
 
   return (
-    <div className="weather">
-      <div className="greeting flex flex-column items-start">
+    <div className='weather'>
+      <div className='greeting flex flex-column items-start'>
         <div>
-          <h3 className="ttc">
-            {greeting}, {props.userFirstName}
+          <h3 className='ttc'>
+            {greeting}
+            ,
+            {props.userFirstName}
           </h3>
           <p>Have a fruitful day ahead!</p>
         </div>
-        <div className="time">
+        <div className='time'>
           <Clock />
         </div>
       </div>
-      <div className="weather-info flex flex-column items-center justify-center self-center">
+      <div className='weather-info flex flex-column items-center justify-center self-center'>
         <img
           src={
             weatherData.iconCode
               ? `http://openweathermap.org/img/wn/${weatherData.iconCode}.png`
               : ''
           }
-          alt="weather"
+          alt='weather'
         />
-        <div className="flex flex-column w-100 tc">
-          <h3>{weatherData.temp}°c</h3>
+        <div className='flex flex-column w-100 tc'>
+          <h3>
+            {weatherData.temp}
+            °c
+          </h3>
           <p>{weatherData.condition}</p>
           <p>
-            {weatherData.city}, {weatherData.country}
+            {weatherData.city}
+            ,
+            {weatherData.country}
           </p>
         </div>
       </div>

@@ -1,4 +1,6 @@
-import { RefObject, useCallback, useEffect, useState } from 'react';
+import {
+  RefObject, useCallback, useEffect, useState,
+} from 'react';
 
 // See: https://usehooks-typescript.com/react-hook/use-event-listener
 import useEventListener from './useEventListener';
@@ -30,7 +32,6 @@ function useElementSize<T extends HTMLElement = HTMLDivElement>(
   // Initial size on mount
   useEffect(() => {
     updateSize();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEventListener('resize', updateSize);

@@ -23,36 +23,38 @@ const TaskInfoViewComponent = () => {
   // };
 
   return (
-    <div className="w-100 relative">
-      <div style={{ position: 'sticky', top: 0 }} className={`pa4`}>
+    <div className='w-100 relative'>
+      <div style={{ position: 'sticky', top: 0 }} className='pa4'>
         {/* <CloseIcon
           onClick={close}
           className={`pointer absolute`}
           style={{ right: 12 }}
         /> */}
         <h3 style={{ fontWeight: 700, lineHeight: '28px' }}>
-          {t('app.project.Tasks.Task-Details')}:
+          {t('app.project.Tasks.Task-Details')}
+          :
         </h3>
-        <div className="mt3">
-          <div className="mb2">
+        <div className='mt3'>
+          <div className='mb2'>
             <TaskStatusEdior />
           </div>
-          <div className="task-info-items">
-            <h1 className="f6">
-              {t('app.project.Tasks.Assigned-To')}:
+          <div className='task-info-items'>
+            <h1 className='f6'>
+              {t('app.project.Tasks.Assigned-To')}
+              :
             </h1>
             <Popover
               isOpen={membersPopover}
-              content={
-                <div className="pa3 cf bg-white">
+              content={(
+                <div className='pa3 cf bg-white'>
                   <AssignedMembersEditor
                     setMembersPopover={setMembersPopover}
                   />
                 </div>
-              }
-              target={
+              )}
+              target={(
                 <div
-                  className="flex br2 mb2 pt2 ph3 pointer"
+                  className='flex br2 mb2 pt2 ph3 pointer'
                   style={{
                     width: '100%',
                     minWidth: '11rem',
@@ -64,18 +66,18 @@ const TaskInfoViewComponent = () => {
                   <img
                     style={{ height: '15px' }}
                     src={addMembers}
-                    alt="addMembers"
+                    alt='addMembers'
                   />
-                  <p className="pl3 f7">
+                  <p className='pl3 f7'>
                     {t('app.project.Project-boards.Members')}
                   </p>
                 </div>
-              }
+              )}
             />
           </div>
           <DueDateEditor />
           <PriorityEditorList />
-          <div className="mt4">
+          <div className='mt4'>
             <AssignedMembersView />
           </div>
         </div>

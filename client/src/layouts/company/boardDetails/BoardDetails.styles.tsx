@@ -60,8 +60,7 @@ export const ViewSelectDiv = styled.div`
     padding: 0.25rem 0;
 
     &:not(:first-child) {
-      cursor: ${(props) =>
-        props.fetchingBoard ? 'not-allowed' : 'pointer'};
+      cursor: ${(props) => (props.fetchingBoard ? 'not-allowed' : 'pointer')};
       padding: 0.25rem 0.5rem;
       display: flex;
       align-items: center;

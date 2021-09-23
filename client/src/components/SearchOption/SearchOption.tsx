@@ -8,15 +8,11 @@ const SearchOption = ({ list, rows, setRows }: any) => {
   const requestSearch = (searchedVal: string) => {
     if (searchedVal === '') {
       setRows(list);
-    } else {
-      if (rows) {
-        const filteredRows = rows.filter((row) => {
-          return row.name
-            .toLowerCase()
-            .includes(searchedVal.toLowerCase());
-        });
-        setRows(filteredRows);
-      }
+    } else if (rows) {
+      const filteredRows = rows.filter((row) => row.name
+        .toLowerCase()
+        .includes(searchedVal.toLowerCase()));
+      setRows(filteredRows);
     }
   };
 
@@ -27,11 +23,11 @@ const SearchOption = ({ list, rows, setRows }: any) => {
 
   return (
     <SearchBar
-      className="search-bar"
+      className='search-bar'
       value={searched}
       onChange={(searchVal) => requestSearch(searchVal)}
       onCancelSearch={() => cancelSearch()}
-      placeholder="search with name"
+      placeholder='search with name'
     />
   );
 };

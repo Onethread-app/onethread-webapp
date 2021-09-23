@@ -17,20 +17,18 @@ const StyledMultipleSelect = ({
   input: { value = [], ...input },
   meta,
   ...rest
-}: Props) => {
-  return (
-    <>
-      <MultipleSelect
-        multiple
-        value={value || []}
-        {...input}
-        {...rest}
-      />
-      {checkError(meta) ? (
-        <StyledError errorMessage={meta.error || meta.submitError} />
-      ) : null}
-    </>
-  );
-};
+}: Props) => (
+  <>
+    <MultipleSelect
+      multiple
+      value={value || []}
+      {...input}
+      {...rest}
+    />
+    {checkError(meta) ? (
+      <StyledError errorMessage={meta.error || meta.submitError} />
+    ) : null}
+  </>
+);
 
 export default StyledMultipleSelect;

@@ -16,8 +16,7 @@ import { ICompany } from 'stores/company/Reducer';
 import {
   deleteSubTaskMember,
   IPayloadForDeletingMember,
-} from 'stores/subtask/Actions';
-import {
+
   getAllSubTask,
   createSubTask,
   updateSubTask,
@@ -80,8 +79,8 @@ export const SubTaskViewPageComponent = (
   return (
     <>
       {props.loading === false ? (
-        <div className="w-100">
-          <div className="flex justify-between items-center">
+        <div className='w-100'>
+          <div className='flex justify-between items-center'>
             <h1
               style={{
                 color: '#323030',
@@ -90,8 +89,11 @@ export const SubTaskViewPageComponent = (
                 lineHeight: '28px',
               }}
             >
-              {t('app.project.Project-boards.Subtask')} (
-              {props.subTaskList.length})
+              {t('app.project.Project-boards.Subtask')}
+              {' '}
+              (
+              {props.subTaskList.length}
+              )
             </h1>
             <Icon
               style={{
@@ -99,19 +101,19 @@ export const SubTaskViewPageComponent = (
               }}
               icon={IconNames.PLUS}
               iconSize={20}
-              className="pointer"
+              className='pointer'
               onClick={() => setShowSubTaskForm(true)}
             />
           </div>
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             {props.subTaskList.length > 0 && (
-              <h1 className="f6 blue">
+              <h1 className='f6 blue'>
                 {Math.floor(
                   (props.subTaskList.filter(
                     (list) => list.done === true,
-                  ).length /
-                    props.subTaskList.length) *
-                    100,
+                  ).length
+                    / props.subTaskList.length)
+                    * 100,
                 )}
                 %
               </h1>
@@ -121,8 +123,8 @@ export const SubTaskViewPageComponent = (
             <Dialog
               isOpen={showSubtaskForm}
               onClose={() => setShowSubTaskForm(!showSubtaskForm)}
-              canEscapeKeyClose={true}
-              canOutsideClickClose={true}
+              canEscapeKeyClose
+              canOutsideClickClose
               style={{
                 background: '#fff',
               }}
@@ -131,9 +133,7 @@ export const SubTaskViewPageComponent = (
                 showSubtaskForm={showSubtaskForm}
                 subtask={subtask}
                 setsubtask={setsubtask}
-                setShowSubTaskForm={(e) =>
-                  setShowSubTaskForm(!showSubtaskForm)
-                }
+                setShowSubTaskForm={(e) => setShowSubTaskForm(!showSubtaskForm)}
               />
             </Dialog>
           )}
@@ -141,25 +141,25 @@ export const SubTaskViewPageComponent = (
             <div>
               <ProgressBar
                 stripes={false}
-                intent="primary"
+                intent='primary'
                 value={
                   props.subTaskList.filter(
                     (list) => list.done === true,
                   ).length / props.subTaskList.length
                 }
               />
-              <div className="mt3 mb3">
+              <div className='mt3 mb3'>
                 {props.subTaskList.map((subTask) => (
                   <div
-                    className="flex justify-between items-center"
+                    className='flex justify-between items-center'
                     key={subTask._id}
                   >
                     <Checkbox
-                      className="ws-break"
+                      className='ws-break'
                       value={subTask._id}
                       checked={subTask.done}
                       label={subTask.name}
-                      large={true}
+                      large
                       style={{
                         textDecoration: subTask.done
                           ? 'line-through'
@@ -174,18 +174,18 @@ export const SubTaskViewPageComponent = (
                         props.updateSubTask(subtaskData);
                       }}
                     />
-                    <div className="flex items-center">
+                    <div className='flex items-center'>
                       <div
                         className={
-                          subTask.assignedMembers &&
-                          subTask.assignedMembers?.length > 0
+                          subTask.assignedMembers
+                          && subTask.assignedMembers?.length > 0
                             ? 'mr3 flex'
                             : 'dn'
                         }
                         style={{ width: 'max-content' }}
                       >
-                        {subTask.assignedMembers &&
-                          subTask.assignedMembers.map((subMember) => (
+                        {subTask.assignedMembers
+                          && subTask.assignedMembers.map((subMember) => (
                             <SubTaskMemberIcon
                               key={subMember._id}
                               deleteSubTaskMember={
@@ -229,12 +229,12 @@ export const SubTaskViewPageComponent = (
                         {props.company ? (
                           <Popover
                             isOpen={
-                              membersPopover._id === subTask._id &&
-                              membersPopover.open
+                              membersPopover._id === subTask._id
+                              && membersPopover.open
                             }
-                            position="right"
-                            content={
-                              <div className="pa3 cf bg-white">
+                            position='right'
+                            content={(
+                              <div className='pa3 cf bg-white'>
                                 <div>
                                   <AddSubtaskMember
                                     setMembersPopover={
@@ -246,22 +246,22 @@ export const SubTaskViewPageComponent = (
                                   />
                                 </div>
                               </div>
-                            }
-                            target={
+                            )}
+                            target={(
                               <Icon
-                                className="fr pointer mr3 pt1"
+                                className='fr pointer mr3 pt1'
                                 style={{
                                   marginTop: 0,
                                   color: 'lightsteelblue',
                                 }}
-                                icon="people"
+                                icon='people'
                                 onClick={() => {
                                   toggleMembersPopover(
                                     subTask._id ? subTask._id : '',
                                   );
                                 }}
                               />
-                            }
+                            )}
                           />
                         ) : undefined}
                       </div>
@@ -303,7 +303,7 @@ export const SubTaskViewPageComponent = (
                           }
                         />
                       </div> */}
-                      <div className="mr3">
+                      <div className='mr3'>
                         <DueDateEditor
                           dueDate={subTask.dueDate}
                           subTask={subTask}
@@ -311,12 +311,12 @@ export const SubTaskViewPageComponent = (
                       </div>
                       <div>
                         <Icon
-                          className="fr pointer mr3"
+                          className='fr pointer mr3'
                           style={{
                             marginTop: 0,
                             color: 'lightsteelblue',
                           }}
-                          icon="edit"
+                          icon='edit'
                           onClick={async () => {
                             await setsubtask(subTask);
                             setShowSubTaskForm(true);
@@ -324,7 +324,7 @@ export const SubTaskViewPageComponent = (
                         />
                       </div>
 
-                      <div className="pt2">
+                      <div className='pt2'>
                         <SubTaskDelete
                           subTask={subTask}
                           deleteSubTask={props.deleteSubTask}
@@ -353,19 +353,17 @@ export const SubTaskViewPageComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    subTaskList: state.taskIndexReducer.subTaskReducer.subTaskList,
-    deletingMember:
+const mapStateToProps = (state: any) => ({
+  subTaskList: state.taskIndexReducer.subTaskReducer.subTaskList,
+  deletingMember:
       state.taskIndexReducer.subTaskReducer.deletingMember,
-    errorOnDeletingMember:
+  errorOnDeletingMember:
       state.taskIndexReducer.subTaskReducer.errorOnDeletingMember,
-    loading: state.taskIndexReducer.subTaskReducer.fetchingSubTask,
-    currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
-    fetchingTask: state.taskIndexReducer.taskReducer.fetchingTask,
-    company: state.companyReducer.currentCompany,
-  };
-};
+  loading: state.taskIndexReducer.subTaskReducer.fetchingSubTask,
+  currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
+  fetchingTask: state.taskIndexReducer.taskReducer.fetchingTask,
+  company: state.companyReducer.currentCompany,
+});
 
 export const SubTaskView = connect(mapStateToProps, {
   getAllSubTask,

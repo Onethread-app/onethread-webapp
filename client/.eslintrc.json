@@ -1,0 +1,97 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "react-jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint", "import"],
+  "rules": {
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "react/jsx-filename-extension": [
+      "warn",
+      { "extensions": [".tsx", "ts", "jsx", "js"] }
+    ],
+    "max-len": ["warn", { "code": 80 }],
+    "import/prefer-default-export": "off",
+    "react/prop-types": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": 1,
+    "import/extensions": [
+      "warn",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "tsx": "never",
+        "js": "never",
+        "jsx": "never"
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "@typescript-eslint/explicit-module-boundary-types": ["off"],
+    "@typescript-eslint/ban-types": [
+      "warn",
+      {
+        "extendDefaults": true,
+        "types": {
+          "{}": false
+        }
+      }
+    ],
+    "react/jsx-uses-react": 0,
+    "react/react-in-jsx-scope": 0,
+    "prefer-destructuring": 1,
+    "import/no-extraneous-dependencies": ["warn", { "devDependencies": true }],
+    "react/destructuring-assignment": 1,
+    "import/no-cycle": 1,
+    "react/require-default-props": 1,
+    "react/no-unused-prop-types": 1,
+    "jsx-a11y/click-events-have-key-events": 1,
+    "consistent-return": 1,
+    "no-nested-ternary": 1,
+    "no-unused-expressions": 1,
+    "no-useless-escape": 1,
+    "no-param-reassign": 1,
+    "jsx-quotes": ["error", "prefer-single"],
+    "jsx-a11y/label-has-associated-control": 1,
+    "jsx-a11y/no-noninteractive-element-interactions": 1,
+    "react/button-has-type": 1,
+    "array-callback-return": 1,
+    "jsx-a11y/anchor-is-valid": 1,
+    "jsx-a11y/no-static-element-interactions": 1,
+    "jsx-a11y/no-autofocus": 1,
+    "react/no-array-index-key": 1,
+    "react/jsx-props-no-spreading": 1,
+    "react/no-unescaped-entities": 1
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts?(x)"]
+    }
+  ],
+  "settings": {
+    "import/extensions": [".js", ".jsx", "ts", "tsx"],
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "paths": "./tsconfig.json"
+      }
+    }
+  }
+}

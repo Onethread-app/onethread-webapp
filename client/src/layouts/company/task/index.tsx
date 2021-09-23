@@ -10,11 +10,11 @@ import {
   getSelectedBoard,
 } from 'stores/task/Actions';
 
+import SuspenseLoader from 'components/loader/SuspenseLoader';
+import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import { ActivityView } from './activity/ActivityView';
 import { TaskDetails } from './taskDetails';
 import TaskInfoViewComponent from './TaskInfoView/Index';
-import SuspenseLoader from 'components/loader/SuspenseLoader';
-import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 
 export const customStyles = {
   content: {
@@ -52,9 +52,9 @@ const TaskPageComponent = (props: TaskInternalProps) => {
 
   useEffect(() => {
     if (
-      loading === true &&
-      props.fetchingTask === false &&
-      props.taskError === ''
+      loading === true
+      && props.fetchingTask === false
+      && props.taskError === ''
     ) {
       setLoading(false);
     }
@@ -71,11 +71,11 @@ const TaskPageComponent = (props: TaskInternalProps) => {
   // }, [props.currentBoard._id, props.currentTask]);
 
   return (
-    <div className="cf h-100" style={{ zIndex: 4 }}>
+    <div className='cf h-100' style={{ zIndex: 4 }}>
       <BreadCrumbs
         items={[
           {
-            text: `Board`,
+            text: 'Board',
             href: `/company/${props.company.uniqueName}/project/${props.currentProject._id}/board`,
           },
           {
@@ -92,13 +92,13 @@ const TaskPageComponent = (props: TaskInternalProps) => {
       {loading === true ? (
         <SuspenseLoader insideComponent />
       ) : (
-        <div className="task-activity-container">
-          <div className="w-100 w-70-l pa2">
+        <div className='task-activity-container'>
+          <div className='w-100 w-70-l pa2'>
             <TaskDetails />
             {isMobileOnly ? null : <ActivityView />}
           </div>
           <div
-            className="w-100 w-30-l flex justify-center task-info-view"
+            className='w-100 w-30-l flex justify-center task-info-view'
             style={{ background: '#F6F6F6' }}
           >
             <TaskInfoViewComponent />
@@ -109,18 +109,16 @@ const TaskPageComponent = (props: TaskInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentTask: state.taskIndexReducer.taskReducer.currentTask,
-    currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
-    company: state.companyReducer.currentCompany,
-    currentProject: state.projectReducer.projectDetails,
-    fetchingTask: state.taskIndexReducer.taskReducer.fetchingTask,
-    taskError: state.taskIndexReducer.taskReducer.taskError,
-    subscriptiontExpired:
+const mapStateToProps = (state: any) => ({
+  currentTask: state.taskIndexReducer.taskReducer.currentTask,
+  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
+  company: state.companyReducer.currentCompany,
+  currentProject: state.projectReducer.projectDetails,
+  fetchingTask: state.taskIndexReducer.taskReducer.fetchingTask,
+  taskError: state.taskIndexReducer.taskReducer.taskError,
+  subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
-  };
-};
+});
 
 export const TaskPage = connect(mapStateToProps, {
   getSelectedTaskDetails,

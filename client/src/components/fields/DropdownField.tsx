@@ -30,16 +30,16 @@ export const DropdownField = (props: DropdownFieldProps) => (
   <div>
     <HTMLSelect
       id={props.id}
-      fill={true}
-      minimal={true}
+      fill
+      minimal
       onChange={props.onChange}
       placeholder={props.placeholder}
       className={`${
         props.error
           ? 'bb b--red'
           : props.className
-          ? props.className
-          : 'bb b--lightBlue'
+            ? props.className
+            : 'bb b--lightBlue'
       }`}
       style={{
         boxShadow: 'none',
@@ -49,11 +49,11 @@ export const DropdownField = (props: DropdownFieldProps) => (
       }}
     >
       {props.placeholder ? (
-        <option selected value="">
+        <option selected value=''>
           {props.placeholder}
         </option>
       ) : (
-        <option selected value="">
+        <option selected value=''>
           Please select a value
         </option>
       )}
@@ -85,11 +85,11 @@ export const DropdownFieldErrorWithLabel = (
   <FormGroup
     inline={props.inline}
     intent={props.error ? Intent.DANGER : Intent.NONE}
-    label={
-      <p className="fw5" style={{ fontSize: '.8rem' }}>
+    label={(
+      <p className='fw5' style={{ fontSize: '.8rem' }}>
         {props.label}
       </p>
-    }
+    )}
     helperText={props.error ? props.error : props.helperText}
     labelFor={props.id}
   >

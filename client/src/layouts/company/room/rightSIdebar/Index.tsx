@@ -9,18 +9,14 @@ interface RoomRightSidebarComponentProps {
 
 const RoomRightSidebarComponent = (
   props: RoomRightSidebarComponentProps,
-) => {
-  return (
-    <div className="pl3 h-100">
-      <Discussion />
-      <SharedFile />
-    </div>
-  );
-};
+) => (
+  <div className='pl3 h-100'>
+    <Discussion />
+    <SharedFile />
+  </div>
+);
 
-const mapStateToProps = (state: any) => {
-  return {};
-};
+const mapStateToProps = (state: any) => ({});
 
 export const RoomRightSidebar = connect(
   mapStateToProps,

@@ -16,9 +16,6 @@ import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import { userSignupAction, UserModel } from 'stores/auth/Actions';
 
 import logo from 'resources/images/onethread-text.png';
-import eyeIcon from './../../resources/images/eye.png';
-import eyeClose from './../../resources/images/eyeClose.png';
-import backgroundImage from './../../resources/images/Bg-png.png';
 
 import {
   required,
@@ -34,6 +31,9 @@ import { SubmitError } from 'components/final-form/SubmitError';
 // import { allCountryList } from './countryCode';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import InputTooltip from 'components/input-tooltip/InputTooltip';
+import backgroundImage from '../../resources/images/Bg-png.png';
+import eyeClose from '../../resources/images/eyeClose.png';
+import eyeIcon from '../../resources/images/eye.png';
 
 import './Signup.scss';
 
@@ -79,13 +79,13 @@ export const SignUpPageComponent = (
     const response = await props.userSignupAction({
       ...values,
       email: values.email.trim(),
-      isAccountVerified: invited ? true : false,
+      isAccountVerified: !!invited,
     });
 
     if (response.message === 200 && response.payload.data.token) {
-      props.history.push(`/signup-confirmation`);
+      props.history.push('/signup-confirmation');
       return true;
-    } else if (response.message === 200) {
+    } if (response.message === 200) {
       props.history.push('/signin');
       return true;
     }
@@ -93,28 +93,28 @@ export const SignUpPageComponent = (
   };
 
   useEffect(() => {
-    const search = props.location.search;
+    const { search } = props.location;
     const params = new URLSearchParams(search);
     const emailFromURL = params.get('email');
     if (emailFromURL) {
       if (isValidEmail(emailFromURL)) {
-        setEmail(emailFromURL ? emailFromURL : '');
+        setEmail(emailFromURL || '');
         setInvited(true);
       }
     }
   }, [props.location.search]);
 
   return (
-    <div className="cf ph2-ns">
+    <div className='cf ph2-ns'>
       <div
-        className="fl w-100 w-50-ns dt vh-100 ph3 ph0-ns"
+        className='fl w-100 w-50-ns dt vh-100 ph3 ph0-ns'
         style={{ backgroundColor: 'white' }}
       >
-        <div className="v-mid dtc">
-          <div className="w-two-thirds-l w-100 center">
+        <div className='v-mid dtc'>
+          <div className='w-two-thirds-l w-100 center'>
             <Form
               onSubmit={onSubmit}
-              initialValues={{ email: email ? email : '' }}
+              initialValues={{ email: email || '' }}
               validate={(values: any) => {
                 const errors = {} as any;
                 return errors;
@@ -130,16 +130,16 @@ export const SignUpPageComponent = (
                 ...rest
               }) => (
                 <>
-                  <h1 className="pl3-ns tigrow-lightBlue">
+                  <h1 className='pl3-ns tigrow-lightBlue'>
                     {t('landing.sign-up.sign-up-form.sign-up-text')}
                   </h1>
                   <form onSubmit={handleSubmit}>
-                    <div className="mw7 center ph3-ns v-mid">
+                    <div className='mw7 center ph3-ns v-mid'>
                       <SubmitError errorMessage={submitError} />
 
                       <div>
                         <Field<string>
-                          name="firstName"
+                          name='firstName'
                           validate={composeValidators(
                             required,
                             maxValue(32),
@@ -153,7 +153,7 @@ export const SignUpPageComponent = (
                               }`}
                             >
                               <InputGroupFieldWithError
-                                id="firstName"
+                                id='firstName'
                                 className={`bw1 pb2 br0 bb ${
                                   checkError(meta)
                                     ? 'b--red'
@@ -161,15 +161,15 @@ export const SignUpPageComponent = (
                                 }`}
                                 value={input.value}
                                 onChange={input.onChange}
-                                autoFocus={true}
-                                leftIcon={
-                                  <span className="bp3-icon">
+                                autoFocus
+                                leftIcon={(
+                                  <span className='bp3-icon'>
                                     <Icon
-                                      icon="mugshot"
+                                      icon='mugshot'
                                       style={{ color: '#34b3e9' }}
                                     />
                                   </span>
-                                }
+                                )}
                                 style={{
                                   boxShadow: 'none',
                                   fontSize: '18px',
@@ -179,8 +179,8 @@ export const SignUpPageComponent = (
                                   'landing.sign-up.sign-up-form.first-name',
                                 )}
                                 error={
-                                  checkError(meta) &&
-                                  (meta.error || meta.submitError)
+                                  checkError(meta)
+                                  && (meta.error || meta.submitError)
                                 }
                               />
                             </div>
@@ -189,7 +189,7 @@ export const SignUpPageComponent = (
                       </div>
                       <div>
                         <Field<string>
-                          name="lastName"
+                          name='lastName'
                           validate={composeValidators(
                             required,
                             maxValue(32),
@@ -203,7 +203,7 @@ export const SignUpPageComponent = (
                               }`}
                             >
                               <InputGroupFieldWithError
-                                id="lastName"
+                                id='lastName'
                                 className={`bw1 pb2 br0 bb ${
                                   checkError(meta)
                                     ? 'b--red'
@@ -211,15 +211,15 @@ export const SignUpPageComponent = (
                                 }`}
                                 value={input.value}
                                 onChange={input.onChange}
-                                autoFocus={true}
-                                leftIcon={
-                                  <span className="bp3-icon">
+                                autoFocus
+                                leftIcon={(
+                                  <span className='bp3-icon'>
                                     <Icon
-                                      icon="mugshot"
+                                      icon='mugshot'
                                       style={{ color: '#34b3e9' }}
                                     />
                                   </span>
-                                }
+                                )}
                                 style={{
                                   boxShadow: 'none',
                                   fontSize: '18px',
@@ -229,8 +229,8 @@ export const SignUpPageComponent = (
                                   'landing.sign-up.sign-up-form.last-name',
                                 )}
                                 error={
-                                  checkError(meta) &&
-                                  (meta.error || meta.submitError)
+                                  checkError(meta)
+                                  && (meta.error || meta.submitError)
                                 }
                               />
                             </div>
@@ -402,7 +402,7 @@ export const SignUpPageComponent = (
                       <div>
                         <div>
                           <Field<string>
-                            name="email"
+                            name='email'
                             validate={composeValidators(
                               required,
                               isEmail,
@@ -416,7 +416,7 @@ export const SignUpPageComponent = (
                                 }`}
                               >
                                 <InputGroupFieldWithError
-                                  id="email"
+                                  id='email'
                                   className={`bw1 pb2 br0 bb ${
                                     checkError(meta)
                                       ? 'b--red'
@@ -424,15 +424,15 @@ export const SignUpPageComponent = (
                                   }`}
                                   value={input.value}
                                   onChange={input.onChange}
-                                  autoFocus={true}
-                                  leftIcon={
-                                    <span className="bp3-icon">
+                                  autoFocus
+                                  leftIcon={(
+                                    <span className='bp3-icon'>
                                       <Icon
-                                        icon="envelope"
+                                        icon='envelope'
                                         style={{ color: '#34b3e9' }}
                                       />
                                     </span>
-                                  }
+                                  )}
                                   style={{
                                     boxShadow: 'none',
                                     fontSize: '18px',
@@ -442,8 +442,8 @@ export const SignUpPageComponent = (
                                     'landing.sign-up.sign-up-form.your-email',
                                   )}
                                   error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
+                                    checkError(meta)
+                                    && (meta.error || meta.submitError)
                                   }
                                   disabled={isEmpty(email) === false}
                                 />
@@ -456,7 +456,7 @@ export const SignUpPageComponent = (
                       <div>
                         <div>
                           <Field<string>
-                            name="password"
+                            name='password'
                             validate={composeValidators(
                               required,
                               passwordValidation,
@@ -470,7 +470,7 @@ export const SignUpPageComponent = (
                                 }`}
                               >
                                 <InputGroupFieldWithError
-                                  id="password"
+                                  id='password'
                                   className={`bw1 pb2 br0 bb ${
                                     checkError(meta)
                                       ? 'b--red'
@@ -478,21 +478,21 @@ export const SignUpPageComponent = (
                                   }`}
                                   value={input.value}
                                   onChange={input.onChange}
-                                  autoFocus={true}
+                                  autoFocus
                                   type={`${
                                     showPassword ? 'text' : 'password'
                                   }`}
-                                  leftIcon={
-                                    <span className="bp3-icon">
+                                  leftIcon={(
+                                    <span className='bp3-icon'>
                                       <Icon
-                                        icon="lock"
+                                        icon='lock'
                                         style={{ color: '#34b3e9' }}
                                       />
                                     </span>
-                                  }
-                                  rightElement={
+                                  )}
+                                  rightElement={(
                                     <span
-                                      className="bp3-icon"
+                                      className='bp3-icon'
                                       style={{
                                         paddingTop: '10px',
                                         paddingRight: '5px',
@@ -502,19 +502,18 @@ export const SignUpPageComponent = (
                                       <img
                                         title={
                                           showPassword
-                                            ? `Don't show password`
+                                            ? 'Don\'t show password'
                                             : 'Show password'
                                         }
-                                        onClick={() =>
-                                          setShowPassword(
-                                            !showPassword,
-                                          )
-                                        }
+                                        onClick={() => setShowPassword(
+                                          !showPassword,
+                                        )}
                                         src={
                                           showPassword
                                             ? eyeClose
                                             : eyeIcon
                                         }
+                                        alt=''
                                         style={{
                                           width: '15px',
                                           height: '15px',
@@ -542,17 +541,17 @@ export const SignUpPageComponent = (
                                         }}
                                       >
                                         <InputTooltip
-                                          content="Choose a password at least 8 characters long"
-                                          direction="right"
+                                          content='Choose a password at least 8 characters long'
+                                          direction='right'
                                           validations={validation}
                                         >
                                           <span
-                                            role="img"
-                                            aria-label="question mark"
+                                            role='img'
+                                            aria-label='question mark'
                                           >
                                             <img
-                                              src="https://svgshare.com/i/Q3c.svg"
-                                              alt="question mark logo"
+                                              src='https://svgshare.com/i/Q3c.svg'
+                                              alt='question mark logo'
                                               style={{
                                                 width: '15px',
                                               }}
@@ -561,7 +560,7 @@ export const SignUpPageComponent = (
                                         </InputTooltip>
                                       </span>
                                     </span>
-                                  }
+                                  )}
                                   style={{
                                     boxShadow: 'none',
                                     fontSize: '18px',
@@ -571,8 +570,8 @@ export const SignUpPageComponent = (
                                     'landing.sign-up.sign-up-form.password',
                                   )}
                                   error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
+                                    checkError(meta)
+                                    && (meta.error || meta.submitError)
                                   }
                                 />
                               </div>
@@ -581,7 +580,7 @@ export const SignUpPageComponent = (
                         </div>
                       </div>
                       <Button
-                        className="grow h2 pointer white bp3-minimal w4 btnWidth"
+                        className='grow h2 pointer white bp3-minimal w4 btnWidth'
                         style={{
                           background: '#34b3e9',
                           outline: 'none',
@@ -592,18 +591,19 @@ export const SignUpPageComponent = (
                           fontSize: '1.2rem',
                         }}
                         loading={submitting}
-                        type="submit"
+                        type='submit'
                         disabled={submitting || pristine}
                       >
                         {t(
                           'landing.sign-up.sign-up-form.sign-up-button',
                         )}
                       </Button>
-                      <span className="fw9 dt center pt4-ns pt2">
+                      <span className='fw9 dt center pt4-ns pt2'>
                         {t(
                           'landing.sign-up.sign-up-form.account-exist',
-                        )}{' '}
-                        <NavLink to="/signin">
+                        )}
+                        {' '}
+                        <NavLink to='/signin'>
                           {t(
                             'landing.login.sign-in-form.sign-in-text',
                           )}
@@ -624,7 +624,7 @@ export const SignUpPageComponent = (
         </div>
       </div>
       <div
-        className="fl w-100 w-50-ns dt vh-100 animated slideInLeft fast absolute-l displayNone"
+        className='fl w-100 w-50-ns dt vh-100 animated slideInLeft fast absolute-l displayNone'
         style={{
           zIndex: 9999,
           left: '50%',
@@ -635,12 +635,12 @@ export const SignUpPageComponent = (
           backgroundColor: '#060517',
         }}
       >
-        <div className="v-mid dtc">
-          <div className="w-50 center">
-            <Link to="/">
-              <img src={logo} alt="onethread" />
+        <div className='v-mid dtc'>
+          <div className='w-50 center'>
+            <Link to='/'>
+              <img src={logo} alt='onethread' />
             </Link>
-            <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
+            <h3 className='tj mt4' style={{ color: '#E0E0E3' }}>
               {t(
                 'landing.sign-up.about-one-thread-sign-up.content-sign-up',
               )}

@@ -15,12 +15,12 @@ import { persistor, store } from 'Store';
 import 'tachyons/css/tachyons.min.css';
 import 'typeface-josefin-sans/index.css';
 import 'typeface-open-sans/index.css';
+import { Loading } from 'components/Loading';
 import App from './App';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import './style.css';
 import './i18n';
-import { Loading } from 'components/Loading';
 
 const PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY as string;
 const stripePromise = loadStripe(PUBLIC_KEY);

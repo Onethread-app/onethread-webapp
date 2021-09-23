@@ -27,10 +27,10 @@ import {
   getSelectedTaskDetails,
 } from 'stores/task/Actions';
 
-import DueDate from './DueDate';
 import Timer from 'components/timer/Timer';
-import TaskPriorityTag from './TaskPriorityTag';
 import MemberGroup from 'components/member/MemberGroup';
+import DueDate from './DueDate';
+import TaskPriorityTag from './TaskPriorityTag';
 
 const TaskItemContainer = styled.div`
   width: 100%;
@@ -84,12 +84,11 @@ const TaskPortion = styled.div`
 `;
 
 const TagSelect = styled.select`
-  background-color: ${(props) =>
-    props.status === 'done'
-      ? '#2EB67D'
-      : props.status === 'in-progress'
+  background-color: ${(props) => (props.status === 'done'
+    ? '#2EB67D'
+    : props.status === 'in-progress'
       ? '#08A0F7'
-      : '#FFA800'};
+      : '#FFA800')};
   color: #f5f8fa;
   text-align-last: center;
   border: none;
@@ -199,56 +198,49 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
   };
 
   useEffect(() => {
-    setSelectedOption((prev) => {
-      return {
-        ...prev,
-        label: task.status.toLowerCase().split('-').join(' '),
-      };
-    });
+    setSelectedOption((prev) => ({
+      ...prev,
+      label: task.status.toLowerCase().split('-').join(' '),
+    }));
     if (task.status === 'done') {
       setTick(true);
     } else setTick(false);
   }, [task.status]);
 
   useEffect(() => {
-    setSelectedOption((prev) => {
-      return {
-        ...prev,
-        value: task.columnId,
-      };
-    });
+    setSelectedOption((prev) => ({
+      ...prev,
+      value: task.columnId,
+    }));
   }, [task.columnId]);
 
   useEffect(() => {
     if (columns) {
-      const statusFromColumnName = columns.map((col) => {
-        return {
-          value: col._id,
-          label: col.name,
-        };
-      });
+      const statusFromColumnName = columns.map((col) => ({
+        value: col._id,
+        label: col.name,
+      }));
       setStatusOptions(statusFromColumnName);
     }
   }, [columns]);
 
   useEffect(() => {
     if (
-      loading === true &&
-      props.fetchingTask === false &&
-      props.taskError === ''
+      loading === true
+      && props.fetchingTask === false
+      && props.taskError === ''
     ) {
       history.push(
         `/company/${props.uniqueCompanyName}/project/${props.projectId}/board/${task.boardId}/task/${task._id}`,
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, props.fetchingTask, props.taskError]);
 
   useEffect(() => {
     if (
-      deletingTask === true &&
-      props.deletingTask === false &&
-      props.errorOnTaskDelete === ''
+      deletingTask === true
+      && props.deletingTask === false
+      && props.errorOnTaskDelete === ''
     ) {
       setTaskDelete(false);
       setShowPopover(false);
@@ -268,22 +260,23 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
           <Icon
             icon={tick ? 'tick-circle' : 'circle'}
             iconSize={16}
-            className="mr4 pointer"
+            className='mr4 pointer'
             color={tick ? '#2EB67D' : 'inherit'}
             style={{
               cursor: task.status === 'done' ? 'no-drop' : 'pointer',
             }}
             onClick={handleTick}
           />
-          <h3 className="truncate pr3">{task.name}</h3>
+          <h3 className='truncate pr3'>{task.name}</h3>
         </TaskPortion>
         <TaskPortion>
-          <div className={`flex`}>
+          <div className='flex'>
             <ForumIcon
-              fontSize="small"
+              fontSize='small'
               style={{ color: '#a4a4a4' }}
-            />{' '}
-            <sup className="mt1" style={{ color: '#a4a4a4' }}>
+            />
+            {' '}
+            <sup className='mt1' style={{ color: '#a4a4a4' }}>
               {task.activityCount ? task.activityCount : 0}
             </sup>
           </div>
@@ -293,8 +286,8 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
         </TaskPortion>
         <TaskPortion>
           <TagSelect
-            name="status"
-            id="boardTagStatus"
+            name='status'
+            id='boardTagStatus'
             status={selectedOption.label
               .toLowerCase()
               .split(' ')
@@ -326,21 +319,21 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
           />
         </TaskPortion>
         <TaskPortion>
-          {task.assignedMembers &&
-            task.assignedMembers.length > 0 && (
+          {task.assignedMembers
+            && task.assignedMembers.length > 0 && (
               <MemberGroup members={task.assignedMembers} small />
-            )}
+          )}
         </TaskPortion>
         <TaskPortion>
           <Popover
             isOpen={showPopover}
-            content={
+            content={(
               <ClickAwayListener
                 onClickAway={() => setShowPopover(false)}
               >
                 <Menu>
                   <MenuItem
-                    text="Delete"
+                    text='Delete'
                     onClick={(e) => {
                       e.stopPropagation();
                       setTaskDelete(true);
@@ -348,64 +341,64 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
                   />
                 </Menu>
               </ClickAwayListener>
-            }
-            target={
+            )}
+            target={(
               <MoreVertIcon
-                htmlColor="#a1a1a1"
+                htmlColor='#a1a1a1'
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
                   setShowPopover(!showPopover);
                 }}
               />
-            }
+            )}
           />
         </TaskPortion>
       </TaskItemContainer>
       <Dialog
         isOpen={taskDelete}
         onClose={() => setTaskDelete(false)}
-        canOutsideClickClose={true}
-        canEscapeKeyClose={true}
-        className="pa0"
+        canOutsideClickClose
+        canEscapeKeyClose
+        className='pa0'
       >
         <div
-          className="flex justify-around items-center w-100 ba bw1 br2"
+          className='flex justify-around items-center w-100 ba bw1 br2'
           style={{ borderColor: '#F55B7F' }}
         >
           {props.deletingTask === true ? (
-            <div className="flex items-center justify-center">
+            <div className='flex items-center justify-center'>
               <CircularProgress
-                color="secondary"
+                color='secondary'
                 size={16}
-                className="mr3"
+                className='mr3'
               />
               <h3>Deleting</h3>
             </div>
           ) : props.errorOnTaskDelete === '' ? (
             <>
-              <h4 className="fw5 f5 flex items-center">
+              <h4 className='fw5 f5 flex items-center'>
                 <Icon
-                  icon="info-sign"
-                  intent="primary"
+                  icon='info-sign'
+                  intent='primary'
                   style={{ marginRight: '.5rem' }}
                 />
                 Are you sure?
               </h4>
-              <ButtonGroup minimal={true}>
+              <ButtonGroup minimal>
                 <Button
-                  icon="undo"
+                  icon='undo'
                   onClick={() => {
                     setTaskDelete(false);
                     setShowPopover(false);
                   }}
-                  intent="primary"
+                  intent='primary'
                 >
                   No, Keep it
                 </Button>
                 <Button
-                  icon="trash"
-                  intent="danger"
+                  icon='trash'
+                  intent='danger'
                   onClick={handleTaskDelete}
                 >
                   Yes, Delete
@@ -413,7 +406,7 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
               </ButtonGroup>
             </>
           ) : (
-            <h3 className="fw5 flex items-center tc">
+            <h3 className='fw5 flex items-center tc'>
               {props.errorOnTaskDelete}
             </h3>
           )}

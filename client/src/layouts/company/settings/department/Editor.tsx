@@ -44,20 +44,20 @@ const DepartmentEditorComponent = (
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="ph4 pv2" onSubmit={handleSubmit}>
-          <h1 className="f5 lh-copy tigrow-lightBlue">
+        <form className='ph4 pv2' onSubmit={handleSubmit}>
+          <h1 className='f5 lh-copy tigrow-lightBlue'>
             {t('app.company.Departments.Add-department')}
           </h1>
-          <div className="mw9 center mb2">
+          <div className='mw9 center mb2'>
             <SubmitError errorMessage={submitError} />
           </div>
           <Field<string>
-            name="name"
+            name='name'
             validate={maxValue(32)}
             render={({ input, meta }) => (
               <div className={`${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <InputGroupFieldWithError
-                  id="name"
+                  id='name'
                   placeHolder={t(
                     'app.company.Departments.Add-department',
                   )}
@@ -66,34 +66,34 @@ const DepartmentEditorComponent = (
                   }`}
                   value={input.value}
                   onChange={input.onChange}
-                  leftIcon="comparison"
+                  leftIcon='comparison'
                   style={{
                     boxShadow: 'none',
                   }}
                   error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
+                    checkError(meta)
+                    && (meta.error || meta.submitError)
                   }
                 />
               </div>
             )}
           />
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <Button
-              className="w4 grow h2 pointer mr3"
+              className='w4 grow h2 pointer mr3'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
             >
               Save
             </Button>
             <Button
-              className="w4 grow h2 pointer"
+              className='w4 grow h2 pointer'
               style={{
                 background: '#fff',
                 outline: 'none',
@@ -113,11 +113,9 @@ const DepartmentEditorComponent = (
     />
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    isCompanyLoading: state.companyReducer.loading,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  isCompanyLoading: state.companyReducer.loading,
+});
 export const DepartmentEditor = connect(mapStateToProps, {
   addDepartment,
 })(DepartmentEditorComponent);

@@ -67,13 +67,11 @@ const customStyles = {
   },
 };
 
-const ErrorLabel = () => {
-  return (
-    <div style={{ margin: '5px', color: 'red' }}>
-      <label>Required</label>
-    </div>
-  );
-};
+const ErrorLabel = () => (
+  <div style={{ margin: '5px', color: 'red' }}>
+    <label>Required</label>
+  </div>
+);
 
 export default function PortwalletCardSaction(
   props: IPortwalletCardSaction,
@@ -111,60 +109,58 @@ export default function PortwalletCardSaction(
     }));
   };
   function validateEmail(email) {
-    const re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
   function checkAllInput() {
     if (
-      formValues.name === '' ||
-      formValues.email === '' ||
-      formValues.phone === '' ||
-      formValues.zipCode === '' ||
-      formValues.city === '' ||
-      formValues.state === '' ||
-      formValues.house === ''
+      formValues.name === ''
+      || formValues.email === ''
+      || formValues.phone === ''
+      || formValues.zipCode === ''
+      || formValues.city === ''
+      || formValues.state === ''
+      || formValues.house === ''
     ) {
       setError(true);
       return false;
-    } else {
-      if (!validateEmail(formValues.email)) {
-        setEmailValidation(true);
-        return false;
-      } else {
-        setEmailValidation(false);
-      }
-      return true;
     }
+    if (!validateEmail(formValues.email)) {
+      setEmailValidation(true);
+      return false;
+    }
+    setEmailValidation(false);
+
+    return true;
   }
 
   return (
     <div style={{ marginTop: '45px' }}>
-      <label className="b mt5">Card Details</label>
-      <div className="mt3">
+      <label className='b mt5'>Card Details</label>
+      <div className='mt3'>
         <Grid container>
           <Grid item xs={6}>
             <Card style={{ marginTop: '10px' }}>
               <CardContent style={{ marginTop: '12px' }}>
                 <h3 style={{ textAlign: 'center' }}>PortWallet</h3>
                 <form onChange={handleChange}>
-                  <div className="flex justify-center">
-                    <div className="mr4">
-                      <div className="mb3">
+                  <div className='flex justify-center'>
+                    <div className='mr4'>
+                      <div className='mb3'>
                         <TextField
-                          id="name"
-                          placeholder="Name"
-                          variant="outlined"
+                          id='name'
+                          placeholder='Name'
+                          variant='outlined'
                         />
                         {error && formValues.name === '' && (
                           <ErrorLabel />
                         )}
                       </div>
-                      <div className="mb3">
+                      <div className='mb3'>
                         <TextField
-                          id="phone"
-                          placeholder="Phone, Ex. 01700000000"
-                          variant="outlined"
+                          id='phone'
+                          placeholder='Phone, Ex. 01700000000'
+                          variant='outlined'
                           InputProps={{
                             inputComponent: NumberFormatCustom as any,
                           }}
@@ -174,22 +170,22 @@ export default function PortwalletCardSaction(
                         )}
                       </div>
 
-                      <div className="mb3">
+                      <div className='mb3'>
                         <TextField
-                          id="city"
-                          placeholder="City"
-                          variant="outlined"
+                          id='city'
+                          placeholder='City'
+                          variant='outlined'
                         />
                         {error && formValues.city === '' && (
                           <ErrorLabel />
                         )}
                       </div>
 
-                      <div className="mb3">
+                      <div className='mb3'>
                         <TextField
-                          id="state"
-                          placeholder="State"
-                          variant="outlined"
+                          id='state'
+                          placeholder='State'
+                          variant='outlined'
                         />
                         {error && formValues.state === '' && (
                           <ErrorLabel />
@@ -197,11 +193,11 @@ export default function PortwalletCardSaction(
                       </div>
                     </div>
                     <div>
-                      <div className="mb3">
+                      <div className='mb3'>
                         <TextField
-                          id="email"
-                          placeholder="Email, Ex.jon@gmail.com"
-                          variant="outlined"
+                          id='email'
+                          placeholder='Email, Ex.jon@gmail.com'
+                          variant='outlined'
                         />
                         {error && formValues.email === '' && (
                           <ErrorLabel />
@@ -215,11 +211,11 @@ export default function PortwalletCardSaction(
                         )}
                       </div>
 
-                      <div className="mb3">
+                      <div className='mb3'>
                         <TextField
-                          id="zipCode"
-                          placeholder="ZipCode, Ex. 1207"
-                          variant="outlined"
+                          id='zipCode'
+                          placeholder='ZipCode, Ex. 1207'
+                          variant='outlined'
                           InputProps={{
                             inputComponent: NumberFormatCustom as any,
                           }}
@@ -229,11 +225,11 @@ export default function PortwalletCardSaction(
                         )}
                       </div>
 
-                      <div className="mb3">
+                      <div className='mb3'>
                         <TextField
-                          id="house"
-                          placeholder="House"
-                          variant="outlined"
+                          id='house'
+                          placeholder='House'
+                          variant='outlined'
                         />
                         {error && formValues.house === '' && (
                           <ErrorLabel />
@@ -242,19 +238,21 @@ export default function PortwalletCardSaction(
                     </div>
                   </div>
                 </form>
-                <div className="flex">
+                <div className='flex'>
                   <Checkbox
-                    size="small"
+                    size='small'
                     checked={checked}
                     onChange={handleTermsCheck}
                     defaultChecked
-                    color="primary"
+                    color='primary'
                     inputProps={{
                       'aria-label': 'secondary checkbox',
                     }}
-                  />{' '}
+                  />
+                  {' '}
                   <div style={{ marginTop: '10px' }}>
-                    <span>I have read and approved Onethread's</span>{' '}
+                    <span>I have read and approved Onethread&#39;s</span>
+                    {' '}
                     <span
                       style={{ color: 'blue', cursor: 'pointer' }}
                       onClick={() => openModal()}
@@ -267,11 +265,9 @@ export default function PortwalletCardSaction(
                   style={{ marginTop: '15px' }}
                   disabled={!checked}
                   fullWidth
-                  onClick={(e) =>
-                    checkAllInput() && props.handleSubmit(e)
-                  }
-                  variant="contained"
-                  color="primary"
+                  onClick={(e) => checkAllInput() && props.handleSubmit(e)}
+                  variant='contained'
+                  color='primary'
                 >
                   Pay Now
                 </Button>
@@ -281,9 +277,10 @@ export default function PortwalletCardSaction(
         </Grid>
         <Modal
           isOpen={modalIsOpen}
+          // eslint-disable-next-line react/jsx-no-bind
           onRequestClose={closeModal}
           style={customStyles}
-          contentLabel="Example Modal"
+          contentLabel='Example Modal'
         >
           <TermsAndCondition />
         </Modal>

@@ -18,8 +18,8 @@ const AddSubTaskButton = () => {
         <Dialog
           isOpen={showSubtaskForm}
           onClose={() => setShowSubTaskForm(!showSubtaskForm)}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
+          canEscapeKeyClose
+          canOutsideClickClose
           style={{
             background: '#fff',
           }}
@@ -28,28 +28,28 @@ const AddSubTaskButton = () => {
             showSubtaskForm={showSubtaskForm}
             subtask={subtask}
             setsubtask={setsubtask}
-            setShowSubTaskForm={(e) =>
-              setShowSubTaskForm(!showSubtaskForm)
-            }
+            setShowSubTaskForm={(e) => setShowSubTaskForm(!showSubtaskForm)}
           />
         </Dialog>
       )}
       <div>
         <div
           onClick={() => setShowSubTaskForm(true)}
-          className="flex br2 mb2 pt2 ph3 pointer"
+          className='flex br2 mb2 pt2 ph3 pointer'
           style={{
             width: '100%',
             color: '#5A5A5A',
             border: '1px solid #B1B1B1',
           }}
+          role='button'
+          tabIndex={0}
         >
           <img
             style={{ height: '15px' }}
             src={addSubtask}
-            alt="addSubtask"
+            alt='addSubtask'
           />
-          <p className="pl3 f7">
+          <p className='pl3 f7'>
             {t('app.project.Project-boards.Add-Subtask')}
           </p>
         </div>

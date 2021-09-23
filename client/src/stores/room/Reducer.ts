@@ -272,8 +272,8 @@ export const sortRooms = (a: IRoom, b: IRoom) => {
   return createdAtA > createdAtB
     ? 1
     : createdAtA < createdAtB
-    ? -1
-    : 0;
+      ? -1
+      : 0;
 };
 
 const clearUnreadCountForSingleRoom = (
@@ -287,7 +287,7 @@ const incrementUnreadCountForSingleRoom = (
   roomsUnreadCount: any,
   roomId: any,
 ) => {
-  roomsUnreadCount[roomId] = roomsUnreadCount[roomId] + 1;
+  roomsUnreadCount[roomId] += 1;
   return roomsUnreadCount;
 };
 
@@ -302,30 +302,26 @@ const updateUnreadCount = (
 const updateCompanyRooms = (
   companyRooms: ICompanyRoom[],
   updatedRoom: any,
-) => {
-  return companyRooms.map((room: ICompanyRoom) => {
-    if (room._id === updatedRoom.id) {
-      return {
-        _id: room._id,
-        name: room.name,
-        company: room.company,
-        project: room.project,
-        unreadCount: updatedRoom.unreadCount,
-      };
-    }
-    return room;
-  });
-};
+) => companyRooms.map((room: ICompanyRoom) => {
+  if (room._id === updatedRoom.id) {
+    return {
+      _id: room._id,
+      name: room.name,
+      company: room.company,
+      project: room.project,
+      unreadCount: updatedRoom.unreadCount,
+    };
+  }
+  return room;
+});
 
-const onUserStartedTyping = (state: IRoomReducer, action: any) => {
-  return {
-    ...state,
-    typing: {
-      users: [...state.typing.users, action.payload],
-    },
-    loading: false,
-  };
-};
+const onUserStartedTyping = (state: IRoomReducer, action: any) => ({
+  ...state,
+  typing: {
+    users: [...state.typing.users, action.payload],
+  },
+  loading: false,
+});
 
 export const RoomReducer = (state = InitialState, action: any) => {
   switch (action.type) {
@@ -451,9 +447,8 @@ export const RoomReducer = (state = InitialState, action: any) => {
               ...room,
               archive: action.payload.archive,
             };
-          } else {
-            return room;
           }
+          return room;
         }),
         archivingRoom: false,
       };
@@ -600,9 +595,8 @@ export const RoomReducer = (state = InitialState, action: any) => {
               ...message,
               discussion: action.payload.discussion,
             };
-          } else {
-            return message;
           }
+          return message;
         }),
         discussions: [...state.discussions, action.payload.data],
         togglingDiscussion: false,
@@ -622,14 +616,11 @@ export const RoomReducer = (state = InitialState, action: any) => {
               ...message,
               discussion: action.payload.discussion,
             };
-          } else {
-            return message;
           }
+          return message;
         }),
         discussions: state.discussions.filter(
-          (discussion: IRoomDiscussion) => {
-            return discussion._id !== action.payload.data._id;
-          },
+          (discussion: IRoomDiscussion) => discussion._id !== action.payload.data._id,
         ),
         loading: false,
       };
@@ -738,9 +729,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         pendingFiles: state.pendingFiles.filter(
-          (file: IRoomPendingFile) => {
-            return file._id !== action.payload;
-          },
+          (file: IRoomPendingFile) => file._id !== action.payload,
         ),
       };
     }
@@ -757,9 +746,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
         ...state,
         typing: {
           ...state.typing,
-          users: state.typing.users.filter((user: any) => {
-            return user._id !== action.payload._id;
-          }),
+          users: state.typing.users.filter((user: any) => user._id !== action.payload._id),
         },
         loading: false,
       };
@@ -774,8 +761,8 @@ export const RoomReducer = (state = InitialState, action: any) => {
         ...state,
         messages:
           action.payload.room === state.currentRoom._id
-            ? state.messages.length === 0 ||
-              (state.messages[
+            ? state.messages.length === 0
+              || (state.messages[
                 state.messages.length - 1
               ] as IRoomMessage)._id !== action.payload._id
               ? [...state.messages, action.payload]
@@ -783,8 +770,8 @@ export const RoomReducer = (state = InitialState, action: any) => {
             : [...state.messages],
         sharedFileMessages:
           action.payload.room === state.currentRoom._id
-            ? state.messages.length === 0 ||
-              (state.messages[
+            ? state.messages.length === 0
+              || (state.messages[
                 state.messages.length - 1
               ] as IRoomMessage)._id !== action.payload._id
               ? [...state.sharedFileMessages, action.payload]

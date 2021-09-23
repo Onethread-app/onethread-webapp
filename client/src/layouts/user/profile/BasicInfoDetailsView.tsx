@@ -7,10 +7,10 @@ import { Divider } from '@blueprintjs/core/lib/esm/components/divider/divider';
 
 import { User } from 'stores/user/Reducer';
 
-import editIcon from './../../../resources/images/basicInfoEdit.png';
+import { RightSidebar } from 'components/RightSidebar';
+import editIcon from '../../../resources/images/basicInfoEdit.png';
 
 import { BasicInfoForm } from './BasicInfoDetailsEditor';
-import { RightSidebar } from 'components/RightSidebar';
 
 interface IBasicInfoDetailsViewProps {
   user: User;
@@ -24,20 +24,20 @@ const BasicInfoDetailsViewComponent = (
 
   return (
     <>
-      <div className="relative">
-        <div className="relative">
-          <div className="flex justify-between items-center">
-            <h1 className="f6">
+      <div className='relative'>
+        <div className='relative'>
+          <div className='flex justify-between items-center'>
+            <h1 className='f6'>
               {t('app.user.Personal-profile.Email')}
             </h1>
-            <p className="black-60 fw4">{props.user.email}</p>
+            <p className='black-60 fw4'>{props.user.email}</p>
           </div>
           <Divider />
-          <div className="flex justify-between items-center">
-            <h1 className="f6">
+          <div className='flex justify-between items-center'>
+            <h1 className='f6'>
               {t('app.user.Personal-profile.Secondaty')}
             </h1>
-            <p className="black-60 fw4">
+            <p className='black-60 fw4'>
               {props.user.secondaryEmail}
             </p>
           </div>
@@ -47,48 +47,49 @@ const BasicInfoDetailsViewComponent = (
             <p className="black-60 fw4">{props.us</p>
           </div>
           <Divider /> */}
-          <div className="flex justify-between items-center">
-            <h1 className="f6">
+          <div className='flex justify-between items-center'>
+            <h1 className='f6'>
               {t('app.user.Personal-profile.Address')}
             </h1>
-            <p className="black-60 fw4">{props.user.location}</p>
+            <p className='black-60 fw4'>{props.user.location}</p>
           </div>
           <Divider />
-          <div className="flex justify-between items-center">
-            <h1 className="f6">
+          <div className='flex justify-between items-center'>
+            <h1 className='f6'>
               {t('app.user.Personal-profile.Blood')}
             </h1>
-            <p className="black-60 fw4">{props.user.bloodGroup}</p>
+            <p className='black-60 fw4'>{props.user.bloodGroup}</p>
           </div>
           <Divider />
-          <div className="flex justify-between items-center">
-            <h1 className="f6">
+          <div className='flex justify-between items-center'>
+            <h1 className='f6'>
               {t('app.user.Personal-profile.Date-of-birth')}
             </h1>
-            <p className="black-60 fw4">
+            <p className='black-60 fw4'>
               {props.user.birthDate
                 ? moment(props.user.birthDate).format('Do MMMM YYYY')
                 : ''}
             </p>
           </div>
           <Divider />
-          <div className="flex justify-between items-center">
-            <h1 className="f6">
+          <div className='flex justify-between items-center'>
+            <h1 className='f6'>
               {t('app.user.Personal-profile.Gender')}
             </h1>
-            <p className="black-60 fw4">{props.user.gender}</p>
+            <p className='black-60 fw4'>{props.user.gender}</p>
           </div>
           <Divider />
         </div>
         <div>
           <img
-            className="fixed pointer addButton"
+            className='fixed pointer addButton'
             style={{
               boxShadow: '0px 6px 6px #00000029',
               borderRadius: '50%',
             }}
             onClick={() => setBasicInfoForm(true)}
             src={editIcon}
+            alt=''
           />
         </div>
       </div>
@@ -103,11 +104,9 @@ const BasicInfoDetailsViewComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+});
 
 export const BasicInfoDetailsView = connect(mapStateToProps)(
   BasicInfoDetailsViewComponent,

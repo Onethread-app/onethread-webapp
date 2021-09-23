@@ -48,7 +48,7 @@ const ReportForm = (props: {
   const [imageError, setImageError] = useState('');
 
   const handleChange = (name: string) => (event: any) => {
-    const value = event.target.value;
+    const { value } = event.target;
     setValues({ ...values, [name]: value });
   };
 
@@ -75,27 +75,26 @@ const ReportForm = (props: {
           setImageName('');
           setImageError('This file format is not supported');
           return false;
-        } else if (event.target.files[0].size / 1024 / 1024 > 5) {
+        } if (event.target.files[0].size / 1024 / 1024 > 5) {
           setImageName('');
-          setImageError(`Image size can't be greater than 5 MB`);
+          setImageError('Image size can\'t be greater than 5 MB');
           return false;
-        } else {
-          const data = new FormData();
-          data.append(
-            'file',
-            event.target.files[0],
-            event.target.files[0].name,
-          );
-          setImageName(event.target.files[0]);
-          const headers = tokenConfig();
-          const response = await tigrowApi.post(
-            'files/upload/reportImage',
-            data,
-            headers,
-          );
-          setValues({ ...values, imageUrl: response.data.link });
-          setImageError('');
         }
+        const data = new FormData();
+        data.append(
+          'file',
+          event.target.files[0],
+          event.target.files[0].name,
+        );
+        setImageName(event.target.files[0]);
+        const headers = tokenConfig();
+        const response = await tigrowApi.post(
+          'files/upload/reportImage',
+          data,
+          headers,
+        );
+        setValues({ ...values, imageUrl: response.data.link });
+        setImageError('');
       }
     }
 
@@ -142,12 +141,12 @@ const ReportForm = (props: {
 
   return (
     <>
-      <form className="fl w-100 pa4" onSubmit={onSubmit}>
-        <h1 className="f4 lh-title tigrow-lightBlue mb4">
+      <form className='fl w-100 pa4' onSubmit={onSubmit}>
+        <h1 className='f4 lh-title tigrow-lightBlue mb4'>
           {t('app.user.User-settings.Report-Issue')}
         </h1>
-        <div className="mb3">
-          <h1 className="f6">
+        <div className='mb3'>
+          <h1 className='f6'>
             {t('app.user.User-settings.Select-type')}
           </h1>
           <FormControl className={classes.formControl} required>
@@ -156,70 +155,73 @@ const ReportForm = (props: {
               onChange={handleChangeType}
               inputProps={{ 'aria-label': 'Without label' }}
             >
-              <MenuItem value={'None'}>None of them</MenuItem>
-              <MenuItem value={'Bug'}>Bug</MenuItem>
+              <MenuItem value='None'>None of them</MenuItem>
+              <MenuItem value='Bug'>Bug</MenuItem>
             </Select>
             <small
               style={{
                 color: '#ec3f3f',
               }}
-              className="mb1"
+              className='mb1'
             >
               {required}
             </small>
           </FormControl>
         </div>
-        <div className="mb3">
-          <div className="flex">
-            <div className="bp3-input-group bp3-fill br0">
-              <h1 className="f6 mb1">
+        <div className='mb3'>
+          <div className='flex'>
+            <div className='bp3-input-group bp3-fill br0'>
+              <h1 className='f6 mb1'>
                 {t('app.user.User-settings.Tittle')}
               </h1>
               <input
-                type="text"
+                type='text'
                 onChange={handleChange('title')}
-                className="bp3-input"
-                name="title"
+                className='bp3-input'
+                name='title'
                 required
                 style={{
                   paddingLeft: '0.6rem',
                 }}
                 defaultValue={defaultValues.title}
-                autoFocus={true}
+                autoFocus
               />
             </div>
           </div>
         </div>
-        <div className="mb3">
-          <h1 className="f6 mb1">
+        <div className='mb3'>
+          <h1 className='f6 mb1'>
             {t('app.user.User-settings.Details')}
           </h1>
           <textarea
-            className="bp3-input w-100"
-            name="issueDetails"
-            id="issue-details"
+            className='bp3-input w-100'
+            name='issueDetails'
+            id='issue-details'
             onChange={handleChange('issueDetails')}
             defaultValue={defaultValues.issueDetails}
             required
           />
         </div>
-        <div className="mb3">
-          <h1 className="f6 mb1">
+        <div className='mb3'>
+          <h1 className='f6 mb1'>
             {t('app.user.User-settings.Add-Screenshot-Video')}
           </h1>
-          <label className="bp3-file-input .modifier bp3-fill">
+          <label className='bp3-file-input .modifier bp3-fill'>
             <input
-              type="file"
-              accept=".gif, .jpg, .apng, .jpeg, .bmp, .svg, .png"
+              type='file'
+              accept='.gif, .jpg, .apng, .jpeg, .bmp, .svg, .png'
               onChange={(e) => imageChangeHandler(e)}
               required
               defaultValue={defaultValues.imageUrl}
             />
-            <span className="bp3-file-upload-input">
+            <span className='bp3-file-upload-input'>
               {imageName.name ? (
                 imageName.name
               ) : (
-                <p>{t('app.user.User-settings.Choose-file')}...</p>
+                <p>
+                  {t('app.user.User-settings.Choose-file')}
+                  ...
+                </p>
               )}
             </span>
           </label>
@@ -227,28 +229,28 @@ const ReportForm = (props: {
             <small style={{ color: 'red' }}>{imageError}</small>
           )}
         </div>
-        <div className="flex justify-end">
+        <div className='flex justify-end'>
           <button
-            type="button"
+            type='button'
             style={{
               background: '#fff',
               outline: 'none',
               border: '1px solid #34b3e9',
               color: '#34b3e9',
             }}
-            className="bp3-button w4 grow h2 pointer mr3"
+            className='bp3-button w4 grow h2 pointer mr3'
             onClick={() => props.setShowButtonReport(false)}
           >
             {t('app.user.User-settings.Cancel')}
           </button>
           <button
-            type="submit"
+            type='submit'
             style={{
               background: '#34B3E9',
               outline: 'none',
               color: 'white',
             }}
-            className="bp3-button w4 grow h2 pointer"
+            className='bp3-button w4 grow h2 pointer'
           >
             {loading ? (
               <Spinner size={15} />

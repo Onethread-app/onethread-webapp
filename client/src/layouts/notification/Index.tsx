@@ -32,12 +32,10 @@ const NotificationPage = (props: INotificationPage) => {
 
   useEffect(() => {
     props.getNotifications();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     props.seenNotification();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notificationToShow]);
 
   useEffect(() => {
@@ -98,16 +96,15 @@ const NotificationPage = (props: INotificationPage) => {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <div className="notification-items flex flex-column flex-auto h-100">
+      <div className='notification-items flex flex-column flex-auto h-100'>
         {notificationToShow.length ? (
           notificationToShow.map(
-            (notification: any) =>
-              notification.notification && (
-                <NotificationItem
-                  notificationData={notification}
-                  key={notification._id}
-                />
-              ),
+            (notification: any) => notification.notification && (
+            <NotificationItem
+              notificationData={notification}
+              key={notification._id}
+            />
+            ),
           )
         ) : (
           <h3
@@ -115,7 +112,7 @@ const NotificationPage = (props: INotificationPage) => {
               maxHeight: '300px',
               textAlign: 'center',
             }}
-            className="pa3 overflow-y-auto moon-gray"
+            className='pa3 overflow-y-auto moon-gray'
           >
             No notification to show
           </h3>

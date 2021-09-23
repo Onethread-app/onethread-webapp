@@ -30,55 +30,55 @@ const WhyOnethread = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="w-80 pa2">
-      <h1 className="tc f2">
+    <div className='w-80 pa2'>
+      <h1 className='tc f2'>
         {t('app.company.Pricing.Why-Onethread')}
       </h1>
-      <div className="features flex justify-center">
-        <h2 className="tc">{t('app.company.Pricing.Features')}</h2>
-        <span></span>
+      <div className='features flex justify-center'>
+        <h2 className='tc'>{t('app.company.Pricing.Features')}</h2>
+        <span />
       </div>
       <TableContainer component={Paper}>
-        <Table className="company-table" aria-label="simple table">
+        <Table className='company-table' aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell align="center"></TableCell>
-              <TableCell align="center">
+              <TableCell align='center' />
+              <TableCell align='center'>
                 <img
-                  className="company-logo"
+                  className='company-logo'
                   src={Onethread}
-                  alt="Onethread"
+                  alt='Onethread'
                 />
               </TableCell>
-              <TableCell align="center">
+              <TableCell align='center'>
                 <img
-                  className="company-logo"
+                  className='company-logo'
                   src={Slack}
-                  alt="Slack"
+                  alt='Slack'
                 />
               </TableCell>
-              <TableCell align="center">
+              <TableCell align='center'>
                 <img
-                  className="company-logo"
+                  className='company-logo'
                   src={ClickUp}
-                  alt="ClickUp"
+                  alt='ClickUp'
                 />
               </TableCell>
-              <TableCell align="center">
+              <TableCell align='center'>
                 <img
-                  className="company-logo"
+                  className='company-logo'
                   src={Asana}
-                  alt="Asana"
+                  alt='Asana'
                 />
               </TableCell>
-              <TableCell align="center">
-                <img className="company-logo" src={Jira} alt="Jira" />
+              <TableCell align='center'>
+                <img className='company-logo' src={Jira} alt='Jira' />
               </TableCell>
-              <TableCell align="center">
+              <TableCell align='center'>
                 <img
-                  className="company-logo"
+                  className='company-logo'
                   src={Trello}
-                  alt="Trello"
+                  alt='Trello'
                 />
               </TableCell>
             </TableRow>
@@ -86,10 +86,10 @@ const WhyOnethread = () => {
           <TableBody>
             {features.map((feature, i) => (
               <TableRow key={feature.feature}>
-                <TableCell align="center">
+                <TableCell align='center'>
                   {feature.feature}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align='center'>
                   {feature.onethread === 'yes' ? (
                     <Icon
                       style={{
@@ -97,7 +97,7 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.TICK}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : feature.onethread === 'no' ? (
                     <Icon
@@ -106,13 +106,13 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.CROSS}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : (
                     feature.onethread
                   )}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align='center'>
                   {feature.slack === 'yes' ? (
                     <Icon
                       style={{
@@ -120,7 +120,7 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.TICK}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : feature.slack === 'no' ? (
                     <Icon
@@ -129,13 +129,13 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.CROSS}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : (
                     feature.slack
                   )}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align='center'>
                   {feature.clickUp === 'yes' ? (
                     <Icon
                       style={{
@@ -143,7 +143,7 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.TICK}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : feature.clickUp === 'no' ? (
                     <Icon
@@ -152,13 +152,13 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.CROSS}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : (
                     feature.clickUp
                   )}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align='center'>
                   {feature.asana === 'yes' ? (
                     <Icon
                       style={{
@@ -166,7 +166,7 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.TICK}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : feature.asana === 'no' ? (
                     <Icon
@@ -175,13 +175,13 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.CROSS}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : (
                     feature.asana
                   )}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align='center'>
                   {feature.jira === 'yes' ? (
                     <Icon
                       style={{
@@ -189,7 +189,7 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.TICK}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : feature.jira === 'no' ? (
                     <Icon
@@ -198,13 +198,13 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.CROSS}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : (
                     feature.jira
                   )}
                 </TableCell>
-                <TableCell align="center">
+                <TableCell align='center'>
                   {feature.trello === 'yes' ? (
                     <Icon
                       style={{
@@ -212,7 +212,7 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.TICK}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : feature.trello === 'no' ? (
                     <Icon
@@ -221,7 +221,7 @@ const WhyOnethread = () => {
                       }}
                       icon={IconNames.CROSS}
                       iconSize={20}
-                      className="grow pointer pl2 pr2"
+                      className='grow pointer pl2 pr2'
                     />
                   ) : (
                     feature.trello
@@ -232,18 +232,18 @@ const WhyOnethread = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <div className="availabe flex justify-center mt5">
-        <h2 className="tc">
+      <div className='availabe flex justify-center mt5'>
+        <h2 className='tc'>
           {t('app.company.Pricing.Available-on')}
         </h2>
-        <span></span>
+        <span />
       </div>
-      <div className="flex justify-center mb4 browsers">
-        <img src={chrome} alt="chrome" />
-        <img src={firefox} alt="firefox" />
-        <img src={safari} alt="safari" />
-        <img src={edge} alt="edge" />
-        <img src={operamini} alt="operamini" />
+      <div className='flex justify-center mb4 browsers'>
+        <img src={chrome} alt='chrome' />
+        <img src={firefox} alt='firefox' />
+        <img src={safari} alt='safari' />
+        <img src={edge} alt='edge' />
+        <img src={operamini} alt='operamini' />
       </div>
     </div>
   );

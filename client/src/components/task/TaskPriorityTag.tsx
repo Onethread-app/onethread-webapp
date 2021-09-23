@@ -10,7 +10,7 @@ const TaskPriorityTag = (props: ITaskPriorityTag) => {
   const { priority } = props;
   return (
     <span
-      className="bp3-tag ttu"
+      className='bp3-tag ttu'
       style={{
         background: find(priorityColor, ['code', priority])!.value,
       }}

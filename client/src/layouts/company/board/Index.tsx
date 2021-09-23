@@ -28,12 +28,12 @@ import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
 import { Color, tokenConfig } from 'stores/UtilsActions';
 
-import { FormBoard } from './Form';
-import { UpdateFormBoard } from './UpdateForm';
-import { projectRules } from '../project/settings/projectrules';
 import { Loading } from 'components/Loading';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { RightSidebar } from 'components/RightSidebar';
+import { FormBoard } from './Form';
+import { UpdateFormBoard } from './UpdateForm';
+import { projectRules } from '../project/settings/projectrules';
 import addIcon from '../../../resources/images/addIcon.png';
 
 interface IBoardCardComponent {
@@ -46,9 +46,7 @@ interface IBoardCardComponent {
   errorOnFetchingBoard: string;
   fetchingBoard: boolean;
   singleProjectLoading: boolean;
-  setSingleBoardLoading: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
+  setSingleBoardLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface IBoardListViewInternalProps extends IBoardCardComponent {
@@ -72,29 +70,29 @@ const BoardCard = withRouter(
     return (
       <>
         {props.boardList.map((board) => (
-          <div className="pa2">
+          <div className='pa2'>
             <Card
-              className="h-100"
-              interactive={true}
+              className='h-100'
+              interactive
               elevation={Elevation.TWO}
               style={{ paddingLeft: '0px', paddingBottom: '0px' }}
             >
               <div
-                className="flex"
+                className='flex'
                 style={{
                   borderLeft: `5px solid 
-							${
-                find(Color, ['code', board.color])
-                  ? find(Color, ['code', board.color])!.value
-                  : 'white'
-              }`, // TODO use dictionary
+                ${
+                  find(Color, ['code', board.color])
+                    ? find(Color, ['code', board.color])!.value
+                    : 'white'
+                }`, // TODO use dictionary
                   paddingLeft: '20px',
                   marginLeft: '-2px',
                   borderRadius: '3px',
                 }}
               >
                 <h3
-                  className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
+                  className='mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer'
                   style={{
                     height: '2.5rem',
                     display: '-webkit-box',
@@ -110,28 +108,22 @@ const BoardCard = withRouter(
                   {board.name}
                 </h3>
                 <Popover
-                  className="w-10"
-                  content={
-                    <Menu className="pa2">
+                  className='w-10'
+                  content={(
+                    <Menu className='pa2'>
                       <MenuItem
-                        className="pa1 red"
-                        text={t(
-                          'app.project.Project-boards.Update-Board',
-                        )}
+                        className='pa1 red'
+                        text={t('app.project.Project-boards.Update-Board')}
                         onClick={() => props.handleUpdate(board)}
                       />
                       <MenuItem
-                        className="pa1 red"
-                        text={t(
-                          'app.project.Project-boards.Delete-Board',
-                        )}
-                        onClick={() =>
-                          props.handleDialogChange(board._id)
-                        }
+                        className='pa1 red'
+                        text={t('app.project.Project-boards.Delete-Board')}
+                        onClick={() => props.handleDialogChange(board._id)}
                       />
                     </Menu>
-                  }
-                  target={
+                  )}
+                  target={(
                     <Button
                       style={{
                         transform: 'rotate(90deg)',
@@ -139,39 +131,33 @@ const BoardCard = withRouter(
                         msTransform: 'rotate(90deg)',
                         WebkitTransform: 'rotate(90deg)',
                       }}
-                      icon="more"
-                      minimal={true}
-                      className="outline-0"
+                      icon='more'
+                      minimal
+                      className='outline-0'
                     />
-                  }
+                  )}
                 />
               </div>
               <div
-                className="flex pt3 pr3"
+                className='flex pt3 pr3'
                 style={{
                   justifyContent: 'space-between',
                   paddingLeft: '20px',
                 }}
               >
                 <div>
-                  <p
-                    className="mb0 ws-break"
-                    style={{ fontSize: '0.7rem' }}
-                  >
+                  <p className='mb0 ws-break' style={{ fontSize: '0.7rem' }}>
                     {t('app.project.Project-boards.Total-Members')}
                   </p>
-                  <p className="fw8">
+                  <p className='fw8'>
                     {board.members ? board.members.length : 0}
                   </p>
                 </div>
                 <div>
-                  <p
-                    className="mb0 ws-break"
-                    style={{ fontSize: '0.7rem' }}
-                  >
+                  <p className='mb0 ws-break' style={{ fontSize: '0.7rem' }}>
                     {t('app.project.Project-boards.Remaining-Tasks')}
                   </p>
-                  <p className="fw8">
+                  <p className='fw8'>
                     {`${board.remainingTasks}/${board.totalTasks}`}
                   </p>
                 </div>
@@ -188,8 +174,7 @@ const TaskPageComponent = (
   props: IBoardListViewInternalProps & RouteComponentProps,
 ) => {
   const { t } = useTranslation();
-  const [showTaskBoardDialog, setShowTaskBoardDialog] =
-    useState(false);
+  const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(false);
   const [updTaskBoardDialog, setUpdTaskBoardDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [singleBoardLoading, setSingleBoardLoading] = useState(false);
@@ -216,13 +201,10 @@ const TaskPageComponent = (
   };
 
   const getAllBoardsAndDepts = async () => {
-    Promise.all([
-      props.getAllBoards(),
-      props.getAllDepartments(),
-    ]).then(() => {
+    Promise.all([props.getAllBoards(), props.getAllDepartments()]).then(() => {
       if (
-        props.fetchingBoards === false &&
-        props.departmentNameLoading === false
+        props.fetchingBoards === false
+        && props.departmentNameLoading === false
       ) {
         setLoading(false);
       }
@@ -235,13 +217,10 @@ const TaskPageComponent = (
     if (permissions.grantAll) {
       const headers = tokenConfig();
       try {
-        await Axios.post(
-          `${server}/boards/delete`,
-          { boardId: bid },
-          headers,
-        );
+        await Axios.post(`${server}/boards/delete`, { boardId: bid }, headers);
         props.clearCurrentBoard();
         getAllBoardsAndDepts();
+      // eslint-disable-next-line no-empty
       } catch (e) {}
     }
   };
@@ -249,22 +228,24 @@ const TaskPageComponent = (
   const noBoardsFound = (
     <div
       onClick={() => setShowTaskBoardDialog(true)}
-      className="tc pointer dim"
+      className='tc pointer dim'
     >
       <h1 style={{ color: '#34495E' }}>No Boards Found</h1>
       <p
-        className="f5-l f4-ns f6 tc"
+        className='f5-l f4-ns f6 tc'
         style={{ color: '#85929E', display: 'inline-block' }}
       >
-        Click here to create a board or click on the{' '}
+        Click here to create a board or click on the
+        {' '}
         <img
           src={addIcon}
           style={{
             display: 'inline-block',
             height: '20px',
           }}
-          alt=""
-        />{' '}
+          alt=''
+        />
+        {' '}
         icon below
       </p>
     </div>
@@ -272,20 +253,18 @@ const TaskPageComponent = (
 
   useEffect(() => {
     props.clearCurrentBoard();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     getAllBoardsAndDepts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.project._id]);
 
   useEffect(() => {
     if (
-      loading === true &&
-      props.fetchingBoards === false &&
-      props.departmentNameLoading === false &&
-      props.boardError === ''
+      loading === true
+      && props.fetchingBoards === false
+      && props.departmentNameLoading === false
+      && props.boardError === ''
     ) {
       setLoading(false);
     }
@@ -302,29 +281,27 @@ const TaskPageComponent = (
       setSingleBoardLoading(true);
     };
     if (
-      loading === false &&
-      props.boardList &&
-      props.boardList.length === 1 &&
-      props.boardList[0].name.toLowerCase() === 'general'
+      loading === false
+      && props.boardList
+      && props.boardList.length === 1
+      && props.boardList[0].name.toLowerCase() === 'general'
     ) {
       forwardToGeneral();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.boardList, loading]);
 
   useEffect(() => {
     if (
-      singleBoardLoading === true &&
-      props.fetchingBoard === false &&
-      props.errorOnFetchingBoard === '' &&
-      props.currentBoard._id
+      singleBoardLoading === true
+      && props.fetchingBoard === false
+      && props.errorOnFetchingBoard === ''
+      && props.currentBoard._id
     ) {
       setSingleBoardLoading(false);
       props.history.push(
         `/company/${props.company.uniqueName}/project/${props.project._id}/board/${props.currentBoard._id}`,
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     props.fetchingBoard,
     singleBoardLoading,
@@ -335,13 +312,11 @@ const TaskPageComponent = (
   return (
     <>
       <MobileView>
-        <NavbarCompany
-          title={t('app.project.Project-boards.Board')}
-        />
-        <div className="flex justify-between mt5">
+        <NavbarCompany title={t('app.project.Project-boards.Board')} />
+        <div className='flex justify-between mt5'>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
             activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
@@ -352,7 +327,7 @@ const TaskPageComponent = (
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
             activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
@@ -363,7 +338,7 @@ const TaskPageComponent = (
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
             activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
@@ -372,7 +347,7 @@ const TaskPageComponent = (
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
             activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
@@ -383,7 +358,7 @@ const TaskPageComponent = (
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
             activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
@@ -394,7 +369,7 @@ const TaskPageComponent = (
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
             activeStyle={{ background: '#34b3e9', color: 'white' }}
             style={{ color: 'darkGray' }}
@@ -405,22 +380,19 @@ const TaskPageComponent = (
           </NavLink>
         </div>
       </MobileView>
-      <div className="h-100">
-        <div className="br3 bg-white h-100 pa4-ns pa2 cf flex flex-column">
-          <div className="pl2 flex-ns justify-between">
+      <div className='h-100'>
+        <div className='br3 bg-white h-100 pa4-ns pa2 cf flex flex-column'>
+          <div className='pl2 flex-ns justify-between'>
             {isMobileOnly ? undefined : (
-              <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
+              <h3 className='f3 mt2 lh-title tigrow-lightGray-1 dib'>
                 {t('app.project.Project-boards.Board')}
               </h3>
             )}
           </div>
-          <p
-            className="pl2 mt3"
-            style={{ color: '#6B6B6B', fontSize: '18px' }}
-          >
+          <p className='pl2 mt3' style={{ color: '#6B6B6B', fontSize: '18px' }}>
             {t('app.project.Project-boards.My-boards')}
           </p>
-          <div className="overflow-auto">
+          <div className='overflow-auto'>
             {loading === false ? (
               props.boardList.length > 0 ? (
                 <div
@@ -437,13 +409,9 @@ const TaskPageComponent = (
                       company={props.company}
                       getSelectedBoard={props.getSelectedBoard}
                       currentBoard={props.currentBoard}
-                      errorOnFetchingBoard={
-                        props.errorOnFetchingBoard
-                      }
+                      errorOnFetchingBoard={props.errorOnFetchingBoard}
                       fetchingBoard={props.fetchingBoard}
-                      singleProjectLoading={
-                        props.singleProjectLoading
-                      }
+                      singleProjectLoading={props.singleProjectLoading}
                       setSingleBoardLoading={setSingleBoardLoading}
                       handleDialogChange={handleDialogChange}
                       handleUpdate={handleUpdate}
@@ -454,71 +422,57 @@ const TaskPageComponent = (
                       company={props.company}
                       getSelectedBoard={props.getSelectedBoard}
                       currentBoard={props.currentBoard}
-                      errorOnFetchingBoard={
-                        props.errorOnFetchingBoard
-                      }
+                      errorOnFetchingBoard={props.errorOnFetchingBoard}
                       fetchingBoard={props.fetchingBoard}
-                      singleProjectLoading={
-                        props.singleProjectLoading
-                      }
+                      singleProjectLoading={props.singleProjectLoading}
                       setSingleBoardLoading={setSingleBoardLoading}
                       handleDialogChange={handleDialogChange}
                       handleUpdate={handleUpdate}
                     />
                   )}
                 </div>
-              ) : props.role &&
-                (permissions.grantAll ||
-                  permissions.projectModerator.includes(
+              ) : props.role
+                && (permissions.grantAll
+                  || permissions.projectModerator.includes(
                     'createUpdateBoard',
                   )) ? (
-                noBoardsFound
-              ) : undefined
+                  noBoardsFound
+                ) : undefined
             ) : (
               <Loading />
             )}
             <div>
-              {props.role &&
-              (permissions.grantAll ||
-                permissions.projectModerator.includes(
-                  'createUpdateBoard',
-                )) ? (
-                <img
-                  alt="plus"
-                  onClick={() =>
-                    setShowTaskBoardDialog(!showTaskBoardDialog)
-                  }
-                  src={addIcon}
-                  className={`fixed pointer ${
-                    showTaskBoardDialog ? 'dn' : 'db'
-                  }`}
-                  style={{
-                    bottom: '5rem',
-                    right: '7rem',
-                    width: '5rem',
-                    boxShadow: '0px 6px 6px #00000029',
-                    borderRadius: '50%',
-                  }}
-                />
-              ) : undefined}
+              {props.role
+              && (permissions.grantAll
+                || permissions.projectModerator.includes('createUpdateBoard')) ? (
+                  <img
+                    alt='plus'
+                    onClick={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
+                    src={addIcon}
+                    className={`fixed pointer ${
+                      showTaskBoardDialog ? 'dn' : 'db'
+                    }`}
+                    style={{
+                      bottom: '5rem',
+                      right: '7rem',
+                      width: '5rem',
+                      boxShadow: '0px 6px 6px #00000029',
+                      borderRadius: '50%',
+                    }}
+                  />
+                ) : undefined}
             </div>
             {showTaskBoardDialog && (
               <RightSidebar
-                onClose={() =>
-                  setShowTaskBoardDialog(!showTaskBoardDialog)
-                }
+                onClose={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
               >
-                <FormBoard
-                  setShowTaskBoardDialog={setShowTaskBoardDialog}
-                />
+                <FormBoard setShowTaskBoardDialog={setShowTaskBoardDialog} />
               </RightSidebar>
             )}
 
             {updTaskBoardDialog && (
               <RightSidebar
-                onClose={() =>
-                  setShowTaskBoardDialog(!updTaskBoardDialog)
-                }
+                onClose={() => setShowTaskBoardDialog(!updTaskBoardDialog)}
               >
                 <UpdateFormBoard
                   setShowTaskBoardDialog={setUpdTaskBoardDialog}
@@ -532,10 +486,10 @@ const TaskPageComponent = (
       <Dialog
         isOpen={showDialog}
         style={{ paddingBottom: '0' }}
-        canOutsideClickClose={true}
+        canOutsideClickClose
       >
         <div
-          className="w-100 ba bw1 br2 pa3"
+          className='w-100 ba bw1 br2 pa3'
           style={{ borderColor: '#F55B7F' }}
         >
           <h4 style={{ marginBottom: 13 }}>
@@ -545,20 +499,20 @@ const TaskPageComponent = (
             {t('app.project.Project-boards.Delete-text')}
           </p>
           <ButtonGroup
-            minimal={true}
+            minimal
             style={{ display: 'flex', flexDirection: 'row-reverse' }}
           >
             <Button
-              icon="trash"
-              intent="danger"
+              icon='trash'
+              intent='danger'
               onClick={() => handleDeleteDialog(dialogBoardId)}
             >
               {t('app.project.Project-boards.Yes-delete')}
             </Button>
             <Button
-              icon="undo"
+              icon='undo'
               onClick={() => handleDialogChange()}
-              intent="primary"
+              intent='primary'
             >
               {t('app.project.Project-boards.Keep')}
             </Button>
@@ -569,28 +523,25 @@ const TaskPageComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    boardList: state.taskIndexReducer.taskReducer.boardList,
-    company: state.companyReducer.currentCompany,
-    departmentNameLoading: state.companyReducer.departmentNameLoading,
-    role:
-      state.projectReducer.projectRole.projects &&
-      state.projectReducer.projectRole.projects.role,
-    optionalRole:
-      state.projectReducer.projectRole.projects &&
-      state.projectReducer.projectRole.projects.project.optionalRole,
-    user: state.userReducer.user,
-    project: state.projectReducer.projectDetails,
-    singleProjectLoading: state.projectReducer.singleProjectLoading,
-    currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
-    fetchingBoards: state.taskIndexReducer.taskReducer.fetchingBoards,
-    boardError: state.taskIndexReducer.taskReducer.boardError,
-    fetchingBoard: state.taskIndexReducer.taskReducer.fetchingBoard,
-    errorOnFetchingBoard:
-      state.taskIndexReducer.taskReducer.errorOnFetchingBoard,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  boardList: state.taskIndexReducer.taskReducer.boardList,
+  company: state.companyReducer.currentCompany,
+  departmentNameLoading: state.companyReducer.departmentNameLoading,
+  role:
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.role,
+  optionalRole:
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.project.optionalRole,
+  user: state.userReducer.user,
+  project: state.projectReducer.projectDetails,
+  singleProjectLoading: state.projectReducer.singleProjectLoading,
+  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
+  fetchingBoards: state.taskIndexReducer.taskReducer.fetchingBoards,
+  boardError: state.taskIndexReducer.taskReducer.boardError,
+  fetchingBoard: state.taskIndexReducer.taskReducer.fetchingBoard,
+  errorOnFetchingBoard: state.taskIndexReducer.taskReducer.errorOnFetchingBoard,
+});
 
 export const BoardPage = connect(mapStateToProps, {
   getSelectedBoard,

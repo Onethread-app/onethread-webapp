@@ -19,7 +19,7 @@ function useHover<T extends HTMLElement = HTMLElement>(
         node.removeEventListener('mouseenter', handleMouseEnter);
         node.removeEventListener('mouseleave', handleMouseLeave);
       };
-    } else return undefined;
+    } return undefined;
   }, [elementRef]);
 
   return value;

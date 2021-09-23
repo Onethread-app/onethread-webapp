@@ -33,8 +33,9 @@ const TaskItem = (props: ITaskItem) => {
 
   useEffect(() => {
     if (props.task.taskId) {
-      const { name, dueDate, boardId, project, status, _id } =
-        props.task.taskId;
+      const {
+        name, dueDate, boardId, project, status, _id,
+      } = props.task.taskId;
       const { assignedPerson, account } = props.task;
       const assignedPersonId = assignedPerson._id.toString();
       const accountId = account._id.toString();
@@ -58,12 +59,12 @@ const TaskItem = (props: ITaskItem) => {
   }, [props.task]);
 
   return loading ? (
-    <div className="task-item w-100">
+    <div className='task-item w-100'>
       <LinearProgress />
     </div>
   ) : (
     <div
-      className="task-item flex items-center w-100 pointer"
+      className='task-item flex items-center w-100 pointer'
       onClick={handleClick}
     >
       <div
@@ -73,11 +74,11 @@ const TaskItem = (props: ITaskItem) => {
               ? 'w-20'
               : 'w-10'
             : props.mini
-            ? 'w-20'
-            : 'w-10'
+              ? 'w-20'
+              : 'w-10'
         } self-start`}
       >
-        {('0' + (props.index + 1)).slice(-2)}
+        {(`0${props.index + 1}`).slice(-2)}
       </div>
       <div
         className={`${
@@ -86,8 +87,8 @@ const TaskItem = (props: ITaskItem) => {
               ? 'w-80'
               : 'w-60'
             : props.mini
-            ? 'w-80'
-            : 'w-60'
+              ? 'w-80'
+              : 'w-60'
         } flex flex-column`}
       >
         <h3>{task.name}</h3>
@@ -112,19 +113,19 @@ const TaskItem = (props: ITaskItem) => {
               ? 'dn'
               : 'status w-30 tc'
             : props.mini
-            ? 'dn'
-            : 'status w-15 tc'
+              ? 'dn'
+              : 'status w-15 tc'
         }`}
       >
         <span
-          className="bp3-tag ttc"
+          className='bp3-tag ttc'
           style={{
             background:
               task.status === 'done'
                 ? '#2EB67D'
                 : task.status === 'in-progress'
-                ? '#08A0F7'
-                : '#FFA800',
+                  ? '#08A0F7'
+                  : '#FFA800',
           }}
         >
           {task.status.replace(/-/g, ' ')}

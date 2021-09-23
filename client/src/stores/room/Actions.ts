@@ -96,8 +96,8 @@ export const sendRoomMessageFailure = (errorMessage: any) => ({
 
 export const getRoomMessages = (
   roomId: string,
-  limit: number = 15,
-  skip: number = 0,
+  limit = 15,
+  skip = 0,
 ) => ({
   type: RoomActionTypes.GET_ROOM_MESSAGES_START,
   roomId,
@@ -155,8 +155,8 @@ export const archiveRoomFailure = (errorMessage: any) => ({
 
 export const getRoomSharedFiles = (
   roomId: string,
-  limit: number = 1000,
-  skip: number = 0,
+  limit = 1000,
+  skip = 0,
 ) => ({
   type: RoomActionTypes.GET_ROOM_SHARED_FILES_START,
   roomId,
@@ -176,8 +176,8 @@ export const getRoomSharedFilesFailure = (errorMessage: any) => ({
 
 export const getRoomDiscussions = (
   roomId: string,
-  limit: number = 1000,
-  skip: number = 0,
+  limit = 1000,
+  skip = 0,
 ) => ({
   type: RoomActionTypes.GET_ROOM_DISCUSSIONS_START,
   roomId,

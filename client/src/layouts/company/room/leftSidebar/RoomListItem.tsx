@@ -9,7 +9,7 @@ import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 import { IRoom, IRoomReducer } from 'stores/room/Reducer';
 import { CHANGE_ROOM } from 'stores/room/Types';
 
-import memberListIcon from './../../../../resources/images/member-list.svg';
+import memberListIcon from '../../../../resources/images/member-list.svg';
 
 import { MembersList } from '../chatLayout/members/MembersList';
 import { RoomQueries, RoomPage } from '../Index';
@@ -28,9 +28,8 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
   const location = useLocation();
   const history = useHistory();
   const unreadCount = useSelector(
-    (state: any) =>
-      state.roomReducer.roomNotification.roomsUnreadCount &&
-      state.roomReducer.roomNotification.roomsUnreadCount[
+    (state: any) => state.roomReducer.roomNotification.roomsUnreadCount
+      && state.roomReducer.roomNotification.roomsUnreadCount[
         props.room._id
       ],
   );
@@ -41,15 +40,13 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
     roomId: '',
   });
 
-  const [showMemberListDialog, setShowMemberListDialog] =
-    useState(false);
+  const [showMemberListDialog, setShowMemberListDialog] = useState(false);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
-    const view =
-      query.get('view') && query.get('view') === 'mobile'
-        ? 'mobile'
-        : 'default';
+    const view = query.get('view') && query.get('view') === 'mobile'
+      ? 'mobile'
+      : 'default';
     const roomId = query.get('roomId') ? query.get('roomId')! : '';
     setQueries({ view, roomId });
   }, [location.search]);
@@ -63,8 +60,8 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
   return (
     <>
       <div
-        id="roomListItem"
-        className="pointer br1"
+        id='roomListItem'
+        className='pointer br1'
         style={{
           background: props.active ? 'rgb(63, 97, 197)' : '',
           color: props.active ? '#FFFFFF' : '',
@@ -77,17 +74,17 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
               // tslint:disable-next-line: max-line-length
               props.currentCompany
                 ? history.push(
-                    `/company/${props.currentCompany}/project/${
-                      props.room.project
-                    }/room?roomId=${props.room._id}${
-                      queries.view ? '&view=' + queries.view : ''
-                    }`,
-                  )
+                  `/company/${props.currentCompany}/project/${
+                    props.room.project
+                  }/room?roomId=${props.room._id}${
+                    queries.view ? `&view=${queries.view}` : ''
+                  }`,
+                )
                 : history.push(
-                    `${location.pathname}?roomId=${props.room._id}${
-                      queries.view ? '&view=' + queries.view : ''
-                    }`,
-                  );
+                  `${location.pathname}?roomId=${props.room._id}${
+                    queries.view ? `&view=${queries.view}` : ''
+                  }`,
+                );
             }
             if (isMobileOnly) {
               setShowDialog(true);
@@ -97,9 +94,9 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
             props.lastChild ? 'bn' : ''
           }`}
         >
-          <div className="db pr3">
+          <div className='db pr3'>
             <span
-              className="ttc ba b--black-10 db w2 h2 br3 tc lh-2 bg-light-gray"
+              className='ttc ba b--black-10 db w2 h2 br3 tc lh-2 bg-light-gray'
               style={{
                 backgroundColor: props.room.archive
                   ? 'rgb(215, 215, 215)'
@@ -110,8 +107,8 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
               {props.room.name[0]}
             </span>
           </div>
-          <div className="flex justify-between items-center w-100">
-            <div className="flex">
+          <div className='flex justify-between items-center w-100'>
+            <div className='flex'>
               <h1
                 className={`f6 mv0 break-word ${
                   props.active ? 'fw7' : 'fw4'
@@ -120,15 +117,15 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
                   color: props.room.archive
                     ? 'rgb(141, 141, 141)'
                     : props.active
-                    ? '#fff'
-                    : '#000',
+                      ? '#fff'
+                      : '#000',
                 }}
               >
                 {props.room.name}
               </h1>
               {unreadCount > 0 ? (
                 <h6
-                  className="bg-tigrowLightBlue white fw8 ma0 ml1"
+                  className='bg-tigrowLightBlue white fw8 ma0 ml1'
                   style={{
                     padding: '4px 8px',
                     borderRadius: '50%',
@@ -139,21 +136,19 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
               ) : null}
             </div>
             <div
-              onClick={() =>
-                setShowMemberListDialog(!showMemberListDialog)
-              }
-              className="ma0 pointer dim flex items-center"
+              onClick={() => setShowMemberListDialog(!showMemberListDialog)}
+              className='ma0 pointer dim flex items-center'
             >
               <img
-                className=""
+                className=''
                 src={memberListIcon}
-                width="20px"
-                height="20px"
+                width='20px'
+                height='20px'
                 style={{}}
-                color="#34b3e9"
-                alt=""
+                color='#34b3e9'
+                alt=''
               />
-              <span className="f5 ml2 fw7">
+              <span className='f5 ml2 fw7'>
                 {props.room.memberCount}
               </span>
             </div>
@@ -174,9 +169,7 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
       )}
       {showMemberListDialog && (
         <Dialog
-          onClose={() =>
-            setShowMemberListDialog(!showMemberListDialog)
-          }
+          onClose={() => setShowMemberListDialog(!showMemberListDialog)}
           isOpen={showMemberListDialog}
           style={{ background: '#fff' }}
         >
@@ -187,11 +180,9 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    users: state.roomReducer.users,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  users: state.roomReducer.users,
+});
 
 export const RoomListItem = connect(mapStateToProps)(
   RoomListItemComponent,

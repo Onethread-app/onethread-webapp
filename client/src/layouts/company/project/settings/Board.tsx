@@ -12,7 +12,7 @@ const BoardPageComponent = (props: any) => {
   const [disabled] = useState(false);
 
   return (
-    <div className="bl b--black-05 bw1 pl5 ml5 h5">
+    <div className='bl b--black-05 bw1 pl5 ml5 h5'>
       <p>room</p>
       <Form
         onSubmit={props.onSubmit}
@@ -27,17 +27,17 @@ const BoardPageComponent = (props: any) => {
           hasValidationErrors,
           ...rest
         }) => (
-          <form className="fl w-100" onSubmit={handleSubmit}>
-            <div className="mb3">
+          <form className='fl w-100' onSubmit={handleSubmit}>
+            <div className='mb3'>
               <SubmitError errorMessage={submitError} />
             </div>
-            <p className="b f5 mb3">
+            <p className='b f5 mb3'>
               {t('app.project.Project-teammates.Admins')}
             </p>
-            <div className="mb3">
+            <div className='mb3'>
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -45,11 +45,11 @@ const BoardPageComponent = (props: any) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="createUpdateBoard"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='createUpdateBoard'
                       disabled={disabled}
                     />
                     Create/Update Board
@@ -57,8 +57,8 @@ const BoardPageComponent = (props: any) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -66,11 +66,11 @@ const BoardPageComponent = (props: any) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="createUpdateColumn"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='createUpdateColumn'
                       disabled={disabled}
                     />
                     Create/Update Column
@@ -78,8 +78,8 @@ const BoardPageComponent = (props: any) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -87,11 +87,11 @@ const BoardPageComponent = (props: any) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="assignDeleteMemberBoard"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='assignDeleteMemberBoard'
                       disabled={disabled}
                     />
                     Assign/Delete Board Members
@@ -102,14 +102,14 @@ const BoardPageComponent = (props: any) => {
             {disabled === false ? (
               <div>
                 <Button
-                  className="w4 grow h2 pointer"
+                  className='w4 grow h2 pointer'
                   style={{
                     background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
                   loading={submitting}
-                  type="submit"
+                  type='submit'
                   disabled={submitting || pristine}
                 >
                   Save

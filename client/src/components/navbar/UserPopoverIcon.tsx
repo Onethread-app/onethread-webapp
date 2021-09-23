@@ -48,83 +48,81 @@ const UserPopoverIcon = (props: IUserPopoverIcon) => {
             height: '2rem',
             objectFit: 'cover',
           }}
-          alt="user"
+          alt='user'
           onClick={() => setShowDialog(true)}
         />
       ) : (
         <Popover
-          popoverClassName="bp3-popover-content-sizing"
+          popoverClassName='bp3-popover-content-sizing'
           position={Position.BOTTOM}
-          content={
+          content={(
             <ButtonGroup
-              minimal={true}
-              className="bp3-vertical bp3-fill"
+              minimal
+              className='bp3-vertical bp3-fill'
             >
               <Button
-                className="bp3-minimal outline-0 bp3-popover-dismiss"
+                className='bp3-minimal outline-0 bp3-popover-dismiss'
                 onClick={() => history.push(`/${props.user.name}`)}
               >
-                <div className="dtc w1 w2-ns">
+                <div className='dtc w1 w2-ns'>
                   <img
                     src={
                       props.user.profileImage
                         ? props.user.profileImage
                         : UserIcon
                     }
-                    alt=""
-                    className="db w1 w2-ns h1 h2-ns ba b--black-10 br2"
+                    alt=''
+                    className='db w1 w2-ns h1 h2-ns ba b--black-10 br2'
                   />
                 </div>
-                <div className="dtc v-mid pl3">
-                  <h1 className="f7 f6-ns fw4 lh-title black mv0">
+                <div className='dtc v-mid pl3'>
+                  <h1 className='f7 f6-ns fw4 lh-title black mv0'>
                     {`${props.user.firstName} ${props.user.lastName}`}
                   </h1>
                 </div>
               </Button>
               <Button
-                className="bp3-minimal outline-0 bp3-popover-dismiss"
-                icon="cog"
-                alignText="left"
-                onClick={() =>
-                  history.push(`/${props.user.name}/settings`)
-                }
+                className='bp3-minimal outline-0 bp3-popover-dismiss'
+                icon='cog'
+                alignText='left'
+                onClick={() => history.push(`/${props.user.name}/settings`)}
               >
                 {t('app.company.Settings.Settings')}
               </Button>
               <Button
-                className="bp3-minimal outline-0 bp3-popover-dismiss"
+                className='bp3-minimal outline-0 bp3-popover-dismiss'
                 onClick={(e: any) => setShowButtonReport(true)}
-                icon="issue"
-                alignText="left"
+                icon='issue'
+                alignText='left'
               >
                 {t('app.user.User-settings.Report-Issue')}
               </Button>
               <Button
-                className="bp3-minimal outline-0 bp3-popover-dismiss"
+                className='bp3-minimal outline-0 bp3-popover-dismiss'
                 onClick={(e: any) => props.logoutAction(history)}
-                icon="log-in"
-                alignText="left"
+                icon='log-in'
+                alignText='left'
               >
                 {t('app.user.User-settings.Logout')}
               </Button>
             </ButtonGroup>
-          }
-          target={
+          )}
+          target={(
             <img
               src={
                 props.user.profileImage
                   ? props.user.profileImage
                   : UserIcon
               }
-              className="dim v-mid dib pointer br2"
+              className='dim v-mid dib pointer br2'
               style={{
                 width: '2rem',
                 height: '2rem',
                 objectFit: 'cover',
               }}
-              alt="user"
+              alt='user'
             />
-          }
+          )}
         />
       )}
       {showDialog && (

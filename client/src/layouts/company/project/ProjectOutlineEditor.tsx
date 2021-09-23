@@ -11,12 +11,11 @@ import {
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
+import { SubmitError } from 'components/final-form/SubmitError';
 import {
   projectPrefaceOutlineUpdate,
   getSingleProject,
 } from '../../../stores/project/Actions';
-
-import { SubmitError } from 'components/final-form/SubmitError';
 
 import './textArea.css';
 
@@ -64,53 +63,51 @@ export const ProjectOutlineEditorComponent = (
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="pr2">
+            <div className='pr2'>
               <SubmitError errorMessage={submitError} />
             </div>
-            <div className="pr2 pt2">
+            <div className='pr2 pt2'>
               <Field<string>
-                name="description"
+                name='description'
                 validate={composeValidators(required, maxValue(5000))}
                 render={({ input, meta }) => (
                   <div>
                     <TextareaAutosize
                       value={input.value}
                       onChange={input.onChange}
-                      className="description-area"
-                      placeholder="Write the project outline here"
+                      className='description-area'
+                      placeholder='Write the project outline here'
                       minRows={5}
                       useCacheForDOMMeasurements
                     />
                     {checkError(meta) && (
-                      <p className="mv2" style={{ color: 'red' }}>
+                      <p className='mv2' style={{ color: 'red' }}>
                         {meta.error || meta.submitError}
                       </p>
                     )}
                   </div>
                 )}
               />
-              <div className="flex justify-end mt2">
+              <div className='flex justify-end mt2'>
                 <Button
-                  className="mr2"
+                  className='mr2'
                   style={{ background: 'transparent' }}
-                  icon="cross"
-                  onClick={() =>
-                    props.setEditDescriptionDialog(
-                      !props.editDescriptionDialog,
-                    )
-                  }
+                  icon='cross'
+                  onClick={() => props.setEditDescriptionDialog(
+                    !props.editDescriptionDialog,
+                  )}
                 />
                 <Button
-                  type="submit"
+                  type='submit'
                   style={{ background: '#34b3e9' }}
                   loading={submitting}
-                  icon={
+                  icon={(
                     <Icon
-                      icon="tick"
+                      icon='tick'
                       iconSize={20}
                       style={{ color: 'white' }}
                     />
-                  }
+                  )}
                   disabled={submitting || pristine}
                 />
               </div>

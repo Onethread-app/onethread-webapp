@@ -86,7 +86,6 @@ const AddMemberFormComponent = (
     } else {
       setError('Network Error');
     }
-    return;
   };
 
   useEffect(() => {
@@ -99,8 +98,8 @@ const AddMemberFormComponent = (
 
   useEffect(() => {
     if (
-      isEmpty(props.currentRoom._id) === false &&
-      isEmpty(props.companyId) === false
+      isEmpty(props.currentRoom._id) === false
+      && isEmpty(props.companyId) === false
     ) {
       getSuggestionsForRoomMembers();
       errorHandling(props.roomStatus);
@@ -108,51 +107,49 @@ const AddMemberFormComponent = (
   }, [props.roomStatus]);
 
   return (
-    <div className="pa3">
-      <div className="w-100">
-        <h1 className="f5 tigrow-darkBlue">Add Members</h1>
+    <div className='pa3'>
+      <div className='w-100'>
+        <h1 className='f5 tigrow-darkBlue'>Add Members</h1>
         <SuggestField
           items={suggestedMembers}
           selectedItems={selectedRoomMember}
           setSelectedItems={setSelectedRoomMember}
-          multipleItemSelect={true}
+          multipleItemSelect
         />
         <small
           className={`${
             error || selectedRoomMember.length > 10 ? 'red' : 'black'
           }`}
         >
-          {error
-            ? error
-            : selectedRoomMember.length > 10
+          {error || (selectedRoomMember.length > 10
             ? 'Could not add more than 10 members at a time'
-            : 'Max user at a time : 10'}
+            : 'Max user at a time : 10')}
         </small>
       </div>
 
-      <div className="w-100 mb2">
+      <div className='w-100 mb2'>
         {selectedRoomMember.map((item) => (
           <Tag
             key={item._id}
-            className="ma1 pa2"
+            className='ma1 pa2'
             style={{ backgroundColor: '#3b5998', color: 'white' }}
-            interactive={true}
+            interactive
             onRemove={(e) => {
               const filteredItems = selectedRoomMember.filter(
                 (selectedItem) => item.name !== selectedItem.name,
               );
               setSelectedRoomMember([...filteredItems]);
             }}
-            large={true}
+            large
           >
             {item.name}
           </Tag>
         ))}
       </div>
 
-      <div className="flex justify-end mt3">
+      <div className='flex justify-end mt3'>
         <Button
-          className="grow h2 pointer white bp3-minimal w4 mr3"
+          className='grow h2 pointer white bp3-minimal w4 mr3'
           style={{
             background: '#fff',
             outline: 'none',
@@ -166,23 +163,21 @@ const AddMemberFormComponent = (
           Cancel
         </Button>
         <Button
-          className="grow h2 pointer white bp3-minimal w4 outline-0"
+          className='grow h2 pointer white bp3-minimal w4 outline-0'
           style={{ backgroundColor: '#3b5998', color: 'white' }}
           disabled={
-            selectedRoomMember.length === 0 ||
-            selectedRoomMember.length > 10
+            selectedRoomMember.length === 0
+            || selectedRoomMember.length > 10
           }
           onClick={async () => {
             const data = {
               room: props.currentRoom._id,
               company: props.companyId,
               project: props.projectId,
-              members: selectedRoomMember.map((m: any) => {
-                return {
-                  account: m._id,
-                  team: m.teamId,
-                };
-              }),
+              members: selectedRoomMember.map((m: any) => ({
+                account: m._id,
+                team: m.teamId,
+              })),
             };
             await props.addRoomMembers(data, selectedRoomMember);
             // if (props.roomStatus === 201) {
@@ -201,14 +196,12 @@ const AddMemberFormComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentRoom: state.roomReducer.currentRoom,
-    companyId: state.companyReducer.currentCompany._id,
-    projectId: state.projectReducer.projectDetails._id,
-    roomStatus: state.roomReducer.responseCode,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentRoom: state.roomReducer.currentRoom,
+  companyId: state.companyReducer.currentCompany._id,
+  projectId: state.projectReducer.projectDetails._id,
+  roomStatus: state.roomReducer.responseCode,
+});
 
 export const AddMemberForm = connect(mapStateToProps, {
   addRoomMembers,

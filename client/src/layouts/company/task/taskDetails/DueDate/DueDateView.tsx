@@ -13,8 +13,8 @@ export const DueDateViewComponent = (
   const { t } = useTranslation();
 
   return (
-    <div className="flex justify-between items-center">
-      <h1 className="f6">
+    <div className='flex justify-between items-center'>
+      <h1 className='f6'>
         {t('app.project.Project-boards.Due-Date')}
       </h1>
       {props.dueDate ? (
@@ -26,11 +26,9 @@ export const DueDateViewComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    dueDate: state.taskIndexReducer.taskReducer.currentTask.dueDate,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  dueDate: state.taskIndexReducer.taskReducer.currentTask.dueDate,
+});
 
 export const DueDateView = connect(
   mapStateToProps,

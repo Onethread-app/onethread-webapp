@@ -6,7 +6,7 @@ import { User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { companyPermit } from 'stores/UtilsActions';
 
-import DefaultUserImage from './../../resources/images/profilePhoto.svg';
+import DefaultUserImage from '../../resources/images/profilePhoto.svg';
 
 import { ImageEdit } from '../image-editor/ImageEditor';
 
@@ -53,21 +53,22 @@ export const ProfilePicture = (props: IProfilePictureProps) => {
     <>
       <div>
         <img
-          className="companyProfilepic"
+          className='companyProfilepic'
           style={{
             objectFit: 'cover',
           }}
           src={imageSrc}
-          alt=""
+          alt=''
           onClick={handleClick}
         />
         {props.company ? (
           <div>
-            <h1 className="ma1 ws-break ttc f3-ns f4">
+            <h1 className='ma1 ws-break ttc f3-ns f4'>
               {' '}
-              {props.company.name}{' '}
+              {props.company.name}
+              {' '}
             </h1>
-            <h1 className="f6 fw6 ma1 ws-break">
+            <h1 className='f6 fw6 ma1 ws-break'>
               {props.company.type}
             </h1>
           </div>
@@ -75,7 +76,7 @@ export const ProfilePicture = (props: IProfilePictureProps) => {
       </div>
       {showDialogPicture && (
         <Dialog
-          icon="briefcase"
+          icon='briefcase'
           onClose={() => setShowDialogPicture(!showDialogPicture)}
           isOpen
           style={{ background: '#fff' }}

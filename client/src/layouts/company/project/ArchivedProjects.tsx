@@ -13,13 +13,12 @@ import { ButtonGroup } from '@blueprintjs/core/lib/esm/components/button/buttonG
 
 import { ICompany } from 'stores/company/Reducer';
 import { Color } from 'stores/UtilsActions';
+import NoProjectsFound from 'NoProjectsFound';
 import {
   unarchiveProject,
   deleteProject,
   getProjectArchive,
 } from '../../../stores/project/Actions';
-
-import NoProjectsFound from 'NoProjectsFound';
 
 interface IArchivedProjects {
   company: ICompany;
@@ -36,8 +35,7 @@ interface IArchivedProjects {
 
 const ArchivedProjects = (props: IArchivedProjects) => {
   const [deleteProjectIndex, setDeleteProjectIndex] = useState('');
-  const [deleteProjectDialog, setDeleteProjectDialog] =
-    useState(false);
+  const [deleteProjectDialog, setDeleteProjectDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // const permissions = projectRules(props.role, props.optionalRole);
@@ -60,14 +58,13 @@ const ArchivedProjects = (props: IArchivedProjects) => {
 
   useEffect(() => {
     props.getProjectArchive();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (
-      loading === true &&
-      props.deletingProject === false &&
-      props.errorOnDeletingProject === ''
+      loading === true
+      && props.deletingProject === false
+      && props.errorOnDeletingProject === ''
     ) {
       setDeleteProjectIndex('');
       setDeleteProjectDialog(false);
@@ -76,8 +73,8 @@ const ArchivedProjects = (props: IArchivedProjects) => {
 
   return (
     <>
-      <div className="overflow-auto my-projects">
-        <div className="flex flex-column relative">
+      <div className='overflow-auto my-projects'>
+        <div className='flex flex-column relative'>
           {props.archiveProjectList.length > 0 ? (
             <div
               style={{
@@ -90,17 +87,17 @@ const ArchivedProjects = (props: IArchivedProjects) => {
             >
               {' '}
               {props.archiveProjectList.map((archProject: any) => (
-                <div className="pa1" key={archProject._id}>
+                <div className='pa1' key={archProject._id}>
                   <Card
-                    className="h-100"
-                    interactive={true}
+                    className='h-100'
+                    interactive
                     style={{
                       paddingLeft: '0px',
                       paddingBottom: '0px',
                     }}
                   >
                     <div
-                      className=""
+                      className=''
                       style={{
                         borderLeft: `5px solid 
                 ${
@@ -115,9 +112,9 @@ const ArchivedProjects = (props: IArchivedProjects) => {
                         borderRadius: '3px',
                       }}
                     >
-                      <div className="flex">
+                      <div className='flex'>
                         <h3
-                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4"
+                          className='mt0 mb2 flex-grow-1 fw6 overflow-hidden f4'
                           style={{
                             whiteSpace: 'nowrap',
                             textOverflow: 'ellipsis',
@@ -128,30 +125,26 @@ const ArchivedProjects = (props: IArchivedProjects) => {
                         </h3>
 
                         <Popover
-                          className="w-10"
-                          content={
-                            <Menu className="pa2">
+                          className='w-10'
+                          content={(
+                            <Menu className='pa2'>
                               <MenuItem
-                                className="pa1"
-                                intent="primary"
-                                text="Restore Project"
-                                onClick={() =>
-                                  checkRoleForUnarchiveProject(
-                                    archProject._id,
-                                  )
-                                }
+                                className='pa1'
+                                intent='primary'
+                                text='Restore Project'
+                                onClick={() => checkRoleForUnarchiveProject(
+                                  archProject._id,
+                                )}
                               />
                               <MenuItem
-                                className="pa1"
-                                intent="danger"
-                                text="Delete Project"
-                                onClick={() =>
-                                  handleDialogBox(archProject._id)
-                                }
+                                className='pa1'
+                                intent='danger'
+                                text='Delete Project'
+                                onClick={() => handleDialogBox(archProject._id)}
                               />
                             </Menu>
-                          }
-                          target={
+                          )}
+                          target={(
                             <Button
                               style={{
                                 transform: 'rotate(90deg)',
@@ -159,41 +152,42 @@ const ArchivedProjects = (props: IArchivedProjects) => {
                                 msTransform: 'rotate(90deg)',
                                 WebkitTransform: 'rotate(90deg)',
                               }}
-                              icon="more"
-                              minimal={true}
-                              className="outline-0"
+                              icon='more'
+                              minimal
+                              className='outline-0'
                             />
-                          }
+                          )}
                         />
                       </div>
-                      <div className="flex flex-column items-start mt2">
+                      <div className='flex flex-column items-start mt2'>
                         <span
                           className={`bp3-tag modifier ${
                             archProject.status === 'not-started'
                               ? 'bg-blue'
                               : archProject.status === 'ongoing'
-                              ? 'bg-orange'
-                              : 'bg-green'
+                                ? 'bg-orange'
+                                : 'bg-green'
                           }`}
                         >
                           {archProject.status.replace(/-|\s/g, ' ')}
                         </span>
 
                         <p
-                          className="f7 fw5"
+                          className='f7 fw5'
                           style={{ marginTop: '10px' }}
                         >
-                          Deadline:{' '}
+                          Deadline:
+                          {' '}
                           {archProject.deadline
                             ? moment(archProject.deadline).format(
-                                'DD/MM/YYYY',
-                              )
+                              'DD/MM/YYYY',
+                            )
                             : 'Not Set'}
                         </p>
                       </div>
 
                       <h3
-                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
+                        className='mt0 mb2 flex-grow-1 fw6 overflow-hidden silver'
                         style={{
                           whiteSpace: 'nowrap',
                           textOverflow: 'ellipsis',
@@ -220,10 +214,10 @@ const ArchivedProjects = (props: IArchivedProjects) => {
       <Dialog
         isOpen={deleteProjectDialog}
         style={{ paddingBottom: '0' }}
-        canOutsideClickClose={true}
+        canOutsideClickClose
       >
         <div
-          className="w-100 ba bw1 br2 pa3"
+          className='w-100 ba bw1 br2 pa3'
           style={{ borderColor: '#F55B7F' }}
         >
           <h4 style={{ marginBottom: 13 }}>Delete Project</h4>
@@ -231,23 +225,23 @@ const ArchivedProjects = (props: IArchivedProjects) => {
             Are you sure you want to delete this project?
           </p>
           <ButtonGroup
-            minimal={true}
+            minimal
             style={{ display: 'flex', flexDirection: 'row-reverse' }}
           >
             <Button
-              icon="trash"
-              intent="danger"
+              icon='trash'
+              intent='danger'
               onClick={handleDelete}
             >
               Yes. Delete
             </Button>
             <Button
-              icon="undo"
+              icon='undo'
               onClick={() => {
                 setDeleteProjectIndex('');
                 setDeleteProjectDialog(false);
               }}
-              intent="primary"
+              intent='primary'
             >
               No. Keep it
             </Button>
@@ -262,11 +256,11 @@ const mapStateToProps = (state: any) => ({
   company: state.companyReducer.currentCompany,
   archiveProjectList: state.projectReducer.allArchive,
   role:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.role,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.role,
   optionalRole:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.project.optionalRole,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.project.optionalRole,
   deletingProject: state.projectReducer.deletingProject,
   errorOnDeletingProject: state.projectReducer.errorOnDeletingProject,
 });

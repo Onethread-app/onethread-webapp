@@ -14,15 +14,13 @@ const TextArea = styled.textarea`
   border: 1px solid #c9c9c9;
 `;
 
-const StyledTextInput = ({ input, meta, ...rest }: Props) => {
-  return (
-    <>
-      <TextArea {...input} {...rest} />
-      {checkError(meta) ? (
-        <StyledError errorMessage={meta.error || meta.submitError} />
-      ) : null}
-    </>
-  );
-};
+const StyledTextInput = ({ input, meta, ...rest }: Props) => (
+  <>
+    <TextArea {...input} {...rest} />
+    {checkError(meta) ? (
+      <StyledError errorMessage={meta.error || meta.submitError} />
+    ) : null}
+  </>
+);
 
 export default StyledTextInput;

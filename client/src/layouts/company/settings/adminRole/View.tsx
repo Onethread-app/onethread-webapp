@@ -40,17 +40,17 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
           hasValidationErrors,
           ...rest
         }) => (
-          <form className="fl w-100" onSubmit={handleSubmit}>
-            <div className="mb3">
+          <form className='fl w-100' onSubmit={handleSubmit}>
+            <div className='mb3'>
               <SubmitError errorMessage={submitError} />
             </div>
-            <p className="b f5 mb3">
+            <p className='b f5 mb3'>
               {t('app.project.Project-teammates.Admins')}
             </p>
-            <div className="mb3">
+            <div className='mb3'>
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -58,11 +58,11 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="cRUDAnnouncement"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='cRUDAnnouncement'
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-1')}
@@ -70,8 +70,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -79,11 +79,11 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="editProfile"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='editProfile'
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-2')}
@@ -91,8 +91,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -100,11 +100,11 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="archiveProject"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='archiveProject'
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-3')}
@@ -112,8 +112,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -121,11 +121,11 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="addRemoveModerator"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='addRemoveModerator'
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-4')}
@@ -133,8 +133,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -142,11 +142,11 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="messageAssociate"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='messageAssociate'
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-5')}
@@ -154,8 +154,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -163,11 +163,11 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="addAcceptRejectAssociate"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='addAcceptRejectAssociate'
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-6')}
@@ -175,8 +175,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                 )}
               />
               <Field<string>
-                name="optionalRole"
-                type="checkbox"
+                name='optionalRole'
+                type='checkbox'
                 render={({ input, meta }) => (
                   <label
                     className={`flex items-center mb2 ${
@@ -184,11 +184,11 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                     }`}
                   >
                     <Field
-                      name="optionalRole"
-                      className="mr2"
-                      component="input"
-                      type="checkbox"
-                      value="acceptRejectProjectFromAssociate"
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='acceptRejectProjectFromAssociate'
                       disabled={disabled}
                     />
                     {t('app.company.Role-Permissions.Permission-7')}
@@ -199,14 +199,14 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
             {disabled === false ? (
               <div>
                 <Button
-                  className="w4 grow h2 pointer"
+                  className='w4 grow h2 pointer'
                   style={{
                     background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
                   loading={submitting}
-                  type="submit"
+                  type='submit'
                   disabled={submitting || pristine}
                 >
                   Save
@@ -220,12 +220,10 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    optionalRole: state.companyReducer.currentCompany.optionalRole,
-    companyRole: state.companyReducer.currentCompany.role,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  optionalRole: state.companyReducer.currentCompany.optionalRole,
+  companyRole: state.companyReducer.currentCompany.role,
+});
 
 export const AdminRoleView = connect(mapStateToProps, {
   companyOptionalRole,

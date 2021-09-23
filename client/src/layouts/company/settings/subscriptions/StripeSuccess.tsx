@@ -7,14 +7,14 @@ export default function StripeSuccess(props: IStripeSuccess) {
   return (
     <div>
       <img
-        className="center"
+        className='center'
         style={{
           height: '370px',
           width: '500px',
           textAlign: 'center',
         }}
         src={successImage}
-        alt="success"
+        alt='success'
       />
 
       <h1

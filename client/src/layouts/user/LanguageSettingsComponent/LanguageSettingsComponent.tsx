@@ -41,8 +41,8 @@ const LanguageSettingsComponent = (props: any) => {
   };
 
   const handleChange = async (event) => {
-    const value = event.target.value;
-    let data = {
+    const { value } = event.target;
+    const data = {
       language: value,
     };
     const response = await tigrowApi.post(
@@ -61,29 +61,26 @@ const LanguageSettingsComponent = (props: any) => {
 
   useEffect(() => {
     handleLanguage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <FormControl className={classes.formControl}>
       <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
+        labelId='demo-simple-select-label'
+        id='demo-simple-select'
         value={language}
         onChange={handleChange}
       >
-        <MenuItem value={'en'}>English</MenuItem>
-        <MenuItem value={'bn'}>বাংলা</MenuItem>
+        <MenuItem value='en'>English</MenuItem>
+        <MenuItem value='bn'>বাংলা</MenuItem>
       </Select>
     </FormControl>
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+});
 
 export const LanguageSettings = connect(mapStateToProps)(
   LanguageSettingsComponent,

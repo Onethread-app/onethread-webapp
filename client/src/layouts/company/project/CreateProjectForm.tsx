@@ -14,8 +14,6 @@ import arrayMutators from 'final-form-arrays';
 import { ICompany } from 'stores/company/Reducer';
 import { Associate } from 'stores/associate/Reducer';
 import { Color } from 'stores/UtilsActions';
-import { createProjectInCompany } from '../../../stores/project/Actions';
-import { getAllDepartments } from '../../../stores/company/Actions';
 import { saveProjectForm } from 'stores/projectForm/Actions';
 
 import {
@@ -25,6 +23,8 @@ import {
   maxValue,
 } from 'components/final-form/utils';
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
+import { getAllDepartments } from '../../../stores/company/Actions';
+import { createProjectInCompany } from '../../../stores/project/Actions';
 
 export interface IDepartment {
   name: string;
@@ -78,7 +78,7 @@ const FormComponent = (props: {
 
   return (
     <>
-      <div className="pl3" style={{ marginTop: '6rem' }}>
+      <div className='pl3' style={{ marginTop: '6rem' }}>
         <h3>{t('app.forms.Start-project.Create-project')}</h3>
       </div>
       <Form
@@ -104,16 +104,16 @@ const FormComponent = (props: {
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="pa3 justify-content w-100">
+            <div className='pa3 justify-content w-100'>
               <Field<string>
-                name="name"
+                name='name'
                 validate={composeValidators(required, maxValue(32))}
                 render={({ input, meta }) => (
                   <div
                     className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
                   >
                     <InputGroupFieldWithLabel
-                      id="name"
+                      id='name'
                       value={input.value}
                       onChange={(e) => {
                         input.onChange(e);
@@ -124,11 +124,11 @@ const FormComponent = (props: {
                         fontSize: '18px',
                       }}
                       error={
-                        checkError(meta) &&
-                        (meta.error || meta.submitError)
+                        checkError(meta)
+                        && (meta.error || meta.submitError)
                       }
                       label={t('app.forms.Start-project.Name')}
-                      autoFocus={true}
+                      autoFocus
                     />
                   </div>
                 )}
@@ -136,32 +136,30 @@ const FormComponent = (props: {
 
               <Switch
                 checked={hasDeadline}
-                label="Add Deadline"
+                label='Add Deadline'
                 onChange={() => setHasDeadline(!hasDeadline)}
-                className="dib"
+                className='dib'
               />
               {hasDeadline && (
                 <div>
                   <Field<string>
-                    name="deadline"
+                    name='deadline'
                     validate={required}
                     render={({ input, meta }) => (
                       <div>
                         <div
-                          className={`flex bw1 pb1 br0 flex items-center `}
+                          className='flex bw1 pb1 br0 flex items-center '
                         >
                           <div>
                             <Icon
-                              icon="calendar"
-                              className="mr2"
+                              icon='calendar'
+                              className='mr2'
                               style={{ color: '#34b3e9' }}
                               iconSize={30}
                             />
                           </div>
                           <DateInput
-                            formatDate={(date: Date) =>
-                              date.toLocaleDateString()
-                            }
+                            formatDate={(date: Date) => date.toLocaleDateString()}
                             parseDate={(str: string) => new Date(str)}
                             onChange={(e) => {
                               input.onChange(e);
@@ -178,13 +176,13 @@ const FormComponent = (props: {
                             }}
                             maxDate={moment().add(10, 'y').toDate()}
                             minDate={new Date()}
-                            placeholder="Deadline"
-                            className="flex-auto"
+                            placeholder='Deadline'
+                            className='flex-auto'
                           />
                         </div>
                         {checkError(meta) && (
                           <small
-                            className="mv3-ns mv2"
+                            className='mv3-ns mv2'
                             style={{ color: 'red' }}
                           >
                             {meta.error || meta.submitError}
@@ -196,20 +194,20 @@ const FormComponent = (props: {
                 </div>
               )}
               <Field<string>
-                name="color"
+                name='color'
                 render={({ input, meta }) => (
-                  <div className="mb3 mt3">
+                  <div className='mb3 mt3'>
                     <p
-                      className="fw5 mb3"
+                      className='fw5 mb3'
                       style={{ fontSize: '.8rem' }}
                     >
                       Label
                     </p>
-                    <div className="flex">
+                    <div className='flex'>
                       {Color.map((color) => (
-                        <div className="pr2" key={color.code}>
+                        <div className='pr2' key={color.code}>
                           <Icon
-                            className="br2"
+                            className='br2'
                             icon={
                               isEqual(color.code, labelColor) === true
                                 ? 'tick'
@@ -224,8 +222,8 @@ const FormComponent = (props: {
                             style={{
                               backgroundColor: color.value,
                               border:
-                                isEqual(color.code, labelColor) ===
-                                true
+                                isEqual(color.code, labelColor)
+                                === true
                                   ? '3px solid #ffffff'
                                   : 'none',
                               height: '3rem',
@@ -238,22 +236,22 @@ const FormComponent = (props: {
                   </div>
                 )}
               />
-              <div className="flex justify-end mt4">
+              <div className='flex justify-end mt4'>
                 <Button
-                  className="w4 grow h2 pointer mr3"
+                  className='w4 grow h2 pointer mr3'
                   style={{
                     background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
                   loading={submitting}
-                  type="submit"
+                  type='submit'
                   disabled={submitting || pristine}
-                  text="Create"
+                  text='Create'
                 />
 
                 <Button
-                  className="w4 grow h2 pointer br0"
+                  className='w4 grow h2 pointer br0'
                   style={{
                     background: 'white',
                     outline: 'none',
@@ -263,7 +261,7 @@ const FormComponent = (props: {
                     e.preventDefault();
                     props.setShowProjectDialog(false);
                   }}
-                  text="Cancel"
+                  text='Cancel'
                 />
               </div>
             </div>
@@ -274,14 +272,12 @@ const FormComponent = (props: {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    departments: state.companyReducer.currentCompany.departments,
-    company: state.companyReducer.currentCompany,
-    associates: state.associateReducer.associatesList,
-    previousData: state.projectFormReducer.data,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  departments: state.companyReducer.currentCompany.departments,
+  company: state.companyReducer.currentCompany,
+  associates: state.associateReducer.associatesList,
+  previousData: state.projectFormReducer.data,
+});
 
 export const FormProject = connect(mapStateToProps, {
   createProjectInCompany,

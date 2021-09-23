@@ -43,35 +43,35 @@ export const PendingAssociateListComponent = (
 
   return (
     <>
-      <div className="br3 bg-white pa4-ns cf flex w-100">
-        <div className="w-100">
+      <div className='br3 bg-white pa4-ns cf flex w-100'>
+        <div className='w-100'>
           {loading ? (
             <Loading />
           ) : props.pendingAssociates.length > 0 ? (
             props.pendingAssociates.map((associate: Associate) => (
               <>
-                <article className="dt w-100 pv3 mt2">
-                  <div className="dtc w2 w3-ns v-mid">
+                <article className='dt w-100 pv3 mt2'>
+                  <div className='dtc w2 w3-ns v-mid'>
                     {associate.associateCompany.logo ? (
                       <img
                         src={`${associate.associateCompany.logo}`}
-                        alt="company logo"
-                        className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns"
+                        alt='company logo'
+                        className='ba b--black-10 db br-100 w2 w3-ns h2 h3-ns'
                       />
                     ) : (
-                      <h1 className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns tc pt2-ns bg-green white f4 f3-ns">
+                      <h1 className='ba b--black-10 db br-100 w2 w3-ns h2 h3-ns tc pt2-ns bg-green white f4 f3-ns'>
                         {associate.associateCompany
                           ? associate.associateCompany.name.charAt(0)
                           : 'Demo'}
                       </h1>
                     )}
                   </div>
-                  <div className="dtc v-mid pl3 mw6">
-                    <h1 className="f5 black mv0">
+                  <div className='dtc v-mid pl3 mw6'>
+                    <h1 className='f5 black mv0'>
                       {associate.associateCompany.name}
                     </h1>
                     <h2
-                      className="f6 fw4 mt0 mb0 black-60 ttc ws-break overflow-hidden nowrap mt2"
+                      className='f6 fw4 mt0 mb0 black-60 ttc ws-break overflow-hidden nowrap mt2'
                       style={{
                         textOverflow: 'ellipsis',
                       }}
@@ -79,15 +79,15 @@ export const PendingAssociateListComponent = (
                       {associate.associateCompany.about}
                     </h2>
                   </div>
-                  <div className="dtc v-mid">
-                    <form className="w-100 tr">
+                  <div className='dtc v-mid'>
+                    <form className='w-100 tr'>
                       <Button
-                        className="w4-ns grow h2 pointer bp3-minimal mr4-ns mr2"
+                        className='w4-ns grow h2 pointer bp3-minimal mr4-ns mr2'
                         style={{
                           border: '1px solid silver',
                           outline: 'none',
                         }}
-                        text="Reject"
+                        text='Reject'
                         loading={rejectLoading}
                         onClick={async () => {
                           setRejectLoading(true);
@@ -98,14 +98,14 @@ export const PendingAssociateListComponent = (
                         }}
                       />
                       <Button
-                        className="w4-ns grow h2 pointer"
+                        className='w4-ns grow h2 pointer'
                         style={{
                           background: '#34b3e9',
                           outline: 'none',
                           color: 'white',
                           border: 'none',
                         }}
-                        text="Accept"
+                        text='Accept'
                         loading={acceptLoading}
                         onClick={async () => {
                           setAcceptLoading(true);
@@ -130,12 +130,10 @@ export const PendingAssociateListComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    pendingAssociates: state.associateReducer.pendingAssociates,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  pendingAssociates: state.associateReducer.pendingAssociates,
+});
 
 export const PendingAssociateList = connect(mapStateToProps, {
   getAllPendingAssociates,

@@ -1,10 +1,13 @@
-import { all, put, call, select } from 'redux-saga/effects';
+import {
+  all, put, call, select,
+} from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 
 import { isEmpty } from 'lodash';
 
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 import { CommentActionTypes } from './Types';
 import { getCurrentTaskId } from '../task/Selector';
 import { getCurrentUser } from '../user/Selector';
@@ -15,10 +18,9 @@ import {
   getAllCommentsFailure,
   getAllCommentsSuccess,
 } from './Actions';
-import { returnErrorText } from 'helpers/HandleSagaErrors';
 
-const takeEvery: any = Eff.takeEvery;
-const takeLatest: any = Eff.takeLatest;
+const { takeEvery } = Eff;
+const { takeLatest } = Eff;
 
 export function* getAllComments() {
   try {
@@ -36,27 +38,26 @@ export function* getAllComments() {
             return {
               _id: comment._id,
               name:
-                comment.account.firstName +
-                ' ' +
-                comment.account.lastName,
+                `${comment.account.firstName
+                } ${
+                  comment.account.lastName}`,
               profileImage: '',
               position: comment.account.position,
               text: comment.text,
               createdAt: comment.createdAt,
             };
-          } else {
-            return {
-              _id: comment._id,
-              name:
-                comment.account.firstName +
-                ' ' +
-                comment.account.lastName,
-              profileImage: comment.account.profileImage,
-              position: comment.account.position,
-              text: comment.text,
-              createdAt: comment.createdAt,
-            };
           }
+          return {
+            _id: comment._id,
+            name:
+                `${comment.account.firstName
+                } ${
+                  comment.account.lastName}`,
+            profileImage: comment.account.profileImage,
+            position: comment.account.position,
+            text: comment.text,
+            createdAt: comment.createdAt,
+          };
         });
         yield put(getAllCommentsSuccess(responseData));
       }
@@ -79,16 +80,16 @@ export function* createComment({ text }: any) {
         taskId,
       };
       const response = yield tigrowApi.post(
-        `comments`,
+        'comments',
         reqBody,
         headers,
       );
       const responseData = {
         _id: response.data._id,
-        name: currentUser.firstName + ' ' + currentUser.lastName,
+        name: `${currentUser.firstName} ${currentUser.lastName}`,
         profileImage:
-          currentUser.profileImage &&
-          isEmpty(currentUser.profileImage) === false
+          currentUser.profileImage
+          && isEmpty(currentUser.profileImage) === false
             ? currentUser.profileImage
             : '',
         position: currentUser.position,

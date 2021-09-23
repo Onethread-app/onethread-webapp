@@ -29,9 +29,9 @@ import {
 } from 'stores/task/Actions';
 import { priorityColor } from 'stores/UtilsActions';
 
+import MemberGroup from 'components/member/MemberGroup';
 import DueDate from './DueDate';
 import TaskPriorityTag from './TaskPriorityTag';
-import MemberGroup from 'components/member/MemberGroup';
 
 const ThirdRow = styled.div`
   overflow: hidden;
@@ -71,10 +71,10 @@ const TaskItemContainer = styled.div`
   border-radius: 5px;
   box-shadow: ${(props) => `
   rgba(17, 17, 26, 0.05) 0px 1px 0px, ${
-    props.isDragging
-      ? '#3484F0'
-      : find(priorityColor, ['code', props.priority])!.value
-  } 0px 0px 4px`};
+  props.isDragging
+    ? '#3484F0'
+    : find(priorityColor, ['code', props.priority])!.value
+} 0px 0px 4px`};
   background-color: #fff;
   color: #182026 !important;
   display: flex;
@@ -127,9 +127,9 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
 
   useEffect(() => {
     if (
-      loading === true &&
-      props.fetchingTask === false &&
-      props.taskError === ''
+      loading === true
+      && props.fetchingTask === false
+      && props.taskError === ''
     ) {
       history.push(
         `/company/${props.uniqueCompanyName}/project/${props.projectId}/board/${task.boardId}/task/${task._id}`,
@@ -139,9 +139,9 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
 
   useEffect(() => {
     if (
-      deletingTask === true &&
-      props.deletingTask === false &&
-      props.errorOnTaskDelete === ''
+      deletingTask === true
+      && props.deletingTask === false
+      && props.errorOnTaskDelete === ''
     ) {
       setTaskDelete(false);
       setShowPopover(false);
@@ -161,7 +161,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
             //   }}
             // >
             <TaskItemContainer
-              className={`mh2 w-100`}
+              className='mh2 w-100'
               priority={task.priority}
               isDragging={snapshot.isDragging}
               {...provided.draggableProps}
@@ -169,19 +169,19 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
               {...allowedProps}
               onClick={handleClick}
             >
-              <div className="flex justify-between items-center">
+              <div className='flex justify-between items-center'>
                 <TaskItemName title={task.name}>
                   {task.name}
                 </TaskItemName>
                 <Popover
                   isOpen={showPopover}
-                  content={
+                  content={(
                     <ClickAwayListener
                       onClickAway={() => setShowPopover(false)}
                     >
                       <Menu>
                         <MenuItem
-                          text="Delete"
+                          text='Delete'
                           onClick={(e) => {
                             e.stopPropagation();
                             setTaskDelete(true);
@@ -189,11 +189,11 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
                         />
                       </Menu>
                     </ClickAwayListener>
-                  }
-                  target={
+                  )}
+                  target={(
                     <MoreVertIcon
-                      htmlColor="#182026"
-                      fontSize="small"
+                      htmlColor='#182026'
+                      fontSize='small'
                       style={{ cursor: 'pointer' }}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -201,38 +201,39 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
                         setShowPopover(!showPopover);
                       }}
                     />
-                  }
+                  )}
                 />
               </div>
-              <SecondRow className={`flex  items-center`}>
+              <SecondRow className='flex  items-center'>
                 <TaskDueDate>
                   {task.dueDate ? (
                     <DueDate dueDate={task.dueDate} />
                   ) : (
-                    <p className="mb0">No Due Date</p>
+                    <p className='mb0'>No Due Date</p>
                   )}
                 </TaskDueDate>
-                <div className={`flex`}>
+                <div className='flex'>
                   <ForumIcon
-                    fontSize="small"
+                    fontSize='small'
                     style={{ color: '#a4a4a4' }}
-                  />{' '}
-                  <sup className="mt1" style={{ color: '#a4a4a4' }}>
+                  />
+                  {' '}
+                  <sup className='mt1' style={{ color: '#a4a4a4' }}>
                     {task.activityCount ? task.activityCount : 0}
                   </sup>
                 </div>
               </SecondRow>
               <ThirdRow
-                className={`flex justify-between items-center`}
+                className='flex justify-between items-center'
               >
                 <TaskPriorityTag priority={task.priority} />
-                {task.assignedMembers &&
-                  task.assignedMembers.length > 0 && (
+                {task.assignedMembers
+                  && task.assignedMembers.length > 0 && (
                     <MemberGroup
                       members={task.assignedMembers}
                       small
                     />
-                  )}
+                )}
               </ThirdRow>
             </TaskItemContainer>
             // </Link>
@@ -242,47 +243,47 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
       <Dialog
         isOpen={taskDelete}
         onClose={() => setTaskDelete(false)}
-        canOutsideClickClose={true}
-        canEscapeKeyClose={true}
-        className="pa0"
+        canOutsideClickClose
+        canEscapeKeyClose
+        className='pa0'
       >
         <div
-          className="flex justify-around items-center w-100 ba bw1 br2"
+          className='flex justify-around items-center w-100 ba bw1 br2'
           style={{ borderColor: '#F55B7F' }}
         >
           {props.deletingTask === true ? (
-            <div className="flex items-center justify-center">
+            <div className='flex items-center justify-center'>
               <CircularProgress
-                color="secondary"
+                color='secondary'
                 size={16}
-                className="mr3"
+                className='mr3'
               />
               <h3>Deleting</h3>
             </div>
           ) : props.errorOnTaskDelete === '' ? (
             <>
-              <h4 className="fw5 f5 flex items-center">
+              <h4 className='fw5 f5 flex items-center'>
                 <Icon
-                  icon="info-sign"
-                  intent="primary"
+                  icon='info-sign'
+                  intent='primary'
                   style={{ marginRight: '.5rem' }}
                 />
                 Are you sure?
               </h4>
-              <ButtonGroup minimal={true}>
+              <ButtonGroup minimal>
                 <Button
-                  icon="undo"
+                  icon='undo'
                   onClick={() => {
                     setTaskDelete(false);
                     setShowPopover(false);
                   }}
-                  intent="primary"
+                  intent='primary'
                 >
                   No, Keep it
                 </Button>
                 <Button
-                  icon="trash"
-                  intent="danger"
+                  icon='trash'
+                  intent='danger'
                   onClick={handleTaskDelete}
                 >
                   Yes, Delete
@@ -290,7 +291,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
               </ButtonGroup>
             </>
           ) : (
-            <h3 className="fw5 flex items-center tc">
+            <h3 className='fw5 flex items-center tc'>
               {props.errorOnTaskDelete}
             </h3>
           )}

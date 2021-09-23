@@ -71,21 +71,19 @@ const ExportTasks = (props: IExportTasks) => {
 
   useEffect(() => {
     if (loading === false && data.length > 0) {
-      const modifiedData = data.map((d: ICompanyTask) => {
-        return {
-          name: d.name,
-          priority: find(priorityColor, ['code', d.priority])!.name,
-          status: d.status.replace(/-|\s/g, ' '),
-          dueDate: moment(d.dueDate).format('MMMM Do YYYY, h:mm a'),
-          createdAt: moment(d.createdAt).format(
-            'MMMM Do YYYY, h:mm a',
-          ),
-          project: d.project.name,
-          assignee: d.members.map(
-            (m) => `${m.firstName} ${m.lastName}`,
-          ),
-        };
-      });
+      const modifiedData = data.map((d: ICompanyTask) => ({
+        name: d.name,
+        priority: find(priorityColor, ['code', d.priority])!.name,
+        status: d.status.replace(/-|\s/g, ' '),
+        dueDate: moment(d.dueDate).format('MMMM Do YYYY, h:mm a'),
+        createdAt: moment(d.createdAt).format(
+          'MMMM Do YYYY, h:mm a',
+        ),
+        project: d.project.name,
+        assignee: d.members.map(
+          (m) => `${m.firstName} ${m.lastName}`,
+        ),
+      }));
       setProcessedData(modifiedData);
       setProcessing(false);
     }
@@ -95,14 +93,14 @@ const ExportTasks = (props: IExportTasks) => {
   }, [data, loading]);
 
   return (
-    <div className={`w-100 h-100 flex items-center justify-center`}>
+    <div className='w-100 h-100 flex items-center justify-center'>
       {processing ? (
-        <div className={`w-third flex flex-column justify-center tc`}>
+        <div className='w-third flex flex-column justify-center tc'>
           <span>Processing...</span>
           <SuspenseLoader insideComponent />
         </div>
       ) : processedData.length > 0 ? (
-        <CSVLink {...csvReport} className={`f4`}>
+        <CSVLink {...csvReport} className='f4'>
           Export to CSV
         </CSVLink>
       ) : (

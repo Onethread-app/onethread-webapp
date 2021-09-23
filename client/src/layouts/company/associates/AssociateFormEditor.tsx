@@ -60,9 +60,9 @@ const AssociateFormEditorComponent = (
   }, [result]);
 
   return (
-    <div className="pa3 mt5 mt0-ns">
-      <div className=" w-100">
-        <h1 className="f5 tigrow-lightBlue">
+    <div className='pa3 mt5 mt0-ns'>
+      <div className=' w-100'>
+        <h1 className='f5 tigrow-lightBlue'>
           {t('app.company.Partners.Add-Partners')}
         </h1>
         <SuggestField
@@ -73,23 +73,23 @@ const AssociateFormEditorComponent = (
           selectedItems={selectedAssociate}
           setSelectedItems={setSelectedAssociate}
         />
-        <small className="white">{error}</small>
+        <small className='white'>{error}</small>
       </div>
-      <div className="flex justify-end mt4">
+      <div className='flex justify-end mt4'>
         <Button
-          className="grow h2 pointer white bp3-minimal w4 mr3"
+          className='grow h2 pointer white bp3-minimal w4 mr3'
           style={
             isEmpty(selectedAssociate) === true
               ? {
-                  background: '#34b3e9',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#34b3e9',
+                outline: 'none',
+                color: 'white',
+              }
               : {
-                  background: '#34b3e9',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#34b3e9',
+                outline: 'none',
+                color: 'white',
+              }
           }
           disabled={isEmpty(selectedAssociate)}
           onClick={async () => {
@@ -107,7 +107,7 @@ const AssociateFormEditorComponent = (
           Add
         </Button>
         <Button
-          className="grow h2 pointer white bp3-minimal w4"
+          className='grow h2 pointer white bp3-minimal w4'
           style={{
             background: '#fff',
             outline: 'none',
@@ -119,8 +119,8 @@ const AssociateFormEditorComponent = (
           Cancel
         </Button>
 
-        {props.sendingRequestSuccess &&
-          props.setShowDialog(!props.showDialog)}
+        {props.sendingRequestSuccess
+          && props.setShowDialog(!props.showDialog)}
       </div>
     </div>
   );

@@ -10,17 +10,12 @@ export const adminServer = process.env.REACT_APP_ADMIN_API_URL;
 
 export const PUSHER_CHANNEL_AUTH_END_POINT = `${server}channel/authenticate`;
 
-export const PUSHER_CHANNEL_KEY =
-  process.env.REACT_APP_PUSHER_CHANNEL_KEY;
-export const PUSHER_CHANNEL_CLUSTER =
-  process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER;
+export const PUSHER_CHANNEL_KEY = process.env.REACT_APP_PUSHER_CHANNEL_KEY;
+export const PUSHER_CHANNEL_CLUSTER = process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER;
 
-export const NOTIFICATION_KEY =
-  process.env.REACT_APP_PUSHER_CHANNEL_KEY;
-export const NOTIFICATION_CLUSTER =
-  process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER;
-export const VAPID_PUBLIC_KEY =
-  process.env.REACT_APP_VAPID_PUBLIC_KEY;
+export const NOTIFICATION_KEY = process.env.REACT_APP_PUSHER_CHANNEL_KEY;
+export const NOTIFICATION_CLUSTER = process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER;
+export const VAPID_PUBLIC_KEY = process.env.REACT_APP_VAPID_PUBLIC_KEY;
 export const tigrowApi = axios.create({
   baseURL: server,
 });

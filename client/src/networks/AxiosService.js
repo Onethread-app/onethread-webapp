@@ -8,7 +8,7 @@ function getIRequestProp(isMultipart) {
   const token = JSON.parse(localStorage.getItem('tigrow_acc_id'));
   // const headers = tokenConfig();
   return {
-    serverUrl: serverUrl,
+    serverUrl,
     requestHeader: {
       'Content-Type': isMultipart
         ? 'multipart/form-data'

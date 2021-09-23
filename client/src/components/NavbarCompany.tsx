@@ -13,6 +13,8 @@ import { Drawer } from '@blueprintjs/core/lib/esm/components/drawer/drawer';
 
 import { User } from 'stores/user/Reducer';
 import { IChat, IRoom } from 'stores/room/Reducer';
+import { companySubscriber } from 'helpers/notification/subscribers';
+import NotificationPopover from 'components/notification/NotificationPopover';
 import {
   seenNotification,
   getNotifications,
@@ -22,8 +24,6 @@ import { fetchRooms, fetchChats } from '../stores/room/Actions';
 import user from '../resources/images/profilePhoto.svg';
 
 import { MobileListView } from '../layouts/company/MobileListView';
-import { companySubscriber } from 'helpers/notification/subscribers';
-import NotificationPopover from 'components/notification/NotificationPopover';
 import ChatListItem from './chat/ChatListItem';
 import { compareChats } from './Navbar';
 
@@ -63,7 +63,6 @@ const NavbarCompanyComponent = (
     companySubscriber(props.companyId);
     props.fetchRooms();
     props.fetchChats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -72,46 +71,46 @@ const NavbarCompanyComponent = (
         <MobileView>
           <Navbar
             fixedToTop
-            className="flex justify-between items-center shadow-4"
+            className='flex justify-between items-center shadow-4'
             style={{ height: '55px' }}
           >
-            <h1 className="f4">{props.title}</h1>
-            <div className="flex justify-end items-center">
+            <h1 className='f4'>{props.title}</h1>
+            <div className='flex justify-end items-center'>
               {props.match.path !== '/:username' && (
                 <Popover
-                  popoverClassName="bg-white mh3"
+                  popoverClassName='bg-white mh3'
                   position={Position.BOTTOM}
                   content={<NotificationPopover />}
-                  target={
-                    <div className="mh4 pointer">
+                  target={(
+                    <div className='mh4 pointer'>
                       <Badge
                         badgeContent={props.read}
                         anchorOrigin={{
                           vertical: 'top',
                           horizontal: 'right',
                         }}
-                        color="secondary"
+                        color='secondary'
                       >
                         <NotificationsIcon
                           onClick={handleSeenNotifications}
                         />
                       </Badge>
                     </div>
-                  }
+                  )}
                 />
               )}
               {props.match.path !== '/:username' && (
                 <Popover
-                  popoverClassName="bg-white"
+                  popoverClassName='bg-white'
                   position={Position.BOTTOM}
-                  content={
+                  content={(
                     <div
                       style={{
                         maxHeight: '300px',
                         width: '350px',
                         maxWidth: '100%',
                       }}
-                      className="pa3 overflow-y-auto"
+                      className='pa3 overflow-y-auto'
                     >
                       {props.chats && props.chats.length ? (
                         props.chats
@@ -120,24 +119,24 @@ const NavbarCompanyComponent = (
                             <ChatListItem chat={chat} key={index} />
                           ))
                       ) : (
-                        <p className="ph2">No room To Show</p>
+                        <p className='ph2'>No room To Show</p>
                       )}
                     </div>
-                  }
-                  target={
-                    <div className="mh4 pointer">
+                  )}
+                  target={(
+                    <div className='mh4 pointer'>
                       <Badge
                         badgeContent={props.totalRoomUnread}
                         anchorOrigin={{
                           vertical: 'top',
                           horizontal: 'right',
                         }}
-                        color="secondary"
+                        color='secondary'
                       >
                         <ChatIcon onClick={handleSeenNotifications} />
                       </Badge>
                     </div>
-                  }
+                  )}
                 />
               )}
               <img
@@ -146,13 +145,13 @@ const NavbarCompanyComponent = (
                     ? props.user.profileImage
                     : user
                 }
-                className="dim v-mid dib br-100 pointer"
+                className='dim v-mid dib br-100 pointer'
                 style={{
                   width: '2rem',
                   height: '2rem',
                   objectFit: 'cover',
                 }}
-                alt="user"
+                alt='user'
                 onClick={() => setShowDialog(true)}
               />
             </div>
@@ -178,19 +177,17 @@ const NavbarCompanyComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-    companyId: state.companyReducer.currentCompany._id,
-    notifications: state.notificationReducer.allNotifications,
-    read: state.notificationReducer.read,
-    rooms: state.roomReducer.roomNotification.rooms,
-    chats: state.roomReducer.chats,
-    currentRoom: state.roomReducer.currentRoom,
-    totalRoomUnread: state.roomReducer.totalUnread,
-    seen: state.notificationReducer.seen,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+  companyId: state.companyReducer.currentCompany._id,
+  notifications: state.notificationReducer.allNotifications,
+  read: state.notificationReducer.read,
+  rooms: state.roomReducer.roomNotification.rooms,
+  chats: state.roomReducer.chats,
+  currentRoom: state.roomReducer.currentRoom,
+  totalRoomUnread: state.roomReducer.totalUnread,
+  seen: state.notificationReducer.seen,
+});
 export const NavbarCompany = connect(mapStateToProps, {
   companySubscriber,
   getNotifications,

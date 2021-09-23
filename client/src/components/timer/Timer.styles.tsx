@@ -5,8 +5,7 @@ export const StyledTimer = styled.div`
   align-items: center;
   justify-content: center;
   color: #5a5a5a;
-  border: ${(props) =>
-    !!props.list ? 'none' : ' 1px solid #b1b1b1'};
+  border: ${(props) => (props.list ? 'none' : ' 1px solid #b1b1b1')};
   border-radius: 0.25rem;
   margin-bottom: 0.5rem;
   width: 120px;

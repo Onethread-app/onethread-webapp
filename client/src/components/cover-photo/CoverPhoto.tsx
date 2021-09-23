@@ -15,12 +15,12 @@ import { User } from 'stores/user/Reducer';
 import { companyPermit } from 'stores/UtilsActions';
 
 import coverPic from 'resources/images/coverPhoto.png';
-import editIcon from '../../resources/images/editIcon.png';
 
 import { ImageEdit } from 'components/image-editor/ImageEditor';
 import { PositionEditor } from 'layouts/user/profile/PositionEditor';
 import { ProfilePicture } from 'components/profile-picture/ProfilePicture';
 import { RightSidebar } from 'components/RightSidebar';
+import editIcon from '../../resources/images/editIcon.png';
 
 interface ICoverPhotoProps {
   company?: ICompany;
@@ -44,106 +44,110 @@ interface IChangeButtonProps {
   setShowDialogPicture: (val: any) => void;
 }
 
-const UserCustomView = (props: IUserProps) => {
-  return (
-    <>
-      <CustomView condition={!isMobileOnly}>
+const UserCustomView = (props: IUserProps) => (
+  <>
+    <CustomView condition={!isMobileOnly}>
+      <div
+        className='relative flex'
+        style={{ marginTop: '-120px', marginLeft: '50px' }}
+      >
         <div
-          className="relative flex"
-          style={{ marginTop: '-120px', marginLeft: '50px' }}
+          className='pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray'
+          style={{ width: '235px', height: '235px' }}
         >
-          <div
-            className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray"
-            style={{ width: '235px', height: '235px' }}
-          >
-            <ProfilePicture user={props.user} />
-          </div>
-          <div
-            className="ml5-tigrow-l ml1-m"
-            style={{ marginTop: '9rem' }}
-          >
-            <h1 className="f3-l f4 ma0 ws-break ttc">
-              {props.user.firstName} {props.user.lastName}
-            </h1>
-            <div className="cf ">
-              <h1 className="f5 dib ws-break black-70 ttc">
-                {props.user.position
-                  ? props.user.position
-                  : 'No designation'}
-              </h1>
-              <img
-                src={editIcon}
-                width="30"
-                height="30"
-                className="br2 pointer fr mv1"
-                onClick={() => props.setShowDialogPosition(true)}
-              />
-            </div>
-          </div>
+          <ProfilePicture user={props.user} />
         </div>
-      </CustomView>
-      <MobileOnlyView>
-        <div className="relative flex companyProfilepicOuterOuter">
-          <div className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray companyProfilepicOuter">
-            <ProfilePicture user={props.user} />
-          </div>
-        </div>
-        <div className="mw5 center" style={{ marginTop: '3rem' }}>
-          <h1 className="f3-l f4 ma0 ws-break ttc">
-            {props.user.firstName} {props.user.lastName}
+        <div
+          className='ml5-tigrow-l ml1-m'
+          style={{ marginTop: '9rem' }}
+        >
+          <h1 className='f3-l f4 ma0 ws-break ttc'>
+            {props.user.firstName}
+            {' '}
+            {props.user.lastName}
           </h1>
-          <div className="cf ">
-            <h1 className="f5 dib ws-break black-70 ttc">
+          <div className='cf '>
+            <h1 className='f5 dib ws-break black-70 ttc'>
               {props.user.position
                 ? props.user.position
                 : 'No designation'}
             </h1>
             <img
               src={editIcon}
-              width="30"
-              height="30"
-              className="br2 pointer fr mv1"
+              width='30'
+              height='30'
+              className='br2 pointer fr mv1'
               onClick={() => props.setShowDialogPosition(true)}
+              alt=''
             />
           </div>
         </div>
-      </MobileOnlyView>
-    </>
-  );
-};
+      </div>
+    </CustomView>
+    <MobileOnlyView>
+      <div className='relative flex companyProfilepicOuterOuter'>
+        <div className='pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray companyProfilepicOuter'>
+          <ProfilePicture user={props.user} />
+        </div>
+      </div>
+      <div className='mw5 center' style={{ marginTop: '3rem' }}>
+        <h1 className='f3-l f4 ma0 ws-break ttc'>
+          {props.user.firstName}
+          {' '}
+          {props.user.lastName}
+        </h1>
+        <div className='cf '>
+          <h1 className='f5 dib ws-break black-70 ttc'>
+            {props.user.position
+              ? props.user.position
+              : 'No designation'}
+          </h1>
+          <img
+            src={editIcon}
+            width='30'
+            height='30'
+            className='br2 pointer fr mv1'
+            onClick={() => props.setShowDialogPosition(true)}
+            alt=''
+          />
+        </div>
+      </div>
+    </MobileOnlyView>
+  </>
+);
 
 const CompanyCustomView = (props: ICompanyProps) => {
   const { t } = useTranslation();
   return (
     <>
-      <div className="relative flex companyProfilepicOuterOuter ">
-        <div className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray companyProfilepicOuter">
+      <div className='relative flex companyProfilepicOuterOuter '>
+        <div className='pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray companyProfilepicOuter'>
           <ProfilePicture company={props.company} />
         </div>
         <CustomView condition={!isMobileOnly}>
-          <div className="flex flex-grow-1 justify-between">
-            <div className="flex">
+          <div className='flex flex-grow-1 justify-between'>
+            <div className='flex'>
               <div
-                className="ml5 ml1-m"
+                className='ml5 ml1-m'
                 style={{ marginTop: '10rem' }}
               >
-                <h1 className="f6 ma0 ws-break ttc">
+                <h1 className='f6 ma0 ws-break ttc'>
                   {t('app.company.Company-profile.Total-Employee')}
                 </h1>
-                <h1 className="f3-l f4 fw4 ma0 ws-break tc">
+                <h1 className='f3-l f4 fw4 ma0 ws-break tc'>
                   {props.company.totalMember
                     ? props.company.totalMember
                     : 0}
                 </h1>
               </div>
               <div
-                className="ml4 ml1-m"
+                className='ml4 ml1-m'
                 style={{ marginTop: '10rem' }}
               >
-                <h1 className="f6 ma0 ws-break ttc">
+                <h1 className='f6 ma0 ws-break ttc'>
                   {t('app.company.Company-profile.Associates')}
                 </h1>
-                <h1 className="f3-l f4 fw4 ma0 ws-break tc ">
+                <h1 className='f3-l f4 fw4 ma0 ws-break tc '>
                   {props.company.totalAssociate
                     ? props.company.totalAssociate
                     : 0}
@@ -155,24 +159,24 @@ const CompanyCustomView = (props: ICompanyProps) => {
       </div>
       <MobileOnlyView>
         <div
-          className="flex  justify-between mh4"
+          className='flex  justify-between mh4'
           style={{ marginTop: '5rem' }}
         >
-          <div className="">
-            <h1 className="f7 ma0 ws-break ttc">
+          <div className=''>
+            <h1 className='f7 ma0 ws-break ttc'>
               {t('app.company.Company-profile.Total-Employee')}
             </h1>
-            <h1 className="fw4 ma0 ws-break tc">
+            <h1 className='fw4 ma0 ws-break tc'>
               {props.company.totalMember
                 ? props.company.totalMember
                 : 0}
             </h1>
           </div>
-          <div className="">
-            <h1 className="f7 ma0 ws-break ttc">
+          <div className=''>
+            <h1 className='f7 ma0 ws-break ttc'>
               {t('app.company.Company-profile.Associates')}
             </h1>
-            <h1 className="fw4 ma0 ws-break tc ">
+            <h1 className='fw4 ma0 ws-break tc '>
               {props.company.totalAssociate
                 ? props.company.totalAssociate
                 : 0}
@@ -188,10 +192,10 @@ const ChangeButton = (props: IChangeButtonProps) => {
   const { t } = useTranslation();
   if (props.company) {
     return (
-      <div className="h-100 child bg-black-40 br4">
+      <div className='h-100 child bg-black-40 br4'>
         {companyPermit(props.company.role) && (
           <Button
-            className="fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3 child f7 f5-ns companyCoverButton"
+            className='fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3 child f7 f5-ns companyCoverButton'
             style={{
               color: 'white',
             }}
@@ -202,21 +206,20 @@ const ChangeButton = (props: IChangeButtonProps) => {
         )}
       </div>
     );
-  } else {
-    return (
-      <div className="h-100 child bg-black-40 br4">
-        <Button
-          className="fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3 companyCoverButton f7 f5-ns"
-          style={{
-            color: 'white',
-          }}
-          onClick={() => props.setShowDialogPicture(true)}
-        >
-          {t('app.user.Personal-profile.Cover')}
-        </Button>
-      </div>
-    );
   }
+  return (
+    <div className='h-100 child bg-black-40 br4'>
+      <Button
+        className='fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3 companyCoverButton f7 f5-ns'
+        style={{
+          color: 'white',
+        }}
+        onClick={() => props.setShowDialogPicture(true)}
+      >
+        {t('app.user.Personal-profile.Cover')}
+      </Button>
+    </div>
+  );
 };
 
 const CoverPhotoComponent = (props: ICoverPhotoProps) => {
@@ -240,7 +243,7 @@ const CoverPhotoComponent = (props: ICoverPhotoProps) => {
   return (
     <>
       <div
-        className="relative hide-child cover bg-center br4 individualcover"
+        className='relative hide-child cover bg-center br4 individualcover'
         style={{
           backgroundImage: `url(${bgSrc})`,
           backgroundPosition: 'center',
@@ -278,7 +281,7 @@ const CoverPhotoComponent = (props: ICoverPhotoProps) => {
 
       {showDialogPicture && (
         <Dialog
-          icon="briefcase"
+          icon='briefcase'
           onClose={() => setShowDialogPicture(!showDialogPicture)}
           isOpen
           style={{ background: '#fff' }}
@@ -301,12 +304,10 @@ const CoverPhotoComponent = (props: ICoverPhotoProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    user: state.userReducer.user,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  user: state.userReducer.user,
+});
 
 export const CoverPhoto = connect(mapStateToProps)(
   CoverPhotoComponent,

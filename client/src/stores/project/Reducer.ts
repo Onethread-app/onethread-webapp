@@ -1,12 +1,11 @@
+import { Entity } from 'stores/UtilsActions';
+import { User } from 'stores/user/Reducer';
+import { IDesignations, ICompany } from 'stores/company/Reducer';
 import {
   PROJECT,
   CLEAR_PROJECT_REDUCER_STATE,
   ProjectActionTypes,
 } from './Types';
-import { Entity } from 'stores/UtilsActions';
-import { User } from 'stores/user/Reducer';
-import { IDesignations } from 'stores/company/Reducer';
-import { ICompany } from 'stores/company/Reducer';
 
 export interface IMember {
   concernedAdmin: {
@@ -31,7 +30,7 @@ export interface IProject {
   totalMember: number;
   concernAdmin: User;
   createdAt: Date;
-  status: String;
+  status: string;
   timeSpent?: number;
 }
 
@@ -188,23 +187,21 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.UPDATE_PROJECT_TIME_SPENT:
       return {
         ...state,
-        allProjects: state.allProjects.map((project: IProject) =>
-          project._id === action.payload.project
-            ? {
-                ...project,
-                timeSpent:
+        allProjects: state.allProjects.map((project: IProject) => (project._id === action.payload.project
+          ? {
+            ...project,
+            timeSpent:
                   project.timeSpent + action.payload.duration,
-              }
-            : project,
-        ),
+          }
+          : project)),
         projectDetails:
           state.projectDetails._id === action.payload.project
             ? {
-                ...state.projectDetails,
-                timeSpent:
-                  state.projectDetails.timeSpent +
-                  action.payload.duration,
-              }
+              ...state.projectDetails,
+              timeSpent:
+                  state.projectDetails.timeSpent
+                  + action.payload.duration,
+            }
             : state.projectDetails,
       };
     case ProjectActionTypes.UNARCHIVE_PROJECT_START:
@@ -341,9 +338,8 @@ export const ProjectReducer = (state = initialState, action: any) => {
               ...team,
               role: action.payload.role,
             };
-          } else {
-            return team;
           }
+          return team;
         }),
       };
     case ProjectActionTypes.OPEN_PROJECT_FILE:

@@ -12,42 +12,38 @@ interface NavbarProps {
   setShowDialog: (val: boolean) => void;
 }
 
-const NavbarIndividualComponent = (props: NavbarProps) => {
-  return (
-    <>
-      <Navbar fixedToTop className="flex justify-end items-center">
-        <Icon
-          icon="menu"
-          iconSize={25}
-          className="blue"
-          onClick={() => props.setShowDialog(true)}
+const NavbarIndividualComponent = (props: NavbarProps) => (
+  <>
+    <Navbar fixedToTop className='flex justify-end items-center'>
+      <Icon
+        icon='menu'
+        iconSize={25}
+        className='blue'
+        onClick={() => props.setShowDialog(true)}
+      />
+    </Navbar>
+    {props.showDialog && (
+    <Drawer
+      onClose={() => props.setShowDialog(!props.showDialog)}
+      isOpen={props.showDialog}
+      canOutsideClickClose={false}
+      style={{ width: '70%' }}
+    >
+      <div>
+        <MobileListView
+          showDialog={props.showDialog}
+          setShowDialog={props.setShowDialog}
         />
-      </Navbar>
-      {props.showDialog && (
-        <Drawer
-          onClose={() => props.setShowDialog(!props.showDialog)}
-          isOpen={props.showDialog}
-          canOutsideClickClose={false}
-          style={{ width: '70%' }}
-        >
-          <div>
-            <MobileListView
-              showDialog={props.showDialog}
-              setShowDialog={props.setShowDialog}
-            />
-            {/* <MobileSidebar setShowSidebar={props.setShowDialog} /> */}
-          </div>
-        </Drawer>
-      )}
-    </>
-  );
-};
+        {/* <MobileSidebar setShowSidebar={props.setShowDialog} /> */}
+      </div>
+    </Drawer>
+    )}
+  </>
+);
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+});
 
 export const NavbarIndividual = connect(mapStateToProps)(
   NavbarIndividualComponent,

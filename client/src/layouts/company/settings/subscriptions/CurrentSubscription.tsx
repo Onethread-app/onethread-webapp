@@ -55,13 +55,13 @@ const _CurrentSubscription = (
       </div>
       {props.currentComonent === 'base' && (
         <div>
-          <div className="pt1">
+          <div className='pt1'>
             <h4>
               {t('app.company.Subscription-And-Billing.Current')}
             </h4>
             <Grid container spacing={3}>
               <Grid item xs={7}>
-                <label className="pl1">
+                <label className='pl1'>
                   {props.currentSubscriptions
                     ? props.currentSubscriptions
                     : 'Trial'}
@@ -69,12 +69,10 @@ const _CurrentSubscription = (
               </Grid>
               <Grid item xs={5}>
                 <Button
-                  variant="text"
+                  variant='text'
                   className={classes.button}
-                  color="primary"
-                  onClick={() =>
-                    props.changeComponentTo('subscriptionList')
-                  }
+                  color='primary'
+                  onClick={() => props.changeComponentTo('subscriptionList')}
                 >
                   {t('app.company.Subscription-And-Billing.Change')}
                 </Button>
@@ -85,9 +83,9 @@ const _CurrentSubscription = (
             <h4>
               {t('app.company.Subscription-And-Billing.Payment-date')}
             </h4>
-            <label className="pl1">
-              {props.dueDate &&
-                moment(props.dueDate).format('MMMM Do YYYY')}
+            <label className='pl1'>
+              {props.dueDate
+                && moment(props.dueDate).format('MMMM Do YYYY')}
             </label>
           </div>
           <div>
@@ -98,11 +96,11 @@ const _CurrentSubscription = (
             </h4>
             <Grid container spacing={3}>
               <Grid item xs={7}>
-                <label className="pl1">
+                <label className='pl1'>
                   {props.lastPayment ? (
                     moment(props.lastPayment).format('MMMM Do YYYY')
                   ) : (
-                    <label className="b moon-gray">
+                    <label className='b moon-gray'>
                       {t(
                         'app.company.Subscription-And-Billing.No-Payment',
                       )}
@@ -112,12 +110,10 @@ const _CurrentSubscription = (
               </Grid>
               <Grid item xs={5}>
                 <Button
-                  variant="text"
+                  variant='text'
                   className={classes.button}
-                  color="primary"
-                  onClick={() =>
-                    props.changeComponentTo('paymentHistory')
-                  }
+                  color='primary'
+                  onClick={() => props.changeComponentTo('paymentHistory')}
                 >
                   {t(
                     'app.company.Subscription-And-Billing.View-history',
@@ -151,21 +147,19 @@ const _CurrentSubscription = (
     </div>
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    errorCompanyName: state.companyReducer.error,
-    currentSubscriptions:
-      state.subscriptionReducer.currentSubscriptions &&
-      state.subscriptionReducer.currentSubscriptions.plan.name,
-    dueDate:
-      state.subscriptionReducer.currentSubscriptions &&
-      state.subscriptionReducer.currentSubscriptions.expireAt,
-    lastPayment:
-      state.subscriptionReducer.paymentHistory[0] &&
-      state.subscriptionReducer.paymentHistory[0].createdAt,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  errorCompanyName: state.companyReducer.error,
+  currentSubscriptions:
+      state.subscriptionReducer.currentSubscriptions
+      && state.subscriptionReducer.currentSubscriptions.plan.name,
+  dueDate:
+      state.subscriptionReducer.currentSubscriptions
+      && state.subscriptionReducer.currentSubscriptions.expireAt,
+  lastPayment:
+      state.subscriptionReducer.paymentHistory[0]
+      && state.subscriptionReducer.paymentHistory[0].createdAt,
+});
 
 export const CurrentSubscription = connect(mapStateToProps, {
   changeCompanyName,

@@ -1,7 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
-import { History } from 'history';
+import { History, createBrowserHistory } from 'history';
 import { isEqual } from 'lodash';
-import { tokenConfig, parseJwt } from '../UtilsActions';
 import {
   FETCH_USER,
   USER_FETCH_ERROR,
@@ -10,10 +9,10 @@ import {
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
-import { createBrowserHistory } from 'history';
 import { tigrowApi } from 'config';
 import { Toaster } from '@blueprintjs/core';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+import { tokenConfig, parseJwt } from '../UtilsActions';
 
 // import { removePushSubscriptionFromServer } from '../../usePushNotifications';
 
@@ -36,19 +35,17 @@ export interface LoginModel {
 const RouteHistory = createBrowserHistory();
 
 const resfreshApiAction = async () => {
-  let accessToken =
-    typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
-      : null;
-  const refreshToken =
-    typeof window !== undefined &&
-    localStorage.getItem('tigrow_real_id')
-      ? JSON.parse(localStorage.getItem('tigrow_real_id')!)
-      : null;
+  let accessToken = typeof window !== undefined
+    && localStorage.getItem('tigrow_acc_id')
+    ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+    : null;
+  const refreshToken = typeof window !== undefined
+    && localStorage.getItem('tigrow_real_id')
+    ? JSON.parse(localStorage.getItem('tigrow_real_id')!)
+    : null;
   if (
-    localStorage.getItem('tigrow_acc_id') &&
-    localStorage.getItem('tigrow_real_id')
+    localStorage.getItem('tigrow_acc_id')
+    && localStorage.getItem('tigrow_real_id')
   ) {
     try {
       const response = await tigrowApi.post('accounts/refresh', {
@@ -65,10 +62,8 @@ const resfreshApiAction = async () => {
           JSON.stringify(response.data.refreshToken),
         );
         accessToken = localStorage.getItem('tigrow_acc_id');
-        const accessTokenExpiredTime =
-          parseJwt(accessToken) * 1000 - 1000;
-        const accessTokenRemainingTime =
-          accessTokenExpiredTime - Date.now();
+        const accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
+        const accessTokenRemainingTime = accessTokenExpiredTime - Date.now();
         setTimeout(resfreshApiAction, accessTokenRemainingTime);
       }
       return errorMessgeHandler(response);
@@ -84,20 +79,17 @@ const resfreshApiAction = async () => {
     });
     RouteHistory.push('/signin');
     window.location.reload();
-    return;
   }
 };
 
-export const userSignupAction = (newUser: UserModel) => async (
-  dispatch: any,
-) => {
+export const userSignupAction = (newUser: UserModel) => async (dispatch: any) => {
   try {
     const response = await tigrowApi.post(
       'accounts/signup',
       newUser,
-      {
-        'Content-Type': 'application/json',
-      } as AxiosRequestConfig,
+        {
+          'Content-Type': 'application/json',
+        } as AxiosRequestConfig,
     );
     if (response.status === 201) {
       localStorage.setItem('email', JSON.stringify(newUser.email));
@@ -108,29 +100,28 @@ export const userSignupAction = (newUser: UserModel) => async (
   }
 };
 
-export const inviteUserToSignUp = (email: string) => async (
-  dispatch: any,
-) => {
+export const inviteUserToSignUp = (email: string) => async (dispatch: any) => {
   try {
-    const response = await tigrowApi.post('accounts/invite-signup', {
-      email,
-    });
+    const response = await tigrowApi.post(
+      'accounts/invite-signup',
+      {
+        email,
+      },
+    );
     return response;
   } catch (error) {
     return errorMessgeHandler(error);
   }
 };
 
-export const loginAction = (loginUser: LoginModel) => async (
-  dispatch: any,
-) => {
+export const loginAction = (loginUser: LoginModel) => async (dispatch: any) => {
   try {
     const response = await tigrowApi.post(
       'accounts/login',
       loginUser,
-      {
-        'Content-Type': 'application/json',
-      } as AxiosRequestConfig,
+        {
+          'Content-Type': 'application/json',
+        } as AxiosRequestConfig,
     );
     if (response.status === 200) {
       localStorage.setItem(
@@ -175,9 +166,9 @@ export const fetchUserAction = () => async (dispatch: any) => {
     if ((headers as any).headers.Authorization) {
       let response;
       let timeline;
-      response = await tigrowApi.get(`accounts`, headers);
+      response = await tigrowApi.get('accounts', headers);
       try {
-        timeline = await tigrowApi.get(`accounts/timeline`, headers);
+        timeline = await tigrowApi.get('accounts/timeline', headers);
         timeline = timeline.data.user.timeline;
       } catch (error) {
         // tslint:disable-next-line: no-console
@@ -186,8 +177,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
       response = { ...response.data.user, timeline };
       accessToken = localStorage.getItem('tigrow_acc_id');
       accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
-      const accessTokenRemainingTime =
-        accessTokenExpiredTime - Date.now();
+      const accessTokenRemainingTime = accessTokenExpiredTime - Date.now();
       setTimeout(resfreshApiAction, accessTokenRemainingTime);
       dispatch({ type: FETCH_USER, payload: response });
     } else {
@@ -202,17 +192,14 @@ export const fetchUserAction = () => async (dispatch: any) => {
   }
 };
 
-export const logoutAction = (routeHistory: History) => async (
-  dispatch: any,
-) => {
+export const logoutAction = (routeHistory: History) => async (dispatch: any) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      const refreshToken =
-        typeof window !== undefined &&
-        localStorage.getItem('tigrow_real_id')
-          ? JSON.parse(localStorage.getItem('tigrow_real_id')!)
-          : null;
+      const refreshToken = typeof window !== undefined
+          && localStorage.getItem('tigrow_real_id')
+        ? JSON.parse(localStorage.getItem('tigrow_real_id')!)
+        : null;
 
       let subscriptionId;
       let pushSubscription: any = localStorage.getItem(
@@ -223,7 +210,7 @@ export const logoutAction = (routeHistory: History) => async (
         subscriptionId = pushSubscription._id;
       }
       const response = await tigrowApi.post(
-        `accounts/logout`,
+        'accounts/logout',
         { refreshToken, subscriptionId },
         headers,
       );
@@ -250,9 +237,7 @@ export const logoutAction = (routeHistory: History) => async (
 export const resendMailForSignup = async (email?: string) => {
   try {
     const requestData = {
-      email: email
-        ? email
-        : JSON.parse(localStorage.getItem('email')!),
+      email: email || JSON.parse(localStorage.getItem('email')!),
       resentType: 'verify-account',
     };
     const response = await tigrowApi.post(
@@ -268,9 +253,7 @@ export const resendMailForSignup = async (email?: string) => {
   }
 };
 
-export const getVideoConferencesJoinee = () => async (
-  dispatch: any,
-) => {
+export const getVideoConferencesJoinee = () => async (dispatch: any) => {
   let accessToken = localStorage.getItem('tigrow_acc_id');
   let accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
   const refreshToken = localStorage.getItem('tigrow_real_id');
@@ -290,7 +273,7 @@ export const getVideoConferencesJoinee = () => async (
 
       try {
         response = await tigrowApi.get(
-          `video-conf/get-joinee`,
+          'video-conf/get-joinee',
           headers,
         );
       } catch (error) {
@@ -300,8 +283,7 @@ export const getVideoConferencesJoinee = () => async (
       response = { ...response.data.user };
       accessToken = localStorage.getItem('tigrow_acc_id');
       accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
-      const accessTokenRemainingTime =
-        accessTokenExpiredTime - Date.now();
+      const accessTokenRemainingTime = accessTokenExpiredTime - Date.now();
       setTimeout(resfreshApiAction, accessTokenRemainingTime);
       dispatch({ type: FETCH_USER, payload: response });
     } else {

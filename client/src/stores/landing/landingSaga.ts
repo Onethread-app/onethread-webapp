@@ -1,21 +1,21 @@
 import { all, put, call } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
-import { LANDING_APIS } from './Types';
 import { tigrowApi } from 'config';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { LANDING_APIS } from './Types';
 
 import {
   saveContactFormSuccess,
   saveContactFormFailure,
 } from './Actions';
-import { returnErrorText } from 'helpers/HandleSagaErrors';
 
-const takeLatest: any = Eff.takeLatest;
+const { takeLatest } = Eff;
 
 function* savingContactForm({ payload }: any) {
   try {
     const response = yield tigrowApi.post(
-      `contact/contact-sale`,
+      'contact/contact-sale',
       payload,
     );
     yield put(saveContactFormSuccess(response.status));

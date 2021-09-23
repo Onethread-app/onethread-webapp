@@ -1,15 +1,17 @@
-import { all, call, put, select } from 'redux-saga/effects';
+import {
+  all, call, put, select,
+} from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
-import { NOTIFICATION } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 import { isEqual } from 'lodash';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { NOTIFICATION } from './Types';
 import { markAllAsReadFailure, markAllAsReadSuccess } from './Action';
 
-const takeEvery: any = Eff.takeEvery; // <-- new
-const takeLatest: any = Eff.takeLatest;
+const { takeEvery } = Eff; // <-- new
+const { takeLatest } = Eff;
 
 function* getNotifications() {
   try {
@@ -28,7 +30,7 @@ function* getNotifications() {
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
         // `notifications/${companyId}`,
-        `notifications/get`,
+        'notifications/get',
         headers,
       );
       yield put({
@@ -54,8 +56,8 @@ function* readNotification(action) {
   try {
     const headers = tokenConfig();
     if (
-      (headers as any).headers.Authorization &&
-      action.notificationId
+      (headers as any).headers.Authorization
+      && action.notificationId
     ) {
       yield tigrowApi.get(
         `notifications/read/${action.notificationId}`,
@@ -79,7 +81,7 @@ function* markAllAsReadAsync({ payload }: any) {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.put(
-        `notifications/markallread`,
+        'notifications/markallread',
         {
           list: payload,
         },
@@ -100,7 +102,7 @@ function* seenNotification() {
     const headers = tokenConfig();
     // const companyId = yield select(selectCompanyId);
     if ((headers as any).headers.Authorization) {
-      yield tigrowApi.get(`notifications/seen`, headers);
+      yield tigrowApi.get('notifications/seen', headers);
     }
     // put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
   } catch (error: any) {
@@ -117,8 +119,7 @@ function* seenNotification() {
 
 function* webPushNotification(action) {
   try {
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
+    const selectCompanyId = (state) => state.companyReducer.currentCompany._id;
     const selectRole = (state) => state.userReducer.user;
     const headers = tokenConfig();
     const companyId = yield select(selectCompanyId);

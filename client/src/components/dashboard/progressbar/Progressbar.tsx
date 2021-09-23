@@ -16,10 +16,10 @@ const Progressbar = ({ width, percent }) => {
 
   return (
     <div>
-      <div className="progress-div" style={{ width: '100%' }}>
+      <div className='progress-div' style={{ width: '100%' }}>
         <div
           style={{ width: `${value}%`, background: '#3484F0' }}
-          className="progress"
+          className='progress'
         />
       </div>
     </div>

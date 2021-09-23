@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { includes, lowerCase, isEqual, findIndex } from 'lodash';
+import {
+  includes, lowerCase, isEqual, findIndex,
+} from 'lodash';
 
 import { Suggest } from '@blueprintjs/select';
 import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
@@ -11,6 +13,7 @@ export interface ItemEntityProps {
   _id?: string;
   email?: string;
   name: string | null;
+  // eslint-disable-next-line camelcase
   mongo_id?: string;
 }
 
@@ -41,22 +44,16 @@ export const SuggestField = (props: SuggestFieldProps) => {
       initialContent={null}
       onQueryChange={props.onChange}
       items={props.items}
-      itemListPredicate={(item) =>
-        props.items.filter((s) =>
-          s.email
-            ? includes(lowerCase(s.email!), lowerCase(item))
-            : includes(lowerCase(s.name!), lowerCase(item)),
-        )
-      }
+      itemListPredicate={(item) => props.items.filter((s) => (s.email
+        ? includes(lowerCase(s.email!), lowerCase(item))
+        : includes(lowerCase(s.name!), lowerCase(item))))}
       itemRenderer={(item) => (
         <MenuItem
           key={item._id}
           onClick={(e: any) => {
             if (props.multipleItemSelect === true) {
               if (
-                (props.selectedItems as any).filter((si: any) =>
-                  isEqual(item.name, si.name),
-                ).length === 0
+                (props.selectedItems as any).filter((si: any) => isEqual(item.name, si.name)).length === 0
               ) {
                 props.setSelectedItems([
                   ...(props.selectedItems as any),
@@ -80,11 +77,15 @@ export const SuggestField = (props: SuggestFieldProps) => {
           }}
           text={
             item.email ? (
-              <div className="flex justify-start items-center">
-                <h5 className="ma0 mr1">
+              <div className='flex justify-start items-center'>
+                <h5 className='ma0 mr1'>
                   {capitalizeName(item.email)}
                 </h5>
-                <small>({item.name})</small>
+                <small>
+                  (
+                  {item.name}
+                  )
+                </small>
               </div>
             ) : (
               item.name
@@ -92,75 +93,67 @@ export const SuggestField = (props: SuggestFieldProps) => {
           }
           intent={
             props.multipleItemSelect === true
-              ? (props.selectedItems as any).filter((si: any) =>
-                  isEqual(item.name, si.name),
-                ).length > 0
+              ? (props.selectedItems as any).filter((si: any) => isEqual(item.name, si.name)).length > 0
                 ? Intent.PRIMARY
                 : Intent.NONE
               : isEqual(
-                  item.name,
-                  (props.selectedItems as ItemEntityProps).name,
-                )
-              ? Intent.PRIMARY
-              : Intent.NONE
+                item.name,
+                (props.selectedItems as ItemEntityProps).name,
+              )
+                ? Intent.PRIMARY
+                : Intent.NONE
           }
           icon={
             props.multipleItemSelect === true
-              ? (props.selectedItems as any).filter((si: any) =>
-                  isEqual(item.name, si.name),
-                ).length > 0
+              ? (props.selectedItems as any).filter((si: any) => isEqual(item.name, si.name)).length > 0
                 ? 'tick'
                 : 'square'
               : isEqual(
-                  item.name,
-                  (props.selectedItems as ItemEntityProps).name,
-                )
-              ? 'tick'
-              : 'square'
+                item.name,
+                (props.selectedItems as ItemEntityProps).name,
+              )
+                ? 'tick'
+                : 'square'
           }
         />
       )}
-      createNewItemFromQuery={(query: string) => {
-        return {
-          _id: undefined,
-          name: query,
-        };
-      }}
-      createNewItemRenderer={(item) => {
-        return props.isCreatable === true ? (
-          <MenuItem
-            text={item}
-            icon="new-object"
-            intent={Intent.PRIMARY}
-            onClick={async (e: any) => {
-              const newItem = { name: item };
-              if (props.isCreatableAPI) {
-                await props.isCreatableAPI(newItem);
-              }
-            }}
-          />
-        ) : !props.isCreatable === true &&
-          props.items.length === 0 ? (
-          <MenuItem
-            text="No result found"
-            icon="blank"
-            intent={Intent.WARNING}
-            onClick={async (e: any) => {
+      createNewItemFromQuery={(query: string) => ({
+        _id: undefined,
+        name: query,
+      })}
+      createNewItemRenderer={(item) => (props.isCreatable === true ? (
+        <MenuItem
+          text={item}
+          icon='new-object'
+          intent={Intent.PRIMARY}
+          onClick={async (e: any) => {
+            const newItem = { name: item };
+            if (props.isCreatableAPI) {
+              await props.isCreatableAPI(newItem);
+            }
+          }}
+        />
+      ) : !props.isCreatable === true
+          && props.items.length === 0 ? (
+            <MenuItem
+              text='No result found'
+              icon='blank'
+              intent={Intent.WARNING}
+              onClick={async (e: any) => {
               // tslint:disable-next-line: no-console
-            }}
-          />
-        ) : undefined;
-      }}
+              }}
+            />
+        ) : undefined)}
       onItemSelect={(selectedSkill) => {
         // tslint:disable-next-line: no-console
       }}
       closeOnSelect={false}
-      resetOnClose={true}
+      resetOnClose
       popoverProps={{
         minimal: true,
         popoverClassName: 'max-h5 overflow-auto',
       }}
-      fill={true}
+      fill
       inputValueRenderer={(item: ItemEntityProps) => item.name!}
       selectedItem={currentQuery}
     />

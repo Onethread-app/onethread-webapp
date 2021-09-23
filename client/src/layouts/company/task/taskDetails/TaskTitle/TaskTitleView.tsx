@@ -29,7 +29,7 @@ export const TaskTitleViewComponent = (
           setNameEdit={(e) => setNameEdit(!nameEdit)}
         />
       ) : (
-        <div className="mv2">
+        <div className='mv2'>
           <h5
             style={{
               fontSize: '12px',
@@ -42,8 +42,8 @@ export const TaskTitleViewComponent = (
             TASK
           </h5>
           <h3
-            title="Click to edit title"
-            className="fw6 mb0 mv2 dim"
+            title='Click to edit title'
+            className='fw6 mb0 mv2 dim'
             style={{
               cursor: 'text',
               fontSize: '25px',
@@ -65,9 +65,11 @@ export const TaskTitleViewComponent = (
               margin: '0.2rem 0rem',
             }}
           >
-            Task created by {props.currentTask!.createdBy}
+            Task created by
+            {' '}
+            {props.currentTask!.createdBy}
           </h5>
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             {props.currentTask!.dueDate && (
               <>
                 {Math.ceil(
@@ -77,60 +79,64 @@ export const TaskTitleViewComponent = (
                     true,
                   ),
                 ) === 0 ? (
-                  <p className="fw6 red mv2">Deadline ends today</p>
-                ) : Math.ceil(
+                  <p className='fw6 red mv2'>Deadline ends today</p>
+                  ) : Math.ceil(
                     moment(props.currentTask!.dueDate).diff(
                       moment(),
                       'days',
                       true,
                     ),
                   ) < 0 ? (
-                  <p className="fw6 red mv2">Expired</p>
-                ) : Math.ceil(
-                    moment(props.currentTask!.dueDate).diff(
-                      moment(),
-                      'days',
-                      true,
-                    ),
-                  ) === 1 ? (
-                  <p className="fw6 mv2 flex items-center">
-                    <Icon
-                      style={{
-                        color: '#323030',
-                      }}
-                      icon={IconNames.TIME}
-                      iconSize={12}
-                      className="grow pointer pl2 pr2"
-                    />{' '}
-                    {Math.ceil(
+                    <p className='fw6 red mv2'>Expired</p>
+                    ) : Math.ceil(
                       moment(props.currentTask!.dueDate).diff(
                         moment(),
                         'days',
                         true,
                       ),
-                    )}{' '}
-                    day remaining
-                  </p>
-                ) : (
-                  <p className="fw6  mv2 flex items-center">
-                    <Icon
-                      style={{
-                        color: '#323030',
-                      }}
-                      icon={IconNames.TIME}
-                      iconSize={12}
-                      className="grow pointer pl2 pr2"
-                    />{' '}
-                    {Math.ceil(
-                      moment(props.currentTask!.dueDate).diff(
-                        moment(),
-                        'days',
-                        true,
-                      ),
-                    )}{' '}
-                    days remaining
-                  </p>
-                )}
+                    ) === 1 ? (
+                      <p className='fw6 mv2 flex items-center'>
+                        <Icon
+                          style={{
+                            color: '#323030',
+                          }}
+                          icon={IconNames.TIME}
+                          iconSize={12}
+                          className='grow pointer pl2 pr2'
+                        />
+                        {' '}
+                        {Math.ceil(
+                          moment(props.currentTask!.dueDate).diff(
+                            moment(),
+                            'days',
+                            true,
+                          ),
+                        )}
+                        {' '}
+                        day remaining
+                      </p>
+                      ) : (
+                        <p className='fw6  mv2 flex items-center'>
+                          <Icon
+                            style={{
+                              color: '#323030',
+                            }}
+                            icon={IconNames.TIME}
+                            iconSize={12}
+                            className='grow pointer pl2 pr2'
+                          />
+                          {' '}
+                          {Math.ceil(
+                            moment(props.currentTask!.dueDate).diff(
+                              moment(),
+                              'days',
+                              true,
+                            ),
+                          )}
+                          {' '}
+                          days remaining
+                        </p>
+                      )}
               </>
             )}
           </div>
@@ -140,12 +146,10 @@ export const TaskTitleViewComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentTask: state.taskIndexReducer.taskReducer.currentTask,
-    company: state.companyReducer.currentCompany,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentTask: state.taskIndexReducer.taskReducer.currentTask,
+  company: state.companyReducer.currentCompany,
+});
 
 export const TaskTitleView = connect(
   mapStateToProps,

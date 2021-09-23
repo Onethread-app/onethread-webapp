@@ -62,19 +62,17 @@ const AddProjectAssociateFormComponent = (
     //     size: 5
     //   };
     // });
-    const asso = response.data.data.map((e: any) =>
-      isEqual(props.company._id, e._source.company_id) === true
-        ? {
-            _id: e._source.mongo_id,
-            name: e._source.associateCompanyName,
-            size: 5,
-          }
-        : {
-            _id: e._source.mongo_id,
-            name: e._source.companyName,
-            size: 5,
-          },
-    );
+    const asso = response.data.data.map((e: any) => (isEqual(props.company._id, e._source.company_id) === true
+      ? {
+        _id: e._source.mongo_id,
+        name: e._source.associateCompanyName,
+        size: 5,
+      }
+      : {
+        _id: e._source.mongo_id,
+        name: e._source.companyName,
+        size: 5,
+      }));
     return asso;
   };
 
@@ -134,9 +132,9 @@ const AddProjectAssociateFormComponent = (
   }, [resultAssociate]);
 
   return (
-    <div className="pa3">
-      <div className="w-100">
-        <h1 className="f5 tigrow-darkBlue">
+    <div className='pa3'>
+      <div className='w-100'>
+        <h1 className='f5 tigrow-darkBlue'>
           {t('app.company.Partners.Add-Partners')}
         </h1>
         <SuggestField
@@ -146,25 +144,25 @@ const AddProjectAssociateFormComponent = (
           items={associates}
           selectedItems={selectedAssociate}
           setSelectedItems={setSelectedAssociate}
-          multipleItemSelect={true}
+          multipleItemSelect
         />
       </div>
 
-      <div className="w-100 mb2">
+      <div className='w-100 mb2'>
         {selectedAssociate.map((item, index) => (
           <>
             <Tag
               key={item._id}
-              className="ma1 pa2"
+              className='ma1 pa2'
               style={{ backgroundColor: '#3b5998', color: 'white' }}
-              interactive={true}
+              interactive
               onRemove={(e) => {
                 const filteredItems = selectedAssociate.filter(
                   (selectedItem) => item.name !== selectedItem.name,
                 );
                 setSelectedAssociate([...filteredItems]);
               }}
-              large={true}
+              large
             >
               <span
                 style={{
@@ -179,31 +177,29 @@ const AddProjectAssociateFormComponent = (
             <span style={{ padding: 3 }}>
               <select
                 onChange={(e: any) => {
-                  const sa = [...selectedAssociate];
-                  sa[index]['size'] = e.target.value;
+                  const sa: any = [...selectedAssociate];
+                  sa[index].size = e.target.value;
                   setSelectedAssociate(sa);
                 }}
-                className="pa1"
+                className='pa1'
               >
-                <option selected value="">
+                <option selected value=''>
                   No. of employee
                 </option>
-                {teamSizes.map((t) => {
-                  return (
-                    <option key={t.label + t.value} value={t.value}>
-                      {t.label}
-                    </option>
-                  );
-                })}
+                {teamSizes.map((t) => (
+                  <option key={t.label + t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
               </select>
             </span>
           </>
         ))}
       </div>
 
-      <div className="flex justify-end mt3">
+      <div className='flex justify-end mt3'>
         <Button
-          className="grow h2 pointer white bp3-minimal w4 mr3"
+          className='grow h2 pointer white bp3-minimal w4 mr3'
           style={{
             background: '#fff',
             outline: 'none',
@@ -215,20 +211,18 @@ const AddProjectAssociateFormComponent = (
           Cancel
         </Button>
         <Button
-          className="grow h2 pointer white bp3-minimal w4 outline-0"
+          className='grow h2 pointer white bp3-minimal w4 outline-0'
           style={{ backgroundColor: '#3b5998', color: 'white' }}
           disabled={selectedAssociate.length === 0}
           onClick={async () => {
             const data = {
               project: props.projectId,
               company: props.company._id,
-              associates: selectedAssociate.map((m: any) => {
-                return {
-                  _id: m._id,
-                  size: m.size,
-                  name: m.name,
-                };
-              }),
+              associates: selectedAssociate.map((m: any) => ({
+                _id: m._id,
+                size: m.size,
+                name: m.name,
+              })),
             };
             const response: any = await props.addProjectAssociate(
               data,
@@ -247,14 +241,12 @@ const AddProjectAssociateFormComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    projectId: state.projectReducer.pid,
-    associates: state.associateReducer.associatesList,
-    isLoading: state.projectReducer.projectLoading,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  projectId: state.projectReducer.pid,
+  associates: state.associateReducer.associatesList,
+  isLoading: state.projectReducer.projectLoading,
+});
 
 export const AddProjectAssociateForm = connect(mapStateToProps, {
   addProjectAssociate,

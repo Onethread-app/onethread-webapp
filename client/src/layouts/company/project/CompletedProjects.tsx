@@ -16,6 +16,12 @@ import Snackbar from '@material-ui/core/Snackbar/Snackbar';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
 import { getAllAssociates } from 'stores/associate/Actions';
+import {
+  Color,
+  unreadMessageNotification,
+} from 'stores/UtilsActions';
+import { RightSidebar } from 'components/RightSidebar';
+import NoProjectsFound from 'NoProjectsFound';
 import { getAllDepartments } from '../../../stores/company/Actions';
 import {
   archiveProject,
@@ -26,16 +32,10 @@ import {
   setCurrentProjectId,
   unarchiveProject,
 } from '../../../stores/project/Actions';
-import {
-  Color,
-  unreadMessageNotification,
-} from 'stores/UtilsActions';
 
-import { RightSidebar } from 'components/RightSidebar';
 import { UpdateProject } from './ChangeProjectName';
 import { FormProject } from './CreateProjectForm';
 import { projectRules } from './settings/projectrules';
-import NoProjectsFound from 'NoProjectsFound';
 
 import addIcon from '../../../resources/images/addIcon.png';
 import './MyProjects.scss';
@@ -44,8 +44,7 @@ const CompletedProjectsComponent = (
   props: any & RouteComponentProps,
 ) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
-  const [showUpdateNameDialog, setShowUpdateNameDialog] =
-    useState(false);
+  const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(false);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
@@ -82,23 +81,23 @@ const CompletedProjectsComponent = (
     permissions.grantAll
       ? setShowUpdateNameDialog(true)
       : permissions.projectModerator.includes('updateProjectPreface')
-      ? setShowUpdateNameDialog(true)
-      : setOpen(true);
+        ? setShowUpdateNameDialog(true)
+        : setOpen(true);
   };
 
   const checkRoleForArchiveProject = (projectId: string) => {
     permissions.grantAll
       ? projectArchive(projectId)
       : permissions.projectModerator.includes('updateProjectPreface')
-      ? projectArchive(projectId)
-      : setOpen(true);
+        ? projectArchive(projectId)
+        : setOpen(true);
   };
 
   const nextProjectsPage = (e: any) => {
     e.preventDefault();
     if (
-      currentProjectPage <
-      Math.ceil(props.projects.length / itemsPerPage)
+      currentProjectPage
+      < Math.ceil(props.projects.length / itemsPerPage)
     ) {
       setCurrentProjectPage(currentProjectPage + 1);
     }
@@ -151,18 +150,18 @@ const CompletedProjectsComponent = (
   return (
     <>
       <div>
-        <div className="overflow-auto my-projects">
-          <div className="flex flex-column relative">
+        <div className='overflow-auto my-projects'>
+          <div className='flex flex-column relative'>
             <div
               style={
                 projectsLoaded && filteredProjects.length > 0
                   ? {
-                      display: 'grid',
-                      gridTemplateColumns:
+                    display: 'grid',
+                    gridTemplateColumns:
                         'repeat(auto-fit, minmax(200px, 265px))',
-                      gridAutoRows: '135px',
-                      gridGap: '10px 10px',
-                    }
+                    gridAutoRows: '135px',
+                    gridGap: '10px 10px',
+                  }
                   : {}
               }
             >
@@ -170,11 +169,11 @@ const CompletedProjectsComponent = (
                 <CircularProgress />
               ) : filteredProjects.length > 0 ? (
                 currentProjects.map((project: any) => (
-                  <div className="pa1">
+                  <div className='pa1'>
                     <Card
                       key={project._id}
-                      className="h-100"
-                      interactive={true}
+                      className='h-100'
+                      interactive
                       elevation={Elevation.TWO}
                       style={{
                         paddingLeft: '0px',
@@ -182,17 +181,17 @@ const CompletedProjectsComponent = (
                         cursor: 'default',
                       }}
                     >
-                      <div className="flex flex-column">
-                        <div className="flex items-start">
+                      <div className='flex flex-column'>
+                        <div className='flex items-start'>
                           <h3
                             style={{
                               borderLeft: `5px solid 
                               ${
                                 find(Color, ['code', project.color])
                                   ? find(Color, [
-                                      'code',
-                                      project.color,
-                                    ])!.value
+                                    'code',
+                                    project.color,
+                                  ])!.value
                                   : 'white'
                               }`,
                               paddingLeft: '20px',
@@ -210,37 +209,33 @@ const CompletedProjectsComponent = (
                               e.preventDefault();
                               singleProjectOnClick(project._id);
                             }}
-                            className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
+                            className='mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer'
                           >
                             {project.name}
                           </h3>
                           <Popover
-                            className="w-10"
+                            className='w-10'
                             content={
                               modalOpen ? (
-                                <Menu className="pa2">
+                                <Menu className='pa2'>
                                   <MenuItem
-                                    className="pa1"
-                                    text="Update Project"
-                                    onClick={(e: any) =>
-                                      checkRoleForChangeName()
-                                    }
+                                    className='pa1'
+                                    text='Update Project'
+                                    onClick={(e: any) => checkRoleForChangeName()}
                                   />
                                   <MenuItem
-                                    className="pa1 red"
-                                    text="Archive Project"
-                                    onClick={(e: any) =>
-                                      checkRoleForArchiveProject(
-                                        project._id,
-                                      )
-                                    }
+                                    className='pa1 red'
+                                    text='Archive Project'
+                                    onClick={(e: any) => checkRoleForArchiveProject(
+                                      project._id,
+                                    )}
                                   />
                                 </Menu>
                               ) : (
                                 'Loading..'
                               )
                             }
-                            target={
+                            target={(
                               <Button
                                 style={{
                                   transform: 'rotate(90deg)',
@@ -248,29 +243,27 @@ const CompletedProjectsComponent = (
                                   msTransform: 'rotate(90deg)',
                                   WebkitTransform: 'rotate(90deg)',
                                 }}
-                                icon="more"
-                                minimal={true}
-                                className="outline-0"
-                                onClick={(e: any) =>
-                                  getProjectRole(project._id)
-                                }
+                                icon='more'
+                                minimal
+                                className='outline-0'
+                                onClick={(e: any) => getProjectRole(project._id)}
                               />
-                            }
+                            )}
                           />
-                          {props.companyRooms &&
-                          unreadMessageNotification(
+                          {props.companyRooms
+                          && unreadMessageNotification(
                             props.companyRooms,
                             'project',
                             project._id,
                           ) ? (
                             <span
-                              className="ml1 br-100 bg-red"
+                              className='ml1 br-100 bg-red'
                               style={{ width: '7px', height: '7px' }}
-                            ></span>
-                          ) : null}
+                            />
+                            ) : null}
                         </div>
                         <div
-                          className="flex flex-column items-start mt2"
+                          className='flex flex-column items-start mt2'
                           style={{ paddingLeft: '25px' }}
                         >
                           <span
@@ -278,22 +271,22 @@ const CompletedProjectsComponent = (
                               project.status === 'not-started'
                                 ? 'bg-blue'
                                 : project.status === 'ongoing'
-                                ? 'bg-orange'
-                                : 'bg-green'
+                                  ? 'bg-orange'
+                                  : 'bg-green'
                             }`}
                           >
                             {project.status.replace(/-|\s/g, ' ')}
                           </span>
 
                           <p
-                            className="f7 fw5"
+                            className='f7 fw5'
                             style={{ marginTop: '10px' }}
                           >
                             Deadline:
                             {project.deadline
                               ? moment(project.deadline).format(
-                                  'DD/MM/YYYY',
-                                )
+                                'DD/MM/YYYY',
+                              )
                               : 'Not Set'}
                           </p>
                         </div>
@@ -301,11 +294,9 @@ const CompletedProjectsComponent = (
                     </Card>
                     {showUpdateNameDialog && (
                       <RightSidebar
-                        onClose={() =>
-                          setShowUpdateNameDialog(
-                            !showUpdateNameDialog,
-                          )
-                        }
+                        onClose={() => setShowUpdateNameDialog(
+                          !showUpdateNameDialog,
+                        )}
                       >
                         <UpdateProject
                           projectName={props.currentProject.name}
@@ -326,15 +317,15 @@ const CompletedProjectsComponent = (
                 <NoProjectsFound />
               )}
             </div>
-            {projectsLoaded === true &&
-              filteredProjects.length > itemsPerPage && (
-                <div className="flex flex-row items-center w-100 justify-center mt3">
+            {projectsLoaded === true
+              && filteredProjects.length > itemsPerPage && (
+                <div className='flex flex-row items-center w-100 justify-center mt3'>
                   <div
-                    className="f6 fw5 flex flex-row items-center"
+                    className='f6 fw5 flex flex-row items-center'
                     style={{ color: '#BBBBBB' }}
                   >
                     <Icon
-                      icon="circle-arrow-left"
+                      icon='circle-arrow-left'
                       iconSize={25}
                       onClick={prevProjectsPage}
                       className={`mr2 ${
@@ -347,24 +338,27 @@ const CompletedProjectsComponent = (
                             : '#656565',
                       }}
                     />
-                    {currentProjectPage} of{' '}
+                    {currentProjectPage}
+                    {' '}
+                    of
+                    {' '}
                     {Math.ceil(
                       filteredProjects.length / itemsPerPage,
                     )}
                     <Icon
-                      icon="circle-arrow-right"
+                      icon='circle-arrow-right'
                       iconSize={25}
                       onClick={nextProjectsPage}
                       className={`ml2 ${
-                        currentProjectPage <
-                          Math.ceil(
+                        currentProjectPage
+                          < Math.ceil(
                             filteredProjects.length / itemsPerPage,
                           ) && 'pointer'
                       }`}
                       style={{
                         color:
-                          currentProjectPage <
-                          Math.ceil(
+                          currentProjectPage
+                          < Math.ceil(
                             filteredProjects.length / itemsPerPage,
                           )
                             ? '#34b3e9'
@@ -373,15 +367,13 @@ const CompletedProjectsComponent = (
                     />
                   </div>
                 </div>
-              )}
+            )}
           </div>
           {/* Add Icon */}
           {props.company.role !== 'employee' && (
             <div>
               <img
-                onClick={() =>
-                  setShowProjectDialog(!showProjectDialog)
-                }
+                onClick={() => setShowProjectDialog(!showProjectDialog)}
                 src={addIcon}
                 className={`fixed pointer addButton ${
                   showProjectDialog ? 'dn' : 'db'
@@ -390,7 +382,7 @@ const CompletedProjectsComponent = (
                   boxShadow: '0px 6px 6px #00000029',
                   borderRadius: '50%',
                 }}
-                alt=""
+                alt=''
               />
             </div>
           )}
@@ -408,7 +400,7 @@ const CompletedProjectsComponent = (
         autoHideDuration={2000}
         onClose={() => setOpen(false)}
       >
-        <MuiAlert severity="warning">
+        <MuiAlert severity='warning'>
           You are not allowed to do this change!
         </MuiAlert>
       </Snackbar>
@@ -422,14 +414,14 @@ const mapStateToProps = (state: any) => ({
   company: state.companyReducer.currentCompany,
   companyRooms: state.roomReducer.companyRooms,
   role:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.role,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.role,
   optionalRole:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.project.optionalRole,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.project.optionalRole,
   currentProject:
-    state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.project,
+    state.projectReducer.projectRole.projects
+    && state.projectReducer.projectRole.projects.project,
   companyRole: state.companyReducer.currentCompany.role,
 });
 

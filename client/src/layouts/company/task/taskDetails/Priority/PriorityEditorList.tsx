@@ -9,23 +9,22 @@ import { priorityColor } from 'stores/UtilsActions';
 
 interface IPriorityEditorProps {
   updateTask: (task: ITask) => any;
-  colorCode: Number;
+  colorCode: number;
   updatingTask: boolean;
 }
 
 const TagSelectPriority = styled.select`
-  color: ${(props) =>
-    props.colorCode === 0
-      ? '#F44135'
-      : props.colorCode === 1
+  color: ${(props) => (props.colorCode === 0
+    ? '#F44135'
+    : props.colorCode === 1
       ? '#CB5800'
       : props.colorCode === 2
-      ? '#08A0F7'
-      : props.colorCode === 3
-      ? '#5387AF'
-      : props.colorCode === 4
-      ? '#093F68'
-      : '#000'};
+        ? '#08A0F7'
+        : props.colorCode === 3
+          ? '#5387AF'
+          : props.colorCode === 4
+            ? '#093F68'
+            : '#000')};
   background: #f6f6f6;
   border-radius: 3px;
   padding: 0.2rem 0.5rem;
@@ -65,13 +64,14 @@ export const PriorityEditorListComponent = (
   }, [props.colorCode]);
 
   return (
-    <div className="task-info-items">
-      <h1 className="f6">
-        {t('app.project.Project-boards.Priority')}:
+    <div className='task-info-items'>
+      <h1 className='f6'>
+        {t('app.project.Project-boards.Priority')}
+        :
       </h1>
       <TagSelectPriority
-        name="priority"
-        id="taskPriority"
+        name='priority'
+        id='taskPriority'
         onClick={handlePriorityClick}
         onChange={handlePriorityChange}
         value={selectedPriority}
@@ -86,14 +86,14 @@ export const PriorityEditorListComponent = (
                 color.code === 0
                   ? '#C43600'
                   : color.code === 1
-                  ? '#CB5800'
-                  : color.code === 2
-                  ? '#08A0F7'
-                  : color.code === 3
-                  ? '#5387AF'
-                  : color.code === 4
-                  ? '#093F68'
-                  : '#000',
+                    ? '#CB5800'
+                    : color.code === 2
+                      ? '#08A0F7'
+                      : color.code === 3
+                        ? '#5387AF'
+                        : color.code === 4
+                          ? '#093F68'
+                          : '#000',
             }}
           >
             {color.name}
@@ -104,13 +104,11 @@ export const PriorityEditorListComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    colorCode:
+const mapStateToProps = (state: any) => ({
+  colorCode:
       state.taskIndexReducer.taskReducer.currentTask.priority,
-    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
-  };
-};
+  updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+});
 
 export const PriorityEditorList = connect(mapStateToProps, {
   updateTask,

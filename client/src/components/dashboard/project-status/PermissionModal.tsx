@@ -12,19 +12,19 @@ export default function AlertDialogSlide({ open, handleClickOpen }) {
         open={open}
         keepMounted
         onClose={handleClickOpen}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
+        aria-labelledby='alert-dialog-slide-title'
+        aria-describedby='alert-dialog-slide-description'
       >
-        <DialogTitle id="alert-dialog-slide-title">
-          {'Permission Error'}
+        <DialogTitle id='alert-dialog-slide-title'>
+          Permission Error
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
+          <DialogContentText id='alert-dialog-slide-description'>
             You don't have any permission to access this task
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClickOpen} color="primary">
+          <Button onClick={handleClickOpen} color='primary'>
             close
           </Button>
         </DialogActions>

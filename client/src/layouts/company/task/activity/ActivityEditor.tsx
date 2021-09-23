@@ -30,7 +30,7 @@ export const ActivityEditorPageComponent = (
   };
 
   return (
-    <div className="w-100">
+    <div className='w-100'>
       <Form
         onSubmit={onSubmit}
         render={({
@@ -47,9 +47,9 @@ export const ActivityEditorPageComponent = (
             <div>
               <SubmitError errorMessage={submitError} />
             </div>
-            <div className="pl2 pt2 w-100 flex">
+            <div className='pl2 pt2 w-100 flex'>
               <Field<string>
-                name="text"
+                name='text'
                 validate={required}
                 render={({ input, meta }) => (
                   <div
@@ -58,10 +58,10 @@ export const ActivityEditorPageComponent = (
                     }`}
                   >
                     <InputGroupFieldWithError
-                      id="text"
+                      id='text'
                       value={input.value}
                       onChange={input.onChange}
-                      className="br2"
+                      className='br2'
                       placeHolder={t(
                         'app.project.Project-boards.Write-comment',
                       )}
@@ -71,24 +71,24 @@ export const ActivityEditorPageComponent = (
                       }}
                     />
                     {checkError(meta) && (
-                      <small className="mv3" style={{ color: 'red' }}>
+                      <small className='mv3' style={{ color: 'red' }}>
                         {meta.error || meta.submitError}
                       </small>
                     )}
                   </div>
                 )}
               />
-              <div className="w-20 pl2">
+              <div className='w-20 pl2'>
                 <Button
-                  type="submit"
-                  className="w-100"
+                  type='submit'
+                  className='w-100'
                   style={{
                     background: '#34b3e9',
                     color: '#ffffff',
                     height: '40px',
                   }}
                   loading={submitting}
-                  text="Send"
+                  text='Send'
                   disabled={submitting || pristine}
                 />
               </div>
@@ -100,11 +100,9 @@ export const ActivityEditorPageComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    isCreating: state.commentReducer.isCreating,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  isCreating: state.commentReducer.isCreating,
+});
 
 export const ActivityEditor = connect(mapStateToProps, {
   createComment,

@@ -1,15 +1,24 @@
-import { all, put, call, select } from 'redux-saga/effects';
+import {
+  all, put, call, select,
+} from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
 import {
   tokenConfig,
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
-import { TaskActionType } from './Types';
-import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
 import { Toaster } from '@blueprintjs/core';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
+import { getProjectId } from 'stores/project/Selector';
+import { getCompanyId } from 'stores/company/Selector';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
+import {
+  getCurrentBoard,
+  getCurrentTaskId,
+  selectColumnName,
+} from './Selector';
 import {
   createBoardFailure,
   createBoardSuccess,
@@ -46,18 +55,11 @@ import {
   getAllUserTasksSuccess,
   getAllUserTasksFailure,
 } from './Actions';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { getProjectId } from 'stores/project/Selector';
-import { getCompanyId } from 'stores/company/Selector';
-import {
-  getCurrentBoard,
-  getCurrentTaskId,
-  selectColumnName,
-} from './Selector';
-import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { TaskBoard, ITask } from './Reducer';
+import { TaskActionType } from './Types';
 
-const takeEvery: any = Eff.takeEvery;
-const takeLatest: any = Eff.takeLatest;
+const { takeEvery } = Eff;
+const { takeLatest } = Eff;
 
 export function* createBoard({ payload }: any) {
   try {
@@ -154,8 +156,8 @@ export function* updateBoardNameAsync({ payload }: any) {
     };
     if (currentBoard._id) {
       if (
-        (headers as any).headers.Authorization &&
-        payload !== currentBoard.name
+        (headers as any).headers.Authorization
+        && payload !== currentBoard.name
       ) {
         const response = yield tigrowApi.put(
           `boards/${currentBoard._id}/update-name?pid=${projectId}`,
@@ -295,7 +297,7 @@ export function* dragAndDrop({
         );
       }
       yield put(dragAndDropTaskSuccess(allColumns));
-      yield tigrowApi.post(`tasks/dragTask`, requestData, headers);
+      yield tigrowApi.post('tasks/dragTask', requestData, headers);
     }
   } catch (error) {
     Toaster.create().show({
@@ -345,9 +347,9 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
         createdAt: res.data.createdAt,
         dueDate: res.data.dueDate,
         createdBy:
-          res.data.account.firstName +
-          ' ' +
-          res.data.account.lastName,
+          `${res.data.account.firstName
+          } ${
+            res.data.account.lastName}`,
         description: res.data.description,
         priority: res.data.priority,
         currentColumnName: res.data.columnId.name,
@@ -387,9 +389,9 @@ export function* updateTask({ payload }: any) {
         createdAt: res.data.createdAt,
         dueDate: res.data.dueDate,
         createdBy:
-          res.data.account.firstName +
-          ' ' +
-          res.data.account.lastName,
+          `${res.data.account.firstName
+          } ${
+            res.data.account.lastName}`,
         description: res.data.description,
         priority: res.data.priority,
         currentColumnName: res.data.columnId.name,
@@ -413,8 +415,7 @@ export function* updateTask({ payload }: any) {
           column.tasks![index].dueDate = response.dueDate;
           column.tasks![index].description = response.description;
           column.tasks![index].priority = response.priority;
-          column.tasks![index].currentColumnName =
-            response.currentColumnName;
+          column.tasks![index].currentColumnName = response.currentColumnName;
           column.tasks![index].columnId = response.columnId;
         }
       });
@@ -461,7 +462,7 @@ export function* taskFileDeleteAsync({ payload }: any) {
     };
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      yield tigrowApi.put(`files/file-delete-task`, reqBody, headers);
+      yield tigrowApi.put('files/file-delete-task', reqBody, headers);
       yield all([
         put(taskFileDeleteSuccess(payload)),
         put(getSelectedTaskDetails(payload.taskId)),

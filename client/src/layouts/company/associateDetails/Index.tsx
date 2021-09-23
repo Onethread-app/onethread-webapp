@@ -26,7 +26,7 @@ const AssociatesDetailsViewComponent = (
   props: AssociatesDetailsViewInternalProps & RouteComponentProps,
 ) => {
   const [loading, setLoading] = useState(false);
-  const associateId = (props.match.params as any).associateId;
+  const { associateId } = props.match.params as any;
 
   useEffect(() => {
     async function loadAssociate() {
@@ -42,12 +42,12 @@ const AssociatesDetailsViewComponent = (
       {loading === true || isEmpty(props.associate._id) === true ? (
         <Loading />
       ) : (
-        <div className="bg-white br3 ph5-ns ph4">
-          <div className="pv4">
+        <div className='bg-white br3 ph5-ns ph4'>
+          <div className='pv4'>
             <BreadCrumbs
               items={[
                 {
-                  text: `My Partners`,
+                  text: 'My Partners',
                   href: `/company/${props.company.uniqueName}/associates`,
                 },
                 {
@@ -57,28 +57,29 @@ const AssociatesDetailsViewComponent = (
               ]}
             />
           </div>
-          <div className="flex mb4">
-            {props.associate &&
-            props.associate.associateCompany.logo ? (
+          <div className='flex mb4'>
+            {props.associate
+            && props.associate.associateCompany.logo ? (
               <img
-                className="w3 h3 mr4"
+                className='w3 h3 mr4'
                 src={`${props.associate.associateCompany.logo}`}
-                alt="company logo"
+                alt='company logo'
               />
-            ) : (
-              <h1 className="white f3 bg-green w3 h3 tc pt3 br3">
-                {props.associate
-                  ? props.associate.associateCompany.name.charAt(0)
-                  : 'Demo'}
-              </h1>
-            )}
-            <div className="ml4">
-              <h1 className="f3 mv0">
+              ) : (
+                <h1 className='white f3 bg-green w3 h3 tc pt3 br3'>
+                  {props.associate
+                    ? props.associate.associateCompany.name.charAt(0)
+                    : 'Demo'}
+                </h1>
+              )}
+            <div className='ml4'>
+              <h1 className='f3 mv0'>
                 {props.associate.associateCompany.name}
               </h1>
-              <h1 className="silver f7 mv0 fw5">{`Added by ${props.associate.account.firstName} ${props.associate.account.lastName}`}</h1>
-              <h1 className="f7 mv0 pt3 fw6">
-                Added on{' '}
+              <h1 className='silver f7 mv0 fw5'>{`Added by ${props.associate.account.firstName} ${props.associate.account.lastName}`}</h1>
+              <h1 className='f7 mv0 pt3 fw6'>
+                Added on
+                {' '}
                 {moment(props.associate.createdAt).format(
                   'MMMM Do YYYY',
                 )}
@@ -86,16 +87,16 @@ const AssociatesDetailsViewComponent = (
             </div>
           </div>
           <Divider />
-          <Tabs id="TabsExample">
+          <Tabs id='TabsExample'>
             <Tab
-              id="associates_basic_info"
-              title="Basic Information"
-              panel={
+              id='associates_basic_info'
+              title='Basic Information'
+              panel={(
                 <AssociateBasicInfoView
                   company={props.associate.associateCompany}
                 />
-              }
-              className="outline-0 mt4"
+              )}
+              className='outline-0 mt4'
             />
           </Tabs>
         </div>
@@ -104,12 +105,10 @@ const AssociatesDetailsViewComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    associate: state.associateReducer.currentAssociate,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  associate: state.associateReducer.currentAssociate,
+});
 
 export const AssociatesDetailsView = connect(mapStateToProps, {
   getSelectedAssociate,

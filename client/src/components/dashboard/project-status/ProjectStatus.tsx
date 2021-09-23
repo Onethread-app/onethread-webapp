@@ -23,14 +23,14 @@ import {
 } from 'stores/subscriptionBilling/Actions';
 import { priorityColor, tokenConfig } from 'stores/UtilsActions';
 
-import TasksTable from './TasksTable';
-import MultiSelectComponent from './MultiSelectComponent';
 import CalendarView from 'components/calendar/CalendarView';
 import ExportTasks, {
   ICompanyTask,
 } from 'components/export-tasks/ExportTasks';
 
 import { ViewSelectDiv } from 'layouts/company/boardDetails/BoardDetails.styles';
+import MultiSelectComponent from './MultiSelectComponent';
+import TasksTable from './TasksTable';
 import { ExportDiv } from './ProjectStatus.styles';
 import './ProjectStatus.scss';
 
@@ -47,29 +47,26 @@ interface Data {
 
 type Order = 'asc' | 'desc';
 
-const getModifiedTasks = (a) => {
-  return a.map((task) => ({
-    taskname: task.name,
-    projectname: task.project.name,
-    members: task.members,
-    status: task.status,
-    dueDate: task.dueDate ? task.dueDate : `December 31, 1970`,
-    doneSubtasks: task.doneSubtasks,
-    totalSubtasks: task.totalSubtasks,
-    boardId: task.boardId,
-    companyUniqueName: task.company.uniqueName,
-    projectId: task.project._id,
-    taskId: task._id,
-    priority: task.priority,
-    remainingSubtask: task.totalSubtasks - task.doneSubtasks,
-  }));
-};
+const getModifiedTasks = (a) => a.map((task) => ({
+  taskname: task.name,
+  projectname: task.project.name,
+  members: task.members,
+  status: task.status,
+  dueDate: task.dueDate ? task.dueDate : 'December 31, 1970',
+  doneSubtasks: task.doneSubtasks,
+  totalSubtasks: task.totalSubtasks,
+  boardId: task.boardId,
+  companyUniqueName: task.company.uniqueName,
+  projectId: task.project._id,
+  taskId: task._id,
+  priority: task.priority,
+  remainingSubtask: task.totalSubtasks - task.doneSubtasks,
+}));
 
-const getUniqueList = (a, fld) =>
-  [...Array.from(new Set(a.map((m) => m[fld])))].map((a) => ({
-    id: a,
-    label: a,
-  }));
+const getUniqueList = (a, fld) => [...Array.from(new Set(a.map((m) => m[fld])))].map((a) => ({
+  id: a,
+  label: a,
+}));
 
 const filterSpacing = {
   paddingRight: 10,
@@ -117,10 +114,8 @@ const ProjectStatusComponent = (props) => {
   const [calTask, setCalTask] = useState<any[]>([]);
 
   // export tasks
-  const [openExportDialog, setOpenExportDialog] =
-    useState<boolean>(false);
-  const [loadingExportTasks, setLoadingExportTasks] =
-    useState<boolean>(false);
+  const [openExportDialog, setOpenExportDialog] = useState<boolean>(false);
+  const [loadingExportTasks, setLoadingExportTasks] = useState<boolean>(false);
   const [tasksForExport, setTasksForExport] = useState<
     ICompanyTask[]
   >([]);
@@ -190,12 +185,15 @@ const ProjectStatusComponent = (props) => {
       let uniqueMembersT: any[] = [];
       const uniqueMembersMap = {};
 
-      for (let task of mTask) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const task of mTask) {
         if (task.members) {
           const members = task.members.map(
             (t) => `${t.firstName} ${t.lastName}`,
           );
-          for (let member of members) {
+          // eslint-disable-next-line no-restricted-syntax
+          for (const member of members) {
+            // eslint-disable-next-line no-continue
             if (uniqueMembersMap[member]) continue;
             uniqueMembersMap[member] = true;
             uniqueMembersT.push(member);
@@ -220,10 +218,10 @@ const ProjectStatusComponent = (props) => {
     setDate(null);
   };
   const didYouFilter = !(
-    selectedStatus.length === 0 &&
-    selectedAssignee.length === 0 &&
-    selectedPriority.length === 0 &&
-    selectedProjects.length === 0
+    selectedStatus.length === 0
+    && selectedAssignee.length === 0
+    && selectedPriority.length === 0
+    && selectedProjects.length === 0
   );
 
   const handleViewChange = (v: 'table' | 'calendar') => {
@@ -236,27 +234,30 @@ const ProjectStatusComponent = (props) => {
 
   useEffect(() => {
     if (
-      selectedStatus.length === 0 &&
-      selectedAssignee.length === 0 &&
-      selectedPriority.length === 0 &&
-      selectedProjects.length === 0 &&
-      !date
+      selectedStatus.length === 0
+      && selectedAssignee.length === 0
+      && selectedPriority.length === 0
+      && selectedProjects.length === 0
+      && !date
     ) {
       setfTasks(allTasks);
       return;
     }
     const colorMapper = {};
-    for (let pc of priorityColor) colorMapper[pc.name] = pc.code;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const pc of priorityColor) colorMapper[pc.name] = pc.code;
 
     const fTaskList: any[] = [];
-    for (let task of allTasks) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const task of allTasks) {
       let found = false;
       let takeThis = true;
       // member
       if (selectedAssignee.length > 0) {
-        for (let member of task.members) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const member of task.members) {
           const memberName = `${member.firstName} ${member.lastName}`;
-          let res = selectedAssignee.find(
+          const res = selectedAssignee.find(
             (s) => s.label === memberName,
           );
           if (res) {
@@ -276,9 +277,8 @@ const ProjectStatusComponent = (props) => {
       // priority
       if (selectedPriority.length > 0) {
         found = selectedPriority.find(
-          (p) =>
-            colorMapper[p.label].toString() ===
-            task.priority.toString(),
+          (p) => colorMapper[p.label].toString()
+            === task.priority.toString(),
         );
         if (!found) takeThis = false;
       }
@@ -286,9 +286,8 @@ const ProjectStatusComponent = (props) => {
       // status
       if (selectedStatus.length > 0) {
         found = selectedStatus.find(
-          (p) =>
-            p.label.split(' ').join('-').toLowerCase() ===
-            task.status,
+          (p) => p.label.split(' ').join('-').toLowerCase()
+            === task.status,
         );
         if (!found) takeThis = false;
       }
@@ -319,10 +318,10 @@ const ProjectStatusComponent = (props) => {
   }, [fTasks]);
 
   return (
-    <div className="project-status mb5">
-      <div className="text-center">
+    <div className='project-status mb5'>
+      <div className='text-center'>
         <h3
-          className="f3-ns f5"
+          className='f3-ns f5'
           style={{
             color: '#34b3e9',
             fontSize: '2.3rem',
@@ -332,20 +331,23 @@ const ProjectStatusComponent = (props) => {
           {t('app.project.Tasks.Task-Status')}
         </h3>
       </div>
-      <div className={`flex items-center justify-between mb2 w-100`}>
-        <div className={`w-third`}></div>
+      <div className='flex items-center justify-between mb2 w-100'>
+        <div className='w-third' />
         <ViewSelectDiv
           fetchingBoard={props.fetchingBoard}
-          className="flex items-center tc w-third"
+          className='flex items-center tc w-third'
         >
-          <p>{t('app.project.Tasks.View')}:</p>
+          <p>
+            {t('app.project.Tasks.View')}
+            :
+          </p>
           <p
             onClick={() => {
               handleViewChange('table');
             }}
             className={`${view === 'table' && 'active'}`}
           >
-            <Tooltip title="List" placement="top">
+            <Tooltip title='List' placement='top'>
               <ListIcon />
             </Tooltip>
           </p>
@@ -355,14 +357,14 @@ const ProjectStatusComponent = (props) => {
             }}
             className={`${view === 'calendar' && 'active'}`}
           >
-            <Tooltip title="Calendar" placement="top">
+            <Tooltip title='Calendar' placement='top'>
               <DateRangeIcon />
             </Tooltip>
           </p>
         </ViewSelectDiv>
-        <div className={`w-third flex justify-end`}>
+        <div className='w-third flex justify-end'>
           {isLoading === false && (
-            <Tooltip title="Export Tasks" placement="top">
+            <Tooltip title='Export Tasks' placement='top'>
               <ExportDiv
                 className={`${isLoading ? '' : 'pointer'}`}
                 onClick={() => {
@@ -379,7 +381,7 @@ const ProjectStatusComponent = (props) => {
       </div>
       {isLoading ? (
         <div
-          className="flex justify-center mt2 w-100"
+          className='flex justify-center mt2 w-100'
           style={{ paddingTop: 25, paddingBottom: 30 }}
         >
           <CircularProgress
@@ -389,28 +391,36 @@ const ProjectStatusComponent = (props) => {
         </div>
       ) : (
         <div>
-          <div className="status-bar">
-            <div className="status-count">
+          <div className='status-bar'>
+            <div className='status-count'>
               <p style={{ paddingRight: 20 }}>
-                {t('app.project.Tasks.Total-tasks')}: {totalTasks}
+                {t('app.project.Tasks.Total-tasks')}
+                :
+                {totalTasks}
               </p>
               <p>
-                {t('app.project.Tasks.Remaining-tasks')}:{' '}
+                {t('app.project.Tasks.Remaining-tasks')}
+                :
+                {' '}
                 {remainingTasks}
               </p>
             </div>
-            <div className="status-count">
+            <div className='status-count'>
               <p style={{ paddingRight: 20 }}>
-                {t('app.project.Tasks.Running-projects')}:{' '}
+                {t('app.project.Tasks.Running-projects')}
+                :
+                {' '}
                 {runnningProject}
               </p>
               <p>
-                {t('app.project.Tasks.Completed-projects')}:{' '}
+                {t('app.project.Tasks.Completed-projects')}
+                :
+                {' '}
                 {completedProject}
               </p>
             </div>
           </div>
-          <div className="task-filters">
+          <div className='task-filters'>
             <div style={filterSpacing}>
               <MultiSelectComponent
                 container={uniqueStatus}
@@ -461,7 +471,7 @@ const ProjectStatusComponent = (props) => {
           {didYouFilter && (
             <div style={{ textAlign: 'right' }}>
               <button
-                className="w4 grow h2 pointer"
+                className='w4 grow h2 pointer'
                 style={{
                   background: 'rgb(52, 132, 240)',
                   color: 'white',
@@ -476,7 +486,7 @@ const ProjectStatusComponent = (props) => {
           )}
 
           {fTasks.length > 0 && (
-            <div className="projects-list w-100">
+            <div className='projects-list w-100'>
               {view === 'calendar' && (
                 <CalendarView tasks={calTask} />
               )}
@@ -504,8 +514,8 @@ const ProjectStatusComponent = (props) => {
         <Dialog
           isOpen={openExportDialog}
           onClose={() => setOpenExportDialog(false)}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
+          canEscapeKeyClose
+          canOutsideClickClose
           style={{
             width: isMobileOnly ? '95%' : '420px',
             maxWidth: '420px',
@@ -524,15 +534,13 @@ const ProjectStatusComponent = (props) => {
     </div>
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-    company: state.companyReducer.currentCompany,
-    subscriptiontExpired:
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+  company: state.companyReducer.currentCompany,
+  subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
-    completedTasks: state.companyReducer.completedTasks,
-  };
-};
+  completedTasks: state.companyReducer.completedTasks,
+});
 
 export const ProjectStatus = connect(mapStateToProps, {
   getCompanyAnnouncement,

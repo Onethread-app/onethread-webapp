@@ -22,17 +22,17 @@ const CompanyPopoverIcon = (props: ICompanyPopoverIcon) => {
   return (
     <>
       <Popover
-        popoverClassName="bp3-popover-content-sizing bg-white padding-fix"
+        popoverClassName='bp3-popover-content-sizing bg-white padding-fix'
         position={Position.BOTTOM}
-        content={
+        content={(
           <CompanyListView
             showDialog={showDialog}
             setShowDialog={setShowDialog}
           />
-        }
-        target={
+        )}
+        target={(
           <Button
-            className="bp3-minimal dim f6 f5-l dib mr3 mr4-l outline-0"
+            className='bp3-minimal dim f6 f5-l dib mr3 mr4-l outline-0'
             style={{
               fontSize: '0.8rem',
               fontWeight: 600,
@@ -41,7 +41,7 @@ const CompanyPopoverIcon = (props: ICompanyPopoverIcon) => {
             }}
             text={t('app.homepage.My-Companies')}
           />
-        }
+        )}
       />
       {showDialog && (
         <Dialog

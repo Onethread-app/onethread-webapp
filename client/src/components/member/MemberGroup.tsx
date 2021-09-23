@@ -13,26 +13,24 @@ import MemberListDialog from './MemberListDialog';
 
 import './Icon.scss';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      '& > *': {
-        margin: theme.spacing(1),
-      },
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  root: {
+    display: 'flex',
+    '& > *': {
+      margin: theme.spacing(1),
     },
-    small: {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
-      zIndex: 0,
-    },
-    large: {
-      width: theme.spacing(5),
-      height: theme.spacing(5),
-      zIndex: 0,
-    },
-  }),
-);
+  },
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    zIndex: 0,
+  },
+  large: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    zIndex: 0,
+  },
+}));
 
 interface IMemberGroup {
   members: IBoardMember[] | ITaskMember[];
@@ -44,9 +42,9 @@ const MemberGroup = (props: IMemberGroup) => {
   return (
     <Popover
       content={<MemberListDialog members={props.members} />}
-      interactionKind="hover"
-      target={
-        <AvatarGroup max={3} className="pointer">
+      interactionKind='hover'
+      target={(
+        <AvatarGroup max={3} className='pointer'>
           {props.members.map((member) => (
             <Avatar
               alt={`${member.name}`}
@@ -56,7 +54,7 @@ const MemberGroup = (props: IMemberGroup) => {
             />
           ))}
         </AvatarGroup>
-      }
+      )}
     />
   );
 };

@@ -27,15 +27,15 @@ const EditableTextComponent = (props: IEditableTextComponent) => {
     <div>
       <EditableText
         alwaysRenderInput={false}
-        intent="none"
+        intent='none'
         value={value}
         maxLength={props.maxLength}
         multiline={props.multiline ? props.multiline : false}
         maxLines={props.maxLines}
         minLines={props.minLines}
         placeholder={props.placeholder ? props.placeholder : ''}
-        className="pa1"
-        confirmOnEnterKey={true}
+        className='pa1'
+        confirmOnEnterKey
         onChange={handleChange}
         onConfirm={handleConfirm}
       />

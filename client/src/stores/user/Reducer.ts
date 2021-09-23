@@ -1,3 +1,4 @@
+import { ItemEntityProps } from 'components/fields/SuggestField';
 import {
   USER_FETCH_ERROR,
   BASIC_INFO,
@@ -13,7 +14,7 @@ import {
   COVER_IMAGE_UPLOAD,
   VIDEO_CONFERENCE,
 } from './Types';
-import { ItemEntityProps } from 'components/fields/SuggestField';
+
 export interface ICompanyByUser {
   role: string;
   company: {

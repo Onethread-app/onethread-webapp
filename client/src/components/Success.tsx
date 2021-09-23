@@ -17,13 +17,14 @@ function _Success(props: ISuccess) {
 
   useEffect(() => {
     async function successCall() {
-      const search = window.location.search;
+      const { search } = window.location;
       const params = new URLSearchParams(search);
       // const currency = params.get('currency');
       const amount = params.get('amount');
       const status = params.get('status');
       // const invoice = params.get('invoice');
       // const pan_id = params.get('pan_id');
+      // eslint-disable-next-line camelcase
       const transaction_id = params.get('transaction_id');
       // const username = params.get('username');
       // const currency = params.get('currency');
@@ -54,14 +55,14 @@ function _Success(props: ISuccess) {
       }}
     >
       <img
-        className="center"
+        className='center'
         style={{
           height: '370px',
           width: '500px',
           textAlign: 'center',
         }}
         src={successImage}
-        alt="success"
+        alt='success'
       />
 
       <h1

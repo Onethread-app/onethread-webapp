@@ -18,53 +18,47 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 
 import { priorityColor } from 'stores/UtilsActions';
 
-const StyledTableCell = withStyles((theme: Theme) =>
-  createStyles({
-    head: {
-      backgroundColor: 'rgba(0, 0, 0, 0.03)',
-      color: 'black',
-    },
-    body: {
-      fontSize: 14,
-    },
-  }),
-)(TableCell);
+const StyledTableCell = withStyles((theme: Theme) => createStyles({
+  head: {
+    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    color: 'black',
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
 
-const StyledTableRow = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '&:nth-of-type(even)': {
-        backgroundColor: theme.palette.action.hover,
-      },
+const StyledTableRow = withStyles((theme: Theme) => createStyles({
+  root: {
+    '&:nth-of-type(even)': {
+      backgroundColor: theme.palette.action.hover,
     },
-  }),
-)(TableRow);
+  },
+}))(TableRow);
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    paper: {
-      width: '100%',
-      marginBottom: theme.spacing(2),
-    },
-    table: {
-      minWidth: 750,
-    },
-    visuallyHidden: {
-      border: 0,
-      clip: 'rect(0 0 0 0)',
-      height: 1,
-      margin: -1,
-      overflow: 'hidden',
-      padding: 0,
-      position: 'absolute',
-      top: 20,
-      width: 1,
-    },
-  }),
-);
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  root: {
+    width: '100%',
+  },
+  paper: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
+  table: {
+    minWidth: 750,
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1,
+  },
+}));
 
 interface Data {
   name: string;
@@ -127,11 +121,12 @@ interface EnhancedTableProps {
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const { t } = useTranslation();
-  const { classes, order, orderBy, onRequestSort } = props;
-  const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
+  const {
+    classes, order, orderBy, onRequestSort,
+  } = props;
+  const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    onRequestSort(event, property);
+  };
 
   interface HeadCell {
     id: keyof Data;
@@ -172,7 +167,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           <StyledTableCell
             key={headCell.id}
             align={index === 0 ? 'center' : 'left'}
-            padding={'default'}
+            padding='default'
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -181,14 +176,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
               onClick={createSortHandler(headCell.id)}
             >
               <b style={{ fontSize: 16.5 }}>{headCell.label}</b>
-              {orderBy === headCell.id &&
-              headCell.id === 'dueDate' ? (
+              {orderBy === headCell.id
+              && headCell.id === 'dueDate' ? (
                 <span className={classes.visuallyHidden}>
                   {order === 'desc'
                     ? 'sorted descending'
                     : 'sorted ascending'}
                 </span>
-              ) : null}
+                ) : null}
             </TableSortLabel>
           </StyledTableCell>
         ))}
@@ -203,7 +198,7 @@ const PriorityButton = ({ value }) => {
   );
   return (
     <span
-      className="ph2 pv1"
+      className='ph2 pv1'
       style={{
         background: priorObject.value,
         color: 'white',
@@ -230,7 +225,7 @@ const AppTable = ({
   companyUnqName,
   projectId,
 }) => {
-  let history = useHistory();
+  const history = useHistory();
   const classes = useStyles();
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -263,18 +258,17 @@ const AppTable = ({
     setPage(0);
   };
 
-  const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, tasks.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage
+    - Math.min(rowsPerPage, tasks.length - page * rowsPerPage);
   return (
     <div className={classes.root} style={{ paddingTop: 20 }}>
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
             className={classes.table}
-            aria-labelledby="tableTitle"
-            size={'medium'}
-            aria-label="enhanced table"
+            aria-labelledby='tableTitle'
+            size='medium'
+            aria-label='enhanced table'
           >
             <EnhancedTableHead
               classes={classes}
@@ -296,7 +290,7 @@ const AppTable = ({
                   return (
                     <StyledTableRow
                       hover
-                      role="checkbox"
+                      role='checkbox'
                       tabIndex={-1}
                       key={row.name}
                       onClick={() => {
@@ -307,28 +301,28 @@ const AppTable = ({
                       style={{ cursor: 'pointer' }}
                     >
                       <StyledTableCell
-                        component="th"
+                        component='th'
                         id={labelId}
-                        scope="row"
-                        padding="none"
-                        align={'center'}
+                        scope='row'
+                        padding='none'
+                        align='center'
                       >
                         {row.name}
                       </StyledTableCell>
-                      <StyledTableCell align="left">
+                      <StyledTableCell align='left'>
                         {row.assign ? row.assign : '-'}
                       </StyledTableCell>
-                      <StyledTableCell align="left">
+                      <StyledTableCell align='left'>
                         {row.boardName}
                       </StyledTableCell>
 
-                      <StyledTableCell align="left">
+                      <StyledTableCell align='left'>
                         <PriorityButton value={row.priority} />
                       </StyledTableCell>
-                      <StyledTableCell align="left">
+                      <StyledTableCell align='left'>
                         <span>{row.status}</span>
                       </StyledTableCell>
-                      <StyledTableCell align="left">
+                      <StyledTableCell align='left'>
                         {row.dueDate ? (
                           <p>
                             {moment(row.dueDate).format(
@@ -356,7 +350,7 @@ const AppTable = ({
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
-          component="div"
+          component='div'
           count={tasks.length}
           rowsPerPage={rowsPerPage}
           page={page}

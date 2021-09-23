@@ -13,7 +13,7 @@ const MainFooter = () => {
   const { t } = useTranslation();
   return (
     <>
-      <div className="main-footer flex flex-column items-center w-100">
+      <div className='main-footer flex flex-column items-center w-100'>
         {/* <div className="main-footer-links flex items-center justify-between flex-nowrap">
         <div>
           <ul>
@@ -49,7 +49,7 @@ const MainFooter = () => {
       </div>
       <div className="main-footer-border"></div> */}
         <div
-          className="main-footer-icons flex justify-between items-center"
+          className='main-footer-icons flex justify-between items-center'
           style={{ marginBottom: '3rem' }}
         >
           {/* <div className="group-1">
@@ -57,36 +57,36 @@ const MainFooter = () => {
           <img src={AndroidIcon} alt="android" />
           <img src={MacIcon} alt="mac" />
         </div> */}
-          <div className="group-1">
+          <div className='group-1'>
             <a
-              href="https://www.facebook.com/onethread.app.2021"
-              target="_blank"
-              rel="noreferrer"
+              href='https://www.facebook.com/onethread.app.2021'
+              target='_blank'
+              rel='noreferrer'
             >
               {' '}
-              <img src={FBIcon} alt="facebook" />
+              <img src={FBIcon} alt='facebook' />
             </a>
             <a
-              href="https://www.linkedin.com/company/72622667 "
-              target="_blank"
-              rel="noreferrer"
+              href='https://www.linkedin.com/company/72622667 '
+              target='_blank'
+              rel='noreferrer'
             >
               {' '}
-              <img src={LinkedInIcon} alt="linkedin" />
+              <img src={LinkedInIcon} alt='linkedin' />
             </a>
             <a
-              href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
-              target="_blank"
-              rel="noreferrer"
+              href='https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA'
+              target='_blank'
+              rel='noreferrer'
             >
-              <img src={YTIcon} alt="youtube" />
+              <img src={YTIcon} alt='youtube' />
             </a>
             {/* <LanguageSelector /> */}
           </div>
         </div>
       </div>
-      <div className="footer-copyright flex items-center w-100">
-        <h1 className="tc w-100">
+      <div className='footer-copyright flex items-center w-100'>
+        <h1 className='tc w-100'>
           {t('landing.homepage.footer.copyright')}
         </h1>
       </div>

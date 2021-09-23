@@ -14,8 +14,8 @@ export const PriorityViewComponent = (
   const { t } = useTranslation();
 
   return (
-    <div className="flex justify-between items-center">
-      <h1 className="f6">
+    <div className='flex justify-between items-center'>
+      <h1 className='f6'>
         {t('app.project.Project-boards.Priority')}
       </h1>
       {props.priority! > -1 && (
@@ -37,11 +37,9 @@ export const PriorityViewComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    priority: state.taskIndexReducer.taskReducer.currentTask.priority,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  priority: state.taskIndexReducer.taskReducer.currentTask.priority,
+});
 
 export const PriorityView = connect(
   mapStateToProps,

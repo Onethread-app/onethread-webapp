@@ -80,11 +80,10 @@ const AddColleaguesFormComponent = (
           headers,
         );
         return response.data;
-      } else {
-        // tslint:disable-next-line: no-console
-
-        return { status: false, message: 'Authorization Error' };
       }
+      // tslint:disable-next-line: no-console
+
+      return { status: false, message: 'Authorization Error' };
     } catch (error: any) {
       // tslint:disable-next-line: no-console
 
@@ -106,7 +105,7 @@ const AddColleaguesFormComponent = (
       Toaster.create({
         position: Position.TOP,
       }).show({
-        message: `Already exist in this company.`,
+        message: 'Already exist in this company.',
         intent: 'danger',
       });
     } else {
@@ -125,9 +124,9 @@ const AddColleaguesFormComponent = (
   };
 
   return (
-    <div className="pa3">
-      <div className=" w-100">
-        <h1 className="f5 tigrow-lightBlue">Add members</h1>
+    <div className='pa3'>
+      <div className=' w-100'>
+        <h1 className='f5 tigrow-lightBlue'>Add members</h1>
         <SuggestField
           onChange={(query: string) => {
             setEmail(query);
@@ -135,27 +134,27 @@ const AddColleaguesFormComponent = (
           items={teamMembers}
           selectedItems={selectedTeamMember}
           setSelectedItems={setSelectedTeamMember}
-          multipleItemSelect={true}
+          multipleItemSelect
           isCreatable={
-            isEmpty(teamMembers) && isEmail(email) ? true : false
+            !!(isEmpty(teamMembers) && isEmail(email))
           }
           isCreatableAPI={addNewUser}
         />
       </div>
-      <div className="w-100">
+      <div className='w-100'>
         {selectedTeamMember.map((item) => (
           <Tag
             key={item._id}
-            className="ma1 pa2"
-            interactive={true}
+            className='ma1 pa2'
+            interactive
             onRemove={(e) => {
               const filteredItems = selectedTeamMember.filter(
                 (selectedItem) => item.name !== selectedItem.name,
               );
               setSelectedTeamMember([...filteredItems]);
             }}
-            large={true}
-            intent="primary"
+            large
+            intent='primary'
           >
             {item.name}
           </Tag>
@@ -164,20 +163,20 @@ const AddColleaguesFormComponent = (
       {pendingTeamMembers.length ? (
         <small>Invited Members:</small>
       ) : undefined}
-      <div className="w-100">
+      <div className='w-100'>
         {pendingTeamMembers.map((item, index) => (
           <Tag
             key={index}
-            className="ma1 pa2"
-            interactive={true}
+            className='ma1 pa2'
+            interactive
             onRemove={(e) => {
               const filteredItems = pendingTeamMembers.filter(
                 (selectedItem) => item !== selectedItem,
               );
               setPendingTeamMembers([...filteredItems]);
             }}
-            large={true}
-            intent="primary"
+            large
+            intent='primary'
           >
             {item}
           </Tag>
@@ -185,14 +184,14 @@ const AddColleaguesFormComponent = (
       </div>
 
       {selectedTeamMember.length + pendingTeamMembers.length > 20 ? (
-        <small className="red">
+        <small className='red'>
           Could not add more than 20 members at a time.
         </small>
       ) : undefined}
 
-      <div className="flex justify-end mt4">
+      <div className='flex justify-end mt4'>
         <Button
-          className="grow h2 pointer white bp3-minimal w4 mr3"
+          className='grow h2 pointer white bp3-minimal w4 mr3'
           style={{
             background: '#fff',
             outline: 'none',
@@ -204,39 +203,35 @@ const AddColleaguesFormComponent = (
           Cancel
         </Button>
         <Button
-          className="grow h2 pointer white bp3-minimal w4"
+          className='grow h2 pointer white bp3-minimal w4'
           style={
-            selectedTeamMember.length + pendingTeamMembers.length >
-              0 &&
-            selectedTeamMember.length + pendingTeamMembers.length <=
-              20
+            selectedTeamMember.length + pendingTeamMembers.length
+              > 0
+            && selectedTeamMember.length + pendingTeamMembers.length
+              <= 20
               ? {
-                  background: '#34b3e9',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#34b3e9',
+                outline: 'none',
+                color: 'white',
+              }
               : {
-                  background: '#011b1b2e',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#011b1b2e',
+                outline: 'none',
+                color: 'white',
+              }
           }
           disabled={
-            selectedTeamMember.length + pendingTeamMembers.length >
-              0 &&
-            selectedTeamMember.length + pendingTeamMembers.length <=
-              20
-              ? false
-              : true
+            !(selectedTeamMember.length + pendingTeamMembers.length
+              > 0
+            && selectedTeamMember.length + pendingTeamMembers.length
+              <= 20)
           }
           onClick={async () => {
             const userIdWithCompany = selectedTeamMember.map(
-              (selected: any) => {
-                return {
-                  account: selected.mongo_id,
-                  company: props.company._id,
-                };
-              },
+              (selected: any) => ({
+                account: selected.mongo_id,
+                company: props.company._id,
+              }),
             );
 
             if (userIdWithCompany || pendingTeamMembers) {
@@ -257,11 +252,9 @@ const AddColleaguesFormComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+});
 
 export const AddColleaguesForm = connect(mapStateToProps, {
   addTeamMembers,

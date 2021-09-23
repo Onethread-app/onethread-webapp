@@ -48,46 +48,46 @@ const PositionEditComponent = (props: IPositionEditInternalProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="ph4 pt6" onSubmit={handleSubmit}>
+        <form className='ph4 pt6' onSubmit={handleSubmit}>
           <SubmitError errorMessage={submitError} />
-          <h1 className="f5 lh-copy white">Position</h1>
+          <h1 className='f5 lh-copy white'>Position</h1>
           <Field<string>
-            name="position"
+            name='position'
             validate={maxValue(32)}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <InputGroupFieldWithError
-                  id="position"
-                  className="mt1 ba"
+                  id='position'
+                  className='mt1 ba'
                   value={input.value}
                   onChange={input.onChange}
                   style={{
                     boxShadow: 'none',
                   }}
                   error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
+                    checkError(meta)
+                    && (meta.error || meta.submitError)
                   }
                 />
               </div>
             )}
           />
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <Button
-              className="w4 grow h2 pointer mr3"
+              className='w4 grow h2 pointer mr3'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
             >
               Save
             </Button>
             <Button
-              className="w4 grow h2 pointer"
+              className='w4 grow h2 pointer'
               style={{
                 background: '#fff',
                 outline: 'none',
@@ -107,11 +107,9 @@ const PositionEditComponent = (props: IPositionEditInternalProps) => {
     />
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+});
 
 export const PositionEditor = connect(mapStateToProps, {
   editInfoAction: editUserInfoAction,

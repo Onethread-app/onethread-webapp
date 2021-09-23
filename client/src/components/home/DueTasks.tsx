@@ -30,7 +30,7 @@ const DueTasks = () => {
       const headers = tokenConfig();
       if ((headers.headers as any).Authorization) {
         const response = await tigrowApi.get(
-          `accounts/due-task`,
+          'accounts/due-task',
           headers,
         );
         setAssignedToMe(
@@ -67,38 +67,44 @@ const DueTasks = () => {
   }, [currentPage, itemsPerPage, tasks]);
 
   return (
-    <div className="due-tasks">
-      <div className="flex flex-column w-100">
-        <div className="flex items-center">
+    <div className='due-tasks'>
+      <div className='flex flex-column w-100'>
+        <div className='flex items-center'>
           <h3>Due Tasks</h3>
-          <span className="ml1">
-            ({assignedToMe.length + assignedByMe.length})
+          <span className='ml1'>
+            (
+            {assignedToMe.length + assignedByMe.length}
+            )
           </span>
         </div>
-        <div className="due-tasks-filter flex items-center">
+        <div className='due-tasks-filter flex items-center'>
           <p
             className={`${filterOption === 1 ? 'active' : ''}`}
             onClick={() => setFilterOption(1)}
           >
-            Assigned to me {assignedToMe.length > 0}
+            Assigned to me
+            {' '}
+            {assignedToMe.length > 0}
           </p>
-          <span className="divider-small">|</span>
+          <span className='divider-small'>|</span>
           <p
             className={`${filterOption === 2 ? 'active' : ''}`}
             onClick={() => setFilterOption(2)}
           >
-            Assigned by me {assignedByMe.length > 0}
+            Assigned by me
+            {' '}
+            {assignedByMe.length > 0}
           </p>
         </div>
       </div>
-      <div className="tasks-list w-100">
-        <div className="header flex w-100">
-          <div className="w-20">No.</div>
-          <div className="w-80">Task Name</div>
+      <div className='tasks-list w-100'>
+        <div className='header flex w-100'>
+          <div className='w-20'>No.</div>
+          <div className='w-80'>Task Name</div>
         </div>
         <div style={{ height: '159px' }}>
           {loading ? (
-            <div className="flex justify-center mt2 w-100">
+            <div className='flex justify-center mt2 w-100'>
               <CircularProgress
                 style={{ color: 'rgba(0, 0, 0, 0.1)' }}
                 size={26}
@@ -106,22 +112,21 @@ const DueTasks = () => {
             </div>
           ) : tasksToShow.length > 0 ? (
             tasksToShow.map(
-              (task, index) =>
-                task && (
-                  <TaskItem
-                    task={task}
-                    index={tasks.indexOf(task)}
-                    mini
-                    key={index}
-                  />
-                ),
+              (task, index) => task && (
+              <TaskItem
+                task={task}
+                index={tasks.indexOf(task)}
+                mini
+                key={index}
+              />
+              ),
             )
           ) : (
-            <div className="w-100 tc gray mt2">No Due Task</div>
+            <div className='w-100 tc gray mt2'>No Due Task</div>
           )}
         </div>
         {tasks.length > itemsPerPage && (
-          <div className="flex justify-center mt2 w-100">
+          <div className='flex justify-center mt2 w-100'>
             <Pagination
               count={totalPage}
               onChange={handleChange}

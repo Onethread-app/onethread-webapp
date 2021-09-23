@@ -89,46 +89,46 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
           props.values && props.values.name
             ? props.values.name
             : defaultValues.degree
-            ? defaultValues.degree
-            : '',
+              ? defaultValues.degree
+              : '',
         institutionName:
           props.values && props.values.qualification
             ? props.values.qualification
             : defaultValues.institutionName
-            ? defaultValues.institutionName
-            : '',
+              ? defaultValues.institutionName
+              : '',
         // TODO: Date type must be used instead of string
         startYear:
           props.values && props.values.startYear
             ? props.values.startYear
             : defaultValues.startYear
-            ? defaultValues.startYear
-            : '',
+              ? defaultValues.startYear
+              : '',
         endingYear:
           props.values && props.values.endingYear
             ? props.values.endingYear
             : defaultValues.endingYear
-            ? defaultValues.endingYear
-            : '',
+              ? defaultValues.endingYear
+              : '',
         currentlyStudy:
           props.values && props.values.currentStatus
             ? props.values.currentStatus
             : defaultValues.currentlyStudy
-            ? defaultValues.currentlyStudy
-            : false,
+              ? defaultValues.currentlyStudy
+              : false,
         eduDescription:
           props.values && props.values.description
             ? props.values.description
             : defaultValues.eduDescription
-            ? defaultValues.eduDescription
-            : '',
+              ? defaultValues.eduDescription
+              : '',
       }}
       validate={(values: any) => {
         const errors = {} as any;
         if (
-          values.startYear !== '' &&
-          values.endingYear === '' &&
-          values.currentlyStudy === false
+          values.startYear !== ''
+          && values.endingYear === ''
+          && values.currentlyStudy === false
         ) {
           errors.endingYear = 'required';
           errors.currentlyStudy = 'required';
@@ -145,19 +145,19 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="fl w-100" onSubmit={handleSubmit}>
-          <div className="mb3">
+        <form className='fl w-100' onSubmit={handleSubmit}>
+          <div className='mb3'>
             <SubmitError errorMessage={submitError} />
           </div>
           <Field<string>
-            name="degree"
+            name='degree'
             validate={composeValidators(required, maxValue(32))}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>{t('app.user.User-Education.Degree')}</label>
                 <InputGroupFieldWithError
-                  id="degree"
-                  className="mt1"
+                  id='degree'
+                  className='mt1'
                   value={input.value}
                   onChange={(e) => {
                     input.onChange(e);
@@ -167,16 +167,16 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                     boxShadow: 'none',
                   }}
                   error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
+                    checkError(meta)
+                    && (meta.error || meta.submitError)
                   }
-                  autoFocus={true}
+                  autoFocus
                 />
               </div>
             )}
           />
           <Field<string>
-            name="institutionName"
+            name='institutionName'
             validate={composeValidators(required, maxValue(32))}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
@@ -184,8 +184,8 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                   {t('app.user.User-Education.Institution')}
                 </label>
                 <InputGroupFieldWithError
-                  id="institutionName"
-                  className="mt1"
+                  id='institutionName'
+                  className='mt1'
                   value={input.value}
                   onChange={(e) => {
                     input.onChange(e);
@@ -195,15 +195,15 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                     boxShadow: 'none',
                   }}
                   error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
+                    checkError(meta)
+                    && (meta.error || meta.submitError)
                   }
                 />
               </div>
             )}
           />
           <Field<string>
-            name="startYear"
+            name='startYear'
             validate={required}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
@@ -211,9 +211,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                   {t('app.user.User-Education.Start-year')}
                 </label>
                 <DateInput
-                  formatDate={(date: Date) =>
-                    date.toLocaleDateString()
-                  }
+                  formatDate={(date: Date) => date.toLocaleDateString()}
                   parseDate={(str: string) => new Date(str)}
                   onChange={(e) => {
                     input.onChange(e);
@@ -239,7 +237,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                   }
                 />
                 {checkError(meta) && (
-                  <small className="mv3" style={{ color: 'red' }}>
+                  <small className='mv3' style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
                   </small>
                 )}
@@ -247,14 +245,12 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             )}
           />
           <Field<string>
-            name="endingYear"
+            name='endingYear'
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>{t('app.user.User-Education.End-year')}</label>
                 <DateInput
-                  formatDate={(date: Date) =>
-                    date.toLocaleDateString()
-                  }
+                  formatDate={(date: Date) => date.toLocaleDateString()}
                   parseDate={(str: string) => new Date(str)}
                   onChange={(e) => {
                     input.onChange(e);
@@ -263,9 +259,9 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                   disabled={
                     new Date(
                       values.startYear,
-                    ).toLocaleDateString() ===
-                      new Date().toLocaleDateString() ||
-                    values.startYear === ''
+                    ).toLocaleDateString()
+                      === new Date().toLocaleDateString()
+                    || values.startYear === ''
                       ? true
                       : values.currentlyStudy
                   }
@@ -286,7 +282,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                   }}
                 />
                 {checkError(meta) && (
-                  <small className="mv3" style={{ color: 'red' }}>
+                  <small className='mv3' style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
                   </small>
                 )}
@@ -294,15 +290,15 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             )}
           />
           <Field<string>
-            name="eduDescription"
+            name='eduDescription'
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>
                   {t('app.user.User-Education.Description')}
                 </label>
                 <TextArea
-                  id="eduDescription"
-                  className="mt1"
+                  id='eduDescription'
+                  className='mt1'
                   value={input.value}
                   onChange={(e) => {
                     input.onChange(e);
@@ -313,11 +309,11 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                     minHeight: '50px',
                     maxHeight: '150px',
                   }}
-                  fill={true}
-                  growVertically={true}
+                  fill
+                  growVertically
                 />
                 {checkError(meta) && (
-                  <small className="mv3" style={{ color: 'red' }}>
+                  <small className='mv3' style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
                   </small>
                 )}
@@ -325,12 +321,12 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             )}
           />
           <Field<string>
-            name="currentlyStudy"
-            type="checkbox"
+            name='currentlyStudy'
+            type='checkbox'
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <Checkbox
-                  id="currentlyStudy"
+                  id='currentlyStudy'
                   value={input.value}
                   onChange={(e) => {
                     input.onChange(e);
@@ -343,32 +339,32 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
                   }}
                   checked={values.currentlyStudy}
                   label={t('app.user.User-Education.Currently')}
-                  disabled={values.startYear === '' ? true : false}
+                  disabled={values.startYear === ''}
                 />
                 {checkError(meta) && (
-                  <small className="mv3" style={{ color: 'red' }}>
+                  <small className='mv3' style={{ color: 'red' }}>
                     {meta.error || meta.submitError}
                   </small>
                 )}
               </div>
             )}
           />
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <Button
-              className="w4 grow h2 pointer mr3"
+              className='w4 grow h2 pointer mr3'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
             >
               Save
             </Button>
             <Button
-              className="w4 grow h2 pointer"
+              className='w4 grow h2 pointer'
               style={{
                 background: '#fff',
                 outline: 'none',
@@ -389,11 +385,9 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    previousData: state.eduDetailsFormReducer.data,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  previousData: state.eduDetailsFormReducer.data,
+});
 
 export const EducationForm = connect(mapStateToProps, {
   saveEduDetailsForm,

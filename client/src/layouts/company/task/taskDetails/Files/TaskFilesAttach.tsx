@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Dispatch, SetStateAction, useEffect, useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
@@ -68,21 +70,20 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
           setImageName('');
           setImageError('This file format is not supported');
           return false;
-        } else if (file.size / 1024 / 1024 > sizeLimit) {
+        } if (file.size / 1024 / 1024 > sizeLimit) {
           setImageName('');
           setImageError(
             `File size can't be greater than ${sizeLimit} MB`,
           );
           return false;
-        } else {
-          const data = new FormData();
-          data.append('file', file, file.name);
-          data.append('taskId', props.currentTask._id);
-          setImageName(file);
-          setImageSelected(data);
-          setImageError('');
-          return data;
         }
+        const data = new FormData();
+        data.append('file', file, file.name);
+        data.append('taskId', props.currentTask._id);
+        setImageName(file);
+        setImageSelected(data);
+        setImageError('');
+        return data;
       }
     }
     return false;
@@ -100,9 +101,9 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
 
   useEffect(() => {
     if (
-      fileLoading &&
-      props.uploadingTaskFile === false &&
-      props.errorOnUploadingTaskFile === ''
+      fileLoading
+      && props.uploadingTaskFile === false
+      && props.errorOnUploadingTaskFile === ''
     ) {
       setFileLoading(false);
       props.setFilePopover(false);
@@ -110,16 +111,16 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
   }, [props.uploadingTaskFile, props.errorOnUploadingTaskFile]);
 
   return (
-    <div className="pa3 cf bg-white flex flex-column">
-      <div className="flex justify-end">
+    <div className='pa3 cf bg-white flex flex-column'>
+      <div className='flex justify-end'>
         <Icon
           icon={IconNames.CROSS}
           iconSize={20}
-          className="grow pointer"
+          className='grow pointer'
           onClick={(e: any) => props.setFilePopover(false)}
         />
       </div>
-      <h1 className="f5">
+      <h1 className='f5'>
         {t('app.project.Project-boards.Attach-Files')}
       </h1>
       <FileInput
@@ -131,9 +132,9 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
       )}
       <div>
         <Button
-          type="submit"
-          text="Attach"
-          className="grow h2 pointer w-40 fr mt2"
+          type='submit'
+          text='Attach'
+          className='grow h2 pointer w-40 fr mt2'
           style={{
             background: '#34b3e9',
             outline: 'none',
@@ -141,10 +142,8 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
           }}
           loading={props.uploadingTaskFile}
           disabled={
-            props.uploadingTaskFile === true ||
-            isEmpty(imageName.name)
-              ? true
-              : false
+            !!(props.uploadingTaskFile === true
+            || isEmpty(imageName.name))
           }
           onClick={(e: any) => handleSubmit(e)}
         />
@@ -153,15 +152,13 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentTask: state.taskIndexReducer.taskReducer.currentTask,
-    uploadingTaskFile:
+const mapStateToProps = (state: any) => ({
+  currentTask: state.taskIndexReducer.taskReducer.currentTask,
+  uploadingTaskFile:
       state.taskIndexReducer.taskReducer.uploadingTaskFile,
-    errorOnUploadingTaskFile:
+  errorOnUploadingTaskFile:
       state.taskIndexReducer.taskReducer.errorOnUploadingTaskFile,
-  };
-};
+});
 
 export default connect(mapStateToProps, { taskFileUpload })(
   TaskFilesAttach,

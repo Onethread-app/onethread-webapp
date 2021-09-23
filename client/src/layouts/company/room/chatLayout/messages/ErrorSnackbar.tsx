@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useState, useEffect } from 'react';
+import {
+  Dispatch, SetStateAction, useState, useEffect,
+} from 'react';
 
 import Snackbar, {
   SnackbarOrigin,
@@ -8,7 +10,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Theme } from '@material-ui/core/styles/createTheme';
 
 function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -37,6 +39,7 @@ const ErrorSnackbar = (props: {
   const { vertical, horizontal, open } = state;
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const timer = setTimeout(() => {}, 5000);
     return () => clearTimeout(timer);
   }, []);
@@ -59,7 +62,7 @@ const ErrorSnackbar = (props: {
         anchorOrigin={{ vertical, horizontal }}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity="error">
+        <Alert onClose={handleClose} severity='error'>
           {props.messageError}
         </Alert>
       </Snackbar>

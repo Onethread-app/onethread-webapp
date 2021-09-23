@@ -7,8 +7,6 @@ import { msToTime } from 'helpers/utils';
 import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import StopIcon from '@material-ui/icons/Stop';
 
-import { StyledTimer, StyledWatch } from './Timer.styles';
-
 import {
   addItemToTrack,
   addTrackedTime,
@@ -17,6 +15,7 @@ import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 import { ITask } from 'stores/task/Reducer';
 
 import TrackedListDialog from 'components/time-tracker/TrackedListDialog';
+import { StyledTimer, StyledWatch } from './Timer.styles';
 
 interface ITimerProps {
   task: ITask;
@@ -56,6 +55,36 @@ const Timer = (props: ITimerInternalProps) => {
   const timerRef = useRef(null);
   const timerHover = useHover(timerRef);
 
+  const handleAdd = () => {
+    setTimerOn(true);
+    const payload = {
+      name: task.name,
+      task: task._id,
+      column: task.columnId,
+      project: projectId,
+      company: companyId,
+      startTime: new Date(),
+      duration: 0,
+    };
+    addItemToTrack(payload);
+  };
+
+  const handleStart = (e: any) => {
+    if (props.list) {
+      e.stopPropagation();
+    }
+    if (currentlyTracking.task) {
+      addTrackedTime(currentlyTracking);
+      setLoading(true);
+    } else handleAdd();
+  };
+
+  const handleStop = (e: any) => {
+    e.stopPropagation();
+    setTimerOn(false);
+    addTrackedTime(currentlyTracking);
+  };
+
   useEffect(() => {
     if (task.timeSpent) setTotalTime(task.timeSpent);
   }, [task.timeSpent]);
@@ -74,70 +103,40 @@ const Timer = (props: ITimerInternalProps) => {
 
   useEffect(() => {
     if (
-      loading === true &&
-      addingTrack === false &&
-      errorOnAddingTrack === ''
+      loading === true
+      && addingTrack === false
+      && errorOnAddingTrack === ''
     ) {
       handleAdd();
       setLoading(false);
     }
   }, [loading, addingTrack, errorOnAddingTrack]);
 
-  const handleAdd = () => {
-    setTimerOn(true);
-    const payload = {
-      name: task.name,
-      task: task._id,
-      column: task.columnId,
-      project: projectId,
-      company: companyId,
-      startTime: new Date(),
-      duration: 0,
-    };
-    addItemToTrack(payload);
-  };
-
-  const handleStart = (e: any) => {
-    if (!!props.list) {
-      e.stopPropagation();
-    }
-    if (currentlyTracking.task) {
-      addTrackedTime(currentlyTracking);
-      setLoading(true);
-    } else handleAdd();
-  };
-
-  const handleStop = (e: any) => {
-    e.stopPropagation();
-    setTimerOn(false);
-    addTrackedTime(currentlyTracking);
-  };
-
   return (
     <StyledTimer
       ref={timerRef}
-      className={`${!!props.list ? '' : 'pl3'}`}
+      className={`${props.list ? '' : 'pl3'}`}
       list={props.list ? 1 : 0}
     >
       {timerOn === false ? (
         <PlayCircleFilledWhiteIcon
-          className="pointer"
-          htmlColor="#2EB67D"
-          fontSize="small"
+          className='pointer'
+          htmlColor='#2EB67D'
+          fontSize='small'
           onClick={handleStart}
         />
       ) : (
         <StopIcon
-          className="pointer"
-          color="error"
-          fontSize="small"
+          className='pointer'
+          color='error'
+          fontSize='small'
           onClick={handleStop}
         />
       )}
       <StyledWatch>
         {timerOn ? <>{msToTime(time)}</> : <>{msToTime(totalTime)}</>}
       </StyledWatch>
-      {!!props.list ? null : (
+      {props.list ? null : (
         <TrackedListDialog timerHover={timerHover} />
       )}
     </StyledTimer>

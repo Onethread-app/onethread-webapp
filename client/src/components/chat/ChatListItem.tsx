@@ -27,10 +27,9 @@ const ChatListItem = (props: IChatListItem) => {
 
   useEffect(() => {
     const query = new URLSearchParams(history.location.search);
-    const view =
-      query.get('view') && query.get('view') === 'mobile'
-        ? 'mobile'
-        : 'default';
+    const view = query.get('view') && query.get('view') === 'mobile'
+      ? 'mobile'
+      : 'default';
     const roomId = query.get('roomId') ? query.get('roomId')! : '';
     setQueries({ view, roomId });
   }, [history.location.search]);
@@ -41,7 +40,7 @@ const ChatListItem = (props: IChatListItem) => {
       `/company/${props.chat.room.company.uniqueName}/project/${
         props.chat.room.project._id
       }/room?roomId=${props.chat.room._id}${
-        queries.view ? '&view=' + queries.view : ''
+        queries.view ? `&view=${queries.view}` : ''
       }`,
     );
   };
@@ -56,23 +55,23 @@ const ChatListItem = (props: IChatListItem) => {
       }}
       onClick={handleClick}
     >
-      <div className="mr2" style={{ width: '32px', flexShrink: 0 }}>
+      <div className='mr2' style={{ width: '32px', flexShrink: 0 }}>
         <img
           src={
             props.chat.message.account.profileImage
               ? props.chat.message.account.profileImage
               : UserIcon
           }
-          alt=""
+          alt=''
           style={{
             height: '32px',
             width: '32px',
           }}
-          className="br4"
+          className='br4'
         />
       </div>
-      <div className="flex flex-auto flex-column">
-        <div className="flex flex-auto items-center justify-between mb1">
+      <div className='flex flex-auto flex-column'>
+        <div className='flex flex-auto items-center justify-between mb1'>
           <h3
             className={`pa0 mv0 ml0 mr4 ttc f6 ${
               props.chat.read ? 'gray fw5 ' : 'inherit fw6 '
@@ -80,35 +79,41 @@ const ChatListItem = (props: IChatListItem) => {
           >
             {`${props.chat.message.account.firstName} ${props.chat.message.account.lastName}`}
           </h3>
-          <div className="flex items-center">
+          <div className='flex items-center'>
             <p
-              className="bp3-tag modifier mb0"
+              className='bp3-tag modifier mb0'
               style={{ background: 'rgb(63, 97, 197)' }}
-            >{`${props.chat.room.name}`}</p>
+            >
+              {`${props.chat.room.name}`}
+            </p>
             <p
-              className="ml2 bp3-tag modifier mb0"
+              className='ml2 bp3-tag modifier mb0'
               style={{
                 background: `${
                   find(Color, ['code', props.chat.room.project.color])
                     ? find(Color, [
-                        'code',
-                        props.chat.room.project.color,
-                      ])!.value
+                      'code',
+                      props.chat.room.project.color,
+                    ])!.value
                     : 'inherit'
                 }`,
               }}
-            >{`${props.chat.room.project.name}`}</p>
+            >
+              {`${props.chat.room.project.name}`}
+            </p>
           </div>
         </div>
-        <div className="flex items-center justify-between flex-auto">
+        <div className='flex items-center justify-between flex-auto'>
           <p
             className={`truncate mr3 w-60 ${
               props.chat.read ? 'gray' : 'inherit'
             }`}
             style={{ maxWidth: '60%' }}
-          >{`${props.chat.message.text}`}</p>
+          >
+            {`${props.chat.message.text}`}
+          </p>
           <p
-            className="gray w-40 self-end tr"
+            className='gray w-40 self-end tr'
             style={{ fontSize: '11px' }}
           >
             {moment(props.chat.message.createdAt).fromNow()}
@@ -119,8 +124,6 @@ const ChatListItem = (props: IChatListItem) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {};
-};
+const mapStateToProps = (state: any) => ({});
 
 export default connect(mapStateToProps)(ChatListItem);

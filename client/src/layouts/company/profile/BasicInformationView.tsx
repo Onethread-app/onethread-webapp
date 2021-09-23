@@ -9,7 +9,7 @@ import { companyPermit } from 'stores/UtilsActions';
 
 import { CompanyInfoForm } from './BasicInformationEditor';
 
-import addIcon from './../../../resources/images/addIcon.png';
+import addIcon from '../../../resources/images/addIcon.png';
 
 const BasicInfoDetailsViewComponent = (props: any) => {
   const { t } = useTranslation();
@@ -17,59 +17,60 @@ const BasicInfoDetailsViewComponent = (props: any) => {
 
   return (
     <>
-      <div className="relative">
-        <div className="flex-ns justify-between w-100 mb5-ns mb6">
-          <div className="w-50-ns w-100 pr4">
-            <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">
+      <div className='relative'>
+        <div className='flex-ns justify-between w-100 mb5-ns mb6'>
+          <div className='w-50-ns w-100 pr4'>
+            <div className='bg-white h-auto'>
+              <h1 className='f6 lh-copy'>
                 {t('app.company.Company-profile.Name')}
               </h1>
-              <p className="f5">{props.company.name}</p>
+              <p className='f5'>{props.company.name}</p>
             </div>
-            <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">
+            <div className='bg-white h-auto'>
+              <h1 className='f6 lh-copy'>
                 {t('app.company.Company-profile.Type')}
               </h1>
-              <p className="f5">{props.company.type}</p>
+              <p className='f5'>{props.company.type}</p>
             </div>
-            <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">
+            <div className='bg-white h-auto'>
+              <h1 className='f6 lh-copy'>
                 {t('app.company.Company-profile.Address')}
               </h1>
-              <p className="f5">{props.company.address}</p>
+              <p className='f5'>{props.company.address}</p>
             </div>
           </div>
-          <div className="w-50-ns w-100">
-            <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">
+          <div className='w-50-ns w-100'>
+            <div className='bg-white h-auto'>
+              <h1 className='f6 lh-copy'>
                 {t('app.company.Company-profile.Mail-company')}
               </h1>
-              <p className="f5">{props.company.email}</p>
+              <p className='f5'>{props.company.email}</p>
             </div>
-            <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">
+            <div className='bg-white h-auto'>
+              <h1 className='f6 lh-copy'>
                 {t('app.company.Company-profile.Legal-owner')}
               </h1>
-              <p className="f5">{props.company.legalOwnerName}</p>
+              <p className='f5'>{props.company.legalOwnerName}</p>
             </div>
-            <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">
+            <div className='bg-white h-auto'>
+              <h1 className='f6 lh-copy'>
                 {t('app.company.Company-profile.Legal-mail')}
               </h1>
-              <p className="f5">{props.company.legalOwnerMail}</p>
+              <p className='f5'>{props.company.legalOwnerMail}</p>
             </div>
           </div>
         </div>
         <div>
           {companyPermit(props.company.role) && (
             <img
-              className="fixed pointer addButton"
+              className='fixed pointer addButton'
               style={{
                 boxShadow: '0px 6px 6px #00000029',
                 borderRadius: '50%',
               }}
               onClick={() => setShowDialog(true)}
               src={addIcon}
+              alt=''
             />
           )}
         </div>
@@ -89,11 +90,9 @@ const BasicInfoDetailsViewComponent = (props: any) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+});
 
 export const BasicInfoDetailsView = connect(mapStateToProps, {
   companyLogoUploadAction,

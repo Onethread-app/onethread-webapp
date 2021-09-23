@@ -24,33 +24,31 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
 
   return (
     <>
-      <main className="mw6" id="roomList">
-        <ul className="list pa0 mh2-ns">
-          {props.gettingRooms === false &&
-          props.rooms &&
-          props.rooms.length ? (
-            props.search ? (
-              props.rooms
-                .filter(
-                  (item) =>
-                    !item.name
+      <main className='mw6' id='roomList'>
+        <ul className='list pa0 mh2-ns'>
+          {props.gettingRooms === false
+          && props.rooms
+          && props.rooms.length ? (
+              props.search ? (
+                props.rooms
+                  .filter(
+                    (item) => !item.name
                       .toLowerCase()
                       .indexOf(props.search.toLowerCase()),
-                )
-                .map((filteredRooms, i, arr: {}) => (
-                  <RoomListItem
-                    key={filteredRooms._id}
-                    room={filteredRooms}
-                    active={
-                      props.currentRoom !== undefined &&
-                      filteredRooms._id === props.currentRoom._id
+                  )
+                  .map((filteredRooms, i, arr: {}) => (
+                    <RoomListItem
+                      key={filteredRooms._id}
+                      room={filteredRooms}
+                      active={
+                      props.currentRoom !== undefined
+                      && filteredRooms._id === props.currentRoom._id
                     }
-                    iconBgColor={roomBgColor[i % roomBgColor.length]}
-                  />
-                ))
-            ) : (
-              props.rooms.map((room: IRoom, i: number, arr: any) => {
-                return (
+                      iconBgColor={roomBgColor[i % roomBgColor.length]}
+                    />
+                  ))
+              ) : (
+                props.rooms.map((room: IRoom, i: number, arr: any) => (
                   <RoomListItem
                     key={room._id}
                     room={room}
@@ -59,29 +57,26 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
                       arr[props.rooms!.length - 1].id,
                     )}
                     active={
-                      props.currentRoom !== undefined &&
-                      room._id === props.currentRoom._id
+                      props.currentRoom !== undefined
+                      && room._id === props.currentRoom._id
                     }
                     iconBgColor={roomBgColor[i % roomBgColor.length]}
                   />
-                );
-              })
-            )
-          ) : (
-            <p className="ph2">No rooms</p>
-          )}
+                ))
+              )
+            ) : (
+              <p className='ph2'>No rooms</p>
+            )}
         </ul>
       </main>
     </>
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentRoom: state.roomReducer.currentRoom,
-    rooms: state.roomReducer.rooms,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentRoom: state.roomReducer.currentRoom,
+  rooms: state.roomReducer.rooms,
+});
 
 export const RoomList = connect(
   mapStateToProps,

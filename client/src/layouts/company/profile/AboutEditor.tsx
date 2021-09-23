@@ -27,16 +27,16 @@ const CompanyAboutEditorComponent = (
   const [aboutInfoError, setAboutInfoError] = useState('');
 
   return (
-    <form className="fl w-100 pa4">
-      <h1 className="f5 lh-copy dib tigrow-lightGray-1 fl w-100">
+    <form className='fl w-100 pa4'>
+      <h1 className='f5 lh-copy dib tigrow-lightGray-1 fl w-100'>
         About
       </h1>
       <TextArea
-        className="mb4 fl w-100"
+        className='mb4 fl w-100'
         style={{ resize: 'none' }}
         rows={5}
         growVertically={false}
-        large={true}
+        large
         onChange={(e) => {
           if (aboutInfo && aboutInfo.length > 2000) {
             setAboutInfoError(
@@ -55,10 +55,10 @@ const CompanyAboutEditorComponent = (
         ''
       )}
       <Divider />
-      <div className="flex w-100 justify-end mt3">
+      <div className='flex w-100 justify-end mt3'>
         <Button
-          type="submit"
-          className="w4 grow h2 pointer mr3"
+          type='submit'
+          className='w4 grow h2 pointer mr3'
           style={{
             background: '#34b3e9',
             outline: 'none',
@@ -75,7 +75,7 @@ const CompanyAboutEditorComponent = (
           Save
         </Button>
         <Button
-          className="w4 grow h2 pointer"
+          className='w4 grow h2 pointer'
           style={{
             background: '#fff',
             outline: 'none',

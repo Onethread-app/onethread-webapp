@@ -40,15 +40,18 @@ const CreateTaskButton = (props: ICreateTaskButton) => {
   return (
     <>
       <CreateTaskButtonDiv onClick={handleClick}>
-        <Icon icon="plus" color="#fff" className="mr2" />
-        <p> {t('app.project.Tasks.Add-task')}</p>
+        <Icon icon='plus' color='#fff' className='mr2' />
+        <p>
+          {' '}
+          {t('app.project.Tasks.Add-task')}
+        </p>
       </CreateTaskButtonDiv>
       <Dialog
         isOpen={showDialog}
         onClose={() => setShowDialog(false)}
-        canEscapeKeyClose={true}
-        canOutsideClickClose={true}
-        className="create-task-dialog"
+        canEscapeKeyClose
+        canOutsideClickClose
+        className='create-task-dialog'
       >
         <CreateTaskDialog
           setShowDialog={setShowDialog}

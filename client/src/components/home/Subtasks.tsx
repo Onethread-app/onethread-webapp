@@ -19,7 +19,7 @@ const Subtasks = () => {
       const headers = tokenConfig();
       if ((headers.headers as any).Authorization) {
         const response = await tigrowApi.get(
-          `accounts/subtasks`,
+          'accounts/subtasks',
           headers,
         );
         setSubtasks(response.data);
@@ -30,12 +30,12 @@ const Subtasks = () => {
   }, []);
 
   return (
-    <div className="subtasks">
+    <div className='subtasks'>
       <h3>{t('app.project.Tasks.Subtasks')}</h3>
       {loading ? (
         <div
           style={{ minHeight: '200px', width: '100%' }}
-          className="flex items-center justify-center"
+          className='flex items-center justify-center'
         >
           <CircularProgress
             style={{ color: 'rgb(48, 48, 83)' }}
@@ -43,18 +43,18 @@ const Subtasks = () => {
           />
         </div>
       ) : (
-        <div className="subtasks-list mt2 pa1">
+        <div className='subtasks-list mt2 pa1'>
           <div
-            className="flex items-center justify-between mb2 f5 bb relative"
+            className='flex items-center justify-between mb2 f5 bb relative'
             style={{ minWidth: '500px' }}
           >
             <div>{t('app.project.Tasks.Subtasks')}</div>
-            <div className="flex items-center">
-              <div className="mr3" style={{ maxWidth: '100px' }}>
+            <div className='flex items-center'>
+              <div className='mr3' style={{ maxWidth: '100px' }}>
                 {t('app.project.Tasks.Tasks')}
               </div>
               <div
-                className="flex justify-end mr3"
+                className='flex justify-end mr3'
                 style={{ width: '100px' }}
               >
                 {t('app.project.Tasks.Due-date')}
@@ -63,18 +63,16 @@ const Subtasks = () => {
           </div>
           {subTasks.length > 0 ? (
             sortTasksByDueDate(subTasks, 'desc').map(
-              (subtask, index) => {
-                return (
-                  <SubtaskItem
-                    subtask={subtask}
-                    index={index}
-                    key={subtask._id}
-                  />
-                );
-              },
+              (subtask, index) => (
+                <SubtaskItem
+                  subtask={subtask}
+                  index={index}
+                  key={subtask._id}
+                />
+              ),
             )
           ) : (
-            <div className="w-100 tc" style={{ color: '#777' }}>
+            <div className='w-100 tc' style={{ color: '#777' }}>
               No Subtasks due
             </div>
           )}

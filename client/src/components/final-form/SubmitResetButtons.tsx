@@ -11,10 +11,10 @@ interface ISubmitAndResetButtonsProps {
 export const SubmitAndResetButtons = (
   props: ISubmitAndResetButtonsProps,
 ) => (
-  <div className="flex justify-end mt4">
+  <div className='flex justify-end mt4'>
     <Button
-      icon="refresh"
-      className="grow h2 pointer white bp3-minimal w4 mr3"
+      icon='refresh'
+      className='grow h2 pointer white bp3-minimal w4 mr3'
       style={{
         background: '#fff',
         outline: 'none',
@@ -27,14 +27,14 @@ export const SubmitAndResetButtons = (
       {props.resetBtnName}
     </Button>
     <Button
-      className="grow h2 pointer white bp3-minimal w4"
+      className='grow h2 pointer white bp3-minimal w4'
       style={{
         background: '#34b3e9',
         outline: 'none',
         color: 'white',
       }}
       loading={props.submitting}
-      type="submit"
+      type='submit'
       disabled={props.submitting || props.pristine}
     >
       {props.submitBtnName}

@@ -10,42 +10,40 @@ import Subtasks from 'components/home/Subtasks';
 
 import './Index.styles.scss';
 
-const index = () => {
-  return isMobileOnly ? (
-    <div className="home-container">
-      <div>
-        <Tasks />
-      </div>
-      <div>
-        <Subtasks />
-      </div>
-      <div>
-        <Projects />
-      </div>
-      <div>
-        <VideoConference />
-      </div>
-      {/* <div>
+const index = () => (isMobileOnly ? (
+  <div className='home-container'>
+    <div>
+      <Tasks />
+    </div>
+    <div>
+      <Subtasks />
+    </div>
+    <div>
+      <Projects />
+    </div>
+    <div>
+      <VideoConference />
+    </div>
+    {/* <div>
         <ProfileProgress />
       </div> */}
+  </div>
+) : (
+  <div className='home-container'>
+    <div className='w-100'>
+      <Projects />
+      <VideoConference />
     </div>
-  ) : (
-    <div className="home-container">
-      <div className="w-100">
-        <Projects />
-        <VideoConference />
-      </div>
-      <div className="w-100">
-        {/* <Weather /> */}
-        <Tasks />
-        <Subtasks />
-      </div>
-      <div className="w-100">
-        <Profile />
-        {/* <ProfileProgress /> */}
-      </div>
+    <div className='w-100'>
+      {/* <Weather /> */}
+      <Tasks />
+      <Subtasks />
     </div>
-  );
-};
+    <div className='w-100'>
+      <Profile />
+      {/* <ProfileProgress /> */}
+    </div>
+  </div>
+));
 
 export default index;

@@ -39,23 +39,22 @@ export const TiButton = ({
       <Link to={to}>
         <Button
           className={classes}
-          style={style ? style : defaultStyles}
+          style={style || defaultStyles}
         >
           {children}
         </Button>
       </Link>
     );
-  } else {
-    return (
-      <Button
-        className={classes}
-        onClick={onClick}
-        style={style ? style : defaultStyles}
-      >
-        {children}
-      </Button>
-    );
   }
+  return (
+    <Button
+      className={classes}
+      onClick={onClick}
+      style={style || defaultStyles}
+    >
+      {children}
+    </Button>
+  );
 };
 
 interface IOTButton {
@@ -76,7 +75,7 @@ export const OTButton = (props: IOTButton) => {
     padding: '1.15rem 2.4rem',
     border: 'none',
     color: props.white ? '#3484f0' : '#fff',
-    textAlign: 'center' as 'center',
+    textAlign: 'center' as const,
     fontWeight: props.bold ? 700 : 500,
     fontSize: props.white ? '24px' : '20px',
     lineHeight: props.white ? '29px' : '24px',
@@ -97,13 +96,12 @@ export const OTButton = (props: IOTButton) => {
         <Button style={styles}>{props.children}</Button>
       </Link>
     );
-  } else {
-    return (
-      <Button onClick={props.onClick} style={styles}>
-        {props.children}
-      </Button>
-    );
   }
+  return (
+    <Button onClick={props.onClick} style={styles}>
+      {props.children}
+    </Button>
+  );
 };
 
 export const CreateCompany = () => {

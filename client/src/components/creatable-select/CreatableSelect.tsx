@@ -78,20 +78,16 @@ const CreatableSingle = (props: ICreatableSingleInternalProps) => {
                 label: response.data.department.name,
               };
               setDepartmentOptions(
-                departmentOptions.map((d) =>
-                  d.label.toLowerCase() ===
-                  response.data.department.name.toLowerCase()
-                    ? tempDept
-                    : d,
-                ),
+                departmentOptions.map((d) => (d.label.toLowerCase()
+                  === response.data.department.name.toLowerCase()
+                  ? tempDept
+                  : d)),
               );
               setSelectedDepartment(
-                selectedDepartment.map((d) =>
-                  d.label.toLowerCase() ===
-                  response.data.department.name.toLowerCase()
-                    ? tempDept
-                    : d,
-                ),
+                selectedDepartment.map((d) => (d.label.toLowerCase()
+                  === response.data.department.name.toLowerCase()
+                  ? tempDept
+                  : d)),
               );
             }
           } catch (error) {
@@ -117,16 +113,14 @@ const CreatableSingle = (props: ICreatableSingleInternalProps) => {
       onChange={handleChange}
       options={departmentOptions}
       styles={customStyles}
-      placeholder="Select Department"
+      placeholder='Select Department'
     />
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    departments: state.companyReducer.currentCompany.departments,
-    companyId: state.companyReducer.currentCompany._id,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  departments: state.companyReducer.currentCompany.departments,
+  companyId: state.companyReducer.currentCompany._id,
+});
 
 export default connect(mapStateToProps)(CreatableSingle);

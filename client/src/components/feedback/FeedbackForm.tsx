@@ -43,9 +43,7 @@ const FeedbackForm = (props: IFeedbackForm) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const renderLabel = (val: number) => {
-    return `${val}`;
-  };
+  const renderLabel = (val: number) => `${val}`;
 
   const handleClear = () => {
     setValues({
@@ -89,17 +87,16 @@ const FeedbackForm = (props: IFeedbackForm) => {
     }
 
     return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [response]);
 
   return (
     <>
-      <div className="feedback-form flex flex-column items-center justify-center pa4 ma1">
+      <div className='feedback-form flex flex-column items-center justify-center pa4 ma1'>
         <h2>{t('app.company.Feedback.Feedback')}</h2>
-        <form className="flex flex-column">
-          <div className="flex flex-column">
+        <form className='flex flex-column'>
+          <div className='flex flex-column'>
             <label
-              htmlFor="recommend"
+              htmlFor='recommend'
               style={{ marginBottom: '1rem' }}
             >
               <span>
@@ -113,87 +110,87 @@ const FeedbackForm = (props: IFeedbackForm) => {
               stepSize={1}
               onChange={handleSliderChange}
               labelRenderer={renderLabel}
-              showTrackFill={true}
+              showTrackFill
               value={sliderValue}
               vertical={false}
-              className="w-80 self-center"
+              className='w-80 self-center'
               intent={
                 sliderValue < 4
                   ? 'danger'
                   : sliderValue < 6
-                  ? 'warning'
-                  : sliderValue < 8
-                  ? 'primary'
-                  : 'success'
+                    ? 'warning'
+                    : sliderValue < 8
+                      ? 'primary'
+                      : 'success'
               }
             />
           </div>
           <div>
-            <p className="f6 fw6 mv2">
+            <p className='f6 fw6 mv2'>
               {t('app.company.Feedback.Optional')}
             </p>
           </div>
-          <div className="flex flex-column">
-            <label htmlFor="improve">
+          <div className='flex flex-column'>
+            <label htmlFor='improve'>
               <span>
                 {t('app.company.Feedback.Opinion-2.Number')}
               </span>
               {t('app.company.Feedback.Opinion-2.text')}
             </label>
             <TextArea
-              growVertically={true}
-              large={true}
+              growVertically
+              large
               onChange={handleChange}
-              name="improve"
+              name='improve'
               value={values.improve}
-              className="w-80"
+              className='w-80'
             />
           </div>
-          <div className="flex flex-column">
-            <label htmlFor="usefulFeature">
+          <div className='flex flex-column'>
+            <label htmlFor='usefulFeature'>
               <span>
                 {t('app.company.Feedback.Opinion-3.Number')}
               </span>
               {t('app.company.Feedback.Opinion-3.text')}
             </label>
             <TextArea
-              growVertically={true}
-              large={true}
+              growVertically
+              large
               onChange={handleChange}
-              name="usefulFeature"
+              name='usefulFeature'
               value={values.usefulFeature}
-              className="w-80"
+              className='w-80'
             />
           </div>
-          <div className="flex flex-column">
-            <label htmlFor="wishFeature">
+          <div className='flex flex-column'>
+            <label htmlFor='wishFeature'>
               <span>
                 {t('app.company.Feedback.Opinion-4.Number')}
               </span>
               {t('app.company.Feedback.Opinion-4.text')}
             </label>
             <TextArea
-              growVertically={true}
-              large={true}
+              growVertically
+              large
               onChange={handleChange}
-              name="wishFeature"
+              name='wishFeature'
               value={values.wishFeature}
-              className="w-80"
+              className='w-80'
             />
           </div>
           <div
-            className="feedback-form-buttons flex self-end"
+            className='feedback-form-buttons flex self-end'
             style={{
               marginRight: '20%',
             }}
           >
-            <Button onClick={handleClear} className="grow">
+            <Button onClick={handleClear} className='grow'>
               {t('app.company.Feedback.Clear')}
             </Button>
             <Button
-              type="submit"
+              type='submit'
               onClick={handleSubmit}
-              className="grow"
+              className='grow'
             >
               {t('app.company.Feedback.Submit')}
             </Button>

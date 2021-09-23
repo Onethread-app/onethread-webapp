@@ -1,15 +1,13 @@
-import TaskPage from 'layouts/company/task';
+import { TaskPage } from 'layouts/company/task';
 
 import { ModalWrapper, Modal } from './TaskModal.styles';
 
-const TaskModal = () => {
-  return (
-    <ModalWrapper>
-      <Modal>
-        <TaskPage />
-      </Modal>
-    </ModalWrapper>
-  );
-};
+const TaskModal = () => (
+  <ModalWrapper>
+    <Modal>
+      <TaskPage />
+    </Modal>
+  </ModalWrapper>
+);
 
 export default TaskModal;

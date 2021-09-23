@@ -48,52 +48,52 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="ph2">
+            <div className='ph2'>
               <SubmitError errorMessage={submitError} />
             </div>
-            <div className="ph2 pt2 w-100">
+            <div className='ph2 pt2 w-100'>
               <Field<string>
-                name="name"
+                name='name'
                 validate={composeValidators(required, maxValue(150))}
                 render={({ input, meta }) => (
                   <div
                     className={`${checkError(meta) ? 'mb3' : 'mb2'}`}
                   >
                     <EditableText
-                      multiline={true}
+                      multiline
                       minLines={3}
                       maxLines={10}
                       value={input.value}
                       onChange={input.onChange}
-                      className="outline pa1"
-                      placeholder=""
+                      className='outline pa1'
+                      placeholder=''
                     />
                     {checkError(meta) && (
-                      <small className="mv3" style={{ color: 'red' }}>
+                      <small className='mv3' style={{ color: 'red' }}>
                         {meta.error || meta.submitError}
                       </small>
                     )}
                   </div>
                 )}
               />
-              <div className="flex justify-end mt2">
+              <div className='flex justify-end mt2'>
                 <Button
-                  className="mr2"
+                  className='mr2'
                   style={{ background: 'transparent' }}
-                  icon="cross"
+                  icon='cross'
                   onClick={() => props.setNameEdit(!props.nameEdit)}
                 />
                 <Button
-                  type="submit"
+                  type='submit'
                   style={{ background: '#34b3e9' }}
                   loading={submitting}
-                  icon={
+                  icon={(
                     <Icon
-                      icon="tick"
+                      icon='tick'
                       iconSize={20}
                       style={{ color: 'white' }}
                     />
-                  }
+                  )}
                   disabled={submitting || pristine}
                 />
               </div>
@@ -104,12 +104,10 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
     </div>
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    currentTask: state.taskIndexReducer.taskReducer.currentTask,
-    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentTask: state.taskIndexReducer.taskReducer.currentTask,
+  updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+});
 
 export const TaskTitleEditor = connect(mapStateToProps, {
   updateTask,

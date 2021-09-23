@@ -61,7 +61,7 @@ const TrackedListDialog = (props: ITrackedListDialog) => {
   }, [gettingList, loading, trackList]);
 
   return (
-    <div className="self-end">
+    <div className='self-end'>
       <ArrowDropDownIcon
         aria-describedby={id}
         onClick={handleClick}
@@ -85,8 +85,11 @@ const TrackedListDialog = (props: ITrackedListDialog) => {
           height={windowSize.height}
           width={windowSize.width}
         >
-          <h3>Total time spent: {msToTime(taskTimeSpent)}</h3>
-          <h4 className="pt2">Previously Tracked</h4>
+          <h3>
+            Total time spent:
+            {msToTime(taskTimeSpent)}
+          </h3>
+          <h4 className='pt2'>Previously Tracked</h4>
           <TrackItemListContainer
             height={windowSize.height}
             width={windowSize.width}

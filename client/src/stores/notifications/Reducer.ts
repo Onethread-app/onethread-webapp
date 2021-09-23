@@ -1,10 +1,10 @@
 import { NOTIFICATION } from './Types';
 
 export interface INotification {
-  read: Boolean;
-  seen: Number;
-  socketId: String;
-  pageNumber: Number;
+  read: boolean;
+  seen: number;
+  socketId: string;
+  pageNumber: number;
 }
 
 const initialState = {
@@ -17,16 +17,13 @@ const initialState = {
   errorOnMarkingAllAsRead: '',
 };
 
-const handleMarkAllRead = (state: any, list: any) => {
-  return state.allNotifications.map((notification) => {
-    const found = list.find(
-      (modifiedNotification) =>
-        notification._id === modifiedNotification._id,
-    );
+const handleMarkAllRead = (state: any, list: any) => state.allNotifications.map((notification) => {
+  const found = list.find(
+    (modifiedNotification) => notification._id === modifiedNotification._id,
+  );
 
-    return found ? { ...notification, read: true } : notification;
-  });
-};
+  return found ? { ...notification, read: true } : notification;
+});
 
 export const notificationReducer = (
   state = initialState,

@@ -24,15 +24,15 @@ const NotificationItem = (props: INotificationItem) => {
   };
 
   return (
-    <div className="flex items-center" onClick={handleClick}>
-      <div className="flex items-center">
+    <div className='flex items-center' onClick={handleClick}>
+      <div className='flex items-center'>
         <img
           src={
             notification.type
               ? notificationType[notification.type].img
               : 'https://via.placeholder.com/20'
           }
-          alt=""
+          alt=''
           style={{ width: '20px' }}
         />
         <p
@@ -43,7 +43,7 @@ const NotificationItem = (props: INotificationItem) => {
           {notification.text}
         </p>
       </div>
-      <span className="ml2 blue notification-time">
+      <span className='ml2 blue notification-time'>
         {moment(props.notificationData.createdAt).fromNow()}
       </span>
     </div>

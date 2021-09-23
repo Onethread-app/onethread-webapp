@@ -68,9 +68,9 @@ export const SkillEdit = (props: SkillEditProps) => {
   }, [result]);
 
   return (
-    <div className="ph4 pt6">
-      <h1 className="f5 lh-copy">Add Your Skills</h1>
-      <div className="fl w-100 pv2">
+    <div className='ph4 pt6'>
+      <h1 className='f5 lh-copy'>Add Your Skills</h1>
+      <div className='fl w-100 pv2'>
         <SuggestField
           onChange={(query: string) => {
             setSearchName(query);
@@ -78,45 +78,42 @@ export const SkillEdit = (props: SkillEditProps) => {
           items={skills}
           selectedItems={selectedSkills}
           setSelectedItems={setSelectedSkills}
-          multipleItemSelect={true}
+          multipleItemSelect
           isCreatable={
-            isEmpty(
+            !!(isEmpty(
               skills.filter((item) => searchName === item.name),
-            ) &&
-            isEmpty(
-              userSkills.filter(
-                (item: ItemEntityProps) =>
-                  lowerCase(searchName) === item.name,
-              ),
             )
-              ? true
-              : false
+            && isEmpty(
+              userSkills.filter(
+                (item: ItemEntityProps) => lowerCase(searchName) === item.name,
+              ),
+            ))
           }
           isCreatableAPI={addNewSkill}
         />
-        <div className="fl w-100 mb2">
+        <div className='fl w-100 mb2'>
           {selectedSkills.map((item) => (
             <Tag
               key={item._id}
-              className="ma1 pa2"
-              interactive={true}
-              intent="primary"
+              className='ma1 pa2'
+              interactive
+              intent='primary'
               onRemove={(e) => {
                 const filteredSkills = selectedSkills.filter(
                   (selectedItem) => item.name !== selectedItem.name,
                 );
                 setSelectedSkills([...filteredSkills]);
               }}
-              large={true}
+              large
             >
               {item.name}
             </Tag>
           ))}
         </div>
-        <div className="fl w-100 mt4">
-          <div className="flex justify-end">
+        <div className='fl w-100 mt4'>
+          <div className='flex justify-end'>
             <Button
-              type="submit"
+              type='submit'
               onClick={async (e: any) => {
                 e.preventDefault();
                 const skillSet: string[] = [];
@@ -128,7 +125,7 @@ export const SkillEdit = (props: SkillEditProps) => {
                   props.setShowDialog(!props.showDialog);
                 }
               }}
-              className="w4 grow h2 pointer mr3"
+              className='w4 grow h2 pointer mr3'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
@@ -138,7 +135,7 @@ export const SkillEdit = (props: SkillEditProps) => {
               Save
             </Button>
             <Button
-              className="w4 grow h2 pointer"
+              className='w4 grow h2 pointer'
               onClick={(e: any) => {
                 e.preventDefault();
                 props.setShowDialog(false);

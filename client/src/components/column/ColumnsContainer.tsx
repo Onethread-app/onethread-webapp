@@ -52,16 +52,15 @@ interface IColumnsContainerInternalProps {
 
 const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
   const [columns, setColumns] = useState<IColumn[]>([]);
-  const [showColumnFormDialog, setShowColumnFormDialog] =
-    useState(false);
+  const [showColumnFormDialog, setShowColumnFormDialog] = useState(false);
 
   const dragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
     }
     if (
-      result.source.droppableId === result.destination.droppableId &&
-      result.source.index === result.destination.index
+      result.source.droppableId === result.destination.droppableId
+      && result.source.index === result.destination.index
     ) {
       return;
     }
@@ -105,15 +104,15 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
       onDragEnd={(result: DropResult) => dragEnd(result)}
     >
       <Droppable
-        droppableId="all-columns"
-        type="column"
-        direction="horizontal"
+        droppableId='all-columns'
+        type='column'
+        direction='horizontal'
       >
         {(provided) => {
           const allowedProps = { ref: provided.innerRef };
           return (
             <ColumnsContainerDiv
-              className={`flex flex-row overflow-x-auto items-start mw-100`}
+              className='flex flex-row overflow-x-auto items-start mw-100'
               {...provided.droppableProps}
               {...allowedProps}
             >
@@ -123,7 +122,7 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
               <AddColumnButton
                 onClick={() => setShowColumnFormDialog(true)}
               >
-                <Icon icon="plus" color="#34B3E9" />
+                <Icon icon='plus' color='#34B3E9' />
               </AddColumnButton>
               {showColumnFormDialog && (
                 <RightSidebar

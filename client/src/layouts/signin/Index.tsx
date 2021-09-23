@@ -14,26 +14,26 @@ import { Toaster } from '@blueprintjs/core/lib/esm/components/toast/toaster';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
-import {
-  loginAction,
-  LoginModel,
-  resendMailForSignup,
-} from '../../stores/auth/Actions';
-
 import logo from 'resources/images/onethread-text.png';
-import eyeIcon from './../../resources/images/eye.png';
-import eyeClose from './../../resources/images/eyeClose.png';
-import backgroundImage from './../../resources/images/Bg-png.png';
-
 import {
   required,
   checkError,
   composeValidators,
   isEmail,
 } from 'components/final-form/utils';
-import { usePushNotifications } from '../../usePushNotifications';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import {
+  loginAction,
+  LoginModel,
+  resendMailForSignup,
+} from '../../stores/auth/Actions';
+
+import eyeIcon from '../../resources/images/eye.png';
+import eyeClose from '../../resources/images/eyeClose.png';
+import backgroundImage from '../../resources/images/Bg-png.png';
+
+import { usePushNotifications } from '../../usePushNotifications';
 
 interface SignInPageInternalProps {
   loginAction: (login: LoginModel) => any;
@@ -83,7 +83,7 @@ export const SignInPageComponent = (
             <>
               {`${response.message}.`}
               <a
-                className="link dim blue pl1"
+                className='link dim blue pl1'
                 onClick={async () => {
                   const res = await resendMailForSignup(values.email);
                   if (res.message === 200) {
@@ -97,6 +97,8 @@ export const SignInPageComponent = (
                     });
                   }
                 }}
+                role='link'
+                tabIndex={0}
               >
                 Resend mail?
               </a>
@@ -111,15 +113,15 @@ export const SignInPageComponent = (
   };
 
   useEffect(() => {
-    const search = props.location.search;
+    const { search } = props.location;
     const params = new URLSearchParams(search);
     setEmail(params.get('email') ? params.get('email')! : '');
   }, [props.location.search]);
 
   return (
-    <div className="cf">
+    <div className='cf'>
       <div
-        className="fl w-100 w-50-ns dt vh-100 displayNone"
+        className='fl w-100 w-50-ns dt vh-100 displayNone'
         style={{
           zIndex: 9999,
           left: '50%',
@@ -130,12 +132,12 @@ export const SignInPageComponent = (
           backgroundColor: '#060517',
         }}
       >
-        <div className="v-mid dtc">
-          <div className="w-50 center">
-            <Link to="/">
-              <img src={logo} alt="onethread" />
+        <div className='v-mid dtc'>
+          <div className='w-50 center'>
+            <Link to='/'>
+              <img src={logo} alt='onethread' />
             </Link>
-            <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
+            <h3 className='tj mt4' style={{ color: '#E0E0E3' }}>
               {t(
                 'landing.login.about-one-thread-login.content-login',
               )}
@@ -145,15 +147,15 @@ export const SignInPageComponent = (
       </div>
 
       <div
-        className="fl w-100 w-50-ns dt vh-100 pa4 pa0-ns"
+        className='fl w-100 w-50-ns dt vh-100 pa4 pa0-ns'
         style={{ backgroundColor: 'white' }}
       >
-        <div className="v-mid dtc">
-          <div className="w-two-thirds-l w-90-m center">
+        <div className='v-mid dtc'>
+          <div className='w-two-thirds-l w-90-m center'>
             <Form
               onSubmit={onSubmit}
               initialValues={{
-                email: email ? email : '',
+                email: email || '',
                 password: '',
                 pushSubscription: '',
               }}
@@ -172,20 +174,20 @@ export const SignInPageComponent = (
                 ...rest
               }) => (
                 <>
-                  <h1 className="pl3 tigrow-lightBlue">
+                  <h1 className='pl3 tigrow-lightBlue'>
                     {t('landing.login.sign-in-form.sign-in-text')}
                   </h1>
                   <form
-                    className="fl w-100 cf"
+                    className='fl w-100 cf'
                     onSubmit={handleSubmit}
                   >
-                    <div className="mw9 center mb2">
+                    <div className='mw9 center mb2'>
                       <SubmitError errorMessage={submitError} />
                     </div>
                     <div>
                       <div>
                         <Field<string>
-                          name="email"
+                          name='email'
                           validate={composeValidators(
                             required,
                             isEmail,
@@ -197,7 +199,7 @@ export const SignInPageComponent = (
                               }`}
                             >
                               <InputGroupFieldWithError
-                                id="email"
+                                id='email'
                                 className={`bw1 pb2 br0 bb ${
                                   checkError(meta)
                                     ? 'b--red'
@@ -205,17 +207,17 @@ export const SignInPageComponent = (
                                 }`}
                                 value={input.value}
                                 onChange={input.onChange}
-                                autoFocus={true}
-                                leftIcon={
-                                  <span className="bp3-icon">
+                                autoFocus
+                                leftIcon={(
+                                  <span className='bp3-icon'>
                                     <Icon
-                                      icon="envelope"
+                                      icon='envelope'
                                       style={{
                                         color: '#34b3e9',
                                       }}
                                     />
                                   </span>
-                                }
+                                )}
                                 style={{
                                   boxShadow: 'none',
                                   fontSize: '18px',
@@ -225,8 +227,8 @@ export const SignInPageComponent = (
                                   'landing.login.sign-in-form.email',
                                 )}
                                 error={
-                                  checkError(meta) &&
-                                  (meta.error || meta.submitError)
+                                  checkError(meta)
+                                  && (meta.error || meta.submitError)
                                 }
                                 disabled={isEmpty(email) === false}
                               />
@@ -238,7 +240,7 @@ export const SignInPageComponent = (
                     <div>
                       <div>
                         <Field<string>
-                          name="password"
+                          name='password'
                           validate={composeValidators(required)}
                           render={({ input, meta }) => (
                             <div
@@ -247,7 +249,7 @@ export const SignInPageComponent = (
                               }`}
                             >
                               <InputGroupFieldWithError
-                                id="password"
+                                id='password'
                                 className={`bw1 pb2 br0 bb ${
                                   checkError(meta)
                                     ? 'b--red'
@@ -255,23 +257,23 @@ export const SignInPageComponent = (
                                 }`}
                                 value={input.value}
                                 onChange={input.onChange}
-                                autoFocus={true}
+                                autoFocus
                                 type={`${
                                   showPassword ? 'text' : 'password'
                                 }`}
-                                leftIcon={
-                                  <span className="bp3-icon">
+                                leftIcon={(
+                                  <span className='bp3-icon'>
                                     <Icon
-                                      icon="lock"
+                                      icon='lock'
                                       style={{
                                         color: '#34b3e9',
                                       }}
                                     />
                                   </span>
-                                }
-                                rightElement={
+                                )}
+                                rightElement={(
                                   <span
-                                    className="bp3-icon"
+                                    className='bp3-icon'
                                     style={{
                                       paddingTop: '10px',
                                       paddingRight: '5px',
@@ -284,9 +286,7 @@ export const SignInPageComponent = (
                                           ? "Don't show password"
                                           : 'Show password'
                                       }
-                                      onClick={() =>
-                                        setShowPassword(!showPassword)
-                                      }
+                                      onClick={() => setShowPassword(!showPassword)}
                                       src={
                                         showPassword
                                           ? eyeClose
@@ -297,9 +297,10 @@ export const SignInPageComponent = (
                                         height: '15px',
                                         color: '#34b3e9',
                                       }}
+                                      alt=''
                                     />
                                   </span>
-                                }
+                                )}
                                 style={{
                                   boxShadow: 'none',
                                   fontSize: '18px',
@@ -309,8 +310,8 @@ export const SignInPageComponent = (
                                   'landing.login.sign-in-form.password',
                                 )}
                                 error={
-                                  checkError(meta) &&
-                                  (meta.error || meta.submitError)
+                                  checkError(meta)
+                                  && (meta.error || meta.submitError)
                                 }
                               />
                             </div>
@@ -320,7 +321,7 @@ export const SignInPageComponent = (
                     </div>
 
                     <Button
-                      className="grow h2 pointer white bp3-minimal w4"
+                      className='grow h2 pointer white bp3-minimal w4'
                       style={{
                         background: '#34b3e9',
                         outline: 'none',
@@ -331,32 +332,32 @@ export const SignInPageComponent = (
                         fontSize: '1.2rem',
                       }}
                       loading={submitting}
-                      type="submit"
+                      type='submit'
                       disabled={submitting || pristine}
                     >
                       {t('landing.login.sign-in-form.sign-in-button')}
                     </Button>
-                    <div className="tc mv4">
+                    <div className='tc mv4'>
                       <NavLink
-                        className="fw9 dt center tigrow-lightBlue"
-                        to="/forgot-password"
+                        className='fw9 dt center tigrow-lightBlue'
+                        to='/forgot-password'
                       >
                         {t(
                           'landing.login.sign-in-form.forgot-password',
                         )}
                       </NavLink>
                     </div>
-                    <div className="tc mv4">
+                    <div className='tc mv4'>
                       <NavLink
-                        className="fw9 dt center tigrow-lightBlue"
-                        to="/signup"
+                        className='fw9 dt center tigrow-lightBlue'
+                        to='/signup'
                       >
                         {t('landing.login.sign-in-form.no-account')}
                       </NavLink>
                     </div>
-                    <Link to="/signup">
+                    <Link to='/signup'>
                       <Button
-                        className="w-100 grow pointer"
+                        className='w-100 grow pointer'
                         style={{
                           background: '#fff',
                           outline: 'none',

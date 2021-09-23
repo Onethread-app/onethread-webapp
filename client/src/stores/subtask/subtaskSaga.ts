@@ -13,9 +13,9 @@ import { tigrowApi } from 'config';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 import { errorMessgeHandler } from 'components/final-form/utils';
 
-import { SubtaskActionTypes } from './Types';
 import { getCurrentTaskId } from 'stores/taskMembers/Selector';
 import { getProjectId } from 'stores/project/Selector';
+import { getCurrentBoardId } from 'stores/task/Selector';
 import {
   addSubTaskMemberFailure,
   addSubTaskMemberSuccess,
@@ -31,7 +31,7 @@ import {
   updateSubTaskFailure,
   updateSubTaskSuccess,
 } from './Actions';
-import { getCurrentBoardId } from 'stores/task/Selector';
+import { SubtaskActionTypes } from './Types';
 
 function* createSubtaskAsync({ payload }: any) {
   try {

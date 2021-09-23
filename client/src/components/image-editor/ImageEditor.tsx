@@ -37,36 +37,35 @@ const ImageEditComponent = (props: IImageEditProps) => {
           setImageName('');
           setImageError('This file format is not supported');
           return false;
-        } else if (event.target.files[0].size / 1024 / 1024 > 5) {
+        } if (event.target.files[0].size / 1024 / 1024 > 5) {
           setImageName('');
-          setImageError(`Image size can't be greater than 5 MB`);
+          setImageError('Image size can\'t be greater than 5 MB');
           return false;
-        } else {
-          const data = new FormData();
-          data.append(
-            'file',
-            event.target.files[0],
-            event.target.files[0].name,
-          );
-          setImageName(event.target.files[0]);
-          setImageSelected(data);
-          setImageError('');
-          return data;
         }
+        const data = new FormData();
+        data.append(
+          'file',
+          event.target.files[0],
+          event.target.files[0].name,
+        );
+        setImageName(event.target.files[0]);
+        setImageSelected(data);
+        setImageError('');
+        return data;
       }
     }
     return false;
   };
   return (
-    <div className="pa3 cf">
-      <h1 className="f5 tigrow-lightBlue">Upload Photo</h1>
-      <label className="bp3-file-input .modifier bp3-fill">
+    <div className='pa3 cf'>
+      <h1 className='f5 tigrow-lightBlue'>Upload Photo</h1>
+      <label className='bp3-file-input .modifier bp3-fill'>
         <input
-          type="file"
-          accept=".gif, .jpg, .apng, .jpeg, .bmp, .svg, .png"
+          type='file'
+          accept='.gif, .jpg, .apng, .jpeg, .bmp, .svg, .png'
           onChange={(e) => imageChangeHandler(e)}
         />
-        <span className="bp3-file-upload-input">
+        <span className='bp3-file-upload-input'>
           {imageName.name ? (
             imageName.name
           ) : (
@@ -77,9 +76,9 @@ const ImageEditComponent = (props: IImageEditProps) => {
       {imageError && (
         <small style={{ color: 'red' }}>{imageError}</small>
       )}
-      <div className="flex justify-end mt3">
+      <div className='flex justify-end mt3'>
         <Button
-          className="w4 grow h2 pointer mr3"
+          className='w4 grow h2 pointer mr3'
           style={{
             background: '#fff',
             outline: 'none',
@@ -97,28 +96,28 @@ const ImageEditComponent = (props: IImageEditProps) => {
           cancel
         </Button>
         <Button
-          type="submit"
-          className="w4 grow h2 pointer"
+          type='submit'
+          className='w4 grow h2 pointer'
           style={
             imageName && isEmpty(imageName.name) === false
               ? {
-                  background: '#34b3e9',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#34b3e9',
+                outline: 'none',
+                color: 'white',
+              }
               : {
-                  background: '#011b1b2e',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#011b1b2e',
+                outline: 'none',
+                color: 'white',
+              }
           }
           onClick={async (e: any) => {
             e.preventDefault();
             setImageLoading(true);
             let response;
             if (
-              props.type === 'company-logo' ||
-              props.type === 'company-cover-photo'
+              props.type === 'company-logo'
+              || props.type === 'company-cover-photo'
             ) {
               response = await props.companyLogoUploadAction(
                 imageSelected,
@@ -126,8 +125,8 @@ const ImageEditComponent = (props: IImageEditProps) => {
               );
             }
             if (
-              props.type === 'coverPhoto' ||
-              props.type === 'profilePic'
+              props.type === 'coverPhoto'
+              || props.type === 'profilePic'
             ) {
               response = await props.imageUploadAction(
                 imageSelected,
@@ -141,9 +140,7 @@ const ImageEditComponent = (props: IImageEditProps) => {
             setImageLoading(false);
           }}
           disabled={
-            imageLoading === true || isEmpty(imageName.name)
-              ? true
-              : false
+            !!(imageLoading === true || isEmpty(imageName.name))
           }
         >
           {imageLoading ? <Spinner size={15} /> : 'Save'}

@@ -30,8 +30,7 @@ export const AssociateListComponent = (
   props: RouteComponentProps & AssociatesPageComponentProps,
 ) => {
   const { t } = useTranslation();
-  const [showAssociateDialog, setShowAssociateDialog] =
-    useState(false);
+  const [showAssociateDialog, setShowAssociateDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -45,8 +44,8 @@ export const AssociateListComponent = (
 
   return (
     <div>
-      <div className="br3 bg-white cf flex w-100">
-        <div className="overflow-auto w-100">
+      <div className='br3 bg-white cf flex w-100'>
+        <div className='overflow-auto w-100'>
           <CustomView condition={!isMobileOnly}>
             <div
               style={{
@@ -61,8 +60,8 @@ export const AssociateListComponent = (
               ) : props.associates.length > 0 ? (
                 props.associates.map((associate: Associate) => (
                   <Card
-                    className="ba b--black-20 br4 pa4 ma2"
-                    interactive={true}
+                    className='ba b--black-20 br4 pa4 ma2'
+                    interactive
                     onClick={async (e) => {
                       e.preventDefault();
                       props.history.push(
@@ -73,23 +72,24 @@ export const AssociateListComponent = (
                     {associate.associateCompany.logo ? (
                       <img
                         src={`${associate.associateCompany.logo}`}
-                        alt="company logo"
+                        alt='company logo'
                       />
                     ) : (
-                      <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
+                      <h1 className='center white f3 bg-green w3 h3 tc pt3 br3'>
                         {associate.associateCompany
                           ? associate.associateCompany.name.charAt(0)
                           : 'Demo'}
                       </h1>
                     )}
-                    <h1 className="tc black f4 mv0">
+                    <h1 className='tc black f4 mv0'>
                       {associate.associateCompany.name}
                     </h1>
-                    <h1 className="tc silver f7 mv0">
+                    <h1 className='tc silver f7 mv0'>
                       {associate.associateCompany.type}
                     </h1>
-                    <h1 className="tc black f7 mt3">
-                      Added on{' '}
+                    <h1 className='tc black f7 mt3'>
+                      Added on
+                      {' '}
                       {moment(associate.createdAt).format(
                         'MMMM Do YYYY',
                       )}
@@ -115,8 +115,8 @@ export const AssociateListComponent = (
               ) : props.associates.length > 0 ? (
                 props.associates.map((associate: Associate) => (
                   <Card
-                    className="ba b--black-0125 br4 ma1"
-                    interactive={true}
+                    className='ba b--black-0125 br4 ma1'
+                    interactive
                     onClick={async (e) => {
                       e.preventDefault();
                       props.history.push(
@@ -127,11 +127,11 @@ export const AssociateListComponent = (
                     {associate.associateCompany.logo ? (
                       <img
                         src={`${associate.associateCompany.logo}`}
-                        alt="company logo"
+                        alt='company logo'
                       />
                     ) : (
                       <h1
-                        className="center white f4 fw6 bg-green tc br3 pt2 ma0"
+                        className='center white f4 fw6 bg-green tc br3 pt2 ma0'
                         style={{ width: '3rem', height: '3rem' }}
                       >
                         {associate.associateCompany
@@ -139,14 +139,15 @@ export const AssociateListComponent = (
                           : 'Demo'}
                       </h1>
                     )}
-                    <h1 className="tc black f4-ns f5 fw6 mt2 mb0">
+                    <h1 className='tc black f4-ns f5 fw6 mt2 mb0'>
                       {associate.associateCompany.name}
                     </h1>
-                    <h1 className="tc silver f7 mv0">
+                    <h1 className='tc silver f7 mv0'>
                       {associate.associateCompany.type}
                     </h1>
-                    <h1 className="tc black f7 fw6 mt2">
-                      Added on{' '}
+                    <h1 className='tc black f7 fw6 mt2'>
+                      Added on
+                      {' '}
                       {moment(associate.createdAt).format(
                         'MMMM Do YYYY',
                       )}
@@ -160,9 +161,7 @@ export const AssociateListComponent = (
           </MobileOnlyView>
           <div>
             <img
-              onClick={() =>
-                setShowAssociateDialog(!showAssociateDialog)
-              }
+              onClick={() => setShowAssociateDialog(!showAssociateDialog)}
               src={addIcon}
               className={`fixed pointer addButton ${
                 showAssociateDialog ? 'dn' : 'db'
@@ -171,6 +170,7 @@ export const AssociateListComponent = (
                 boxShadow: '0px 6px 6px #00000029',
                 borderRadius: '50%',
               }}
+              alt=''
             />
           </div>
         </div>
@@ -182,9 +182,7 @@ export const AssociateListComponent = (
           <AssociateFormEditor
             company={props.company}
             showDialog={showAssociateDialog}
-            setShowDialog={() =>
-              setShowAssociateDialog(!showAssociateDialog)
-            }
+            setShowDialog={() => setShowAssociateDialog(!showAssociateDialog)}
           />
         </RightSidebar>
       )}
@@ -192,12 +190,10 @@ export const AssociateListComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    associates: state.associateReducer.associatesList,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  associates: state.associateReducer.associatesList,
+});
 
 export const AssociateList = connect(mapStateToProps, {
   getAllAssociates,

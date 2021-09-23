@@ -10,7 +10,6 @@ import { DateInput } from '@blueprintjs/datetime/lib/esm/dateInput';
 import { Form, Field } from 'react-final-form';
 
 import { Color } from 'stores/UtilsActions';
-import { updateProject } from '../../../stores/project/Actions';
 
 import {
   checkError,
@@ -20,6 +19,7 @@ import {
 } from 'components/final-form/utils';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
+import { updateProject } from '../../../stores/project/Actions';
 
 interface UpdateProjectProps {
   setShowDialog: (val: boolean) => void;
@@ -65,8 +65,8 @@ const UpdateProjectComponent = (
       );
     }
     if (
-      props.updatingProject === false &&
-      props.errorOnUpdatingProject === ''
+      props.updatingProject === false
+      && props.errorOnUpdatingProject === ''
     ) {
       props.setShowDialog(false);
     }
@@ -88,15 +88,15 @@ const UpdateProjectComponent = (
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="fl w-100 ph4 pt6" onSubmit={handleSubmit}>
+        <form className='fl w-100 ph4 pt6' onSubmit={handleSubmit}>
           <SubmitError errorMessage={submitError} />
           <Field<string>
-            name="name"
+            name='name'
             validate={composeValidators(required, maxValue(32))}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
                 <InputGroupFieldWithLabel
-                  id="name"
+                  id='name'
                   value={input.value}
                   onChange={input.onChange}
                   style={{
@@ -104,34 +104,32 @@ const UpdateProjectComponent = (
                     fontSize: '18px',
                   }}
                   error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
+                    checkError(meta)
+                    && (meta.error || meta.submitError)
                   }
-                  label="Project Name*"
+                  label='Project Name*'
                 />
               </div>
             )}
           />
           <Field<string>
-            name="deadline"
+            name='deadline'
             render={({ input, meta }) => (
               <div>
-                <p className="fw5 mb3" style={{ fontSize: '.8rem' }}>
+                <p className='fw5 mb3' style={{ fontSize: '.8rem' }}>
                   Deadline
                 </p>
-                <div className={`flex bw1 pb1 br0 items-center `}>
+                <div className='flex bw1 pb1 br0 items-center '>
                   <div>
                     <Icon
-                      icon="calendar"
-                      className="mr2"
+                      icon='calendar'
+                      className='mr2'
                       style={{ color: '#34b3e9' }}
                       iconSize={30}
                     />
                   </div>
                   <DateInput
-                    formatDate={(date: Date) =>
-                      date.toLocaleDateString()
-                    }
+                    formatDate={(date: Date) => date.toLocaleDateString()}
                     parseDate={(str: string) => new Date(str)}
                     onChange={input.onChange}
                     canClearSelection={false}
@@ -139,21 +137,21 @@ const UpdateProjectComponent = (
                       input.value
                         ? new Date(input.value)
                         : props.deadline
-                        ? new Date(props.deadline)
-                        : undefined
+                          ? new Date(props.deadline)
+                          : undefined
                     }
                     popoverProps={{
                       targetClassName: 'w-100',
                     }}
                     maxDate={moment().add(10, 'y').toDate()}
                     minDate={new Date()}
-                    placeholder="Deadline"
-                    className="flex-auto"
+                    placeholder='Deadline'
+                    className='flex-auto'
                   />
                 </div>
                 {checkError(meta) && (
                   <small
-                    className="mv3-ns mv2"
+                    className='mv3-ns mv2'
                     style={{ color: 'red' }}
                   >
                     {meta.error || meta.submitError}
@@ -163,14 +161,14 @@ const UpdateProjectComponent = (
             )}
           />
           <Field<string>
-            name="budget"
+            name='budget'
             validate={composeValidators(required, maxValue(32))}
             render={({ input, meta }) => (
               <div
                 className={` ${checkError(meta) ? 'mb2' : 'mb3'} mt2`}
               >
                 <InputGroupFieldWithLabel
-                  id="budget"
+                  id='budget'
                   value={input.value}
                   onChange={input.onChange}
                   style={{
@@ -178,26 +176,26 @@ const UpdateProjectComponent = (
                     fontSize: '18px',
                   }}
                   error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
+                    checkError(meta)
+                    && (meta.error || meta.submitError)
                   }
-                  label="Budget"
+                  label='Budget'
                 />
               </div>
             )}
           />
           <Field<string>
-            name="color"
+            name='color'
             render={({ input, meta }) => (
-              <div className="mb3 mt3">
-                <p className="fw5 mb3" style={{ fontSize: '.8rem' }}>
+              <div className='mb3 mt3'>
+                <p className='fw5 mb3' style={{ fontSize: '.8rem' }}>
                   Label
                 </p>
-                <div className="flex">
+                <div className='flex'>
                   {Color.map((color) => (
-                    <div className="pr2" key={color.code}>
+                    <div className='pr2' key={color.code}>
                       <Icon
-                        className="br2"
+                        className='br2'
                         icon={
                           isEqual(color.code, labelColor) === true
                             ? 'tick'
@@ -225,21 +223,21 @@ const UpdateProjectComponent = (
             )}
           />
           <Divider />
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <Button
-              className="w4 grow h2 pointer mr3"
+              className='w4 grow h2 pointer mr3'
               style={{
                 background: '#0fa3a3',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
-              text="save"
+              text='save'
             />
             <Button
-              className="w4 grow h2 pointer br0"
+              className='w4 grow h2 pointer br0'
               style={{
                 background: '#fff',
                 outline: 'none',
@@ -260,14 +258,12 @@ const UpdateProjectComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    isLoading: state.projectReducer.projectLoading,
-    updatingProject: state.projectReducer.updatingProject,
-    errorOnUpdatingProject:
+const mapStateToProps = (state: any) => ({
+  isLoading: state.projectReducer.projectLoading,
+  updatingProject: state.projectReducer.updatingProject,
+  errorOnUpdatingProject:
       state.projectReducer.errorOnUpdatingProject,
-  };
-};
+});
 
 export const UpdateProject = connect(mapStateToProps, {
   updateProject,

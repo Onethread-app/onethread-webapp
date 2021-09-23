@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 
 import { User } from 'stores/user/Reducer';
 
+import { RightSidebar } from 'components/RightSidebar';
 import editIcon from '../../../resources/images/editIcon.png';
 
 import { AboutEdit } from './AboutEditor';
-import { RightSidebar } from 'components/RightSidebar';
 
 interface IAboutViewProps {
   user: User;
@@ -19,20 +19,21 @@ const AboutViewComponent = (props: IAboutViewProps) => {
 
   return (
     <>
-      <div className="cf ">
-        <h1 className="f5 lh-copy dib tigrow-lightGray-1 ws-break">
+      <div className='cf '>
+        <h1 className='f5 lh-copy dib tigrow-lightGray-1 ws-break'>
           {t('app.user.Personal-profile.About')}
         </h1>
         <img
           src={editIcon}
-          width="38"
-          className="br2 pointer fr mv1"
+          width='38'
+          className='br2 pointer fr mv1'
           onClick={() => setShowDialogAbout(true)}
+          alt=''
         />
       </div>
       <div>
         <p
-          className="ws-break tj black-70 fw6"
+          className='ws-break tj black-70 fw6'
           style={{ whiteSpace: 'pre-line' }}
         >
           {props.user.about}
@@ -51,10 +52,8 @@ const AboutViewComponent = (props: IAboutViewProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+});
 
 export const AboutView = connect(mapStateToProps)(AboutViewComponent);

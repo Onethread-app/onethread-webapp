@@ -13,8 +13,8 @@ const VideoConference = () => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
-    <div className="video-conference">
-      <div className="flex justify-between w-100">
+    <div className='video-conference'>
+      <div className='flex justify-between w-100'>
         <div>
           <h3>{t('app.Video-Conferences.Video-Conferences')}</h3>
           <p>{t('app.Video-Conferences.Make-Team-align')}</p>
@@ -37,8 +37,8 @@ const VideoConference = () => {
         <Dialog
           isOpen={showDialog}
           onClose={() => setShowDialog(false)}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
+          canEscapeKeyClose
+          canOutsideClickClose
           style={{
             width: isMobileOnly ? '95%' : '544px',
             maxWidth: '544px',

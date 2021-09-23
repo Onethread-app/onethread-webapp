@@ -18,33 +18,34 @@ const SubtaskItem = (props: ISubtaskItemProps) => {
 
   return (
     <div
-      className="subtask-item flex items-center justify-between pa1 pointer hover-bg-light-gray br2"
+      className='subtask-item flex items-center justify-between pa1 pointer hover-bg-light-gray br2'
       style={{ minWidth: '500px' }}
       onClick={handleClick}
     >
       <div
-        className="flex items-center truncate"
+        className='flex items-center truncate'
         style={{ maxWidth: '60%' }}
         title={subtask.name}
       >
-        <span className="mr2">
-          {('0' + (props.index + 1)).slice(-2)}.
+        <span className='mr2'>
+          {(`0${props.index + 1}`).slice(-2)}
+          .
         </span>
         {subtask.name}
       </div>
-      <div className="flex">
+      <div className='flex'>
         <div
-          className="tc truncate mr3"
+          className='tc truncate mr3'
           style={{ maxWidth: '100px', fontSize: '12px' }}
         >
           {subtask.taskId.name}
         </div>
         <div
-          className={'flex items-center justify-end mr3'}
+          className='flex items-center justify-end mr3'
           style={{ width: '100px' }}
         >
           <span
-            className="bp3-tag"
+            className='bp3-tag'
             style={{
               backgroundColor:
                 moment() > moment(subtask.dueDate)

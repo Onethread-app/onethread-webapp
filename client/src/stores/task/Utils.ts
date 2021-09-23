@@ -1,8 +1,6 @@
 import { Order, SortTasksBy } from './Reducer';
 
-export const toggleOrderBy = (currentOrder: Order) => {
-  return currentOrder === 'asc' ? 'desc' : 'asc';
-};
+export const toggleOrderBy = (currentOrder: Order) => (currentOrder === 'asc' ? 'desc' : 'asc');
 
 export const toggleOrderOnSort = (
   currentOrder: Order,
@@ -11,7 +9,6 @@ export const toggleOrderOnSort = (
 ) => {
   if (currentSort === sort) {
     return toggleOrderBy(currentOrder);
-  } else {
-    return 'asc';
   }
+  return 'asc';
 };

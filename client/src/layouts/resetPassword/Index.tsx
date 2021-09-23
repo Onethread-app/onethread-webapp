@@ -6,11 +6,7 @@ import { tigrowApi } from 'config';
 import { Form, Field } from 'react-final-form';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
-import lockIcon from './../../resources/images/lock.png';
-import eyeIcon from './../../resources/images/eye.png';
-
 import { SubmitError } from 'components/final-form/SubmitError';
-import { InputGroupFieldWithError } from '../../components/fields/InputGroupField';
 import {
   errorMessgeHandler,
   composeValidators,
@@ -19,6 +15,10 @@ import {
   passwordValidation,
 } from 'components/final-form/utils';
 import InputTooltip from 'components/input-tooltip/InputTooltip';
+import lockIcon from '../../resources/images/lock.png';
+import eyeIcon from '../../resources/images/eye.png';
+
+import { InputGroupFieldWithError } from '../../components/fields/InputGroupField';
 
 const validation = {
   rules: [
@@ -30,8 +30,7 @@ const validation = {
 };
 const ResetPasswordComponent = (props: RouteComponentProps) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleResetPassword = async (values: any) => {
     try {
@@ -47,7 +46,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
         [response.fieldName]: (
           <>
             {`${response.message}.`}
-            <Link to="/forgot-password">Resend mail?</Link>
+            <Link to='/forgot-password'>Resend mail?</Link>
           </>
         ),
       };
@@ -55,9 +54,9 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
   };
 
   return (
-    <div className="dt w-100 vh-100">
-      <div className="v-mid dtc">
-        <div className="cf shadow-4-ns w-34-ns center br3 ph4">
+    <div className='dt w-100 vh-100'>
+      <div className='v-mid dtc'>
+        <div className='cf shadow-4-ns w-34-ns center br3 ph4'>
           <Form
             onSubmit={handleResetPassword}
             validate={(values: any) => {
@@ -74,14 +73,14 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
               submitError,
             }) => (
               <>
-                <h1 className="pl3">Reset Password</h1>
-                <form className="fl w-100 cf" onSubmit={handleSubmit}>
-                  <div className="mw9 center mb2">
+                <h1 className='pl3'>Reset Password</h1>
+                <form className='fl w-100 cf' onSubmit={handleSubmit}>
+                  <div className='mw9 center mb2'>
                     <SubmitError errorMessage={submitError} />
                   </div>
                   <div>
                     <Field<string>
-                      name="password"
+                      name='password'
                       validate={composeValidators(
                         required,
                         passwordValidation,
@@ -93,7 +92,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                           }`}
                         >
                           <InputGroupFieldWithError
-                            id="password"
+                            id='password'
                             className={`bw1 pb2 br0 bb ${
                               checkError(meta)
                                 ? 'b--red'
@@ -104,19 +103,20 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                             type={`${
                               showPassword ? 'text' : 'password'
                             }`}
-                            leftIcon={
-                              <span className="bp3-icon">
+                            leftIcon={(
+                              <span className='bp3-icon'>
                                 <img
                                   src={lockIcon}
-                                  width="20px"
-                                  height="20px"
-                                  color="#34b3e9"
+                                  width='20px'
+                                  height='20px'
+                                  color='#34b3e9'
+                                  alt=''
                                 />
                               </span>
-                            }
-                            rightElement={
+                            )}
+                            rightElement={(
                               <span
-                                className="bp3-icon"
+                                className='bp3-icon'
                                 style={{
                                   paddingTop: '5px',
                                 }}
@@ -128,16 +128,13 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                   }}
                                 >
                                   <img
-                                    onMouseDown={() =>
-                                      setShowPassword(true)
-                                    }
-                                    onMouseUp={() =>
-                                      setShowPassword(false)
-                                    }
+                                    onMouseDown={() => setShowPassword(true)}
+                                    onMouseUp={() => setShowPassword(false)}
                                     src={eyeIcon}
-                                    width="15px"
-                                    height="15px"
-                                    color="#34b3e9"
+                                    width='15px'
+                                    height='15px'
+                                    color='#34b3e9'
+                                    alt=''
                                   />
                                 </span>
                                 <span
@@ -145,35 +142,35 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                     position: 'absolute',
                                     left: '40px',
                                   }}
-                                  className="hidden-small"
+                                  className='hidden-small'
                                 >
                                   <InputTooltip
-                                    content="Choose a password at least 8 characters long"
-                                    direction="right"
+                                    content='Choose a password at least 8 characters long'
+                                    direction='right'
                                     validations={validation}
                                   >
                                     <span
-                                      role="img"
-                                      aria-label="question mark"
+                                      role='img'
+                                      aria-label='question mark'
                                     >
                                       <img
-                                        src="https://svgshare.com/i/Q3c.svg"
-                                        alt="question mark logo"
+                                        src='https://svgshare.com/i/Q3c.svg'
+                                        alt='question mark logo'
                                       />
                                     </span>
                                   </InputTooltip>
                                 </span>
                               </span>
-                            }
+                            )}
                             style={{
                               boxShadow: 'none',
                               fontSize: '18px',
                               paddingLeft: '40px',
                             }}
-                            placeHolder="Password"
+                            placeHolder='Password'
                             error={
-                              checkError(meta) &&
-                              (meta.error || meta.submitError)
+                              checkError(meta)
+                              && (meta.error || meta.submitError)
                             }
                           />
                         </div>
@@ -183,7 +180,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
 
                   <div>
                     <Field<string>
-                      name="confirmPassword"
+                      name='confirmPassword'
                       validate={composeValidators(required)}
                       render={({ input, meta }) => (
                         <div
@@ -192,7 +189,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                           }`}
                         >
                           <InputGroupFieldWithError
-                            id="confirmPassword"
+                            id='confirmPassword'
                             className={`bw1 pb2 br0 bb ${
                               checkError(meta)
                                 ? 'b--red'
@@ -205,47 +202,45 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                 ? 'text'
                                 : 'password'
                             }`}
-                            leftIcon={
-                              <span className="bp3-icon">
+                            leftIcon={(
+                              <span className='bp3-icon'>
                                 <img
                                   src={lockIcon}
-                                  width="20px"
-                                  height="20px"
-                                  color="#34b3e9"
+                                  width='20px'
+                                  height='20px'
+                                  color='#34b3e9'
+                                  alt=''
                                 />
                               </span>
-                            }
-                            rightElement={
+                            )}
+                            rightElement={(
                               <span
-                                className="bp3-icon"
+                                className='bp3-icon'
                                 style={{
                                   paddingTop: '10px',
                                   paddingRight: '5px',
                                 }}
                               >
                                 <img
-                                  onMouseDown={() =>
-                                    setShowConfirmPassword(true)
-                                  }
-                                  onMouseUp={() =>
-                                    setShowConfirmPassword(false)
-                                  }
+                                  onMouseDown={() => setShowConfirmPassword(true)}
+                                  onMouseUp={() => setShowConfirmPassword(false)}
                                   src={eyeIcon}
-                                  width="15px"
-                                  height="15px"
-                                  color="#34b3e9"
+                                  width='15px'
+                                  height='15px'
+                                  color='#34b3e9'
+                                  alt=''
                                 />
                               </span>
-                            }
+                            )}
                             style={{
                               boxShadow: 'none',
                               fontSize: '18px',
                               paddingLeft: '40px',
                             }}
-                            placeHolder="Confirm Password"
+                            placeHolder='Confirm Password'
                             error={
-                              checkError(meta) &&
-                              (meta.error || meta.submitError)
+                              checkError(meta)
+                              && (meta.error || meta.submitError)
                             }
                           />
                         </div>
@@ -254,16 +249,16 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                   </div>
 
                   <Button
-                    className=" b--none w-100 fr grow h2 ph5 pointer pv2 white mb3"
+                    className=' b--none w-100 fr grow h2 ph5 pointer pv2 white mb3'
                     style={{
                       background: '#34b3e9',
                       outline: 'none',
                       color: 'white',
                     }}
                     loading={submitting}
-                    type="submit"
+                    type='submit'
                     disabled={submitting || pristine}
-                    text="Submit"
+                    text='Submit'
                   />
                 </form>
               </>

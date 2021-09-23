@@ -30,7 +30,7 @@ export const VideoCallRequest = (props: VideoCallRequestProps) => {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.post(
-          `contact/contact-sale`,
+          'contact/contact-sale',
           values,
           headers,
         );
@@ -63,29 +63,27 @@ export const VideoCallRequest = (props: VideoCallRequestProps) => {
         pristine,
         submitError,
       }) => (
-        <div className="ph4">
-          <div className="flex justify-end pt2 pb2">
+        <div className='ph4'>
+          <div className='flex justify-end pt2 pb2'>
             <Icon
               icon={IconNames.DELETE}
               iconSize={20}
-              className="grow pointer"
+              className='grow pointer'
               style={{
                 marginRight: '-16px',
                 color: '#707070',
               }}
-              onClick={(e: any) =>
-                props.setShowVideoCallDialog(false)
-              }
+              onClick={(e: any) => props.setShowVideoCallDialog(false)}
             />
           </div>
-          <h3 className="mv0 tc fw6 c-tigrowViolet">
+          <h3 className='mv0 tc fw6 c-tigrowViolet'>
             Please fill in your requirement, Our Sales Team will
             contact you
           </h3>
-          <form className="fl w-100 pt0" onSubmit={handleSubmit}>
-            <h4 className="c-tigrowViolet mb1">Name</h4>
+          <form className='fl w-100 pt0' onSubmit={handleSubmit}>
+            <h4 className='c-tigrowViolet mb1'>Name</h4>
             <Field<string>
-              name="name"
+              name='name'
               validate={required}
               render={({ input, meta }) => (
                 <div>
@@ -103,16 +101,16 @@ export const VideoCallRequest = (props: VideoCallRequestProps) => {
                     style={{ boxShadow: 'none' }}
                   />
                   {checkError(meta) && (
-                    <small className="mv3" style={{ color: 'red' }}>
+                    <small className='mv3' style={{ color: 'red' }}>
                       {meta.error || meta.submitError}
                     </small>
                   )}
                 </div>
               )}
             />
-            <h4 className="c-tigrowViolet mb1">Email</h4>
+            <h4 className='c-tigrowViolet mb1'>Email</h4>
             <Field<string>
-              name="email"
+              name='email'
               validate={composeValidators(required, isEmail)}
               render={({ input, meta }) => (
                 <div>
@@ -130,24 +128,24 @@ export const VideoCallRequest = (props: VideoCallRequestProps) => {
                     style={{ boxShadow: 'none' }}
                   />
                   {checkError(meta) && (
-                    <small className="mv3" style={{ color: 'red' }}>
+                    <small className='mv3' style={{ color: 'red' }}>
                       {meta.error || meta.submitError}
                     </small>
                   )}
                 </div>
               )}
             />
-            <h4 className="c-tigrowViolet mb1">
+            <h4 className='c-tigrowViolet mb1'>
               For how many persons do you want this solution?
             </h4>
             <Field<string>
-              name="message"
+              name='message'
               validate={required}
               render={({ input, meta }) => (
                 <div>
                   <TextArea
-                    growVertically={true}
-                    fill={true}
+                    growVertically
+                    fill
                     id={input.name}
                     value={input.value}
                     onChange={input.onChange}
@@ -165,29 +163,29 @@ export const VideoCallRequest = (props: VideoCallRequestProps) => {
                     }}
                   />
                   {checkError(meta) && (
-                    <small className="mv3" style={{ color: 'red' }}>
+                    <small className='mv3' style={{ color: 'red' }}>
                       {meta.error || meta.submitError}
                     </small>
                   )}
                 </div>
               )}
             />
-            <div className="tc">
+            <div className='tc'>
               <Button
-                className="grow h2 pointer bp3-minimal w4 mt3 br3"
+                className='grow h2 pointer bp3-minimal w4 mt3 br3'
                 style={{
                   backgroundColor: '#43466d',
                   color: 'white',
                   outline: 'none',
                 }}
                 loading={submitting}
-                type="submit"
+                type='submit'
                 disabled={submitting || pristine}
               >
-                <span className="fw6 tracked">Send</span>
+                <span className='fw6 tracked'>Send</span>
               </Button>
               {submitError && (
-                <div className="red mt2">{submitError}</div>
+                <div className='red mt2'>{submitError}</div>
               )}
             </div>
           </form>

@@ -7,27 +7,26 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 
-import TimeTrackerTypes from './Types';
-
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 
+import { updateTaskTimeSpent } from 'stores/task/Actions';
+import { updateProjectTimeSpent } from 'stores/project/Actions';
+import { getCurrentTaskId } from 'stores/task/Selector';
 import {
   addTrackedTimeFailure,
   addTrackedTimeSuccess,
   getTaskTrackersFailure,
   getTaskTrackersSuccess,
 } from './Action';
-import { updateTaskTimeSpent } from 'stores/task/Actions';
-import { updateProjectTimeSpent } from 'stores/project/Actions';
-import { getCurrentTaskId } from 'stores/task/Selector';
+import TimeTrackerTypes from './Types';
 
 function* addTrackedTimeAsync({ payload }: any) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      const res = yield tigrowApi.post(`track/`, payload, headers);
+      const res = yield tigrowApi.post('track/', payload, headers);
       yield all([
         put(updateProjectTimeSpent(res.data.timeTracker)),
         put(updateTaskTimeSpent(res.data.timeTracker)),

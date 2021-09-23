@@ -67,9 +67,7 @@ const ReactMultiEmail = ({
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const isInList = (email: string) => {
-    return emails.includes(email);
-  };
+  const isInList = (email: string) => emails.includes(email);
 
   const isEmail = (email: string) => {
     const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
@@ -160,8 +158,8 @@ const ReactMultiEmail = ({
           <div key={email}>
             {email}
             <button
-              type="button"
-              className="button"
+              type='button'
+              className='button'
               onClick={() => handleDelete(email)}
             >
               &times;
@@ -172,7 +170,7 @@ const ReactMultiEmail = ({
         <input
           ref={inputRef}
           name={name}
-          type="email"
+          type='email'
           placeholder={placeholder ?? ''}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
@@ -180,7 +178,7 @@ const ReactMultiEmail = ({
           value={input}
         />
       </StyledDiv>
-      {errors && <StyledError errorMessage={errors}></StyledError>}
+      {errors && <StyledError errorMessage={errors} />}
     </div>
   );
 };

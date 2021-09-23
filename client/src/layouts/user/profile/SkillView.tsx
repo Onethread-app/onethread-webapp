@@ -8,11 +8,11 @@ import {
   deleteSkillAction,
 } from 'stores/user/Actions';
 
-import skillImage from './../../../resources/images/skills.png';
-
-import { SkillEdit } from './SkillEditor';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 import { RightSidebar } from 'components/RightSidebar';
+import skillImage from '../../../resources/images/skills.png';
+
+import { SkillEdit } from './SkillEditor';
 
 interface SkillViewComponentProps {
   user: User;
@@ -28,49 +28,50 @@ export const SkillViewComponent = (
 
   return (
     <>
-      <h1 className="f5 lh-copy">
+      <h1 className='f5 lh-copy'>
         {t('app.user.Personal-profile.Skills')}
       </h1>
-      <div className="dib">
+      <div className='dib'>
         {props.user.skillArea && props.user.skillArea.length > 0 ? (
-          props.user.skillArea.map((skill: ItemEntityProps) => {
-            return (
-              <div className="mv1 fl">
+          props.user.skillArea.map((skill: ItemEntityProps) => (
+            <div className='mv1 fl'>
+              <span
+                className='bp3-tag ma1 pv2 ph3 ws-break'
+                style={{
+                  backgroundColor: '#34b3e9',
+                  color: 'white',
+                  fontSize: '15px',
+                }}
+              >
+                {skill.name}
                 <span
-                  className="bp3-tag ma1 pv2 ph3 ws-break"
+                  className='bp3-tag-remove bp3-icon-delete mh2 w1 h1'
                   style={{
-                    backgroundColor: '#34b3e9',
-                    color: 'white',
-                    fontSize: '15px',
+                    backgroundColor: 'white',
+                    color: '#34b3e9',
+                    borderRadius: '30px',
+                    paddingTop: '1px',
                   }}
-                >
-                  {skill.name}
-                  <span
-                    className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
-                    style={{
-                      backgroundColor: 'white',
-                      color: '#34b3e9',
-                      borderRadius: '30px',
-                      paddingTop: '1px',
-                    }}
-                    onClick={(e: any) => {
-                      props.deleteSkillAction(skill._id!);
-                    }}
-                  ></span>
-                </span>
-              </div>
-            );
-          })
+                  onClick={(e: any) => {
+                    props.deleteSkillAction(skill._id!);
+                  }}
+                  role='button'
+                  aria-label='Delete Skill'
+                  tabIndex={0}
+                />
+              </span>
+            </div>
+          ))
         ) : (
           <div>
-            <img src={skillImage}></img>
+            <img src={skillImage} alt='' />
             <p>No skill has selected</p>
           </div>
         )}
       </div>
-      <div className="tc">
+      <div className='tc'>
         <button
-          className="br3 grow ph3-l ph2-m pointer pv2 bg-white ba b--lightBlue tigrow-lightBlue outline-0 mt3 mb2 bw1 fw7"
+          className='br3 grow ph3-l ph2-m pointer pv2 bg-white ba b--lightBlue tigrow-lightBlue outline-0 mt3 mb2 bw1 fw7'
           onClick={() => setShowDialog(!showDialog)}
         >
           {t('app.user.Personal-profile.Add-skills')}
@@ -89,11 +90,9 @@ export const SkillViewComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+});
 
 export const SkillView = connect(mapStateToProps, {
   addSkillAction,

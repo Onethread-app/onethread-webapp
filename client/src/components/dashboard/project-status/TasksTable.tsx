@@ -24,67 +24,59 @@ import { priorityColor, tokenConfig } from 'stores/UtilsActions';
 import MemberIcon from 'components/member/MemberIcon';
 import AlertDialogSlide from './PermissionModal';
 
-const StyledTableCell = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '&:first-child': { paddingRight: 5 },
-      '&:last-child': { paddingRight: 5 },
-    },
-    head: { color: 'black' },
-    body: { fontSize: 14 },
-  }),
-)(TableCell);
+const StyledTableCell = withStyles((theme: Theme) => createStyles({
+  root: {
+    '&:first-child': { paddingRight: 5 },
+    '&:last-child': { paddingRight: 5 },
+  },
+  head: { color: 'black' },
+  body: { fontSize: 14 },
+}))(TableCell);
 
-const StyledTableRow = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      backgroundColor: '#fefefe',
-      cursor: 'pointer',
-    },
-  }),
-)(TableRow);
+const StyledTableRow = withStyles((theme: Theme) => createStyles({
+  root: {
+    backgroundColor: '#fefefe',
+    cursor: 'pointer',
+  },
+}))(TableRow);
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    paper: {
-      width: '100%',
-      marginBottom: theme.spacing(2),
-    },
-    visuallyHidden: {
-      border: 0,
-      clip: 'rect(0 0 0 0)',
-      height: 1,
-      margin: -1,
-      overflow: 'hidden',
-      padding: 0,
-      position: 'absolute',
-      top: 20,
-      width: 1,
-    },
-  }),
-);
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  root: {
+    width: '100%',
+  },
+  paper: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1,
+  },
+}));
 
-const BorderLinearProgress = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      height: 10,
-      borderRadius: 5,
-    },
-    colorPrimary: {
-      backgroundColor:
+const BorderLinearProgress = withStyles((theme: Theme) => createStyles({
+  root: {
+    height: 10,
+    borderRadius: 5,
+  },
+  colorPrimary: {
+    backgroundColor:
         theme.palette.grey[
           theme.palette.type === 'light' ? 300 : 700
         ],
-    },
-    bar: {
-      borderRadius: 5,
-      backgroundColor: '#1a90ff',
-    },
-  }),
-)(LinearProgress);
+  },
+  bar: {
+    borderRadius: 5,
+    backgroundColor: '#1a90ff',
+  },
+}))(LinearProgress);
 
 interface Data {
   taskname: string;
@@ -103,7 +95,7 @@ function descendingComparator(a, b, orderBy) {
     );
   }
   if (orderBy === 'subtask') {
-    return b['remainingSubtask'] - a['remainingSubtask'];
+    return b.remainingSubtask - a.remainingSubtask;
   }
   if (b[orderBy] < a[orderBy]) return -1;
   if (b[orderBy] > a[orderBy]) return 1;
@@ -156,12 +148,13 @@ interface EnhancedTableProps {
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const { t } = useTranslation();
-  const { classes, order, orderBy, onRequestSort } = props;
+  const {
+    classes, order, orderBy, onRequestSort,
+  } = props;
 
-  const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
+  const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    onRequestSort(event, property);
+  };
 
   interface HeadCell {
     id: keyof Data;
@@ -212,7 +205,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           <StyledTableCell
             key={headCell.id}
             align={index === 0 ? 'center' : 'left'}
-            padding={'default'}
+            padding='default'
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -229,14 +222,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
               >
                 {headCell.label}
               </p>
-              {orderBy === headCell.id &&
-              headCell.id === 'dueDate' ? (
+              {orderBy === headCell.id
+              && headCell.id === 'dueDate' ? (
                 <span className={classes.visuallyHidden}>
                   {order === 'desc'
                     ? 'sorted descending'
                     : 'sorted ascending'}
                 </span>
-              ) : null}
+                ) : null}
             </TableSortLabel>
           </StyledTableCell>
         ))}
@@ -295,9 +288,8 @@ const AppTable = ({
     setPage(0);
   };
 
-  const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, tasks.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage
+    - Math.min(rowsPerPage, tasks.length - page * rowsPerPage);
 
   const PriorityButton = ({ value }) => {
     const priorObject: any = priorityColor.find(
@@ -305,7 +297,7 @@ const AppTable = ({
     );
     return (
       <span
-        className="ph2 pv1"
+        className='ph2 pv1'
         style={{
           background: priorObject.value,
           color: 'white',
@@ -344,9 +336,9 @@ const AppTable = ({
         />
         <TableContainer>
           <Table
-            aria-labelledby="tableTitle"
-            size={'medium'}
-            aria-label="enhanced table"
+            aria-labelledby='tableTitle'
+            size='medium'
+            aria-label='enhanced table'
           >
             <EnhancedTableHead
               classes={classes}
@@ -369,7 +361,7 @@ const AppTable = ({
                   return (
                     <StyledTableRow
                       hover
-                      role="checkbox"
+                      role='checkbox'
                       tabIndex={-1}
                       key={row._id}
                       style={{
@@ -379,11 +371,11 @@ const AppTable = ({
                       onClick={() => redirectTo(row)}
                     >
                       <StyledTableCell
-                        component="th"
+                        component='th'
                         id={labelId}
-                        scope="row"
-                        padding="none"
-                        align={'center'}
+                        scope='row'
+                        padding='none'
+                        align='center'
                         style={{
                           maxWidth: 250,
                           lineHeight: 1.5,
@@ -404,11 +396,11 @@ const AppTable = ({
                       </StyledTableCell>
 
                       <StyledTableCell
-                        align="center"
+                        align='center'
                         style={{ maxWidth: 70 }}
                       >
                         {row.members.length ? (
-                          <div className="flex items-center justify-center">
+                          <div className='flex items-center justify-center'>
                             {row.members.map((member: any) => (
                               <MemberIcon
                                 name={`${member.firstName} ${member.lastName}`}
@@ -422,22 +414,22 @@ const AppTable = ({
                         )}
                       </StyledTableCell>
                       <StyledTableCell
-                        align="left"
+                        align='left'
                         style={{ maxWidth: 70 }}
                       >
                         <PriorityButton value={row.priority} />
                       </StyledTableCell>
 
-                      <StyledTableCell align="left">
+                      <StyledTableCell align='left'>
                         <span
-                          className="bp3-tag ttc"
+                          className='bp3-tag ttc'
                           style={{
                             background:
                               row.status === 'done'
                                 ? '#2EB67D'
                                 : row.status === 'in-progress'
-                                ? '#08A0F7'
-                                : '#FFA800',
+                                  ? '#08A0F7'
+                                  : '#FFA800',
                             maxWidth: 100,
                           }}
                         >
@@ -448,7 +440,7 @@ const AppTable = ({
                         </span>
                       </StyledTableCell>
                       <StyledTableCell
-                        align="left"
+                        align='left'
                         style={{ maxWidth: 70 }}
                       >
                         <span>
@@ -464,31 +456,33 @@ const AppTable = ({
                         </span>
                       </StyledTableCell>
                       <StyledTableCell style={{ minWidth: 150 }}>
-                        {parseInt(row.doneSubtasks) +
-                          parseInt(row.totalSubtasks) ===
-                        0 ? (
+                        {parseInt(row.doneSubtasks, 10)
+                          + parseInt(row.totalSubtasks, 10)
+                        === 0 ? (
                           <p>No subtask</p>
-                        ) : (
-                          <div className="flex items-center">
-                            <div className="w-60">
-                              <BorderLinearProgress
-                                variant="determinate"
-                                value={
-                                  (row.doneSubtasks * 100) /
-                                  row.totalSubtasks
+                          ) : (
+                            <div className='flex items-center'>
+                              <div className='w-60'>
+                                <BorderLinearProgress
+                                  variant='determinate'
+                                  value={
+                                  (row.doneSubtasks * 100)
+                                  / row.totalSubtasks
                                 }
-                              />
+                                />
+                              </div>
+                              <span
+                                className='w-40'
+                                style={{
+                                  paddingLeft: 10,
+                                }}
+                              >
+                                {`${parseInt(row.doneSubtasks, 10)} / ${
+                                  row.totalSubtasks
+                                }`}
+                              </span>
                             </div>
-                            <span
-                              className="w-40"
-                              style={{
-                                paddingLeft: 10,
-                              }}
-                            >{`${parseInt(row.doneSubtasks)} / ${
-                              row.totalSubtasks
-                            }`}</span>
-                          </div>
-                        )}
+                          )}
                       </StyledTableCell>
                     </StyledTableRow>
                   );
@@ -507,7 +501,7 @@ const AppTable = ({
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5]}
-          component="div"
+          component='div'
           count={tasks.length}
           rowsPerPage={rowsPerPage}
           page={page}

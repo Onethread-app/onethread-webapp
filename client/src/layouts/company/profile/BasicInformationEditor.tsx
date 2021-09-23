@@ -60,26 +60,23 @@ const CompanyInfoFormComponent = (
   });
 
   const emailValidation = (email: string) => {
-    const regexForEmailValidation =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (email && email.match(regexForEmailValidation)) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   const emptyErrorCheck = () => {
     if (
-      isEmpty(errors.legalOwnerMail) &&
-      isEmpty(errors.email) &&
-      isEmpty(errors.address) &&
-      isEmpty(errors.legalOwnerName)
+      isEmpty(errors.legalOwnerMail)
+      && isEmpty(errors.email)
+      && isEmpty(errors.address)
+      && isEmpty(errors.legalOwnerName)
     ) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   const emptyValueCheck = () => {
@@ -90,9 +87,8 @@ const CompanyInfoFormComponent = (
       }
       setErrors(e);
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   const handleChange = (name: string | number) => (event: any) => {
@@ -104,7 +100,7 @@ const CompanyInfoFormComponent = (
   };
 
   const onChangeSelectField = (name: string) => (event: any) => {
-    const value = event.currentTarget.value;
+    const { value } = event.currentTarget;
     setValues({ ...values, [name]: value });
     setData({ ...values, [name]: value });
     setErrors({ ...errors, [name]: '' });
@@ -113,9 +109,8 @@ const CompanyInfoFormComponent = (
   const checkLegalOwnerMail = () => {
     if (isEqual(values.email, values.legalOwnerMail)) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   useEffect(() => {
@@ -134,19 +129,19 @@ const CompanyInfoFormComponent = (
   }, [data]);
 
   return (
-    <form className="fl w-100 pa4">
-      <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
+    <form className='fl w-100 pa4'>
+      <h1 className='f5 lh-title ml2 tigrow-lightBlue mb4'>
         {t('app.company.Company-profile.Basic')}
       </h1>
       <div className={` ${errors.name ? 'mb3' : 'mb4'}`}>
         <InputGroupField
-          id="name"
+          id='name'
           value={values.name}
           onChange={handleChange('name')}
           placeHolder={`${t(
             'app.forms.Create-company.Name',
           )} (Required)`}
-          leftIcon="user"
+          leftIcon='user'
           style={{
             boxShadow: 'none',
           }}
@@ -177,15 +172,15 @@ const CompanyInfoFormComponent = (
         )}
       </div>
       <div className={` ${errors.type ? 'mb3' : 'mb4'}`}>
-        <div className="flex">
-          <div className=" f5 pa1 bb b--lightBlue">
-            <Icon icon={'briefcase'} className="tigrow-lightBlue" />
+        <div className='flex'>
+          <div className=' f5 pa1 bb b--lightBlue'>
+            <Icon icon='briefcase' className='tigrow-lightBlue' />
           </div>
           <HTMLSelect
-            fill={true}
-            minimal={true}
+            fill
+            minimal
             onChange={onChangeSelectField('type')}
-            className=" bb b--lightBlue"
+            className=' bb b--lightBlue'
             style={{
               boxShadow: 'none',
               borderRadius: '0px',
@@ -197,7 +192,7 @@ const CompanyInfoFormComponent = (
             <option selected value={values.type}>
               {values.type
                 ? values.type
-                : `Select a company type (Required)`}
+                : 'Select a company type (Required)'}
             </option>
             {Type.map((t) => (
               <option value={t}>{t}</option>
@@ -212,13 +207,13 @@ const CompanyInfoFormComponent = (
       </div>
       <div className={` ${errors.address ? 'mb3' : 'mb4'}`}>
         <InputGroupField
-          id="address"
+          id='address'
           value={values.address}
           onChange={handleChange('address')}
           placeHolder={`${t(
             'app.forms.Create-company.Address',
           )} (Required)`}
-          leftIcon="map-marker"
+          leftIcon='map-marker'
           style={{
             boxShadow: 'none',
           }}
@@ -231,8 +226,8 @@ const CompanyInfoFormComponent = (
               const addressError = { ...errors, address: 'Required' };
               setErrors(addressError);
             } else if (
-              values.address &&
-              values.address.length > 120
+              values.address
+              && values.address.length > 120
             ) {
               const addressError = {
                 ...errors,
@@ -254,11 +249,11 @@ const CompanyInfoFormComponent = (
       </div>
       <div className={` ${errors.email ? 'mb3' : 'mb4'}`}>
         <InputGroupField
-          id="email"
+          id='email'
           value={values.email}
           onChange={handleChange('email')}
           placeHolder={t('app.forms.Create-company.Email')}
-          leftIcon="envelope"
+          leftIcon='envelope'
           style={{
             boxShadow: 'none',
           }}
@@ -275,8 +270,8 @@ const CompanyInfoFormComponent = (
               };
               setErrors(companyEmailError);
             } else if (
-              !isEmpty(values.email) &&
-              !emailValidation(values.email)
+              !isEmpty(values.email)
+              && !emailValidation(values.email)
             ) {
               const emailError = {
                 ...errors,
@@ -297,11 +292,11 @@ const CompanyInfoFormComponent = (
       </div>
       <div className={` ${errors.legalOwnerName ? 'mb3' : 'mb4'}`}>
         <InputGroupField
-          id="legalOwnerName"
+          id='legalOwnerName'
           value={values.legalOwnerName}
           onChange={handleChange('legalOwnerName')}
           placeHolder={t('app.forms.Create-company.Legal-name')}
-          leftIcon="mugshot"
+          leftIcon='mugshot'
           style={{
             boxShadow: 'none',
           }}
@@ -313,8 +308,8 @@ const CompanyInfoFormComponent = (
           }`}
           validationOnBlur={() => {
             if (
-              values.legalOwnerName &&
-              values.legalOwnerName.length > 32
+              values.legalOwnerName
+              && values.legalOwnerName.length > 32
             ) {
               const legalOwnerNameError = {
                 ...errors,
@@ -341,11 +336,11 @@ const CompanyInfoFormComponent = (
       </div>
       <div className={` ${errors.legalOwnerMail ? 'mb3' : 'mb4'}`}>
         <InputGroupField
-          id="legalOwnerMail"
+          id='legalOwnerMail'
           value={values.legalOwnerMail}
           onChange={handleChange('legalOwnerMail')}
           placeHolder={t('app.forms.Create-company.Legal-email')}
-          leftIcon="envelope"
+          leftIcon='envelope'
           style={{
             boxShadow: 'none',
           }}
@@ -357,8 +352,8 @@ const CompanyInfoFormComponent = (
           }`}
           validationOnBlur={() => {
             if (
-              checkLegalOwnerMail() &&
-              !isEmpty(values.legalOwnerMail)
+              checkLegalOwnerMail()
+              && !isEmpty(values.legalOwnerMail)
             ) {
               const ownerEmailError = {
                 ...errors,
@@ -367,8 +362,8 @@ const CompanyInfoFormComponent = (
               };
               setErrors(ownerEmailError);
             } else if (
-              !isEmpty(values.legalOwnerMail) &&
-              !emailValidation(values.legalOwnerMail)
+              !isEmpty(values.legalOwnerMail)
+              && !emailValidation(values.legalOwnerMail)
             ) {
               const legalOwnerMailError = {
                 ...errors,
@@ -392,10 +387,10 @@ const CompanyInfoFormComponent = (
           ''
         )}
       </div>
-      <div className="flex justify-end">
+      <div className='flex justify-end'>
         <Button
-          type="submit"
-          className="w4 grow h2 pointer mr3"
+          type='submit'
+          className='w4 grow h2 pointer mr3'
           style={{
             background: '#34b3e9',
             outline: 'none',
@@ -412,7 +407,7 @@ const CompanyInfoFormComponent = (
           Save
         </Button>
         <Button
-          className="w4 grow h2 pointer"
+          className='w4 grow h2 pointer'
           style={{
             background: '#fff',
             outline: 'none',
@@ -431,12 +426,10 @@ const CompanyInfoFormComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    companyInfo: state.companyReducer.currentCompany,
-    previousData: state.companyBasicInfoFormReducer.data,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  companyInfo: state.companyReducer.currentCompany,
+  previousData: state.companyBasicInfoFormReducer.data,
+});
 
 export const CompanyInfoForm = connect(mapStateToProps, {
   saveCompanyBasicInfoForm,

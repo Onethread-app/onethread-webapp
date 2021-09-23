@@ -23,8 +23,8 @@ import {
   showDepartment,
 } from 'layouts/company/colleagues/Index';
 import Navbar from 'components/navbar/Navbar';
-import MemberTable from '../../../../components/MemberTable/MemberTable';
 import SearchOption from 'components/SearchOption/SearchOption';
+import MemberTable from '../../../../components/MemberTable/MemberTable';
 import { AddProjectMemberForm } from './AddProjectMemberForm';
 import { AddProjectAssociateForm } from './AddProjectAssociateForm';
 import { AssociateList } from './AssociateList';
@@ -53,8 +53,7 @@ interface TeamMember {
 const ProjectTeamPageComponent = (props: TeamMember) => {
   const { t } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
-  const [showAssociateDialog, setShowAssociateDialog] =
-    useState(false);
+  const [showAssociateDialog, setShowAssociateDialog] = useState(false);
   const [teammatesList, setTeammatesList] = useState<any[]>([]);
   const [rows, setRows] = useState<any[]>(teammatesList);
 
@@ -69,7 +68,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
   }, [props.project._id]);
 
   useEffect(() => {
-    let teammatesList = props.teams.map((m: any, i) => ({
+    const teammatesList = props.teams.map((m: any, i) => ({
       name: `${upperFirst(
         m.member.account.firstName,
       )}${' '}${upperFirst(m.member.account.lastName)}`,
@@ -78,13 +77,13 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         ? m.member.account.profileImage
         : null,
       division: `${
-        m.member.designations.length > 0 &&
-        getDivisionName[m.member.designations[0].division]
+        m.member.designations.length > 0
+        && getDivisionName[m.member.designations[0].division]
       }`,
       department: `${showDepartment(m.member)}`,
       position: `${
-        m.member.designations.length > 0 &&
-        m.member.designations[0].position
+        m.member.designations.length > 0
+        && m.member.designations[0].position
       }`,
       role: m.role,
       id: m._id,
@@ -97,11 +96,11 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
   return (
     <>
       <MobileView>
-        <Navbar type="company" />
-        <div className="flex justify-between mt5">
+        <Navbar type='company' />
+        <div className='flex justify-between mt5'>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
             activeStyle={{
               background: '#34b3e9',
@@ -115,7 +114,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
             activeStyle={{
               background: '#34b3e9',
@@ -129,7 +128,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
             activeStyle={{
               background: '#34b3e9',
@@ -143,7 +142,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
             activeStyle={{
               background: '#34b3e9',
@@ -157,7 +156,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
             activeStyle={{
               background: '#34b3e9',
@@ -171,7 +170,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
             activeStyle={{
               background: '#34b3e9',
@@ -186,27 +185,30 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         </div>
       </MobileView>
       <div
-        className="ph5-ns ph3 pv4"
+        className='ph5-ns ph3 pv4'
         style={{ background: '#E5E5E5' }}
       >
         <div
-          className="flex justify-between items-center"
+          className='flex justify-between items-center'
           style={{ borderBottom: '2px solid #E0E0E0' }}
         >
           {isMobileOnly ? undefined : (
-            <h1 className="f3">
-              {t('app.project.Project-teammates.Team-members')} (
-              {teammatesList.length})
+            <h1 className='f3'>
+              {t('app.project.Project-teammates.Team-members')}
+              {' '}
+              (
+              {teammatesList.length}
+              )
             </h1>
           )}
-          <div className="teammates-top-area mb1">
+          <div className='teammates-top-area mb1'>
             <SearchOption
               list={teammatesList}
               rows={rows}
               setRows={setRows}
             />
             <Button
-              className="grow fr h2 pointer white bp3-minimal mr2 ml2 mb1"
+              className='grow fr h2 pointer white bp3-minimal mr2 ml2 mb1'
               style={{
                 background: '#34b3e9',
                 color: '#fff',
@@ -216,35 +218,31 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             >
               {t('app.project.Project-teammates.Add-Teammates')}
             </Button>
-            {props.projectList &&
-              props.projectList.map((project) =>
-                props.project._id === project._id ? (
-                  project.company === props.company._id ? (
-                    <Button
-                      className="grow fr h2 pointer white bp3-minimal mr2 mb1"
-                      style={{
-                        background: '#34b3e9',
-                        color: '#fff',
-                        outline: 'none',
-                      }}
-                      onClick={() =>
-                        setShowAssociateDialog(!showAssociateDialog)
-                      }
-                    >
-                      {t('app.company.Partners.Add-Partners')}
-                      {/* Add Partners */}
-                    </Button>
-                  ) : undefined
-                ) : undefined,
-              )}
+            {props.projectList
+              && props.projectList.map((project) => (props.project._id === project._id ? (
+                project.company === props.company._id ? (
+                  <Button
+                    className='grow fr h2 pointer white bp3-minimal mr2 mb1'
+                    style={{
+                      background: '#34b3e9',
+                      color: '#fff',
+                      outline: 'none',
+                    }}
+                    onClick={() => setShowAssociateDialog(!showAssociateDialog)}
+                  >
+                    {t('app.company.Partners.Add-Partners')}
+                    {/* Add Partners */}
+                  </Button>
+                ) : undefined
+              ) : undefined))}
           </div>
         </div>
 
         {/* new table */}
-        <MemberTable type={'teammates'} rows={rows} props={props} />
+        <MemberTable type='teammates' rows={rows} props={props} />
         {/* new table */}
 
-        <h1 className="f4 mv4">
+        <h1 className='f4 mv4'>
           {t('app.company.Partners.External')}
         </h1>
         <AssociateList />
@@ -273,9 +271,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         >
           <AddProjectAssociateForm
             showDialog={showAssociateDialog}
-            setShowDialog={(e) =>
-              setShowAssociateDialog(!showAssociateDialog)
-            }
+            setShowDialog={(e) => setShowAssociateDialog(!showAssociateDialog)}
           />
         </Dialog>
       )}
@@ -283,19 +279,17 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-    teams: state.projectReducer.teams,
-    projectRole:
-      state.projectReducer.projectRole.projects &&
-      state.projectReducer.projectRole.projects.role,
-    companyRole: state.companyReducer.currentCompany.role,
-    project: state.projectReducer.projectDetails,
-    company: state.companyReducer.currentCompany,
-    projectList: state.projectReducer.allProjects,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+  teams: state.projectReducer.teams,
+  projectRole:
+      state.projectReducer.projectRole.projects
+      && state.projectReducer.projectRole.projects.role,
+  companyRole: state.companyReducer.currentCompany.role,
+  project: state.projectReducer.projectDetails,
+  company: state.companyReducer.currentCompany,
+  projectList: state.projectReducer.allProjects,
+});
 
 export const ProjectTeamPage = connect(mapStateToProps, {
   getProjectTeams,

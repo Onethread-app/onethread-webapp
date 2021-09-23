@@ -33,21 +33,24 @@ export const AssignedMembersViewComponent = (
     <>
       {loading === false ? (
         <div>
-          <h3> {t('app.project.Tasks.Viewers')}</h3>
+          <h3>
+            {' '}
+            {t('app.project.Tasks.Viewers')}
+          </h3>
           {props.taskMemberList.map((list) => (
             <div
-              className="pa1 flex items-center w-100"
+              className='pa1 flex items-center w-100'
               key={list._id}
             >
-              <div className="flex items-center w-100">
+              <div className='flex items-center w-100'>
                 <img
                   src={
                     list.profileImage
                       ? list.profileImage
                       : 'https://tigrowresources.s3-ap-southeast-1.amazonaws.com/profilePhoto.svg'
                   }
-                  className="br2 h2 w2 pointer mh2"
-                  alt="avatar"
+                  className='br2 h2 w2 pointer mh2'
+                  alt='avatar'
                 />
                 <p>{list.name}</p>
               </div>
@@ -62,13 +65,11 @@ export const AssignedMembersViewComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    taskMemberList:
+const mapStateToProps = (state: any) => ({
+  taskMemberList:
       state.taskIndexReducer.taskMembersReducer.taskMemberList,
-    currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
-  };
-};
+  currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
+});
 
 export const AssignedMembersView = connect(mapStateToProps, {
   getAllMembers,

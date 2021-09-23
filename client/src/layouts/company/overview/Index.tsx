@@ -11,9 +11,9 @@ import moment from 'moment';
 
 import { tokenConfig } from 'stores/UtilsActions';
 
-import Table from './Table/Table';
 import { Loading } from 'components/Loading';
 import Navbar from 'components/navbar/Navbar';
+import Table from './Table/Table';
 
 import './index.scss';
 
@@ -34,26 +34,26 @@ const ProjectInfo = ({
   containerStyle = {},
   dataStyle = {},
   dataClassName = '',
-}) => {
-  return (
-    <p
-      style={{
-        fontSize: 18.5,
-        fontWeight: 'bold',
-        paddingBottom: 4,
-        ...containerStyle,
-      }}
+}) => (
+  <p
+    style={{
+      fontSize: 18.5,
+      fontWeight: 'bold',
+      paddingBottom: 4,
+      ...containerStyle,
+    }}
+  >
+    {context}
+    :
+    {' '}
+    <span
+      style={{ fontWeight: 'normal', ...dataStyle }}
+      className={dataClassName}
     >
-      {context}:{' '}
-      <span
-        style={{ fontWeight: 'normal', ...dataStyle }}
-        className={dataClassName}
-      >
-        {data}
-      </span>
-    </p>
-  );
-};
+      {data}
+    </span>
+  </p>
+);
 
 type Order = 'asc' | 'desc';
 interface Data {
@@ -113,11 +113,11 @@ const Index = (props: any) => {
       ) : (
         <>
           <MobileView>
-            <Navbar type="company" />
-            <div className="flex justify-between mt5">
+            <Navbar type='company' />
+            <div className='flex justify-between mt5'>
               <NavLink
                 exact
-                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
                 to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
                 activeStyle={{
                   background: '#34b3e9',
@@ -131,7 +131,7 @@ const Index = (props: any) => {
               </NavLink>
               <NavLink
                 exact
-                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
                 to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
                 activeStyle={{
                   background: '#34b3e9',
@@ -145,7 +145,7 @@ const Index = (props: any) => {
               </NavLink>
               <NavLink
                 exact
-                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
                 to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
                 activeStyle={{
                   background: '#34b3e9',
@@ -159,7 +159,7 @@ const Index = (props: any) => {
               </NavLink>
               <NavLink
                 exact
-                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
                 to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
                 activeStyle={{
                   background: '#34b3e9',
@@ -173,7 +173,7 @@ const Index = (props: any) => {
               </NavLink>
               <NavLink
                 exact
-                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
                 to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
                 activeStyle={{
                   background: '#34b3e9',
@@ -187,7 +187,7 @@ const Index = (props: any) => {
               </NavLink>
               <NavLink
                 exact
-                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
                 to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
                 activeStyle={{
                   background: '#34b3e9',
@@ -233,8 +233,8 @@ const Index = (props: any) => {
                     status === 'not-started'
                       ? '#357EDD'
                       : status === 'ongoing'
-                      ? '#FF6300'
-                      : '#19A974'
+                        ? '#FF6300'
+                        : '#19A974'
                   }`,
                   marginLeft: 5,
                   color: 'white',
@@ -242,12 +242,12 @@ const Index = (props: any) => {
                   fontSize: 16.5,
                   textTransform: 'capitalize',
                 }}
-                dataClassName="ph2 pv1"
+                dataClassName='ph2 pv1'
               />
             </div>
             <>
               {!tasks.length ? (
-                <div className="tc pt3">
+                <div className='tc pt3'>
                   <h2>{t('app.company.Projects.Not-available')}</h2>
                 </div>
               ) : (
@@ -276,29 +276,27 @@ const Index = (props: any) => {
     </div>
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    boardList: state.taskIndexReducer.taskReducer.boardList,
-    company: state.companyReducer.currentCompany,
-    departmentNameLoading: state.companyReducer.departmentNameLoading,
-    role:
-      state.projectReducer.projectRole.projects &&
-      state.projectReducer.projectRole.projects.role,
-    optionalRole:
-      state.projectReducer.projectRole.projects &&
-      state.projectReducer.projectRole.projects.project.optionalRole,
-    user: state.userReducer.user,
-    project: state.projectReducer.projectDetails,
-    singleProjectLoading: state.projectReducer.singleProjectLoading,
-    currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
-    fetchingBoards: state.taskIndexReducer.taskReducer.fetchingBoards,
-    fetchingBoard: state.taskIndexReducer.taskReducer.fetchingBoard,
-    errorOnFetchingBoard:
+const mapStateToProps = (state: any) => ({
+  boardList: state.taskIndexReducer.taskReducer.boardList,
+  company: state.companyReducer.currentCompany,
+  departmentNameLoading: state.companyReducer.departmentNameLoading,
+  role:
+      state.projectReducer.projectRole.projects
+      && state.projectReducer.projectRole.projects.role,
+  optionalRole:
+      state.projectReducer.projectRole.projects
+      && state.projectReducer.projectRole.projects.project.optionalRole,
+  user: state.userReducer.user,
+  project: state.projectReducer.projectDetails,
+  singleProjectLoading: state.projectReducer.singleProjectLoading,
+  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
+  fetchingBoards: state.taskIndexReducer.taskReducer.fetchingBoards,
+  fetchingBoard: state.taskIndexReducer.taskReducer.fetchingBoard,
+  errorOnFetchingBoard:
       state.taskIndexReducer.taskReducer.errorOnFetchingBoard,
-    subscriptiontExpired:
+  subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
-  };
-};
+});
 
 export const OverviewPage = connect(
   mapStateToProps,

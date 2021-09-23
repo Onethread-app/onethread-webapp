@@ -27,34 +27,34 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
     if (props.subscriptiontExpired) {
       props.company.role === 'superAdmin'
         ? window.location.replace(
-            `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
-          )
+          `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+        )
         : window.location.replace(
-            `${window.location.origin}/${props.user.name}/home`,
-          );
+          `${window.location.origin}/${props.user.name}/home`,
+        );
     }
   }, []);
 
   return (
     <>
-      {isMobileOnly && <Navbar type="company" />}
-      <div className="ph4 w-100">
-        <Tabs id="associatesTab" className="mt5 mt0-ns">
+      {isMobileOnly && <Navbar type='company' />}
+      <div className='ph4 w-100'>
+        <Tabs id='associatesTab' className='mt5 mt0-ns'>
           <Tab
-            id="associates"
+            id='associates'
             title={t('app.company.Partners.Partners')}
             panel={<AssociateList />}
-            className="outline-0"
+            className='outline-0'
           />
           {companyPermit(
             props.company.role,
             'addAcceptRejectAssociate',
           ) && (
             <Tab
-              id="pending_associates"
+              id='pending_associates'
               title={t('app.company.Partners.Pending-partners')}
               panel={<PendingAssociateList />}
-              className="outline-0"
+              className='outline-0'
             />
           )}
         </Tabs>
@@ -63,14 +63,12 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-    subscriptiontExpired:
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+  subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
-    company: state.companyReducer.currentCompany,
-  };
-};
+  company: state.companyReducer.currentCompany,
+});
 
 export const AssociatesPage = connect(
   mapStateToProps,

@@ -30,11 +30,11 @@ const CalendarView = (props: ICalendarViewProps) => {
       <Calendar
         localizer={localizer}
         events={props.tasks}
-        startAccessor="start"
-        endAccessor="end"
+        startAccessor='start'
+        endAccessor='end'
         style={{ height: 550 }}
-        drilldownView="agenda"
-        popup={true}
+        drilldownView='agenda'
+        popup
         step={15}
         timeslots={4}
         messages={{
@@ -44,8 +44,7 @@ const CalendarView = (props: ICalendarViewProps) => {
           eventWrapper: CustomComponents.eventWrapper(history),
         }}
         formats={{
-          weekdayFormat: (date, culture, localizer) =>
-            localizer.format(date, 'dddd', culture),
+          weekdayFormat: (date, culture, localizer) => localizer.format(date, 'dddd', culture),
         }}
       />
     </div>

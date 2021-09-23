@@ -58,28 +58,27 @@ const validate = (val: string) => {
       success: false,
       error: 'Team name cannot be empty!',
     };
-  } else if (Validator.minLength(val.trim(), 1)) {
+  } if (Validator.minLength(val.trim(), 1)) {
     return {
       success: false,
       error: 'Team name cannot be shorter than 1!',
     };
-  } else if (Validator.maxLength(val.trim(), 16)) {
+  } if (Validator.maxLength(val.trim(), 16)) {
     return {
       success: false,
       error: 'Team name cannot be longer than 16!',
     };
-  } else if (Validator.validChar(val.trim())) {
+  } if (Validator.validChar(val.trim())) {
     return {
       success: false,
       error:
         'Only capital or lower-case letter, number and "_" are permitted!',
     };
-  } else {
-    return {
-      success: true,
-      error: '',
-    };
   }
+  return {
+    success: true,
+    error: '',
+  };
 };
 
 const LinkGeneratorPopup = () => {
@@ -96,31 +95,23 @@ const LinkGeneratorPopup = () => {
     setIsValid(success);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSubmit();
-    }
-  };
-
   const handleSubmit = () => {
     if (isValid && errorMessage === '') {
-      console.log(teamName);
       Cookies.set('channel', teamName);
       Cookies.set('baseMode', 'avc');
       Cookies.set('transcode', 'interop');
       Cookies.set('attendeeMode', 'video');
       Cookies.set('videoProfile', '480p_4');
 
-      const host =
-        process.env.PUBLIC_URL || `${document.location.host}`;
-      const link = host + '/vc/join/?conf=' + window.btoa(teamName);
+      const host = process.env.PUBLIC_URL || `${document.location.host}`;
+      const link = `${host}/vc/join/?conf=${window.btoa(teamName)}`;
 
       const headers = tokenConfig();
       if ((headers.headers as any).Authorization) {
         axios
           .post(
             `${server}video-conferences/save-record`,
-            { link: link, name: teamName },
+            { link, name: teamName },
             headers,
           )
           .then((res) => {
@@ -133,16 +124,22 @@ const LinkGeneratorPopup = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
   return (
-    <Container className="flex flex-column items-center justify-center">
+    <Container className='flex flex-column items-center justify-center'>
       <H2>{t('app.Video-Conferences.Empowering-teams')}</H2>
       <P>{t('app.Video-Conferences.Enter-name')}</P>
 
-      <div className="flex items-center justify-center mt2">
+      <div className='flex items-center justify-center mt2'>
         <Input
-          type="text"
-          name="team"
-          id="teaminput"
+          type='text'
+          name='team'
+          id='teaminput'
           autoFocus
           placeholder={t('app.Video-Conferences.Enter-team-name')}
           value={teamName}
@@ -150,19 +147,21 @@ const LinkGeneratorPopup = () => {
           onChange={handleChange}
         />
         <LinkBox
-          className="flex items-center justify-center pointer"
+          className='flex items-center justify-center pointer'
           onClick={handleSubmit}
           aria-disabled={teamName.length < 1}
         >
-          <img src={Link} alt="" />
+          <img src={Link} alt='' />
         </LinkBox>
       </div>
-      {errorMessage && <div className="mt2">{errorMessage}</div>}
+      {errorMessage && <div className='mt2'>{errorMessage}</div>}
 
       {conferenceLink && (
-        <div className="mt2 w-55">
-          {t('app.Video-Conferences.Link')}:{' '}
-          <a href={conferenceLink} target="_blank" rel="noreferrer">
+        <div className='mt2 w-55'>
+          {t('app.Video-Conferences.Link')}
+          :
+          {' '}
+          <a href={conferenceLink} target='_blank' rel='noreferrer'>
             {conferenceLink}
           </a>
         </div>

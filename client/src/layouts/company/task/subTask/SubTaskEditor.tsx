@@ -60,8 +60,8 @@ export const SubTaskCreatorComponent = (
   };
 
   return (
-    <div className="mb3 pa3">
-      <h3 className="tc">Create Subtask</h3>
+    <div className='mb3 pa3'>
+      <h3 className='tc'>Create Subtask</h3>
       <Form
         onSubmit={onSubmit}
         initialValues={{
@@ -79,46 +79,46 @@ export const SubTaskCreatorComponent = (
         }) => (
           <form onSubmit={handleSubmit}>
             <SubmitError errorMessage={submitError} />
-            <div className="pt2">
+            <div className='pt2'>
               <Field<string>
-                name="subtaskTitle"
+                name='subtaskTitle'
                 validate={composeValidators(required, maxValue(100))}
                 render={({ input, meta }) => (
                   <div
                     className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}
                   >
                     <InputGroupFieldWithError
-                      id="subtaskTitle"
+                      id='subtaskTitle'
                       value={input.value}
                       onChange={input.onChange}
-                      className="ba br2"
+                      className='ba br2'
                     />
                     {checkError(meta) && (
-                      <small className="mv3" style={{ color: 'red' }}>
+                      <small className='mv3' style={{ color: 'red' }}>
                         {meta.error || meta.submitError}
                       </small>
                     )}
                   </div>
                 )}
               />
-              <div className="flex justify-end mt2">
+              <div className='flex justify-end mt2'>
                 <Button
-                  type="submit"
+                  type='submit'
                   style={{ background: '#34b3e9' }}
                   loading={submitting}
-                  icon={
+                  icon={(
                     <Icon
-                      icon="tick"
+                      icon='tick'
                       iconSize={20}
                       style={{ color: 'white' }}
                     />
-                  }
+                  )}
                   disabled={submitting || pristine}
                 />
                 <Button
-                  className="ml2"
+                  className='ml2'
                   style={{ background: 'transparent' }}
-                  icon="cross"
+                  icon='cross'
                   onClick={async () => {
                     await props.setsubtask({});
                     props.setShowSubTaskForm(!props.showSubtaskForm);
@@ -133,14 +133,12 @@ export const SubTaskCreatorComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    creatingSubTask:
+const mapStateToProps = (state: any) => ({
+  creatingSubTask:
       state.taskIndexReducer.subTaskReducer.creatingSubTask,
-    updatingSubTask:
+  updatingSubTask:
       state.taskIndexReducer.subTaskReducer.updatingSubTask,
-  };
-};
+});
 
 export const SubTaskCreator = connect(mapStateToProps, {
   createSubTask,
@@ -154,21 +152,21 @@ export const SubTaskDelete = (
   return (
     <Popover
       isOpen={deletePopover}
-      content={
-        <div className="pa3 cf bg-white" style={{ width: '350px' }}>
-          <h1 className="f5">Delete</h1>
+      content={(
+        <div className='pa3 cf bg-white' style={{ width: '350px' }}>
+          <h1 className='f5'>Delete</h1>
           <div>
             <p>Are you sure about that ? </p>
-            <div className="flex justify-end mt4">
+            <div className='flex justify-end mt4'>
               <Button
-                className="grow h2 pointer white bp3-minimal w4 mr3"
+                className='grow h2 pointer white bp3-minimal w4 mr3'
                 style={{
                   background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
                 // loading={submitting}
-                type="submit"
+                type='submit'
                 onClick={() => {
                   props.deleteSubTask(props.subTask);
                   setDeletePopover(false);
@@ -177,7 +175,7 @@ export const SubTaskDelete = (
                 Yes, Delete
               </Button>
               <Button
-                className="grow h2 pointer white bp3-minimal w4"
+                className='grow h2 pointer white bp3-minimal w4'
                 style={{
                   background: '#fff',
                   outline: 'none',
@@ -191,15 +189,15 @@ export const SubTaskDelete = (
             </div>
           </div>
         </div>
-      }
-      target={
+      )}
+      target={(
         <Icon
-          className="fr mv3 tigrow-lightBlue pointer mr4 pt1"
+          className='fr mv3 tigrow-lightBlue pointer mr4 pt1'
           style={{ marginTop: 0, color: 'lightsteelblue' }}
-          icon="trash"
+          icon='trash'
           onClick={() => setDeletePopover(true)}
         />
-      }
+      )}
     />
   );
 };

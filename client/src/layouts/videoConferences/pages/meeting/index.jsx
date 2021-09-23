@@ -13,10 +13,9 @@ class Meeting extends Component {
     super(props);
     const query = new URLSearchParams(props.history.location.search);
     const room = query.get('conf');
-    this.videoProfile =
-      (Cookies.get('videoProfile') &&
-        Cookies.get('videoProfile').split(',')[0]) ||
-      '480p_4';
+    this.videoProfile = (Cookies.get('videoProfile')
+        && Cookies.get('videoProfile').split(',')[0])
+      || '480p_4';
     this.channel = window.atob(room);
 
     this.transcode = Cookies.get('transcode') || 'interop';
@@ -43,8 +42,8 @@ class Meeting extends Component {
 
   render() {
     const videoFrame = (
-      <div className="ag-main">
-        <div className="ag-container">
+      <div className='ag-main'>
+        <div className='ag-container'>
           <AgoraVideoCall
             videoProfile={this.videoProfile}
             channel={this.channel}
@@ -59,8 +58,8 @@ class Meeting extends Component {
     );
 
     const inviatationFrame = (
-      <div className="invitation-frame">
-        <button className="invite-btn" onClick={this.joinMeeting}>
+      <div className='invitation-frame'>
+        <button className='invite-btn' onClick={this.joinMeeting}>
           Please Click to Join
         </button>
       </div>
@@ -68,7 +67,7 @@ class Meeting extends Component {
 
     return (
       <>
-        <div className="wrapper meeting">
+        <div className='wrapper meeting'>
           {this.state.showInvitaion ? inviatationFrame : videoFrame}
         </div>
       </>

@@ -10,8 +10,6 @@ const Error = styled.span({
   width: '100%',
 });
 
-const StyledError = (props: IProps) => {
-  return <Error>{props.errorMessage}</Error>;
-};
+const StyledError = (props: IProps) => <Error>{props.errorMessage}</Error>;
 
 export default StyledError;

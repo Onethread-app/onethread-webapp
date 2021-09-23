@@ -157,17 +157,12 @@ export const projectPrefaceDescriptionUpdateSuccess = () => ({
   type: ProjectActionTypes.PROJECT_PREFACE_DES_UP_SUCCESS,
 });
 
-export const projectPrefaceDescriptionUpdateFailure = (
-  errorMessage: any,
-) => ({
+export const projectPrefaceDescriptionUpdateFailure = (errorMessage: any) => ({
   type: ProjectActionTypes.PROJECT_PREFACE_DES_UP_FAILURE,
   payload: errorMessage,
 });
 
-export const projectPrefaceOutlineUpdate = (
-  pid: string,
-  outline: string,
-) => ({
+export const projectPrefaceOutlineUpdate = (pid: string, outline: string) => ({
   type: ProjectActionTypes.PROJECT_PREFACE_OUT_UP_START,
   pid,
   outline,
@@ -177,9 +172,7 @@ export const projectPrefaceOutlineUpdateSuccess = () => ({
   type: ProjectActionTypes.PROJECT_PREFACE_OUT_UP_SUCCESS,
 });
 
-export const projectPrefaceOutlineUpdateFailure = (
-  errorMessage: any,
-) => ({
+export const projectPrefaceOutlineUpdateFailure = (errorMessage: any) => ({
   type: ProjectActionTypes.PROJECT_PREFACE_OUT_UP_FAILURE,
   payload: errorMessage,
 });
@@ -340,7 +333,7 @@ export const getProjectAssociatesFailure = (errorMessage: any) => ({
 export const addProjectAssociate = (
   data: {
     project: string;
-    company: String;
+    company: string;
     associates: Array<{ _id: string; size: number }>;
   },
   selectedAssociate: {
@@ -378,9 +371,7 @@ export const changeProjectMemberRoleSuccess = (response: any) => ({
   payload: response,
 });
 
-export const changeProjectMemberRoleFailure = (
-  errorMessage: any,
-) => ({
+export const changeProjectMemberRoleFailure = (errorMessage: any) => ({
   type: ProjectActionTypes.UPDATE_PROJECT_MEMBER_ROLE_FAILURE,
   payload: errorMessage,
 });
@@ -421,4 +412,14 @@ export const updateProjectTimeSpent = (payload: any) => ({
 export const deleteTeamMember = (teamId: string) => ({
   type: ProjectActionTypes.DELETE_TEAM_MEMBER_START,
   payload: teamId,
+});
+
+export const deleteTeamMemberSuccess = (response: any) => ({
+  type: ProjectActionTypes.DELETE_TEAM_MEMBER_SUCCESS,
+  payload: response,
+});
+
+export const deleteTeamMemberFailure = (errorMessage: any) => ({
+  type: ProjectActionTypes.DELETE_TEAM_MEMBER_FAILURE,
+  payload: errorMessage,
 });

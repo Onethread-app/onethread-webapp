@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  CustomView,
-  MobileOnlyView,
-  isMobileOnly,
-} from 'react-device-detect';
+import { CustomView, MobileOnlyView, isMobileOnly } from 'react-device-detect';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -43,59 +39,57 @@ export const AssociateListComponent = (
   return (
     <div>
       <div
-        className="br3 bg-white cf flex w-100"
+        className='br3 bg-white cf flex w-100'
         style={{ background: '#E5E5E5' }}
       >
-        <div className="overflow-auto w-100">
+        <div className='overflow-auto w-100'>
           <CustomView condition={!isMobileOnly}>
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns:
-                  'repeat(auto-fit, minmax(200px, 280px))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 280px))',
                 gridTemplateRows: 'repeat(2, 270px)',
               }}
             >
               {loading ? (
                 <Loading />
               ) : props.associates.length > 0 ? (
-                props.associates.map((associate: Associate) =>
-                  associate.hasOwnProperty('associateCompany') ? (
-                    <>
-                      <Card className="ba b--black-20 br4 pa4 ma2">
-                        <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
-                          {associate.associateCompany
-                            ? associate.associateCompany.name.charAt(
-                                0,
-                              )
-                            : 'Demo'}
-                        </h1>
-                        <h1 className="tc black f4 mv0">
-                          {associate.associateCompany.name}
-                        </h1>
-                        <h1 className="tc silver f7 mv0">
-                          {associate.associateCompany.type}
-                        </h1>
-                      </Card>
-                    </>
+                props.associates.map((associate: Associate) => (Object(associate).prototype.hasOwnProperty.call(
+                  associate,
+                  'associateCompany',
+                ) ? (
+                  <>
+                    <Card className='ba b--black-20 br4 pa4 ma2'>
+                      <h1 className='center white f3 bg-green w3 h3 tc pt3 br3'>
+                        {associate.associateCompany
+                          ? associate.associateCompany.name.charAt(0)
+                          : 'Demo'}
+                      </h1>
+                      <h1 className='tc black f4 mv0'>
+                        {associate.associateCompany.name}
+                      </h1>
+                      <h1 className='tc silver f7 mv0'>
+                        {associate.associateCompany.type}
+                      </h1>
+                    </Card>
+                  </>
                   ) : (
                     <>
-                      <Card className="ba b--black-20 br4 pa4 ma2">
-                        <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
+                      <Card className='ba b--black-20 br4 pa4 ma2'>
+                        <h1 className='center white f3 bg-green w3 h3 tc pt3 br3'>
                           {associate.company
                             ? associate.company.name.charAt(0)
                             : 'Demo'}
                         </h1>
-                        <h1 className="tc black f4 mv0">
+                        <h1 className='tc black f4 mv0'>
                           {associate.company.name}
                         </h1>
-                        <h1 className="tc silver f7 mv0">
+                        <h1 className='tc silver f7 mv0'>
                           {associate.company.type}
                         </h1>
                       </Card>
                     </>
-                  ),
-                )
+                  )))
               ) : (
                 <p>{t('app.company.Partners.No-associates')}</p>
               )}
@@ -105,51 +99,46 @@ export const AssociateListComponent = (
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns:
-                  'repeat(auto-fit, minmax(160px, 170px))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 170px))',
                 gridTemplateRows: 'repeat(2, 170px)',
               }}
             >
               {loading ? (
                 <Loading />
               ) : props.associates.length > 0 ? (
-                props.associates.map((associate: Associate) =>
-                  associate.hasOwnProperty('associateCompany') ? (
-                    <>
-                      <Card className="ba b--black-20 br4 pa4 ma2">
-                        <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
-                          {associate.associateCompany
-                            ? associate.associateCompany.name.charAt(
-                                0,
-                              )
-                            : 'Demo'}
-                        </h1>
-                        <h1 className="tc black f4 mv0">
-                          {associate.associateCompany.name}
-                        </h1>
-                        <h1 className="tc silver f7 mv0">
-                          {associate.associateCompany.type}
-                        </h1>
-                      </Card>
-                    </>
-                  ) : (
-                    <>
-                      <Card className="ba b--black-20 br4 pa4 ma2">
-                        <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
-                          {associate.company
-                            ? associate.company.name.charAt(0)
-                            : 'Demo'}
-                        </h1>
-                        <h1 className="tc black f4 mv0">
-                          {associate.company.name}
-                        </h1>
-                        <h1 className="tc silver f7 mv0">
-                          {associate.company.type}
-                        </h1>
-                      </Card>
-                    </>
-                  ),
-                )
+                props.associates.map((associate: Associate) => (Object(associate).prototype.hasOwnProperty.call(associate, 'associateCompany') ? (
+                  <>
+                    <Card className='ba b--black-20 br4 pa4 ma2'>
+                      <h1 className='center white f3 bg-green w3 h3 tc pt3 br3'>
+                        {associate.associateCompany
+                          ? associate.associateCompany.name.charAt(0)
+                          : 'Demo'}
+                      </h1>
+                      <h1 className='tc black f4 mv0'>
+                        {associate.associateCompany.name}
+                      </h1>
+                      <h1 className='tc silver f7 mv0'>
+                        {associate.associateCompany.type}
+                      </h1>
+                    </Card>
+                  </>
+                ) : (
+                  <>
+                    <Card className='ba b--black-20 br4 pa4 ma2'>
+                      <h1 className='center white f3 bg-green w3 h3 tc pt3 br3'>
+                        {associate.company
+                          ? associate.company.name.charAt(0)
+                          : 'Demo'}
+                      </h1>
+                      <h1 className='tc black f4 mv0'>
+                        {associate.company.name}
+                      </h1>
+                      <h1 className='tc silver f7 mv0'>
+                        {associate.company.type}
+                      </h1>
+                    </Card>
+                  </>
+                )))
               ) : (
                 <p>{t('app.company.Partners.No-associates')}</p>
               )}
@@ -161,13 +150,11 @@ export const AssociateListComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    associates: state.projectReducer.projectAssociates,
-    projectId: state.projectReducer.projectDetails._id,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  associates: state.projectReducer.projectAssociates,
+  projectId: state.projectReducer.projectDetails._id,
+});
 
 export const AssociateList = connect(mapStateToProps, {
   getProjectAssociates,

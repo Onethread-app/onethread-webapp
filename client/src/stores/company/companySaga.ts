@@ -1,8 +1,24 @@
-import { all, put, call, select } from 'redux-saga/effects';
+import {
+  all, put, call, select,
+} from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
-import { CompanyActionTypes } from './Types';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
+import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+import {
+  CLEAR_ROOMS_REDUCER_STATE,
+  CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY,
+} from 'stores/room/Types';
+import { Toaster } from '@blueprintjs/core';
+import { getAllProjects } from 'stores/project/Actions';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { setSubscriptionNotExpire } from 'stores/subscriptionBilling/Actions';
+import {
+  getCompanyId,
+  getCompanyName,
+  getParentCompany,
+} from './Selector';
 import {
   createCompanyActionSuccess,
   createCompanyActionFailure,
@@ -61,31 +77,17 @@ import {
   updateCompanyLoading,
   companyOptionalRoleFailure,
 } from './Actions';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
-import {
-  CLEAR_ROOMS_REDUCER_STATE,
-  CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY,
-} from 'stores/room/Types';
-import {
-  getCompanyId,
-  getCompanyName,
-  getParentCompany,
-} from './Selector';
-import { Toaster } from '@blueprintjs/core';
-import { getAllProjects } from 'stores/project/Actions';
-import { returnErrorText } from 'helpers/HandleSagaErrors';
-import { setSubscriptionNotExpire } from 'stores/subscriptionBilling/Actions';
+import { CompanyActionTypes } from './Types';
 
-const takeEvery: any = Eff.takeEvery;
-const takeLatest: any = Eff.takeLatest;
+const { takeEvery } = Eff;
+const { takeLatest } = Eff;
 
 export function* createCompanyAsync({ companyData }: any) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
-        `company`,
+        'company',
         companyData,
         headers,
       );

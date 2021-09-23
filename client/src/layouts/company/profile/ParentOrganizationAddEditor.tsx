@@ -50,13 +50,13 @@ const OrganizationAddComponent = (props: IOrganizationEditProps) => {
           hasValidationErrors,
           ...rest
         }) => (
-          <form className="ph4 pt6" onSubmit={handleSubmit}>
+          <form className='ph4 pt6' onSubmit={handleSubmit}>
             <SubmitError errorMessage={submitError} />
-            <h1 className="f5 lh-copy white pb4">
+            <h1 className='f5 lh-copy white pb4'>
               Parent Organizations
             </h1>
             <Field<string>
-              name="parentcom"
+              name='parentcom'
               validate={maxValue(32)}
               render={({ input, meta }) => (
                 <div
@@ -64,37 +64,37 @@ const OrganizationAddComponent = (props: IOrganizationEditProps) => {
                 >
                   <label>Company Name</label>
                   <InputGroupFieldWithError
-                    id="parentcom"
-                    className="mt1 ba"
+                    id='parentcom'
+                    className='mt1 ba'
                     value={input.value}
                     onChange={input.onChange}
                     style={{
                       boxShadow: 'none',
                     }}
                     error={
-                      checkError(meta) &&
-                      (meta.error || meta.submitError)
+                      checkError(meta)
+                      && (meta.error || meta.submitError)
                     }
                   />
                 </div>
               )}
             />
-            <div className="flex justify-end">
+            <div className='flex justify-end'>
               <Button
-                className="w4 grow h2 pointer mr3"
+                className='w4 grow h2 pointer mr3'
                 style={{
                   background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
                 loading={submitting}
-                type="submit"
+                type='submit'
                 disabled={submitting || pristine}
               >
                 Save
               </Button>
               <Button
-                className="w4 grow h2 pointer"
+                className='w4 grow h2 pointer'
                 style={{
                   background: '#fff',
                   outline: 'none',
@@ -115,12 +115,10 @@ const OrganizationAddComponent = (props: IOrganizationEditProps) => {
     </>
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany,
-    isLoading: state.companyReducer.loading,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  company: state.companyReducer.currentCompany,
+  isLoading: state.companyReducer.loading,
+});
 
 export const OrganizationAdd = connect(mapStateToProps, {
   addOrganization,

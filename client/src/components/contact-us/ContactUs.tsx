@@ -35,7 +35,7 @@ const ContactUs = (props: IContactUs) => {
       subject: `Query from ${values.email}`,
     };
     const response = await tigrowApi.post(
-      `/contact/contact-sale`,
+      '/contact/contact-sale',
       payload,
     );
     props.setResponse({
@@ -46,19 +46,19 @@ const ContactUs = (props: IContactUs) => {
 
   useEffect(() => {
     if (
-      values.firstName &&
-      values.lastName &&
-      values.email &&
-      values.message
+      values.firstName
+      && values.lastName
+      && values.email
+      && values.message
     ) {
       // setIsSubmitDisabled(false);
     }
   }, [values]);
 
   return (
-    <div className="flex flex-column" style={{ padding: '6%' }}>
+    <div className='flex flex-column' style={{ padding: '6%' }}>
       <h3
-        className="mt0 self-center"
+        className='mt0 self-center'
         style={{
           color: '#3484f0',
           fontSize: '22px',
@@ -66,23 +66,23 @@ const ContactUs = (props: IContactUs) => {
       >
         Contact Us
       </h3>
-      <form className="contact-form flex flex-column">
-        <div className="flex" style={{ gap: '.5rem' }}>
+      <form className='contact-form flex flex-column'>
+        <div className='flex' style={{ gap: '.5rem' }}>
           <input
-            type="text"
-            name="firstName"
-            id=""
-            placeholder="First Name"
+            type='text'
+            name='firstName'
+            id=''
+            placeholder='First Name'
             required
             value={values.firstName}
             onChange={handleChange}
             style={{ width: '50%' }}
           />
           <input
-            type="text"
-            name="lastName"
-            id=""
-            placeholder="Last Name"
+            type='text'
+            name='lastName'
+            id=''
+            placeholder='Last Name'
             required
             value={values.lastName}
             onChange={handleChange}
@@ -90,25 +90,25 @@ const ContactUs = (props: IContactUs) => {
           />
         </div>
         <input
-          type="email"
-          name="email"
-          id=""
-          placeholder="Your Email Here"
+          type='email'
+          name='email'
+          id=''
+          placeholder='Your Email Here'
           required
           value={values.email}
           onChange={handleChange}
         />
         <textarea
-          placeholder="Write your message here"
+          placeholder='Write your message here'
           required
-          name="message"
+          name='message'
           maxLength={5000}
           value={values.message}
           onChange={handleChange}
-        ></textarea>
-        <div className="center contact-form-buttons">
+        />
+        <div className='center contact-form-buttons'>
           <Button
-            type="submit"
+            type='submit'
             style={{
               backgroundColor: '#3484f0',
               color: '#fff',

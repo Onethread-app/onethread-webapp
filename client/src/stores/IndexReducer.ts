@@ -1,17 +1,17 @@
+import { combineReducers } from 'redux';
+import { loadingBarReducer } from 'react-redux-loading-bar';
 import { EduDetailsFormReducer } from './EduDetailsFrom/Reducer';
 import { JobDetailsFormReducer } from './jobDetailsForm/Reducer';
 import { notificationReducer } from './notifications/Reducer';
-import { combineReducers } from 'redux';
 import { UserReducer } from './user/Reducer';
 import { CompanyReducer } from './company/Reducer';
 import { RoomReducer } from './room/Reducer';
 import { LayoutReducer } from './layout/Reducer';
 import { TaskIndexReducer } from './taskIndexReducer';
-import { AssociateReducer } from './associate/Reducer';
+import { AssociateReducer, AssociateModel } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
 import { PusherReducer } from './pusher/Reducer';
 import { SubscriptionReducer } from './subscriptionBilling/Reducer';
-import { AssociateModel } from './associate/Reducer';
 import { videoConferencesReducers } from './videoConferences/Reducer';
 import toasterReducer from './toast/Reducer';
 import { LandingReducer } from './landing/Reducer';
@@ -23,8 +23,6 @@ import { ProjectFormReducer } from './projectForm/Reducer';
 import { TaskFormReducer } from './taskForm/Reducer';
 import { UserBasicInfoFormReducer } from './UserBasicInfoDetailsForm/Reducer';
 import { CompanyBasicInfoFormReducer } from './companyBasicInfoForm/Reducer';
-
-import { loadingBarReducer } from 'react-redux-loading-bar';
 
 export interface AppState {
   layoutReducer: any;

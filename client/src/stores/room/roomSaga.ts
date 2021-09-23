@@ -1,16 +1,13 @@
-import { all, call, put, select } from 'redux-saga/effects';
-import * as Eff from 'redux-saga/effects';
 import {
-  room,
-  // LOADING_ROOM,
-  ALL_MESSAGE_RECEIVED,
-  RoomActionTypes,
-  CURRENT_ROOM,
-} from './Types';
+  all, call, put, select,
+} from 'redux-saga/effects';
+import * as Eff from 'redux-saga/effects';
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
 import { roomSubscribe } from 'layouts/company/room/channelSubscribe';
-import { IRoom } from './Reducer';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { getProjectId } from 'stores/project/Selector';
 import {
   addRoomMembersFailure,
   addRoomMembersSuccess,
@@ -43,14 +40,19 @@ import {
   updateLastSeenFailure,
   updateLastSeenSuccess,
 } from './Actions';
-import { showLoading, hideLoading } from 'react-redux-loading-bar';
-import { returnErrorText } from 'helpers/HandleSagaErrors';
-import { getProjectId } from 'stores/project/Selector';
+import { IRoom } from './Reducer';
+import {
+  room,
+  // LOADING_ROOM,
+  ALL_MESSAGE_RECEIVED,
+  RoomActionTypes,
+  CURRENT_ROOM,
+} from './Types';
 
-const takeEvery: any = Eff.takeEvery; // <-- new
-const takeLatest: any = Eff.takeLatest;
+const { takeEvery } = Eff; // <-- new
+const { takeLatest } = Eff;
 
-function* createRoom({ payload }) {
+function* createRoom({ payload }: { payload: any; type: string }) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
@@ -105,7 +107,12 @@ function* getRooms() {
   }
 }
 
-function* getRoomMembers({ payload }) {
+function* getRoomMembers({
+  payload,
+}: {
+  payload: string;
+  type: string;
+}) {
   try {
     yield put(showLoading());
     const headers = tokenConfig();
@@ -123,7 +130,14 @@ function* getRoomMembers({ payload }) {
   }
 }
 
-function* addRoomMembers({ data, selectedRoomMember }) {
+function* addRoomMembers({
+  data,
+  selectedRoomMember,
+}: {
+  type: string;
+  data: any;
+  selectedRoomMember: any;
+}) {
   try {
     const projectId = yield select(getProjectId);
     const headers = tokenConfig();
@@ -150,11 +164,16 @@ function* addRoomMembers({ data, selectedRoomMember }) {
   }
 }
 
-function* sendRoomMessage({ payload }) {
+function* sendRoomMessage({
+  payload,
+}: {
+  payload: any;
+  type: string;
+}) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      yield tigrowApi.post(`messages`, payload, headers);
+      yield tigrowApi.post('messages', payload, headers);
       yield put(sendRoomMessageSuccess());
     }
   } catch (error) {
@@ -162,7 +181,16 @@ function* sendRoomMessage({ payload }) {
   }
 }
 
-function* getRoomMessages({ roomId, limit, skip }) {
+function* getRoomMessages({
+  roomId,
+  limit,
+  skip,
+}: {
+  type: string;
+  roomId: string;
+  limit: number;
+  skip: number;
+}) {
   try {
     yield put(showLoading());
     const headers = tokenConfig();
@@ -203,8 +231,7 @@ function* fileUploadAction(action) {
 
 function* archiveRoom(action) {
   try {
-    const selectProjectId = (state) =>
-      state.projectReducer.projectDetails._id;
+    const selectProjectId = (state) => state.projectReducer.projectDetails._id;
     const project = yield select(selectProjectId);
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
@@ -227,7 +254,16 @@ function* archiveRoom(action) {
   }
 }
 
-function* getRoomSharedFiles({ roomId, limit, skip }) {
+function* getRoomSharedFiles({
+  roomId,
+  limit,
+  skip,
+}: {
+  type: string;
+  roomId: string;
+  limit: number;
+  skip: number;
+}) {
   try {
     yield put(showLoading());
     const headers = tokenConfig();
@@ -245,7 +281,16 @@ function* getRoomSharedFiles({ roomId, limit, skip }) {
   }
 }
 
-function* getRoomDiscussions({ roomId, limit, skip }) {
+function* getRoomDiscussions({
+  roomId,
+  limit,
+  skip,
+}: {
+  type: string;
+  roomId: string;
+  limit: number;
+  skip: number;
+}) {
   try {
     yield put(showLoading());
     const headers = tokenConfig();
@@ -263,7 +308,14 @@ function* getRoomDiscussions({ roomId, limit, skip }) {
   }
 }
 
-function* toggleDiscussions({ messageId, data }) {
+function* toggleDiscussions({
+  messageId,
+  data,
+}: {
+  messageId: string;
+  data: any;
+  type: string;
+}) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
@@ -291,7 +343,12 @@ function* toggleDiscussions({ messageId, data }) {
   }
 }
 
-function* updateLastSeen({ roomId }) {
+function* updateLastSeen({
+  roomId,
+}: {
+  roomId: string;
+  type: string;
+}) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
@@ -342,7 +399,7 @@ function* fetchChatsAsync() {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(`rooms/chats`, headers);
+      const response = yield tigrowApi.get('rooms/chats', headers);
       yield put(fetchChatsSuccess(response.data.rooms));
     }
   } catch (error) {

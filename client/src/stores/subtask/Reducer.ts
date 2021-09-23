@@ -1,5 +1,5 @@
-import { SubtaskActionTypes } from './Types';
 import { isEqual } from 'lodash';
+import { SubtaskActionTypes } from './Types';
 
 export interface ISubtaskMember {
   _id: string;
@@ -85,16 +85,14 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
     case SubtaskActionTypes.UPDATE_SUBTASK_SUCCESS:
       return {
         ...state,
-        subTaskList: state.subTaskList.map((subTask: ISubTask) =>
-          isEqual(subTask._id, action.payload._id)
-            ? {
-                ...subTask,
-                name: action.payload.name,
-                done: action.payload.done,
-                dueDate: action.payload.dueDate,
-              }
-            : subTask,
-        ),
+        subTaskList: state.subTaskList.map((subTask: ISubTask) => (isEqual(subTask._id, action.payload._id)
+          ? {
+            ...subTask,
+            name: action.payload.name,
+            done: action.payload.done,
+            dueDate: action.payload.dueDate,
+          }
+          : subTask)),
         updatingSubTask: false,
       };
     case SubtaskActionTypes.UPDATE_SUBTASK_FAILURE:
@@ -112,14 +110,12 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
     case SubtaskActionTypes.ADD_SUBTASK_MEMBER_SUCCESS:
       return {
         ...state,
-        subTaskList: state.subTaskList.map((subTask: ISubTask) =>
-          isEqual(subTask._id, action.payload._id)
-            ? {
-                ...subTask,
-                assignedMembers: action.payload.assignedMembers,
-              }
-            : subTask,
-        ),
+        subTaskList: state.subTaskList.map((subTask: ISubTask) => (isEqual(subTask._id, action.payload._id)
+          ? {
+            ...subTask,
+            assignedMembers: action.payload.assignedMembers,
+          }
+          : subTask)),
         addingMember: false,
       };
     case SubtaskActionTypes.ADD_SUBTASK_MEMBER_FAILURE:
@@ -138,14 +134,12 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
     case SubtaskActionTypes.DELETE_SUBTASK_MEMBER_SUCCESS:
       return {
         ...state,
-        subTaskList: state.subTaskList.map((subTask: ISubTask) =>
-          isEqual(subTask._id, action.payload._id)
-            ? {
-                ...subTask,
-                assignedMembers: action.payload.assignedMembers,
-              }
-            : subTask,
-        ),
+        subTaskList: state.subTaskList.map((subTask: ISubTask) => (isEqual(subTask._id, action.payload._id)
+          ? {
+            ...subTask,
+            assignedMembers: action.payload.assignedMembers,
+          }
+          : subTask)),
         deletingMember: false,
       };
     case SubtaskActionTypes.DELETE_SUBTASK_MEMBER_FAILURE:

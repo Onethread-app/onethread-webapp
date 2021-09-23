@@ -35,8 +35,7 @@ const MultipleCheckBox = styled.div`
   display: inline-block;
   width: 16px;
   height: 16px;
-  background: ${(props: { checked: boolean }) =>
-    props.checked ? 'salmon' : 'papayawhip'};
+  background: ${(props: { checked: boolean }) => (props.checked ? 'salmon' : 'papayawhip')};
   border-radius: 3px;
   transition: all 150ms;
   margin-left: 10px;
@@ -47,8 +46,7 @@ const MultipleCheckBox = styled.div`
   }
 
   ${Icon} {
-    visibility: ${(props: { checked: boolean }) =>
-      props.checked ? 'visible' : 'hidden'};
+    visibility: ${(props: { checked: boolean }) => (props.checked ? 'visible' : 'hidden')};
   }
 `;
 
@@ -56,27 +54,25 @@ const StyledMultipleCheckBox = ({
   input: { value, ...input },
   meta,
   ...rest
-}: Props) => {
-  return (
-    <>
-      <CheckboxContainer>
-        <HiddenCheckbox
-          type="checkbox"
-          checked={input.checked}
-          {...input}
-          {...rest}
-        />
-        <MultipleCheckBox checked={input.checked}>
-          <Icon viewBox="0 0 24 24">
-            <polyline points="20 6 9 17 4 12" />
-          </Icon>
-        </MultipleCheckBox>
-      </CheckboxContainer>
-      {checkError(meta) ? (
-        <StyledError errorMessage={meta.error || meta.submitError} />
-      ) : null}
-    </>
-  );
-};
+}: Props) => (
+  <>
+    <CheckboxContainer>
+      <HiddenCheckbox
+        type='checkbox'
+        checked={input.checked}
+        {...input}
+        {...rest}
+      />
+      <MultipleCheckBox checked={input.checked}>
+        <Icon viewBox='0 0 24 24'>
+          <polyline points='20 6 9 17 4 12' />
+        </Icon>
+      </MultipleCheckBox>
+    </CheckboxContainer>
+    {checkError(meta) ? (
+      <StyledError errorMessage={meta.error || meta.submitError} />
+    ) : null}
+  </>
+);
 
 export default StyledMultipleCheckBox;

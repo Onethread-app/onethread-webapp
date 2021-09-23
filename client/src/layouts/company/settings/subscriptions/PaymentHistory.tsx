@@ -35,7 +35,7 @@ const _PaymentHistory = (props: IPaymentHistory) => {
     <div>
       {props.currentComponent === 'paymentHistory' && (
         <div>
-          <div className="mb1">
+          <div className='mb1'>
             <Button
               startIcon={<ArrowBackIosIcon />}
               onClick={() => props.changeComponentTo('base')}
@@ -50,51 +50,49 @@ const _PaymentHistory = (props: IPaymentHistory) => {
           </h4>
           <Grid container spacing={3}>
             <Grid item xs={6} sm={3}>
-              <div className="b">
+              <div className='b'>
                 {t('app.company.Subscription-And-Billing.Invoice')}
               </div>
             </Grid>
             <Grid item xs={6} sm={3}>
-              <div className="b">
+              <div className='b'>
                 {t('app.company.Subscription-And-Billing.Date')}
               </div>
             </Grid>
             <Grid item xs={6} sm={3}>
-              <div className="b">
+              <div className='b'>
                 {t('app.company.Subscription-And-Billing.Status')}
               </div>
             </Grid>
             <Grid item xs={6} sm={3}>
-              <div className="b">
+              <div className='b'>
                 {t('app.company.Subscription-And-Billing.Amount')}
               </div>
             </Grid>
           </Grid>
-          {props.paymentHistory &&
-            props.paymentHistory.map((payment, i) => {
-              return (
-                <Card style={{ marginTop: '10px', padding: '10px' }}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={6} sm={3}>
-                      <div className="ml1">{payment._id}</div>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <div className="ml1">
-                        {moment(payment.createdAt).format(
-                          'MMMM Do YYYY',
-                        )}
-                      </div>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <div className="ml1">{payment.status}</div>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <div className="ml1">{payment.amount}</div>
-                    </Grid>
+          {props.paymentHistory
+            && props.paymentHistory.map((payment, i) => (
+              <Card style={{ marginTop: '10px', padding: '10px' }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={6} sm={3}>
+                    <div className='ml1'>{payment._id}</div>
                   </Grid>
-                </Card>
-              );
-            })}
+                  <Grid item xs={6} sm={3}>
+                    <div className='ml1'>
+                      {moment(payment.createdAt).format(
+                        'MMMM Do YYYY',
+                      )}
+                    </div>
+                  </Grid>
+                  <Grid item xs={6} sm={3}>
+                    <div className='ml1'>{payment.status}</div>
+                  </Grid>
+                  <Grid item xs={6} sm={3}>
+                    <div className='ml1'>{payment.amount}</div>
+                  </Grid>
+                </Grid>
+              </Card>
+            ))}
         </div>
       )}
     </div>

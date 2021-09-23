@@ -56,7 +56,7 @@ const TasksComponent = (props: any) => {
     const taskList = task.map((t) => ({
       name: t.taskId.name,
       assignee:
-        t.assignedPerson.firstName + ' ' + t.assignedPerson.lastName,
+        `${t.assignedPerson.firstName} ${t.assignedPerson.lastName}`,
       accountId: t.account._id,
       assignedPersonId: t.assignedPerson._id,
       dueDate: t.taskId.dueDate,
@@ -74,19 +74,16 @@ const TasksComponent = (props: any) => {
     setTasks([]);
     return tasks.sort((a, b) => {
       if (a.dueDate < b.dueDate) return orderBy === 'asc' ? 1 : -1;
-      else if (a.dueDate > b.dueDate)
-        return orderBy === 'asc' ? -1 : 1;
-      else return 0;
+      if (a.dueDate > b.dueDate) return orderBy === 'asc' ? -1 : 1;
+      return 0;
     });
   };
 
   const sortTasksByPriority = (tasks, orderBy) => {
     setTasks([]);
-    return tasks.sort((a, b) =>
-      orderBy === 'asc'
-        ? a.priority - b.priority
-        : b.priority - a.priority,
-    );
+    return tasks.sort((a, b) => (orderBy === 'asc'
+      ? a.priority - b.priority
+      : b.priority - a.priority));
   };
 
   const sortTasksByStatus = (tasks: any, orderBy: any) => {
@@ -101,7 +98,7 @@ const TasksComponent = (props: any) => {
         };
         return primaryStatus.includes(task.status)
           ? rank[task.status]
-          : rank['other'];
+          : rank.other;
       }
       if (orderBy === 'desc') {
         const rank = {
@@ -111,7 +108,7 @@ const TasksComponent = (props: any) => {
         };
         return primaryStatus.includes(task.status)
           ? rank[task.status]
-          : rank['other'];
+          : rank.other;
       }
     });
     return sortedTasks;
@@ -120,30 +117,28 @@ const TasksComponent = (props: any) => {
   const sortTasksByTodayDay = async (tasks, assign) => {
     setTasks([]);
     const today = moment(new Date()).format('MMM DD');
-    let todaysTasks: any = [];
+    const todaysTasks: any = [];
     await tasks.map((task: any) => {
       const dueDate = moment(task.dueDate).format('MMM DD');
       if (assign === 'to-me') {
         if (
-          task.assignedPersonId === userId &&
-          task.dueDate &&
-          dueDate === today
+          task.assignedPersonId === userId
+          && task.dueDate
+          && dueDate === today
         ) {
           todaysTasks.push(task);
         }
       } else if (assign === 'by-me') {
         if (
-          task.accountId === userId &&
-          task.assignedPersonId !== userId &&
-          task.dueDate &&
-          dueDate === today
+          task.accountId === userId
+          && task.assignedPersonId !== userId
+          && task.dueDate
+          && dueDate === today
         ) {
           todaysTasks.push(task);
         }
-      } else {
-        if (task.dueDate && dueDate === today) {
-          todaysTasks.push(task);
-        }
+      } else if (task.dueDate && dueDate === today) {
+        todaysTasks.push(task);
       }
     });
     setTasks(todaysTasks);
@@ -155,30 +150,28 @@ const TasksComponent = (props: any) => {
       .add(1, 'days')
       .format('MMM DD');
 
-    let upcommingTasks: any = [];
+    const upcommingTasks: any = [];
     await tasks.map((task: any) => {
       const dueDate = moment(task.dueDate).format('MMM DD');
       if (assign === 'to-me') {
         if (
-          task.assignedPersonId === userId &&
-          task.dueDate &&
-          dueDate > tomorrow
+          task.assignedPersonId === userId
+          && task.dueDate
+          && dueDate > tomorrow
         ) {
           upcommingTasks.push(task);
         }
       } else if (assign === 'by-me') {
         if (
-          task.accountId === userId &&
-          task.assignedPersonId !== userId &&
-          task.dueDate &&
-          dueDate > tomorrow
+          task.accountId === userId
+          && task.assignedPersonId !== userId
+          && task.dueDate
+          && dueDate > tomorrow
         ) {
           upcommingTasks.push(task);
         }
-      } else {
-        if (task.dueDate && dueDate > tomorrow) {
-          upcommingTasks.push(task);
-        }
+      } else if (task.dueDate && dueDate > tomorrow) {
+        upcommingTasks.push(task);
       }
     });
     setTasks(upcommingTasks);
@@ -190,30 +183,28 @@ const TasksComponent = (props: any) => {
       .add(1, 'days')
       .format('MMM DD');
 
-    let tomorrowTasks: any = [];
+    const tomorrowTasks: any = [];
     await tasks.map((task: any) => {
       const dueDate = moment(task.dueDate).format('MMM DD');
       if (assign === 'to-me') {
         if (
-          task.assignedPersonId === userId &&
-          task.dueDate &&
-          dueDate === tomorrow
+          task.assignedPersonId === userId
+          && task.dueDate
+          && dueDate === tomorrow
         ) {
           tomorrowTasks.push(task);
         }
       } else if (assign === 'by-me') {
         if (
-          task.accountId === userId &&
-          task.assignedPersonId !== userId &&
-          task.dueDate &&
-          dueDate === tomorrow
+          task.accountId === userId
+          && task.assignedPersonId !== userId
+          && task.dueDate
+          && dueDate === tomorrow
         ) {
           tomorrowTasks.push(task);
         }
-      } else {
-        if (dueDate === tomorrow) {
-          tomorrowTasks.push(task);
-        }
+      } else if (dueDate === tomorrow) {
+        tomorrowTasks.push(task);
       }
     });
     setTasks(tomorrowTasks);
@@ -222,29 +213,26 @@ const TasksComponent = (props: any) => {
   const sortTasksByDueTasks = async (tasks, assign) => {
     setTasks([]);
     const today = moment(new Date()).format('MMM DD');
-    let dueTasks: any = [];
+    const dueTasks: any = [];
     await tasks.map((task: any) => {
       const dueDate = moment(task.dueDate).format('MMM DD');
       if (assign === 'to-me') {
         if (
-          task.assignedPersonId === userId &&
-          task.dueDate &&
-          dueDate < today
+          task.assignedPersonId === userId
+          && task.dueDate
+          && dueDate < today
         ) {
           dueTasks.push(task);
         }
       } else if (assign === 'by-me') {
         if (
-          task.accountId === userId &&
-          task.assignedPersonId !== userId &&
-          task.dueDate &&
-          dueDate < today
-        )
-          dueTasks.push(task);
-      } else {
-        if (task.dueDate && dueDate < today) {
-          dueTasks.push(task);
-        }
+          task.accountId === userId
+          && task.assignedPersonId !== userId
+          && task.dueDate
+          && dueDate < today
+        ) dueTasks.push(task);
+      } else if (task.dueDate && dueDate < today) {
+        dueTasks.push(task);
       }
     });
     setTasks(dueTasks);
@@ -252,7 +240,7 @@ const TasksComponent = (props: any) => {
 
   const sortByAssignToUser = async (tasks) => {
     setTasks([]);
-    let assignToUser: any = [];
+    const assignToUser: any = [];
     await tasks.map((task: any) => {
       if (task.assignedPersonId === userId) {
         assignToUser.push(task);
@@ -263,11 +251,11 @@ const TasksComponent = (props: any) => {
 
   const sortByAssignByUser = async (tasks) => {
     setTasks([]);
-    let assignByUser: any = [];
+    const assignByUser: any = [];
     await tasks.map((task: any) => {
       if (
-        task.accountId === userId &&
-        task.assignedPersonId !== userId
+        task.accountId === userId
+        && task.assignedPersonId !== userId
       ) {
         assignByUser.push(task);
       }
@@ -308,9 +296,9 @@ const TasksComponent = (props: any) => {
 
   useEffect(() => {
     if (
-      loading === true &&
-      props.fetchingUserTasks === false &&
-      props.errorOnFetchingUserTasks === ''
+      loading === true
+      && props.fetchingUserTasks === false
+      && props.errorOnFetchingUserTasks === ''
     ) {
       setTasksAll(props.userTasks);
       setLoading(false);
@@ -379,13 +367,13 @@ const TasksComponent = (props: any) => {
   }, [sortedBy, orderBy]);
 
   return (
-    <div className="tasks">
-      <div className="flex justify-between items-center filter-option">
-        <h3 className="f3 fw2 ttc">My tasks</h3>
-        <div className="flex items-center justify-between items-center">
+    <div className='tasks'>
+      <div className='flex justify-between items-center filter-option'>
+        <h3 className='f3 fw2 ttc'>My tasks</h3>
+        <div className='flex items-center justify-between items-center'>
           {sortedBy !== '' || assign !== '' || day !== '' ? (
             <ClearOutlinedIcon
-              className="pointer ba br2 mr2 grow"
+              className='pointer ba br2 mr2 grow'
               style={{
                 color: '#656565',
                 borderColor: '#656565',
@@ -394,17 +382,17 @@ const TasksComponent = (props: any) => {
             />
           ) : null}
 
-          <SortingDiv className="flex items-center justify-between">
+          <SortingDiv className='flex items-center justify-between'>
             <Popover
               isOpen={sortPopoverOpen}
-              interactionKind="click"
-              position="bottom"
-              popoverClassName="bg-white"
-              content={
+              interactionKind='click'
+              position='bottom'
+              popoverClassName='bg-white'
+              content={(
                 <ClickAwayListener onClickAway={closePopover}>
-                  <div className="bg-white ma3">
+                  <div className='bg-white ma3'>
                     <div
-                      className="flex items-center pointer mb2"
+                      className='flex items-center pointer mb2'
                       style={{
                         marginRight:
                           sortedBy === 'dueDate' ? '8px' : '20px',
@@ -417,25 +405,21 @@ const TasksComponent = (props: any) => {
                             : 'circle'
                         }
                         iconSize={16}
-                        className="mr2"
+                        className='mr2'
                         color={
                           sortedBy === 'dueDate'
                             ? '#2EB67D'
                             : 'inherit'
                         }
-                        onClick={() =>
-                          sortedBy === 'dueDate'
-                            ? setSortedBy('')
-                            : setSortedBy('dueDate')
-                        }
+                        onClick={() => (sortedBy === 'dueDate'
+                          ? setSortedBy('')
+                          : setSortedBy('dueDate'))}
                       />
                       <p
-                        className="mb0 mr1"
-                        onClick={() =>
-                          sortedBy === 'dueDate'
-                            ? setSortedBy('')
-                            : setSortedBy('dueDate')
-                        }
+                        className='mb0 mr1'
+                        onClick={() => (sortedBy === 'dueDate'
+                          ? setSortedBy('')
+                          : setSortedBy('dueDate'))}
                       >
                         Due Date
                       </p>
@@ -444,14 +428,14 @@ const TasksComponent = (props: any) => {
                           {orderBy === 'asc' && (
                             <Icon
                               iconSize={12}
-                              icon={'arrow-up'}
+                              icon='arrow-up'
                               onClick={() => setOrderBy('desc')}
                             />
                           )}
                           {orderBy === 'desc' && (
                             <Icon
                               iconSize={12}
-                              icon={'arrow-down'}
+                              icon='arrow-down'
                               onClick={() => setOrderBy('asc')}
                             />
                           )}
@@ -459,7 +443,7 @@ const TasksComponent = (props: any) => {
                       )}
                     </div>
                     <div
-                      className="flex items-center pointer mb2"
+                      className='flex items-center pointer mb2'
                       style={{
                         marginRight:
                           sortedBy === 'priority' ? '8px' : '20px',
@@ -472,25 +456,21 @@ const TasksComponent = (props: any) => {
                             : 'circle'
                         }
                         iconSize={16}
-                        className="mr2"
+                        className='mr2'
                         color={
                           sortedBy === 'priority'
                             ? '#2EB67D'
                             : 'inherit'
                         }
-                        onClick={() =>
-                          sortedBy === 'priority'
-                            ? setSortedBy('')
-                            : setSortedBy('priority')
-                        }
+                        onClick={() => (sortedBy === 'priority'
+                          ? setSortedBy('')
+                          : setSortedBy('priority'))}
                       />
                       <p
-                        className="mb0 mr1"
-                        onClick={() =>
-                          sortedBy === 'priority'
-                            ? setSortedBy('')
-                            : setSortedBy('priority')
-                        }
+                        className='mb0 mr1'
+                        onClick={() => (sortedBy === 'priority'
+                          ? setSortedBy('')
+                          : setSortedBy('priority'))}
                       >
                         Priority
                       </p>
@@ -499,14 +479,14 @@ const TasksComponent = (props: any) => {
                           {orderBy === 'asc' && (
                             <Icon
                               iconSize={12}
-                              icon={'arrow-up'}
+                              icon='arrow-up'
                               onClick={() => setOrderBy('desc')}
                             />
                           )}
                           {orderBy === 'desc' && (
                             <Icon
                               iconSize={12}
-                              icon={'arrow-down'}
+                              icon='arrow-down'
                               onClick={() => setOrderBy('asc')}
                             />
                           )}
@@ -514,7 +494,7 @@ const TasksComponent = (props: any) => {
                       )}
                     </div>
                     <div
-                      className="flex items-center pointer mb2"
+                      className='flex items-center pointer mb2'
                       style={{
                         marginRight:
                           sortedBy === 'status' ? '8px' : '20px',
@@ -527,25 +507,21 @@ const TasksComponent = (props: any) => {
                             : 'circle'
                         }
                         iconSize={16}
-                        className="mr2"
+                        className='mr2'
                         color={
                           sortedBy === 'status'
                             ? '#2EB67D'
                             : 'inherit'
                         }
-                        onClick={() =>
-                          sortedBy === 'status'
-                            ? setSortedBy('')
-                            : setSortedBy('status')
-                        }
+                        onClick={() => (sortedBy === 'status'
+                          ? setSortedBy('')
+                          : setSortedBy('status'))}
                       />
                       <p
-                        className="mb0 mr1"
-                        onClick={() =>
-                          sortedBy === 'status'
-                            ? setSortedBy('')
-                            : setSortedBy('status')
-                        }
+                        className='mb0 mr1'
+                        onClick={() => (sortedBy === 'status'
+                          ? setSortedBy('')
+                          : setSortedBy('status'))}
                       >
                         Status
                       </p>
@@ -554,14 +530,14 @@ const TasksComponent = (props: any) => {
                           {orderBy === 'asc' && (
                             <Icon
                               iconSize={12}
-                              icon={'arrow-up'}
+                              icon='arrow-up'
                               onClick={() => setOrderBy('desc')}
                             />
                           )}
                           {orderBy === 'desc' && (
                             <Icon
                               iconSize={12}
-                              icon={'arrow-down'}
+                              icon='arrow-down'
                               onClick={() => setOrderBy('asc')}
                             />
                           )}
@@ -570,34 +546,32 @@ const TasksComponent = (props: any) => {
                     </div>
                   </div>
                 </ClickAwayListener>
-              }
-              target={
+              )}
+              target={(
                 <div
-                  className="flex items-center mr3"
+                  className='flex items-center mr3'
                   onClick={sortPopover}
                 >
                   <Icon
-                    icon="sort-desc"
-                    className="mr1"
+                    icon='sort-desc'
+                    className='mr1'
                     iconSize={12}
                   />
                   <p>Sort</p>
                 </div>
-              }
+              )}
             />
             <Popover
               isOpen={filterPopoverOpen}
-              interactionKind="click"
-              position="bottom"
-              popoverClassName="bg-white"
-              content={
+              interactionKind='click'
+              position='bottom'
+              popoverClassName='bg-white'
+              content={(
                 <ClickAwayListener onClickAway={closePopover}>
-                  <div className="bg-white ma3">
+                  <div className='bg-white ma3'>
                     <p
-                      className="flex items-center pointer"
-                      onClick={() =>
-                        day === 'today' ? setDay('') : setDay('today')
-                      }
+                      className='flex items-center pointer'
+                      onClick={() => (day === 'today' ? setDay('') : setDay('today'))}
                       style={{
                         marginRight: day === 'today' ? '8px' : '20px',
                       }}
@@ -607,7 +581,7 @@ const TasksComponent = (props: any) => {
                           day === 'today' ? 'tick-circle' : 'circle'
                         }
                         iconSize={16}
-                        className="mr2"
+                        className='mr2'
                         color={
                           day === 'today' ? '#2EB67D' : 'inherit'
                         }
@@ -615,12 +589,10 @@ const TasksComponent = (props: any) => {
                       Today's Task
                     </p>
                     <p
-                      className="flex items-center pointer"
-                      onClick={() =>
-                        day === 'tomorrow'
-                          ? setDay('')
-                          : setDay('tomorrow')
-                      }
+                      className='flex items-center pointer'
+                      onClick={() => (day === 'tomorrow'
+                        ? setDay('')
+                        : setDay('tomorrow'))}
                       style={{
                         marginRight:
                           day === 'tomorrow' ? '8px' : '20px',
@@ -633,7 +605,7 @@ const TasksComponent = (props: any) => {
                             : 'circle'
                         }
                         iconSize={16}
-                        className="mr2"
+                        className='mr2'
                         color={
                           day === 'tomorrow' ? '#2EB67D' : 'inherit'
                         }
@@ -641,12 +613,10 @@ const TasksComponent = (props: any) => {
                       Tomorrow's Task
                     </p>
                     <p
-                      className="flex items-center pointer"
-                      onClick={() =>
-                        day === 'upcomming'
-                          ? setDay('')
-                          : setDay('upcomming')
-                      }
+                      className='flex items-center pointer'
+                      onClick={() => (day === 'upcomming'
+                        ? setDay('')
+                        : setDay('upcomming'))}
                       style={{
                         marginRight:
                           day === 'upcomming' ? '8px' : '20px',
@@ -659,7 +629,7 @@ const TasksComponent = (props: any) => {
                             : 'circle'
                         }
                         iconSize={16}
-                        className="mr2"
+                        className='mr2'
                         color={
                           day === 'upcomming' ? '#2EB67D' : 'inherit'
                         }
@@ -667,10 +637,8 @@ const TasksComponent = (props: any) => {
                       Upcoming Task
                     </p>
                     <p
-                      className="flex items-center pointer"
-                      onClick={() =>
-                        day === 'due' ? setDay('') : setDay('due')
-                      }
+                      className='flex items-center pointer'
+                      onClick={() => (day === 'due' ? setDay('') : setDay('due'))}
                       style={{
                         marginRight: day === 'due' ? '8px' : '20px',
                       }}
@@ -680,18 +648,16 @@ const TasksComponent = (props: any) => {
                           day === 'due' ? 'tick-circle' : 'circle'
                         }
                         iconSize={16}
-                        className="mr2"
+                        className='mr2'
                         color={day === 'due' ? '#2EB67D' : 'inherit'}
                       />
                       Due Task
                     </p>
                     <p
-                      className="flex items-center pointer"
-                      onClick={() =>
-                        assign === 'to-me'
-                          ? setAssign('')
-                          : setAssign('to-me')
-                      }
+                      className='flex items-center pointer'
+                      onClick={() => (assign === 'to-me'
+                        ? setAssign('')
+                        : setAssign('to-me'))}
                       style={{
                         marginRight:
                           assign === 'to-me' ? '8px' : '20px',
@@ -704,7 +670,7 @@ const TasksComponent = (props: any) => {
                             : 'circle'
                         }
                         iconSize={16}
-                        className="mr2"
+                        className='mr2'
                         color={
                           assign === 'to-me' ? '#2EB67D' : 'inherit'
                         }
@@ -712,12 +678,10 @@ const TasksComponent = (props: any) => {
                       Assigned to me
                     </p>
                     <p
-                      className="mr2 flex items-center pointer"
-                      onClick={() =>
-                        assign === 'by-me'
-                          ? setAssign('')
-                          : setAssign('by-me')
-                      }
+                      className='mr2 flex items-center pointer'
+                      onClick={() => (assign === 'by-me'
+                        ? setAssign('')
+                        : setAssign('by-me'))}
                       style={{
                         marginRight:
                           assign === 'by-me' ? '8px' : '20px',
@@ -730,7 +694,7 @@ const TasksComponent = (props: any) => {
                             : 'circle'
                         }
                         iconSize={16}
-                        className="mr2"
+                        className='mr2'
                         color={
                           assign === 'by-me' ? '#2EB67D' : 'inherit'
                         }
@@ -739,37 +703,35 @@ const TasksComponent = (props: any) => {
                     </p>
                   </div>
                 </ClickAwayListener>
-              }
-              target={
+              )}
+              target={(
                 <div
-                  className="mr2 flex items-center"
+                  className='mr2 flex items-center'
                   onClick={filterPopover}
                 >
-                  <Icon icon="filter" className="mr1" iconSize={12} />
+                  <Icon icon='filter' className='mr1' iconSize={12} />
                   <p>Filter</p>
                 </div>
-              }
+              )}
             />
           </SortingDiv>
         </div>
       </div>
-      <div className="tasks-list w-100">
+      <div className='tasks-list w-100'>
         <TaskListContainer tasks={tasks} loading={loading} />
       </div>
     </div>
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-    userTasks: state.taskIndexReducer.taskReducer.userTasks,
-    fetchingUserTasks:
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+  userTasks: state.taskIndexReducer.taskReducer.userTasks,
+  fetchingUserTasks:
       state.taskIndexReducer.taskReducer.fetchingUserTasks,
-    errorOnFetchingUserTasks:
+  errorOnFetchingUserTasks:
       state.taskIndexReducer.taskReducer.errorOnFetchingUserTasks,
-  };
-};
+});
 
 export const Tasks = connect(mapStateToProps, { getAllUserTasks })(
   TasksComponent,

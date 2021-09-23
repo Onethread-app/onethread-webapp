@@ -27,8 +27,7 @@ interface AddDesignationFormProps {
   departments: Entity[];
 }
 
-interface AddDesignationFormInternalProps
-  extends AddDesignationFormProps {
+interface AddDesignationFormInternalProps extends AddDesignationFormProps {
   isLoading: boolean;
 }
 
@@ -37,10 +36,7 @@ const AddDesignationFormComponent = (
 ) => {
   const onSubmit: any = async (values: any) => {
     if (props.member) {
-      const status: any = await props.addDesignation(
-        values,
-        props.member._id,
-      );
+      const status: any = await props.addDesignation(values, props.member._id);
       if (status && props.isLoading === false) {
         await props.getCompanyMembers();
         props.setShowDialogAdd(false);
@@ -54,39 +50,35 @@ const AddDesignationFormComponent = (
       onSubmit={onSubmit}
       // initialValues={{ division: "", department: "", position: "" }}
       // validate={values => {
-      // 	const errors: any = {};
-      // 	if (!values.name) {
-      // 		errors.name = "Required";
-      // 	}
-      // 	return errors;
+      // const errors: any = {};
+      // if (!values.name) {
+      // errors.name = "Required";
+      // }
+      // return errors;
       // }}
       render={({
-        handleSubmit,
-        form,
-        submitting,
-        pristine,
-        values,
+        handleSubmit, form, submitting, pristine, values,
       }) => (
         <div>
-          <div className="flex justify-end pa3">
+          <div className='flex justify-end pa3'>
             <Icon
               icon={IconNames.DELETE}
               iconSize={20}
-              className="grow pointer tigrow-lightBlue"
+              className='grow pointer tigrow-lightBlue'
               onClick={(e: any) => props.setShowDialogAdd(false)}
             />
           </div>
-          <form className="fl w-100 pa4 pt0" onSubmit={handleSubmit}>
-            <h1 className="f5 tigrow-lightBlue">Add Role</h1>
-            <div className="flex flex-column">
-              <div className="mb4">
+          <form className='fl w-100 pa4 pt0' onSubmit={handleSubmit}>
+            <h1 className='f5 tigrow-lightBlue'>Add Role</h1>
+            <div className='flex flex-column'>
+              <div className='mb4'>
                 <Field<string>
-                  name="division"
+                  name='division'
                   validate={required}
                   render={({ input, meta }) => (
                     <DropdownFieldWithError
                       id={input.name}
-                      placeholder="Please select a division"
+                      placeholder='Please select a division'
                       selectedValue={input.value}
                       options={
                         props.divisions && props.divisions.length > 0
@@ -94,45 +86,40 @@ const AddDesignationFormComponent = (
                           : ([] as any)
                       }
                       onChange={input.onChange}
-                      leftIcon="id-number"
+                      leftIcon='id-number'
                       error={
-                        checkError(meta) &&
-                        (meta.error || meta.submitError)
+                        checkError(meta) && (meta.error || meta.submitError)
                       }
                     />
                   )}
                 />
               </div>
               <Condition
-                when="division"
-                validate={(value) => {
-                  return [
-                    'seniorManager',
-                    'middleManager',
-                    'operationalEmployee',
-                  ].includes(value);
-                }}
+                when='division'
+                validate={(value) => [
+                  'seniorManager',
+                  'middleManager',
+                  'operationalEmployee',
+                ].includes(value)}
               >
-                <div className="mb4">
+                <div className='mb4'>
                   <Field<string>
-                    name="department"
+                    name='department'
                     validate={required}
                     render={({ input, meta }) => (
                       <DropdownFieldWithError
                         id={input.name}
                         selectedValue={input.value}
-                        placeholder="Please select a department"
+                        placeholder='Please select a department'
                         options={
-                          props.departments &&
-                          props.departments.length > 0
+                          props.departments && props.departments.length > 0
                             ? props.departments
                             : ([] as any)
                         }
                         onChange={input.onChange}
-                        leftIcon="comparison"
+                        leftIcon='comparison'
                         error={
-                          checkError(meta) &&
-                          (meta.error || meta.submitError)
+                          checkError(meta) && (meta.error || meta.submitError)
                         }
                       />
                     )}
@@ -141,7 +128,7 @@ const AddDesignationFormComponent = (
               </Condition>
             </div>
             <Field<string>
-              name="position"
+              name='position'
               validate={composeValidators(required, maxValue(50))}
               render={({ input, meta }) => (
                 <InputGroupFieldWithError
@@ -149,31 +136,26 @@ const AddDesignationFormComponent = (
                   className={`br0 ${
                     checkError(meta) ? 'bb b--red' : 'bb b--lightBlue'
                   }`}
-                  placeHolder="Position"
+                  placeHolder='Position'
                   value={input.value}
                   onChange={input.onChange}
-                  leftIcon="id-number"
-                  leftIconColor={`${
-                    checkError(meta) ? 'red' : '#34b3e9'
-                  }`}
+                  leftIcon='id-number'
+                  leftIconColor={`${checkError(meta) ? 'red' : '#34b3e9'}`}
                   style={{ boxShadow: 'none' }}
-                  error={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
-                  }
+                  error={checkError(meta) && (meta.error || meta.submitError)}
                 />
               )}
             />
-            <div className="tc">
+            <div className='tc'>
               <Button
-                className="grow h2 pointer white bp3-minimal w4 mt4"
+                className='grow h2 pointer white bp3-minimal w4 mt4'
                 style={{
                   background: '#34b3e9',
                   outline: 'none',
                   color: 'white',
                 }}
                 loading={submitting}
-                type="submit"
+                type='submit'
                 disabled={submitting || pristine}
               >
                 Save
@@ -186,11 +168,9 @@ const AddDesignationFormComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    isLoading: state.companyReducer.designationLoading,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  isLoading: state.companyReducer.designationLoading,
+});
 
 export const AddDesignationForm = connect(mapStateToProps)(
   AddDesignationFormComponent,

@@ -1,8 +1,7 @@
 import { isEqual } from 'lodash';
 import { FORM_ERROR } from 'final-form';
 
-export const required = (value: any) =>
-  value ? undefined : 'Required';
+export const required = (value: any) => (value ? undefined : 'Required');
 
 export const maxValue = (max: number) => (value: any) => {
   if (value === undefined || value.length <= max) {
@@ -13,17 +12,16 @@ export const maxValue = (max: number) => (value: any) => {
 
 export const composeValidators = (...validators: any) => (
   value: any,
-) =>
-  validators.reduce(
-    (error: any, validator: any) => error || validator(value),
-    undefined,
-  );
+) => validators.reduce(
+  (error: any, validator: any) => error || validator(value),
+  undefined,
+);
 
 export const checkError = (meta: any) => {
   if (
-    (meta.error ||
-      (meta.submitError && !meta.dirtySinceLastSubmit)) &&
-    meta.touched
+    (meta.error
+      || (meta.submitError && !meta.dirtySinceLastSubmit))
+    && meta.touched
   ) {
     return true;
   }

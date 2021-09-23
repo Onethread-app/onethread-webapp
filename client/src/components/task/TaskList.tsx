@@ -90,7 +90,7 @@ const TaskList = (props: ITaskList) => {
           <h3>{t('app.project.Tasks.Assigned-Member')}</h3>
         </HeaderItem>
         <HeaderItem>
-          <SettingsIcon htmlColor="#a1a1a1" />
+          <SettingsIcon htmlColor='#a1a1a1' />
         </HeaderItem>
       </ListHeader>
       <TasksContainer />

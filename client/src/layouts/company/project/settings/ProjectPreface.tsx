@@ -8,11 +8,11 @@ const PrefacePageComponent = (props: any) => {
 
   return (
     <div>
-      <p className="b f5 mb3">Project Preface</p>
-      <div className="mb3">
+      <p className='b f5 mb3'>Project Preface</p>
+      <div className='mb3'>
         <Field<string>
-          name="optionalRole"
-          type="checkbox"
+          name='optionalRole'
+          type='checkbox'
           render={({ input, meta }) => (
             <label
               className={`flex items-center mb2 ${
@@ -20,11 +20,11 @@ const PrefacePageComponent = (props: any) => {
               }`}
             >
               <Field
-                name="optionalRole"
-                className="mr2"
-                component="input"
-                type="checkbox"
-                value="updateProjectPreface"
+                name='optionalRole'
+                className='mr2'
+                component='input'
+                type='checkbox'
+                value='updateProjectPreface'
                 disabled={disabled}
               />
               Update info's in Project Preface
@@ -32,8 +32,8 @@ const PrefacePageComponent = (props: any) => {
           )}
         />
         <Field<string>
-          name="optionalRole"
-          type="checkbox"
+          name='optionalRole'
+          type='checkbox'
           render={({ input, meta }) => (
             <label
               className={`flex items-center mb2 ${
@@ -41,11 +41,11 @@ const PrefacePageComponent = (props: any) => {
               }`}
             >
               <Field
-                name="optionalRole"
-                className="mr2"
-                component="input"
-                type="checkbox"
-                value="addFileProject"
+                name='optionalRole'
+                className='mr2'
+                component='input'
+                type='checkbox'
+                value='addFileProject'
                 disabled={disabled}
               />
               Add files in Project Preface

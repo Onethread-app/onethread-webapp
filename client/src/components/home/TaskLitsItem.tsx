@@ -69,24 +69,24 @@ const TaskLitsItem = (props: any) => {
         onClick={() => history.push(task.redirectTo.toString())}
       >
         <TaskPortion>
-          <h3 className="truncate pr3">{task.name}</h3>
+          <h3 className='truncate pr3'>{task.name}</h3>
         </TaskPortion>
         <TaskPortion>
-          <h3 className="truncate pr3">{task.projectName}</h3>
+          <h3 className='truncate pr3'>{task.projectName}</h3>
         </TaskPortion>
         <TaskPortion>
           <TaskPriorityTag priority={task.priority} />
         </TaskPortion>
         <TaskPortion>
           <span
-            className="bp3-tag ttc"
+            className='bp3-tag ttc'
             style={{
               background:
                 task.status === 'done'
                   ? '#2EB67D'
                   : task.status === 'in-progress'
-                  ? '#08A0F7'
-                  : '#FFA800',
+                    ? '#08A0F7'
+                    : '#FFA800',
             }}
           >
             {task.status.toString().replace(/-/g, ' ').toUpperCase()}

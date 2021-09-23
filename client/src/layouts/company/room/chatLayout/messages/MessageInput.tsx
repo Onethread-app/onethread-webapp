@@ -54,9 +54,7 @@ const CustomMentionEditor = (
   props: ICustomMentionEditor,
 ): ReactElement => {
   const ref = useRef<Editor>(null);
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(),
-  );
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState<MentionData[]>(
     props.mentions,
@@ -66,8 +64,7 @@ const CustomMentionEditor = (
   const messageLimit = 3500;
   const dispatch = useDispatch();
   // const { hasCommandModifier } = KeyBindingUtil;
-  defaultTheme.emojiSelectPopover =
-    defaultTheme.emojiSelectPopover + ' my-emoji-popover';
+  defaultTheme.emojiSelectPopover += ' my-emoji-popover';
 
   const {
     MentionSuggestions,
@@ -106,7 +103,6 @@ const CustomMentionEditor = (
     ({ value }: { value: string }) => {
       setSuggestions(defaultSuggestionsFilter(value, props.mentions));
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -114,22 +110,20 @@ const CustomMentionEditor = (
     if (e.keyCode === 13 /* enter key */) {
       if (e.nativeEvent.shiftKey) {
         return 'myeditor-newline';
-      } else {
-        return 'myeditor-save';
       }
+      return 'myeditor-save';
     }
     return getDefaultKeyBinding(e);
   }
 
   const sendMessage = async (_text: string, type: string) => {
-    const files =
-      props.pendingFiles && props.pendingFiles.length
-        ? props.pendingFiles.map((file) => ({
-            _id: file._id,
-            link: file.link,
-            s3Key: file.s3Key,
-          }))
-        : [];
+    const files = props.pendingFiles && props.pendingFiles.length
+      ? props.pendingFiles.map((file) => ({
+        _id: file._id,
+        link: file.link,
+        s3Key: file.s3Key,
+      }))
+      : [];
 
     dispatch({ type: CLEAR_FILE_UPLOAD });
 
@@ -153,19 +147,19 @@ const CustomMentionEditor = (
         `Message should be less than ${messageLimit} character`,
       );
     } else if (
-      trimmedText.length > 0 &&
-      trimmedText.length < messageLimit &&
-      props.pendingFiles.length === 0
+      trimmedText.length > 0
+      && trimmedText.length < messageLimit
+      && props.pendingFiles.length === 0
     ) {
       sendMessage(trimmedText, 'text');
     } else if (
-      trimmedText.length === 0 &&
-      props.pendingFiles.length > 0
+      trimmedText.length === 0
+      && props.pendingFiles.length > 0
     ) {
       sendMessage(trimmedText, 'file');
     } else if (
-      trimmedText.length > 0 &&
-      props.pendingFiles.length > 0
+      trimmedText.length > 0
+      && props.pendingFiles.length > 0
     ) {
       sendMessage(trimmedText, 'attachment');
     } else {
@@ -177,7 +171,7 @@ const CustomMentionEditor = (
     if (command === 'myeditor-save') {
       handleSend();
       return 'handled';
-    } else if (command === 'myeditor-newline') {
+    } if (command === 'myeditor-newline') {
       const newEditorState = RichUtils.insertSoftNewline(editorState);
       setEditorState(newEditorState);
       return 'handled';
@@ -187,7 +181,7 @@ const CustomMentionEditor = (
 
   return (
     <>
-      <div className="flex w-100 items-center">
+      <div className='flex w-100 items-center'>
         <div
           className={`${editorStyles.editor} flex w-100 pa2 mr1`}
           onClick={() => {
@@ -195,17 +189,18 @@ const CustomMentionEditor = (
           }}
         >
           <Editor
-            editorKey={'editor'}
+            editorKey='editor'
             editorState={editorState}
             handleKeyCommand={(cmd) => handleKeyCommand(cmd)}
+            // eslint-disable-next-line react/jsx-no-bind
             keyBindingFn={myKeyBindingFn}
             onChange={onChange}
             plugins={plugins}
             ref={ref}
-            autoCapitalize="off"
-            autoComplete="off"
-            autoCorrect="off"
-            placeholder="Ask something or post an update"
+            autoCapitalize='off'
+            autoComplete='off'
+            autoCorrect='off'
+            placeholder='Ask something or post an update'
           />
           <MentionSuggestions
             open={open}
@@ -221,12 +216,12 @@ const CustomMentionEditor = (
 
         <EmojiSelect closeOnEmojiSelect />
         <AttachFileIcon
-          className="pointer"
+          className='pointer'
           style={{ color: '#34b3e9', margin: '0 .5rem' }}
           onClick={() => props.setShowFileDialog(true)}
         />
         <SendIcon
-          className="pointer"
+          className='pointer'
           style={{ color: '#34b3e9', margin: '0 .5rem' }}
           onClick={() => handleSend()}
         />

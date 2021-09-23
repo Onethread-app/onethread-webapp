@@ -12,14 +12,14 @@ import Pusher from 'pusher-js/types/src/core/pusher';
 import { ICompany } from 'stores/company/Reducer';
 import { IRoomReducer, IRoom } from 'stores/room/Reducer';
 import { getRooms } from 'stores/room/Actions';
+
+import Navbar from 'components/navbar/Navbar';
+import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 import {
   getSingleProject,
   setCurrentProjectId,
   getRoleForProject,
 } from '../../../stores/project/Actions';
-
-import Navbar from 'components/navbar/Navbar';
-import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 
 export interface RoomQueries {
   view: 'default' | 'mobile';
@@ -61,12 +61,12 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
 
   return (
     <>
-      <Navbar type="company" />
+      <Navbar type='company' />
       {!(view && view === 'mobile') && (
-        <div className="flex justify-between mt5">
+        <div className='flex justify-between mt5'>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
             activeStyle={{
               background: '#34b3e9',
@@ -86,7 +86,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
             activeStyle={{
               background: '#34b3e9',
@@ -106,7 +106,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
             activeStyle={{
               background: '#34b3e9',
@@ -126,7 +126,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
             activeStyle={{
               background: '#34b3e9',
@@ -146,7 +146,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
             activeStyle={{
               background: '#34b3e9',
@@ -166,7 +166,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
           </NavLink>
           <NavLink
             exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            className='bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25'
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
             activeStyle={{
               background: '#34b3e9',
@@ -186,8 +186,8 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
           </NavLink>
         </div>
       )}
-      <div className="flex h-100 w-100">
-        <div className="w-100">
+      <div className='flex h-100 w-100'>
+        <div className='w-100'>
           <RoomSideBar />
         </div>
       </div>
@@ -195,17 +195,15 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentRoom: state.roomReducer.currentRoom,
-    companyId: state.companyReducer.currentCompany._id,
-    projectId: state.projectReducer.projectDetails._id,
-    rooms: state.roomReducer.rooms,
-    pusherInstance: state.pusherReducer.pusherInstance,
-    company: state.companyReducer.currentCompany,
-    project: state.projectReducer.projectDetails,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentRoom: state.roomReducer.currentRoom,
+  companyId: state.companyReducer.currentCompany._id,
+  projectId: state.projectReducer.projectDetails._id,
+  rooms: state.roomReducer.rooms,
+  pusherInstance: state.pusherReducer.pusherInstance,
+  company: state.companyReducer.currentCompany,
+  project: state.projectReducer.projectDetails,
+});
 
 export const RoomPageMobile = connect(mapStateToProps, {
   getRooms,

@@ -51,8 +51,8 @@ const AddSubtaskMember = (props: IAddSubtaskMemberInternalProps) => {
     await props.addSubTaskMember(payload);
 
     if (
-      props.addingMember === false &&
-      props.errorOnAddingMember === ''
+      props.addingMember === false
+      && props.errorOnAddingMember === ''
     ) {
       props.setMembersPopover({ _id: props.id, open: false });
     }
@@ -87,30 +87,28 @@ const AddSubtaskMember = (props: IAddSubtaskMemberInternalProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="fl w-100 ph2 pt2" onSubmit={handleSubmit}>
-          <div className="flex justify-end">
+        <form className='fl w-100 ph2 pt2' onSubmit={handleSubmit}>
+          <div className='flex justify-end'>
             <Icon
               icon={IconNames.CROSS}
               iconSize={20}
-              className="grow pointer"
-              onClick={(e: any) =>
-                props.setMembersPopover({
-                  _id: props.id,
-                  open: false,
-                })
-              }
+              className='grow pointer'
+              onClick={(e: any) => props.setMembersPopover({
+                _id: props.id,
+                open: false,
+              })}
             />
           </div>
           <div>
             <SubmitError errorMessage={submitError} />
           </div>
           <Field<string>
-            name="member"
+            name='member'
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <div className="fl w-100 pb2">
-                  <div className="mb1">
-                    <p className="fw5" style={{ fontSize: '.8rem' }}>
+                <div className='fl w-100 pb2'>
+                  <div className='mb1'>
+                    <p className='fw5' style={{ fontSize: '.8rem' }}>
                       Assign Member
                     </p>
                   </div>
@@ -130,16 +128,16 @@ const AddSubtaskMember = (props: IAddSubtaskMemberInternalProps) => {
               </div>
             )}
           />
-          <div className="fr">
+          <div className='fr'>
             <Button
-              className="grow pointer white bp3-minimal w4 mt2"
+              className='grow pointer white bp3-minimal w4 mt2'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
             >
               Assign
@@ -151,14 +149,12 @@ const AddSubtaskMember = (props: IAddSubtaskMemberInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    projectId: state.projectReducer.projectDetails._id,
-    addingMember: state.taskIndexReducer.subTaskReducer.addingMember,
-    errorOnAddingMember:
+const mapStateToProps = (state: any) => ({
+  projectId: state.projectReducer.projectDetails._id,
+  addingMember: state.taskIndexReducer.subTaskReducer.addingMember,
+  errorOnAddingMember:
       state.taskIndexReducer.subTaskReducer.errorOnAddingMember,
-  };
-};
+});
 
 export default connect(mapStateToProps, { addSubTaskMember })(
   AddSubtaskMember,

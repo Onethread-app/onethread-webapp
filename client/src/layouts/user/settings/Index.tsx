@@ -15,10 +15,10 @@ export const ProfileSettingsComponent = () => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
-    <div className="bl b--black-05 bw1 pl3-ns pl1 vh-50">
+    <div className='bl b--black-05 bw1 pl3-ns pl1 vh-50'>
       <Button
-        type="submit"
-        className="grow pointer outline-0 shadow-0-ns h2 changepass"
+        type='submit'
+        className='grow pointer outline-0 shadow-0-ns h2 changepass'
         style={{
           background: '#34b3e9',
           color: 'white',
@@ -33,7 +33,7 @@ export const ProfileSettingsComponent = () => {
           isOpen
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
-          className="ma2"
+          className='ma2'
         >
           <div>
             <ChangePasswordComponent setShowDialog={setShowDialog} />
@@ -47,19 +47,19 @@ export const ProfileSettingsComponent = () => {
 const ProfileSettingsPageComponent = () => {
   const { t } = useTranslation();
   return (
-    <div className="bg-white mh4 mv5 br3 pa4-ns h-75 shadow-4-ns w-90-ns">
-      <Tabs id="TabsExample" vertical={true}>
+    <div className='bg-white mh4 mv5 br3 pa4-ns h-75 shadow-4-ns w-90-ns'>
+      <Tabs id='TabsExample' vertical>
         <Tab
-          id="profile_settings"
+          id='profile_settings'
           title={t('app.user.User-settings.Profile')}
           panel={<ProfileSettingsComponent />}
-          className="outline-0 w-100"
+          className='outline-0 w-100'
         />
         <Tab
-          id="language_settings"
+          id='language_settings'
           title={t('app.user.User-settings.Language-Settings')}
           panel={<LanguageSettings />}
-          className="outline-0 w-100"
+          className='outline-0 w-100'
         />
       </Tabs>
     </div>

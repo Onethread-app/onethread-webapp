@@ -28,7 +28,7 @@ const Navbar = () => {
 
   useEffect(() => {
     getLocation().then((data) => {
-      const country = data.data.country;
+      const { country } = data.data;
 
       localStorage.setItem('city', data.data.city);
       localStorage.setItem('country', country);
@@ -41,36 +41,35 @@ const Navbar = () => {
         setIsToggle(false);
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="navbar flex justify-between items-center">
-      <ul className="flex">
-        <NavLink to="/">
-          <img src={DarkLogo} alt="Onethread" />
+    <div className='navbar flex justify-between items-center'>
+      <ul className='flex'>
+        <NavLink to='/'>
+          <img src={DarkLogo} alt='Onethread' />
         </NavLink>
-        <ul className="flex navbar-ml">
+        <ul className='flex navbar-ml'>
           <li>
             <a
-              href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
-              target="_blank"
-              rel="noreferrer"
+              href='https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA'
+              target='_blank'
+              rel='noreferrer'
             >
               {t('app.Navbar.How-It-Works')}
             </a>
           </li>
           <li>
-            <NavLink to="/pricing">{t('app.Navbar.Pricing')}</NavLink>
+            <NavLink to='/pricing'>{t('app.Navbar.Pricing')}</NavLink>
           </li>
           <li>
-            <a href="https://blog.onethread.app/" rel="noreferrer">
+            <a href='https://blog.onethread.app/' rel='noreferrer'>
               {t('app.Navbar.Blog')}
             </a>
           </li>
         </ul>
       </ul>
-      <ul className="flex">
+      <ul className='flex'>
         <li>
           <Switch
             isToggle={isToggle}
@@ -78,10 +77,10 @@ const Navbar = () => {
           />
         </li>
         <li>
-          <NavLink to="/signin">{t('app.Navbar.Login')}</NavLink>
+          <NavLink to='/signin'>{t('app.Navbar.Login')}</NavLink>
         </li>
         <li>
-          <NavLink to="/signup" className="b">
+          <NavLink to='/signup' className='b'>
             {t('app.Navbar.SignUp')}
           </NavLink>
         </li>

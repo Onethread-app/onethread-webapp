@@ -63,35 +63,33 @@ const HeaderItem = styled.div`
   }
 `;
 
-const TaskListContainer = (props: any) => {
-  return props.loading ? (
-    <TaskListSkeleton />
-  ) : props.tasks.length > 0 ? (
-    <TaskListContainerDiv>
-      <ListHeader>
-        <HeaderItem>
-          <h3>TASK NAME</h3>
-        </HeaderItem>
-        <HeaderItem>
-          <h3>PROJECT</h3>
-        </HeaderItem>
-        <HeaderItem>
-          <h3>PRIORITY</h3>
-        </HeaderItem>
-        <HeaderItem>
-          <h3>STATUS</h3>
-        </HeaderItem>
-        <HeaderItem>
-          <h3>DUE DATE</h3>
-        </HeaderItem>
-      </ListHeader>
-      <TaskTableContainer tasks={props.tasks} />
-    </TaskListContainerDiv>
-  ) : (
-    <div className="w-100 tc gray mt2">
-      Create some tasks in board.
-    </div>
-  );
-};
+const TaskListContainer = (props: any) => (props.loading ? (
+  <TaskListSkeleton />
+) : props.tasks.length > 0 ? (
+  <TaskListContainerDiv>
+    <ListHeader>
+      <HeaderItem>
+        <h3>TASK NAME</h3>
+      </HeaderItem>
+      <HeaderItem>
+        <h3>PROJECT</h3>
+      </HeaderItem>
+      <HeaderItem>
+        <h3>PRIORITY</h3>
+      </HeaderItem>
+      <HeaderItem>
+        <h3>STATUS</h3>
+      </HeaderItem>
+      <HeaderItem>
+        <h3>DUE DATE</h3>
+      </HeaderItem>
+    </ListHeader>
+    <TaskTableContainer tasks={props.tasks} />
+  </TaskListContainerDiv>
+) : (
+  <div className='w-100 tc gray mt2'>
+    Create some tasks in board.
+  </div>
+));
 
 export default TaskListContainer;

@@ -58,12 +58,10 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
   const [teamMembers, setTeamMembers]: any = useState([]);
   const [memberValue, setMemberValue]: any = useState([]);
   const [options] = useState<IOption[]>(
-    priorityColor.map((pc) => {
-      return {
-        value: pc.code,
-        label: pc.name,
-      };
-    }),
+    priorityColor.map((pc) => ({
+      value: pc.code,
+      label: pc.name,
+    })),
   );
   const [selectedOption, setSelectedOption] = useState(options[2]);
   const [creatingTask, setCreatingTask] = useState(false);
@@ -170,16 +168,16 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
 
   useEffect(() => {
     if (
-      creatingTask === true &&
-      props.creatingTask === false &&
-      props.errorOnCreatingTask !== ''
+      creatingTask === true
+      && props.creatingTask === false
+      && props.errorOnCreatingTask !== ''
     ) {
       setErrorText(props.errorOnCreatingTask);
     }
     if (
-      creatingTask === true &&
-      props.creatingTask === false &&
-      props.errorOnCreatingTask === ''
+      creatingTask === true
+      && props.creatingTask === false
+      && props.errorOnCreatingTask === ''
     ) {
       props.setShowDialog(false);
     }
@@ -187,7 +185,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
 
   return (
     <Container>
-      <div className="flex justify-end">
+      <div className='flex justify-end'>
         <Button
           style={{
             background: 'transparent',
@@ -195,13 +193,13 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
             boxShadow: 'none',
             width: '25px',
           }}
-          icon="cross"
+          icon='cross'
           onClick={() => {
             props.setShowDialog(false);
           }}
         />
       </div>
-      {errorText && <h3 className="tc fw5 f4 red">{errorText}</h3>}
+      {errorText && <h3 className='tc fw5 f4 red'>{errorText}</h3>}
       <Form
         onSubmit={onSubmit}
         initialValues={{
@@ -220,12 +218,12 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="flex flex-column">
+            <div className='flex flex-column'>
               <Field<string>
-                name="name"
+                name='name'
                 validate={composeValidators(required, maxValue(150))}
                 render={({ input, meta }) => (
-                  <div className="mb3">
+                  <div className='mb3'>
                     <p
                       style={{
                         fontSize: '10px',
@@ -236,7 +234,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                       NEW TASK
                     </p>
                     <InputGroupFieldWithError
-                      id="name"
+                      id='name'
                       value={input.value}
                       onChange={(e) => {
                         input.onChange(e);
@@ -249,21 +247,21 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         paddingLeft: '0px',
                       }}
                       error={
-                        checkError(meta) &&
-                        (meta.error || meta.submitError)
+                        checkError(meta)
+                        && (meta.error || meta.submitError)
                       }
-                      placeHolder="Task Name"
-                      autoFocus={true}
+                      placeHolder='Task Name'
+                      autoFocus
                     />
                   </div>
                 )}
               />
               <Field<string>
-                name="assignmembers"
+                name='assignmembers'
                 render={({ input, meta }) => (
-                  <div className="mb3">
-                    <div className="flex items-center">
-                      <label className="text-width">
+                  <div className='mb3'>
+                    <div className='flex items-center'>
+                      <label className='text-width'>
                         Assign to:
                         <div>
                           {assignedUserError && (
@@ -281,8 +279,8 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
 
                       <Select
                         isMulti
-                        className="select-option-mdfy"
-                        name="assignmembers"
+                        className='select-option-mdfy'
+                        name='assignmembers'
                         value={memberValue}
                         options={teamMembers}
                         onChange={handleMember}
@@ -291,18 +289,18 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                   </div>
                 )}
               />
-              <div className="duedate-priority-container">
+              <div className='duedate-priority-container'>
                 <Field<string>
-                  name="dueDate"
+                  name='dueDate'
                   validate={required}
                   render={({ input, meta }) => (
-                    <div className="flex items-center w-100 mb3">
-                      <label className="text-width-dueDate">
+                    <div className='flex items-center w-100 mb3'>
+                      <label className='text-width-dueDate'>
                         Due Date:
                         <div>
                           {checkError(meta) && (
                             <small
-                              className="mv3"
+                              className='mv3'
                               style={{
                                 color: 'red',
                               }}
@@ -313,12 +311,10 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         </div>
                       </label>
                       <DateInput
-                        formatDate={(date: Date) =>
-                          date.toLocaleDateString()
-                        }
+                        formatDate={(date: Date) => date.toLocaleDateString()}
                         timePickerProps={timePickerProps}
-                        timePrecision="minute"
-                        placeholder="dd/mm/yyyy"
+                        timePrecision='minute'
+                        placeholder='dd/mm/yyyy'
                         parseDate={(str: string) => new Date(str)}
                         onChange={(e) => {
                           input.onChange(e);
@@ -328,7 +324,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         value={
                           input.value ? new Date(input.value) : null
                         }
-                        className="task-dueDate"
+                        className='task-dueDate'
                         popoverProps={{
                           targetClassName: 'w-100',
                         }}
@@ -338,11 +334,11 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     </div>
                   )}
                 />
-                <div className="flex items-center w-100 mb3">
-                  <label className="text-width">Priority:</label>
-                  <div className="w-100">
+                <div className='flex items-center w-100 mb3'>
+                  <label className='text-width'>Priority:</label>
+                  <div className='w-100'>
                     <Select
-                      className="select-option-mdfy"
+                      className='select-option-mdfy'
                       options={options}
                       value={selectedOption}
                       onChange={handleSelect}
@@ -351,13 +347,13 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                 </div>
               </div>
               <Field<string>
-                name="description"
+                name='description'
                 render={({ input, meta }) => (
-                  <div className="mv1 flex">
-                    <label className="text-width">Description:</label>
+                  <div className='mv1 flex'>
+                    <label className='text-width'>Description:</label>
                     <textarea
-                      name="description"
-                      id="description"
+                      name='description'
+                      id='description'
                       value={input.value}
                       onChange={(e) => {
                         input.onChange(e);
@@ -372,14 +368,14 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         padding: '0.5rem',
                         borderRadius: '0.2rem',
                       }}
-                      placeholder="Add some details about the task"
+                      placeholder='Add some details about the task'
                     />
                   </div>
                 )}
               />
-              <div className="flex justify-end mt3">
+              <div className='flex justify-end mt3'>
                 <Button
-                  type="submit"
+                  type='submit'
                   style={{
                     background: '#34b3e9',
                     color: '#fff',

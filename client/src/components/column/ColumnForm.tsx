@@ -36,8 +36,8 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
         props.column && isEmpty(props.column.name) === false
           ? props.column.positionInBoard
           : props.currentBoard.columns
-          ? props.currentBoard.columns.length + 1
-          : 1,
+            ? props.currentBoard.columns.length + 1
+            : 1,
       boardId: props.currentBoard._id,
     };
     if (props.column && isEmpty(props.column.name) === false) {
@@ -54,7 +54,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
   };
 
   return (
-    <div className="pa3">
+    <div className='pa3'>
       <div style={{ marginTop: '7rem' }}>
         {props.column ? <h3>Edit Column</h3> : <h3>Create Column</h3>}
       </div>
@@ -74,9 +74,9 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="pv3 justify-content w-100">
+            <div className='pv3 justify-content w-100'>
               <Field<string>
-                name="name"
+                name='name'
                 validate={composeValidators(
                   required,
                   maxValue(60),
@@ -87,7 +87,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                     className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
                   >
                     <InputGroupFieldWithLabel
-                      id="name"
+                      id='name'
                       value={input.value}
                       onChange={input.onChange}
                       style={{
@@ -95,31 +95,31 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                         fontSize: '18px',
                       }}
                       error={
-                        checkError(meta) &&
-                        (meta.error || meta.submitError)
+                        checkError(meta)
+                        && (meta.error || meta.submitError)
                       }
-                      label="Column Name"
-                      autoFocus={true}
+                      label='Column Name'
+                      autoFocus
                     />
                   </div>
                 )}
               />
-              <div className="fr">
+              <div className='fr'>
                 <Button
-                  className="grow pointer white bp3-minimal w4 mt2 mr3"
+                  className='grow pointer white bp3-minimal w4 mt2 mr3'
                   style={{
                     background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
                   loading={submitting}
-                  type="submit"
+                  type='submit'
                   disabled={submitting || pristine}
                 >
                   {props.column ? 'Update' : 'Create'}
                 </Button>
                 <Button
-                  className="w4 grow h2 pointer"
+                  className='w4 grow h2 pointer'
                   style={{
                     background: '#fff',
                     outline: 'none',
@@ -143,11 +143,9 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
+});
 
 export const ColumnForm = connect(mapStateToProps, {
   createColumn,

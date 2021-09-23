@@ -11,13 +11,13 @@ import { IRoomReducer } from 'stores/room/Reducer';
 import { getRoomMembers, archiveRoom } from 'stores/room/Actions';
 import { projectPermit } from 'stores/UtilsActions';
 
-import addMemberIcon from './../../../../resources/images/addMemberIcon.png';
-import settingsIcon from './../../../../resources/images/settings.svg';
+import addMemberIcon from '../../../../resources/images/addMemberIcon.png';
+import settingsIcon from '../../../../resources/images/settings.svg';
 // import videoCallIcon from './../../../../resources/images/video-call.png';
 
 import { AddMemberForm } from './members/AddMemberForm';
 import { VideoCallRequest } from './VideoCallRequest';
-import { projectRules } from './../../project/settings/projectrules';
+import { projectRules } from '../../project/settings/projectrules';
 import { SendMessageForm } from './messages/SendMessageForm';
 import { MessageList } from './messages/MessageList';
 
@@ -36,10 +36,8 @@ export const ChatLayoutComponent = (
   props: ChatLayoutComponentProps,
 ) => {
   const { t } = useTranslation();
-  const [showMemberFormDialog, setShowMemberFormDialog] =
-    useState(false);
-  const [showVideoCallDialog, setShowVideoCallDialog] =
-    useState(false);
+  const [showMemberFormDialog, setShowMemberFormDialog] = useState(false);
+  const [showVideoCallDialog, setShowVideoCallDialog] = useState(false);
 
   const permissions = projectRules(
     props.projectRole,
@@ -48,28 +46,28 @@ export const ChatLayoutComponent = (
 
   return (
     <>
-      {isEmpty(props.currentRoom.name) === false &&
-      isEmpty(props.currentRoom._id) === false ? (
-        <div className="flex flex-column h-100 w-100">
+      {isEmpty(props.currentRoom.name) === false
+      && isEmpty(props.currentRoom._id) === false ? (
+        <div className='flex flex-column h-100 w-100'>
           {/* chat heading starts */}
-          <div className="flex justify-between items-center ph4-ns ph2 pv2 bb b--tigrowLightGray-1">
+          <div className='flex justify-between items-center ph4-ns ph2 pv2 bb b--tigrowLightGray-1'>
             <div>
-              <p className="f4 fw7 mv3">{props.currentRoom.name}</p>
+              <p className='f4 fw7 mv3'>{props.currentRoom.name}</p>
             </div>
-            <div className="flex">
-              <div className="pointer">
+            <div className='flex'>
+              <div className='pointer'>
                 <Popover
-                  minimal={true}
+                  minimal
                   // isOpen={true}
                   position={Position.BOTTOM}
-                  popoverClassName="bg-white pa3"
-                  content={
+                  popoverClassName='bg-white pa3'
+                  content={(
                     <div>
                       {props.currentRoom.archive ? (
                         <>
                           {projectPermit(props.companyRole) ? (
                             <h5
-                              className="ma0 pointer bp3-popover-dismiss"
+                              className='ma0 pointer bp3-popover-dismiss'
                               onClick={async () => {
                                 await props.archiveRoom(
                                   {
@@ -82,7 +80,7 @@ export const ChatLayoutComponent = (
                               Activate Room
                             </h5>
                           ) : (
-                            <h5 className="ma0 pointer bp3-popover-dismiss gray">
+                            <h5 className='ma0 pointer bp3-popover-dismiss gray'>
                               No settings
                             </h5>
                           )}
@@ -92,65 +90,65 @@ export const ChatLayoutComponent = (
                           {/* <h5 className="gray ma0 mb2 pointer bp3-popover-dismiss">
                             Mute Conversation
                           </h5> */}
-                          {projectPermit(props.companyRole) ||
-                          (props.projectRole &&
-                            props.optionalRole &&
-                            (permissions.grantAll ||
-                              permissions.projectModerator.includes(
+                          {projectPermit(props.companyRole)
+                          || (props.projectRole
+                            && props.optionalRole
+                            && (permissions.grantAll
+                              || permissions.projectModerator.includes(
                                 'archiveRoom',
                               ))) ? (
-                            <h5
-                              className="red ma0 pointer bp3-popover-dismiss"
-                              onClick={async () => {
-                                await props.archiveRoom(
-                                  {
-                                    archive: true,
-                                  },
-                                  props.currentRoom._id,
-                                );
-                              }}
-                            >
-                              Archive Room
-                            </h5>
-                          ) : (
-                            <h5 className="ma0 bp3-popover-dismiss gray">
-                              No settings
-                            </h5>
-                          )}
+                                <h5
+                                  className='red ma0 pointer bp3-popover-dismiss'
+                                  onClick={async () => {
+                                    await props.archiveRoom(
+                                      {
+                                        archive: true,
+                                      },
+                                      props.currentRoom._id,
+                                    );
+                                  }}
+                                >
+                                  Archive Room
+                                </h5>
+                            ) : (
+                              <h5 className='ma0 bp3-popover-dismiss gray'>
+                                No settings
+                              </h5>
+                            )}
                         </>
                       )}
                     </div>
-                  }
-                  target={
+                  )}
+                  target={(
                     <div>
                       <img
-                        className="grow"
+                        className='grow'
                         src={settingsIcon}
-                        width="30px"
-                        height="30px"
-                        alt=""
+                        width='30px'
+                        height='30px'
+                        alt=''
                       />
                     </div>
-                  }
+                  )}
                 />
               </div>
-              {projectPermit(props.companyRole) ||
-              (props.projectRole &&
-                props.optionalRole &&
-                props.currentRoom.archive === false) ? (
-                <div
-                  className="pointer ml3-ns ml1"
-                  onClick={() => setShowMemberFormDialog(true)}
-                >
-                  <img
-                    className="grow"
-                    src={addMemberIcon}
-                    width="30px"
-                    height="30px"
-                    alt=""
-                  />
-                </div>
-              ) : null}
+              {projectPermit(props.companyRole)
+              || (props.projectRole
+                && props.optionalRole
+                && props.currentRoom.archive === false) ? (
+                  <div
+                    className='pointer ml3-ns ml1'
+                    onClick={() => setShowMemberFormDialog(true)}
+                  >
+                    <img
+                      className='grow'
+                      src={addMemberIcon}
+                      width='30px'
+                      height='30px'
+                      alt=''
+                    />
+                  </div>
+                ) : null}
               {/* {props.currentRoom.archive === false && (
                 <div className="pointer ml3-ns ml1">
                   <Popover
@@ -207,15 +205,15 @@ export const ChatLayoutComponent = (
           {props.currentRoom.archive === false ? (
             <SendMessageForm />
           ) : (
-            <div className="flex justify-center items-center h4">
-              <h3 className="fw5 f3">The Room is archived</h3>
+            <div className='flex justify-center items-center h4'>
+              <h3 className='fw5 f3'>The Room is archived</h3>
             </div>
           )}
         </div>
-      ) : (
-        <h2>{t('app.project.Project-rooms.Select-room')}</h2>
+        ) : (
+          <h2>{t('app.project.Project-rooms.Select-room')}</h2>
         // <h2>Please, select a room !!</h2>
-      )}
+        )}
 
       {showVideoCallDialog && (
         <Dialog
@@ -246,23 +244,21 @@ export const ChatLayoutComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentRoom: state.roomReducer.currentRoom,
-    activeRoom: state.roomReducer.activeRoom,
-    users: state.roomReducer.users,
-    companyRole: state.companyReducer.currentCompany.role,
-    projectRole:
-      state.projectReducer.projectRole &&
-      state.projectReducer.projectRole.projects &&
-      state.projectReducer.projectRole.projects.role,
-    optionalRole:
-      state.projectReducer.projectRole &&
-      state.projectReducer.projectRole.projects &&
-      state.projectReducer.projectRole.projects.project &&
-      state.projectReducer.projectRole.projects.project.optionalRole,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentRoom: state.roomReducer.currentRoom,
+  activeRoom: state.roomReducer.activeRoom,
+  users: state.roomReducer.users,
+  companyRole: state.companyReducer.currentCompany.role,
+  projectRole:
+      state.projectReducer.projectRole
+      && state.projectReducer.projectRole.projects
+      && state.projectReducer.projectRole.projects.role,
+  optionalRole:
+      state.projectReducer.projectRole
+      && state.projectReducer.projectRole.projects
+      && state.projectReducer.projectRole.projects.project
+      && state.projectReducer.projectRole.projects.project.optionalRole,
+});
 
 export const ChatLayout = connect(mapStateToProps, {
   getRoomMembers,

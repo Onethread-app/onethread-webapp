@@ -1,22 +1,23 @@
-import warningIcon from './../../resources/images/warningIcon.png';
+import warningIcon from '../../resources/images/warningIcon.png';
 
 export const SubmitError = (props: { errorMessage: string }) => (
   <div>
     {props.errorMessage && (
       <div
-        className="flex"
+        className='flex'
         style={{
           backgroundColor: '#FCEBEB',
           paddingLeft: '10px',
           paddingTop: '10px',
         }}
       >
-        <span className="bp3-icon">
+        <span className='bp3-icon'>
           <img
             src={warningIcon}
-            width="20px"
-            height="20px"
-            color="#34b3e9"
+            width='20px'
+            height='20px'
+            color='#34b3e9'
+            alt=''
           />
         </span>
         <p style={{ color: '#962414', paddingLeft: '10px' }}>

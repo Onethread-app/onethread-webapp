@@ -42,17 +42,17 @@ const UserInput = (props: IUserInputInternalProps) => {
   };
 
   return (
-    <div className="start-today-input-group flex items-center justify-center w-100">
+    <div className='start-today-input-group flex items-center justify-center w-100'>
       <input
-        type="email"
-        name="email"
-        id="useremail"
-        placeholder="Your email address"
-        className="h-100 tc"
+        type='email'
+        name='email'
+        id='useremail'
+        placeholder='Your email address'
+        className='h-100 tc'
         onChange={handleChange}
       />
       <button
-        className="h-100"
+        className='h-100'
         style={{ color: props.color }}
         onClick={handleSubmit}
       >

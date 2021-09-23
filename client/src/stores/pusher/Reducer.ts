@@ -1,15 +1,15 @@
 import Pusher from 'pusher-js';
 import {
+  IChannelSubscriptionSucceeded,
+  IChannelMember,
+} from 'layouts/company/room/channelSubscribe';
+import {
   UPDATE_PUSHER_INSTANCE,
   CLEAR_PUSHER_REDUCER_STATE,
   CHANNEL_USER_LOGIN,
   CHANNEL_USER_JOINED,
   CHANNEL_USER_LEAVED,
 } from './Types';
-import {
-  IChannelSubscriptionSucceeded,
-  IChannelMember,
-} from 'layouts/company/room/channelSubscribe';
 
 export interface IPusherReducer {
   pusherInstance: Pusher | undefined;

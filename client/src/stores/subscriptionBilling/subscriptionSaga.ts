@@ -1,7 +1,10 @@
-import { all, put, select, takeLatest } from 'redux-saga/effects';
+import {
+  all, put, select, takeLatest,
+} from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 import { tokenConfig, adminTokenConfig } from 'stores/UtilsActions';
 import { tigrowAdminApi, tigrowApi } from 'config';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 import { subscription } from './Type';
 import {
   checkCouponValidityFailure,
@@ -12,16 +15,14 @@ import {
   getTotalMembersSuccess,
   setSubscriptionExpire,
 } from './Actions';
-import { returnErrorText } from 'helpers/HandleSagaErrors';
 
-const takeEvery: any = Eff.takeEvery; // <-- new
+const { takeEvery } = Eff; // <-- new
 // const takeLatest: any = Eff.takeLatest;
 
 function* getPaymentIntent() {
   try {
     const headers = tokenConfig();
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
+    const selectCompanyId = (state) => state.companyReducer.currentCompany._id;
 
     if ((headers as any).headers.Authorization) {
       const companyId = yield select(selectCompanyId);
@@ -47,7 +48,7 @@ function* getSubscriptions() {
     if ((headers as any).headers.Authorization) {
       // const companyId = yield select(selectCompanyId);
 
-      const response = yield tigrowApi.get(`plans`, headers);
+      const response = yield tigrowApi.get('plans', headers);
       yield put({
         type: subscription.GET_SUBSCRIPTIONS_SUCCESS,
         payload: response.data,
@@ -61,8 +62,7 @@ function* getSubscriptions() {
 function* getCurrentSubscription() {
   try {
     const headers = tokenConfig();
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
+    const selectCompanyId = (state) => state.companyReducer.currentCompany._id;
 
     if ((headers as any).headers.Authorization) {
       const companyId = yield select(selectCompanyId);
@@ -92,16 +92,16 @@ function* checkCouponValidityAsync({ payload }: any) {
     response.data.data
       ? response.data.data.isUsed
         ? yield put(
-            checkCouponValidityFailure(
-              'Coupon has already been used',
-            ),
-          )
+          checkCouponValidityFailure(
+            'Coupon has already been used',
+          ),
+        )
         : yield put(
-            checkCouponValiditySuccess({
-              validity: true,
-              data: response.data.data,
-            }),
-          )
+          checkCouponValiditySuccess({
+            validity: true,
+            data: response.data.data,
+          }),
+        )
       : yield put(checkCouponValidityFailure('No Data Found'));
   } catch (error) {
     yield put(checkCouponValidityFailure(returnErrorText(error)));
@@ -113,7 +113,7 @@ export function* getTotalMembersAsync() {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
-        `payments/total-subscriber`,
+        'payments/total-subscriber',
         headers,
       );
       yield put(getTotalMembersSuccess(response.data));

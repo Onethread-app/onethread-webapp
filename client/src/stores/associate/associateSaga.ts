@@ -1,6 +1,5 @@
 import { all, put, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
-import { associate } from './Types';
 import { tigrowApi } from 'config';
 // import { isEqual } from 'lodash';
 import { tokenConfig } from 'stores/UtilsActions';
@@ -14,23 +13,25 @@ import { ICompany } from 'stores/company/Reducer';
 // import { Associate } from './Reducer';
 // import { Toaster } from '@blueprintjs/core';
 
-import {
-  selectAssociateSuccess,
-  selectAssociateFailure,
-} from './Actions';
 import { getProjectAssociatesFailure } from 'stores/project/Actions';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 import { getCompanyId } from 'stores/company/Selector';
 import { getProjectId } from 'stores/project/Selector';
+import {
+  selectAssociateSuccess,
+  selectAssociateFailure,
+} from './Actions';
+import { associate } from './Types';
 
-const takeEvery: any = Eff.takeEvery; // <-- new
-const takeLatest: any = Eff.takeLatest;
+const { takeEvery } = Eff; // <-- new
+const { takeLatest } = Eff;
 
 interface IAddAssociateAction {
-  type: String;
+  type: string;
   associateWith: {
-    mongo_id: String;
-    name: String;
+    // eslint-disable-next-line camelcase
+    mongo_id: string;
+    name: string;
   };
   company: ICompany;
 }
@@ -52,9 +53,8 @@ function* addAssociate(action: IAddAssociateAction) {
       );
       yield put({ type: associate.SEND_REQUEST_SUCCESS });
       return response;
-    } else {
-      // tslint:disable-next-line: no-console
     }
+    // tslint:disable-next-line: no-console
   } catch (error) {
     const errorText = returnErrorText(error);
     yield put({ type: associate.SEND_REQUEST_ERROR, errorText });
@@ -66,26 +66,24 @@ function* getAllAssociates() {
     const headers = tokenConfig();
     const companyId = yield select(getCompanyId);
     if (
-      (headers as any).headers.Authorization &&
-      !isEmpty(companyId)
+      (headers as any).headers.Authorization
+      && !isEmpty(companyId)
     ) {
       const response = yield tigrowApi.get(
         `associate/${companyId}`,
         headers,
       );
-      const associates = yield response.data.map((associate: any) =>
-        isEqual(companyId, associate.company._id) === true
-          ? {
-              _id: associate._id,
-              associateCompany: associate.associateCompany,
-              createdAt: associate.createdAt,
-            }
-          : {
-              _id: associate._id,
-              associateCompany: associate.company,
-              createdAt: associate.createdAt,
-            },
-      );
+      const associates = yield response.data.map((associate: any) => (isEqual(companyId, associate.company._id) === true
+        ? {
+          _id: associate._id,
+          associateCompany: associate.associateCompany,
+          createdAt: associate.createdAt,
+        }
+        : {
+          _id: associate._id,
+          associateCompany: associate.company,
+          createdAt: associate.createdAt,
+        }));
       yield put({
         type: associate.GET_ASSOCIATE_SUCCSESS,
         payload: associates,
@@ -124,27 +122,25 @@ function* getAllPendingAssociates() {
     const headers = tokenConfig();
     const companyId = yield select(getCompanyId);
     if (
-      (headers as any).headers.Authorization &&
-      !isEmpty(companyId)
+      (headers as any).headers.Authorization
+      && !isEmpty(companyId)
     ) {
       const response = yield tigrowApi.get(
         `associate/pending/${companyId}`,
         headers,
       );
 
-      const associates = response.data.map((associate: any) =>
-        isEqual(companyId, associate.company._id) === true
-          ? {
-              _id: associate._id,
-              associateCompany: associate.associateCompany,
-              createdAt: associate.createdAt,
-            }
-          : {
-              _id: associate._id,
-              associateCompany: associate.company,
-              createdAt: associate.createdAt,
-            },
-      );
+      const associates = response.data.map((associate: any) => (isEqual(companyId, associate.company._id) === true
+        ? {
+          _id: associate._id,
+          associateCompany: associate.associateCompany,
+          createdAt: associate.createdAt,
+        }
+        : {
+          _id: associate._id,
+          associateCompany: associate.company,
+          createdAt: associate.createdAt,
+        }));
       yield put({
         type: associate.GET_ALL_PENDING_ASSOCIATE_SUCCSESS,
         payload: associates,
@@ -170,15 +166,15 @@ function* getAllPendingAssociates() {
 // }
 
 function* acceptPendingAssociate(action: {
-  type: String;
-  associateID: String;
+  type: string;
+  associateID: string;
 }) {
   try {
     const headers = tokenConfig();
     const companyID = yield select(getCompanyId);
     if (
-      (headers as any).headers.Authorization &&
-      action.associateID
+      (headers as any).headers.Authorization
+      && action.associateID
     ) {
       const response = yield tigrowApi.post(
         `associate/accept/${companyID}`,
@@ -194,7 +190,7 @@ function* acceptPendingAssociate(action: {
       });
       yield put({ type: associate.GET_ALL_PENDING_ASSOCIATE_LOAD });
       Toaster.create().show({
-        message: `Successfully accepted`,
+        message: 'Successfully accepted',
         timeout: 3000,
         intent: 'success',
       });
@@ -205,16 +201,16 @@ function* acceptPendingAssociate(action: {
 }
 
 function* rejectPendingAssociate(action: {
-  type: String;
-  associateID: String;
+  type: string;
+  associateID: string;
 }) {
   try {
     const headers = tokenConfig();
     const companyID = yield select(getCompanyId);
     if (
-      (headers as any).headers.Authorization &&
-      action.associateID &&
-      !isEmpty(companyID)
+      (headers as any).headers.Authorization
+      && action.associateID
+      && !isEmpty(companyID)
     ) {
       const response = yield tigrowApi.post(
         `associate/reject/${companyID}`,
@@ -230,7 +226,7 @@ function* rejectPendingAssociate(action: {
       });
       yield put({ type: associate.GET_ALL_PENDING_ASSOCIATE_LOAD });
       Toaster.create().show({
-        message: `Successfully accepted`,
+        message: 'Successfully accepted',
         timeout: 3000,
         intent: 'success',
       });
@@ -245,9 +241,9 @@ function* getSelectedAssociate({ payload }: any) {
     const headers = tokenConfig();
     const companyId = yield select(getCompanyId);
     if (
-      (headers as any).headers.Authorization &&
-      payload &&
-      !isEmpty(companyId)
+      (headers as any).headers.Authorization
+      && payload
+      && !isEmpty(companyId)
     ) {
       const response = yield tigrowApi.get(
         `associate/${payload}/${companyId}`,

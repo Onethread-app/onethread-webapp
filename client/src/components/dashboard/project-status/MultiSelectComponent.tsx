@@ -17,25 +17,23 @@ const MultiSelectComponent = ({
   };
 
   const handleTagRemove = (tag, index) => {
-    setSelected((prev) => {
-      return [...prev.slice(0, index), ...prev.slice(index + 1)];
-    });
+    setSelected((prev) => [...prev.slice(0, index), ...prev.slice(index + 1)]);
   };
 
   return (
     <>
       <MultiSelect
         tagInputProps={{
-          placeholder: placeholder,
+          placeholder,
           onRemove: handleTagRemove,
         }}
-        fill={true}
+        fill
         itemRenderer={(item) => (
           <MenuItem
             key={item.id}
             onClick={(e: any) => onItemSelect(item)}
             text={item.label}
-            className="ttc"
+            className='ttc'
             intent={
               selected.find((si) => si.label === item.label)
                 ? Intent.PRIMARY
@@ -49,7 +47,11 @@ const MultiSelectComponent = ({
           />
         )}
         tagRenderer={(item) => (
-          <p className="ma0 white ttc"> {item.label} </p>
+          <p className='ma0 white ttc'>
+            {' '}
+            {item.label}
+            {' '}
+          </p>
         )}
         items={container}
         selectedItems={selected}

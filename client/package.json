@@ -28,8 +28,6 @@
     "@types/react-select": "^3.1.2",
     "@types/react-transition-group": "^4.2.2",
     "@types/react-vertical-timeline-component": "^2.3.1",
-    "@typescript-eslint/eslint-plugin": "^4.29.3",
-    "@typescript-eslint/parser": "^4.26.0",
     "agora-rtc-sdk": "^3.1.1",
     "animate.css": "^3.7.2",
     "axios": "^0.21.3",
@@ -110,7 +108,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -128,7 +129,17 @@
     "@types/lodash": "^4.14.138",
     "@types/react-beautiful-dnd": "^11.0.3",
     "@types/react-redux": "^7.1.2",
+    "@types/react-router": "^5.1.16",
     "@types/redux-thunk": "^2.1.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.26.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.0.2"
   }
 }

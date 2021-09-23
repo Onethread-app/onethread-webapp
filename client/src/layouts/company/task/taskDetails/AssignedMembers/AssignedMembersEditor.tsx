@@ -86,12 +86,12 @@ export const AssignedMembersEditorComponent = (
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="fl w-100 ph2 pt2" onSubmit={handleSubmit}>
-          <div className="flex justify-end">
+        <form className='fl w-100 ph2 pt2' onSubmit={handleSubmit}>
+          <div className='flex justify-end'>
             <Icon
               icon={IconNames.CROSS}
               iconSize={20}
-              className="grow pointer"
+              className='grow pointer'
               onClick={(e: any) => props.setMembersPopover(false)}
             />
           </div>
@@ -99,12 +99,12 @@ export const AssignedMembersEditorComponent = (
             <SubmitError errorMessage={submitError} />
           </div>
           <Field<string>
-            name="member"
+            name='member'
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <div className="fl w-100 pb2">
-                  <div className="mb1">
-                    <p className="fw5" style={{ fontSize: '.8rem' }}>
+                <div className='fl w-100 pb2'>
+                  <div className='mb1'>
+                    <p className='fw5' style={{ fontSize: '.8rem' }}>
                       {t('app.project.Project-boards.Assign-Members')}
                     </p>
                   </div>
@@ -122,13 +122,13 @@ export const AssignedMembersEditorComponent = (
                         ),
                       );
                     }}
-                    multipleItemSelect={true}
+                    multipleItemSelect
                   />
                 </div>
                 {selectedTeamMember.length > 0 && (
-                  <div className="w-100">
+                  <div className='w-100'>
                     <div
-                      className="overflow-auto br2"
+                      className='overflow-auto br2'
                       style={{
                         border: '1px solid #707070',
                         maxHeight: '120px',
@@ -139,15 +139,13 @@ export const AssignedMembersEditorComponent = (
                         <div key={item._id}>
                           <Tag
                             key={item._id}
-                            className="pa1"
-                            interactive={true}
+                            className='pa1'
+                            interactive
                             style={{ background: '#707070' }}
                             onRemove={(e) => {
-                              const filteredItems =
-                                selectedTeamMember.filter(
-                                  (selectedItem) =>
-                                    item.name !== selectedItem.name,
-                                );
+                              const filteredItems = selectedTeamMember.filter(
+                                (selectedItem) => item.name !== selectedItem.name,
+                              );
                               setSelectedTeamMember([
                                 ...filteredItems,
                               ]);
@@ -155,13 +153,12 @@ export const AssignedMembersEditorComponent = (
                                 isEmpty(filteredItems)
                                   ? undefined
                                   : filteredItems.map(
-                                      (member: ICompanyTeamMembers) =>
-                                        member._id,
-                                    ),
+                                    (member: ICompanyTeamMembers) => member._id,
+                                  ),
                               );
                             }}
-                            large={true}
-                            intent="primary"
+                            large
+                            intent='primary'
                           >
                             {item.name}
                           </Tag>
@@ -173,16 +170,16 @@ export const AssignedMembersEditorComponent = (
               </div>
             )}
           />
-          <div className="fr">
+          <div className='fr'>
             <Button
-              className="grow pointer white bp3-minimal w4 mt2"
+              className='grow pointer white bp3-minimal w4 mt2'
               style={{
                 background: '#34b3e9',
                 outline: 'none',
                 color: 'white',
               }}
               loading={submitting}
-              type="submit"
+              type='submit'
               disabled={submitting || pristine}
             >
               Assign
@@ -194,13 +191,11 @@ export const AssignedMembersEditorComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    project: state.projectReducer.projectDetails,
-    currentTask: state.taskIndexReducer.taskReducer.currentTask,
-    isEditingTask: state.taskMembersReducer.isEditingTask,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  project: state.projectReducer.projectDetails,
+  currentTask: state.taskIndexReducer.taskReducer.currentTask,
+  isEditingTask: state.taskMembersReducer.isEditingTask,
+});
 
 export const AssignedMembersEditor = connect(mapStateToProps, {
   addTaskMember,

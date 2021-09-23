@@ -14,18 +14,17 @@ import {
   getCompanyAnnouncement,
   getLatestCompletedTasks,
 } from 'stores/company/Actions';
-import {
-  getCurrentSubscription,
-  setSubscriptionExpire,
-  setSubscriptionNotExpire,
-} from '../../stores/subscriptionBilling/Actions';
-
-import tick from '../../resources/images/tick.svg';
 
 import CompanyAnnouncementsList from 'components/dashboard/company-announcements-list/CompanyAnnouncementsList';
 import { ProjectStatus } from 'components/dashboard/project-status/ProjectStatus';
 import { Loading } from 'components/Loading';
 import Navbar from 'components/navbar/Navbar';
+import tick from '../../resources/images/tick.svg';
+import {
+  getCurrentSubscription,
+  setSubscriptionExpire,
+  setSubscriptionNotExpire,
+} from '../../stores/subscriptionBilling/Actions';
 
 import './Index.scss';
 
@@ -97,11 +96,11 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
         await props.getCurrentSubscription();
         props.company.role === 'superAdmin'
           ? window.location.replace(
-              `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
-            )
+            `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+          )
           : window.location.replace(
-              `${window.location.origin}/${props.user.name}/home`,
-            );
+            `${window.location.origin}/${props.user.name}/home`,
+          );
       }
     }
   };
@@ -114,51 +113,51 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     <>
       {loading === false ? (
         <>
-          {isMobileOnly && <Navbar type="company" />}
-          <div className="w-90 center mh2 mt4-l mt5 pb5 pb0-l">
+          {isMobileOnly && <Navbar type='company' />}
+          <div className='w-90 center mh2 mt4-l mt5 pb5 pb0-l'>
             <div>
-              <div className="mt4 pb0-ns">
+              <div className='mt4 pb0-ns'>
                 <ProjectStatus />
               </div>
               <div
-                className="flex flex-row-ns flex-column-reverse w-100 items-start mt5 mb4 pb0-ns"
+                className='flex flex-row-ns flex-column-reverse w-100 items-start mt5 mb4 pb0-ns'
                 style={{ gap: '1.5rem' }}
               >
                 {/* Company Announcements List */}
                 <CompanyAnnouncementsList company={props.company} />
 
-                <div className="w-50-ns w-100">
+                <div className='w-50-ns w-100'>
                   <h3
-                    className="f3-ns f5"
+                    className='f3-ns f5'
                     style={{ color: '#34b3e9' }}
                   >
                     {t('app.company.Dashboard.Update-of-task')}
                   </h3>
-                  <div className="flex-ns justify-between mt2">
-                    <Card className="w-100-l w-100 pa3-ns pa2 shadow-1 br2">
+                  <div className='flex-ns justify-between mt2'>
+                    <Card className='w-100-l w-100 pa3-ns pa2 shadow-1 br2'>
                       {props.completedTasks.length > 0 ? (
                         currentTasks.map((task: latestTask) => (
                           <div
-                            className="flex flex-row-ns flex-column mb2"
+                            className='flex flex-row-ns flex-column mb2'
                             key={task._id}
                           >
-                            <div className="flex flex-row mb1 w-100">
+                            <div className='flex flex-row mb1 w-100'>
                               <img
                                 src={tick}
-                                alt="tick"
-                                className="mr2"
+                                alt='tick'
+                                className='mr2'
                                 style={{
                                   height: '18px',
                                   width: '18px',
                                 }}
                               />
-                              <div className="w-100 flex flex-row lastest-completed-tasks">
+                              <div className='w-100 flex flex-row lastest-completed-tasks'>
                                 <div
-                                  className="mr1"
+                                  className='mr1'
                                   style={{ lineHeight: '21px' }}
                                 >
                                   <span
-                                    className="fw6 mr3 ba b-light-gray br2 ph1"
+                                    className='fw6 mr3 ba b-light-gray br2 ph1'
                                     style={{
                                       color: '#BBBBBB',
                                       height: 'fit-content',
@@ -167,16 +166,20 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                     {task.project.name}
                                   </span>
                                   <span
-                                    className="fw6"
+                                    className='fw6'
                                     style={{ color: '#656565' }}
                                   >
                                     <span
-                                      className="ttc"
+                                      className='ttc'
                                       style={{ color: '#34b3e9' }}
                                     >
                                       {task.name}
-                                    </span>{' '}
-                                    from {task.boardId.name}{' '}
+                                    </span>
+                                    {' '}
+                                    from
+                                    {' '}
+                                    {task.boardId.name}
+                                    {' '}
                                     {t(
                                       'app.company.Dashboard.Complete-notification',
                                     )}
@@ -195,34 +198,37 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                           {t('app.company.Dashboard.Not-Marked')}
                         </Typography>
                       )}
-                      {props.completedTasks.length >
-                        taskItemsPerPage && (
-                        <div className="flex flex-row items-end w-100 justify-end">
+                      {props.completedTasks.length
+                        > taskItemsPerPage && (
+                        <div className='flex flex-row items-end w-100 justify-end'>
                           <div
-                            className="f6 fw5 flex flex-row items-center"
+                            className='f6 fw5 flex flex-row items-center'
                             style={{ color: '#BBBBBB' }}
                           >
                             {currentTaskPage > 1 && (
                               <span
-                                className="mr2 pointer f4"
+                                className='mr2 pointer f4'
                                 style={{ color: '#656565' }}
                                 onClick={prevTaskPage}
                               >
                                 &lt;
                               </span>
                             )}
-                            {currentTaskPage} of{' '}
+                            {currentTaskPage}
+                            {' '}
+                            of
+                            {' '}
                             {Math.ceil(
-                              props.completedTasks.length /
-                                taskItemsPerPage,
+                              props.completedTasks.length
+                                / taskItemsPerPage,
                             )}
-                            {currentTaskPage <
-                              Math.ceil(
-                                props.completedTasks.length /
-                                  taskItemsPerPage,
+                            {currentTaskPage
+                              < Math.ceil(
+                                props.completedTasks.length
+                                  / taskItemsPerPage,
                               ) && (
                               <span
-                                className="ml2 pointer f4"
+                                className='ml2 pointer f4'
                                 style={{ color: '#656565' }}
                                 onClick={nextTaskPage}
                               >
@@ -246,15 +252,13 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-    company: state.companyReducer.currentCompany,
-    subscriptiontExpired:
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+  company: state.companyReducer.currentCompany,
+  subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
-    completedTasks: state.companyReducer.completedTasks,
-  };
-};
+  completedTasks: state.companyReducer.completedTasks,
+});
 
 export const DashboardView = connect(mapStateToProps, {
   getCompanyAnnouncement,

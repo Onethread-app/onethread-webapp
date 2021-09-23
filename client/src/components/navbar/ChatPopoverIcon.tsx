@@ -20,51 +20,49 @@ interface IChatPopoverIconInternalProps extends IChatPopoverIcon {
   totalRoomUnread: number;
 }
 
-const ChatPopoverIcon = (props: IChatPopoverIconInternalProps) => {
-  return (
-    <Popover
-      popoverClassName="bg-white"
-      position={Position.BOTTOM}
-      content={
-        <div
-          style={{
-            maxHeight: '300px',
-            width: isMobileOnly ? '320px' : '420px',
+const ChatPopoverIcon = (props: IChatPopoverIconInternalProps) => (
+  <Popover
+    popoverClassName='bg-white'
+    position={Position.BOTTOM}
+    content={(
+      <div
+        style={{
+          maxHeight: '300px',
+          width: isMobileOnly ? '320px' : '420px',
+        }}
+        className='pt2 pb1 overflow-y-auto'
+      >
+        {props.chats && props.chats.length ? (
+          props.chats
+            .sort(compareChats)
+            .map((chat: IChat, index) => (
+              <ChatListItem chat={chat} key={index} />
+            ))
+        ) : (
+          <p className='ph2'>No room To Show</p>
+        )}
+      </div>
+      )}
+    target={(
+      <div className='mr3 pointer'>
+        <Badge
+          badgeContent={props.totalRoomUnread}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
           }}
-          className={`pt2 pb1 overflow-y-auto`}
+          color='secondary'
         >
-          {props.chats && props.chats.length ? (
-            props.chats
-              .sort(compareChats)
-              .map((chat: IChat, index) => (
-                <ChatListItem chat={chat} key={index} />
-              ))
-          ) : (
-            <p className="ph2">No room To Show</p>
-          )}
-        </div>
-      }
-      target={
-        <div className="mr3 pointer">
-          <Badge
-            badgeContent={props.totalRoomUnread}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
+          <ChatIcon
+            style={{
+              color: props.type === 'home' ? 'white' : 'dark-gray',
             }}
-            color="secondary"
-          >
-            <ChatIcon
-              style={{
-                color: props.type === 'home' ? 'white' : 'dark-gray',
-              }}
-            />
-          </Badge>
-        </div>
-      }
-    />
-  );
-};
+          />
+        </Badge>
+      </div>
+      )}
+  />
+);
 
 const mapStateToProps = (state: any) => ({
   chats: state.roomReducer.chats,

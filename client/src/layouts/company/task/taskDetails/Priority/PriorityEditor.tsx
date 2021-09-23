@@ -17,7 +17,7 @@ import { SubmitError } from 'components/final-form/SubmitError';
 interface IPriorityEditorProps {
   setPriorityPopover: (val: boolean) => void;
   updateTask: (task: ITask) => any;
-  colorCode: Number;
+  colorCode: number;
   updatingTask: boolean;
 }
 
@@ -49,32 +49,32 @@ export const PriorityEditorComponent = (
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="flex justify-end">
+            <div className='flex justify-end'>
               <Icon
                 icon={IconNames.CROSS}
                 iconSize={20}
-                className="grow pointer"
+                className='grow pointer'
                 onClick={(e: any) => props.setPriorityPopover(false)}
               />
             </div>
             <div>
               <SubmitError errorMessage={submitError} />
             </div>
-            <div className="ph2 pt2 w-100">
+            <div className='ph2 pt2 w-100'>
               <Field<string>
-                name="priority"
+                name='priority'
                 render={({ input, meta }) => (
-                  <div className="mb3">
-                    <h3 className="f5 mt0">
+                  <div className='mb3'>
+                    <h3 className='f5 mt0'>
                       {t(
                         'app.project.Project-boards.Choose-Priority',
                       )}
                     </h3>
-                    <div className="mt4">
+                    <div className='mt4'>
                       {priorityColor.map((color) => (
-                        <div className="pr2" key={color.code}>
+                        <div className='pr2' key={color.code}>
                           <div
-                            className="flex mv2 pointer"
+                            className='flex mv2 pointer'
                             onClick={(e) => {
                               e.preventDefault();
                               input.onChange(color.code);
@@ -82,7 +82,7 @@ export const PriorityEditorComponent = (
                             }}
                           >
                             <div
-                              className="br-100"
+                              className='br-100'
                               style={{
                                 height: '25px',
                                 width: '25px',
@@ -92,13 +92,13 @@ export const PriorityEditorComponent = (
                               {' '}
                             </div>
                             <div
-                              className="flex pl3 w-80 justify-between ml3"
+                              className='flex pl3 w-80 justify-between ml3'
                               style={{ background: color.container }}
                             >
-                              <div className="pt1">{color.name}</div>
+                              <div className='pt1'>{color.name}</div>
                               <div>
                                 <Icon
-                                  className="br2 pt1 pr1"
+                                  className='br2 pt1 pr1'
                                   style={{
                                     color: isEqual(
                                       color.code,
@@ -125,16 +125,16 @@ export const PriorityEditorComponent = (
                   </div>
                 )}
               />
-              <div className="fr">
+              <div className='fr'>
                 <Button
-                  className="grow pointer white bp3-minimal w4 mt2"
+                  className='grow pointer white bp3-minimal w4 mt2'
                   style={{
                     background: '#34b3e9',
                     outline: 'none',
                     color: 'white',
                   }}
                   loading={submitting}
-                  type="submit"
+                  type='submit'
                   disabled={submitting || pristine}
                 >
                   Submit
@@ -148,13 +148,11 @@ export const PriorityEditorComponent = (
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    colorCode:
+const mapStateToProps = (state: any) => ({
+  colorCode:
       state.taskIndexReducer.taskReducer.currentTask.priority,
-    updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
-  };
-};
+  updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+});
 
 export const PriorityEditor = connect(mapStateToProps, {
   updateTask,

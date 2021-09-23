@@ -330,13 +330,12 @@ export const TaskReducer = (state = InitialState, action: any) => {
         currentBoard: {
           ...state.currentBoard,
           columns: state.currentBoard.columns.map(
-            (column: IColumn, i) =>
-              column._id === action.payload._id
-                ? {
-                    ...column,
-                    name: action.payload.name,
-                  }
-                : column,
+            (column: IColumn, i) => (column._id === action.payload._id
+              ? {
+                ...column,
+                name: action.payload.name,
+              }
+              : column),
           ),
         },
         updatingColumn: false,
@@ -359,13 +358,12 @@ export const TaskReducer = (state = InitialState, action: any) => {
         currentBoard: {
           ...state.currentBoard,
           columns: state.currentBoard.columns.map(
-            (column: IColumn, i) =>
-              column._id === action.payload.columnId
-                ? {
-                    ...column,
-                    tasks: [...column.tasks!, action.payload],
-                  }
-                : column,
+            (column: IColumn, i) => (column._id === action.payload.columnId
+              ? {
+                ...column,
+                tasks: [...column.tasks!, action.payload],
+              }
+              : column),
           ),
         },
         creatingTask: false,
@@ -440,35 +438,32 @@ export const TaskReducer = (state = InitialState, action: any) => {
         currentBoard: {
           ...state.currentBoard,
           columns: (state.currentBoard.columns as any).map(
-            (column: IColumn) =>
-              column._id === action.payload.column
-                ? {
-                    ...column,
-                    tasks:
+            (column: IColumn) => (column._id === action.payload.column
+              ? {
+                ...column,
+                tasks:
                       column.tasks && column.tasks.length > 0
-                        ? column.tasks.map((task: ITask) =>
-                            task._id === action.payload.task
-                              ? {
-                                  ...task,
-                                  timeSpent:
-                                    task.timeSpent +
-                                    action.payload.duration,
-                                }
-                              : task,
-                          )
+                        ? column.tasks.map((task: ITask) => (task._id === action.payload.task
+                          ? {
+                            ...task,
+                            timeSpent:
+                                    task.timeSpent
+                                    + action.payload.duration,
+                          }
+                          : task))
                         : [],
-                  }
-                : column,
+              }
+              : column),
           ),
         },
         currentTask:
           action.payload.task === state.currentTask._id
             ? {
-                ...state.currentTask,
-                timeSpent:
-                  state.currentTask.timeSpent +
-                  action.payload.duration,
-              }
+              ...state.currentTask,
+              timeSpent:
+                  state.currentTask.timeSpent
+                  + action.payload.duration,
+            }
             : state.currentTask,
       };
     case TaskActionType.TASK_FILE_UP_START:
@@ -573,18 +568,16 @@ export const TaskReducer = (state = InitialState, action: any) => {
         ...state,
         currentBoard: {
           ...state.currentBoard,
-          columns: state.currentBoard.columns.map((column: IColumn) =>
-            column._id === action.payload.columnId
-              ? {
-                  ...column,
-                  tasks: column.tasks
-                    ? column.tasks.filter(
-                        (task) => task._id !== action.payload.taskId,
-                      )
-                    : column.tasks,
-                }
-              : column,
-          ),
+          columns: state.currentBoard.columns.map((column: IColumn) => (column._id === action.payload.columnId
+            ? {
+              ...column,
+              tasks: column.tasks
+                ? column.tasks.filter(
+                  (task) => task._id !== action.payload.taskId,
+                )
+                : column.tasks,
+            }
+            : column)),
         },
         deletingTask: false,
       };

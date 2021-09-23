@@ -20,11 +20,11 @@ interface BreadCrumbsProps {
 
 export const BreadCrumbs = withRouter(
   (props: BreadCrumbsProps & RouteComponentProps) => (
-    <div className="cf">
-      <div className="fl">
+    <div className='cf'>
+      <div className='fl'>
         <Icon
-          className="pointer mr2 mt1 black-70"
-          icon={'circle-arrow-left'}
+          className='pointer mr2 mt1 black-70'
+          icon='circle-arrow-left'
           iconSize={26}
           onClick={(e) => {
             props.history.push(
@@ -33,7 +33,7 @@ export const BreadCrumbs = withRouter(
           }}
         />
       </div>
-      <div className="fl">
+      <div className='fl'>
         <Breadcrumbs
           items={props.items}
           minVisibleItems={props.items.length}
@@ -42,7 +42,7 @@ export const BreadCrumbs = withRouter(
               <Breadcrumb
                 onClick={e.onClick}
                 text={e.text}
-                className="pointer f7 black fw6 hover-black"
+                className='pointer f7 black fw6 hover-black'
               />
             </Link>
           )}

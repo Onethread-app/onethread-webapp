@@ -26,8 +26,8 @@ const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
       };
       await props.deleteSubTaskMember(payload);
       if (
-        !props.deletingMember &&
-        props.errorOnDeletingMember === ''
+        !props.deletingMember
+        && props.errorOnDeletingMember === ''
       ) {
         setIsOpen(false);
       }
@@ -36,28 +36,28 @@ const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
   return (
     <Popover
       isOpen={isOpen}
-      content={
-        <div className="pa3 cf bg-white">
+      content={(
+        <div className='pa3 cf bg-white'>
           <h3>Remove User</h3>
           <button
-            type="button"
-            className="bp3-button bp3-intent-danger mr2"
+            type='button'
+            className='bp3-button bp3-intent-danger mr2'
             onClick={handleRemove}
           >
             Yes, Delete
           </button>
           <button
-            type="button"
-            className="bp3-button bp3-intent-primary"
+            type='button'
+            className='bp3-button bp3-intent-primary'
             onClick={() => setIsOpen(!isOpen)}
           >
             No, Keep
           </button>
         </div>
-      }
+      )}
     >
       <Tooltip
-        content={
+        content={(
           <div>
             <h3
               style={{
@@ -66,7 +66,9 @@ const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
                 textTransform: 'capitalize',
               }}
             >
-              {props.member.firstName} {props.member.lastName}
+              {props.member.firstName}
+              {' '}
+              {props.member.lastName}
             </h3>
             {props.company && projectPermit(props.company.role) && (
               <p
@@ -78,7 +80,7 @@ const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
               </p>
             )}
           </div>
-        }
+        )}
       >
         <img
           src={
@@ -86,18 +88,16 @@ const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
               ? props.member.profileImage
               : 'https://tigrowresources.s3-ap-southeast-1.amazonaws.com/profilePhoto.svg'
           }
-          alt=""
+          alt=''
           style={{
             width: '16px',
             height: '16px',
             borderRadius: '10px',
           }}
-          onClick={() =>
-            props.company &&
-            projectPermit(props.company.role) &&
-            setIsOpen(!isOpen)
-          }
-          className="fr pointer mr1"
+          onClick={() => props.company
+            && projectPermit(props.company.role)
+            && setIsOpen(!isOpen)}
+          className='fr pointer mr1'
         />
       </Tooltip>
     </Popover>

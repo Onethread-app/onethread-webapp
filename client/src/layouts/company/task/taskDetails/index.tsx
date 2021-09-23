@@ -10,11 +10,11 @@ import { ICompany } from 'stores/company/Reducer';
 
 import attachFiles from 'resources/images/attachFiles.png';
 
+import Timer from 'components/timer/Timer';
 import TaskFiles from './Files/TaskFiles';
 import TaskFilesAttach from './Files/TaskFilesAttach';
 import { SubTaskView } from '../subTask/SubtaskView';
 import AddSubTaskButton from '../subTask/AddSubtaskButton';
-import Timer from 'components/timer/Timer';
 import { ActivityView } from '../activity/ActivityView';
 import { TaskTitleView } from './TaskTitle/TaskTitleView';
 import { TaskDescriptionView } from './TaskDescription/TaskDescriptionView';
@@ -34,22 +34,22 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   };
 
   return (
-    <div className="w-100 ph2">
-      <div className="w-100">
+    <div className='w-100 ph2'>
+      <div className='w-100'>
         <TaskTitleView />
       </div>
-      <div className="w-100">
-        <div className="flex justify-start">
-          <div className="mr3">
+      <div className='w-100'>
+        <div className='flex justify-start'>
+          <div className='mr3'>
             <Popover
               isOpen={filePopover}
               content={
                 <TaskFilesAttach setFilePopover={setFilePopover} />
               }
-              target={
+              target={(
                 <div
                   onClick={openFilePopover}
-                  className="flex br2 mb2 pt2 ph3 pointer"
+                  className='flex br2 mb2 pt2 ph3 pointer'
                   style={{
                     width: '100%',
                     color: '#5A5A5A',
@@ -59,16 +59,16 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                   <img
                     style={{ height: '15px' }}
                     src={attachFiles}
-                    alt=""
+                    alt=''
                   />
-                  <p className="pl3 f7">
+                  <p className='pl3 f7'>
                     {t('app.project.Project-boards.Attach-Files')}
                   </p>
                 </div>
-              }
+              )}
             />
           </div>
-          <div className="mr3">
+          <div className='mr3'>
             <AddSubTaskButton />
           </div>
           <div>
@@ -80,19 +80,19 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
           </div>
         </div>
       </div>
-      <div className="w-100">
-        <div className="mv3">
+      <div className='w-100'>
+        <div className='mv3'>
           <TaskDescriptionView />
         </div>
         {isMobileOnly && (
-          <div className="mv3">
+          <div className='mv3'>
             <ActivityView />
           </div>
         )}
-        <div className="mv3">
+        <div className='mv3'>
           <SubTaskView />
         </div>
-        <div className="mv3">
+        <div className='mv3'>
           <TaskFiles />
         </div>
       </div>
@@ -100,13 +100,11 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentTask: state.taskIndexReducer.taskReducer.currentTask,
-    company: state.companyReducer.currentCompany,
-    currentProjectId: state.projectReducer.projectDetails._id,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  currentTask: state.taskIndexReducer.taskReducer.currentTask,
+  company: state.companyReducer.currentCompany,
+  currentProjectId: state.projectReducer.projectDetails._id,
+});
 
 export const TaskDetails = connect(mapStateToProps)(
   TaskDetailsComponent,

@@ -175,15 +175,12 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
   useEffect(() => {
     props.getAllCompaniesByUserId(props.user._id);
     setOptions([{ value: '1', label: 'Loading' }]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.user._id]);
 
   useEffect(() => {
     if (props.companies) {
       const gettingOptionsFromCompanies = props.companies.map(
-        (c: ICompanyByUser) => {
-          return { value: c.company._id, label: c.company.name };
-        },
+        (c: ICompanyByUser) => ({ value: c.company._id, label: c.company.name }),
       );
       setOptions(gettingOptionsFromCompanies);
     } else {
@@ -195,7 +192,6 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
     if (creating === true && props.projectLoading === false) {
       props.setShowDialog(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creating, props.projectLoading]);
 
   useEffect(() => {
@@ -230,7 +226,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
   }, [defaultValues]);
 
   return (
-    <CONTAINER className="flex flex-column items-center justify-center h-100">
+    <CONTAINER className='flex flex-column items-center justify-center h-100'>
       <HEADER>{t('app.company.Projects.Create-Project')}</HEADER>
       <form
         onSubmit={handleSubmit}
@@ -243,7 +239,10 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
               paddingBottom: 5,
             }}
           >
-            <span style={{ color: 'red' }}>*{errorMessage}</span>
+            <span style={{ color: 'red' }}>
+              *
+              {errorMessage}
+            </span>
           </div>
         )}
 
@@ -252,27 +251,25 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
           placeholder={t(
             'app.company.Projects.Create-or-Select-company',
           )}
-          id={'companies'}
+          id='companies'
           options={options}
           onChange={handleCompanyChange}
-          formatCreateLabel={(userInput) =>
-            `Create company: ${userInput}`
-          }
-        ></CreatableSelect>
+          formatCreateLabel={(userInput) => `Create company: ${userInput}`}
+        />
 
         <TEXTINPUT
-          type="text"
-          name="project-name"
-          id="project-name-from-dialog"
+          type='text'
+          name='project-name'
+          id='project-name-from-dialog'
           placeholder={t('app.project.Project-preface.Project-Name')}
-          className="w-100"
+          className='w-100'
           onChange={handleNameChange}
           required
           defaultValue={defaultValues.name}
-          autoFocus={true}
+          autoFocus
         />
 
-        <div className="deadline">
+        <div className='deadline'>
           <DateInput
             formatDate={(date: Date) => date.toLocaleDateString()}
             parseDate={(str: string) => new Date(str)}
@@ -285,22 +282,22 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
             maxDate={moment().add(10, 'y').toDate()}
             minDate={new Date()}
             placeholder={t('app.project.Project-preface.Deadline')}
-            className="flex-auto"
+            className='flex-auto'
           />
         </div>
 
-        <div className="project-label">
+        <div className='project-label'>
           <label
-            htmlFor="label"
+            htmlFor='label'
             style={{ color: 'rgba(0, 0, 0, 0.37)' }}
           >
             {t('app.project.Project-preface.Label')}
           </label>
-          <div className="flex">
+          <div className='flex'>
             {Color.map((color) => (
-              <div className="pr2" key={color.code}>
+              <div className='pr2' key={color.code}>
                 <Icon
-                  className="br2 flex items-center justify-center h-100"
+                  className='br2 flex items-center justify-center h-100'
                   icon={color.code === labelColor ? 'tick' : 'blank'}
                   iconSize={16}
                   onClick={(e) => {
@@ -323,10 +320,10 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
             ))}
           </div>
         </div>
-        <div className="flex flex-column items-center w-100">
+        <div className='flex flex-column items-center w-100'>
           <DONE>{t('app.project.Project-preface.Done')}</DONE>
           <p
-            className="tc pointer"
+            className='tc pointer'
             onClick={() => {
               props.setShowDialog(false);
             }}
