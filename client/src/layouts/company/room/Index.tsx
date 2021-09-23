@@ -102,10 +102,6 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
     }
   };
 
-  const callUpdateLastSeen = async (roomId: string) => {
-    await props.updateLastSeen(roomId);
-  };
-
   // get all rooms
   useEffect(() => {
     if (!isMobileOnly && props.companyId && props.projectId) {
@@ -128,17 +124,16 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
   useEffect(() => {
     if (
       !isEmpty(queries.roomId) &&
-      props.pusherInstance !== undefined &&
-      props.rooms.length > 0
+      props.pusherInstance !== undefined
     ) {
-      if (!isEmpty(props.currentRoom._id)) {
-        callUpdateLastSeen(props.currentRoom._id);
+      if (props.currentRoom._id === queries.roomId) {
+        props.updateLastSeen(props.currentRoom._id);
         // props.pusherInstance.unsubscribe(`private-${props.currentRoom._id}`);
         // props.pusherInstance.unsubscribe(`presence-${props.currentRoom._id}`);
       }
       roomSwitch(queries.roomId);
     }
-  }, [queries.roomId, props.pusherInstance, props.rooms]);
+  }, [queries.roomId, props.pusherInstance, props.currentRoom._id]);
 
   return (
     <>

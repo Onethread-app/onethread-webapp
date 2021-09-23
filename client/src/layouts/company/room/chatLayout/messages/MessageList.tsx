@@ -34,14 +34,10 @@ export const MessageListComponent = (props: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
 
-  const callUpdateLastSeen = async (roomId: string) => {
-    await props.updateLastSeen(roomId);
-  };
-
   const scrollToBottom = () => {
     // TODO send message read trigger
     if (props.messages.length) {
-      callUpdateLastSeen(props.currentRoom._id);
+      props.updateLastSeen(props.currentRoom._id);
     }
 
     // On new message, scroll to bottom

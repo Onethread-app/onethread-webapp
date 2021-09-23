@@ -297,7 +297,6 @@ function* updateLastSeen({ roomId }) {
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.put(
         `rooms/last-seen/${roomId}`,
-        null,
         headers,
       );
       if (response.status === 200) {

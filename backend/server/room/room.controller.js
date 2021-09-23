@@ -5,7 +5,7 @@ const { Message } = require('../message/message.model');
 const { UserMessage } = require('../message/userMessage.model');
 const { RoomMember } = require('./roomMember.model');
 const {
-  addTeamMateIntoRoomNotification
+  addTeamMateIntoRoomNotification,
 } = require('../notification/notification.controller');
 
 const {
@@ -76,7 +76,7 @@ const create = async (req, res, next) => {
 
     return sendJSONresponse(res, 201, { room, roomMember });
   } catch (e) {
-    console.log(e)
+    console.log(e);
     logger.error(`Room: ${e}`);
     next(e);
   }
@@ -99,13 +99,18 @@ const addMembers = async (req, res, next) => {
     });
 
     const result = await RoomMember.create(roomMembers);
-    await addTeamMateIntoRoomNotification(companyId, senderId, roomMembers,
+    await addTeamMateIntoRoomNotification(
+      companyId,
+      senderId,
+      roomMembers,
       {
         _id: req.user._id,
         name: req.user.name,
         pusherSock: req.headers.clientid,
       },
-      roomId, pid);
+      roomId,
+      pid,
+    );
 
     if (!result) {
       return sendErrorResponse(res, 404, 'RoomNotFoundError', {
@@ -272,15 +277,17 @@ const list = async (req, res, next) => {
 
     let modifiedRooms = [];
 
-    await Promise.all(filterRooms.map(async (room) => {
-      const memberCount = await RoomMember.find({
-        room: room._id,
-        project,
-        removed: false,
-      }).countDocuments();
-      const modifiedRoom = { ...room, memberCount }
-      modifiedRooms.push(modifiedRoom)
-    }))
+    await Promise.all(
+      filterRooms.map(async (room) => {
+        const memberCount = await RoomMember.find({
+          room: room._id,
+          project,
+          removed: false,
+        }).countDocuments();
+        const modifiedRoom = { ...room, memberCount };
+        modifiedRooms.push(modifiedRoom);
+      }),
+    );
 
     return res.status(200).json({
       rooms: modifiedRooms,
