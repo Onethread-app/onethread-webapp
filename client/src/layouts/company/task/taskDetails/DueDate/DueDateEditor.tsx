@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import { Form, Field } from 'react-final-form';
 import DateFnsUtils from '@date-io/date-fns';
@@ -70,6 +71,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                       'app.project.Project-boards.Select-date',
                     )}
                     minDate={new Date()}
+                    maxDate={moment().add(10, 'y').toDate()}
                     onClose={handleSubmit}
                   />
                 </MuiPickersUtilsProvider>
