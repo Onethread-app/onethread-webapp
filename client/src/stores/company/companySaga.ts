@@ -297,7 +297,10 @@ export function* addDesignationAsync({ values, memberId }: any) {
         values,
         headers,
       );
-      yield put(addDesignationSuccess());
+      yield all([
+        put(addDesignationSuccess()),
+        put(getCompanyMembers()),
+      ]);
     }
   } catch (error) {
     yield put(addDesignationFailure(returnErrorText(error)));
@@ -314,7 +317,10 @@ export function* editDesignationAsync({ values, memberId }: any) {
         values,
         headers,
       );
-      yield put(editDesignationSuccess());
+      yield all([
+        put(editDesignationSuccess()),
+        put(getCompanyMembers()),
+      ]);
     }
   } catch (error) {
     yield put(editDesignationFailure(returnErrorText(error)));
