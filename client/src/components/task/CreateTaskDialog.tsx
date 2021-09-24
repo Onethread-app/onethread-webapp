@@ -3,6 +3,7 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { tigrowApi } from 'config';
+import moment from 'moment';
 // import { isEmpty } from 'lodash';
 
 import { Field, Form } from 'react-final-form';
@@ -332,6 +333,7 @@ const CreateTaskDialog = (props: ICreateTaskDialogInternalProps) => {
                           targetClassName: 'w-100',
                         }}
                         minDate={new Date()}
+                        maxDate={moment().add(10, 'y').toDate()}
                       />
                     </div>
                   )}
