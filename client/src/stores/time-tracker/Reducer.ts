@@ -7,13 +7,13 @@ export interface ICurrentTrack {
   column: string;
   project: string;
   company: string;
-  start_time: Date | null;
+  startTime: Date | null;
   duration: number;
 }
 
 export interface ITrack {
   _id: string;
-  start_time: Date;
+  startTime: Date;
   duration: number;
   task: {
     _id: string;
@@ -67,7 +67,7 @@ const InitialState: ITimeTracker = {
     column: '',
     project: '',
     company: '',
-    start_time: null,
+    startTime: null,
     duration: 0,
   },
   trackListForCurrentTask: [],
@@ -106,7 +106,7 @@ export const TimeTrackerReducer = (
           project: '',
           company: '',
           duration: 0,
-          start_time: null,
+          startTime: null,
         },
         addingTrack: true,
         errorOnAddingTrack: '',
