@@ -17,7 +17,7 @@ webpush.setVapidDetails(
   privateVapidKey,
 );
 
-const webPushTTL = 60 * 60 * 24;
+const webPushTTL = 60;
 
 const savePushSubscription = (account, pushSubscription) => {
   return WebPushModel.create({ account, pushSubscription });
