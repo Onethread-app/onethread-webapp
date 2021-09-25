@@ -3,7 +3,7 @@ const Joi = require('@hapi/joi');
 const { idSchema } = require('../helpers/idSchema');
 
 const timeTrackerSchema = {
-  start_time: Joi.date(),
+  startTime: Joi.date(),
   duration: Joi.number(),
   account: idSchema.id,
   task: idSchema.id,
@@ -16,7 +16,7 @@ const timeTrackerSchema = {
 module.exports = {
   createTimeTracker: Joi.object().keys({
     body: Joi.object().keys({
-      start_time: timeTrackerSchema.start_time.required(),
+      startTime: timeTrackerSchema.startTime.required(),
       duration: timeTrackerSchema.duration.required(),
       task: timeTrackerSchema.task.required(),
       subtask: timeTrackerSchema.subtask,

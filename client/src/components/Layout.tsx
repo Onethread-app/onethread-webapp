@@ -275,12 +275,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   useEffect(() => {
     let interval;
 
-    if (!!props.currentlyTracking.start_time) {
+    if (!!props.currentlyTracking.startTime) {
       interval = setInterval(() => {
-        if (!!props.currentlyTracking.start_time) {
+        if (!!props.currentlyTracking.startTime) {
           const difference =
             new Date().getTime() -
-            new Date(props.currentlyTracking.start_time).getTime();
+            new Date(props.currentlyTracking.startTime).getTime();
           dispatch(updateDurationPersecond(difference));
         }
       }, 1000);
@@ -289,7 +289,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     }
 
     return () => clearInterval(interval);
-  }, [props.currentlyTracking.start_time]);
+  }, [props.currentlyTracking.startTime]);
 
   useEffect(() => {
     if (

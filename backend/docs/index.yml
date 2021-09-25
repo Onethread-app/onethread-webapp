@@ -16465,7 +16465,7 @@ paths:
             schema:
               $ref: '#/components/schemas/TimetrackerRequest'
             example:
-              start_time: 12-12-12 12:12:12
+              startTime: 12-12-12 12:12:12
               duration: 1
               task: 6115070201ec38253c152696
               subtask: 611a33a2136730229831fed6
@@ -16564,7 +16564,7 @@ paths:
                   version: 0
                   _id: 6149be796dcc3e0804f3d7c6
                   account: 60fda8fe5eb94d256068813b
-                  start_time: 2012-12-12T06:12:12.000Z
+                  startTime: 2012-12-12T06:12:12.000Z
                   duration: 1
                   task: 6115070201ec38253c152696
                   subtask: 611a33a2136730229831fed6
@@ -16695,7 +16695,7 @@ paths:
                       firstName: dee
                       lastName: osinski
                       name: dee-osinski-1
-                    start_time: 2012-12-12T06:12:12.000Z
+                    startTime: 2012-12-12T06:12:12.000Z
                     duration: 1
                     task: ''
                     subtask: ''
@@ -16716,7 +16716,7 @@ paths:
                     firstName: dee
                     lastName: osinski
                     name: dee-osinski-1
-                  start_time: 2012-12-12T06:12:12.000Z
+                  startTime: 2012-12-12T06:12:12.000Z
                   duration: 1
                   task: ''
                   subtask: ''
@@ -16851,7 +16851,7 @@ paths:
                       firstName: dee
                       lastName: osinski
                       name: dee-osinski-1
-                    start_time: 2012-12-12T06:12:12.000Z
+                    startTime: 2012-12-12T06:12:12.000Z
                     duration: 1
                     task: ''
                     subtask: ''
@@ -16872,7 +16872,7 @@ paths:
                     firstName: dee
                     lastName: osinski
                     name: dee-osinski-1
-                  start_time: 2012-12-12T06:12:12.000Z
+                  startTime: 2012-12-12T06:12:12.000Z
                   duration: 1
                   task: ''
                   subtask: ''
@@ -17007,7 +17007,7 @@ paths:
                       firstName: dee
                       lastName: osinski
                       name: dee-osinski-1
-                    start_time: 2012-12-12T06:12:12.000Z
+                    startTime: 2012-12-12T06:12:12.000Z
                     duration: 1
                     task: ''
                     subtask: ''
@@ -17028,7 +17028,7 @@ paths:
                     firstName: dee
                     lastName: osinski
                     name: dee-osinski-1
-                  start_time: 2012-12-12T06:12:12.000Z
+                  startTime: 2012-12-12T06:12:12.000Z
                   duration: 1
                   task: ''
                   subtask: ''
@@ -17172,7 +17172,7 @@ paths:
                       firstName: dee
                       lastName: osinski
                       name: dee-osinski-1
-                    start_time: 2012-12-12T06:12:12.000Z
+                    startTime: 2012-12-12T06:12:12.000Z
                     duration: 1
                     task: ''
                     subtask: ''
@@ -17193,7 +17193,7 @@ paths:
                     firstName: dee
                     lastName: osinski
                     name: dee-osinski-1
-                  start_time: 2012-12-12T06:12:12.000Z
+                  startTime: 2012-12-12T06:12:12.000Z
                   duration: 1
                   task: ''
                   subtask: ''
@@ -23995,7 +23995,7 @@ components:
     TimetrackerRequest:
       title: TimetrackerRequest
       required:
-        - start_time
+        - startTime
         - duration
         - task
         - subtask
@@ -24004,7 +24004,7 @@ components:
         - company
       type: object
       properties:
-        start_time:
+        startTime:
           type: string
         duration:
           type: integer
@@ -24020,7 +24020,7 @@ components:
         company:
           type: string
       example:
-        start_time: 12-12-12 12:12:12
+        startTime: 12-12-12 12:12:12
         duration: 1
         task: 6115070201ec38253c152696
         subtask: 611a33a2136730229831fed6
@@ -24040,7 +24040,7 @@ components:
           version: 0
           _id: 6149be796dcc3e0804f3d7c6
           account: 60fda8fe5eb94d256068813b
-          start_time: 2012-12-12T06:12:12.000Z
+          startTime: 2012-12-12T06:12:12.000Z
           duration: 1
           task: 6115070201ec38253c152696
           subtask: 611a33a2136730229831fed6
@@ -24056,7 +24056,7 @@ components:
         - version
         - _id
         - account
-        - start_time
+        - startTime
         - duration
         - task
         - subtask
@@ -24075,7 +24075,7 @@ components:
           type: string
         account:
           type: string
-        start_time:
+        startTime:
           type: string
         duration:
           type: integer
@@ -24101,7 +24101,7 @@ components:
         version: 0
         _id: 6149be796dcc3e0804f3d7c6
         account: 60fda8fe5eb94d256068813b
-        start_time: 2012-12-12T06:12:12.000Z
+        startTime: 2012-12-12T06:12:12.000Z
         duration: 1
         task: 6115070201ec38253c152696
         subtask: 611a33a2136730229831fed6
@@ -24116,7 +24116,7 @@ components:
       required:
         - _id
         - account
-        - start_time
+        - startTime
         - duration
         - task
         - subtask
@@ -24129,7 +24129,7 @@ components:
           type: string
         account:
           $ref: '#/components/schemas/Account20'
-        start_time:
+        startTime:
           type: string
         duration:
           type: integer
@@ -24153,7 +24153,7 @@ components:
           firstName: dee
           lastName: osinski
           name: dee-osinski-1
-        start_time: 2012-12-12T06:12:12.000Z
+        startTime: 2012-12-12T06:12:12.000Z
         duration: 1
         task: ''
         subtask: ''
@@ -24226,7 +24226,7 @@ components:
       required:
         - _id
         - account
-        - start_time
+        - startTime
         - duration
         - task
         - subtask
@@ -24239,7 +24239,7 @@ components:
           type: string
         account:
           $ref: '#/components/schemas/Account20'
-        start_time:
+        startTime:
           type: string
         duration:
           type: integer
@@ -24263,7 +24263,7 @@ components:
           firstName: dee
           lastName: osinski
           name: dee-osinski-1
-        start_time: 2012-12-12T06:12:12.000Z
+        startTime: 2012-12-12T06:12:12.000Z
         duration: 1
         task: ''
         subtask: ''
@@ -24282,7 +24282,7 @@ components:
       required:
         - _id
         - account
-        - start_time
+        - startTime
         - duration
         - task
         - subtask
@@ -24295,7 +24295,7 @@ components:
           type: string
         account:
           $ref: '#/components/schemas/Account20'
-        start_time:
+        startTime:
           type: string
         duration:
           type: integer
@@ -24319,7 +24319,7 @@ components:
           firstName: dee
           lastName: osinski
           name: dee-osinski-1
-        start_time: 2012-12-12T06:12:12.000Z
+        startTime: 2012-12-12T06:12:12.000Z
         duration: 1
         task: ''
         subtask: ''
@@ -24338,7 +24338,7 @@ components:
       required:
         - _id
         - account
-        - start_time
+        - startTime
         - duration
         - task
         - subtask
@@ -24351,7 +24351,7 @@ components:
           type: string
         account:
           $ref: '#/components/schemas/Account20'
-        start_time:
+        startTime:
           type: string
         duration:
           type: integer
@@ -24375,7 +24375,7 @@ components:
           firstName: dee
           lastName: osinski
           name: dee-osinski-1
-        start_time: 2012-12-12T06:12:12.000Z
+        startTime: 2012-12-12T06:12:12.000Z
         duration: 1
         task: ''
         subtask: ''
