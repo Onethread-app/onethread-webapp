@@ -27,7 +27,7 @@ const TrackItem = (props: ITrackItem) => {
     >
       <TrackPart>
         <p>{msToTime(item.duration)}</p>
-        <p>{moment(item.start_time).format('MMM DD, hh:mm a')}</p>
+        <p>{moment(item.startTime).format('MMM DD, hh:mm a')}</p>
       </TrackPart>
       <TrackPart>
         <TaskStatusTag status={item.column.name.replace(/ /g, '-')} />

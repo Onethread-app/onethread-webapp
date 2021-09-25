@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const TimeTracker = new Schema(
   {
-    start_time: {
+    startTime: {
       type: Schema.Types.Date,
       required: true,
     },

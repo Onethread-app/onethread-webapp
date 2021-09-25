@@ -42,7 +42,7 @@ const ttPopulateOptions = [
 const create = async (req, res, next) => {
   try {
     const {
-      start_time,
+      startTime,
       duration,
       task,
       subtask,
@@ -53,7 +53,7 @@ const create = async (req, res, next) => {
 
     const timeTracker = new TimeTracker({
       account: req.user._id,
-      start_time,
+      startTime,
       duration,
       task,
       subtask,
@@ -104,7 +104,7 @@ const findByuser = async (req, res, next) => {
       account: req.user._id,
     })
       .populate(ttPopulateOptions)
-      .sort({ start_time: -1 })
+      .sort({ startTime: -1 })
       .exec();
     sendJSONresponse(res, 200, trackedTime);
   } catch (error) {
@@ -119,10 +119,10 @@ const findByTask = async (req, res, next) => {
       task: req.query.taskId,
     })
       .select(
-        '_id start_time duration task subtask column project company',
+        '_id startTime duration task subtask column project company',
       )
       .populate(ttPopulateOptions)
-      .sort({ start_time: -1 })
+      .sort({ startTime: -1 })
       .exec();
     sendJSONresponse(res, 200, timeTrackers);
   } catch (error) {
@@ -137,10 +137,10 @@ const findBySubtask = async (req, res, next) => {
       subtask: req.query.subtaskId,
     })
       .select(
-        '_id start_time duration task subtask column project company',
+        '_id startTime duration task subtask column project company',
       )
       .populate(ttPopulateOptions)
-      .sort({ start_time: -1 })
+      .sort({ startTime: -1 })
       .exec();
     sendJSONresponse(res, 200, timeTrackers);
   } catch (error) {
@@ -155,10 +155,10 @@ const findByProject = async (req, res, next) => {
       project: req.query.projectId,
     })
       .select(
-        '_id start_time duration task subtask column project company',
+        '_id startTime duration task subtask column project company',
       )
       .populate(ttPopulateOptions)
-      .sort({ start_time: -1 })
+      .sort({ startTime: -1 })
       .exec();
     sendJSONresponse(res, 200, timeTrackers);
   } catch (error) {
@@ -173,10 +173,10 @@ const findByCompany = async (req, res, next) => {
       project: req.query.projectId,
     })
       .select(
-        '_id start_time duration task subtask column project company',
+        '_id startTime duration task subtask column project company',
       )
       .populate(ttPopulateOptions)
-      .sort({ start_time: -1 })
+      .sort({ startTime: -1 })
       .exec();
     sendJSONresponse(res, 200, timeTrackers);
   } catch (error) {

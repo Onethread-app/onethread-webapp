@@ -91,7 +91,7 @@ const Timer = (props: ITimerInternalProps) => {
       column: task.columnId,
       project: projectId,
       company: companyId,
-      start_time: new Date(),
+      startTime: new Date(),
       duration: 0,
     };
     addItemToTrack(payload);
