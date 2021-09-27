@@ -8,14 +8,9 @@ const SchemaValidator = require('../helpers/joiSchemaValidator');
 const timeTrackerSchema = require('./time-tracker.validation');
 
 const subCtrl = require('../subscription/subscription.controller');
-const projectCtrl = require('../project/project.controller');
 const trackControl = require('./time-tracker.controller');
 
 const router = express.Router();
-
-router.route('/user').get(authorization, trackControl.findByuser);
-
-router.use('/', subCtrl.subscriptionExpireCheck());
 
 router
   .route('/')
@@ -24,6 +19,10 @@ router
     SchemaValidator(timeTrackerSchema.createTimeTracker),
     trackControl.create,
   );
+
+router.use('/', subCtrl.subscriptionExpireCheck());
+
+router.route('/user').get(authorization, trackControl.findByuser);
 
 router
   .route('/task')
