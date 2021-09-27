@@ -2,7 +2,7 @@ version: 0.1
 os: linux
 files:
   - source: /
-    destination: /home/ec2-onethread/back-admin
+    destination: /home/ec2-onethread/
 hooks:
   ApplicationStop:
     - location: scripts/application_stop.sh
