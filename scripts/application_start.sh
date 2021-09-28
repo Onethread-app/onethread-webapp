@@ -1,7 +1,5 @@
-
-
 #give permission for everything in the onethread-app backend directory
-sudo chmod -R 777 /home/ec2-user/onethread-webapp/
+sudo chmod -R 777 /home/ec2-user/onethread-webapp/backend
 
 #navigate into our working directory where we have all our github files
 cd /home/ec2-user/onethread-webapp/backend
