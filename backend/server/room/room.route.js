@@ -20,7 +20,7 @@ router
       'all',
       'admin',
       'projectModerator',
-      'member'
+      'member',
     ),
     roomCtrl.create,
   );
@@ -59,10 +59,7 @@ router
 // get suggestions for adding members
 router
   .route('/suggest-member')
-  .get(
-    authorization,
-    roomCtrl.suggestMember,
-  );
+  .get(authorization, roomCtrl.suggestMember);
 
 router
   .route('/list') // for project
