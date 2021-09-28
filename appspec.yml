@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/onethread-webapp
+    destination: /home/ec2-user
 hooks:
   ApplicationStop:
     - location: scripts/application_stop.sh
