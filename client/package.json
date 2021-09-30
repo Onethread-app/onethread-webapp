@@ -50,7 +50,7 @@
     "material-ui-search-bar": "^1.0.0",
     "moment": "^2.24.0",
     "node-sass": "^4.14.1",
-    "pusher-js": "^5.1.1",
+    "pusher-js": "^7.0.3",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^11.0.5",
     "react-beforeunload": "^2.5.1",

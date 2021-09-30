@@ -19,6 +19,7 @@ const {
 const {
   sendCompanyRoleNotification,
   sendCompanyAndProjectNotification,
+  sendNotification,
 } = require('../services/notification.services');
 const logger = require('../../config/winston');
 const {
@@ -108,11 +109,11 @@ module.exports.notifyToBoardMembers = async (
     let destName = await BoardColumn.findOne({
       _id: destinationColumnId,
     }).select('name');
-    let notifications = {
+    let notification = {
       type: 'subtask',
       text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
         senderFullName.lastName,
-      )} move task ${task.name} from ${sourceColumnName.name} to ${
+      )} moved task ${task.name} from ${sourceColumnName.name} to ${
         destName.name
       }`,
       account: adminUser._id,
@@ -125,11 +126,19 @@ module.exports.notifyToBoardMembers = async (
     };
     boardMember.members.forEach(async (e) => {
       if (e.toString() !== senderName) {
-        notifications = await Notification.create(notifications);
-        await UserNotification.create({
-          notification: notifications._id,
+        notification = await Notification.create(notification);
+        notification = await notification
+          .populate('company', 'uniqueName _id')
+          .execPopulate();
+        let userNotification = await UserNotification.create({
+          notification: notification._id,
           account: e,
         });
+        userNotification = {
+          ...userNotification._doc,
+          notification,
+        };
+        sendNotification(e, userNotification, adminUser.pusherSock);
         await triggerUnreadNotifications(e);
       }
     });
@@ -583,7 +592,7 @@ module.exports.createBoardNotification = async (
     let companyRoleReciver = ['superAdmin', 'admin'];
     let companyEvent = board.company; //
 
-    let projectRoleReciver = ['modarator'];
+    let projectRoleReciver = ['moderator'];
     // let projectEvent =  project._id; //
 
     sendCompanyAndProjectNotification(

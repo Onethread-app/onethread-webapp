@@ -4,7 +4,6 @@ const _ = require('lodash');
 const { pusherChannel } = require('./pusher.services');
 const { adminFirebase } = require('./firebase.services');
 
-
 // const channels_client = new Pusher({
 //   appId: config.pusherChanel.appid,
 //   key: config.pusherChanel.key,
@@ -60,7 +59,7 @@ module.exports.sendCompanyRoleNotification = async (
   );
 
   // var message = [{
-    
+
   //   webpush: {
   //     notification: {
   //       title: userNoti.type,
@@ -71,24 +70,22 @@ module.exports.sendCompanyRoleNotification = async (
   //   topic:topic
   // }];
   const notification = {
-          title: userNoti.type,
-          body: userNoti.text,
-          icon: "https://www.tigrow.co/static/media/TiGrowLogoFinal.2668af93.png"
-        };
+    title: userNoti.type,
+    body: userNoti.text,
+    icon: 'https://www.tigrow.co/static/media/TiGrowLogoFinal.2668af93.png',
+  };
   let messages = companyChannelsPusher.map((topic) => {
     return {
       webpush: {
         notification: {
-          ...notification
-        }
+          ...notification,
+        },
       },
-      topic:topic
+      topic: topic,
     };
   });
-  
-  adminFirebase.messaging().sendAll(messages);
-  
 
+  adminFirebase.messaging().sendAll(messages);
 };
 
 module.exports.sendMultipleNotification = async (
@@ -149,5 +146,18 @@ module.exports.sendCompanyAndProjectNotification = async (
     project.company.toString(),
     userNotification,
     adminUser.pusherSock,
+  );
+};
+
+module.exports.sendNotification = (
+  userId,
+  notification,
+  socketId,
+) => {
+  pusherChannel.trigger(
+    `private-${userId}`,
+    'new-notification',
+    notification,
+    socketId,
   );
 };

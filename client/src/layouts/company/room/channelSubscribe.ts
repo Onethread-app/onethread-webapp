@@ -25,6 +25,8 @@ import {
   CHANNEL_USER_LEAVED,
 } from 'stores/pusher/Types';
 import { isEqual } from 'lodash';
+import { newNotification } from 'stores/notifications/Action';
+import { NOTIFICATION } from 'stores/notifications/Types';
 
 export interface IChannelMember {
   id: string;
@@ -57,7 +59,7 @@ export const userSubscriber = async () => {
       ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
       : null;
 
-  const user: User = await store.getState().userReducer.user;
+  const user: User = store.getState().userReducer.user;
 
   const pusher = new Pusher(PUSHER_CHANNEL_KEY!, {
     cluster: PUSHER_CHANNEL_CLUSTER!,
@@ -79,9 +81,8 @@ export const userSubscriber = async () => {
   });
 
   pusher.connection.bind('error', (err: any) => {
-    if (err.error.data.code === 4004) {
+    if (err.error.data.code === 404) {
       // tslint:disable-next-line: no-console
-      
     }
   });
 
@@ -128,14 +129,14 @@ export const roomSubscribe = async (roomId: string) => {
 
   // presenceChannel.bind('pusher:subscription_succeeded', async (data: any) => {
   //   // tslint:disable-next-line: no-console
-  //   
+  //
   //   presenceChannel.bind('pusher:member_added', (member: any) => {
   //     // tslint:disable-next-line: no-console
-  //     
+  //
   //   });
   //   presenceChannel.bind('pusher:member_removed', (member: any) => {
   //     // tslint:disable-next-line: no-console
-  //     
+  //
   //   });
   // });
   channel.bind('pusher:subscription_succeeded', async () => {
@@ -217,4 +218,41 @@ export const isTypingStopTrigger = async (
   const channel = pusher.subscribe(`private-${typingUser.roomId}`);
 
   channel.trigger('client-user-stop-typing', typingUser);
+};
+
+export const notificationSubscriber = (userId: string) => {
+  const token =
+    typeof window !== undefined &&
+    localStorage.getItem('tigrow_acc_id')
+      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+      : null;
+
+  const user: User = store.getState().userReducer.user;
+
+  const pusher = new Pusher(PUSHER_CHANNEL_KEY!, {
+    cluster: PUSHER_CHANNEL_CLUSTER!,
+    forceTLS: true,
+    authEndpoint: PUSHER_CHANNEL_AUTH_END_POINT!,
+    auth: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        account: user._id,
+      },
+    },
+  });
+
+  pusher.connection.bind('connected', () => {
+    store.dispatch({
+      type: NOTIFICATION.SET_SOCKET_ID,
+      payload: pusher.connection.socket_id,
+    });
+  });
+
+  const channel = pusher.subscribe(`private-${userId}`);
+
+  channel.bind('new-notification', (data: any) => {
+    store.dispatch(newNotification(data));
+  });
 };
