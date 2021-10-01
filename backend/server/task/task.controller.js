@@ -109,7 +109,7 @@ const addMemberToTask = async (
             pusherSock: req.headers.clientid,
           },
         );
-        await triggerUnreadNotifications(e.assignedPerson._id);
+        
       }
     });
     return members;

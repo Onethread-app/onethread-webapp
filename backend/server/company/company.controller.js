@@ -363,6 +363,7 @@ const updateRole = async (req, res, next) => {
 // company will be found on req.company
 const getCompanyLoad = async (req, res, next) => {
   try {
+    console.log(req);
     const company = await Company.findOne({
       _id: req.params.companyId,
     }).populate('account', '_id firstName lastName email contactNo');

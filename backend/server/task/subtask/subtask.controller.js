@@ -16,9 +16,6 @@ const {
   subTaskAssignNotificationToUsers,
 } = require('../../notification/notification.controller');
 const {
-  createBoardNotification,
-} = require('../../notification/notification.controller');
-const {
   triggerUnreadNotifications,
 } = require('../../services/webpush.services');
 
