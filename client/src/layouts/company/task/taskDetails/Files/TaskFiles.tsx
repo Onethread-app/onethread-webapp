@@ -11,6 +11,7 @@ import { IFile } from 'stores/task/Reducer';
 import { taskFileDelete, ITaskFileDelete } from 'stores/task/Actions';
 
 import TaskFilesAttach from './TaskFilesAttach';
+import { isMobileOnly } from 'react-device-detect';
 
 interface ITaskFiles {
   taskFiles: IFile[];
@@ -42,7 +43,7 @@ const TaskFiles = (props: ITaskFiles) => {
   };
 
   return (
-    <div className="w-100">
+    <div className={`w-100 ${isMobileOnly ? 'mb5' : ''}`}>
       <div className="flex justify-between items-center w-100">
         <h1
           style={{
