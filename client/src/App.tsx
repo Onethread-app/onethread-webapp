@@ -16,6 +16,8 @@ import SuspenseLoader from 'components/loader/SuspenseLoader';
 
 import { isAuthenticate } from 'stores/UtilsActions';
 
+import GlobalStyle from './App.styles';
+
 const AutoLoginPage = lazy(() => import('components/AutoLogin'));
 const NewLanding = lazy(() => import('layouts/landingx/Index'));
 const SignInPage = lazy(() => import('layouts/signin/Index'));
@@ -159,6 +161,7 @@ const App = () => {
   return (
     <ErrorBoundary>
       <Suspense fallback={<SuspenseLoader />}>
+        <GlobalStyle />
         <Switch>
           {!isAuthenticate() && (
             <Route exact path="/" component={NewLanding} />
