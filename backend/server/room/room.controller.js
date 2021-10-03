@@ -409,7 +409,6 @@ const archiveRoom = async (req, res, next) => {
 
 const updateLastSeen = async (req, res, next) => {
   try {
-    console.log(req);
     const room = await RoomMember.findOneAndUpdate(
       {
         room: req.params.roomId,
@@ -430,7 +429,7 @@ const updateLastSeen = async (req, res, next) => {
       message: 'Last seen updated',
     });
   } catch (error) {
-    console.log(error);
+    logger.info(`Room: ${error}`);
     next(error);
   }
 };

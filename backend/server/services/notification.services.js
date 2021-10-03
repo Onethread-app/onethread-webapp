@@ -161,3 +161,16 @@ module.exports.sendNotification = (
     socketId,
   );
 };
+
+module.exports.sendMessageNotification = (
+  userId,
+  message,
+  socketId,
+) => {
+  pusherChannel.trigger(
+    `private-${userId}`,
+    'new-message',
+    message,
+    socketId,
+  );
+};

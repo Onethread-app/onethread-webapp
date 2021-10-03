@@ -1,4 +1,10 @@
+import { IChat } from './Reducer';
 import { CLEAR_ROOMS_ERROR, RoomActionTypes } from './Types';
+
+interface INewChat {
+  message: IChat['message'];
+  currentUserId: string;
+}
 
 export const createRoom = (roomData: any) => ({
   type: RoomActionTypes.CREATE_ROOM_START,
@@ -265,4 +271,9 @@ export const fetchChatsFailure = (errorMessage: any) => ({
 export const setRoomLoading = (value: boolean) => ({
   type: RoomActionTypes.SET_ROOM_LOADING,
   payload: value,
+});
+
+export const newChat = (payload: INewChat) => ({
+  type: RoomActionTypes.NEW_CHAT,
+  payload,
 });

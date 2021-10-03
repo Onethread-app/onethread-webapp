@@ -17,6 +17,7 @@ import {
   IRoomMember,
   IRoomFile,
   ITypingUsers,
+  IChat,
 } from 'stores/room/Reducer';
 import { store } from 'Store';
 import {
@@ -26,6 +27,7 @@ import {
 } from 'stores/pusher/Types';
 import { isEqual } from 'lodash';
 import { newNotification } from 'stores/notifications/Action';
+import { newChat } from 'stores/room/Actions';
 import { NOTIFICATION } from 'stores/notifications/Types';
 
 export interface IChannelMember {
@@ -81,9 +83,10 @@ export const userSubscriber = async () => {
   });
 
   pusher.connection.bind('error', (err: any) => {
-    if (err.error.data.code === 404) {
-      // tslint:disable-next-line: no-console
-    }
+    // console.log(err);
+    // if (err.error.data.code === 404) {
+    //   // tslint:disable-next-line: no-console
+    // }
   });
 
   const channel = pusher.subscribe('presence-quickstart');
@@ -254,5 +257,10 @@ export const notificationSubscriber = (userId: string) => {
 
   channel.bind('new-notification', (data: any) => {
     store.dispatch(newNotification(data));
+  });
+  channel.bind('new-message', (data: IChat['message']) => {
+    const currentUserId = store.getState().userReducer.user._id;
+    const payload = { message: data, currentUserId };
+    store.dispatch(newChat(payload));
   });
 };
