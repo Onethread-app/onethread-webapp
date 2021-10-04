@@ -125,6 +125,9 @@ const ProjectStatusComponent = (props) => {
     ICompanyTask[]
   >([]);
 
+  // filter options
+  const [filterOp, setFilterOp] = useState({});
+
   useEffect(() => {
     const getAllTasks = async () => {
       const headers = tokenConfig();
@@ -165,6 +168,10 @@ const ProjectStatusComponent = (props) => {
           allDay: true,
           redirectTo: `/company/${t.company._id}/project/${t.project._id}/board/${t.boardId}/task/${t._id}`,
           priority: t.priority,
+          status: t.status,
+          dueDate: t.dueDate,
+          assignee: t.members,
+          project: t.project.name,
         })),
       );
       // setCalTask(mTask.map(t => ))
@@ -225,6 +232,17 @@ const ProjectStatusComponent = (props) => {
     selectedPriority.length === 0 &&
     selectedProjects.length === 0
   );
+
+  const filterDate = (selectedDate) => {
+    setFilterOp((prev) => {
+      const filterObj = { ...prev };
+      filterObj['dueDate'] = {
+        id: selectedDate,
+        label: selectedDate,
+      };
+      return filterObj;
+    });
+  };
 
   const handleViewChange = (v: 'table' | 'calendar') => {
     setView(v);
@@ -417,6 +435,8 @@ const ProjectStatusComponent = (props) => {
                 placeholder={t('app.project.Tasks.Filter-status')}
                 selected={selectedStatus}
                 setSelected={setSelectedStatus}
+                fieldName={'status'}
+                setFilterOp={setFilterOp}
               />
             </div>
             <div style={filterSpacing}>
@@ -425,6 +445,8 @@ const ProjectStatusComponent = (props) => {
                 placeholder={t('app.project.Tasks.Filter-priority')}
                 selected={selectedPriority}
                 setSelected={setSelectedPriority}
+                fieldName={'priority'}
+                setFilterOp={setFilterOp}
               />
             </div>
             <div style={filterSpacing}>
@@ -433,6 +455,8 @@ const ProjectStatusComponent = (props) => {
                 placeholder={t('app.project.Tasks.Filter-projects')}
                 selected={selectedProjects}
                 setSelected={setSelectedProjects}
+                fieldName={'project'}
+                setFilterOp={setFilterOp}
               />
             </div>
             <div style={filterSpacing}>
@@ -441,6 +465,8 @@ const ProjectStatusComponent = (props) => {
                 placeholder={t('app.project.Tasks.Filter-assignee')}
                 selected={selectedAssignee}
                 setSelected={setSelectedAssignee}
+                fieldName={'assignee'}
+                setFilterOp={setFilterOp}
               />
             </div>
             <div style={{ ...filterSpacing, paddingRight: 0 }}>
@@ -448,7 +474,10 @@ const ProjectStatusComponent = (props) => {
                 formatDate={(date: Date) => date.toLocaleDateString()}
                 placeholder={t('app.project.Tasks.Filter-Duedate')}
                 parseDate={(str: string) => new Date(str)}
-                onChange={(selectedDate) => setDate(selectedDate)}
+                onChange={(selectedDate) => {
+                  setDate(selectedDate);
+                  filterDate(selectedDate);
+                }}
                 canClearSelection={false}
                 value={date}
                 popoverProps={{
@@ -478,7 +507,10 @@ const ProjectStatusComponent = (props) => {
           {fTasks.length > 0 && (
             <div className="projects-list w-100">
               {view === 'calendar' && (
-                <CalendarView tasks={calTask} />
+                <CalendarView
+                  tasks={calTask}
+                  filterOptions={filterOp}
+                />
               )}
 
               {view === 'table' && (

@@ -34,6 +34,7 @@ interface IProjectItem {
   project: any;
   index: number;
 }
+
 const ProjectItem = (props: IProjectItem) => {
   const [showAllMembers, setShowAllMembers] = useState(false);
 

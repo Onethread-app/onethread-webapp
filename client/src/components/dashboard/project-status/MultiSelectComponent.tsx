@@ -4,22 +4,52 @@ import { MultiSelect } from '@blueprintjs/select/lib/esm/components/select/multi
 
 import './ProjectStatus.scss';
 
-const MultiSelectComponent = ({
-  container,
-  placeholder,
-  selected,
-  setSelected,
-}) => {
+interface MultiSelectPropsItem {
+  container: any;
+  placeholder: any;
+  selected: any;
+  setSelected: any;
+  setFilterOp?: any;
+  fieldName?: any;
+}
+
+const MultiSelectComponent = (props: MultiSelectPropsItem) => {
+  const {
+    container,
+    placeholder,
+    selected,
+    setSelected,
+    setFilterOp,
+    fieldName,
+  } = props;
+
+  const f = (x) => (x ? x : []);
+
   const onItemSelect = (item) => {
     if (!selected.find((si) => si.label === item.label)) {
       setSelected((prev) => [...prev, item]);
+      if (setFilterOp) {
+        setFilterOp((prev) => {
+          const newArray = f(prev[fieldName]);
+          newArray.push(item);
+          return { ...prev, [fieldName]: newArray };
+        });
+      }
     }
   };
 
   const handleTagRemove = (tag, index) => {
-    setSelected((prev) => {
-      return [...prev.slice(0, index), ...prev.slice(index + 1)];
-    });
+    const removeElement = (prev, index) => [
+      ...prev.slice(0, index),
+      ...prev.slice(index + 1),
+    ];
+    setSelected((prev) => removeElement(prev, index));
+    if (setFilterOp) {
+      setFilterOp((prev) => {
+        const newArray = removeElement(f(prev[fieldName]), index);
+        return { ...prev, [fieldName]: newArray };
+      });
+    }
   };
 
   return (
