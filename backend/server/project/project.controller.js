@@ -1030,7 +1030,6 @@ const projectListForMember = async (req, res, next) => {
       .limit(+limit)
       .exec()
       .then((result) => {
-        console.log(result);
         return sendJSONresponse(res, 200, result);
       });
   } catch (error) {

@@ -775,18 +775,22 @@ export const RoomReducer = (state = InitialState, action: any) => {
         messages:
           action.payload.room === state.currentRoom._id
             ? state.messages.length === 0 ||
-              (state.messages[
-                state.messages.length - 1
-              ] as IRoomMessage)._id !== action.payload._id
+              (
+                state.messages[
+                  state.messages.length - 1
+                ] as IRoomMessage
+              )._id !== action.payload._id
               ? [...state.messages, action.payload]
               : [...state.messages]
             : [...state.messages],
         sharedFileMessages:
           action.payload.room === state.currentRoom._id
             ? state.messages.length === 0 ||
-              (state.messages[
-                state.messages.length - 1
-              ] as IRoomMessage)._id !== action.payload._id
+              (
+                state.messages[
+                  state.messages.length - 1
+                ] as IRoomMessage
+              )._id !== action.payload._id
               ? [...state.sharedFileMessages, action.payload]
               : [...state.sharedFileMessages]
             : [...state.sharedFileMessages],
@@ -864,6 +868,23 @@ export const RoomReducer = (state = InitialState, action: any) => {
     //     roomError: action.payload,
     //     loading: false,
     //   };
+    case RoomActionTypes.NEW_CHAT:
+      return {
+        ...state,
+        chats: state.chats.map((chat) =>
+          chat.room._id === action.payload.message.room
+            ? {
+                ...chat,
+                message: action.payload.message,
+              }
+            : chat,
+        ),
+        totalUnread:
+          action.payload.message.account._id ===
+          action.payload.currentUserId
+            ? state.totalUnread
+            : state.totalUnread + 1,
+      };
     default:
       return state;
   }

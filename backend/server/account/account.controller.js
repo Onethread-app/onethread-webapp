@@ -35,7 +35,10 @@ const {
   savePushSubscription,
   removePushSubscription,
 } = require('../services/webpush.services');
-const { Tasks } = require('elasticsearch');
+const {
+  findAccountById,
+  findAccountByIdAndUpdate,
+} = require('../services/account/account.service');
 const Task = require('../task/task.model');
 const SubTask = require('../task/subtask/subtask.model');
 const TaskAssign = require('../task/taskAssign.model');
@@ -78,86 +81,6 @@ const options = [
     select: '_id firstName lastName',
   },
 ];
-
-// get today's tasks for user
-const getTodaysTask = async (req) => {
-  try {
-    let startToday = new Date(req.query.date);
-    startToday.setHours(0, 0, 0, 0);
-    let endToday = new Date();
-    endToday.setHours(23, 59, 59, 999);
-    const taskList = await Task.find({
-      dueDate: { $gte: startToday, $lt: endToday },
-    }).sort({ createdAt: -1 });
-    let taskId = taskList.map((e) => e._id);
-    const assignToUserToday = await TaskAssign.find({
-      taskId: taskId,
-      assignedPerson: req.user._id,
-    })
-      .select('taskId')
-      .populate(options);
-    const assignByUserToday = await TaskAssign.find({
-      taskId: taskId,
-      account: req.user._id,
-      assignedPerson: { $nin: { _id: req.user._id } },
-    })
-      .sort({ createdAt: -1 })
-      .select('taskId')
-      .populate(options);
-    const userTask = {
-      assignToUser: [...assignToUserToday],
-      assignByUser: [...assignByUserToday],
-      totalTasks: assignToUserToday.length + assignByUserToday.length,
-    };
-    return userTask;
-  } catch (error) {
-    logger.error(`Account: ${error}`);
-    next(error);
-  }
-};
-
-// get upcoming tasks for user
-const getUpcomingTasks = async (req, dayFrom, dayTo) => {
-  try {
-    let tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + dayFrom);
-    tomorrow.setHours(0, 0, 0, 0);
-
-    let oneWeek = new Date();
-    oneWeek.setDate(oneWeek.getDate() + dayTo);
-    oneWeek.setHours(23, 59, 59, 999);
-
-    const upcomingTask = await Task.find({
-      dueDate: { $gte: tomorrow, $lte: oneWeek },
-    }).sort({ createdAt: -1 });
-    taskId = upcomingTask.map((e) => e._id);
-
-    const assignToUserUpcoming = await TaskAssign.find({
-      taskId: taskId,
-      assignedPerson: req.user._id,
-    })
-      .select('taskId')
-      .populate(options);
-    const assignByUserUpcoming = await TaskAssign.find({
-      taskId: taskId,
-      account: req.user._id,
-      assignedPerson: { $nin: { _id: req.user._id } },
-    })
-      .sort({ createdAt: -1 })
-      .select('taskId')
-      .populate(options);
-    const userTask = {
-      assignToUser: [...assignToUserUpcoming],
-      assignByUser: [...assignByUserUpcoming],
-      totalTasks:
-        assignToUserUpcoming.length + assignByUserUpcoming.length,
-    };
-    return userTask;
-  } catch (error) {
-    logger.error(`Account: ${error}`);
-    next(error);
-  }
-};
 
 // create a new account for individual users
 const register = async (req, res, next) => {
@@ -303,7 +226,6 @@ const login = async (req, res, next) => {
     let userObj = {};
     userObj.name = req.user.name;
     userObj.language = req.user.language || 'en';
-    // addUserDataIntoCache(req.user._id, req.user);
     let pushSubscription;
     if (req.body.pushSubscription) {
       pushSubscription = await savePushSubscription(
@@ -326,11 +248,7 @@ const login = async (req, res, next) => {
 
 const getAccount = async (req, res, next) => {
   try {
-    let userInfo = await Account.findOne({
-      _id: req.user._id,
-    })
-      .select('-password')
-      .populate('skillArea', '_id name');
+    let userInfo = await findAccountById(req.user._id);
     let count = 0;
     if (userInfo.skillArea.length === 0) {
       count++;
@@ -377,20 +295,7 @@ const getAccount = async (req, res, next) => {
     next(error);
   }
 };
-// client
-//   .multi()
-//   .get(`userID:${req.user.email}`)
-//   .execAsync()
-//   .then(result => {
-//     let user = JSON.parse(result);
-//     return sendJSONresponse(res, 200, {
-//       success: true,
-//       user: user,
-//     });
-//   })
-//   .catch(err => {
-//     next(err);
-//   });
+
 const userDailyProgress = async (req, res, next) => {
   try {
     let startToday = new Date();
@@ -432,30 +337,20 @@ const userDailyProgress = async (req, res, next) => {
 };
 const skillArea = async (req, res, next) => {
   try {
-    const user = await Account.findOne({
-      email: req.user.email,
-    })
-      .select('-password')
-      .populate('skillArea', '_id name');
+    const user = await findAccountById(req.user._id);
     return sendJSONresponse(res, 200, {
       success: true,
       user: user,
     });
   } catch (error) {
+    logger.error(`Account: ${error}`);
     next(error);
   }
 };
 // create a timeline for user
 const timeline = async (req, res, next) => {
   try {
-    const user = await Account.findOne({
-      email: req.user.email,
-    })
-      .select('-password')
-      .populate(
-        'jobExperience education',
-        '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy',
-      );
+    const user = await findAccountById(req.user._id);
     const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,
@@ -467,6 +362,7 @@ const timeline = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
+    logger.error(`Account: ${error}`);
     next(error);
   }
 };
@@ -518,64 +414,17 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
 };
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
-  await Account.findOneAndUpdate(
-    {
-      email: req.user.email,
-    },
-    req.body,
-    {
-      safe: true,
-      upsert: true,
-      new: true,
-    },
-  )
-    .select('-password')
-    .exec()
-    .then(async (user) => {
-      if (user) {
-        // if (typeof user.about !== 'undefined') {
-        //   client.hmset(`userID:${user._id}`, 'about', user.about);
-        //   logger.info(`about added into ${user.email}'s cache`);
-        // }
-        // if (typeof user.location !== 'undefined') {
-        //   client.hmset(
-        //     `userID:${user._id}`,
-        //     'location',
-        //     user.location,
-        //   );
-        //   logger.info(`location added into ${user.email}'s cache`);
-        // }
-        // if (typeof user.gender !== 'undefined') {
-        //   client.hmset(`userID:${user._id}`, 'gender', user.gender);
-        //   logger.info(`gender added into ${user.email}'s cache`);
-        // }
-        // if (typeof user.bloodGroup !== 'undefined') {
-        //   client.hmset(
-        //     `userID:${user._id}`,
-        //     'bloodGroup',
-        //     user.bloodGroup,
-        //   );
-        //   logger.info(`bloodGroup added into ${user.email}'s cache`);
-        // }
-        // if (typeof user.position !== 'undefined') {
-        //   client.hmset(
-        //     `userID:${user._id}`,
-        //     'position',
-        //     user.position,
-        //   );
-        //   logger.info(`postion added into ${user.email}'s cache`);
-        // }
-
-        return sendJSONresponse(res, 200, {
-          message: 'profile updated',
-        });
-      }
-    })
-    .catch((err) => {
-      logger.error(`${err}`);
-      next(err);
+  try {
+    await findAccountByIdAndUpdate(req.user._id, req.body);
+    return sendJSONresponse(res, 200, {
+      message: 'profile updated',
     });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
 };
+
 const logout = async (req, res, next) => {
   try {
     let refreshToken = req.body.refreshToken;
@@ -911,36 +760,6 @@ const inviteSignup = async (req, res, next) => {
     next(error);
   }
 };
-
-const getDueTasks = async (req) => {
-  const taskList = await Task.find({
-    dueDate: { $lte: new Date() },
-    status: { $ne: 'done' },
-  }).sort({ createdAt: -1 });
-
-  let taskId = taskList.map((e) => e._id);
-  const assignToUserToday = await TaskAssign.find({
-    taskId: taskId,
-    assignedPerson: req.user._id,
-  })
-    .select('taskId')
-    .populate(options);
-  const assignByUserToday = await TaskAssign.find({
-    taskId: taskId,
-    account: req.user._id,
-    assignedPerson: { $nin: { _id: req.user._id } },
-  })
-    .sort({ createdAt: -1 })
-    .select('taskId')
-    .populate(options);
-  const userTask = {
-    assignToUser: [...assignToUserToday],
-    assignByUser: [...assignByUserToday],
-    totalTasks: assignToUserToday.length + assignByUserToday.length,
-  };
-  return userTask;
-};
-
 const userTaskList = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   try {

@@ -1,0 +1,12 @@
+version: 0.2
+phases:
+  post_build:
+    commands:
+      - echo Entered the post_build phase...
+      - zip -r site.zip ./*
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - appspec.yml
+    - site.zip
+    - DeployScripts/*

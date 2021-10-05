@@ -16,9 +16,6 @@ const {
   subTaskAssignNotificationToUsers,
 } = require('../../notification/notification.controller');
 const {
-  createBoardNotification,
-} = require('../../notification/notification.controller');
-const {
   triggerUnreadNotifications,
 } = require('../../services/webpush.services');
 
@@ -152,7 +149,7 @@ const addMember = async (req, res, next) => {
             },
           ])
           .exec();
-        if (req.user._id == requestedMember) {
+        if (req.user._id !== requestedMember) {
           await subTaskAssignNotificationToUsers(
             req.user._id,
             req.headers.companyid,
@@ -164,7 +161,6 @@ const addMember = async (req, res, next) => {
               pusherSock: req.headers.clientid,
             },
           );
-          await triggerUnreadNotifications(requestedMember);
         }
         return sendJSONresponse(res, 201, subTask);
       } else {
@@ -194,7 +190,6 @@ const addMember = async (req, res, next) => {
               pusherSock: req.headers.clientid,
             },
           );
-          await triggerUnreadNotifications(requestedMember);
         }
         return sendJSONresponse(res, 201, subTask);
       }
