@@ -240,8 +240,9 @@ router
 router
   .route('/:projectId/teams/:accountId')
   .delete(
-    authorization, schemaValidator(projectValidation.deleteTeamMember),
-    projectCtrl.deleteTeamMember
-  )
+    authorization,
+    schemaValidator(projectValidation.deleteTeamMember),
+    projectCtrl.deleteTeamMember,
+  );
 
 module.exports = router;

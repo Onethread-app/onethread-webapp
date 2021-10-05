@@ -168,7 +168,6 @@ const addTeamMember = async (req, res, next) => {
               pusherSock: req.headers.clientid,
             },
           );
-          await triggerUnreadNotifications(e.account);
         });
       }
       return sendJSONresponse(res, 201, {

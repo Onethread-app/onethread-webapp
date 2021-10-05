@@ -266,21 +266,7 @@ const updateBasicInfo = async (req, res, next) => {
         req.company[key] = req.body[key];
       }
     }
-
     await req.company.save();
-
-    // const text = `company profile has been updated by ${req.user.name}`;
-    // createCompanyRoleNotification(
-    //   req.company,
-    //   {
-    //     _id: req.user._id,
-    //     name: req.user.name,
-    //     pusherSock: req.headers.clientid,
-    //   },
-    //   text,
-    //   'companyProfile',
-    // );
-    //createCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name} );
     return res.status(200).json({
       message: `Company's basic information updated`,
     });
@@ -305,21 +291,6 @@ const updateAbout = async (req, res, next) => {
       { about: req.body.about },
       { safe: true, upsert: true, new: true },
     ).exec();
-
-    // const text = `company profile has been updated by ${req.user.name}`;
-    // createCompanyRoleNotification(
-    //   req.company,
-    //   {
-    //     _id: req.user._id,
-    //     name: req.user.name,
-    //     pusherSock: req.headers.clientid,
-    //   },
-    //   text,
-    //   'companyProfile',
-    // );
-    //sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
-    //createCompanyNotification(req.company._id , {_id:req.user._id, name: req.user.name} );
-
     return res.status(200).json({
       message: `Company's about updated`,
     });
@@ -363,7 +334,6 @@ const updateRole = async (req, res, next) => {
 // company will be found on req.company
 const getCompanyLoad = async (req, res, next) => {
   try {
-    console.log(req);
     const company = await Company.findOne({
       _id: req.params.companyId,
     }).populate('account', '_id firstName lastName email contactNo');

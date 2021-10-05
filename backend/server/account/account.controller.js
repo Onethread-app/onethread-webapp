@@ -351,7 +351,6 @@ const skillArea = async (req, res, next) => {
 const timeline = async (req, res, next) => {
   try {
     const user = await findAccountById(req.user._id);
-    console.log(user);
     const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,

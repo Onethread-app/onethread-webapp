@@ -5,6 +5,10 @@ const companyListFinder = async () => {
   return companyIdList;
 };
 
+const findCompanyById = async (_id) => {
+  return await Company.findById({ _id: _id });
+};
 module.exports = {
   companyListFinder,
+  findCompanyById
 };

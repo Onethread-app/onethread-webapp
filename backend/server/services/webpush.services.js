@@ -4,7 +4,7 @@ const { ServiceError } = require('../helpers/APIError');
 const webpush = require('web-push');
 const config = require('../../config/config');
 const UserNotificationModel = require('../notification/userNotification.model');
-const {UserMessage} = require('../message/userMessage.model');
+const { UserMessage } = require('../message/userMessage.model');
 const Account = require('../account/account.model');
 const publicVapidKey = config.vapidPublicKey;
 const privateVapidKey = config.vapidPrivateKey;
@@ -151,7 +151,6 @@ const triggerUnreadMessages = async (memberId) => {
 
   await triggerMessage(memberId, dataToSend);
 };
-
 
 module.exports = {
   webpush,

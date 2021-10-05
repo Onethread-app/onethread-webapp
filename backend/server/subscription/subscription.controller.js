@@ -106,10 +106,12 @@ const subscriptionExpireCheck = () => {
         });
       }
       let today = new Date().getTime();
-      if (subscribe[0].expireAt > today) {
-        req.subscribe = subscribe[0].expireAt;
-        next();
-      } else {
+      if (
+        typeof subscribe === undefined ||
+        typeof subscribe[0] === undefined ||
+        typeof subscribe[0].expireAt === undefined ||
+        subscribe[0].expireAt < today
+      ) {
         return sendErrorResponse(
           res,
           403,
@@ -117,6 +119,8 @@ const subscriptionExpireCheck = () => {
           { message: 'Your subscription is expired' },
         );
       }
+      req.subscribe = subscribe[0].expireAt;
+      next();
     } catch (error) {
       logger.error(`Subscription: ${error}`);
       next(error);
