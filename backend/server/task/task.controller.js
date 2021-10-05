@@ -669,6 +669,34 @@ const taskReminder = async (req, res, next) => {
   }
   todaysTask = [...new Set(todaysTask)];
 
+  const todayUserSubTask = await SubTask.find({
+    taskId,
+    dueDate: { $gte: startToday, $lte: endToday },
+  })
+    .populate({ path: 'account', select: '_id name' })
+    .populate({ path: 'assignedPerson', select: '_id name' });
+
+  console.log({ todayUserSubTask });
+
+  const todayStCounter = {};
+  let todayStTask = [];
+  const usernameStMapping = {};
+  for (let subTask of todayUserSubTask) {
+    if (!todayStCounter[idStr(subTask.account)])
+      todayStCounter[idStr(subTask.account)] = 0;
+    todayStCounter[idStr(subTask.account)]++;
+    todayStTask.push(idStr(subTask.account));
+    usernameStMapping[idStr(subTask.account)] = subTask.account.name;
+
+    for (let sta of subTask.assignedPerson) {
+      if (!todayStCounter[idStr(sta)]) todayStCounter[idStr(sta)] = 0;
+      todayStCounter[idStr(sta)]++;
+      todayStTask.push(idStr(sta));
+      usernameStMapping[idStr(sta)] = sta.name;
+    }
+  }
+  let todaySubTaskList = (todayStTask = [...new Set(todayStTask)]);
+
   const tomorrowCounter = {};
   let tomorrowTask = [];
   const taskListTomorrow = await Task.find({
@@ -713,6 +741,7 @@ const taskReminder = async (req, res, next) => {
   return res.status(200).json({
     todayCounter,
     todaysTask,
+    todaySubTaskList,
     tomorrowCounter,
     tomorrowTask,
   });
