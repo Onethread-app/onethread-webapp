@@ -218,11 +218,7 @@ module.exports.notifyToTaskMember = async (
       ...userNotification._doc,
       notificationList,
     };
-    sendNotification(
-      account._id,
-      userNotification._id,
-      adminUser.pusherSock,
-    );
+    sendNotification(member, userNotification, adminUser.pusherSock);
     await triggerUnreadNotifications(account._id);
   } catch (error) {
     logger.error(`Notifications: ${error}`);
@@ -268,6 +264,7 @@ module.exports.sendNotificationToProjectTeamMates = async (
           ...userNotification._doc,
           notification,
         };
+        console.log(member);
         sendNotification(
           member.account._id,
           userNotification,
@@ -288,9 +285,7 @@ module.exports.createMemberAddNotification = async (
   adminUser,
 ) => {
   try {
-    let senderFullName = await Account.findById({
-      _id: senderName,
-    }).select('firstName lastName');
+    let senderFullName = await findAccountById(senderName);
     let companyName = await Company.findById({ _id: company }).select(
       'name',
     );
