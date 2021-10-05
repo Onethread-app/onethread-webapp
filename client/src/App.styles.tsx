@@ -2,10 +2,10 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   body {
-    --primary-color: #34B3E9;
+    --primary-color: white;
     --secondary-color: ;
     --accent-color: ;
-    --primary-bg-color:#303053;
+    --primary-bg-color:#34B3E9;
     --secondary-bg-color: transparent;
     --disabled-color: gray;
     --dark-color: black;
