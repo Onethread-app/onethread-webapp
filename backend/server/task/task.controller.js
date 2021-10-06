@@ -109,7 +109,6 @@ const addMemberToTask = async (
             pusherSock: req.headers.clientid,
           },
         );
-        
       }
     });
     return members;
@@ -627,124 +626,193 @@ const dragTask = async (req, res, next) => {
 };
 
 const taskReminder = async (req, res, next) => {
-  let startToday = new Date();
-  startToday.setHours(0, 0, 0, 0);
+  try {
+    // All account Id
+    let allIdList = [];
+    let allIdUnqMapper = {};
 
-  let endToday = new Date();
-  endToday.setHours(23, 59, 59, 999);
+    // Today - Start
+    let startToday = new Date();
+    startToday.setHours(0, 0, 0, 0);
 
-  let tomorrowEnd = new Date();
-  tomorrowEnd.setDate(tomorrowEnd.getDate() + 100);
-  tomorrowEnd.setHours(23, 59, 59, 999);
+    // Today - End
+    let endToday = new Date();
+    endToday.setHours(23, 59, 59, 999);
 
-  let taskId = [];
+    // Tomorrow - End
+    let tomorrowEnd = new Date();
+    tomorrowEnd.setDate(tomorrowEnd.getDate() + 100);
+    tomorrowEnd.setHours(23, 59, 59, 999);
 
-  const taskListToday = await Task.find({
-    dueDate: { $gte: startToday, $lte: endToday },
-  });
-  taskId = taskListToday.map((i) => i._id);
+    // Todays Task
+    const taskListToday = await Task.find({
+      dueDate: { $gte: startToday, $lte: endToday },
+    });
+    let taskId = taskListToday.map((i) => i._id);
 
-  const todayCounter = {};
-  let todaysTask = [];
-  const usernameMapping = {};
-  const userTaskListToday = await TaskAssign.find({ taskId })
-    .populate({ path: 'account', select: '_id name' })
-    .populate({ path: 'assignedPerson', select: '_id name' });
+    // Todays task and counter
+    const todayCounter = {};
+    let todaysTask = [];
+    const usernameMapping = {};
 
-  const idStr = (x) => x._id.toString();
+    const userTaskListToday = await TaskAssign.find({ taskId })
+      .populate({ path: 'account', select: '_id name' })
+      .populate({ path: 'assignedPerson', select: '_id name' });
 
-  for (let task of userTaskListToday) {
-    if (!todayCounter[idStr(task.account)])
-      todayCounter[idStr(task.account)] = 0;
-    todayCounter[idStr(task.account)]++;
-    todaysTask.push(idStr(task.account));
-    usernameMapping[idStr(task.account)] = task.account.name;
+    const idStr = (x) => x._id.toString();
 
-    if (!todayCounter[idStr(task.assignedPerson)])
-      todayCounter[idStr(task.assignedPerson)] = 0;
-    todayCounter[idStr(task.assignedPerson)]++;
-    todaysTask.push(idStr(task.assignedPerson));
-    usernameMapping[idStr(task.assignedPerson)] =
-      task.assignedPerson.name;
-  }
-  todaysTask = [...new Set(todaysTask)];
+    for (let task of userTaskListToday) {
+      // Assigned by me
+      const accountId = idStr(task.account);
+      if (!todayCounter[accountId]) todayCounter[accountId] = 0;
 
-  const todayUserSubTask = await SubTask.find({
-    taskId,
-    dueDate: { $gte: startToday, $lte: endToday },
-  })
-    .populate({ path: 'account', select: '_id name' })
-    .populate({ path: 'assignedPerson', select: '_id name' });
+      todayCounter[accountId]++;
+      todaysTask.push(accountId);
+      usernameMapping[accountId] = task.account.name;
 
-  console.log({ todayUserSubTask });
+      if (!allIdUnqMapper[accountId]) {
+        allIdUnqMapper[accountId] = true;
+        allIdList.push(accountId);
+      }
 
-  const todayStCounter = {};
-  let todayStTask = [];
-  const usernameStMapping = {};
-  for (let subTask of todayUserSubTask) {
-    if (!todayStCounter[idStr(subTask.account)])
-      todayStCounter[idStr(subTask.account)] = 0;
-    todayStCounter[idStr(subTask.account)]++;
-    todayStTask.push(idStr(subTask.account));
-    usernameStMapping[idStr(subTask.account)] = subTask.account.name;
+      // Assigned to me
+      const assigneeId = idStr(task.assignedPerson);
+      if (!todayCounter[assigneeId]) todayCounter[assigneeId] = 0;
 
-    for (let sta of subTask.assignedPerson) {
-      if (!todayStCounter[idStr(sta)]) todayStCounter[idStr(sta)] = 0;
-      todayStCounter[idStr(sta)]++;
-      todayStTask.push(idStr(sta));
-      usernameStMapping[idStr(sta)] = sta.name;
+      // Self Assign
+      if (accountId === assigneeId) continue;
+
+      todayCounter[assigneeId]++;
+      todaysTask.push(assigneeId);
+      usernameMapping[assigneeId] = task.assignedPerson.name;
+
+      if (!allIdUnqMapper[assigneeId]) {
+        allIdUnqMapper[assigneeId] = true;
+        allIdList.push(assigneeId);
+      }
     }
+    todaysTask = [...new Set(todaysTask)];
+
+    const tomorrowCounter = {};
+    let tomorrowTask = [];
+    const taskListTomorrow = await Task.find({
+      dueDate: { $gte: startToday, $lte: tomorrowEnd },
+    });
+    taskId = taskListTomorrow.map((i) => i._id);
+    const userTaskListTomorrow = await TaskAssign.find({ taskId })
+      .populate({ path: 'account', select: '_id name' })
+      .populate({ path: 'assignedPerson', select: '_id name' });
+
+    for (let task of userTaskListTomorrow) {
+      // Assign by me
+      const accountId = idStr(task.account);
+      if (!tomorrowCounter[accountId]) tomorrowCounter[accountId] = 0;
+      tomorrowCounter[accountId]++;
+      tomorrowTask.push(accountId);
+      usernameMapping[accountId] = task.account.name;
+
+      if (!allIdUnqMapper[accountId]) {
+        allIdUnqMapper[accountId] = true;
+        allIdList.push(accountId);
+      }
+
+      // Assign to me
+      const assigneeId = idStr(task.assignedPerson);
+      if (!tomorrowCounter[assigneeId])
+        tomorrowCounter[assigneeId] = 0;
+
+      if (accountId === assigneeId) continue;
+
+      tomorrowCounter[assigneeId]++;
+      tomorrowTask.push(assigneeId);
+      usernameMapping[assigneeId] = task.assignedPerson.name;
+
+      if (!allIdUnqMapper[assigneeId]) {
+        allIdUnqMapper[assigneeId] = true;
+        allIdList.push(assigneeId);
+      }
+    }
+    tomorrowTask = [...new Set(tomorrowTask)];
+
+    const subtaskList = await SubTask.find({
+      taskId,
+      dueDate: { $gte: startToday, $lte: endToday },
+    })
+      .populate({ path: 'account', select: '_id name' })
+      .populate({ path: 'assignedMembers', select: '_id name' });
+
+    const todaySubTaskCounter = {};
+    let todaySubTask = [];
+    for (let task of subtaskList) {
+      // Assign by me
+      const accountId = idStr(task.account);
+      if (!todaySubTaskCounter[accountId]) {
+        todaySubTaskCounter[accountId] = 0;
+      }
+      todaySubTaskCounter[accountId]++;
+      todaySubTask.push(accountId);
+      usernameMapping[accountId] = task.account.name;
+
+      if (!allIdUnqMapper[accountId]) {
+        allIdUnqMapper[accountId] = true;
+        allIdList.push(accountId);
+      }
+
+      // Assign to me
+      for (let st of task.assignedMembers) {
+        const assigneeId = idStr(st);
+        if (!todaySubTaskCounter[assigneeId]) {
+          todaySubTaskCounter[assigneeId] = 0;
+        }
+        if (accountId === assigneeId) continue;
+
+        todaySubTaskCounter[assigneeId]++;
+        todaySubTask.push(assigneeId);
+        usernameMapping[assigneeId] = st.name;
+
+        if (!allIdUnqMapper[assigneeId]) {
+          allIdUnqMapper[assigneeId] = true;
+          allIdList.push(assigneeId);
+        }
+      }
+    }
+    todaySubTask = [...new Set(todaySubTask)];
+
+    await Promise.all(
+      allIdList.map(async (account) => {
+        if (!todayCounter[account]) {
+          todayCounter[account] = 0;
+        }
+        if (!tomorrowCounter[account]) {
+          tomorrowCounter[account] = 0;
+        }
+        if (!todaySubTaskCounter[account]) {
+          todaySubTaskCounter[account] = 0;
+        }
+
+        await triggerMessage(account, {
+          notification: {
+            title: 'Task Reminder',
+            body: `You have ${todayCounter[account]} tasks and ${todaySubTaskCounter[account]} subtasks today and ${tomorrowCounter[account]} tasks tomorrow`,
+            icon: '',
+            data: `/${usernameMapping[account]}/home`,
+          },
+        });
+      }),
+    );
+
+    return res.status(200).json({
+      todayCounter,
+      todaysTask,
+      tomorrowCounter,
+      tomorrowTask,
+      todaySubTaskCounter,
+      todaySubTask,
+    });
+  } catch (error) {
+    logger.error(`Task Reminder: ${error}`);
+    next(error);
   }
-  let todaySubTaskList = (todayStTask = [...new Set(todayStTask)]);
-
-  const tomorrowCounter = {};
-  let tomorrowTask = [];
-  const taskListTomorrow = await Task.find({
-    dueDate: { $gte: startToday, $lte: tomorrowEnd },
-  });
-  taskId = taskListTomorrow.map((i) => i._id);
-  const userTaskListTomorrow = await TaskAssign.find({ taskId })
-    .populate({ path: 'account', select: '_id name' })
-    .populate({ path: 'assignedPerson', select: '_id name' });
-
-  for (let task of userTaskListTomorrow) {
-    if (!tomorrowCounter[idStr(task.account)])
-      tomorrowCounter[idStr(task.account)] = 0;
-    tomorrowCounter[idStr(task.account)]++;
-    tomorrowTask.push(idStr(task.account));
-    usernameMapping[idStr(task.account)] = task.account.name;
-
-    if (!tomorrowCounter[idStr(task.assignedPerson)])
-      tomorrowCounter[idStr(task.assignedPerson)] = 0;
-    tomorrowCounter[idStr(task.assignedPerson)]++;
-    tomorrowTask.push(idStr(task.assignedPerson));
-    usernameMapping[idStr(task.assignedPerson)] =
-      task.assignedPerson.name;
-  }
-  tomorrowTask = [...new Set(tomorrowTask)];
-
-  await Promise.all(
-    tomorrowTask.map(async (account) => {
-      if (!todayCounter[account]) todayCounter[account] = 0;
-      if (!tomorrowCounter[account]) tomorrowCounter[account] = 0;
-      await triggerMessage(account, {
-        notification: {
-          title: 'Task Reminder',
-          body: `You have ${todayCounter[account]} tasks today and ${tomorrowCounter[account]} tasks tomorrow`,
-          icon: '',
-          data: `/${usernameMapping[account]}/home`,
-        },
-      });
-    }),
-  );
-
-  return res.status(200).json({
-    todayCounter,
-    todaysTask,
-    todaySubTaskList,
-    tomorrowCounter,
-    tomorrowTask,
-  });
 };
 
 module.exports = {
