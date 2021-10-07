@@ -109,7 +109,6 @@ const addMemberToTask = async (
             pusherSock: req.headers.clientid,
           },
         );
-        
       }
     });
     return members;
@@ -166,7 +165,7 @@ const load = (req, res, next, id) => {
       next();
     })
     .catch(() => {
-      return sendErrorResponse(res, 404, 'IdIsNotExist', {
+      return sendErrorResponse(res, 404, 'IdNotExist', {
         success: false,
         message: 'No valid entry found for provided Task ID',
       });

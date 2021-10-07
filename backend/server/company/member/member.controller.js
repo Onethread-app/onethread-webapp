@@ -65,7 +65,7 @@ const addMember = async (req, res, next) => {
   }
   try {
     if (!req.body.members.length && !req.body.pendingTeamMembers) {
-      return sendErrorResponse(res, 400, 'MemberNotFoundError', {
+      return sendErrorResponse(res, 400, 'ValidationError', {
         message: `No members or newMembers found`,
       });
     }

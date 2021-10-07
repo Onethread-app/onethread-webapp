@@ -76,7 +76,6 @@ const createPending = async (req, res, next) => {
     return res.status(201).json(associate);
   } catch (error) {
     logger.error(`Associate pending: ${error}`);
-
     next(error);
   }
 };
