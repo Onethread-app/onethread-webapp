@@ -402,7 +402,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
           message: 'Account Verified Successfully',
         });
       } else {
-        return sendErrorResponse(res, 400, 'TokenExpireError', {
+        return sendErrorResponse(res, 401, 'TokenExpireError', {
           isAccountVerified: false,
           message: 'Link is expired',
         });
@@ -720,7 +720,7 @@ const resendEmail = async (req, res, next) => {
       email: email,
     });
     if (!resentType) {
-      return sendErrorResponse(res, 400, {
+      return sendErrorResponse(res, 400, 'ValidationError', {
         message: 'Please provide resent-type',
       });
     }
