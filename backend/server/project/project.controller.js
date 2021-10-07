@@ -581,6 +581,10 @@ const showAllProjectsForCompany = async (req, res, next) => {
             },
           ],
         },
+        {
+          path: 'company',
+          select: '_id uniqueName',
+        },
       ])
       .populate('departments concernedAdmin', 'name _id ')
       // .select('-type -__v  -files -version -optionalRole ')
@@ -673,8 +677,19 @@ const getProjectDetails = async (req, res, next) => {
     const project = await Project.findOne({
       _id: req.query.pid,
     })
-      .populate('files', 'link s3Key')
-      .select('outline description color name status totalSpent');
+      .select(
+        'outline description color name status totalSpent company',
+      )
+      .populate([
+        {
+          path: 'files',
+          select: 'link s3Key',
+        },
+        {
+          path: 'company',
+          select: '_id uniqueName',
+        },
+      ]);
 
     const members = await Team.find({
       project: req.query.pid,
