@@ -107,12 +107,6 @@ const subscriptionExpireCheck = () => {
           message: `companyId is required`,
         });
       }
-      const isCompanyExist = await findCompanyById(validCompanyId);
-      if (!isCompanyExist) {
-        return sendErrorResponse(res, 404, 'NotFoundError', {
-          message: `companyId does not exist`,
-        });
-      }
       const subscribe = await Subscription.find({
         company: validCompanyId,
         isActive: true,
