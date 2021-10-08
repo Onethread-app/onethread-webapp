@@ -12,6 +12,18 @@ import {
   PROFILE_IMAGE_UPLOAD,
   COVER_IMAGE_UPLOAD,
   VIDEO_CONFERENCE,
+  SAVE_USER_AUTHENTICATION_INFO_SUCCESS,
+  SAVE_USER_AUTHENTICATION_INFO_FAILURE,
+  TOKEN_VERIFY_START,
+  TOKEN_VERIFY_SUCCESS,
+  TOKEN_VERIFY_FAILURE,
+  REFRESH_USER_INFO_SUCCESS,
+  REFRESH_USER_INFO_FAILURE,
+  REFRESH_USER_INFO_START,
+  SAVE_USER_AUTHENTICATION_INFO_START,
+  REFRESH_USER_TOKEN_SUCCESS,
+  REFRESH_USER_TOKEN_START,
+  REFRESH_USER_TOKEN_FAILURE,
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 export interface ICompanyByUser {
@@ -196,6 +208,77 @@ export const UserReducer = (state = InitialState, action: any) => {
         },
       };
     }
+    case SAVE_USER_AUTHENTICATION_INFO_START:
+      return {
+        ...state,
+        accountUpdateLoading: true,
+        accountUpdateError: '',
+      };
+    case SAVE_USER_AUTHENTICATION_INFO_SUCCESS:
+      return {
+        ...state,
+        accountUpdateLoading: false,
+      };
+    case SAVE_USER_AUTHENTICATION_INFO_FAILURE:
+      return {
+        ...state,
+        accountUpdateLoading: false,
+        accountUpdateError: action.payload,
+      };
+    case TOKEN_VERIFY_START:
+      return {
+        ...state,
+        tokenVerificationProcessing: true,
+        tokenVerificationError: '',
+      };
+    case TOKEN_VERIFY_SUCCESS:
+      return {
+        ...state,
+        tokenVerifiedSuccess: true,
+        tokenVerificationProcessing: false,
+      };
+    case TOKEN_VERIFY_FAILURE:
+      return {
+        ...state,
+        tokenVerificationError: action.payload,
+        tokenVerifiedSuccess: false,
+        tokenVerificationProcessing: false,
+      };
+    case REFRESH_USER_INFO_START:
+      return {
+        ...state,
+        informationRefreshedLoading: true,
+        informationRefreshedError: '',
+      };
+    case REFRESH_USER_INFO_SUCCESS:
+      return {
+        ...state,
+        user: action.payload.user,
+        informationRefreshedLoading: false,
+      };
+    case REFRESH_USER_INFO_FAILURE:
+      return {
+        ...state,
+        informationRefreshedLoading: false,
+        informationRefreshedError: action.payload,
+      };
+    case REFRESH_USER_TOKEN_START:
+      return {
+        ...state,
+        tokenRefreshedLoading: true,
+        tokenRefreshedError: '',
+      };
+    case REFRESH_USER_TOKEN_SUCCESS:
+      return {
+        ...state,
+        tokenRefreshedLoading: false,
+      };
+    case REFRESH_USER_TOKEN_FAILURE:
+      return {
+        ...state,
+        tokenRefreshedLoading: false,
+        tokenRefreshedError: action.payload,
+      };
     default:
       return state;
   }
