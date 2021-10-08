@@ -10,8 +10,8 @@ const AutoLogin = (props: RouteComponentProps) => {
   const refreshToken = JSON.stringify(query.get('refreshToken'));
   const view = query.get('view');
   const redirectPath = query.get('redirectPath');
-  localStorage.setItem('tigrow_acc_id', token);
-  localStorage.setItem('tigrow_real_id', refreshToken);
+  localStorage.setItem('ot_access_id', token);
+  localStorage.setItem('ot_refresh_id', refreshToken);
 
   return (
     <>

@@ -12,7 +12,7 @@ const client = require('../../index.redis');
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
-  inviteSignupEmail,
+  signupMail,
 } = require('../services/email.services');
 const {
   addTokenToBlackList,
@@ -82,121 +82,286 @@ const options = [
   },
 ];
 
-// create a new account for individual users
-const register = async (req, res, next) => {
-  const data = req.body;
-  if (!data.email || !data.password) {
-    return sendJSONresponse(res, 400, {
-      message: 'You must provide email and password.',
-    });
-  }
-  let name = '';
-  await Account.countDocuments({
-    firstName: data.firstName,
-    lastName: data.lastName,
-  })
-    .exec()
-    .then((result) => {
-      let firstName = createSlug(data.firstName);
-      let lastName = createSlug(data.lastName);
-      let uniqueId = result + 1;
-      name = firstName + '-' + lastName + '-' + uniqueId;
-    });
-  let account = new Account({
-    email: data.email,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    name: name,
-    contactNo: Date.now(),
-    password: data.password,
-    isAccountVerified: false,
-  });
-  await account
-    .save()
-    .then(async (user) => {
-      if (user.isAccountVerified)
-        return sendJSONresponse(res, 201, {
-          message: 'User created',
-        });
-      let token = crypto.randomBytes(20).toString('hex');
-      let verifyToken = crypto
-        .createHash('sha256')
-        .update(token)
-        .digest('hex');
-      let verifyAccountTokenExpiration = Date.now() + 604800;
-
-      let pendingMember = await PendingMember.find({
-        email: account.email,
-      }).select('-__v -createdAt -updatedAt');
-
-      if (pendingMember.length > 0) {
-        let pendingMemberToMember = pendingMember.map((m) => {
-          return { account: account._id, company: m.company };
-        });
-
-        const pendingMemberToMemberAccounts =
-          pendingMemberToMember.map((member) => member.account);
-        const pendingMemberToMemberCompany =
-          pendingMemberToMember.map((member) => member.company);
-
-        await Member.create(pendingMemberToMember);
-
-        const elasticIndexedMembers = await Member.find({
-          account: { $in: pendingMemberToMemberAccounts },
-          company: { $in: pendingMemberToMemberCompany },
-        }).populate({
-          path: 'account',
-          select: '_id name firstName lastName email',
-        });
-
-        const memberStructure = (data) => {
-          return {
-            mongo_id: data.mongo_id,
-            account: data.account,
-            company: data.company,
-          };
-        };
-
-        await bulkInsert(
-          memberIndex,
-          elasticIndexedMembers,
-          memberStructure,
-        );
-        logger.info(
-          chalk.blueBright(
-            `ElasticSearch successfully documented with bulk on ${memberIndex}`,
-          ),
-        );
-
-        await PendingMember.updateMany(
-          { email: account.email },
-          {
-            removed: true,
-          },
-        );
-      }
-
-      sendEmailForVerifyAccount(
-        user.firstName,
-        user.lastName,
-        user.email,
-        verifyToken,
-      );
-      accountVerificationToken(
-        `verifyAccountToken:${verifyToken}`,
-        user._id,
-        verifyAccountTokenExpiration,
-      );
-      return sendJSONresponse(res, 201, {
-        message: 'User created',
-        token: verifyToken,
-      });
-    })
-    .catch((err) => {
-      logger.error(`Account: ${err}`);
-      next(err);
-    });
+const generateToken = () => {
+  const token = crypto.randomBytes(20).toString('hex');
+  return crypto.createHash('sha256').update(token).digest('hex');
 };
+
+const genAuthToken = (user) => {
+  const payLoad = {
+    email: user.email,
+    name: user.name,
+    _id: user._id,
+  };
+  const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
+    expiresIn: config.accessTokenExpire,
+  });
+  const refreshToken = jwt.sign(payLoad, config.refreshTokenSecret, {
+    expiresIn: config.refreshTokenExpire,
+  });
+
+  return [accessToken, refreshToken];
+};
+
+const makeUnqName = (firstName, lastName, c) => {
+  return `${createSlug(firstName)}-${createSlug(lastName)}-${c + 1}`;
+};
+
+const signup = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await Account.create({
+      email,
+      name: generateToken(),
+      contactNo: generateToken(),
+    });
+    const token = {
+      hash: generateToken(),
+      exp: Date.now() + 604800,
+    };
+
+    try {
+      await signupMail(email, token.hash);
+    } catch (err) {
+      logger.error(err);
+      return sendJSONresponse(res, 422, {
+        message: 'Mail delivery failure!',
+      });
+    }
+    // Redis
+    await accountVerificationToken(
+      `verifyAccountToken:${token.hash}`,
+      email,
+      token.exp,
+    );
+    return sendJSONresponse(res, 200, {
+      message:
+        'Invitaion sent successfully. Please check your email.',
+      user,
+    });
+    // TODO: ELK
+  } catch (error) {
+    logger.error(`Account: ${error}`);
+    next(error);
+  }
+};
+
+const resendEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const token = {
+      hash: generateToken(),
+      exp: Date.now() + 604800,
+    };
+    try {
+      await signupMail(email, token.hash);
+    } catch (err) {
+      logger.error(err);
+      return sendJSONresponse(res, 422, {
+        message: 'Mail delivery failure!',
+      });
+    }
+    // TODO: blacklist old token for this email address.
+    await accountVerificationToken(
+      `verifyAccountToken:${token.hash}`,
+      email,
+      token.exp,
+    );
+    return sendJSONresponse(res, 200, {
+      message: 'resend email successfully',
+    });
+  } catch (error) {
+    logger.error(`Account: ${error}`);
+    next(error);
+  }
+};
+
+const getAccessTokenForVerifyAccount = async (req, res, next) => {
+  try {
+    client
+      .multi()
+      .get(`verifyAccountToken:${req.params.token}`)
+      .exec(async (err, data) => {
+        if (err) {
+          logger.error(`${err}`);
+          return next(err);
+        }
+        let email = data[0];
+
+        if (typeof email === 'string') {
+          const user = await Account.findOneAndUpdate(
+            { email },
+            { $set: { isAccountVerified: true } },
+            { safe: true, upsert: true, new: true },
+          );
+          await client.del(`verifyAccountToken:${req.params.token}`);
+          await setDocument(accountIndex, '_doc', {
+            mongo_id: user._id,
+            name: user.name, // Random Token
+            email: user.email,
+            firstName: user.firstName, // Undefined
+            lastName: user.lastName, // Undefined
+          });
+          logger.info(
+            chalk.blueBright(
+              `ElasticSearch document added on ${accountIndex}`,
+            ),
+          );
+          const [accessToken, refreshToken] = genAuthToken(user);
+          return sendJSONresponse(res, 200, {
+            message: 'Account Verified Successfully',
+            accessToken,
+            refreshToken,
+          });
+        } else {
+          return sendErrorResponse(res, 400, 'TokenExpireError', {
+            isAccountVerified: false,
+            message: 'Link is expired',
+          });
+        }
+      });
+  } catch (err) {
+    logger.error(`Account: ${err}`);
+    next(err);
+  }
+};
+
+const removeSpecialChars = (str) => {
+  return str.trim().replace(/[^a-zA-Z ]/g, '');
+};
+
+// OK
+const accountUpdate = async (req, res, next) => {
+  const { email } = req.user;
+  const { firstName, lastName, password } = req.body;
+  try {
+    const count = await Account.countDocuments({
+      firstName: removeSpecialChars(firstName),
+      lastName: removeSpecialChars(lastName),
+    });
+    const user = await Account.findOne({ email });
+
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.name = makeUnqName(firstName, lastName, count);
+    user.password = password;
+    await user.save();
+    return sendJSONresponse(res, 200, {
+      message: 'Account Updated Successfully',
+    });
+  } catch (err) {
+    logger.error(`${err}`);
+    next(err);
+  }
+};
+
+// create a new account for individual users
+// const register = async (req, res, next) => {
+//   const data = req.body;
+//   if (!data.email || !data.password) {
+//     return sendJSONresponse(res, 400, {
+//       message: 'You must provide email and password.',
+//     });
+//   }
+//   const result = await Account.countDocuments({
+//     firstName: data.firstName,
+//     lastName: data.lastName,
+//   });
+//   let firstName = createSlug(data.firstName);
+//   let lastName = createSlug(data.lastName);
+//   let uniqueId = result + 1;
+//   const name = firstName + '-' + lastName + '-' + uniqueId;
+//   let account = new Account({
+//     email: data.email,
+//     firstName: data.firstName,
+//     lastName: data.lastName,
+//     name,
+//     contactNo: Date.now(),
+//     password: data.password,
+//     isAccountVerified: false,
+//   });
+//   await account
+//     .save()
+//     .then(async (user) => {
+//       if (user.isAccountVerified)
+//         return sendJSONresponse(res, 201, {
+//           message: 'User created',
+//         });
+//       let verifyToken = generateToken();
+//       let verifyAccountTokenExpiration = Date.now() + 604800;
+
+//       let pendingMember = await PendingMember.find({
+//         email: account.email,
+//       }).select('-__v -createdAt -updatedAt');
+
+//       if (pendingMember.length > 0) {
+//         let pendingMemberToMember = pendingMember.map((m) => {
+//           return { account: account._id, company: m.company };
+//         });
+
+//         const pendingMemberToMemberAccounts =
+//           pendingMemberToMember.map((member) => member.account);
+//         const pendingMemberToMemberCompany =
+//           pendingMemberToMember.map((member) => member.company);
+
+//         await Member.create(pendingMemberToMember);
+
+//         const elasticIndexedMembers = await Member.find({
+//           account: { $in: pendingMemberToMemberAccounts },
+//           company: { $in: pendingMemberToMemberCompany },
+//         }).populate({
+//           path: 'account',
+//           select: '_id name firstName lastName email',
+//         });
+
+//         const memberStructure = (data) => {
+//           return {
+//             mongo_id: data.mongo_id,
+//             account: data.account,
+//             company: data.company,
+//           };
+//         };
+
+//         await bulkInsert(
+//           memberIndex,
+//           elasticIndexedMembers,
+//           memberStructure,
+//         );
+//         logger.info(
+//           chalk.blueBright(
+//             `ElasticSearch successfully documented with bulk on ${memberIndex}`,
+//           ),
+//         );
+
+//         await PendingMember.updateMany(
+//           { email: account.email },
+//           {
+//             removed: true,
+//           },
+//         );
+//       }
+
+//       sendEmailForVerifyAccount(
+//         user.firstName,
+//         user.lastName,
+//         user.email,
+//         verifyToken,
+//       );
+//       accountVerificationToken(
+//         `verifyAccountToken:${verifyToken}`,
+//         user._id,
+//         verifyAccountTokenExpiration,
+//       );
+//       return sendJSONresponse(res, 201, {
+//         message: 'User created',
+//         token: verifyToken,
+//       });
+//     })
+//     .catch((err) => {
+//       logger.error(`Account: ${err}`);
+//       next(err);
+//     });
+// };
 /**
  * Returns jwt token if valid uname and password is provided
  * @param req
@@ -208,21 +373,7 @@ const register = async (req, res, next) => {
 // account holder can login their account
 const login = async (req, res, next) => {
   try {
-    const payLoad = {
-      email: req.user.email,
-      name: req.user.name,
-      _id: req.user._id,
-    };
-    const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
-      expiresIn: config.accessTokenExpire,
-    });
-    const refreshToken = jwt.sign(
-      payLoad,
-      config.refreshTokenSecret,
-      {
-        expiresIn: config.refreshTokenExpire,
-      },
-    );
+    const [accessToken, refreshToken] = genAuthToken(req.user);
     let userObj = {};
     userObj.name = req.user.name;
     userObj.language = req.user.language || 'en';
@@ -363,64 +514,6 @@ const timeline = async (req, res, next) => {
     });
   } catch (error) {
     logger.error(`Account: ${error}`);
-    next(error);
-  }
-};
-// token verification for mail
-const getAccessTokenForVerifyAccount = async (req, res, next) => {
-  try {
-    let multi = client.multi();
-    multi.get(`verifyAccountToken:${req.params.token}`);
-    multi.exec(async (err, data) => {
-      if (err) {
-        logger.error(`${err}`);
-        next(err);
-      }
-      let userID = JSON.parse(data[0]);
-      if (typeof userID === 'string') {
-        const user = await Account.findByIdAndUpdate(
-          { _id: userID },
-          { $set: { isAccountVerified: true } },
-          { safe: true, upsert: true, new: true },
-        ).exec();
-        client.del(`verifyAccountToken:${req.params.token}`);
-        await setDocument(accountIndex, '_doc', {
-          mongo_id: user._id,
-          name: user.name,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        });
-
-        logger.info(
-          chalk.blueBright(
-            `ElasticSearch document added on ${accountIndex}`,
-          ),
-        );
-        return sendJSONresponse(res, 200, {
-          isAccountVerified: true,
-          message: 'Account Verified Successfully',
-        });
-      } else {
-        return sendErrorResponse(res, 400, 'TokenExpireError', {
-          isAccountVerified: false,
-          message: 'Link is expired',
-        });
-      }
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-// account holder can update their account information
-const accountUpdate = async (req, res, next) => {
-  try {
-    await findAccountByIdAndUpdate(req.user._id, req.body);
-    return sendJSONresponse(res, 200, {
-      message: 'profile updated',
-    });
-  } catch (error) {
-    logger.error(`${error}`);
     next(error);
   }
 };
@@ -667,94 +760,27 @@ const tokenRefresh = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
   try {
-    const { user } = req;
     const { oldPassword, newPassword } = req.body;
-    if (oldPassword === newPassword) {
-      return sendErrorResponse(res, 400, 'ValidationError', {
-        message: `You can not use the same password`,
-      });
-    }
-    await Account.findOne({
-      email: user.email,
-    }).exec((err, user) => {
-      if (err) {
-        next(err);
-      }
-      user.comparePassword(oldPassword, async (err, isMatched) => {
-        if (err) {
-          return next(err);
-        }
-        if (isMatched) {
-          user.password = newPassword;
-          await user.save();
-          return sendJSONresponse(res, 200, {
-            message: 'Password changed successfully',
-          });
-        } else {
-          return sendErrorResponse(
-            res,
-            401,
-            'PasswordValidationError',
-            {
-              message: `Your previous password is wrong`,
-            },
-          );
-        }
-      });
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const resendEmail = async (req, res, next) => {
-  try {
-    const email = req.body.email;
-    const resentType = req.body.resentType;
-    const token = crypto.randomBytes(20).toString('hex');
-    const verifyToken = crypto
-      .createHash('sha256')
-      .update(token)
-      .digest('hex');
+    // if (oldPassword === newPassword) {
+    //   return sendErrorResponse(res, 400, 'ValidationError', {
+    //     message: `You can not use the same password`,
+    //   });
+    // }
     const user = await Account.findOne({
-      email: email,
+      email: req.user.email,
     });
-    if (!resentType) {
-      return sendErrorResponse(res, 400, {
-        message: 'Please provide resent-type',
+    const isMatched = await user.comparePassword(oldPassword);
+    if (isMatched) {
+      user.password = newPassword;
+      await user.save();
+      return sendJSONresponse(res, 200, {
+        message: 'Password changed successfully',
+      });
+    } else {
+      return sendErrorResponse(res, 401, 'PasswordValidationError', {
+        message: `Your previous password is wrong`,
       });
     }
-    if (resentType === 'verify-account') {
-      let verifyAccountTokenExpiration = Date.now() + 604800;
-      sendEmailForVerifyAccount(
-        user.firstName,
-        user.lastName,
-        user.email,
-        verifyToken,
-      );
-      accountVerificationToken(
-        `verifyAccountToken:${verifyToken}`,
-        user._id,
-        verifyAccountTokenExpiration,
-      );
-    }
-    return sendJSONresponse(res, 200, {
-      message: 'resend email successfully',
-    });
-  } catch (error) {
-    logger.error(`Account: ${error}`);
-    next(error);
-  }
-};
-
-const inviteSignup = async (req, res, next) => {
-  try {
-    const email = req.body.email;
-    inviteSignupEmail(email);
-    return sendJSONresponse(res, 200, {
-      message:
-        'Invitaion sent successfully. Please check your email.',
-    });
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
@@ -861,6 +887,7 @@ const saveLanguage = async (req, res, next) => {
       {
         $set: { language: req.body.language },
       },
+      { upsert: true, new: true },
     );
 
     return sendJSONresponse(res, 200, {
@@ -872,8 +899,48 @@ const saveLanguage = async (req, res, next) => {
   }
 };
 
+const updateEmail = async (req, res, next) => {
+  try {
+    await Account.findByIdAndUpdate(
+      {
+        _id: req.body.id,
+      },
+      {
+        $set: { email: req.body.email },
+      },
+      { upsert: true, new: true },
+    );
+    const token = {
+      hash: generateToken(),
+      exp: Date.now() + 604800,
+    };
+
+    try {
+      await signupMail(req.body.email, token.hash);
+    } catch (err) {
+      logger.error(err);
+      return sendJSONresponse(res, 422, {
+        message: 'Mail delivery failure!',
+      });
+    }
+    // TODO: blacklist token for old email address.
+    // Redis
+    await accountVerificationToken(
+      `verifyAccountToken:${token.hash}`,
+      req.body.email,
+      token.exp,
+    );
+    return sendJSONresponse(res, 200, {
+      message: 'Email updated',
+    });
+  } catch (error) {
+    logger.error(`Account: ${error}`);
+    next(error);
+  }
+};
+
 module.exports = {
-  register,
+  // register,
   resendEmail,
   login,
   logout,
@@ -886,11 +953,12 @@ module.exports = {
   resetPassword,
   changePassword,
   skillArea,
-  inviteSignup,
+  signup,
   userTaskList,
   userSubtasks,
   subtaskMarkAsDone,
   userDueTask,
   userDailyProgress,
   saveLanguage,
+  updateEmail,
 };

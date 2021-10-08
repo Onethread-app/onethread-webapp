@@ -35,6 +35,10 @@ const member = new Schema(
       type: Boolean,
       default: false,
     },
+    isApproved: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

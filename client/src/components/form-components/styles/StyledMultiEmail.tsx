@@ -1,6 +1,8 @@
-import { SetStateAction, useRef, useState } from 'react';
+import { SetStateAction, useRef, useState, useEffect } from 'react';
 
 import styled from 'styled-components';
+
+import { isEmail } from 'helpers/utils';
 
 import StyledError from './StyledError';
 
@@ -15,36 +17,51 @@ const StyledDiv = styled.div`
   border: 2px gray solid;
   border-radius: 6px;
   width: 100%;
-  height: 4rem;
-  padding: 4px;
-  display: flex;
-  flex-wrap: wrap;
+  min-height: 3rem;
+  max-height: 10rem;
+  padding: 8px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start !important;
+  align-items: center !important;
   gap: 1rem;
+  cursor: text;
 
   & div {
+    font-size: 12px;
     padding: 2px 8px;
     border-radius: 1rem;
-    margin: 0 2px;
     border: 2px gray solid;
-    margin: 0 4px;
-    height: 1.5rem;
+    /* margin: 0 4px; */
+    height: 3rem;
     width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin-bottom: 0.5rem;
+    margin-top: 0.5rem; */
+    line-height: 1;
   }
 
   & input {
     min-height: 1.5rem;
     max-width: 95%;
-    max-height: 95%;
+    max-height: 3rem;
     border-color: transparent;
     outline: transparent;
+    border: none;
+    margin-right: auto;
+    /* margin-bottom: 0.5rem;
+    margin-top: 0.5rem; */
   }
 
   & input:focus {
     border-color: transparent;
     outline: transparent;
     border: none;
-    height: 1.5rem;
+    /* height: 1.5rem; */
   }
 
   button {
@@ -68,12 +85,7 @@ const ReactMultiEmail = ({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const isInList = (email: string) => {
-    return emails.includes(email);
-  };
-
-  const isEmail = (email: string) => {
-    const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-    return emailRegex.test(email);
+    return emails?.includes(email);
   };
 
   const isValid = (email: string) => {
@@ -99,7 +111,7 @@ const ReactMultiEmail = ({
     key: string;
     preventDefault: () => void;
   }) => {
-    if (['Enter', 'Tab', ',', ' '].includes(evt.key)) {
+    if (['Enter', ',', ' '].includes(evt.key)) {
       evt.preventDefault();
 
       let value = input.trim();
@@ -140,23 +152,22 @@ const ReactMultiEmail = ({
       setEmails([...emails, ...toBeAdded]);
     }
   };
+
+  useEffect(() => {
+    inputRef.current?.scrollIntoView();
+  }, [emails]);
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-      }}
-    >
+    <>
       <StyledDiv
         onFocus={() => {
-          inputRef.current?.focus();
+          inputRef?.current?.focus();
         }}
         onClick={() => {
-          inputRef.current?.focus();
+          inputRef?.current?.focus();
         }}
       >
-        {emails.map((email) => (
+        {emails?.map((email) => (
           <div key={email}>
             {email}
             <button
@@ -181,7 +192,7 @@ const ReactMultiEmail = ({
         />
       </StyledDiv>
       {errors && <StyledError errorMessage={errors}></StyledError>}
-    </div>
+    </>
   );
 };
 
