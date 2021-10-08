@@ -114,7 +114,7 @@ const load = (req, res, next, id) => {
       }
     })
     .catch((err) => {
-      return sendErrorResponse(res, 404, 'IdNotExist', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         success: false,
         message: 'No valid entry found for provided Board ID',
       });

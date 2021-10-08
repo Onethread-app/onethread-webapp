@@ -165,7 +165,7 @@ const load = (req, res, next, id) => {
       next();
     })
     .catch(() => {
-      return sendErrorResponse(res, 404, 'IdNotExist', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         success: false,
         message: 'No valid entry found for provided Task ID',
       });

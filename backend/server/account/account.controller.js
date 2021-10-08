@@ -482,7 +482,7 @@ const sendEmailForForgetPassword = async (req, res, next) => {
       email: req.body.email,
     });
     if (!user)
-      return sendErrorResponse(res, 404, 'UserNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'no user found',
         fieldName: 'email',
       });
@@ -691,14 +691,9 @@ const changePassword = async (req, res, next) => {
             message: 'Password changed successfully',
           });
         } else {
-          return sendErrorResponse(
-            res,
-            401,
-            'PasswordValidationError',
-            {
-              message: `Your previous password is wrong`,
-            },
-          );
+          return sendErrorResponse(res, 401, 'AuthError', {
+            message: `Your previous password is wrong`,
+          });
         }
       });
     });
