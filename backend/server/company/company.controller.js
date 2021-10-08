@@ -105,7 +105,7 @@ const createCompany = async (req, res, next) => {
       name: req.body.name,
     });
     if (duplicate) {
-      return sendErrorResponse(res, 409, 'DuplicateNameError', {
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
         message: 'Name already exist',
       });
     }
@@ -114,7 +114,7 @@ const createCompany = async (req, res, next) => {
 
     const planId = await Plan.findOne({ name: 'trial' });
     if (!planId) {
-      return sendErrorResponse(res, 404, 'PlanNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'Plan is not created',
       });
     }
@@ -571,14 +571,9 @@ const editCertification = async (req, res, next) => {
     });
 
     if (!certificate) {
-      return sendErrorResponse(
-        res,
-        404,
-        'CertificateIdNotFoundError',
-        {
-          message: `certificateId not found`,
-        },
-      );
+      return sendErrorResponse(res, 404, 'NotFound', {
+        message: `certificateId not found`,
+      });
     } else {
       for (const key in req.body) {
         if (req.body.hasOwnProperty(key)) {

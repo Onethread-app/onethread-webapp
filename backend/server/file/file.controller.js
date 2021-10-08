@@ -283,7 +283,7 @@ const fileInProject = async (req, res, next) => {
         next(err);
       });
   } else {
-    return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+    return sendErrorResponse(res, 404, 'NotFound', {
       message: 'project id is not exist',
     });
   }
@@ -340,7 +340,7 @@ const fileInTask = async (req, res, next) => {
           next(err);
         });
     } else {
-      return sendErrorResponse(res, 404, 'TaskIdNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'Task id is not exist',
       });
     }
@@ -416,5 +416,5 @@ module.exports = {
   fileInProject,
   fileInTask,
   removeFileInTask,
-  reportImage
+  reportImage,
 };

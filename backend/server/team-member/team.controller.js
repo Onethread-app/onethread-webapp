@@ -301,7 +301,7 @@ const getMemberLoad = async (req, res, next) => {
       req.member = member;
       return next();
     } else {
-      return sendErrorResponse(res, 404, 'MemberIdNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'No valid entry found for provided Member ID',
       });
     }

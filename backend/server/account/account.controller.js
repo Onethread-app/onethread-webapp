@@ -600,7 +600,7 @@ const sendEmailForForgetPassword = async (req, res, next) => {
       email: req.body.email,
     });
     if (!user)
-      return sendErrorResponse(res, 404, 'UserNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'no user found',
         fieldName: 'email',
       });
