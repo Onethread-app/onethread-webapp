@@ -109,7 +109,7 @@ const subscriptionExpireCheck = () => {
         isActive: true,
       }).sort({ _id: -1 });
       if (!subscribe) {
-        return sendErrorResponse(res, 404, 'CompanyIdNotFoundError', {
+        return sendErrorResponse(res, 404, 'NotFound', {
           message: `companyId not found`,
         });
       }
