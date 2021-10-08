@@ -252,6 +252,15 @@ const getCompany = async (req, res, next) => {
   }
 };
 
+const publicCompanyInformation = async (req, res, next) => {
+  try {
+    return sendJSONresponse(res, 200, req.company);
+  } catch (error) {
+    logger.error(`Company: ${error}`);
+    next(error);
+  }
+};
+
 // update a company basic info
 const updateBasicInfo = async (req, res, next) => {
   // Check for JSON
@@ -337,7 +346,6 @@ const getCompanyLoad = async (req, res, next) => {
     const company = await Company.findOne({
       _id: req.params.companyId,
     }).populate('account', '_id firstName lastName email contactNo');
-
     if (company) {
       req.company = company;
       return next();
@@ -404,13 +412,51 @@ const authorizeUser = (functionalRole, ...userRoles) => {
           message: `Restricted`,
         });
       }
-
       next();
     } catch (error) {
       logger.error(`Company: ${error}`);
       next(error);
     }
   };
+};
+
+const FindCompanyAtBeginning = async (req, res, next) => {
+  try {
+    const { limit = 50, skip = 0, name } = req.query;
+
+    if (name) {
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool: {
+            must: [
+              {
+                match_phrase_prefix: {
+                  name: name,
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      const response = await search(companyIndex, '_doc', body);
+
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits.map((h) => h._source),
+      });
+    } else {
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
+      });
+    }
+  } catch (error) {
+    logger.error(`Company: ${error}`);
+    next(error);
+  }
 };
 
 const searchCompany = async (req, res, next) => {
@@ -840,6 +886,7 @@ const adminSuperAdminFinder = async (req, res, next) => {
     next(error);
   }
 };
+
 module.exports = {
   authorizeUser,
   createCompany,
@@ -861,4 +908,6 @@ module.exports = {
   adminSuperAdminFinder,
   editCertification,
   allCompanytasks,
+  FindCompanyAtBeginning,
+  publicCompanyInformation,
 };

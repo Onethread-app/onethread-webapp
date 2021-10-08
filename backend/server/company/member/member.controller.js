@@ -56,6 +56,42 @@ const changeRole = async (req, res, next) => {
   }
 };
 
+const sendJoinRequest = async (req, res, next) => {
+  // TODO: Accept only application/json requests
+  // TODO: Check if member already joined or requested to the company
+  try {
+    const member = await Member.create({
+      account: req.user._id,
+      company: req.company._id,
+      isApproved: false,
+    });
+    return sendJSONresponse(res, 201, {
+      message: 'Member join sucessful. please wait for approval',
+      memberId: member._id,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
+const acceptJoinRequest = async (req, res, next) => {
+  try {
+    await Member.findByIdAndUpdate(
+      { _id: req.params.memberId },
+      { $set: { isApproved: true } },
+      { safe: true, upsert: true, new: true },
+    );
+
+    return sendJSONresponse(res, 200, {
+      message: 'Member join sucessful.',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
 const addMember = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
@@ -233,6 +269,10 @@ const deleteMember = async (req, res, next) => {
       _id: req.member._id,
       company: req.company._id,
     });
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature Onboarding (#251)
     await Team.updateOne(
       {
         member: member._id,
@@ -531,4 +571,6 @@ module.exports = {
   searchMember,
   changeRole,
   checkInvitedMemberStatus,
+  sendJoinRequest,
+  acceptJoinRequest,
 };
