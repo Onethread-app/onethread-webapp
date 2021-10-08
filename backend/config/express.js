@@ -75,8 +75,7 @@ if (
     expressWinston.logger({
       winstonInstance,
       meta: true,
-      msg:
-        'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
+      msg: 'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
       colorStatus: true,
     }),
   );
@@ -116,7 +115,7 @@ app.use((err, req, res, next) => {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  return sendErrorResponse(res, 404, 'MethodNotFoundError', {
+  return sendErrorResponse(res, 404, 'NotFound', {
     message: 'API not found',
   });
 });
