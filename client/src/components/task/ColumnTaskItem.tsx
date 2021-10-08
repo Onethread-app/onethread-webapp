@@ -131,6 +131,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
       props.fetchingTask === false &&
       props.taskError === ''
     ) {
+      setLoading(false);
       history.push(
         `/company/${props.uniqueCompanyName}/project/${props.projectId}/board/${task.boardId}/task/${task._id}`,
       );

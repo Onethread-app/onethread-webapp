@@ -5,7 +5,7 @@ import { server } from 'config';
 
 function getIRequestProp(isMultipart) {
   const serverUrl = server;
-  const token = JSON.parse(localStorage.getItem('tigrow_acc_id'));
+  const token = JSON.parse(localStorage.getItem('ot_access_id'));
   // const headers = tokenConfig();
   return {
     serverUrl: serverUrl,

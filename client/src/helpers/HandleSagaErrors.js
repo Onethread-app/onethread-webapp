@@ -28,6 +28,7 @@ export const returnErrorText = (error) => {
     }
   }
 };
+// TODO: Show error messages with correct error type.
 
 const handleError = (error, errorHandler) => {
   if (error.response) {

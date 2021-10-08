@@ -456,3 +456,22 @@
   right: 20px;
   z-index: 5;
 }
+
+.form {
+  margin-left: 5rem;
+  margin-right: auto;
+  font-size: inherit;
+
+  label {
+    margin-bottom: 0.5rem;
+  }
+
+  input {
+    width: 363px;
+    height: auto;
+    left: 55px;
+    top: 473px;
+
+    box-sizing: border-box;
+  }
+}

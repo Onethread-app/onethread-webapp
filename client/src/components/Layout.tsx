@@ -211,7 +211,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     ) {
       updateBoardReducer();
     }
-    props.fetchRooms();
+    // props.fetchRooms();
   }, [props.match, props.project._id, props.boardId]);
 
   useEffect(() => {
@@ -232,12 +232,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   useEffect(() => {
     if (
       loading === true &&
-      props.fetchingUser === false &&
+      // props.fetchingUser === false &&
       isEmpty(props.user._id) === false
     ) {
       setLoading(false);
     }
-  }, [loading, props.fetchingUser]);
+  }, [loading, props.user._id]);
 
   useEffect(() => {
     if (isEmpty(props.user._id) === true) {
@@ -350,8 +350,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
             className="fw9 dt center tigrow-lightBlue pt4"
             to="/signin"
             onClick={() => {
-              localStorage.removeItem('tigrow_acc_id');
-              localStorage.removeItem('tigrow_real_id');
+              localStorage.removeItem('ot_access_id');
+              localStorage.removeItem('ot_refresh_id');
             }}
           >
             {t('landing.login.sign-in-form.sign-in-button')}
