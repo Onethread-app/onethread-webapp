@@ -7,6 +7,15 @@ import {
   USER_FETCH_ERROR,
   CLEAR_USER_REDUCER_STATE,
 } from 'stores/user/Types';
+import {
+  USER_CHANGE_EMAIL_FAILURE,
+  USER_CHANGE_EMAIL_START,
+  USER_CHANGE_EMAIL_SUCCESS,
+  USER_CLEAR_STATE,
+  USER_SIGNUP_FAILURE,
+  USER_SIGNUP_START,
+  USER_SIGNUP_SUCCESS,
+} from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -14,6 +23,7 @@ import { createBrowserHistory } from 'history';
 import { tigrowApi } from 'config';
 import { Toaster } from '@blueprintjs/core';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 // import { removePushSubscriptionFromServer } from '../../usePushNotifications';
 
@@ -38,17 +48,17 @@ const RouteHistory = createBrowserHistory();
 const resfreshApiAction = async () => {
   let accessToken =
     typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+    localStorage.getItem('ot_access_id')
+      ? JSON.parse(localStorage.getItem('ot_access_id')!)
       : null;
   const refreshToken =
     typeof window !== undefined &&
-    localStorage.getItem('tigrow_real_id')
-      ? JSON.parse(localStorage.getItem('tigrow_real_id')!)
+    localStorage.getItem('ot_refresh_id')
+      ? JSON.parse(localStorage.getItem('ot_refresh_id')!)
       : null;
   if (
-    localStorage.getItem('tigrow_acc_id') &&
-    localStorage.getItem('tigrow_real_id')
+    localStorage.getItem('ot_access_id') &&
+    localStorage.getItem('ot_refresh_id')
   ) {
     try {
       const response = await tigrowApi.post('accounts/refresh', {
@@ -57,27 +67,36 @@ const resfreshApiAction = async () => {
       });
       if (response.status === 200) {
         localStorage.setItem(
-          'tigrow_acc_id',
+          'ot_access_id',
           JSON.stringify(response.data.accessToken),
         );
         localStorage.setItem(
-          'tigrow_real_id',
+          'ot_refresh_id',
           JSON.stringify(response.data.refreshToken),
         );
-        accessToken = localStorage.getItem('tigrow_acc_id');
+        accessToken = localStorage.getItem('ot_access_id');
         const accessTokenExpiredTime =
           parseJwt(accessToken) * 1000 - 1000;
         const accessTokenRemainingTime =
           accessTokenExpiredTime - Date.now();
         setTimeout(resfreshApiAction, accessTokenRemainingTime);
+      } else {
+        localStorage.removeItem('ot_access_id');
+        localStorage.removeItem('ot_refresh_id');
+        Toaster.create().show({
+          message: 'Token is invalid. Please sign in.',
+          intent: 'danger',
+        });
+        RouteHistory.push('/signin');
+        window.location.reload();
       }
       return errorMessgeHandler(response);
     } catch (error) {
       return errorMessgeHandler(error);
     }
   } else {
-    localStorage.removeItem('tigrow_acc_id');
-    localStorage.removeItem('tigrow_real_id');
+    localStorage.removeItem('ot_access_id');
+    localStorage.removeItem('ot_refresh_id');
     Toaster.create().show({
       message: 'Token is invalid. Please sign in.',
       intent: 'danger',
@@ -88,84 +107,94 @@ const resfreshApiAction = async () => {
   }
 };
 
-export const userSignupAction = (newUser: UserModel) => async (
-  dispatch: any,
-) => {
-  try {
-    const response = await tigrowApi.post(
-      'accounts/signup',
-      newUser,
-      {
-        'Content-Type': 'application/json',
-      } as AxiosRequestConfig,
-    );
-    if (response.status === 201) {
-      localStorage.setItem('email', JSON.stringify(newUser.email));
+export const userSignupAction =
+  (newUser: UserModel) => async (dispatch: any) => {
+    try {
+      const response = await tigrowApi.post(
+        'accounts/signup',
+        newUser,
+        {
+          'Content-Type': 'application/json',
+        } as AxiosRequestConfig,
+      );
+      if (response.status === 201) {
+        localStorage.setItem('email', JSON.stringify(newUser.email));
+      }
+      return errorMessgeHandler(response);
+    } catch (error) {
+      return errorMessgeHandler(error);
     }
-    return errorMessgeHandler(response);
-  } catch (error) {
-    return errorMessgeHandler(error);
-  }
-};
+  };
 
-export const inviteUserToSignUp = (email: string) => async (
-  dispatch: any,
-) => {
-  try {
-    const response = await tigrowApi.post('accounts/invite-signup', {
-      email,
-    });
-    return response;
-  } catch (error) {
-    return errorMessgeHandler(error);
-  }
-};
+export const inviteUserToSignUp =
+  (email: string) => async (dispatch: any) => {
+    try {
+      const response = await tigrowApi.post(
+        'accounts/invite-signup',
+        {
+          email,
+        },
+      );
+      Toaster.create().show({
+        message: `An invitation has been sent to ${email}`,
+        timeout: 3000,
+        intent: 'success',
+      });
+      return response;
+    } catch (error) {
+      Toaster.create().show({
+        message: `There was an error. ${returnErrorText(error)}`,
+        timeout: 3000,
+        intent: 'danger',
+      });
+      return returnErrorText(error);
+    }
+  };
 
-export const loginAction = (loginUser: LoginModel) => async (
-  dispatch: any,
-) => {
-  try {
-    const response = await tigrowApi.post(
-      'accounts/login',
-      loginUser,
-      {
-        'Content-Type': 'application/json',
-      } as AxiosRequestConfig,
-    );
-    if (response.status === 200) {
-      localStorage.setItem(
-        'tigrow_acc_id',
-        JSON.stringify(response.data.accessToken),
+export const loginAction =
+  (loginUser: LoginModel) => async (dispatch: any) => {
+    try {
+      const response = await tigrowApi.post(
+        'accounts/login',
+        loginUser,
+        {
+          'Content-Type': 'application/json',
+        } as AxiosRequestConfig,
       );
-      localStorage.setItem(
-        'tigrow_real_id',
-        JSON.stringify(response.data.refreshToken),
-      );
-      if (response.data.pushSubscription) {
+      if (response.status === 200) {
         localStorage.setItem(
-          'pushSubscription',
-          JSON.stringify(response.data.pushSubscription),
+          'ot_access_id',
+          JSON.stringify(response.data.accessToken),
         );
+        localStorage.setItem(
+          'ot_refresh_id',
+          JSON.stringify(response.data.refreshToken),
+        );
+        if (response.data.pushSubscription) {
+          localStorage.setItem(
+            'pushSubscription',
+            JSON.stringify(response.data.pushSubscription),
+          );
+        }
+        if (localStorage.getItem('email')) {
+          localStorage.removeItem('email');
+        }
       }
-      if (localStorage.getItem('email')) {
-        localStorage.removeItem('email');
-      }
+      return errorMessgeHandler(response);
+    } catch (error) {
+      return errorMessgeHandler(error);
     }
-    return errorMessgeHandler(response);
-  } catch (error) {
-    return errorMessgeHandler(error);
-  }
-};
+  };
 
 export const fetchUserAction = () => async (dispatch: any) => {
-  let accessToken = localStorage.getItem('tigrow_acc_id');
+  let accessToken = localStorage.getItem('ot_access_id');
   let accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
-  const refreshToken = localStorage.getItem('tigrow_real_id');
+  const refreshToken = localStorage.getItem('ot_refresh_id');
   const refreshTokenExpiredTime = parseJwt(refreshToken) * 1000;
   // when refresh token is expired
   if (refreshTokenExpiredTime < Date.now()) {
-    localStorage.removeItem('tigrow_acc_id');
-    localStorage.removeItem('tigrow_real_id');
+    localStorage.removeItem('ot_access_id');
+    localStorage.removeItem('ot_refresh_id');
   } else if (accessTokenExpiredTime < Date.now()) {
     // when access token is expired
     await resfreshApiAction();
@@ -184,7 +213,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
         console.log(error);
       }
       response = { ...response.data.user, timeline };
-      accessToken = localStorage.getItem('tigrow_acc_id');
+      accessToken = localStorage.getItem('ot_access_id');
       accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
       const accessTokenRemainingTime =
         accessTokenExpiredTime - Date.now();
@@ -198,54 +227,55 @@ export const fetchUserAction = () => async (dispatch: any) => {
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    console.log(error);
+    localStorage.removeItem('ot_access_id');
+    localStorage.removeItem('ot_refresh_id');
+    window.location.assign('/signin');
   }
 };
 
-export const logoutAction = (routeHistory: History) => async (
-  dispatch: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const refreshToken =
-        typeof window !== undefined &&
-        localStorage.getItem('tigrow_real_id')
-          ? JSON.parse(localStorage.getItem('tigrow_real_id')!)
-          : null;
+export const logoutAction =
+  (routeHistory: History) => async (dispatch: any) => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const refreshToken =
+          typeof window !== undefined &&
+          localStorage.getItem('ot_refresh_id')
+            ? JSON.parse(localStorage.getItem('ot_refresh_id')!)
+            : null;
 
-      let subscriptionId;
-      let pushSubscription: any = localStorage.getItem(
-        'pushSubscription',
-      );
-      if (pushSubscription) {
-        pushSubscription = JSON.parse(pushSubscription);
-        subscriptionId = pushSubscription._id;
+        let subscriptionId;
+        let pushSubscription: any = localStorage.getItem(
+          'pushSubscription',
+        );
+        if (pushSubscription) {
+          pushSubscription = JSON.parse(pushSubscription);
+          subscriptionId = pushSubscription._id;
+        }
+        const response = await tigrowApi.post(
+          `accounts/logout`,
+          { refreshToken, subscriptionId },
+          headers,
+        );
+        if (isEqual(response.status, 200)) {
+          localStorage.removeItem('pushSubscription');
+          localStorage.removeItem('ot_access_id');
+          localStorage.removeItem('ot_refresh_id');
+          routeHistory.push('/signin');
+          await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+          await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
+          await dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
+          await dispatch({ type: CLEAR_USER_REDUCER_STATE });
+        }
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log('No token found in logout action');
       }
-      const response = await tigrowApi.post(
-        `accounts/logout`,
-        { refreshToken, subscriptionId },
-        headers,
-      );
-      if (isEqual(response.status, 200)) {
-        localStorage.removeItem('pushSubscription');
-        localStorage.removeItem('tigrow_acc_id');
-        localStorage.removeItem('tigrow_real_id');
-        routeHistory.push('/signin');
-        await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
-        await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
-        await dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
-        await dispatch({ type: CLEAR_USER_REDUCER_STATE });
-      }
-    } else {
+    } catch (error) {
       // tslint:disable-next-line: no-console
-      console.log('No token found in logout action');
+      console.log('error in logout', error);
     }
-  } catch (error) {
-    // tslint:disable-next-line: no-console
-    console.log('error in logout', error);
-  }
-};
+  };
 
 export const resendMailForSignup = async (email?: string) => {
   try {
@@ -268,50 +298,81 @@ export const resendMailForSignup = async (email?: string) => {
   }
 };
 
-export const getVideoConferencesJoinee = () => async (
-  dispatch: any,
-) => {
-  let accessToken = localStorage.getItem('tigrow_acc_id');
-  let accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
-  const refreshToken = localStorage.getItem('tigrow_real_id');
-  const refreshTokenExpiredTime = parseJwt(refreshToken) * 1000;
-  // when refresh token is expired
-  if (refreshTokenExpiredTime < Date.now()) {
-    localStorage.removeItem('tigrow_acc_id');
-    localStorage.removeItem('tigrow_real_id');
-  } else if (accessTokenExpiredTime < Date.now()) {
-    // when access token is expired
-    await resfreshApiAction();
-  }
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      let response;
-
-      try {
-        response = await tigrowApi.get(
-          `video-conf/get-joinee`,
-          headers,
-        );
-      } catch (error) {
-        // tslint:disable-next-line: no-console
-        // console.log(error);
-      }
-      response = { ...response.data.user };
-      accessToken = localStorage.getItem('tigrow_acc_id');
-      accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
-      const accessTokenRemainingTime =
-        accessTokenExpiredTime - Date.now();
-      setTimeout(resfreshApiAction, accessTokenRemainingTime);
-      dispatch({ type: FETCH_USER, payload: response });
-    } else {
-      dispatch({
-        type: USER_FETCH_ERROR,
-        payload: 'error in user fetching',
-      });
+export const getVideoConferencesJoinee =
+  () => async (dispatch: any) => {
+    let accessToken = localStorage.getItem('ot_access_id');
+    let accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
+    const refreshToken = localStorage.getItem('ot_refresh_id');
+    const refreshTokenExpiredTime = parseJwt(refreshToken) * 1000;
+    // when refresh token is expired
+    if (refreshTokenExpiredTime < Date.now()) {
+      localStorage.removeItem('ot_access_id');
+      localStorage.removeItem('ot_refresh_id');
+    } else if (accessTokenExpiredTime < Date.now()) {
+      // when access token is expired
+      await resfreshApiAction();
     }
-  } catch (error) {
-    // tslint:disable-next-line: no-console
-    // console.log(error);
-  }
-};
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        let response;
+
+        try {
+          response = await tigrowApi.get(
+            `video-conf/get-joinee`,
+            headers,
+          );
+        } catch (error) {
+          // tslint:disable-next-line: no-console
+          // console.log(error);
+        }
+        response = { ...response.data.user };
+        accessToken = localStorage.getItem('ot_access_id');
+        accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
+        const accessTokenRemainingTime =
+          accessTokenExpiredTime - Date.now();
+        setTimeout(resfreshApiAction, accessTokenRemainingTime);
+        dispatch({ type: FETCH_USER, payload: response });
+      } else {
+        dispatch({
+          type: USER_FETCH_ERROR,
+          payload: 'error in user fetching',
+        });
+      }
+    } catch (error) {
+      // tslint:disable-next-line: no-console
+      // console.log(error);
+    }
+  };
+
+export const userSignupStart = (email: string) => ({
+  type: USER_SIGNUP_START,
+  payload: email,
+});
+
+export const userSignupSuccess = () => ({
+  type: USER_SIGNUP_SUCCESS,
+});
+
+export const userSignupFailure = (response: string) => ({
+  type: USER_SIGNUP_FAILURE,
+  payload: response,
+});
+
+export const userClearState = () => ({
+  type: USER_CLEAR_STATE,
+});
+
+export const userChangeEmailStart = (email: string, id: string) => ({
+  type: USER_CHANGE_EMAIL_START,
+  payload: { email, id },
+});
+
+export const userChangeEmailSuccess = () => ({
+  type: USER_CHANGE_EMAIL_SUCCESS,
+});
+
+export const userChangeEmailFailure = (error) => ({
+  type: USER_CHANGE_EMAIL_FAILURE,
+  payload: error,
+});

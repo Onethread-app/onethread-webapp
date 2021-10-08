@@ -23,8 +23,8 @@ const Subtasks = () => {
           headers,
         );
         setSubtasks(response.data);
-        setLoading(false);
       }
+      setLoading(false);
     };
     getUsersSubtasks();
   }, []);
