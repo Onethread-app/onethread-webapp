@@ -2,10 +2,11 @@ import { StyledButton as Button } from 'components/form-components/Index.styles'
 import styled from 'styled-components';
 
 const StyledInput = styled.input`
-  border: 2px solid
+  border: 1px solid
     ${(props: { error: boolean }) =>
-      props.error === true ? 'red' : 'transparent'};
+      props.error ? 'red' : '#c9c9c9'};
   border-right: none;
+  border-radius: 6px 0 0 6px;
 
   &:focus {
     outline: none;
@@ -13,7 +14,7 @@ const StyledInput = styled.input`
       ${(props: { error: boolean }) =>
         props.error === true
           ? 'red'
-          : 'var(--primary-bg-color, #3484f0)'};
+          : 'var(--secondary-bg-color, #3484f0)'};
     border-right: none;
   }
   text-indent: 10px;
@@ -32,21 +33,10 @@ const StyledContainer = styled.div`
     font-size: 18px;
   }
 
-  input,
   button {
     border: 2px solid transparent;
   }
 
-  input {
-    border-radius: 6px 0 0 6px;
-    border: 1px solid #c9c9c9;
-  }
-
-  input:focus {
-    outline: none;
-    border: 2px solid var(---primary-bg-color, #3484f0);
-    border-right: none;
-  }
   button:focus {
     outline: none;
     border: 2px solid var(---primary-bg-color, #3484f0);

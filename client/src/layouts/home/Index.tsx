@@ -1,16 +1,47 @@
 import { isMobileOnly } from 'react-device-detect';
+import { useEffect } from 'react';
 
 import VideoConference from 'components/home/VideoConference';
 import { Tasks } from 'components/home/Tasks';
-import Profile from 'components/home/Profile';
-// import Weather from 'components/home/Weather';
-// import ProfileProgress from 'components/home/ProfileProgress';
 import Projects from 'components/home/Projects';
 import Subtasks from 'components/home/Subtasks';
 
+import { Avatar, Container, Row } from './Index.styles';
 import './Index.styles.scss';
+import CompanySection from 'components/home/company-section/CompanySection';
+import ProjectSection from 'components/home/project-section/ProjectSection';
+import TaskSection from 'components/home/task-section/TaskSection';
+import { connect, useDispatch } from 'react-redux';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
+// import { getProjectsIndividual } from 'stores/project/Actions';
+import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
+import { getCompanyDetails } from 'stores/company/Actions';
+import { getAllUserTasks } from 'stores/task/Actions';
 
-const index = () => {
+const Index = (props: any) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+  }, []);
+
+  useEffect(() => {
+    if (props.user._id) {
+      props.getAllCompaniesByUserId(props.user?._id);
+    }
+    // props.getProjectsIndividual();
+  }, [props.user._id]);
+
+  useEffect(() => {
+    if (props.currentCompany.name === '') {
+      props.getCompanyDetails(props.companies[0]?.company.uniqueName);
+    }
+  }, [props.companies, props.currentCompany]);
+
+  useEffect(() => {
+    props.getAllUserTasks();
+  }, [props.currentCompany]);
+
   return isMobileOnly ? (
     <div className="home-container">
       <div>
@@ -30,22 +61,28 @@ const index = () => {
       </div> */}
     </div>
   ) : (
-    <div className="home-container">
-      <div className="w-100">
-        <Projects />
-        <VideoConference />
-      </div>
-      <div className="w-100">
-        {/* <Weather /> */}
-        <Tasks />
-        <Subtasks />
-      </div>
-      <div className="w-100">
-        <Profile />
-        {/* <ProfileProgress /> */}
-      </div>
-    </div>
+    <Container>
+      <span>PERSONAL DASHBOARD</span>
+      <Row justify="flex-start">
+        <Avatar>{props.user?.firstName?.substring(0, 2)}</Avatar> Hi,{' '}
+        {props.user.firstName}
+      </Row>
+      <CompanySection />
+      <ProjectSection />
+      <TaskSection />
+    </Container>
   );
 };
 
-export default index;
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+  currentCompany: state.companyReducer.currentCompany,
+  companies: state.userReducer.user.companies,
+});
+
+export default connect(mapStateToProps, {
+  getAllCompaniesByUserId,
+  // getProjectsIndividual,
+  getCompanyDetails,
+  getAllUserTasks,
+})(Index);
