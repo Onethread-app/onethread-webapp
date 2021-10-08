@@ -3,7 +3,8 @@ import { sortBy } from 'lodash';
 import { ITask, Order } from 'stores/task/Reducer';
 
 export const isValidEmail = (email: string) => {
-  const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regexForEmailValidation =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if (email.match(regexForEmailValidation)) {
     return true;
   } else return false;
@@ -87,4 +88,10 @@ export const msToTime = (s: number) => {
     ':' +
     pad(((s % 6e4) / 1000) | 0)
   );
+};
+
+export const isEmail = (email: string) => {
+  const emailRegex =
+    /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+  return emailRegex.test(email);
 };

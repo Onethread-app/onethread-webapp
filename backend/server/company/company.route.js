@@ -28,12 +28,22 @@ router
 router
   .route('/user-role-company')
   .get(authorization, companyCtrl.adminSuperAdminFinder);
+
+// TODO: Route name must change
 router
   .route('/search')
   .get(
     authorization,
     SchemaValidator(joiSchema.search),
     companyCtrl.searchCompany,
+  );
+
+router
+  .route('/find')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.find),
+    companyCtrl.FindCompanyAtBeginning,
   );
 // get company
 router.route('/:cname').get(
@@ -151,6 +161,10 @@ router
     companyCtrl.allCompanytasks,
   );
 
+router
+  .route('/:companyId/public')
+  .get(companyCtrl.publicCompanyInformation);
+
 // companies list for individual user
 router
   .route('/individual/:account')
@@ -158,6 +172,7 @@ router
 
 // redirect to member
 router.use('/:companyId/members', memberRoutes);
+// TODO: remove companyId from member routes
 // redirect to department
 router.use('/:companyId/departments', deptRoutes);
 // redirect to designation

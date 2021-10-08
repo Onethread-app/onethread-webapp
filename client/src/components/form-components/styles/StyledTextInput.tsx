@@ -7,7 +7,7 @@ import StyledError from './StyledError';
 
 type Props = FieldRenderProps<string>;
 
-const TextInput = styled.input`
+export const TextInput = styled.input`
   height: 47px;
   border-radius: 0.5rem;
   text-indent: 10px;

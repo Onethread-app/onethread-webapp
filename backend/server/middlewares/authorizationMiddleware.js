@@ -31,16 +31,17 @@ module.exports.authorization = async (req, res, next) => {
       message: 'invalid token',
     });
   }
-  jwt.verify(bearerToken, config.accessTokenSecret, function (
-    err,
-    decoded,
-  ) {
-    if (err) {
-      return sendErrorResponse(res, 401, 'AuthError', {
-        message: err.message,
-      });
-    }
-    req.user = decoded;
-    next();
-  });
+  jwt.verify(
+    bearerToken,
+    config.accessTokenSecret,
+    function (err, decoded) {
+      if (err) {
+        return sendErrorResponse(res, 401, 'AuthError', {
+          message: err.message,
+        });
+      }
+      req.user = decoded;
+      next();
+    },
+  );
 };
