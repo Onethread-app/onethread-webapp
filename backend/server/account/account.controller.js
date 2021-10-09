@@ -38,6 +38,10 @@ const {
 const {
   findAccountById,
   findAccountByIdAndUpdate,
+  createAccountWithEmail,
+  findAccountByEmail,
+  verifyAccountToken,
+  deleteAccountToken,
 } = require('../services/account/account.service');
 const Task = require('../task/task.model');
 const SubTask = require('../task/subtask/subtask.model');
@@ -45,6 +49,11 @@ const TaskAssign = require('../task/taskAssign.model');
 const {
   subtaskPopulateOptionsForUser,
 } = require('../helpers/PopulateOptions');
+
+const {
+  generateToken,
+  validateEmail,
+} = require('../utils/utils.controller');
 
 const options = [
   {
@@ -82,11 +91,6 @@ const options = [
   },
 ];
 
-const generateToken = () => {
-  const token = crypto.randomBytes(20).toString('hex');
-  return crypto.createHash('sha256').update(token).digest('hex');
-};
-
 const genAuthToken = (user) => {
   const payLoad = {
     email: user.email,
@@ -107,14 +111,63 @@ const makeUnqName = (firstName, lastName, c) => {
   return `${createSlug(firstName)}-${createSlug(lastName)}-${c + 1}`;
 };
 
+const removeSpecialChars = (str) => {
+  return str.trim().replace(/[^a-zA-Z ]/g, '');
+};
+
+const storeAccountInELK = async (user) => {
+  let pendingMember = await PendingMember.find({
+    email: user.email,
+  }).select('-__v -createdAt -updatedAt');
+
+  if (pendingMember.length > 0) {
+    let pendingMemberToMember = pendingMember.map((m) => {
+      return { account: user._id, company: m.company };
+    });
+
+    const pendingMemberToMemberAccounts = pendingMemberToMember.map(
+      (member) => member.account,
+    );
+    const pendingMemberToMemberCompany = pendingMemberToMember.map(
+      (member) => member.company,
+    );
+
+    await Member.create(pendingMemberToMember);
+
+    const elasticIndexedMembers = await Member.find({
+      account: { $in: pendingMemberToMemberAccounts },
+      company: { $in: pendingMemberToMemberCompany },
+    }).populate({
+      path: 'account',
+      select: '_id name firstName lastName email',
+    });
+
+    const memberStructure = (data) => {
+      return {
+        mongo_id: data.mongo_id,
+        account: data.account,
+        company: data.company,
+      };
+    };
+
+    await bulkInsert(
+      memberIndex,
+      elasticIndexedMembers,
+      memberStructure,
+    );
+    logger.info(
+      chalk.blueBright(
+        `ElasticSearch successfully documented with bulk on ${memberIndex}`,
+      ),
+    );
+
+    await PendingMember.updateMany({ email }, { removed: true });
+  }
+};
+
 const signup = async (req, res, next) => {
   try {
     const { email } = req.body;
-    const user = await Account.create({
-      email,
-      name: generateToken(),
-      contactNo: generateToken(),
-    });
     const token = {
       hash: generateToken(),
       exp: Date.now() + 604800,
@@ -123,12 +176,12 @@ const signup = async (req, res, next) => {
     try {
       await signupMail(email, token.hash);
     } catch (err) {
-      logger.error(err);
-      return sendJSONresponse(res, 422, {
-        message: 'Mail delivery failure!',
+      logger.error(`Mail Delivery Failure: ${err}`);
+      return sendErrorResponse(res, 422, 'UnprocessableEntity', {
+        message: 'Mail delivery failure',
       });
     }
-    // Redis
+    const user = await createAccountWithEmail(email);
     await accountVerificationToken(
       `verifyAccountToken:${token.hash}`,
       email,
@@ -139,7 +192,6 @@ const signup = async (req, res, next) => {
         'Invitaion sent successfully. Please check your email.',
       user,
     });
-    // TODO: ELK
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
@@ -156,12 +208,11 @@ const resendEmail = async (req, res, next) => {
     try {
       await signupMail(email, token.hash);
     } catch (err) {
-      logger.error(err);
-      return sendJSONresponse(res, 422, {
+      logger.error(`Mail Delivery Failure: ${err}`);
+      return sendErrorResponse(res, 422, 'UnprocessableEntity', {
         message: 'Mail delivery failure!',
       });
     }
-    // TODO: blacklist old token for this email address.
     await accountVerificationToken(
       `verifyAccountToken:${token.hash}`,
       email,
@@ -176,84 +227,165 @@ const resendEmail = async (req, res, next) => {
   }
 };
 
-const getAccessTokenForVerifyAccount = async (req, res, next) => {
+const changeEmail = async (req, res, next) => {
   try {
-    client
-      .multi()
-      .get(`verifyAccountToken:${req.params.token}`)
-      .exec(async (err, data) => {
-        if (err) {
-          logger.error(`${err}`);
-          return next(err);
-        }
-        let email = data[0];
+    const { previousEmail, newEmail } = req.body;
 
-        if (typeof email === 'string') {
-          const user = await Account.findOneAndUpdate(
-            { email },
-            { $set: { isAccountVerified: true } },
-            { safe: true, upsert: true, new: true },
-          );
-          await client.del(`verifyAccountToken:${req.params.token}`);
-          await setDocument(accountIndex, '_doc', {
-            mongo_id: user._id,
-            name: user.name, // Random Token
-            email: user.email,
-            firstName: user.firstName, // Undefined
-            lastName: user.lastName, // Undefined
-          });
-          logger.info(
-            chalk.blueBright(
-              `ElasticSearch document added on ${accountIndex}`,
-            ),
-          );
-          const [accessToken, refreshToken] = genAuthToken(user);
-          return sendJSONresponse(res, 200, {
-            message: 'Account Verified Successfully',
-            accessToken,
-            refreshToken,
-          });
-        } else {
-          return sendErrorResponse(res, 400, 'TokenExpireError', {
-            isAccountVerified: false,
-            message: 'Link is expired',
-          });
-        }
+    const user = await findAccountByEmail(previousEmail);
+    if (!user) {
+      logger.error(`no user found with this email: ${previousEmail}`);
+      return sendErrorResponse(res, 404, 'NotFound', {
+        message: 'no user found',
       });
-  } catch (err) {
-    logger.error(`Account: ${err}`);
-    next(err);
+    }
+    const isDuplicate = await findAccountByEmail(newEmail);
+    if (isDuplicate) {
+      logger.error(
+        `user already exists with this email: ${newEmail}`,
+      );
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'user already exists',
+      });
+    }
+    const token = {
+      hash: generateToken(),
+      exp: Date.now() + 604800,
+    };
+    try {
+      await signupMail(newEmail, token.hash);
+    } catch (err) {
+      logger.error(err);
+      return sendErrorResponse(res, 422, 'UnprocessableEntity', {
+        message: 'Mail delivery failure',
+      });
+    }
+
+    user.email = newEmail;
+    user.isAccountVerified = false;
+    await user.save();
+
+    await accountVerificationToken(
+      `verifyAccountToken:${token.hash}`,
+      newEmail,
+      token.exp,
+    );
+    return sendJSONresponse(res, 200, {
+      message:
+        'Invitaion sent successfully. Please check your new email.',
+      user,
+    });
+  } catch (error) {
+    logger.error(`Account: ${error}`);
+    next(error);
   }
 };
 
-const removeSpecialChars = (str) => {
-  return str.trim().replace(/[^a-zA-Z ]/g, '');
-};
-
-// OK
 const accountUpdate = async (req, res, next) => {
-  const { email } = req.user;
-  const { firstName, lastName, password } = req.body;
   try {
-    const count = await Account.countDocuments({
-      firstName: removeSpecialChars(firstName),
-      lastName: removeSpecialChars(lastName),
-    });
-    const user = await Account.findOne({ email });
+    const { token } = req.query;
+    verifyAccountToken(token).exec(async (err, data) => {
+      if (err) {
+        logger.error(`${err}`);
+        return next(err);
+      }
+      let email = data[0];
+      if (validateEmail(email)) {
+        const { firstName, lastName, password } = req.body;
+        const count = await Account.countDocuments({
+          firstName: removeSpecialChars(firstName),
+          lastName: removeSpecialChars(lastName),
+        });
 
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.name = makeUnqName(firstName, lastName, count);
-    user.password = password;
-    await user.save();
-    return sendJSONresponse(res, 200, {
-      message: 'Account Updated Successfully',
+        const user = await findAccountByEmail(email);
+        if (!user) {
+          logger.error(
+            `no user found with this email: ${previousEmail}`,
+          );
+          return sendErrorResponse(res, 404, 'NotFound', {
+            message: 'no user found',
+          });
+        }
+
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.name = makeUnqName(firstName, lastName, count);
+        user.password = password;
+        user.isAccountVerified = true;
+        await user.save();
+
+        await storeAccountInELK(user);
+        await deleteAccountToken(req.query.token);
+        const [accessToken, refreshToken] = genAuthToken(user);
+
+        return sendJSONresponse(res, 200, {
+          message: 'Account Updated Successfully',
+          accessToken,
+          refreshToken,
+          user,
+        });
+      } else {
+        logger.error(`Link is expired`);
+        return sendErrorResponse(res, 401, 'TokenExpireError', {
+          message: 'Link is expired',
+        });
+      }
     });
   } catch (err) {
     logger.error(`${err}`);
     next(err);
   }
 };
+
+// const getAccessTokenForVerifyAccount = async (req, res, next) => {
+//   try {
+//     // TODO: Check this token is blacklisted or not...
+//     client
+//       .multi()
+//       .get(`verifyAccountToken:${req.params.token}`)
+//       .exec(async (err, data) => {
+//         if (err) {
+//           logger.error(`${err}`);
+//           return next(err);
+//         }
+//         let email = data[0];
+
+//         if (typeof email === 'string') {
+//           const user = await Account.findOneAndUpdate(
+//             { email },
+//             { $set: { isAccountVerified: true } },
+//             { safe: true, upsert: true, new: true },
+//           );
+//           await client.del(`verifyAccountToken:${req.params.token}`);
+//           await setDocument(accountIndex, '_doc', {
+//             mongo_id: user._id,
+//             name: user.name, // Random Token
+//             email: user.email,
+//             firstName: user.firstName, // Undefined
+//             lastName: user.lastName, // Undefined
+//           });
+//           logger.info(
+//             chalk.blueBright(
+//               `ElasticSearch document added on ${accountIndex}`,
+//             ),
+//           );
+//           const [accessToken, refreshToken] = genAuthToken(user);
+//           return sendJSONresponse(res, 200, {
+//             message: 'Account Verified Successfully',
+//             accessToken,
+//             refreshToken,
+//           });
+//         } else {
+//           return sendErrorResponse(res, 401, 'TokenExpireError', {
+//             isAccountVerified: false,
+//             message: 'Link is expired',
+//           });
+//         }
+//       });
+//   } catch (err) {
+//     logger.error(`Account: ${err}`);
+//     next(err);
+//   }
+// };
 
 // create a new account for individual users
 // const register = async (req, res, next) => {
@@ -518,15 +650,20 @@ const timeline = async (req, res, next) => {
   }
 };
 
+const getExpireTime = (exp) => {
+  return (
+    exp * 1000 +
+    new Date(exp * 1000).getTimezoneOffset() * 60 * 1000 -
+    (Date.now() +
+      new Date(Date.now()).getTimezoneOffset() * 60 * 1000)
+  );
+};
+
 const logout = async (req, res, next) => {
   try {
     let refreshToken = req.body.refreshToken;
     let accessToken = req.headers.authorization.split(' ')[1];
-    let accessTokenExpire =
-      req.user.exp * 1000 +
-      new Date(req.user.exp * 1000).getTimezoneOffset() * 60 * 1000 -
-      (Date.now() +
-        new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+    let accessTokenExpire = getExpireTime(req.user.exp);
     if (refreshToken) {
       await jwt.verify(
         refreshToken,
@@ -538,13 +675,7 @@ const logout = async (req, res, next) => {
               fieldName: 'headers',
             });
           }
-          let refreshTokenExpire =
-            user.exp * 1000 +
-            new Date(user.exp * 1000).getTimezoneOffset() *
-              60 *
-              1000 -
-            (Date.now() +
-              new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+          let refreshTokenExpire = getExpireTime(user.exp);
           addTokenToBlackList(accessToken, accessTokenExpire);
           addTokenToBlackList(refreshToken, refreshTokenExpire);
 
@@ -944,7 +1075,7 @@ module.exports = {
   resendEmail,
   login,
   logout,
-  getAccessTokenForVerifyAccount,
+  // getAccessTokenForVerifyAccount,
   getAccount,
   timeline,
   accountUpdate,
@@ -961,4 +1092,5 @@ module.exports = {
   userDailyProgress,
   saveLanguage,
   updateEmail,
+  changeEmail,
 };
