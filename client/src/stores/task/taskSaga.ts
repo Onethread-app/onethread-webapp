@@ -45,6 +45,8 @@ import {
   updateCurrentTaskColumnId,
   getAllUserTasksSuccess,
   getAllUserTasksFailure,
+  getAllCompanyTasksFailure,
+  getAllCompanyTasksSuccess,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
@@ -118,6 +120,27 @@ function* getAllUserTasksAsync() {
     }
   } catch (error) {
     yield put(getAllUserTasksFailure(returnErrorText(error)));
+  }
+}
+
+function* getAllCompanyTasksAsync() {
+  yield put(showLoading());
+  try {
+    const headers = tokenConfig();
+    const companyId = yield select(getCompanyId);
+    if ((headers.headers as any).Authorization) {
+      const response = yield tigrowApi.get(
+        `/company/${companyId}/all-tasks`,
+        headers,
+      );
+      yield put(
+        getAllCompanyTasksSuccess(response.data.taskCompilation),
+      );
+    }
+  } catch (error) {
+    yield put(getAllCompanyTasksFailure(returnErrorText(error)));
+  } finally {
+    yield put(hideLoading());
   }
 }
 
@@ -402,9 +425,7 @@ export function* updateTask({ payload }: any) {
           const index = column.tasks!.findIndex(
             (task) => task._id === taskId,
           );
-          column.tasks![
-            index
-          ].status = response.currentColumnName
+          column.tasks![index].status = response.currentColumnName
             .toLowerCase()
             .split(' ')
             .join('-');
@@ -513,6 +534,13 @@ export function* onGetAllUserTasks() {
   );
 }
 
+export function* onGetAllCompanyTasks() {
+  yield takeLatest(
+    TaskActionType.GET_ALL_TASKS_FOR_COMPANY_START,
+    getAllCompanyTasksAsync,
+  );
+}
+
 export function* onGetSelectedBoard() {
   yield takeLatest(
     TaskActionType.SELECT_BOARD_START,
@@ -587,6 +615,7 @@ export default function* taskSaga() {
     call(onCreateBoard),
     call(onGetAllBoards),
     call(onGetAllUserTasks),
+    call(onGetAllCompanyTasks),
     call(onGetSelectedBoard),
     call(onUpdateBoardName),
     call(onCreateColumn),

@@ -8,6 +8,7 @@ import { getCompanyDetails } from 'stores/company/Actions';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
+import { clearCompanyTasks } from 'stores/task/Actions';
 
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
 
@@ -21,11 +22,12 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   currentCompany: string;
   companies: ICompanyByUser[];
   user: User;
-  getCompanyDetails: (companyName: string) => void;
-  getAllCompaniesByUserId: (userId: string) => void;
   isCompanyLoading: boolean;
   gettingCompanyDetails: boolean;
   errorOnGettingCompanyDetails: string;
+  getCompanyDetails: (companyName: string) => void;
+  getAllCompaniesByUserId: (userId: string) => void;
+  clearCompanyTasks: () => void;
 }
 
 export const ListViewComponent = (
@@ -35,14 +37,13 @@ export const ListViewComponent = (
   const dispatch = useDispatch();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
-  const [gettingDetails, setGettingDetails] = useState(false);
-  const [companyName, setCompanyName] = useState('');
 
   const handleClick = (name: string) => {
     dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
+    props.clearCompanyTasks();
     props.getCompanyDetails(name);
-    setCompanyName(name);
-    setGettingDetails(true);
+    history.push(`/company/${name}`);
   };
 
   useEffect(() => {
@@ -55,25 +56,6 @@ export const ListViewComponent = (
       setLoading(false);
     }
   }, [props.isCompanyLoading]);
-
-  useEffect(() => {
-    if (
-      gettingDetails === true &&
-      props.gettingCompanyDetails === false &&
-      props.errorOnGettingCompanyDetails === '' &&
-      !!companyName
-    ) {
-      dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
-      setGettingDetails(false);
-      history.push(`/company/${companyName}/dashboard`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    companyName,
-    gettingDetails,
-    props.gettingCompanyDetails,
-    props.errorOnGettingCompanyDetails,
-  ]);
 
   return (
     <>
@@ -144,4 +126,5 @@ const mapStateToProps = (state: any) => {
 export const CompanyListView = connect(mapStateToProps, {
   getCompanyDetails,
   getAllCompaniesByUserId,
+  clearCompanyTasks,
 })(ListViewComponent);

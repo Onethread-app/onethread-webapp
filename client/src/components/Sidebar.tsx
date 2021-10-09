@@ -586,7 +586,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                 style={{ color: 'white' }}
                 activeStyle={{ background: ' #3484F0' }}
-                to={`/company/${props.company.uniqueName}`}
+                to={`/company/${props.company.uniqueName}/profile`}
                 onClick={() => setActiveTab('company-profile')}
               >
                 {props.leftOpen ? (
