@@ -105,7 +105,43 @@ export interface IBoard {
   errorOnTaskFileDelete: string;
 }
 
-const InitialState: IBoard = {
+export interface ITaskReducer {
+  boardList: TaskBoard[];
+  currentBoard: TaskBoard;
+  currentTask: ITask;
+  userTasks: ITask[];
+  companyTaskList: ITask[];
+  boardError: string;
+  boardColumnError: string;
+  boardTaskError: string;
+  creatingBoard: boolean;
+  creatingTask: boolean;
+  fetchingBoards: boolean;
+  fetchingBoard: boolean;
+  fetchingColumn: boolean;
+  fetchingTask: boolean;
+  fetchingUserTasks: boolean;
+  fetchingCompanyTasks: boolean;
+  updatingColumn: boolean;
+  updatingBoard: boolean;
+  updatingBoardName: boolean;
+  updatingTask: boolean;
+  deletingTask: boolean;
+  dragAndDrop: boolean;
+  uploadingTaskFile: boolean;
+  deletingTaskFile: boolean;
+  taskError: string;
+  errorOnCreatingTask: string;
+  errorOnUpdatingBoardName: string;
+  errorOnFetchingBoard: string;
+  errorOnFetchingUserTasks: string;
+  errorOnTaskDelete: string;
+  errorOnUploadingTaskFile: string;
+  errorOnTaskFileDelete: string;
+  errorOnFetchingCompanyTasks: string;
+}
+
+const InitialState: ITaskReducer = {
   boardList: [] as any,
   currentBoard: {
     _id: '',
@@ -145,6 +181,7 @@ const InitialState: IBoard = {
     timeSpent: 0,
   },
   userTasks: [],
+  companyTaskList: [],
   creatingBoard: false,
   creatingTask: false,
   fetchingBoards: false,
@@ -152,6 +189,7 @@ const InitialState: IBoard = {
   fetchingColumn: false,
   fetchingTask: false,
   fetchingUserTasks: false,
+  fetchingCompanyTasks: false,
   updatingColumn: false,
   updatingBoard: false,
   updatingBoardName: false,
@@ -171,6 +209,7 @@ const InitialState: IBoard = {
   errorOnTaskDelete: '',
   errorOnUploadingTaskFile: '',
   errorOnTaskFileDelete: '',
+  errorOnFetchingCompanyTasks: '',
 };
 
 export const TaskReducer = (state = InitialState, action: any) => {
@@ -238,6 +277,24 @@ export const TaskReducer = (state = InitialState, action: any) => {
         ...state,
         errorOnFetchingUserTasks: action.payload,
         fetchingUserTasks: false,
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_COMPANY_START:
+      return {
+        ...state,
+        fetchingCompanyTasks: true,
+        errorOnFetchingCompanyTasks: '',
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_COMPANY_SUCCESS:
+      return {
+        ...state,
+        fetchingCompanyTasks: false,
+        companyTaskList: action.payload,
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_COMPANY_FAILURE:
+      return {
+        ...state,
+        fetchingCompanyTasks: false,
+        errorOnFetchingCompanyTasks: action.payload,
       };
     case TaskActionType.SELECT_BOARD_START:
       return {
@@ -655,6 +712,11 @@ export const TaskReducer = (state = InitialState, action: any) => {
           columnId: action.payload.columnId,
           status: action.payload.status,
         },
+      };
+    case TaskActionType.CLEAR_COMPANY_TASKS:
+      return {
+        ...state,
+        companyTaskList: [],
       };
     default:
       return state;

@@ -33,6 +33,10 @@ export interface IProject {
   createdAt: Date;
   status: String;
   timeSpent?: number;
+  company: {
+    _id: string;
+    uniqueName: string;
+  };
 }
 
 export interface IPendingProject {

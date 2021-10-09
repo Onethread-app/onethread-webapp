@@ -318,6 +318,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     }
   }, [subscriptionExpired]);
 
+  useEffect(() => {
+    setSubscriptionExpired(props.subscriptiontExpired);
+  }, [props.subscriptiontExpired]);
+
   useBeforeunload((event) => {
     if (props.currentlyTracking.name !== '') {
       event.preventDefault();
