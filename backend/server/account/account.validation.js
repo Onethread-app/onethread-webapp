@@ -101,17 +101,12 @@ module.exports = {
   }),
   update: Joi.object().keys({
     body: Joi.object().keys({
-      contactNo: schema.contactNo,
-      birthDate: schema.birthDate,
-      bloodGroup: schema.bloodGroup,
-      location: schema.location,
-      position: schema.position,
-      about: schema.about,
-      gender: schema.gender,
-      secondaryEmail: schema.email.allow(''),
-      firstName: schema.firstName,
-      lastName: schema.lastName,
+      firstName: schema.firstName.required(),
+      lastName: schema.lastName.required(),
       password: schema.password.required(),
+    }),
+    query: Joi.object().keys({
+      token: Joi.string().required(),
     }),
   }),
   resetPassword: Joi.object().keys({
@@ -142,11 +137,16 @@ module.exports = {
     }),
     params: subTaskId,
   }),
-
   updateEmail: Joi.object().keys({
     body: Joi.object().keys({
       id: idSchema.id.required(),
       email: schema.email.required(),
+    }),
+  }),
+  changeEmail: Joi.object().keys({
+    body: Joi.object().keys({
+      previousEmail: schema.email.required(),
+      newEmail: schema.email.required(),
     }),
   }),
 };
