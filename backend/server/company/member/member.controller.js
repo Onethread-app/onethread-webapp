@@ -269,10 +269,6 @@ const deleteMember = async (req, res, next) => {
       _id: req.member._id,
       company: req.company._id,
     });
-<<<<<<< HEAD
-=======
-
->>>>>>> feature Onboarding (#251)
     await Team.updateOne(
       {
         member: member._id,
