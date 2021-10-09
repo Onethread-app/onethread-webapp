@@ -66,6 +66,20 @@ export const getAllUserTasksFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
+export const getAllCompanyTasks = () => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_COMPANY_START,
+});
+
+export const getAllCompanyTasksSuccess = (response: any) => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_COMPANY_SUCCESS,
+  payload: response,
+});
+
+export const getAllCompanyTasksFailure = (errorMessage: any) => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_COMPANY_FAILURE,
+  payload: errorMessage,
+});
+
 export const getSelectedBoard = (boardId: string | undefined) => ({
   type: TaskActionType.SELECT_BOARD_START,
   payload: boardId,
@@ -299,4 +313,8 @@ export const updateCurrentTaskColumnId = (data) => ({
 export const updateTaskTimeSpent = (payload: number) => ({
   type: TaskActionType.UPDATE_TASK_TIME_SPENT,
   payload,
+});
+
+export const clearCompanyTasks = () => ({
+  type: TaskActionType.CLEAR_COMPANY_TASKS,
 });
