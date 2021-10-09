@@ -25,6 +25,15 @@ router
     memberCtrl.acceptJoinRequest,
   );
 
+router
+  .route('/:memberId/reject-request')
+  .delete(
+    authorization,
+    SchemaValidator(joiSchema.rejectJoinRequest),
+    authorizeUser('all', 'admin', 'superAdmin'),
+    memberCtrl.rejectJoinRequest,
+  );
+
 router.route('/search').get(authorization, memberCtrl.searchMember);
 
 router
