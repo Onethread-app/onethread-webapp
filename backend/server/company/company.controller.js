@@ -105,7 +105,7 @@ const createCompany = async (req, res, next) => {
       name: req.body.name,
     });
     if (duplicate) {
-      return sendErrorResponse(res, 409, 'DuplicateNameError', {
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
         message: 'Name already exist',
       });
     }
@@ -114,7 +114,7 @@ const createCompany = async (req, res, next) => {
 
     const planId = await Plan.findOne({ name: 'trial' });
     if (!planId) {
-      return sendErrorResponse(res, 404, 'PlanNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'Plan is not created',
       });
     }
@@ -275,21 +275,7 @@ const updateBasicInfo = async (req, res, next) => {
         req.company[key] = req.body[key];
       }
     }
-
     await req.company.save();
-
-    // const text = `company profile has been updated by ${req.user.name}`;
-    // createCompanyRoleNotification(
-    //   req.company,
-    //   {
-    //     _id: req.user._id,
-    //     name: req.user.name,
-    //     pusherSock: req.headers.clientid,
-    //   },
-    //   text,
-    //   'companyProfile',
-    // );
-    //createCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name} );
     return res.status(200).json({
       message: `Company's basic information updated`,
     });
@@ -314,21 +300,6 @@ const updateAbout = async (req, res, next) => {
       { about: req.body.about },
       { safe: true, upsert: true, new: true },
     ).exec();
-
-    // const text = `company profile has been updated by ${req.user.name}`;
-    // createCompanyRoleNotification(
-    //   req.company,
-    //   {
-    //     _id: req.user._id,
-    //     name: req.user.name,
-    //     pusherSock: req.headers.clientid,
-    //   },
-    //   text,
-    //   'companyProfile',
-    // );
-    //sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
-    //createCompanyNotification(req.company._id , {_id:req.user._id, name: req.user.name} );
-
     return res.status(200).json({
       message: `Company's about updated`,
     });
@@ -571,14 +542,9 @@ const editCertification = async (req, res, next) => {
     });
 
     if (!certificate) {
-      return sendErrorResponse(
-        res,
-        404,
-        'CertificateIdNotFoundError',
-        {
-          message: `certificateId not found`,
-        },
-      );
+      return sendErrorResponse(res, 404, 'NotFound', {
+        message: `certificateId not found`,
+      });
     } else {
       for (const key in req.body) {
         if (req.body.hasOwnProperty(key)) {

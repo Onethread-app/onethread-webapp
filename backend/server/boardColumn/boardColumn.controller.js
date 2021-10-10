@@ -31,8 +31,8 @@ const create = async (req, res, next) => {
       boardId: req.body.boardId,
     });
     if (uniqueName) {
-      return sendErrorResponse(res, 409, 'DuplicateColumnError', {
-        message: 'Duplicate column name',
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'Column name already exists',
       });
     }
     const boardColumn = new BoardColumn({

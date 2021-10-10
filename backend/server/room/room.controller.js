@@ -54,7 +54,7 @@ const create = async (req, res, next) => {
       project: req.query.pid,
     });
     if (duplicate) {
-      return sendErrorResponse(res, 409, 'DuplicateRoomError', {
+      return sendErrorResponse(res, 409, 'NotFound', {
         message: `Room already exists`,
       });
     }
@@ -113,7 +113,7 @@ const addMembers = async (req, res, next) => {
     );
 
     if (!result) {
-      return sendErrorResponse(res, 404, 'RoomNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'No room found',
       });
     }
@@ -409,7 +409,6 @@ const archiveRoom = async (req, res, next) => {
 
 const updateLastSeen = async (req, res, next) => {
   try {
-    console.log(req);
     const room = await RoomMember.findOneAndUpdate(
       {
         room: req.params.roomId,
@@ -430,7 +429,7 @@ const updateLastSeen = async (req, res, next) => {
       message: 'Last seen updated',
     });
   } catch (error) {
-    console.log(error);
+    logger.info(`Room: ${error}`);
     next(error);
   }
 };

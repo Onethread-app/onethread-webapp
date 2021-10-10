@@ -58,7 +58,7 @@ const list = async (req, res, next) => {
     }).select('_id name');
 
     if (!departments) {
-      return sendErrorResponse(res, 404, 'DepartmentFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'No departments found.',
       });
     }

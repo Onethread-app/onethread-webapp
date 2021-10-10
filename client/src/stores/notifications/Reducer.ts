@@ -53,6 +53,7 @@ export const notificationReducer = (
       return {
         ...state,
         allNotifications: handleMarkAllRead(state, action.payload),
+        seen: 0,
         markingAllAsRead: false,
       };
     case NOTIFICATION.MARK_ALL_AS_READ_FAILURE:
@@ -75,6 +76,12 @@ export const notificationReducer = (
       return {
         ...state,
         pageNumber: state.pageNumber + 1,
+      };
+    case NOTIFICATION.NEW_NOTIFICATION:
+      return {
+        ...state,
+        allNotifications: [...state.allNotifications, action.payload],
+        seen: state.seen + 1
       };
     default:
       return state;

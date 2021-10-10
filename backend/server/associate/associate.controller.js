@@ -11,40 +11,27 @@ const {
 } = require('../notification/notification.controller');
 const {
   associateIndex,
-  setDocument
+  setDocument,
 } = require('../services/elastic.services');
+const {
+  findByAssociateId,
+} = require('../services/associate/associate.service');
 const chalk = require('chalk');
 
 const get = async (req, res, next) => {
-  await Associate.findOne({
-    _id: req.params.associateId,
-    removed: false,
-  })
-    .select('_id company associateCompany createdAt account')
-    .populate(
-      'associateCompany',
-      '_id name type address email legalOwnerName legalOwnerMail',
-    )
-    .populate(
-      'company',
-      '_id name type address email legalOwnerName legalOwnerMail',
-    )
-    .populate('account', 'firstName lastName')
-    .exec()
-    .then((colResult) => {
-      if (req.params.companyId === colResult.company._id.toString()) {
-        colResult.company = undefined;
-      } else {
-        colResult.associateCompany = colResult.company;
-        colResult.company = undefined;
-      }
-
-      res.json(colResult);
-    })
-    .catch((e) => {
-      logger.error(`Associate create: ${e}`);
-      next(e);
-    });
+  try {
+    const colResult = await findByAssociateId(req.params.associateId);
+    if (req.params.companyId === colResult.company._id.toString()) {
+      colResult.company = undefined;
+    } else {
+      colResult.associateCompany = colResult.company;
+      colResult.company = undefined;
+    }
+    return sendJSONresponse(res, 200, colResult);
+  } catch (error) {
+    logger.error(`Associate create: ${e}`);
+    next(e);
+  }
 };
 
 const createPending = async (req, res, next) => {
@@ -54,7 +41,7 @@ const createPending = async (req, res, next) => {
       associateCompany: req.body.associateCompany,
       isAccepted: false,
       isRejected: true,
-    })
+    });
 
     if (_.isEmpty(associate)) {
       associate = new Associate({
@@ -67,7 +54,7 @@ const createPending = async (req, res, next) => {
     } else {
       associate.isRejected = false;
     }
-    
+
     await associate.save();
     const text = `${req.body.company.name} wants to add you as their associate`;
     createCompanyRoleNotification(
@@ -107,13 +94,13 @@ const acceptPending = async (req, res, next) => {
       select: '_id name type',
     });
 
-    await setDocument(associateIndex,'_doc',{
+    await setDocument(associateIndex, '_doc', {
       mongo_id: associate._id,
       company_id: associate.company._id,
       companyName: associate.company.name,
       associateCompany_id: associate.associateCompany._id,
-      associateCompanyName: associate.associateCompany.name
-    })
+      associateCompanyName: associate.associateCompany.name,
+    });
 
     logger.info(
       chalk.blueBright(
@@ -133,8 +120,6 @@ const acceptPending = async (req, res, next) => {
       text,
       'associate',
     );
-
-    //associate = await Associate.populate(associate, { path: 'company', select: '_id name type'});
 
     return res.status(200).json(associate);
   } catch (error) {

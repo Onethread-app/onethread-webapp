@@ -38,6 +38,9 @@ const SignupConfirmationPage = lazy(
 const Layout = lazy(() => import('components/Layout'));
 const FeedPage = lazy(() => import('layouts/company/feed/Index'));
 const HomePage = lazy(() => import('layouts/home/Index'));
+const CompanyDashboard = lazy(
+  () => import('layouts/newCompany/Index'),
+);
 const DashboardView = lazy(() => import('layouts/dashBoard/Index'));
 const ColleaguesPage = lazy(
   () => import('layouts/company/colleagues/Index'),
@@ -279,6 +282,11 @@ const App = () => {
           <PrivateRoute
             exact={true}
             path="/company/:cname"
+            component={CompanyDashboard}
+          />
+          <PrivateRoute
+            exact={true}
+            path="/company/:cname/profile"
             component={CompanyProfilePage}
           />
           <PrivateRoute

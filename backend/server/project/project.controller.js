@@ -91,7 +91,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       removed: false,
     });
     if (!member) {
-      return sendErrorResponse(res, 404, 'MemberNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'You are not added in company',
       });
     }
@@ -164,7 +164,7 @@ const createNewProjectFromHome = async (req, res, next) => {
       removed: false,
     });
     if (!member) {
-      return sendErrorResponse(res, 404, 'MemberNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'You are not added in company',
       });
     }
@@ -581,6 +581,10 @@ const showAllProjectsForCompany = async (req, res, next) => {
             },
           ],
         },
+        {
+          path: 'company',
+          select: '_id uniqueName',
+        },
       ])
       .populate('departments concernedAdmin', 'name _id ')
       // .select('-type -__v  -files -version -optionalRole ')
@@ -617,7 +621,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
 const updateProjectDescription = async (req, res, next) => {
   let checkPid = isPidExist(req.query.pid);
   if (!checkPid) {
-    return sendErrorResponse(res, 404, 'IdNotExist', {
+    return sendErrorResponse(res, 404, 'NotFound', {
       message: 'pid is not exist',
     });
   }
@@ -673,8 +677,19 @@ const getProjectDetails = async (req, res, next) => {
     const project = await Project.findOne({
       _id: req.query.pid,
     })
-      .populate('files', 'link s3Key')
-      .select('outline description color name status totalSpent');
+      .select(
+        'outline description color name status totalSpent company',
+      )
+      .populate([
+        {
+          path: 'files',
+          select: 'link s3Key',
+        },
+        {
+          path: 'company',
+          select: '_id uniqueName',
+        },
+      ]);
 
     const members = await Team.find({
       project: req.query.pid,
@@ -721,9 +736,7 @@ const updateProject = async (req, res, next) => {
 const archiveProject = async (req, res) => {
   try {
     const projectExist = await Project.findOne(
-      {
-        _id: req.query.pid,
-      },
+      { _id: req.query.pid },
       { removed: false },
     );
     if (projectExist) {
@@ -739,13 +752,13 @@ const archiveProject = async (req, res) => {
       });
     } else {
       logger.error(`Project: Already Archived`);
-      return sendErrorResponse(res, 400, 'ProjectIdNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'Already Archived',
       });
     }
   } catch (error) {
     logger.error(`Project: ${error}`);
-    return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+    return sendErrorResponse(res, 404, 'NotFound', {
       message: 'Project id is not found',
     });
   }
@@ -773,13 +786,13 @@ const unarchiveProject = async (req, res) => {
       });
     } else {
       logger.error(`Project: Not Archived`);
-      return sendErrorResponse(res, 400, 'ProjectIdNotFoundError', {
+      return sendErrorResponse(res, 400, 'NotFound', {
         message: 'Project has not been archived yet',
       });
     }
   } catch (error) {
     logger.error(`Project: ${error}`);
-    return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+    return sendErrorResponse(res, 404, 'NotFound', {
       message: 'Project id is not found',
     });
   }
@@ -967,7 +980,7 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
         !team ||
         (functionalRole === 'all' && !userRoles.includes(team.role))
       ) {
-        return sendErrorResponse(res, 403, 'AccessError', {
+        return sendErrorResponse(res, 403, 'PermissionError', {
           message: `Restricted`,
         });
       }
@@ -1030,7 +1043,6 @@ const projectListForMember = async (req, res, next) => {
       .limit(+limit)
       .exec()
       .then((result) => {
-        console.log(result);
         return sendJSONresponse(res, 200, result);
       });
   } catch (error) {

@@ -22,3 +22,12 @@ module.exports.ISOformat = (time) => {
     .map((d) => parseInt(d));
   return `${monthNames[month - 1]} ${day}, ${year}`;
 };
+
+exports.todaysDate = (split = '/') => {
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0');
+  let yyyy = today.getFullYear();
+
+  return `${dd}${split}${mm}${split}${yyyy}`;
+};

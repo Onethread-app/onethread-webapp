@@ -35,7 +35,10 @@ const {
   savePushSubscription,
   removePushSubscription,
 } = require('../services/webpush.services');
-const { Tasks } = require('elasticsearch');
+const {
+  findAccountById,
+  findAccountByIdAndUpdate,
+} = require('../services/account/account.service');
 const Task = require('../task/task.model');
 const SubTask = require('../task/subtask/subtask.model');
 const TaskAssign = require('../task/taskAssign.model');
@@ -374,7 +377,6 @@ const login = async (req, res, next) => {
     let userObj = {};
     userObj.name = req.user.name;
     userObj.language = req.user.language || 'en';
-    // addUserDataIntoCache(req.user._id, req.user);
     let pushSubscription;
     if (req.body.pushSubscription) {
       pushSubscription = await savePushSubscription(
@@ -397,11 +399,7 @@ const login = async (req, res, next) => {
 
 const getAccount = async (req, res, next) => {
   try {
-    let userInfo = await Account.findOne({
-      _id: req.user._id,
-    })
-      .select('-password')
-      .populate('skillArea', '_id name');
+    let userInfo = await findAccountById(req.user._id);
     let count = 0;
     if (userInfo.skillArea.length === 0) {
       count++;
@@ -448,20 +446,7 @@ const getAccount = async (req, res, next) => {
     next(error);
   }
 };
-// client
-//   .multi()
-//   .get(`userID:${req.user.email}`)
-//   .execAsync()
-//   .then(result => {
-//     let user = JSON.parse(result);
-//     return sendJSONresponse(res, 200, {
-//       success: true,
-//       user: user,
-//     });
-//   })
-//   .catch(err => {
-//     next(err);
-//   });
+
 const userDailyProgress = async (req, res, next) => {
   try {
     let startToday = new Date();
@@ -503,11 +488,7 @@ const userDailyProgress = async (req, res, next) => {
 };
 const skillArea = async (req, res, next) => {
   try {
-    const user = await Account.findOne({
-      email: req.user.email,
-    })
-      .select('-password')
-      .populate('skillArea', '_id name');
+    const user = await findAccountById(req.user._id);
     return sendJSONresponse(res, 200, {
       success: true,
       user: user,
@@ -520,14 +501,7 @@ const skillArea = async (req, res, next) => {
 // create a timeline for user
 const timeline = async (req, res, next) => {
   try {
-    const user = await Account.findOne({
-      email: req.user.email,
-    })
-      .select('-password')
-      .populate(
-        'jobExperience education',
-        '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy',
-      );
+    const user = await findAccountById(req.user._id);
     const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,
@@ -539,6 +513,7 @@ const timeline = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
+    logger.error(`Account: ${error}`);
     next(error);
   }
 };
@@ -600,7 +575,7 @@ const sendEmailForForgetPassword = async (req, res, next) => {
       email: req.body.email,
     });
     if (!user)
-      return sendErrorResponse(res, 404, 'UserNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'no user found',
         fieldName: 'email',
       });
@@ -811,36 +786,6 @@ const changePassword = async (req, res, next) => {
     next(error);
   }
 };
-
-const getDueTasks = async (req) => {
-  const taskList = await Task.find({
-    dueDate: { $lte: new Date() },
-    status: { $ne: 'done' },
-  }).sort({ createdAt: -1 });
-
-  let taskId = taskList.map((e) => e._id);
-  const assignToUserToday = await TaskAssign.find({
-    taskId: taskId,
-    assignedPerson: req.user._id,
-  })
-    .select('taskId')
-    .populate(options);
-  const assignByUserToday = await TaskAssign.find({
-    taskId: taskId,
-    account: req.user._id,
-    assignedPerson: { $nin: { _id: req.user._id } },
-  })
-    .sort({ createdAt: -1 })
-    .select('taskId')
-    .populate(options);
-  const userTask = {
-    assignToUser: [...assignToUserToday],
-    assignByUser: [...assignByUserToday],
-    totalTasks: assignToUserToday.length + assignByUserToday.length,
-  };
-  return userTask;
-};
-
 const userTaskList = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   try {

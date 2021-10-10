@@ -40,3 +40,8 @@ export const webPush = (token: String) => ({
 export const incrementPageNumber = () => ({
   type: NOTIFICATION.INCREASE_PAGE_NUMBER,
 });
+
+export const newNotification = (notification) => ({
+  type: NOTIFICATION.NEW_NOTIFICATION,
+  payload: notification,
+});

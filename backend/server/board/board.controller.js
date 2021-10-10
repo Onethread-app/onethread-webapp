@@ -10,9 +10,6 @@ const {
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
 const { Project } = require('../project/project.model');
-const {
-  createBoardNotification,
-} = require('../notification/notification.controller');
 const { Team } = require('../team-member/team.model');
 
 const getTasksNumbers = async (boardId) => {
@@ -117,7 +114,7 @@ const load = (req, res, next, id) => {
       }
     })
     .catch((err) => {
-      return sendErrorResponse(res, 404, 'Idisnotexits', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         success: false,
         message: 'No valid entry found for provided Board ID',
       });
@@ -279,20 +276,6 @@ const addBoardMembers = async (req, res, next) => {
       .map((m) => m.name);
 
     const text = `${req.user.name} has added  ${newBoardMember} in ${board.name} from ${board.project.name}`;
-
-    createBoardNotification(
-      {
-        project: board.project._id,
-        company: board.project.company,
-        _id: board._id,
-      },
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-    );
     const memberList = board.members;
     return sendJSONresponse(res, 200, memberList);
   } catch (error) {

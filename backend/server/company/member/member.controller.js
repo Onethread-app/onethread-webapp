@@ -269,7 +269,6 @@ const deleteMember = async (req, res, next) => {
       _id: req.member._id,
       company: req.company._id,
     });
-
     await Team.updateOne(
       {
         member: member._id,
@@ -289,7 +288,7 @@ const deleteMember = async (req, res, next) => {
     req.member.removed = true;
 
     await req.member.save();
-
+    await Member.findOneAndDelete({ _id: req.member._id });
     return res.status(200).json({
       message: 'member deleted successfully',
     });
@@ -538,11 +537,6 @@ const createMembers = async (req, notifiyUsersIds) => {
       elasticSearchIndexedMembers,
       memberStructure,
     );
-
-    for (let i = 0; i < elasticSearchIndexedMembers.length; i++) {
-      const memberId = elasticSearchIndexedMembers[i].account._id;
-      await triggerUnreadNotifications(memberId);
-    }
     //return members;
   } catch (error) {
     logger.error(`Member: ${error}`);

@@ -10,7 +10,8 @@ import { getNotifications } from 'stores/notifications/Action';
 
 import Logo from 'resources/images/onethread-text.png';
 
-import { companySubscriber } from 'helpers/notification/subscribers';
+import { notificationSubscriber } from 'layouts/company/room/channelSubscribe';
+
 import NotificationPopoverIcon from './NotificationPopoverIcon';
 import ChatPopoverIcon from './ChatPopoverIcon';
 import CompanyPopoverIcon from './CompanyPopoverIcon';
@@ -35,7 +36,7 @@ const Navbar = (props: INavbarInternalProps) => {
 
   useEffect(() => {
     props.getNotifications();
-    companySubscriber(props.companyId);
+    notificationSubscriber(props.user._id);
     props.fetchChats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

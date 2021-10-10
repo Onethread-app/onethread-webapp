@@ -5,6 +5,7 @@ const hbs = require('nodemailer-express-handlebars');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const { capitalizeName } = require('../helpers/capitalizeLetter');
+const { todaysDate } = require('../helpers/DateFormat');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -139,6 +140,59 @@ module.exports.sendInviteColleague = async (
     logger.info(`send company invitation mail to users successfully`);
     return info;
   });
+};
+
+module.exports.sendMailAsTaskReminder = async (
+  todaysTaskNames,
+  todaysSubtaskNames,
+  usernameEmailMapper,
+) => {
+  const usernames = Object.keys(usernameEmailMapper);
+
+  await Promise.all(
+    usernames.map(async (username) => {
+      const link = `${host}/${username}/home`;
+      const getMarkup = (task) => {
+        if (!task) return 'No task available';
+        return task.map((t) => `<li>${t.name}</li>`).join(',');
+      };
+      if (
+        !todaysTaskNames[username] &&
+        !todaysSubtaskNames[username]
+      ) {
+        return false;
+      }
+      const taskListMarkup = getMarkup(todaysTaskNames[username]);
+      const subTaskListMarkup = getMarkup(
+        todaysSubtaskNames[username],
+      );
+
+      const mailOptions = {
+        from: config.emailAddress,
+        to: usernameEmailMapper[username],
+        subject: `[Onethread] Task Reminder - ${todaysDate('.')}`,
+        html: `
+      <h1> Task Reminder </h1>
+      <h2> Todays Task </h2>
+      ${taskListMarkup}
+      <h2> Todays Subtask </h2>
+      ${subTaskListMarkup}
+
+      For more details: ${link}
+    `,
+      };
+
+      return transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          logger.error(' Message send to failed ' + err);
+        }
+        logger.info(
+          `send company invitation mail to users successfully`,
+        );
+        return info;
+      });
+    }),
+  );
 };
 
 module.exports.contactSaleMail = async (email, subject, message) => {
