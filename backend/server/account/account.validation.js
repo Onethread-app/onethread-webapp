@@ -16,8 +16,18 @@ const subTaskId = Joi.object().keys({
 });
 
 const schema = {
-  firstName: Joi.string().trim().lowercase().min(2).max(32),
-  lastName: Joi.string().required().lowercase().min(2).max(32),
+  firstName: Joi.string()
+    .regex(/^[a-zA-Z][a-zA-Z\s]*$/)
+    .trim()
+    .lowercase()
+    .min(2)
+    .max(32),
+  lastName: Joi.string()
+    .regex(/^[a-zA-Z][a-zA-Z\s]*$/)
+    .required()
+    .lowercase()
+    .min(2)
+    .max(32),
   email: Joi.string()
     .regex(
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
