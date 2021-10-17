@@ -133,6 +133,7 @@ export const StyledInput = styled.input`
 
 export const SortAndFilter = styled.div`
   display: flex;
+  align-items: center;
   gap: 1rem;
   color: #5a5a5a;
 

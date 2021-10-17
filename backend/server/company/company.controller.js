@@ -24,6 +24,7 @@ const {
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
+const { sortTasksByStatus } = require('../helpers/utils');
 
 const {
   search,
@@ -703,9 +704,10 @@ const allCompanytasks = async (req, res, next) => {
     }).exec();
     const allProjectIds = projectList.map((p) => p._id);
     const taskCompilation = await companyTasks(allProjectIds, true);
+    const sortedTasks = sortTasksByStatus(taskCompilation);
     return sendJSONresponse(res, 200, {
       success: true,
-      taskCompilation,
+      tasks: sortedTasks,
     });
   } catch (error) {
     logger.error(`Company: ${error}`);

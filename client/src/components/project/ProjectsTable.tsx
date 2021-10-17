@@ -1,11 +1,10 @@
 import { useHistory } from 'react-router-dom';
-import { isMobileOnly } from 'react-device-detect';
 
 import { IProject } from 'stores/project/Reducer';
 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
-import Pagination from '@material-ui/lab/Pagination/Pagination';
+import TablePagination from '@material-ui/core/TablePagination';
 
 import {
   StyledTable,
@@ -24,9 +23,10 @@ interface IProjectsTable {
   prepareRow: any;
   visibleColumns: any;
   page: any;
-  pageOptions: any;
   gotoPage: any;
   pageSize: any;
+  pageIndex: number;
+  setPageSize: any;
 }
 
 const ProjectsTable = (props: IProjectsTable) => {
@@ -38,9 +38,10 @@ const ProjectsTable = (props: IProjectsTable) => {
     prepareRow,
     visibleColumns,
     page,
-    pageOptions,
     gotoPage,
     pageSize,
+    pageIndex,
+    setPageSize,
   } = props;
 
   const history = useHistory();
@@ -56,7 +57,12 @@ const ProjectsTable = (props: IProjectsTable) => {
   };
 
   const handlePageChange = (event, value) => {
-    gotoPage(value - 1);
+    gotoPage(value);
+  };
+
+  const handleChangeRowsPerPage = (e) => {
+    setPageSize(parseInt(e.target.value, 10));
+    gotoPage(0);
   };
 
   return (
@@ -133,18 +139,23 @@ const ProjectsTable = (props: IProjectsTable) => {
           })}
         </StyledTableBody>
       </StyledTable>
-      {rows.length > pageSize && (
-        <div className="flex justify-center mt2 w-100">
-          <Pagination
-            count={pageOptions.length}
-            onChange={handlePageChange}
-            siblingCount={0}
-            showFirstButton={pageOptions.length > 3}
-            showLastButton={pageOptions.length > 3}
-            size={isMobileOnly ? 'small' : 'medium'}
-          />
-        </div>
-      )}
+      <div className="flex justify-center mt2 w-100">
+        <TablePagination
+          component="div"
+          rowsPerPageOptions={
+            window.innerHeight > 1020
+              ? [12, 25, 50, 100]
+              : window.innerHeight > 800
+              ? [8, 10, 25, 50, 100]
+              : [6, 10, 25, 50, 100]
+          }
+          count={rows.length}
+          page={pageIndex}
+          onPageChange={handlePageChange}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
     </>
   );
 };
