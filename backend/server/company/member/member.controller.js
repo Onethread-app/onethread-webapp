@@ -57,9 +57,17 @@ const changeRole = async (req, res, next) => {
 };
 
 const sendJoinRequest = async (req, res, next) => {
-  // TODO: Accept only application/json requests
-  // TODO: Check if member already joined or requested to the company
   try {
+    const isExists = await Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
+    });
+    if (isExists) {
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'member already exists',
+      });
+    }
+
     const member = await Member.create({
       account: req.user._id,
       company: req.company._id,
