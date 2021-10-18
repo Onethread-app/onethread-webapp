@@ -18,10 +18,10 @@ const localLogin = new LocalStrategy(
   localOptions,
   async (req, email, password, done) => {
     try {
-      const user = await Account.findOne({ email }).populate(
-        'jobExperience education skillArea',
-        '_id name',
-      );
+      const user = await Account.findOne({
+        email,
+        isAccountVerified: true,
+      }).populate('jobExperience education skillArea', '_id name');
       if (!user) {
         logger.error(`No user found!`);
         return done(null, false, {

@@ -39,6 +39,9 @@ const member = new Schema(
       type: Boolean,
       default: true,
     },
+    approvedBy: {
+      type: String,
+    },
   },
   {
     timestamps: true,

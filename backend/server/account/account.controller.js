@@ -198,6 +198,19 @@ const signup = async (req, res, next) => {
   }
 };
 
+// account holder can update their account information
+const accountUpdate = async (req, res, next) => {
+  try {
+    await findAccountByIdAndUpdate(req.user._id, req.body);
+    return sendJSONresponse(res, 200, {
+      message: 'profile updated',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
 const resendEmail = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -280,7 +293,7 @@ const changeEmail = async (req, res, next) => {
   }
 };
 
-const accountUpdate = async (req, res, next) => {
+const registerInitiate = async (req, res, next) => {
   try {
     const { token } = req.query;
     verifyAccountToken(token).exec(async (err, data) => {
@@ -1075,10 +1088,11 @@ module.exports = {
   resendEmail,
   login,
   logout,
+  accountUpdate,
   // getAccessTokenForVerifyAccount,
   getAccount,
   timeline,
-  accountUpdate,
+  registerInitiate,
   tokenRefresh,
   sendEmailForForgetPassword,
   resetPassword,

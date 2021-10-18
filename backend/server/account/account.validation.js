@@ -99,7 +99,7 @@ module.exports = {
       pushSubscription: schema.pushSubscription,
     }),
   }),
-  update: Joi.object().keys({
+  init: Joi.object().keys({
     body: Joi.object().keys({
       firstName: schema.firstName.required(),
       lastName: schema.lastName.required(),
@@ -107,6 +107,19 @@ module.exports = {
     }),
     query: Joi.object().keys({
       token: Joi.string().required(),
+    }),
+  }),
+
+  update: Joi.object().keys({
+    body: Joi.object().keys({
+      contactNo: schema.contactNo,
+      birthDate: schema.birthDate,
+      bloodGroup: schema.bloodGroup,
+      location: schema.location,
+      position: schema.position,
+      about: schema.about,
+      gender: schema.gender,
+      secondaryEmail: schema.email.allow(''),
     }),
   }),
   resetPassword: Joi.object().keys({

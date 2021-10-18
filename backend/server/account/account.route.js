@@ -17,8 +17,16 @@ router
   .post(schemaValidator(paramValidation.signup), accountCtrl.signup);
 
 router
+  .route('/init')
+  .post(
+    schemaValidator(paramValidation.init),
+    accountCtrl.registerInitiate,
+  );
+
+router
   .route('/update')
   .put(
+    authorization,
     schemaValidator(paramValidation.update),
     accountCtrl.accountUpdate,
   );

@@ -94,6 +94,9 @@ module.exports = {
   acceptJoinRequest: Joi.object().keys({
     params: memberId,
   }),
+  rejectJoinRequest: Joi.object().keys({
+    params: memberId,
+  }),
   // updateCompany: Joi.object().keys({
   //   body: Joi.object().keys({
   //     address: schema.address.required(),

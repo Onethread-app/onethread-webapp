@@ -209,16 +209,12 @@ const getCompanyIndividual = async (req, res, next) => {
 
     for (let company of companies) {
       let comDetails = { ...company };
-      console.log({ companyId: company.company._id });
       comDetails.company.numberOfProject =
         await Project.countDocuments({
           company: company.company._id,
           removed: false,
           hasDeleted: false,
         });
-      console.log({
-        numberOfProjects: comDetails.company.numberOfProject,
-      });
     }
 
     return sendJSONresponse(res, 200, {
