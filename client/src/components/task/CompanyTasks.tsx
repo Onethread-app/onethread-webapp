@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
 import {
   useTable,
   useGlobalFilter,
@@ -9,6 +10,7 @@ import {
   usePagination,
 } from 'react-table';
 
+import { CompanyTasksContext } from './CompanyTasksContext';
 import { getAllCompanyTasks } from 'stores/task/Actions';
 import { ITask } from 'stores/task/Reducer';
 import { TaskTableColumns } from './TaskTableColumns';
@@ -17,10 +19,13 @@ import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import { DateRange } from '@blueprintjs/datetime/lib/esm/common/dateRange';
 
 import TaskTableSkeleton from './TaskTableSkeleton';
 import { AlignCenter } from 'components/UtilComponents';
 import TasksTable from './TasksTable';
+import TasksFilter from './TasksFilter';
 import {
   Container,
   HeaderContainer,
@@ -49,10 +54,42 @@ const CompanyTasks = (props: ICompanyTasks) => {
   } = props;
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState<string>('');
+  const [taskList, setTaskList] = useState<ITask[]>([]);
   const [showInputField, setShowInputField] =
     useState<boolean>(false);
-  const data = useMemo(() => companyTaskList, [companyTaskList]);
+  const [selectedStatusList, setSelectedStatusList] = useState<any>(
+    [],
+  );
+  const [selectedProjectList, setSelectedProjectList] = useState<any>(
+    [],
+  );
+  const [selectedDueDateOption, setSelectedDueDateOption] =
+    useState<string>('');
+  const [selectedDueDateRange, setSelectedDueDateRange] =
+    useState<DateRange>([null, null]);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const data = useMemo(() => taskList, [taskList]);
   const columns = useMemo(() => TaskTableColumns, []);
+  const providerValue = useMemo(
+    () => ({
+      tasks: data,
+      selectedStatusList,
+      selectedProjectList,
+      selectedDueDateOption,
+      selectedDueDateRange,
+      setSelectedStatusList,
+      setSelectedProjectList,
+      setSelectedDueDateOption,
+      setSelectedDueDateRange,
+    }),
+    [
+      data,
+      selectedDueDateOption,
+      selectedDueDateRange,
+      selectedProjectList,
+      selectedStatusList,
+    ],
+  );
 
   const {
     getTableProps,
@@ -63,9 +100,11 @@ const CompanyTasks = (props: ICompanyTasks) => {
     visibleColumns,
     allColumns,
     state,
+    setFilter,
+    setAllFilters,
     setGlobalFilter,
     page,
-    pageOptions,
+    setPageSize,
     gotoPage,
   } = useTable(
     {
@@ -88,9 +127,20 @@ const CompanyTasks = (props: ICompanyTasks) => {
     usePagination,
   );
 
+  const { globalFilter, pageSize, pageIndex } = state;
+
   const handleSearchChange = useAsyncDebounce((e) => {
     setGlobalFilter(e.target.value || undefined);
   }, 500);
+
+  const handleClearFilter = () => {
+    setSelectedStatusList([]);
+    setSelectedProjectList([]);
+    setSelectedDueDateRange([null, null]);
+    setSelectedDueDateOption('');
+    setTaskList(companyTaskList);
+    setAllFilters([]);
+  };
 
   useEffect(() => {
     if (uniqueCompanyName) {
@@ -127,83 +177,121 @@ const CompanyTasks = (props: ICompanyTasks) => {
     errorOnFetchingCompanyTasks,
   ]);
 
-  const { globalFilter, pageSize } = state;
+  useEffect(() => {
+    setTaskList(companyTaskList);
+  }, [companyTaskList]);
+
+  useEffect(() => {
+    setFilter('project', selectedProjectList);
+  }, [selectedProjectList]);
+
+  useEffect(() => {
+    setFilter('status', selectedStatusList);
+  }, [selectedStatusList]);
+
+  useEffect(() => {
+    const filterValue = {
+      type: selectedDueDateOption,
+      range: selectedDueDateRange,
+    };
+    setFilter('dueDate', filterValue);
+  }, [selectedDueDateOption, selectedDueDateRange]);
 
   return (
-    <Container>
-      <HeaderContainer>
-        <Header>
-          Tasks{' '}
-          {companyTaskList.length > 0 && (
-            <span>({companyTaskList.length})</span>
-          )}
-        </Header>
-        <SortAndFilter>
-          <ClickAwayListener
-            onClickAway={() => {
-              if (globalFilter === '' || globalFilter === undefined) {
-                setShowInputField(false);
-              }
-            }}
-          >
-            <AlignCenter onClick={() => setShowInputField(true)}>
-              {showInputField ? (
-                <StyledInput onChange={handleSearchChange} />
-              ) : (
-                <Icon icon="search" />
+    <CompanyTasksContext.Provider value={providerValue}>
+      <Container>
+        <HeaderContainer>
+          <Header>
+            Tasks{' '}
+            {companyTaskList.length > 0 && (
+              <span>({companyTaskList.length})</span>
+            )}
+          </Header>
+          <SortAndFilter>
+            <AlignCenter>
+              {(!isEmpty(selectedStatusList) ||
+                !isEmpty(selectedProjectList) ||
+                !isEmpty(selectedDueDateOption)) && (
+                <ClearOutlinedIcon
+                  fontSize="small"
+                  onClick={handleClearFilter}
+                />
               )}
-              Search
             </AlignCenter>
-          </ClickAwayListener>
-          <Popover
-            interactionKind="click"
-            position="bottom-right"
-            content={
-              <StyledFilterPopover>
-                <p className="bb">Customize Table</p>
+            <ClickAwayListener
+              onClickAway={() => {
+                if (
+                  globalFilter === '' ||
+                  globalFilter === undefined
+                ) {
+                  setShowInputField(false);
+                }
+              }}
+            >
+              <AlignCenter onClick={() => setShowInputField(true)}>
+                {showInputField ? (
+                  <StyledInput onChange={handleSearchChange} />
+                ) : (
+                  <Icon icon="search" />
+                )}
+                Search
+              </AlignCenter>
+            </ClickAwayListener>
+            <TasksFilter
+              filterOpen={filterOpen}
+              setFilterOpen={setFilterOpen}
+            />
+            <Popover
+              interactionKind="click"
+              position="bottom-right"
+              content={
+                <StyledFilterPopover>
+                  <p className="bb">Customize Table</p>
 
-                {allColumns.map((column) => (
-                  <div key={column.id}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={column.isVisible}
-                        disabled={column.id === 'name'}
-                        {...column.getToggleHiddenProps()}
-                      />{' '}
-                      {column.Header}
-                    </label>
-                  </div>
-                ))}
-              </StyledFilterPopover>
-            }
-            target={<MoreVertIcon fontSize="small" />}
-          />
-        </SortAndFilter>
-      </HeaderContainer>
-      {companyTaskList.length === 0 ? (
-        loadingData ? (
-          <TaskTableSkeleton />
-        ) : error ? (
-          <div>{error}</div>
+                  {allColumns.map((column) => (
+                    <div key={column.id}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={column.isVisible}
+                          disabled={column.id === 'name'}
+                          {...column.getToggleHiddenProps()}
+                        />{' '}
+                        {column.Header}
+                      </label>
+                    </div>
+                  ))}
+                </StyledFilterPopover>
+              }
+              target={<MoreVertIcon fontSize="small" />}
+            />
+          </SortAndFilter>
+        </HeaderContainer>
+        {companyTaskList.length === 0 ? (
+          loadingData ? (
+            <TaskTableSkeleton />
+          ) : error ? (
+            <div>{error}</div>
+          ) : (
+            <div>No Tasks</div>
+          )
         ) : (
-          <div>No Tasks</div>
-        )
-      ) : (
-        <TasksTable
-          getTableProps={getTableProps}
-          getTableBodyProps={getTableBodyProps}
-          headerGroups={headerGroups}
-          rows={rows}
-          prepareRow={prepareRow}
-          visibleColumns={visibleColumns}
-          page={page}
-          pageOptions={pageOptions}
-          gotoPage={gotoPage}
-          pageSize={pageSize}
-        />
-      )}
-    </Container>
+          <TasksTable
+            getTableProps={getTableProps}
+            getTableBodyProps={getTableBodyProps}
+            headerGroups={headerGroups}
+            rows={rows}
+            prepareRow={prepareRow}
+            visibleColumns={visibleColumns}
+            page={page}
+            pageIndex={pageIndex}
+            gotoPage={gotoPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        )}
+      </Container>
+    </CompanyTasksContext.Provider>
   );
 };
 

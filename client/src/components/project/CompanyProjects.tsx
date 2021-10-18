@@ -65,7 +65,7 @@ const CompanyProjects = (props: ICompanyProjects) => {
     state,
     setGlobalFilter,
     page,
-    pageOptions,
+    setPageSize,
     gotoPage,
   } = useTable(
     {
@@ -88,7 +88,7 @@ const CompanyProjects = (props: ICompanyProjects) => {
     usePagination,
   );
 
-  const { globalFilter, pageSize } = state;
+  const { globalFilter, pageSize, pageIndex } = state;
 
   const handleSearchChange = useAsyncDebounce((e) => {
     setGlobalFilter(e.target.value || undefined);
@@ -197,9 +197,10 @@ const CompanyProjects = (props: ICompanyProjects) => {
           prepareRow={prepareRow}
           visibleColumns={visibleColumns}
           page={page}
-          pageOptions={pageOptions}
           gotoPage={gotoPage}
           pageSize={pageSize}
+          pageIndex={pageIndex}
+          setPageSize={setPageSize}
         />
       )}
     </Container>
