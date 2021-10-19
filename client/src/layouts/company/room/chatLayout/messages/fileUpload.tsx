@@ -17,7 +17,7 @@ const FileUploadComponent = (props: IFileUploadProps) => {
   const [imageName, setImageName] = useState({}) as any;
   const [imageLoading, setImageLoading] = useState(false);
   const [imageError, setImageError] = useState('');
-  const sizeLimit = 25;
+  const sizeLimit = 100;
 
   const checkMimetype = [
     'application/zip',
