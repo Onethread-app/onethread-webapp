@@ -349,10 +349,9 @@ export function* projectFileUploadAsync({ file, pid }: any) {
   try {
     const headers = tokenConfigFIleUpload();
     const projectId = yield select(getProjectId);
-
     if ((headers as any).headers.Authorization) {
       yield tigrowApi.post(
-        `files/file-upload-project?pid=${pid}`,
+        `files/file-upload-project?pid=${projectId}`,
         file,
         headers,
       );

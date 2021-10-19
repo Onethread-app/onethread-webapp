@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 
@@ -77,6 +77,13 @@ const FileUploadComponent = (props: IFileUploadInternalProps) => {
     return false;
   };
 
+  useEffect(() => {
+    if (imageLoading === true && props.isLoading === false) {
+      props.setShowDialog(false);
+      setImageName({});
+    }
+  }, [imageLoading, props.isLoading]);
+
   return (
     <div className="pa3 cf">
       <h1 className="f5 tigrow-lightBlue">Upload File</h1>
@@ -131,15 +138,10 @@ const FileUploadComponent = (props: IFileUploadInternalProps) => {
           onClick={async (e: any) => {
             e.preventDefault();
             setImageLoading(true);
-            const response = await props.projectFileUpload(
+            await props.projectFileUpload(
               imageSelected,
               props.projectID,
             );
-            if (response && props.isLoading === false) {
-              props.setShowDialog(false);
-              setImageName({});
-            }
-            setImageLoading(false);
           }}
           disabled={
             imageLoading === true || isEmpty(imageName.name)
