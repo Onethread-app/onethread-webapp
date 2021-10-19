@@ -9,7 +9,6 @@ import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 
 import { User } from 'stores/user/Reducer';
 
-import { projectRules } from './settings/projectrules';
 import { FileUpload } from './fileUpload';
 import { ProjectOutlineView } from './ProjectOutlineView';
 import Navbar from 'components/navbar/Navbar';
@@ -35,7 +34,6 @@ export const ProjectPrefaceViewComponent = (
 ) => {
   const { t } = useTranslation();
   const [showFileDialog, setShowFileDialog] = useState(false);
-  const permissions = projectRules(props.role, props.optionalRole);
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
@@ -182,24 +180,18 @@ export const ProjectPrefaceViewComponent = (
                 </a>
               </div>
             ))}
-            {(permissions.grantAll ||
-              (permissions.projectModerator &&
-                permissions.projectModerator.includes(
-                  'addFileProject',
-                ))) && (
-              <Button
-                className="pointer w4 pa2 flex flex-column center mb5 mt4"
-                style={{
-                  background: '#fff',
-                  outline: 'none',
-                  border: '2px solid blue',
-                  color: 'blue',
-                }}
-                onClick={() => setShowFileDialog(true)}
-              >
-                {t('app.project.Project-preface.Upload')}
-              </Button>
-            )}
+            <Button
+              className="pointer w4 pa2 flex flex-column center mb5 mt4"
+              style={{
+                background: '#fff',
+                outline: 'none',
+                border: '2px solid blue',
+                color: 'blue',
+              }}
+              onClick={() => setShowFileDialog(true)}
+            >
+              {t('app.project.Project-preface.Upload')}
+            </Button>
           </div>
 
           <h1 className="f6 pb2">

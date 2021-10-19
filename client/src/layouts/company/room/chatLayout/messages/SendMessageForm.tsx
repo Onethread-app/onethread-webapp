@@ -49,6 +49,7 @@ interface SendMessageFormProps {
   user: User;
   roomUsers: IRoomReducer['users'];
   uploadingFile: boolean;
+  errorOnFileUpload: string;
 }
 
 const SendMessageFormComponent = (props: SendMessageFormProps) => {
@@ -247,6 +248,8 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
         <div className="flex w-100 flex-wrap items-center b--black-10 ba">
           {props.uploadingFile ? (
             <CircularProgress size={25} style={{ margin: '.5rem' }} />
+          ) : props.errorOnFileUpload ? (
+            <div>There was an error uploading file</div>
           ) : props.pendingFiles && props.pendingFiles.length ? (
             props.pendingFiles.map((file) => (
               <div className="bg-tigrowLightBlue flex pv2 ph3 ma1 br-pill justify-center items-center">
@@ -392,6 +395,7 @@ const mapStateToProps = (state: any) => {
     typingUsers: state.roomReducer.typing.users,
     pendingFiles: state.roomReducer.pendingFiles,
     uploadingFile: state.roomReducer.uploadingFile,
+    errorOnFileUpload: state.roomReducer.errorOnFileUpload,
     roomUsers: state.roomReducer.users,
     user: state.userReducer.user,
   };
