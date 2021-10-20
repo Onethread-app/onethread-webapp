@@ -38,13 +38,17 @@ router
   );
 
 router.route('/').get(authorization, accountCtrl.getAccount);
+
 router.route('/skill-area').get(authorization, accountCtrl.skillArea);
+
 router
   .route('/task-list')
   .get(authorization, accountCtrl.userTaskList);
+
 router
   .route('/subtasks')
   .get(authorization, accountCtrl.userSubtasks);
+
 router
   .route('/:subTaskId/done')
   .put(
@@ -52,10 +56,13 @@ router
     schemaValidator(paramValidation.subTaskMarkAsDone),
     accountCtrl.subtaskMarkAsDone,
   );
+
 router.route('/due-task').get(authorization, accountCtrl.userDueTask);
+
 router
   .route('/daily-progress')
   .get(authorization, accountCtrl.userDailyProgress);
+
 router.route('/timeline').get(authorization, accountCtrl.timeline);
 router
   .route('/update')
@@ -71,15 +78,18 @@ router
     schemaValidator(paramValidation.logout),
     accountCtrl.logout,
   );
+
 router
   .route('/forget-password')
   .post(accountCtrl.sendEmailForForgetPassword);
+
 router
   .route('/reset-password/')
   .put(
     schemaValidator(paramValidation.resetPassword),
     accountCtrl.resetPassword,
   );
+
 router
   .route('/change-password')
   .put(
@@ -87,6 +97,7 @@ router
     schemaValidator(paramValidation.changePassword),
     accountCtrl.changePassword,
   );
+
 router.route('/refresh').post(accountCtrl.tokenRefresh);
 
 router
