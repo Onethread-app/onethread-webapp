@@ -25,6 +25,7 @@ const {
   createRoomMember,
 } = require('../room/room.controller');
 // const { ISOformat } = require('../helpers/DateFormat');
+const { sortProjectsByStatus } = require('../helpers/utils');
 
 const isPidExist = async (pid) => {
   let checkExist = await Project.findOne(
@@ -606,7 +607,8 @@ const showAllProjectsForCompany = async (req, res, next) => {
             return projectObj;
           }),
         );
-        return sendJSONresponse(res, 200, modifiedResult);
+        const sortedProjects = sortProjectsByStatus(modifiedResult);
+        return sendJSONresponse(res, 200, sortedProjects);
       })
       .catch((error) => {
         logger.error(`${error}`);
