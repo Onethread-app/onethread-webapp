@@ -16,7 +16,6 @@ import {
   updateUserAuthInfoFailure,
   updateUserAuthInfoSuccess,
   updateUserTokenFailure,
-  updateUserTokenStart,
   updateUserTokenSuccess,
   verifyUserTokenFailure,
   verifyUserTokenSuccess,
@@ -44,16 +43,19 @@ export function* updateUserAuthInfoAction(action: {
   };
   try {
     const response = yield tigrowApi.put(
-      'accounts/update',
+      `accounts/init?token=${action.payload.token}`,
       action.payload.userInfo,
       config,
     );
     if (response.status === 200) {
       yield put(updateUserAuthInfoSuccess());
-      yield put(
-        updateUserTokenStart(
-          JSON.parse(localStorage.getItem('ot_refresh_id')!),
-        ),
+      localStorage.setItem(
+        'ot_access_id',
+        JSON.stringify(response.data.accessToken),
+      );
+      localStorage.setItem(
+        'ot_refresh_id',
+        JSON.stringify(response.data.refreshToken),
       );
     }
   } catch (error) {

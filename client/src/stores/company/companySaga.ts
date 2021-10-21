@@ -616,16 +616,12 @@ export function* getCompanyPublicInformationAsync(action: {
   payload: string;
 }) {
   try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(
-        `/company/${action.payload}/public`,
-        headers,
-      );
-      // console.log(action.payload, response.data);
+    const response = yield tigrowApi.get(
+      `/company/${action.payload}/public`,
+    );
+    // console.log(action.payload, response.data);
 
-      yield put(getCompanyPublicInformationSuccess(response.data));
-    }
+    yield put(getCompanyPublicInformationSuccess(response.data));
   } catch (error) {
     yield put(
       getCompanyPublicInformationFailure(returnErrorText(error)),
