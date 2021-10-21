@@ -95,7 +95,7 @@ const Index = (props: IProps) => {
   const containerRef = useRef(null);
   const errorRef = useRef(null);
   const containerSize = useElementSize(containerRef);
-  const errorSize = useElementSize(errorRef);
+  // const errorSize = useElementSize(errorRef);
 
   const { t } = useTranslation();
 
