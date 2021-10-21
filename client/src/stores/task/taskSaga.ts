@@ -256,7 +256,9 @@ export function* createTask({ payload }: any) {
       yield put(createTaskSuccess(responseValue));
     }
   } catch (error) {
-    yield put(createTaskFailure(returnErrorText(error)));
+    yield put(
+      createTaskFailure(returnErrorText(error) || 'Unknown error'),
+    );
   }
 }
 

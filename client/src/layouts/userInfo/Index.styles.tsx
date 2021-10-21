@@ -26,8 +26,9 @@ const TextInput = styled(Input)`
 const Logo = styled(Link)`
   font-weight: normal;
   font-size: 20px;
-  margin-bottom: 2rem;
+  margin-bottom: var(--default-margin, 1rem);
   color: black !important;
+
   span {
     font-weight: bold;
   }
@@ -79,10 +80,10 @@ const FormContainer = styled.div`
   width: 100%;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 100px;
+  padding-top: clamp(50px, 25px, 100px);
   padding-left: 100px;
   padding-right: 100px;
-  row-gap: 2rem;
+  row-gap: var(--default-margin, 1rem);
 
   form div {
     position: relative;
@@ -105,7 +106,7 @@ const FormContainer = styled.div`
   }
 
   form label {
-    margin-top: 2rem;
+    margin-top: var(--default-margin, 1rem);
     color: black;
     font-weight: normal;
     padding-bottom: 4px;
@@ -117,11 +118,6 @@ const FormContainer = styled.div`
     margin-top: 4px !important;
     color: gray;
   }
-
-  /* form span {
-    width: 1rem;
-    height: 1rem;
-  } */
 
   div p {
     margin-top: 5rem;
@@ -142,6 +138,7 @@ const FormContainer = styled.div`
 
 const Container = styled.div`
   --max-width: 35rem;
+  --default-margin: 2rem;
   background: #fff;
   display: flex;
   flex-direction: row;
@@ -152,6 +149,10 @@ const Container = styled.div`
 
   ${FormContainer} input {
     max-width: var(--max-width);
+  }
+
+  @media (max-width: 1367px) {
+    --default-margin: 1rem;
   }
 
   @media (max-width: 721px) {
