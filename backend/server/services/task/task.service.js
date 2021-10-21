@@ -26,16 +26,10 @@ const taskAssignOptions = [
   },
 ];
 const findTaskById = async (_id) => {
-  return await Task.findById({ _id: _id })
-    .select('name boardId project')
-    .exec();
+  return Task.findById(id).select('name boardId project');
 };
 const findTaskMembersById = async (_id) => {
-  return await TaskAssign.findById({
-    _id: _id,
-  })
-    .populate(taskAssignOptions)
-    .exec();
+  return TaskAssign.findById(_id).populate(taskAssignOptions);
 };
 module.exports = {
   findTaskById,

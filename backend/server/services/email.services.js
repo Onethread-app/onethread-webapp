@@ -154,7 +154,12 @@ module.exports.sendMailAsTaskReminder = async (
       const link = `${host}/${username}/home`;
       const getMarkup = (task) => {
         if (!task) return 'No task available';
-        return task.map((t) => `<li>${t.name}</li>`).join(',');
+        return task
+          .map(
+            (t) =>
+              `<li>${t.name} (${host}/company/${t.company}/project/${t.project}/board/${t.boardId}/task/${t._id})</li>`,
+          )
+          .join(',');
       };
       if (
         !todaysTaskNames[username] &&
@@ -172,13 +177,12 @@ module.exports.sendMailAsTaskReminder = async (
         to: usernameEmailMapper[username],
         subject: `[Onethread] Task Reminder - ${todaysDate('.')}`,
         html: `
-      <h1> Task Reminder </h1>
       <h2> Todays Task </h2>
       ${taskListMarkup}
       <h2> Todays Subtask </h2>
-      ${subTaskListMarkup}
+      ${subTaskListMarkup} <br> <br>
 
-      For more details: ${link}
+      <h3>For more details: ${link}</h3>
     `,
       };
 

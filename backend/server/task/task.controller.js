@@ -30,6 +30,11 @@ const {
   sendMailAsTaskReminder,
 } = require('../services/email.services');
 
+const {
+  findCompanyNameByTask,
+  findCompanyNameBySubtask,
+} = require('../services/company/company.services');
+
 const getTaskMembers = async (taskId) => {
   const taskMembers = await TaskAssign.find({
     taskId,
@@ -656,11 +661,16 @@ const taskReminder = async (req, res, next) => {
     });
     let taskId = taskListToday.map((i) => i._id);
     const todayCounter = {};
+    const taskCompanyNameMapper = {};
+    const subTaskCompanyNameMapper = {};
 
     const userTaskListToday = await TaskAssign.find({ taskId })
       .populate({ path: 'account', select: '_id name email' })
       .populate({ path: 'assignedPerson', select: '_id name email' })
-      .populate({ path: 'taskId', select: '_id name' });
+      .populate({
+        path: 'taskId',
+        select: '_id name project boardId',
+      });
 
     for (let task of userTaskListToday) {
       // Assigned by me
@@ -669,9 +679,18 @@ const taskReminder = async (req, res, next) => {
       if (!todaysTaskNames[assignedBy]) {
         todaysTaskNames[assignedBy] = [];
       }
+
+      if (!taskCompanyNameMapper[task.taskId._id]) {
+        taskCompanyNameMapper[task.taskId._id] =
+          await findCompanyNameByTask(task.taskId._id);
+      }
+
       todaysTaskNames[assignedBy].push({
         _id: task.taskId._id,
         name: task.taskId.name,
+        project: task.taskId.project,
+        boardId: task.taskId.boardId,
+        company: taskCompanyNameMapper[task.taskId._id],
       });
 
       // Count
@@ -693,6 +712,9 @@ const taskReminder = async (req, res, next) => {
       todaysTaskNames[assignedTo].push({
         _id: task.taskId._id,
         name: task.taskId.name,
+        project: task.taskId.project,
+        boardId: task.taskId.boardId,
+        company: taskCompanyNameMapper[task.taskId._id],
       });
 
       if (!todayCounter[assignedTo]) todayCounter[assignedTo] = 0;
@@ -751,9 +773,16 @@ const taskReminder = async (req, res, next) => {
       if (!todaysSubtaskNames[assignedBy]) {
         todaysSubtaskNames[assignedBy] = [];
       }
+      if (!subTaskCompanyNameMapper[task.taskId._id]) {
+        subTaskCompanyNameMapper[task.taskId._id] =
+          await findCompanyNameBySubtask(task.taskId._id);
+      }
       todaysSubtaskNames[assignedBy].push({
         _id: task.taskId._id,
         name: task.taskId.name,
+        project: task.taskId.project,
+        boardId: task.taskId.boardId,
+        company: subTaskCompanyNameMapper[task.taskId._id],
       });
       if (!todaySubTaskCounter[assignedBy]) {
         todaySubTaskCounter[assignedBy] = 0;
@@ -775,6 +804,9 @@ const taskReminder = async (req, res, next) => {
         todaysSubtaskNames[assignedTo].push({
           _id: task.taskId._id,
           name: task.taskId.name,
+          project: task.taskId.project,
+          boardId: task.taskId.boardId,
+          company: subTaskCompanyNameMapper[task.taskId._id],
         });
 
         if (!todaySubTaskCounter[assignedTo]) {
@@ -811,7 +843,6 @@ const taskReminder = async (req, res, next) => {
         });
       }),
     );
-
     await sendMailAsTaskReminder(
       todaysTaskNames,
       todaysSubtaskNames,
