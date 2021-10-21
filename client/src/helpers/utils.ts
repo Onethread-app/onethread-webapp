@@ -111,14 +111,14 @@ export const getUniqueList = (a, field) =>
   }));
 
 export const flattenObject = function (ob) {
-  let toReturn = {};
+  const toReturn = {};
 
-  for (let i in ob) {
+  for (const i in ob) {
     if (!ob.hasOwnProperty(i)) continue;
 
     if (typeof ob[i] == 'object') {
-      let flatObject = flattenObject(ob[i]);
-      for (let x in flatObject) {
+      const flatObject = flattenObject(ob[i]);
+      for (const x in flatObject) {
         if (!flatObject.hasOwnProperty(x)) continue;
 
         toReturn[i + '.' + x] = flatObject[x];
