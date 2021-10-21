@@ -83,9 +83,10 @@ export const userSubscriber = async () => {
   });
 
   pusher.connection.bind('error', (err: any) => {
-    if (err.error.data.code === 4004) {
-      // tslint:disable-next-line: no-console
-    }
+    // console.log(err);
+    // if (err.error.data.code === 404) {
+    //   // tslint:disable-next-line: no-console
+    // }
   });
 
   const channel = pusher.subscribe('presence-quickstart');

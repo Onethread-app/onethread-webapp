@@ -12,14 +12,20 @@ export const TextInput = styled.input`
   border-radius: 0.5rem;
   text-indent: 10px;
   width: 100%;
-  border: 1px solid #c9c9c9;
+  border: 1px solid
+    ${({ hasError }) => (hasError ? 'red' : '#c9c9c9')};
   vertical-align: middle;
 `;
 
 const StyledTextInput = ({ input, meta, ...rest }: Props) => {
   return (
     <>
-      <TextInput type="text" {...input} {...rest} />
+      <TextInput
+        type="text"
+        {...input}
+        {...rest}
+        hasError={checkError(meta)}
+      />
       {checkError(meta) ? (
         <StyledError errorMessage={meta.error || meta.submitError} />
       ) : null}

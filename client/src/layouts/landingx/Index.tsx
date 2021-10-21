@@ -140,8 +140,14 @@ const NewLanding = ({
                 </label>
                 <Field
                   name="email"
-                  type="email"
+                  type="text"
                   validate={composeValidators(required)}
+                  parse={(value: string) =>
+                    value.replaceAll(
+                      /[^A-Za-z0-9!#$%&'*+-/=?^_`{|}~."(),:;<>@[\]]/gi,
+                      '',
+                    )
+                  }
                   render={({ input, meta }) => {
                     return (
                       <>

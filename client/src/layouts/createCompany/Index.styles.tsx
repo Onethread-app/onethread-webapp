@@ -54,7 +54,7 @@ const FormContainer = styled.div`
   padding-top: 100px;
   padding-left: 150px;
   padding-right: 150px;
-  row-gap: 2rem;
+  row-gap: var(--default-margin, 1rem);
 
   header {
     font-size: 36px;
@@ -68,7 +68,7 @@ const FormContainer = styled.div`
   }
 
   form label {
-    margin-top: 2rem;
+    margin-top: var(--default-margin, 1rem);
     margin-bottom: 1rem;
     color: black;
   }
@@ -109,6 +109,7 @@ const FormContainer = styled.div`
 
 const Container = styled.div`
   --max-width: 35rem;
+  --default-margin: 2rem;
   background: #fff;
   display: flex;
   flex-direction: row;
@@ -120,6 +121,11 @@ const Container = styled.div`
   ${FormContainer} input {
     max-width: var(--max-width);
   }
+
+  @media (max-width: 1367px) {
+    --default-margin: 1rem;
+  }
+
   @media (max-width: 721px) {
     --max-width: 100%;
 

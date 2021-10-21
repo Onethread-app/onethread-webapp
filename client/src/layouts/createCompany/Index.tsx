@@ -104,8 +104,8 @@ const Index = ({ user, company, ...props }) => {
   return props?.user?.firstName === '' ? (
     <SuspenseLoader />
   ) : (
-    <Container ref={containerRef}>
-      <FormContainer>
+    <Container>
+      <FormContainer ref={containerRef}>
         <Logo to="/">
           One<span>Thread</span>
         </Logo>
