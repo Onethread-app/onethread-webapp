@@ -1,8 +1,7 @@
 import { useHistory } from 'react-router-dom';
-import { isMobileOnly } from 'react-device-detect';
 
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
-import Pagination from '@material-ui/lab/Pagination/Pagination';
+import TablePagination from '@material-ui/core/TablePagination';
 
 import {
   StyledTable,
@@ -21,9 +20,10 @@ interface ITasksTable {
   prepareRow: any;
   visibleColumns: any;
   page: any;
-  pageOptions: any;
   gotoPage: any;
   pageSize: any;
+  pageIndex: number;
+  setPageSize: any;
 }
 
 const TasksTable = (props: ITasksTable) => {
@@ -35,14 +35,20 @@ const TasksTable = (props: ITasksTable) => {
     prepareRow,
     visibleColumns,
     page,
-    pageOptions,
+    pageIndex,
     gotoPage,
     pageSize,
+    setPageSize,
   } = props;
   const history = useHistory();
 
   const handlePageChange = (event, value) => {
-    gotoPage(value - 1);
+    gotoPage(value);
+  };
+
+  const handleChangeRowsPerPage = (e) => {
+    setPageSize(parseInt(e.target.value, 10));
+    gotoPage(0);
   };
 
   const handleClick = (task) => {
@@ -147,18 +153,23 @@ const TasksTable = (props: ITasksTable) => {
           })}
         </StyledTableBody>
       </StyledTable>
-      {rows.length > pageSize && (
-        <div className="flex justify-center mt2 w-100">
-          <Pagination
-            count={pageOptions.length}
-            onChange={handlePageChange}
-            siblingCount={0}
-            showFirstButton={pageOptions.length > 3}
-            showLastButton={pageOptions.length > 3}
-            size={isMobileOnly ? 'small' : 'medium'}
-          />
-        </div>
-      )}
+      <div className="flex justify-center mt2 w-100">
+        <TablePagination
+          component="div"
+          rowsPerPageOptions={
+            window.innerHeight > 1020
+              ? [10, 25, 50, 100]
+              : window.innerHeight > 800
+              ? [7, 10, 25, 50, 100]
+              : [5, 10, 25, 50, 100]
+          }
+          count={rows.length}
+          page={pageIndex}
+          onPageChange={handlePageChange}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
     </>
   );
 };
