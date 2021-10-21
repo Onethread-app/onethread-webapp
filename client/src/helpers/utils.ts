@@ -30,7 +30,7 @@ export const sortTasksByStatus = (tasks: any) => {
     };
     return primaryStatus.includes(task.status)
       ? rank[task.status]
-      : rank['other'];
+      : rank.other;
   });
   return sortedTasks;
 };
@@ -111,14 +111,14 @@ export const getUniqueList = (a, field) =>
   }));
 
 export const flattenObject = function (ob) {
-  var toReturn = {};
+  let toReturn = {};
 
-  for (var i in ob) {
+  for (let i in ob) {
     if (!ob.hasOwnProperty(i)) continue;
 
     if (typeof ob[i] == 'object') {
-      var flatObject = flattenObject(ob[i]);
-      for (var x in flatObject) {
+      let flatObject = flattenObject(ob[i]);
+      for (let x in flatObject) {
         if (!flatObject.hasOwnProperty(x)) continue;
 
         toReturn[i + '.' + x] = flatObject[x];
