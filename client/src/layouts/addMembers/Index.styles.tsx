@@ -151,7 +151,7 @@ const FormContainer = styled.div`
   width: 100%;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 100px;
+  padding-top: clamp(50px, 25px, 100px);
   padding-left: 100px;
   padding-right: 100px;
   row-gap: 1.5rem;
@@ -167,7 +167,7 @@ const FormContainer = styled.div`
   }
 
   form label {
-    margin-top: 2rem;
+    margin-top: var(--default-margin, 1rem);
     color: black;
     font-weight: 600;
   }
@@ -238,6 +238,7 @@ const FormContainer = styled.div`
 
 const Container = styled.div`
   --max-width: 35rem;
+  --default-margin: 2rem;
   background: #fff;
   display: flex;
   flex-direction: row;
@@ -268,6 +269,10 @@ const Container = styled.div`
     }
   }
 
+  @media (max-width: 1367px) {
+    --default-margin: 1rem;
+  }
+
   @media (max-width: 721px) {
     --max-width: 100%;
 
@@ -288,7 +293,7 @@ const Container = styled.div`
 const Logo = styled(Link)`
   font-weight: normal;
   font-size: 20px;
-  margin-bottom: 2rem;
+  margin-bottom: var(--default-margin, 1rem);
   color: black !important;
 
   span {

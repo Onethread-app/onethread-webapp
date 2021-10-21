@@ -170,8 +170,8 @@ const Index = (props: IProps) => {
   ]);
 
   return (
-    <Container ref={containerRef}>
-      <FormContainer>
+    <Container>
+      <FormContainer ref={containerRef}>
         <Logo to="/">
           One<span>Thread</span>
         </Logo>

@@ -93,9 +93,7 @@ const Index = (props: IProps) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const containerRef = useRef(null);
-  const errorRef = useRef(null);
   const containerSize = useElementSize(containerRef);
-  // const errorSize = useElementSize(errorRef);
 
   const { t } = useTranslation();
 
@@ -230,8 +228,13 @@ const Index = (props: IProps) => {
   ]);
 
   return (
-    <Container ref={containerRef}>
-      <FormContainer item xs={6} className="grid-item item1">
+    <Container>
+      <FormContainer
+        item
+        xs={6}
+        className="grid-item item1"
+        ref={containerRef}
+      >
         <Logo to="#" onClick={handleLeave}>
           One<span>Thread</span>
         </Logo>
@@ -288,7 +291,7 @@ const Index = (props: IProps) => {
                 )}
                 render={({ meta, input, ...rest }) => (
                   <>
-                    <div ref={errorRef}>
+                    <div>
                       <TextInput {...input} {...rest} />
                       {showPassword ? (
                         <span>

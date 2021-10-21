@@ -28,6 +28,8 @@ import { Loading } from 'components/Loading';
 import Navbar from 'components/navbar/Navbar';
 
 import './Index.scss';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
+// import ProjectSection from 'components/dashboard/project-section/ProjectSection';
 
 interface DashBoardViewProps {
   user: User;
@@ -38,6 +40,7 @@ interface DashBoardViewProps {
   setSubscriptionNotExpire: () => void;
   getLatestCompletedTasks: () => void;
   getCurrentSubscription: () => void;
+  getAllCompaniesByUserId: (arg0: string) => void;
   completedTasks: [];
 }
 
@@ -89,6 +92,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
       props.setSubscriptionNotExpire();
       props.getLatestCompletedTasks();
       props.getCompanyAnnouncement();
+      props.getAllCompaniesByUserId(props.user._id);
       setLoading(false);
     } catch (err: any) {
       setLoading(false);
@@ -262,6 +266,7 @@ export const DashboardView = connect(mapStateToProps, {
   setSubscriptionNotExpire,
   getLatestCompletedTasks,
   getCurrentSubscription,
+  getAllCompaniesByUserId,
 })(DashboardViewComponent);
 
 export default DashboardView;

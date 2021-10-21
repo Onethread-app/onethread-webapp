@@ -1,0 +1,300 @@
+import styled from 'styled-components';
+
+import {
+  StyledTextInput,
+  StyledRadioInput as RadioInput,
+} from 'components/form-components/Index.styles';
+
+const StyledButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px 7px;
+  height: 33px;
+  white-space: nowrap;
+  background: #08a0f7;
+  border-radius: 4px;
+  color: #fff;
+  border: none;
+
+  &:disabled {
+    background: rgba(8, 160, 247, 0.6);
+  }
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column !important;
+  width: max-content;
+  justify-content: flex-start;
+  align-items: center;
+
+  div {
+    display: flex;
+    flex-direction: column !important;
+  }
+`;
+
+const SuccessToaster = styled.div`
+  padding: 2rem;
+  border: none;
+  border-left: 3px solid #00a150;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  z-index: 10000;
+`;
+
+const ErrorToaster = styled.div`
+  padding: 2rem;
+  border: none;
+  border-left: 3px solid red;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  z-index: 10000;
+`;
+
+const Icon = styled.span`
+  padding: 12px;
+  background-color: ${({ color }) => color};
+  border-radius: 100%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: 4px solid
+    ${({ checked }) => (checked ? '#e1e1e1' : 'transparent')};
+
+  span {
+    display: ${({ checked }) => (checked ? 'block' : 'none')};
+  }
+`;
+
+const StyledRadioInput = styled(RadioInput)`
+  opacity: 0;
+  width: 0;
+  height: 0;
+`;
+
+const TextInput = styled(StyledTextInput)`
+  height: 36px;
+  border-radius: 0.5rem;
+  width: 100%;
+  border: ${({ hasError }) =>
+    hasError ? '1px solid red !important' : 'none'};
+  vertical-align: middle;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 4px;
+  text-indent: 0px;
+  background-color: #fff;
+
+  & + span {
+    color: ${({ hasError }) =>
+      hasError ? 'red !important' : 'inherit'};
+  }
+
+  &:focus {
+    outline: none;
+    font-weight: bolder;
+  }
+`;
+
+const Header = styled.header`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  color: var(--dark-color, #323030);
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  transform: rotate(0.13deg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  img {
+    margin-right: 12px;
+    cursor: pointer;
+  }
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: ${({ justify }) => justify ?? 'center'};
+  align-items: center;
+  width: 100%;
+  padding: 1rem 0;
+  column-gap: 4px;
+  margin: 0.5rem 0;
+
+  input[type='date'],
+  select {
+    min-width: 167px;
+    height: 30px;
+    border: 1px solid #b1b1b1;
+    box-sizing: border-box;
+    border-radius: 4px;
+  }
+
+  div {
+    display: flex;
+    column-gap: 0.5rem;
+  }
+`;
+
+const Footer = styled.div`
+  display: flex;
+  flex-direction: row !important;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  margin-top: auto;
+  border-top: 1px solid #e8e8e8;
+
+  span {
+    width: 50%;
+    height: 100%;
+  }
+
+  span + span {
+    border-left: 1px solid #e8e8e8;
+  }
+`;
+
+const Project = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 128px;
+  height: 128px;
+  background: #ffffff;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  cursor: pointer;
+
+  div {
+    text-align: center;
+  }
+
+  &::first-child > span {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 19px;
+    text-align: center;
+    color: #000000;
+  }
+
+  span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 5px;
+  }
+`;
+
+const Avatar = styled.div`
+  text-transform: capitalize;
+  /* margin: 24px auto 4px; */
+  padding: 12px;
+  background-color: ${(props) => props.bgColor || '#9840dd'};
+  border-radius: 5px;
+`;
+
+const CreateProject = styled.div`
+  width: 120px;
+  height: 126px;
+  border: 1px dashed #a3a3a3;
+  box-sizing: border-box;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    margin-top: 38.5px auto 0;
+    margin-bottom: 12px;
+  }
+`;
+
+const ProjectContainer = styled.div`
+  background-color: #f6f6f6;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 24px;
+  padding: 14px;
+  margin-bottom: 36px;
+  overflow-x: auto;
+`;
+
+const Modal = styled.div`
+  position: absolute;
+  min-width: min(50vw, 600px);
+  width: auto;
+  max-width: 90vw;
+  max-height: 80vh;
+  background: #ffffff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 54px 55px 50px 40px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.2);
+  z-index: 999;
+
+  .label {
+    min-width: 100px;
+  }
+
+  .react-select {
+    width: 250px;
+  }
+`;
+
+const SimpleButton = styled.button`
+  border: 1px solid #b1b1b1;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 7px 14px;
+  cursor: pointer;
+`;
+
+const Container = styled.div``;
+
+export {
+  Header,
+  Footer,
+  Project,
+  Avatar,
+  Row,
+  CreateProject,
+  ProjectContainer,
+  Modal,
+  Container,
+  SimpleButton,
+  TextInput,
+  StyledRadioInput,
+  Icon,
+  SuccessToaster,
+  ErrorToaster,
+  Column,
+  StyledButton,
+};
