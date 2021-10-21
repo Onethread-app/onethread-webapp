@@ -165,7 +165,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     }
 
     if (path.includes('cname') === false) {
-      dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
       props.setSubscriptionNotExpire();
       setSubscriptionExpired(false);
     }
@@ -240,9 +239,13 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   }, [loading, props.user._id]);
 
   useEffect(() => {
-    if (isEmpty(props.user._id) === true) {
+    if (!Boolean(props.user._id)) {
       props.fetchUserAction();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.user._id]);
+
+  useEffect(() => {
     if (
       props.match.url === '/' &&
       isEmpty(props.user._id) === false
@@ -364,109 +367,95 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       ) : (
         <>
           <CustomView condition={!isMobileOnly}>
-            {props.match.url !== `/${props.user.name}/home` ? (
+            <div
+              id="main-layout"
+              className={`flex relative vh-100 ${
+                props.rightSidebarOpen && 'main-layout-overlay'
+              }`}
+            >
               <div
-                id="main-layout"
-                className={`flex relative vh-100 ${
-                  props.rightSidebarOpen && 'main-layout-overlay'
-                }`}
+                className={`relative`}
+                style={{
+                  transition: 'width 0.4s',
+                  width: !leftOpen ? '15%' : '4%',
+                }}
               >
-                <div
-                  className={`relative`}
-                  style={{
-                    transition: 'width 0.4s',
-                    width: !leftOpen ? '15%' : '4%',
-                  }}
-                >
-                  <div>
-                    <Sidebar
-                      user={props.user}
-                      company={props.company}
-                      type={
-                        (props.match.params as any).cname
-                          ? 'company'
-                          : 'default'
-                      }
-                      leftOpen={!leftOpen}
-                      project={props.project}
-                      companyRooms={props.companyRooms}
-                    />
-                  </div>
-                </div>
-                <div
-                  className="relative br3 pv1"
-                  style={{
-                    transition: 'width 0.4s',
-                    width: !leftOpen
-                      ? props.rightSidebarOpen
-                        ? '55%'
-                        : '85%'
-                      : props.rightSidebarOpen
-                      ? '66%'
-                      : '96%',
-                  }}
-                >
-                  <span
-                    className="pointer absolute bp3-icon z-3 top-1 left--1"
-                    onClick={() => setLeftOpen(!leftOpen)}
-                  >
-                    <img
-                      src={!leftOpen ? arrowLeft : arrowRight}
-                      className="br2 w2"
-                      color="#34b3e9"
-                      alt=""
-                    />
-                  </span>
-                  <div className="flex flex-column h-100">
-                    <NavbarTop
-                      scrollTop={scrollTop}
-                      type={
-                        (props.match.params as any).cname
-                          ? 'company'
-                          : 'default'
-                      }
-                    />
-                    <div
-                      ref={scrollRef}
-                      className="flex-grow-1 overflow-y-auto bg-white"
-                      style={{
-                        borderRadius: '0px 0px 0.5rem 0.5rem',
-                      }}
-                    >
-                      <SecondaryLayout Component={props.Component} />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="relative h-100 vh-100"
-                  style={{
-                    transition: 'width 0.4s',
-                    width: props.rightSidebarOpen ? '30%' : '0%',
-                    zIndex: 5,
-                  }}
-                >
-                  <div
-                    id="rightSidebar"
-                    className="h-100 c-tigrowWhite"
-                    style={{
-                      background: 'rgb(6, 5, 23)',
-                    }}
-                  ></div>
+                <div>
+                  <Sidebar
+                    user={props.user}
+                    company={props.company}
+                    type={
+                      (props.match.params as any).cname
+                        ? 'company'
+                        : 'default'
+                    }
+                    leftOpen={!leftOpen}
+                    project={props.project}
+                    companyRooms={props.companyRooms}
+                  />
                 </div>
               </div>
-            ) : (
-              <div className="relative">
+              <div
+                className="relative br3 pv1"
+                style={{
+                  transition: 'width 0.4s',
+                  width: !leftOpen
+                    ? props.rightSidebarOpen
+                      ? '55%'
+                      : '85%'
+                    : props.rightSidebarOpen
+                    ? '66%'
+                    : '96%',
+                }}
+              >
+                <span
+                  className="pointer absolute bp3-icon z-3 top-1 left--1"
+                  onClick={() => setLeftOpen(!leftOpen)}
+                >
+                  <img
+                    src={!leftOpen ? arrowLeft : arrowRight}
+                    className="br2 w2"
+                    color="#34b3e9"
+                    alt=""
+                  />
+                </span>
                 <div className="flex flex-column h-100">
-                  <NavbarTop scrollTop={scrollTop} type={'home'} />
+                  <NavbarTop
+                    scrollTop={scrollTop}
+                    type={
+                      (props.match.params as any).cname
+                        ? 'company'
+                        : 'default'
+                    }
+                  />
                   <div
                     ref={scrollRef}
                     className="flex-grow-1 overflow-y-auto bg-white"
+                    style={{
+                      borderRadius: '0px 0px 0.5rem 0.5rem',
+                    }}
                   >
                     <SecondaryLayout Component={props.Component} />
                   </div>
                 </div>
               </div>
-            )}
+              <div
+                className="relative h-100 vh-100"
+                style={{
+                  transition: 'width 0.4s',
+                  width: props.rightSidebarOpen ? '30%' : '0%',
+                  zIndex: 5,
+                }}
+              >
+                <div
+                  id="rightSidebar"
+                  className="h-100 c-tigrowWhite"
+                  style={{
+                    background: 'rgb(6, 5, 23)',
+                  }}
+                ></div>
+              </div>
+            </div>
           </CustomView>
           <MobileOnlyView>
             {queries.view === 'default' ? (

@@ -648,6 +648,64 @@ const timeline = async (req, res, next) => {
     next(error);
   }
 };
+// token verification for mail
+// const getAccessTokenForVerifyAccount = async (req, res, next) => {
+//   try {
+//     let multi = client.multi();
+//     multi.get(`verifyAccountToken:${req.params.token}`);
+//     multi.exec(async (err, data) => {
+//       if (err) {
+//         logger.error(`${err}`);
+//         next(err);
+//       }
+//       let userID = JSON.parse(data[0]);
+//       if (typeof userID === 'string') {
+//         const user = await Account.findByIdAndUpdate(
+//           { _id: userID },
+//           { $set: { isAccountVerified: true } },
+//           { safe: true, upsert: true, new: true },
+//         ).exec();
+//         client.del(`verifyAccountToken:${req.params.token}`);
+//         await setDocument(accountIndex, '_doc', {
+//           mongo_id: user._id,
+//           name: user.name,
+//           email: user.email,
+//           firstName: user.firstName,
+//           lastName: user.lastName,
+//         });
+
+//         logger.info(
+//           chalk.blueBright(
+//             `ElasticSearch document added on ${accountIndex}`,
+//           ),
+//         );
+//         return sendJSONresponse(res, 200, {
+//           isAccountVerified: true,
+//           message: 'Account Verified Successfully',
+//         });
+//       } else {
+//         return sendErrorResponse(res, 400, 'TokenExpireError', {
+//           isAccountVerified: false,
+//           message: 'Link is expired',
+//         });
+//       }
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+// // account holder can update their account information
+// const accountUpdate = async (req, res, next) => {
+//   try {
+//     await findAccountByIdAndUpdate(req.user._id, req.body);
+//     return sendJSONresponse(res, 200, {
+//       message: 'profile updated',
+//     });
+//   } catch (error) {
+//     logger.error(`${error}`);
+//     next(error);
+//   }
+// };
 
 const getExpireTime = (exp) => {
   return (

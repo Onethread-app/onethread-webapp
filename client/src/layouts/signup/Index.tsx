@@ -138,6 +138,12 @@ const Index = (props: IProps) => {
                 name="email"
                 type="email"
                 validate={composeValidators(required)}
+                parse={(value: string) =>
+                  value.replaceAll(
+                    /[^A-Za-z0-9!#$%&'*+-/=?^_`{|}~."(),:;<>@[\]]/gi,
+                    '',
+                  )
+                }
                 defaultValue={oldEmail}
                 render={({ input, meta }) => {
                   return (
