@@ -325,9 +325,13 @@ const registerInitiate = async (req, res, next) => {
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
   try {
-    await findAccountByIdAndUpdate(req.user._id, req.body);
+    const user = await findAccountByIdAndUpdate(
+      req.user._id,
+      req.body,
+    );
     return sendJSONresponse(res, 200, {
       message: 'profile updated',
+      user,
     });
   } catch (error) {
     logger.error(`${error}`);

@@ -43,6 +43,13 @@ const Index = ({ match, ...props }) => {
       localStorage.removeItem('companyToJoin');
       history.push('/signup');
     }
+    if (
+      props.companyJoinRequestLoading === false &&
+      props.companyJoinRequestFailure === ''
+    ) {
+      localStorage.removeItem('companyToJoin');
+      history.push('/');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     props.companyJoinRequestFailure,
