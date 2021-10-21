@@ -38,6 +38,13 @@ const {
 } = require('../helpers/jsonResponse');
 const logger = require('../../config/winston');
 const { Project } = require('../project/project.model');
+
+const {
+  numOfProjectInACompany,
+  allProjectIdOfCompany,
+  numbOfTasksOfACompany,
+} = require('../services/company/company.services');
+
 // create a company profile
 const changeName = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -207,19 +214,20 @@ const getCompanyIndividual = async (req, res, next) => {
       .select('_id company role')
       .populate(options);
 
+    let container = [];
     for (let company of companies) {
-      let comDetails = { ...company };
-      comDetails.company.numberOfProject =
-        await Project.countDocuments({
-          company: company.company._id,
-          removed: false,
-          hasDeleted: false,
-        });
+      let comDetails = company.toJSON();
+      if (comDetails.company) {
+        comDetails.company.numberOfProjects =
+          await numOfProjectInACompany(company.company._id);
+
+        comDetails.company.numberOfTasks =
+          await numbOfTasksOfACompany(company.company._id);
+      }
+      container.push(comDetails);
     }
 
-    return sendJSONresponse(res, 200, {
-      companies,
-    });
+    return sendJSONresponse(res, 200, { companies: container });
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);
