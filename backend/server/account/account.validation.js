@@ -122,7 +122,7 @@ module.exports = {
       secondaryEmail: schema.email.allow(''),
       firstName: schema.firstName,
       lastName: schema.lastName,
-      password: schema.password.required(),
+      password: schema.password,
     }),
   }),
   resetPassword: Joi.object().keys({

@@ -26,11 +26,11 @@ const Index = (props: any) => {
   }, []);
 
   useEffect(() => {
-    if (props.user._id) {
-      props.getAllCompaniesByUserId(props.user?._id);
+    if (props.user._id && props.companies.length === 0) {
+      props.getAllCompaniesByUserId(props.user._id);
     }
     // props.getProjectsIndividual();
-  }, [props.user._id]);
+  }, [props.user]);
 
   useEffect(() => {
     if (props.currentCompany.name === '') {
@@ -82,7 +82,6 @@ const mapStateToProps = (state: any) => ({
 
 export default connect(mapStateToProps, {
   getAllCompaniesByUserId,
-  // getProjectsIndividual,
   getCompanyDetails,
   getAllUserTasks,
 })(Index);
