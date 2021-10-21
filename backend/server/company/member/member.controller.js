@@ -57,9 +57,17 @@ const changeRole = async (req, res, next) => {
 };
 
 const sendJoinRequest = async (req, res, next) => {
-  // TODO: Accept only application/json requests
-  // TODO: Check if member already joined or requested to the company
   try {
+    const isExists = await Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
+    });
+    if (isExists) {
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'member already exists',
+      });
+    }
+
     const member = await Member.create({
       account: req.user._id,
       company: req.company._id,
@@ -75,11 +83,23 @@ const sendJoinRequest = async (req, res, next) => {
   }
 };
 
+const rejectJoinRequest = async (req, res, next) => {
+  try {
+    await Member.findByIdAndDelete(req.params.memberId);
+    return sendJSONresponse(res, 200, {
+      message: 'Member rejected.',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
 const acceptJoinRequest = async (req, res, next) => {
   try {
     await Member.findByIdAndUpdate(
       { _id: req.params.memberId },
-      { $set: { isApproved: true } },
+      { $set: { isApproved: true, approvedBy: req.user._id } },
       { safe: true, upsert: true, new: true },
     );
 
@@ -152,7 +172,7 @@ const addMember = async (req, res, next) => {
         },
       );
 
-      createMembers(req, accounts);
+      await createMembers(req, accounts);
       // add new members in company
 
       logger.info(
@@ -482,8 +502,9 @@ const bulkInsertMember = async (req, res, next) => {
       (el) => !haveMemberAccounts.includes(el),
     );
 
-    if (notifiyUsersIds.length > 0)
-      createMembers(req, notifiyUsersIds);
+    if (notifiyUsersIds.length > 0) {
+      await createMembers(req, notifiyUsersIds);
+    }
 
     return sendJSONresponse(res, 200, {
       inviteEmailUsers: inviteEmailUsers,
@@ -501,6 +522,8 @@ const createMembers = async (req, notifiyUsersIds) => {
       return {
         account: c,
         company: req.company._id,
+        isApproved: true,
+        approvedBy: req.user._id,
       };
     });
     await Member.create(newMembers);
@@ -569,4 +592,5 @@ module.exports = {
   checkInvitedMemberStatus,
   sendJoinRequest,
   acceptJoinRequest,
+  rejectJoinRequest,
 };

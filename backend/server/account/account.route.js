@@ -17,6 +17,21 @@ router
   .post(schemaValidator(paramValidation.signup), accountCtrl.signup);
 
 router
+  .route('/init')
+  .put(
+    schemaValidator(paramValidation.init),
+    accountCtrl.registerInitiate,
+  );
+
+router
+  .route('/update')
+  .put(
+    authorization,
+    schemaValidator(paramValidation.update),
+    accountCtrl.accountUpdate,
+  );
+
+router
   .route('/login')
   .post(
     authentication,
@@ -39,19 +54,18 @@ router
   );
 
 router
-  .route('/verify-account/:token')
-  .get(
-    schemaValidator(paramValidation.getAccessTokenForVerifyAccount),
-    accountCtrl.getAccessTokenForVerifyAccount,
+  .route('/change-email')
+  .put(
+    schemaValidator(paramValidation.changeEmail),
+    accountCtrl.changeEmail,
   );
 
-router
-  .route('/update')
-  .put(
-    authorization,
-    schemaValidator(paramValidation.update),
-    accountCtrl.accountUpdate,
-  );
+// router
+//   .route('/verify-account/:token')
+//   .get(
+//     schemaValidator(paramValidation.getAccessTokenForVerifyAccount),
+//     accountCtrl.getAccessTokenForVerifyAccount,
+//   );
 
 router.route('/').get(authorization, accountCtrl.getAccount);
 router.route('/skill-area').get(authorization, accountCtrl.skillArea);

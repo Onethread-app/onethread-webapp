@@ -14,7 +14,6 @@ const {
   skillIndex,
   search,
 } = require('../services/elastic.services');
-const { addSkillIntoCache } = require('../services/redis.services');
 
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
