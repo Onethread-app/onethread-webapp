@@ -99,6 +99,17 @@ module.exports = {
       pushSubscription: schema.pushSubscription,
     }),
   }),
+  init: Joi.object().keys({
+    body: Joi.object().keys({
+      firstName: schema.firstName.required(),
+      lastName: schema.lastName.required(),
+      password: schema.password.required(),
+    }),
+    query: Joi.object().keys({
+      token: Joi.string().required(),
+    }),
+  }),
+
   update: Joi.object().keys({
     body: Joi.object().keys({
       contactNo: schema.contactNo,
@@ -142,11 +153,16 @@ module.exports = {
     }),
     params: subTaskId,
   }),
-
   updateEmail: Joi.object().keys({
     body: Joi.object().keys({
       id: idSchema.id.required(),
       email: schema.email.required(),
+    }),
+  }),
+  changeEmail: Joi.object().keys({
+    body: Joi.object().keys({
+      previousEmail: schema.email.required(),
+      newEmail: schema.email.required(),
     }),
   }),
 };

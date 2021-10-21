@@ -1,6 +1,7 @@
 const logger = require(`../../config/winston`);
 const Account = require('../account/account.model');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
+const crypto = require('crypto');
 
 const EmailIDExist = async (req, res, next) => {
   try {
@@ -45,4 +46,21 @@ const changeUserName = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { EmailIDExist, changeUserName };
+
+const generateToken = () => {
+  const token = crypto.randomBytes(20).toString('hex');
+  return crypto.createHash('sha256').update(token).digest('hex');
+};
+
+const validateEmail = (email) => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
+module.exports = {
+  EmailIDExist,
+  changeUserName,
+  generateToken,
+  validateEmail,
+};
