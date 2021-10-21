@@ -1,10 +1,75 @@
 import { format } from 'date-fns';
+import { isEmpty } from 'lodash';
+import moment from 'moment';
 
 import { toTitleCase } from 'helpers/utils';
 
 import MemberGroup from 'components/member/MemberGroup';
 import TaskStatusTag from './TaskStatusTag';
 import TaskPriorityTag from './TaskPriorityTag';
+
+const customProjectFilter = (rows, id, filterValue) => {
+  return rows.filter((row) =>
+    isEmpty(filterValue)
+      ? row
+      : filterValue.includes(row.original.project._id),
+  );
+};
+
+const customStatusFilter = (rows, id, filterValue) => {
+  return rows.filter((row) =>
+    isEmpty(filterValue)
+      ? row
+      : filterValue.includes(row.original.status),
+  );
+};
+
+const customDueDateFilter = (rows, id, filterValue) => {
+  return rows.filter((row) => {
+    const rowYear = new Date(row.original.dueDate).getFullYear();
+    const rowMonth = new Date(row.original.dueDate).getMonth();
+    const rowDate = new Date(row.original.dueDate).getDate();
+
+    var startOfWeek = moment().startOf('week').toISOString();
+    var endOfWeek = moment().endOf('week').toISOString();
+
+    if (
+      filterValue.type === 'range' &&
+      filterValue.range[0] &&
+      filterValue.range[1]
+    ) {
+      return (
+        row.original.dueDate > filterValue.range[0].toISOString() &&
+        row.original.dueDate < filterValue.range[1].toISOString()
+      );
+    } else if (filterValue.type === 'passed') {
+      return row.original.dueDate < new Date().toISOString();
+    } else if (filterValue.type === 'today') {
+      const today = new Date();
+
+      return (
+        rowYear === today.getFullYear() &&
+        rowMonth === today.getMonth() &&
+        rowDate === today.getDate()
+      );
+    } else if (filterValue.type === 'tomorrow') {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      return (
+        rowYear === tomorrow.getFullYear() &&
+        rowMonth === tomorrow.getMonth() &&
+        rowDate === tomorrow.getDate()
+      );
+    } else if (filterValue.type === 'week') {
+      return (
+        row.original.dueDate > startOfWeek &&
+        row.original.dueDate < endOfWeek
+      );
+    } else return row;
+  });
+};
 
 export const TaskTableColumns = [
   {
@@ -20,6 +85,7 @@ export const TaskTableColumns = [
     accessor: 'project',
     sticky: 'center',
     Cell: ({ value }) => value.name,
+    filter: customProjectFilter,
   },
   {
     Header: 'Assignee',
@@ -46,6 +112,7 @@ export const TaskTableColumns = [
     accessor: 'status',
     sticky: 'center',
     Cell: ({ value }) => <TaskStatusTag status={value} />,
+    filter: customStatusFilter,
   },
   {
     Header: 'Created At',
@@ -67,6 +134,7 @@ export const TaskTableColumns = [
         ? format(new Date(value), 'dd/MM/yyyy')
         : 'Not scheduled';
     },
+    filter: customDueDateFilter,
     sticky: 'center',
   },
 ];

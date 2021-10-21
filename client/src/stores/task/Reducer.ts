@@ -70,6 +70,10 @@ export interface ITask {
   boardId?: string;
   activityCount?: number;
   timeSpent?: number;
+  project?: {
+    _id: string;
+    name: string;
+  };
 }
 
 export interface IBoard {
