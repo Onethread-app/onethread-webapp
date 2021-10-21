@@ -12,6 +12,7 @@ import {
 } from 'stores/company/Actions';
 import {
   updateUserAuthInfoStart,
+  updateUserInfoAction,
   userClearState,
   verifyUserTokenStart,
 } from 'stores/user/Actions';
@@ -41,7 +42,6 @@ import {
   // StyledError,
   StyledTextInput,
 } from '../../components/form-components/Index.styles';
-import { Toaster } from '@blueprintjs/core';
 import { CircularProgress } from '@material-ui/core';
 import { isAuthenticate } from 'stores/UtilsActions';
 import { fetchUserAction } from 'stores/auth/Actions';
@@ -54,43 +54,37 @@ const useQuery = () => {
 interface IProps {
   currentCompany: any;
   getCompanyPublicInformation: (arg0: string) => void;
-  tokenVerificationProcessing: boolean;
-  tokenVerificationError: string;
   requestToJoinCompanyStart: (arg0: string) => void;
-  tokenVerified: boolean;
   updateUserAuthInfoStart: (props) => void;
-  tokenRefreshedLoading: boolean;
-  tokenRefreshedError: string;
-  verifyUserTokenStart: (arg0: string) => void;
-  updateUserTokenStart: (arg0: string) => void;
   companyJoinRequestFailure: string;
+  companyJoinRequestLoading: boolean;
   accountUpdateError: string;
   userClearState: () => void;
   fetchUserAction: () => void;
   user: any;
+  updateUserInfoAction: (val: any) => any;
+  accountUpdateLoading: boolean;
 }
 
 const Index = (props: IProps) => {
   const {
     currentCompany,
     getCompanyPublicInformation,
-    tokenVerificationProcessing,
-    tokenVerificationError,
     requestToJoinCompanyStart,
-    tokenVerified,
     updateUserAuthInfoStart,
-    tokenRefreshedLoading,
-    verifyUserTokenStart,
     companyJoinRequestFailure,
+    companyJoinRequestLoading,
     accountUpdateError,
-    tokenRefreshedError,
     fetchUserAction,
     userClearState,
     user,
+    updateUserInfoAction,
+    accountUpdateLoading,
   } = props;
   const history = useHistory();
   const query = useQuery();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [infoUpdated, setInfoUpdated] = useState<boolean>(false);
 
   const containerRef = useRef(null);
   const containerSize = useElementSize(containerRef);
@@ -103,7 +97,6 @@ const Index = (props: IProps) => {
     '';
   const token = query.get('token') || '';
   const [email, setEmail] = useState<string>(emailFromURL);
-  const [accessToken, setAccessToken] = useState<string>('');
   const [companyToJoin, setCompanyToJoin] = useState<string>(
     JSON.parse(localStorage.getItem('companyToJoin')!) || '',
   );
@@ -112,17 +105,23 @@ const Index = (props: IProps) => {
 
   const onSubmit = async (values: any) => {
     setLoading(true);
-    if (accessToken) {
-      updateUserAuthInfoStart({
-        userInfo: values,
-        token: accessToken,
-      });
+    setInfoUpdated(true);
+    updateUserAuthInfoStart({
+      userInfo: values,
+      token,
+    });
+  };
+
+  const updateUserInformation = async (values: any) => {
+    setLoading(true);
+    setInfoUpdated(true);
+    const userInfoReUpdated = updateUserInfoAction(values);
+    if (userInfoReUpdated) {
+      history.push('/create-company');
     }
   };
 
   const handleLeave = () => {
-    localStorage.removeItem('ot_access_id');
-    localStorage.removeItem('ot_refresh_id');
     history.push('/');
   };
 
@@ -139,92 +138,78 @@ const Index = (props: IProps) => {
     setCompanyToJoin(
       JSON.parse(localStorage.getItem('companyToJoin')!) || '',
     );
-    if (!tokenVerified && !isAuthenticate()) {
-      verifyUserTokenStart(token);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokenVerified, token]);
+  }, [token]);
 
   useEffect(() => {
-    if (tokenVerified && token && companyToJoin) {
+    if (companyToJoin) {
       getCompanyPublicInformation(companyToJoin);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, tokenVerified, companyToJoin, currentCompany]);
+  }, []);
 
   useEffect(() => {
     if (emailFromURL && isValidEmail(emailFromURL)) {
       setEmail(emailFromURL);
     }
-    setAccessToken(JSON.parse(localStorage.getItem('ot_access_id')!));
-    if (!tokenVerificationProcessing && tokenVerificationError) {
-      localStorage.removeItem('ot_refresh_id');
-      localStorage.removeItem('ot_access_id');
-      history.push('/signup');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emailFromURL]);
+
+  useEffect(() => {
+    if (infoUpdated) {
+      if (
+        companyJoinRequestLoading === false &&
+        companyJoinRequestFailure === ''
+      ) {
+        history.push('/');
+      }
+      setError(accountUpdateError || companyJoinRequestFailure || '');
+      if (companyJoinRequestFailure) {
+        history.push('/');
+      }
+      if (error) {
+        setLoading(false);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    emailFromURL,
-    tokenVerified,
-    tokenVerificationError,
-    tokenVerificationProcessing,
+    accountUpdateError,
+    companyJoinRequestFailure,
+    companyJoinRequestLoading,
+    error,
+    infoUpdated,
   ]);
 
   useEffect(() => {
-    if (
-      !tokenRefreshedLoading &&
-      tokenRefreshedError === '' &&
-      companyToJoin &&
-      currentCompany.name !== ''
-    ) {
-      setLoading(false);
-      fetchUserAction();
-      requestToJoinCompanyStart(currentCompany._id);
-      localStorage.removeItem('email');
-      localStorage.removeItem('companyToJoin');
-      history.push('/');
-    }
-    if (
-      tokenRefreshedError === '' &&
-      !tokenRefreshedLoading &&
-      !companyToJoin
-    ) {
-      fetchUserAction();
-      userClearState();
-      history.push('/create-company');
+    if (infoUpdated) {
+      if (
+        accountUpdateLoading === false &&
+        accountUpdateError === ''
+      ) {
+        if (companyToJoin) {
+          requestToJoinCompanyStart(currentCompany._id);
+          fetchUserAction();
+          userClearState();
+        }
+        if (!companyToJoin) {
+          fetchUserAction();
+          userClearState();
+          history.push('/create-company');
+        }
+      }
+      if (
+        accountUpdateLoading === false &&
+        accountUpdateError !== ''
+      ) {
+        setError(accountUpdateError);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     companyToJoin,
-    currentCompany,
-    tokenRefreshedLoading,
-    tokenRefreshedError,
-  ]);
-
-  useEffect(() => {
-    setError(
-      tokenVerificationError ||
-        accountUpdateError ||
-        companyJoinRequestFailure ||
-        '',
-    );
-    if (companyJoinRequestFailure) {
-      setLoading(false);
-      Toaster.create().show({
-        message:
-          'There was an error while trying to join the company',
-        intent: 'danger',
-        timeout: 3000,
-      });
-    }
-    if (error === '') {
-      setLoading(false);
-    }
-  }, [
-    accountUpdateError,
-    companyJoinRequestFailure,
-    error,
-    tokenVerificationError,
+    currentCompany._id,
+    infoUpdated,
+    accountUpdateLoading,
   ]);
 
   return (
@@ -239,120 +224,206 @@ const Index = (props: IProps) => {
           One<span>Thread</span>
         </Logo>
         <header className="welcome">Welcome to Onethread!</header>
-        {companyToJoin !== '' ? (
-          <p>You are joining {currentCompany?.name}</p>
-        ) : (
-          <p>You are signing up as {email}</p>
-        )}
-        <Form
-          onSubmit={onSubmit}
-          render={({
-            handleSubmit,
-            form,
-            submitting,
-            pristine,
-            values,
-            submitError,
-            hasValidationErrors,
-            ...rest
-          }) => (
-            <form onSubmit={handleSubmit} className="form">
-              <SubmitError errorMessage={submitError || error} />
-              <label>What's your first name?</label>
-              <Field
-                name="firstName"
-                placeholder="Felipe"
-                parse={(value) => value.replace(/[^A-Za-z ]/gi, '')}
-                validate={composeValidators(required, maxValue(32))}
-                defaultValue={user?.firstName}
-                render={(inputProps) => (
-                  <StyledTextInput {...inputProps} />
-                )}
-              />
-              <label>What's your last name?</label>
-              <Field
-                name="lastName"
-                placeholder="Castro"
-                parse={(value) => value.replace(/[^A-Za-z ]/gi, '')}
-                validate={composeValidators(required, maxValue(32))}
-                defaultValue={user?.lastName}
-                render={(inputProps) => (
-                  <StyledTextInput {...inputProps} />
-                )}
-              />
-              <label>Please set a password</label>
-              <Field
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                palceholder="********"
-                validate={composeValidators(
-                  required,
-                  passwordValidation,
-                )}
-                render={({ meta, input, ...rest }) => (
-                  <>
-                    <div>
-                      <TextInput {...input} {...rest} />
-                      {showPassword ? (
-                        <span>
-                          <img
-                            src={eyeIcon}
-                            alt="Show Password"
-                            onClick={() =>
-                              setShowPassword(!showPassword)
-                            }
-                          />
-                        </span>
-                      ) : (
-                        <span>
-                          <img
-                            src={eyeClose}
-                            alt="Hide Password"
-                            onClick={() =>
-                              setShowPassword(!showPassword)
-                            }
-                          />
-                        </span>
-                      )}
-                    </div>
-                    {!meta.active && checkError(meta) ? (
-                      <StyledError
-                        errorMessage={meta.error || meta.submitError}
-                      />
-                    ) : (
-                      <p>
-                        Password must be 8 characters or longer and
-                        contain at least:
-                        <ul>
-                          <li>A number</li>
-                          <li>An uppercase letter</li>
-                          <li>A lowercase letter</li>
-                          <li>A special character</li>
-                        </ul>
-                      </p>
+        {user.isAccountVerified ? (
+          <>
+            <p>Do you want to change your information?</p>
+
+            <Form
+              onSubmit={updateUserInformation}
+              render={({
+                handleSubmit,
+                form,
+                submitting,
+                pristine,
+                values,
+                submitError,
+                hasValidationErrors,
+                ...rest
+              }) => (
+                <form onSubmit={handleSubmit} className="form">
+                  <SubmitError errorMessage={submitError || error} />
+                  <label>Your first name</label>
+                  <Field
+                    name="firstName"
+                    placeholder={user?.firstName}
+                    parse={(value) =>
+                      value.replace(/[^A-Za-z ]/gi, '')
+                    }
+                    validate={composeValidators(
+                      required,
+                      maxValue(32),
                     )}
-                  </>
-                )}
-              />
-              <StyledButton>
-                {loading ? (
-                  <>
-                    <CircularProgress size="1rem" className="mr1" />
-                    <span>Updating info</span>
-                  </>
-                ) : (
-                  'Continue'
-                )}
-              </StyledButton>
-            </form>
-          )}
-        />
-        <p className="wrong-email">
-          Wrong account?{' '}
-          <Link to="/signin" className="link">
-            Log in
-          </Link>
-        </p>
+                    defaultValue={user?.firstName}
+                    render={(inputProps) => (
+                      <StyledTextInput {...inputProps} />
+                    )}
+                  />
+                  <label>Your last name</label>
+                  <Field
+                    name="lastName"
+                    placeholder={user?.lastName}
+                    parse={(value) =>
+                      value.replace(/[^A-Za-z ]/gi, '')
+                    }
+                    validate={composeValidators(
+                      required,
+                      maxValue(32),
+                    )}
+                    defaultValue={user?.lastName}
+                    render={(inputProps) => (
+                      <StyledTextInput {...inputProps} />
+                    )}
+                  />
+                  <StyledButton className="mt3">
+                    {loading ? (
+                      <>
+                        <CircularProgress
+                          size="1rem"
+                          className="mr1"
+                        />
+                        <span>Updating info</span>
+                      </>
+                    ) : (
+                      'Continue'
+                    )}
+                  </StyledButton>
+                </form>
+              )}
+            />
+          </>
+        ) : (
+          <>
+            {companyToJoin !== '' ? (
+              <p>You are joining {currentCompany?.name}</p>
+            ) : (
+              <p>You are signing up as {email}</p>
+            )}
+            <Form
+              onSubmit={onSubmit}
+              render={({
+                handleSubmit,
+                form,
+                submitting,
+                pristine,
+                values,
+                submitError,
+                hasValidationErrors,
+                ...rest
+              }) => (
+                <form onSubmit={handleSubmit} className="form">
+                  <SubmitError errorMessage={submitError || error} />
+                  <label>What's your first name?</label>
+                  <Field
+                    name="firstName"
+                    placeholder="Felipe"
+                    parse={(value) =>
+                      value.replace(/[^A-Za-z ]/gi, '')
+                    }
+                    validate={composeValidators(
+                      required,
+                      maxValue(32),
+                    )}
+                    defaultValue={user?.firstName}
+                    render={(inputProps) => (
+                      <StyledTextInput {...inputProps} />
+                    )}
+                  />
+                  <label>What's your last name?</label>
+                  <Field
+                    name="lastName"
+                    placeholder="Castro"
+                    parse={(value) =>
+                      value.replace(/[^A-Za-z ]/gi, '')
+                    }
+                    validate={composeValidators(
+                      required,
+                      maxValue(32),
+                    )}
+                    defaultValue={user?.lastName}
+                    render={(inputProps) => (
+                      <StyledTextInput {...inputProps} />
+                    )}
+                  />
+                  <label>Please set a password</label>
+                  <Field
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    palceholder="********"
+                    validate={composeValidators(
+                      required,
+                      passwordValidation,
+                    )}
+                    render={({ meta, input, ...rest }) => (
+                      <>
+                        <div>
+                          <TextInput {...input} {...rest} />
+                          {showPassword ? (
+                            <span>
+                              <img
+                                src={eyeIcon}
+                                alt="Show Password"
+                                onClick={() =>
+                                  setShowPassword(!showPassword)
+                                }
+                              />
+                            </span>
+                          ) : (
+                            <span>
+                              <img
+                                src={eyeClose}
+                                alt="Hide Password"
+                                onClick={() =>
+                                  setShowPassword(!showPassword)
+                                }
+                              />
+                            </span>
+                          )}
+                        </div>
+                        {!meta.active && checkError(meta) ? (
+                          <StyledError
+                            errorMessage={
+                              meta.error || meta.submitError
+                            }
+                          />
+                        ) : (
+                          <p>
+                            Password must be 8 characters or longer
+                            and contain at least:
+                            <ul>
+                              <li>A number</li>
+                              <li>An uppercase letter</li>
+                              <li>A lowercase letter</li>
+                              <li>A special character</li>
+                            </ul>
+                          </p>
+                        )}
+                      </>
+                    )}
+                  />
+                  <StyledButton>
+                    {loading ? (
+                      <>
+                        <CircularProgress
+                          size="1rem"
+                          className="mr1"
+                        />
+                        <span>Updating info</span>
+                      </>
+                    ) : (
+                      'Continue'
+                    )}
+                  </StyledButton>
+                </form>
+              )}
+            />
+            <p className="wrong-email">
+              Wrong account?{' '}
+              <Link to="/signin" className="link">
+                Log in
+              </Link>
+            </p>
+          </>
+        )}
       </FormContainer>
       <ImageContainer height={containerSize.height}>
         <Logo to="#" onClick={handleLeave}>
@@ -369,15 +440,13 @@ const Index = (props: IProps) => {
 const mapStateToProps = (state: any) => ({
   errorGettingCompanyDetails:
     state.companyReducer.errorOnGettingCompanyDetails,
-  tokenVerificationProcessing: state.userReducer.tokenVerification,
-  tokenVerificationError: state.userReducer.tokenVerificationError,
-  tokenVerified: state.userReducer.tokenVerifiedSuccess,
   currentCompany: state.companyReducer.currentCompany,
-  tokenRefreshedLoading: state.userReducer.tokenRefreshedLoading,
-  tokenRefreshedError: state.userReducer.tokenRefreshedError,
   companyJoinRequestFailure:
     state.companyReducer.companyJoinRequestFailure,
+  companyJoinRequestLoading:
+    state.companyReducer.companyJoinRequestLoading,
   accountUpdateError: state.userReducer.accountUpdateError,
+  accountUpdateLoading: state.userReducer.accountUpdateLoading,
   user: state.userReducer.user,
 });
 
@@ -388,4 +457,5 @@ export default connect(mapStateToProps, {
   updateUserAuthInfoStart,
   fetchUserAction,
   userClearState,
+  updateUserInfoAction,
 })(Index);

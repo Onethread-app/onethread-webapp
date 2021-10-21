@@ -28,6 +28,7 @@ import { User } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
 import { SET_INITIAL_CURRENT_COMPANY } from 'stores/company/Types';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 export const editUserInfoAction =
   (basicInfo: User) => async (dispatch: any, getState: any) => {
@@ -168,9 +169,6 @@ export const getAllCompaniesByUserId =
                 : null,
           });
         }
-      } else {
-        // tslint:disable-next-line: no-console
-        //
       }
     } catch (error) {
       // tslint:disable-next-line: no-console
@@ -382,3 +380,30 @@ export const updateUserAuthInfoFailure = (response: string) => ({
 export const userClearState = () => ({
   type: CLEAR_USER_REDUCER_STATE,
 });
+
+export const updateUserInfoAction =
+  (basicInfo: { firstName: string; lastName: string }) =>
+  async (dispatch: any, getState: any) => {
+    try {
+      console.log(basicInfo);
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const response = await tigrowApi.put(
+          `accounts/update`,
+          basicInfo,
+          headers,
+        );
+        dispatch({
+          type: EDIT_BASIC_INFO,
+          payload: response.data.user,
+        });
+      }
+      return true;
+    } catch (error) {
+      dispatch({
+        type: USER_FETCH_ERROR,
+        payload: returnErrorText(error),
+      });
+      return false;
+    }
+  };
