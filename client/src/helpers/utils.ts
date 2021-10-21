@@ -103,3 +103,29 @@ export const toTitleCase = (phrase) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 };
+
+export const getUniqueList = (a, field) =>
+  [...Array.from(new Set(a.map((m) => m[field])))].map((a) => ({
+    id: a,
+    label: a,
+  }));
+
+export const flattenObject = function (ob) {
+  var toReturn = {};
+
+  for (var i in ob) {
+    if (!ob.hasOwnProperty(i)) continue;
+
+    if (typeof ob[i] == 'object') {
+      var flatObject = flattenObject(ob[i]);
+      for (var x in flatObject) {
+        if (!flatObject.hasOwnProperty(x)) continue;
+
+        toReturn[i + '.' + x] = flatObject[x];
+      }
+    } else {
+      toReturn[i] = ob[i];
+    }
+  }
+  return toReturn;
+};

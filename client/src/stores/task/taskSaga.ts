@@ -133,9 +133,7 @@ function* getAllCompanyTasksAsync() {
         `/company/${companyId}/all-tasks`,
         headers,
       );
-      yield put(
-        getAllCompanyTasksSuccess(response.data.taskCompilation),
-      );
+      yield put(getAllCompanyTasksSuccess(response.data.tasks));
     }
   } catch (error) {
     yield put(getAllCompanyTasksFailure(returnErrorText(error)));
