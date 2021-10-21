@@ -30,8 +30,8 @@ const customDueDateFilter = (rows, id, filterValue) => {
     const rowMonth = new Date(row.original.dueDate).getMonth();
     const rowDate = new Date(row.original.dueDate).getDate();
 
-    var startOfWeek = moment().startOf('week').toISOString();
-    var endOfWeek = moment().endOf('week').toISOString();
+    let startOfWeek = moment().startOf('week').toISOString();
+    let endOfWeek = moment().endOf('week').toISOString();
 
     if (
       filterValue.type === 'range' &&
