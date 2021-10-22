@@ -8,6 +8,14 @@ import { connect } from 'react-redux';
 
 interface Props {
   userTasks: any;
+  useToaster: () => {
+    showToaster: boolean;
+    successMessage: string;
+    errorMessage: string;
+    setShowToaster: React.Dispatch<React.SetStateAction<boolean>>;
+    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+    setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
+  };
 }
 
 const TaskSection = (props: Props) => {
@@ -41,7 +49,10 @@ const TaskSection = (props: Props) => {
       )}
       {openTaskDialog ? (
         <Modal>
-          <TaskDialog setShowDialog={setOpenTaskDialog} />
+          <TaskDialog
+            setShowDialog={setOpenTaskDialog}
+            useToaster={props.useToaster}
+          />
         </Modal>
       ) : null}
     </div>
