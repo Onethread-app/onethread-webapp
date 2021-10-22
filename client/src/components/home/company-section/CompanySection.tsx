@@ -91,11 +91,11 @@ const CompanySection = (props: Props) => {
               <Footer>
                 <span>
                   <img src={Union} alt="" />
-                  {/* Add Project count */}
+                  <p>{company.company.numberOfProjects}</p>
                 </span>
                 <span>
                   <img src={Vector} alt="" />
-                  {/* Add tasks count */}
+                  <p>{company.company.numberOfTasks}</p>
                 </span>
               </Footer>
             </Company>
