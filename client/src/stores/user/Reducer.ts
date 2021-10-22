@@ -33,6 +33,8 @@ export interface ICompanyByUser {
     name: string;
     uniqueName: string;
     logo?: string;
+    numberOfProjects: number;
+    numberOfTasks: number;
   };
 }
 export interface IProfilePhoto {
