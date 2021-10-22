@@ -1,5 +1,29 @@
 import styled from 'styled-components';
 
+const SuccessToaster = styled.div`
+  padding: 2rem;
+  border: none;
+  border-left: 3px solid #00a150;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  z-index: 10000;
+`;
+
+const ErrorToaster = styled.div`
+  padding: 2rem;
+  border: none;
+  border-left: 3px solid red;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  z-index: 10000;
+`;
+
 const Avatar = styled.div`
   text-transform: uppercase;
   /* margin: 24px auto 4px; */
@@ -47,4 +71,4 @@ const Container = styled.div`
   }
 `;
 
-export { Container, Row, Avatar };
+export { Container, Row, Avatar, SuccessToaster, ErrorToaster };
