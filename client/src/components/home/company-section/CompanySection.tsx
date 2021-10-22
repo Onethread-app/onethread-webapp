@@ -25,6 +25,7 @@ interface Props {
   creatingCompany: boolean;
   errorOnCreatingCompany: string;
   getCompanyDetails: (name: string) => void;
+  useToaster: () => {};
 }
 
 const CompanySection = (props: Props) => {

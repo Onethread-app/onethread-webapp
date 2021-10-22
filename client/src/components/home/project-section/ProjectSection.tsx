@@ -41,8 +41,6 @@ import {
   TextInput,
   StyledRadioInput,
   Icon,
-  ErrorToaster,
-  SuccessToaster,
   StyledButton,
 } from './ProjectSection.styles';
 
@@ -78,6 +76,14 @@ interface IProps {
   allProjects: IProject[];
   createCompanyActionSuccess: (arg: INewCompanyResponse) => void;
   createCompanyActionFailure: (arg: string) => void;
+  useToaster: () => {
+    showToaster: boolean;
+    successMessage: string;
+    errorMessage: string;
+    setShowToaster: React.Dispatch<React.SetStateAction<boolean>>;
+    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+    setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
+  };
 }
 
 const Index = (props: IProps) => {
@@ -93,15 +99,19 @@ const Index = (props: IProps) => {
   const [data, setData] = useState({});
   const [company, setCompany] = useState<string>('');
   const [defaultValues, setDefaultValues] = useState<any>([]);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [showToaster, setShowToaster] = useState<boolean>(false);
   const [projects, setProjects] = useState<IProject[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [companyLoading, setCompanyLoading] =
     useState<boolean>(false);
   const [assignedCompanyError, setAssignedCompanyError] =
     useState<boolean>(false);
+
+  const {
+    showToaster,
+    setShowToaster,
+    setErrorMessage,
+    setSuccessMessage,
+  } = props.useToaster();
 
   const { t } = useTranslation();
 
@@ -148,6 +158,7 @@ const Index = (props: IProps) => {
               label: response.data.company.name,
             },
           ]);
+          props.getAllCompaniesByUserId(props.user?._id);
           setSuccessMessage(
             `The company ${response.data.company.name} has been created`,
           );
@@ -419,12 +430,12 @@ const Index = (props: IProps) => {
           />
         </Modal>
       ) : null}
-      {Boolean(errorMessage && showToaster) ? (
+      {/* {Boolean(errorMessage && showToaster) ? (
         <ErrorToaster>{errorMessage}</ErrorToaster>
       ) : null}
       {Boolean(successMessage && showToaster) ? (
         <SuccessToaster>{successMessage}</SuccessToaster>
-      ) : null}
+      ) : null} */}
     </Container>
   );
 };
