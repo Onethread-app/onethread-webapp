@@ -42,6 +42,14 @@ const Footer = styled.div`
     height: 100%;
   }
 
+  span > p {
+    margin: 0;
+    padding: 0;
+    align-self: center;
+    font-size: 12px;
+    padding-left: 2px;
+  }
+
   span + span {
     border-left: 1px solid #e8e8e8;
   }
