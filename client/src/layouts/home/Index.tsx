@@ -26,6 +26,7 @@ import { getAllUserTasks } from 'stores/task/Actions';
 
 const Index = (props: any) => {
   const dispatch = useDispatch();
+  const [showToaster, setShowToaster] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -39,6 +40,10 @@ const Index = (props: any) => {
       setSuccessMessage,
     };
   };
+
+  useEffect(() => {
+    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+  }, []);
 
   useEffect(() => {
     if (props.user._id && props.companies.length === 0) {
