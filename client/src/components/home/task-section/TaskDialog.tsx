@@ -43,13 +43,21 @@ import {
   StyledButton,
   // SimpleButton,
   Container,
-  ErrorToaster,
-  SuccessToaster,
+  // ErrorToaster,
+  // SuccessToaster,
 } from './TaskSection.styles';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 interface ICreateTaskDialogProps {
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  useToaster: () => {
+    showToaster: boolean;
+    successMessage: string;
+    errorMessage: string;
+    setShowToaster: React.Dispatch<React.SetStateAction<boolean>>;
+    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+    setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
+  };
 }
 
 interface ICreateTaskDialogInternalProps
@@ -63,9 +71,7 @@ interface ICreateTaskDialogInternalProps
   previousData: any;
   projects: [];
   boardList: { _id: string }[];
-  // createCompanyAction: (val: any) => void;
   companies: any;
-  // createCompanyActionSuccess: (arg0: any) => void;
   getCompanyDetails: (arg0: string) => void;
   createProjectSuccess: () => void;
   getAllProjects: () => void;
@@ -107,22 +113,26 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   const [project, setProject] = useState<any>([]);
   const [projectOptions, setProjectOptions] = useState<any>([{}]);
   const [companyOptions, setCompanyOptions] = useState<any>({});
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [columnId, setColumnId] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [companyLoading, setCompanyLoading] =
     useState<boolean>(false);
   const [projectLoading, setProjectLoading] =
     useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [showToaster, setShowToaster] = useState<boolean>(false);
+
+  const {
+    showToaster,
+    setShowToaster,
+    setErrorMessage,
+    setSuccessMessage,
+  } = props.useToaster();
 
   const onSubmit = (values) => {
     // console.log(values);
     if (!company[0].value) {
       setAssignedCompanyError(true);
     }
-    if (!projectOptions[0].value) {
+    if (!project[0].value) {
       setAssignedPeojectError(true);
     }
     if (selectedTeamMember.length) {
@@ -146,6 +156,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   };
 
   const handleProject = async (selected: any) => {
+    setProject([{}]);
     if (selected.__isNew__) {
       setProjectLoading(true);
       try {
@@ -178,6 +189,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
             `The project ${response.data.project.name} has been created`,
           );
         }
+        props.getAllProjects();
         props.getSingleProject(project[0]?.value);
         props.getAllBoards(project[0]?.value);
         setErrorMessage('');
@@ -194,8 +206,8 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           label: selected.label,
         },
       ]);
-      props.getSingleProject(project[0]?.value);
-      props.getAllBoards(project[0]?.value);
+      props.getSingleProject(selected.value);
+      props.getAllBoards(selected.value);
       setProjectLoading(false);
     }
   };
@@ -240,36 +252,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   const handleCompany = async (selected: any) => {
     if (selected.__isNew__) {
       setCompanyLoading(true);
-      // setNewCompanyInfo(selected);
-      // const headers = tokenConfig();
-      // if ((headers as any).headers.Authorization) {
-      //   try {
-      //     const response = await tigrowApi.post(
-      //       `company`,
-      //       { name: selected.value },
-      //       headers,
-      //     );
-      //     props.createCompanyActionSuccess(response.data);
-      //     console.log(response.data);
-      //     setCompany([
-      //       {
-      //         value: response.data.company._id,
-      //         label: response.data.company.name,
-      //       },
-      //     ]);
-      //     props.getCompanyDetails(response.data.uniqueName);
-      //     setCompanyOptions([
-      //       ...companyOptions,
-      //       {
-      //         value: response.data.company._id,
-      //         label: response.data.company.name,
-      //       },
-      //     ]);
-      //   } catch (err) {}
-      //   setCompanyLoading(false);
-      //   // console.log({ companyOptions });
-      //   // console.log({ company });
-      // }
     } else {
       setCompany([
         {
@@ -407,11 +389,9 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
       props.creatingTask === false &&
       props.errorOnCreatingTask === ''
     ) {
-      console.log('should show toaster');
-      console.log(successMessage);
       setLoading(false);
       setShowToaster(true);
-      // props.setShowDialog(false);
+      props.setShowDialog(false);
       props.getAllUserTasks();
       setCreatingTask(false);
     }
@@ -422,9 +402,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
     const timeout = setTimeout(() => {
       setShowToaster(false);
       setErrorMessage('');
-      if (successMessage) {
-        props.setShowDialog(false);
-      }
       setSuccessMessage('');
     }, 3000);
     return () => clearTimeout(timeout);
@@ -711,12 +688,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           </form>
         )}
       />
-      {Boolean(showToaster && errorMessage) ? (
-        <ErrorToaster>{errorMessage}</ErrorToaster>
-      ) : null}
-      {Boolean(showToaster && successMessage) ? (
-        <SuccessToaster>{successMessage}</SuccessToaster>
-      ) : null}
     </Container>
   );
 };

@@ -155,8 +155,8 @@ const Modal = styled.div`
   flex-direction: column;
   min-width: min(50vw, 720px);
   width: auto;
-  max-width: 90vw;
-  max-height: 80vh;
+  max-width: 95vw;
+  max-height: 95vh;
   background: #ffffff;
   top: 50%;
   left: 50%;
@@ -187,7 +187,10 @@ const Modal = styled.div`
   }
 `;
 
-const Container = styled.div``;
+const Container = styled.div`
+  padding: 0.5rem;
+  overflow: auto;
+`;
 
 export {
   Header,
