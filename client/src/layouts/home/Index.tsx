@@ -1,12 +1,18 @@
 import { isMobileOnly } from 'react-device-detect';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import VideoConference from 'components/home/VideoConference';
 import { Tasks } from 'components/home/Tasks';
 import Projects from 'components/home/Projects';
 import Subtasks from 'components/home/Subtasks';
 
-import { Avatar, Container, Row } from './Index.styles';
+import {
+  Avatar,
+  Container,
+  ErrorToaster,
+  Row,
+  SuccessToaster,
+} from './Index.styles';
 import './Index.styles.scss';
 import CompanySection from 'components/home/company-section/CompanySection';
 import ProjectSection from 'components/home/project-section/ProjectSection';
@@ -20,6 +26,20 @@ import { getAllUserTasks } from 'stores/task/Actions';
 
 const Index = (props: any) => {
   const dispatch = useDispatch();
+  const [showToaster, setShowToaster] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const useToaster = () => {
+    return {
+      showToaster,
+      successMessage,
+      errorMessage,
+      setShowToaster,
+      setErrorMessage,
+      setSuccessMessage,
+    };
+  };
 
   useEffect(() => {
     dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
@@ -67,9 +87,15 @@ const Index = (props: any) => {
         <Avatar>{props.user?.firstName?.substring(0, 2)}</Avatar> Hi,{' '}
         {props.user.firstName}
       </Row>
-      <CompanySection />
-      <ProjectSection />
-      <TaskSection />
+      <CompanySection useToaster={useToaster} />
+      <ProjectSection useToaster={useToaster} />
+      <TaskSection useToaster={useToaster} />
+      {Boolean(showToaster && errorMessage) ? (
+        <ErrorToaster>{errorMessage}</ErrorToaster>
+      ) : null}
+      {Boolean(showToaster && successMessage) ? (
+        <SuccessToaster>{successMessage}</SuccessToaster>
+      ) : null}
     </Container>
   );
 };
