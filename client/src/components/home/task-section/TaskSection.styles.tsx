@@ -149,8 +149,7 @@ const TextButton = styled.button`
   margin-bottom: 8px;
 `;
 
-const Modal = styled.div`
-  position: absolute;
+const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-width: min(50vw, 720px);
@@ -158,10 +157,7 @@ const Modal = styled.div`
   max-width: 95vw;
   max-height: 95vh;
   background: #ffffff;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 54px 55px 50px 40px;
+  padding: 30px 50px 50px 50px;
   border-radius: 4px;
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.2);
 
@@ -197,7 +193,7 @@ export {
   Row,
   TextInput,
   SimpleButton,
-  Modal,
+  ModalContainer,
   TextButton,
   StyledButton,
   Container,
