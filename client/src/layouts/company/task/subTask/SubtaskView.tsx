@@ -6,9 +6,15 @@ import { connect } from 'react-redux';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 import { ProgressBar } from '@blueprintjs/core/lib/esm/components/progress-bar/progressBar';
-import { Checkbox } from '@blueprintjs/core/lib/esm/components/forms/controls';
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 import { IconNames } from '@blueprintjs/icons';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 // import moment from 'moment';
 
 import { ISubTask } from 'stores/subtask/Reducer';
@@ -150,188 +156,146 @@ export const SubTaskViewPageComponent = (
               />
               <div className="mt3 mb3">
                 {props.subTaskList.map((subTask) => (
-                  <div
-                    className="flex justify-between items-center"
-                    key={subTask._id}
-                  >
-                    <Checkbox
-                      className="ws-break"
-                      value={subTask._id}
-                      checked={subTask.done}
-                      label={subTask.name}
-                      large={true}
-                      style={{
-                        textDecoration: subTask.done
-                          ? 'line-through'
-                          : 'none',
-                        minWidth: '220px',
-                      }}
-                      onChange={(event: any) => {
-                        const subtaskData = {
-                          _id: event.target.value,
-                          done: event.target.checked,
-                        };
-                        props.updateSubTask(subtaskData);
-                      }}
-                    />
-                    <div className="flex items-center">
-                      <div
-                        className={
-                          subTask.assignedMembers &&
-                          subTask.assignedMembers?.length > 0
-                            ? 'mr3 flex'
-                            : 'dn'
-                        }
-                        style={{ width: 'max-content' }}
-                      >
-                        {subTask.assignedMembers &&
-                          subTask.assignedMembers.map((subMember) => (
-                            <SubTaskMemberIcon
-                              key={subMember._id}
-                              deleteSubTaskMember={
-                                props.deleteSubTaskMember
-                              }
-                              member={subMember}
-                              subTaskId={subTask._id}
-                              deletingMember={props.deletingMember}
-                              errorOnDeletingMember={
-                                props.errorOnDeletingMember
-                              }
-                              company={props.company}
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-label="Expand"
+                      aria-controls="additional-actions3-content"
+                      id="additional-actions3-header"
+                    >
+                      <div className="flex items-center justify-between w-100">
+                        <FormControlLabel
+                          aria-label="Mark As Done"
+                          onClick={(event) => event.stopPropagation()}
+                          onFocus={(event) => event.stopPropagation()}
+                          control={
+                            <Checkbox
+                              checked={subTask.done}
+                              color="primary"
+                              onChange={(event: any) => {
+                                const subtaskData = {
+                                  _id: subTask._id,
+                                  done: event.target.checked,
+                                };
+                                props.updateSubTask(subtaskData);
+                              }}
                             />
-                          ))}
-                      </div>
-                      {/* <div
-                        className={
-                          subTask.dueDate
-                            ? ' flex items-start mr3'
-                            : 'dn'
-                        }
-                        style={{ width: 'max-content' }}
-                      >
-                        <span
-                          className="bp3-tag"
-                          style={{
-                            backgroundColor:
-                              moment() > moment(subTask.dueDate)
-                                ? 'red'
-                                : 'lightsteelblue',
-                            color:
-                              moment() > moment(subTask.dueDate)
-                                ? '#fff'
-                                : 'inherit',
-                          }}
-                        >
-                          {moment(subTask.dueDate).fromNow()}
-                        </span>
-                      </div> */}
-                      <div>
-                        {props.company ? (
-                          <Popover
-                            isOpen={
-                              membersPopover._id === subTask._id &&
-                              membersPopover.open
+                          }
+                          label={subTask.name}
+                        />
+                        <div className="flex items-center">
+                          <div
+                            className={
+                              subTask.assignedMembers &&
+                              subTask.assignedMembers?.length > 0
+                                ? 'mr3 flex'
+                                : 'dn'
                             }
-                            position="right"
-                            content={
-                              <div className="pa3 cf bg-white">
-                                <div>
-                                  <AddSubtaskMember
-                                    setMembersPopover={
-                                      setMembersPopover
+                            style={{ width: 'max-content' }}
+                          >
+                            {subTask.assignedMembers &&
+                              subTask.assignedMembers.map(
+                                (subMember) => (
+                                  <SubTaskMemberIcon
+                                    key={subMember._id}
+                                    deleteSubTaskMember={
+                                      props.deleteSubTaskMember
                                     }
-                                    id={
-                                      subTask._id ? subTask._id : ''
+                                    member={subMember}
+                                    subTaskId={subTask._id}
+                                    deletingMember={
+                                      props.deletingMember
                                     }
+                                    errorOnDeletingMember={
+                                      props.errorOnDeletingMember
+                                    }
+                                    company={props.company}
                                   />
-                                </div>
-                              </div>
-                            }
-                            target={
-                              <Icon
-                                className="fr pointer mr3 pt1"
-                                style={{
-                                  marginTop: 0,
-                                  color: 'lightsteelblue',
-                                }}
-                                icon="people"
-                                onClick={() => {
-                                  toggleMembersPopover(
-                                    subTask._id ? subTask._id : '',
-                                  );
-                                }}
+                                ),
+                              )}
+                          </div>
+                          <div>
+                            {props.company ? (
+                              <Popover
+                                isOpen={
+                                  membersPopover._id ===
+                                    subTask._id && membersPopover.open
+                                }
+                                position="right"
+                                content={
+                                  <div className="pa3 cf bg-white">
+                                    <div>
+                                      <AddSubtaskMember
+                                        setMembersPopover={
+                                          setMembersPopover
+                                        }
+                                        id={
+                                          subTask._id
+                                            ? subTask._id
+                                            : ''
+                                        }
+                                      />
+                                    </div>
+                                  </div>
+                                }
+                                target={
+                                  <Icon
+                                    className="fr pointer mr3 pt1"
+                                    style={{
+                                      marginTop: 0,
+                                      color: 'lightsteelblue',
+                                    }}
+                                    icon="people"
+                                    onClick={() => {
+                                      toggleMembersPopover(
+                                        subTask._id
+                                          ? subTask._id
+                                          : '',
+                                      );
+                                    }}
+                                  />
+                                }
                               />
-                            }
-                          />
-                        ) : undefined}
-                      </div>
-                      {/* <div>
-                        <Popover
-                          isOpen={
-                            dueDatePopover._id === subTask._id &&
-                            dueDatePopover.open
-                          }
-                          position="right"
-                          content={
-                            <div className="pa3 cf bg-white">
-                              <div>
-                                <DueDateEditor
-                                  setDueDatePopover={
-                                    setDueDatePopover
-                                  }
-                                  dueDate={subTask.dueDate}
-                                  subTask={subTask}
-                                  dueDatePopover={dueDatePopover}
-                                />
-                              </div>
-                            </div>
-                          }
-                          target={
+                            ) : undefined}
+                          </div>
+                          <div className="mr3">
+                            <DueDateEditor
+                              dueDate={subTask.dueDate}
+                              subTask={subTask}
+                            />
+                          </div>
+                          <div>
                             <Icon
-                              className="fr mv3 pointer mr4 mv0"
+                              className="fr pointer mr3"
                               style={{
                                 marginTop: 0,
                                 color: 'lightsteelblue',
                               }}
-                              icon="calendar"
-                              onClick={() => {
-                                toggleDueDatePopover(
-                                  subTask._id ? subTask._id : '',
-                                );
+                              icon="edit"
+                              onClick={async () => {
+                                await setsubtask(subTask);
+                                setShowSubTaskForm(true);
                               }}
                             />
-                          }
-                        />
-                      </div> */}
-                      <div className="mr3">
-                        <DueDateEditor
-                          dueDate={subTask.dueDate}
-                          subTask={subTask}
-                        />
-                      </div>
-                      <div>
-                        <Icon
-                          className="fr pointer mr3"
-                          style={{
-                            marginTop: 0,
-                            color: 'lightsteelblue',
-                          }}
-                          icon="edit"
-                          onClick={async () => {
-                            await setsubtask(subTask);
-                            setShowSubTaskForm(true);
-                          }}
-                        />
-                      </div>
+                          </div>
 
-                      <div className="pt2">
-                        <SubTaskDelete
-                          subTask={subTask}
-                          deleteSubTask={props.deleteSubTask}
-                        />
+                          <div className="pt2">
+                            <SubTaskDelete
+                              subTask={subTask}
+                              deleteSubTask={props.deleteSubTask}
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Typography color="textSecondary">
+                        {subTask.description
+                          ? subTask.description
+                          : 'No description Provided'}
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
                 ))}
               </div>
             </div>

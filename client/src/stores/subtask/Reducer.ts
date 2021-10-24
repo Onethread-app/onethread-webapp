@@ -12,6 +12,7 @@ export interface ISubTask {
   name?: string;
   done?: boolean;
   dueDate?: Date;
+  description?: string;
   assignedMembers?: [ISubtaskMember];
 }
 
@@ -45,6 +46,7 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
           {
             _id: action.payload._id,
             name: action.payload.name,
+            description: action.payload.subtaskDesc,
             done: action.payload.done,
           },
           ...state.subTaskList,
@@ -91,6 +93,7 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
                 ...subTask,
                 name: action.payload.name,
                 done: action.payload.done,
+                description: action.payload.description,
                 dueDate: action.payload.dueDate,
               }
             : subTask,

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
@@ -38,26 +38,38 @@ interface ISubTaskDescriptionDeleteFormProps {
 export const SubTaskCreatorComponent = (
   props: ITaskDescriptionCreateFormProps & RouteComponentProps,
 ) => {
+  const [creating, setCreating] = useState(false);
+  const [updating, setUpdating] = useState(false);
+
   const onSubmit = async (values: any) => {
     if (isEmpty(props.subtask)) {
       const subTaskData = {
         name: values.subtaskTitle,
+        description: values.subtaskDesc,
       };
-      await props.createSubTask(subTaskData);
-      if (props.creatingSubTask === false) {
-        props.setShowSubTaskForm(!props.showSubtaskForm);
-      }
+      props.createSubTask(subTaskData);
+      setCreating(true);
     } else {
       const updateSubTaskData = {
         _id: props.subtask!._id,
         name: values.subtaskTitle,
       };
-      await props.updateSubTask(updateSubTaskData);
-      if (props.updatingSubTask === false) {
-        props.setShowSubTaskForm(!props.showSubtaskForm);
-      }
+      props.updateSubTask(updateSubTaskData);
+      setUpdating(true);
     }
   };
+
+  useEffect(() => {
+    if (creating === true && props.creatingSubTask === false) {
+      props.setShowSubTaskForm(!props.showSubtaskForm);
+    }
+  }, [creating, props.creatingSubTask]);
+
+  useEffect(() => {
+    if (updating === true && props.creatingSubTask === false) {
+      props.setShowSubTaskForm(!props.showSubtaskForm);
+    }
+  }, [updating, props.creatingSubTask]);
 
   return (
     <div className="mb3 pa3">
@@ -66,6 +78,7 @@ export const SubTaskCreatorComponent = (
         onSubmit={onSubmit}
         initialValues={{
           subtaskTitle: props.subtask ? props.subtask.name : '',
+          subtaskDesc: props.subtask ? props.subtask.description : '',
         }}
         render={({
           handleSubmit,
@@ -84,20 +97,58 @@ export const SubTaskCreatorComponent = (
                 name="subtaskTitle"
                 validate={composeValidators(required, maxValue(100))}
                 render={({ input, meta }) => (
-                  <div
-                    className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}
-                  >
-                    <InputGroupFieldWithError
-                      id="subtaskTitle"
-                      value={input.value}
-                      onChange={input.onChange}
-                      className="ba br2"
-                    />
-                    {checkError(meta) && (
-                      <small className="mv3" style={{ color: 'red' }}>
-                        {meta.error || meta.submitError}
-                      </small>
-                    )}
+                  <div>
+                    <div
+                      className={` ${
+                        checkError(meta) ? 'mb3' : 'mb2'
+                      }`}
+                    >
+                      <label htmlFor="subtaskTitle">Name</label>
+                      <InputGroupFieldWithError
+                        id="subtaskTitle"
+                        value={input.value}
+                        onChange={input.onChange}
+                        className="ba br2"
+                      />
+                      {checkError(meta) && (
+                        <small
+                          className="mv3"
+                          style={{ color: 'red' }}
+                        >
+                          {meta.error || meta.submitError}
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                )}
+              />
+              <Field<string>
+                name="subtaskDesc"
+                validate={composeValidators(maxValue(250))}
+                render={({ input, meta }) => (
+                  <div>
+                    <div
+                      className={` ${
+                        checkError(meta) ? 'mb3' : 'mb2'
+                      }`}
+                    >
+                      <label htmlFor="subtaskDesc">Description</label>
+                      <textarea
+                        id="subtaskDesc"
+                        value={input.value}
+                        onChange={input.onChange}
+                        className="ba br2 w-100 h3"
+                        style={{ flex: '1 1 auto' }}
+                      ></textarea>
+                      {checkError(meta) && (
+                        <small
+                          className="mv3"
+                          style={{ color: 'red' }}
+                        >
+                          {meta.error || meta.submitError}
+                        </small>
+                      )}
+                    </div>
                   </div>
                 )}
               />
