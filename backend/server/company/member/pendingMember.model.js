@@ -21,6 +21,10 @@ const pendingMember = new Schema(
       type: Boolean,
       default: false,
     },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+    },
   },
   {
     timestamps: true,
