@@ -542,7 +542,7 @@ export function* onGetAllCompanyTasks() {
 }
 
 export function* onGetSelectedBoard() {
-  yield takeLatest(
+  yield takeEvery(
     TaskActionType.SELECT_BOARD_START,
     getSelectedBoard,
   );
