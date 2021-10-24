@@ -35,7 +35,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import {
   Container,
   Header,
-  Modal,
+  ModalContainer,
   Row,
   SimpleButton,
   TextInput,
@@ -43,6 +43,7 @@ import {
   Icon,
   StyledButton,
 } from './ProjectSection.styles';
+import { Dialog } from '@material-ui/core';
 
 interface INewCompanyResponse {
   message: string;
@@ -244,7 +245,7 @@ const Index = (props: IProps) => {
   return (
     <Container>
       <Header>
-        Projects
+        Recent projects
         <img src={Hamburger} alt="" />
       </Header>
       {projects.length === 0 ? (
@@ -268,8 +269,9 @@ const Index = (props: IProps) => {
           </Link>
         </Row>
       )}
-      {openProjectDialog ? (
-        <Modal>
+      {/* {openProjectDialog ? ( */}
+      <Dialog open={openProjectDialog}>
+        <ModalContainer>
           <Form
             onSubmit={onSubmit}
             validate={(values: any) => {
@@ -428,8 +430,9 @@ const Index = (props: IProps) => {
               </form>
             )}
           />
-        </Modal>
-      ) : null}
+        </ModalContainer>
+      </Dialog>
+      {/* ) : null} */}
       {/* {Boolean(errorMessage && showToaster) ? (
         <ErrorToaster>{errorMessage}</ErrorToaster>
       ) : null}

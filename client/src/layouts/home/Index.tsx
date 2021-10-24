@@ -1,10 +1,21 @@
 import { isMobileOnly } from 'react-device-detect';
 import { useEffect, useState } from 'react';
+import { connect, useDispatch } from 'react-redux';
+
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
+// import { getProjectsIndividual } from 'stores/project/Actions';
+import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
+import { getCompanyDetails } from 'stores/company/Actions';
+import { getAllUserTasks } from 'stores/task/Actions';
+import { capitalizeFirstLetter } from 'helpers/utils';
 
 import VideoConference from 'components/home/VideoConference';
 import { Tasks } from 'components/home/Tasks';
 import Projects from 'components/home/Projects';
 import Subtasks from 'components/home/Subtasks';
+import CompanySection from 'components/home/company-section/CompanySection';
+import ProjectSection from 'components/home/project-section/ProjectSection';
+import TaskSection from 'components/home/task-section/TaskSection';
 
 import {
   Avatar,
@@ -14,15 +25,6 @@ import {
   SuccessToaster,
 } from './Index.styles';
 import './Index.styles.scss';
-import CompanySection from 'components/home/company-section/CompanySection';
-import ProjectSection from 'components/home/project-section/ProjectSection';
-import TaskSection from 'components/home/task-section/TaskSection';
-import { connect, useDispatch } from 'react-redux';
-import { getAllCompaniesByUserId } from 'stores/user/Actions';
-// import { getProjectsIndividual } from 'stores/project/Actions';
-import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
-import { getCompanyDetails } from 'stores/company/Actions';
-import { getAllUserTasks } from 'stores/task/Actions';
 
 const Index = (props: any) => {
   const dispatch = useDispatch();
@@ -85,7 +87,7 @@ const Index = (props: any) => {
       <span>PERSONAL DASHBOARD</span>
       <Row justify="flex-start">
         <Avatar>{props.user?.firstName?.substring(0, 2)}</Avatar> Hi,{' '}
-        {props.user.firstName}
+        {capitalizeFirstLetter(props.user.firstName)}
       </Row>
       <CompanySection useToaster={useToaster} />
       <ProjectSection useToaster={useToaster} />

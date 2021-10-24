@@ -475,7 +475,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      placeHolder="Task Name"
+                      placeHolder="Task Name (Required)"
                       autoFocus={true}
                     />
                   </div>
@@ -485,6 +485,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                 <label className="text-width">Company:</label>
                 <Select
                   id="company"
+                  placeholder="Required"
                   value={company}
                   isLoading={companyLoading}
                   isDisabled={companyLoading}
@@ -513,7 +514,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     <div className="mb3">
                       <div className="flex items-center">
                         <label className="text-width">
-                          Assign to:
+                          In:
                           <div>
                             {assignedPeojectError && (
                               <small
@@ -620,7 +621,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                           KeyboardButtonProps={{
                             'aria-label': 'change date',
                           }}
-                          placeholder="Enter a date"
+                          placeholder="Enter a date(Required)"
                           minDate={new Date()}
                           style={{ width: '250px' }}
                         />

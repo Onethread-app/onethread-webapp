@@ -575,7 +575,7 @@
     "forms": {
       "Create-company": {
         "Create": "Create Company",
-        "Name": "Comapny Name (Required)",
+        "Name": "Company Name (Required)",
         "Address": "Company Address",
         "Type": "Please Select a company type",
         "Email": "Company Email Address",

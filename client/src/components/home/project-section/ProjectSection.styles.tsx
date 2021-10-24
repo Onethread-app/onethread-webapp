@@ -216,20 +216,15 @@ const ProjectContainer = styled.div`
   overflow-x: auto;
 `;
 
-const Modal = styled.div`
-  position: absolute;
+const ModalContainer = styled.div`
   min-width: min(50vw, 600px);
   width: auto;
   max-width: 90vw;
   max-height: 80vh;
   background: #ffffff;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 54px 55px 50px 40px;
+  padding: 50px 55px 50px 40px;
   border-radius: 4px;
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.2);
-  z-index: 999;
 
   .label {
     min-width: 100px;
@@ -263,7 +258,7 @@ export {
   Row,
   CreateProject,
   ProjectContainer,
-  Modal,
+  ModalContainer,
   Container,
   SimpleButton,
   TextInput,
