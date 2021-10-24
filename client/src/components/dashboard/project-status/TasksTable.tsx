@@ -506,7 +506,7 @@ const AppTable = ({
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5]}
+          rowsPerPageOptions={[5, 10, 25, 50, 100]}
           component="div"
           count={tasks.length}
           rowsPerPage={rowsPerPage}
