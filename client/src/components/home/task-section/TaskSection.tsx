@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import { Header, Modal, Row } from './TaskSection.styles';
+import { Header, ModalContainer, Row } from './TaskSection.styles';
 import Hamburger from '../../../resources/images/hamburger.png';
 import TaskDialog from './TaskDialog';
 import { connect } from 'react-redux';
+import { Dialog } from '@material-ui/core';
 
 interface Props {
   userTasks: any;
@@ -29,7 +30,7 @@ const TaskSection = (props: Props) => {
   return (
     <div>
       <Header>
-        Tasks
+        Tasks due soon
         <img src={Hamburger} alt="" />
       </Header>
       {tasks.length === 0 ? (
@@ -47,14 +48,14 @@ const TaskSection = (props: Props) => {
           </Link>
         </Row>
       )}
-      {openTaskDialog ? (
-        <Modal>
+      <Dialog open={openTaskDialog} maxWidth={'lg'}>
+        <ModalContainer>
           <TaskDialog
             setShowDialog={setOpenTaskDialog}
             useToaster={props.useToaster}
           />
-        </Modal>
-      ) : null}
+        </ModalContainer>
+      </Dialog>
     </div>
   );
 };

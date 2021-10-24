@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const SuccessToaster = styled.div`
-  padding: 2rem;
+  padding: 30px 39px 30px 20px;
   border: none;
   border-left: 3px solid #00a150;
   position: absolute;
@@ -13,7 +13,7 @@ const SuccessToaster = styled.div`
 `;
 
 const ErrorToaster = styled.div`
-  padding: 2rem;
+  padding: 30px 39px 30px 20px;
   border: none;
   border-left: 3px solid red;
   position: absolute;
@@ -32,6 +32,9 @@ const Avatar = styled.div`
   border-radius: 5px;
   color: white;
   margin-right: 0.5rem;
+
+  & + span {
+  }
 `;
 
 const Row = styled.div`
@@ -40,15 +43,17 @@ const Row = styled.div`
   justify-content: ${({ justify }) => justify ?? 'center'};
   align-items: center;
   width: 100%;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
   column-gap: 4px;
+  color: #000000;
+  font-weight: 600;
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 0.25rem;
-  padding: 45px 80px;
+  /* row-gap: 0.25rem; */
+  padding: 30px 60px;
   width: 100%;
   height: 100%;
   background-color: #f1f1f1;
