@@ -120,7 +120,12 @@ const storeAccountInELK = async (user) => {
 
   if (pendingMember.length > 0) {
     let pendingMemberToMember = pendingMember.map((m) => {
-      return { account: user._id, company: m.company };
+      return {
+        account: user._id,
+        company: m.company,
+        isApproved: true,
+        approvedBy: m.createdBy,
+      };
     });
 
     const pendingMemberToMemberAccounts = pendingMemberToMember.map(
