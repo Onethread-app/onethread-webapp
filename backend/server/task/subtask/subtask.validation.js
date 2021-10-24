@@ -17,6 +17,7 @@ const subTaskId = Joi.object().keys({
 
 const subTaskSchema = {
   name: Joi.string(),
+  description: Joi.string(),
   done: Joi.boolean(),
   taskId: idSchema.id,
   dueDate: Joi.date(),
@@ -26,6 +27,7 @@ module.exports = {
   createSubTask: Joi.object().keys({
     body: Joi.object().keys({
       name: subTaskSchema.name.required(),
+      description: subTaskSchema.description,
       taskId: subTaskSchema.taskId.required(),
     }),
   }),
@@ -33,6 +35,7 @@ module.exports = {
     body: Joi.object().keys({
       done: subTaskSchema.done,
       name: subTaskSchema.name,
+      description: subTaskSchema.description,
       dueDate: subTaskSchema.dueDate,
     }),
     params: subTaskId,

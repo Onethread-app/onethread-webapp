@@ -8,6 +8,11 @@ const SubTaskSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    description: {
+      type: String,
+      required: false,
+      trim: true,
+    },
     done: {
       type: Boolean,
       default: false,
