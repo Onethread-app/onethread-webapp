@@ -160,7 +160,7 @@ module.exports.sendMailAsTaskReminder = async (
       const link = `${host}/${username}/home`;
       const getMarkup = (task) => {
         if (!task) return 'No task available';
-        return task.map((t) => `<li>${t.name}</li>`).join(',');
+        return task.map((t) => `<li>${t.name}</li>`).join('');
       };
       if (
         !todaysTaskNames[username] &&
