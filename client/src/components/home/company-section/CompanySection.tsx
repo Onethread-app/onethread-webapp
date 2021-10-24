@@ -128,7 +128,10 @@ const CompanySection = (props: Props) => {
           open={showCompanyDialog}
           maxWidth={'lg'}
         >
-          <CompanySignupForm setShowDialog={setShowCompanyDialog} />
+          <CompanySignupForm
+            setShowDialog={setShowCompanyDialog}
+            useToaster={props.useToaster}
+          />
         </Dialog>
       ) : null}
     </div>
