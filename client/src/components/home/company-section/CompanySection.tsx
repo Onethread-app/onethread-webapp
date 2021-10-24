@@ -15,10 +15,10 @@ import {
   CompanyContainer,
 } from './CompanySection.styles';
 import { connect } from 'react-redux';
-import { CompanySignupForm } from 'layouts/company/Form';
-import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 import { Link } from 'react-router-dom';
 import { getCompanyDetails } from 'stores/company/Actions';
+import { Dialog } from '@material-ui/core';
+import { CompanySignupForm } from './CompanyDialog';
 
 interface Props {
   companies: ICompanyByUser[];
@@ -27,6 +27,16 @@ interface Props {
   getCompanyDetails: (name: string) => void;
   useToaster: () => {};
 }
+
+export const Color = [
+  { code: 0, value: '#FA617F' },
+  { code: 1, value: '#A8D16B' },
+  { code: 2, value: '#FFD7D0' },
+  { code: 3, value: '#FE5E41' },
+  { code: 4, value: '#3F61C5' },
+  { code: 5, value: '#11B468' },
+  { code: 6, value: '#5A1DD6' },
+];
 
 const CompanySection = (props: Props) => {
   const {
@@ -43,6 +53,14 @@ const CompanySection = (props: Props) => {
     uniqueName: string;
   }) => {
     getCompanyDetails(company.uniqueName);
+  };
+
+  const getRandomInt = (max) => {
+    return Math.floor(Math.random() * max);
+  };
+
+  const getRandomColor = () => {
+    return Color[getRandomInt(6)]?.value;
   };
 
   useEffect(() => {
@@ -85,8 +103,10 @@ const CompanySection = (props: Props) => {
                 style={{ width: '100%' }}
                 onClick={() => handleCompanyChange(company.company)}
               >
-                <Avatar>{company.company.name[0]}</Avatar>
-                <span>{company.company.name}</span>
+                <Avatar bgColor={getRandomColor()}>
+                  {company.company?.name[0]}
+                </Avatar>
+                <span>{company.company?.name}</span>
               </div>
               <Footer>
                 <span>
@@ -105,9 +125,8 @@ const CompanySection = (props: Props) => {
       {showCompanyDialog ? (
         <Dialog
           onClose={() => setShowCompanyDialog(!showCompanyDialog)}
-          isOpen={showCompanyDialog}
-          style={{ background: '#fff' }}
-          canOutsideClickClose={false}
+          open={showCompanyDialog}
+          maxWidth={'lg'}
         >
           <CompanySignupForm setShowDialog={setShowCompanyDialog} />
         </Dialog>
