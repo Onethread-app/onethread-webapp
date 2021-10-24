@@ -71,6 +71,7 @@ interface ICreateTaskDialogInternalProps
   previousData: any;
   projects: [];
   boardList: { _id: string }[];
+  fetchingBoards: boolean;
   companies: any;
   getCompanyDetails: (arg0: string) => void;
   createProjectSuccess: () => void;
@@ -128,7 +129,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   } = props.useToaster();
 
   const onSubmit = (values) => {
-    // console.log(values);
     if (!company[0].value) {
       setAssignedCompanyError(true);
     }
@@ -188,10 +188,10 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           setSuccessMessage(
             `The project ${response.data.project.name} has been created`,
           );
+          props.getAllProjects();
+          props.getSingleProject(response.data.project._id);
+          props.getAllBoards(response.data.project._id);
         }
-        props.getAllProjects();
-        props.getSingleProject(project[0]?.value);
-        props.getAllBoards(project[0]?.value);
         setErrorMessage('');
         setShowToaster(true);
       } catch (err) {
@@ -209,6 +209,12 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
       props.getSingleProject(selected.value);
       props.getAllBoards(selected.value);
       setProjectLoading(false);
+      console.log({
+        'Id from select': selected.value,
+        'id from variable': project,
+        'id from c.board': props.currentBoard?.project,
+        'column id': columnId,
+      });
     }
   };
 
@@ -285,13 +291,22 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   }, [props.boardList]);
 
   useEffect(() => {
-    if (props.currentBoard.name !== '') {
+    if (
+      props.currentBoard.project === project[0]?.value &&
+      props.fetchingBoards === false
+    ) {
+      console.log('inside column id');
+      console.log({
+        'id from variable': project,
+        'id from c.board': props.currentBoard?.project,
+        'column id': columnId,
+      });
       const id = props.currentBoard.columns.filter(
         (col) => col.name.toLowerCase() === 'to do',
       )[0]._id;
       setColumnId(id);
     }
-  }, [props.currentBoard]);
+  }, [project, props.currentBoard, props.fetchingBoards]);
 
   useEffect(() => {
     const optionsCompany = props.companies.map((company) => {
@@ -312,13 +327,16 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   }, [props.boardList]);
 
   useEffect(() => {
-    if (props.currentBoard.name !== '') {
+    if (
+      props.currentBoard.name !== '' &&
+      props.fetchingBoards === false
+    ) {
       const id = props.currentBoard.columns.filter(
         (col) => col.name.toLowerCase() === 'to do',
       )[0]._id;
       setColumnId(id);
     }
-  }, [props.currentBoard]);
+  }, [props.currentBoard, props.fetchingBoards]);
 
   useEffect(() => {
     const loadTeamMembers = async () => {
@@ -674,7 +692,14 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                   <SimpleButton>Invite members</SimpleButton>
                   <SimpleButton>Create subtask</SimpleButton> */}
                 </div>
-                <StyledButton type="submit">
+                <StyledButton
+                  type="submit"
+                  disabled={
+                    project[0]?.value !== props.currentBoard?.project
+                      ? true
+                      : false
+                  }
+                >
                   {loading ? (
                     <>
                       Creating Task{' '}
@@ -703,6 +728,7 @@ const mapStateToProps = (state: any) => ({
     state.taskIndexReducer.taskReducer.errorOnCreatingTask,
   previousData: state.taskFormReducer.data,
   companies: state.userReducer.user.companies,
+  fetchingBoards: state.taskIndexReducer.taskReducer.fetchingBoards,
 });
 
 export default connect(mapStateToProps, {

@@ -41,6 +41,7 @@ const StyledButton = styled.button`
 
   &:disabled {
     background: rgba(8, 160, 247, 0.6);
+    cursor: not-allowed;
   }
 `;
 
