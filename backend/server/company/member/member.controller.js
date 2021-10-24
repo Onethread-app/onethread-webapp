@@ -569,7 +569,11 @@ const createMembers = async (req, notifiyUsersIds) => {
 const createPendingMembers = async (req, memberEmails) => {
   try {
     let pendingMembersInfo = memberEmails.map((m) => {
-      return { email: m, company: req.company._id };
+      return {
+        email: m,
+        company: req.company._id,
+        createdBy: req.user._id,
+      };
     });
     pendingMembers = await PendingMember.create(pendingMembersInfo);
 
