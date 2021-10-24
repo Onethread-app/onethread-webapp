@@ -4,6 +4,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useBeforeunload } from 'react-beforeunload';
+import { History } from 'history';
 
 import { SubmitError } from 'components/final-form/SubmitError';
 import {
@@ -44,7 +45,7 @@ import {
 } from '../../components/form-components/Index.styles';
 import { CircularProgress } from '@material-ui/core';
 import { isAuthenticate } from 'stores/UtilsActions';
-import { fetchUserAction } from 'stores/auth/Actions';
+import { fetchUserAction, logoutAction } from 'stores/auth/Actions';
 import useElementSize from 'helpers/hooks/useElementSize';
 
 const useQuery = () => {
@@ -64,6 +65,7 @@ interface IProps {
   user: any;
   updateUserInfoAction: (val: any) => any;
   accountUpdateLoading: boolean;
+  logoutAction: (history: History) => void;
 }
 
 const Index = (props: IProps) => {
@@ -80,6 +82,7 @@ const Index = (props: IProps) => {
     user,
     updateUserInfoAction,
     accountUpdateLoading,
+    logoutAction,
   } = props;
   const history = useHistory();
   const query = useQuery();
@@ -122,6 +125,7 @@ const Index = (props: IProps) => {
   };
 
   const handleLeave = () => {
+    localStorage.removeItem('email');
     history.push('/');
   };
 
@@ -140,6 +144,12 @@ const Index = (props: IProps) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  useEffect(() => {
+    if (isAuthenticate()) {
+      fetchUserAction();
+    }
+  }, []);
 
   useEffect(() => {
     if (companyToJoin) {
@@ -290,6 +300,20 @@ const Index = (props: IProps) => {
                 </form>
               )}
             />
+            <p className="wrong-email">
+              Switch account?{' '}
+              <Link
+                to="#"
+                onClick={() => {
+                  logoutAction(history);
+                  localStorage.removeItem('email');
+                  history.push('/signin');
+                }}
+                className="link"
+              >
+                Log in
+              </Link>
+            </p>
           </>
         ) : (
           <>
@@ -458,4 +482,5 @@ export default connect(mapStateToProps, {
   fetchUserAction,
   userClearState,
   updateUserInfoAction,
+  logoutAction,
 })(Index);
