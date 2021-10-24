@@ -1,11 +1,13 @@
+import { StyledTextInput } from 'components/form-components/Index.styles';
 import styled from 'styled-components';
 
 const Header = styled.header`
   font-weight: 500;
   font-size: 18px;
   line-height: 27px;
-  color: var(--dark-color, #323030);
+  color: var(--dark-color, #000000);
   padding-bottom: 12px;
+  padding-top: 12px;
   border-bottom: 1px solid #e0e0e0;
   transform: rotate(0.13deg);
   display: flex;
@@ -52,6 +54,23 @@ const Footer = styled.div`
 
   span + span {
     border-left: 1px solid #e8e8e8;
+  }
+`;
+
+const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: min(50vw, 720px);
+  width: auto;
+  max-width: 95vw;
+  max-height: 95vh;
+  background: #ffffff;
+  padding: 30px 50px 50px 50px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.2);
+
+  label {
+    width: 200px;
   }
 `;
 
@@ -119,7 +138,7 @@ const Avatar = styled.div`
     font-size: 14px;
     line-height: 19px;
     text-align: center;
-    color: #000000;
+    color: #000000 !important;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -155,9 +174,95 @@ const CompanyContainer = styled.div`
   align-items: center;
   column-gap: 24px;
   padding: 14px;
-  margin-bottom: 36px;
+  margin-bottom: 1rem;
   overflow-x: auto;
 `;
+
+const StyledButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px 7px;
+  height: 33px;
+  white-space: nowrap;
+  background: #08a0f7;
+  border-radius: 4px;
+  color: #fff;
+  border: none;
+
+  &:disabled {
+    background: rgba(8, 160, 247, 0.6);
+  }
+`;
+
+// const Column = styled.div`
+//   display: flex;
+//   flex-direction: column !important;
+//   width: max-content;
+//   justify-content: flex-start;
+//   align-items: center;
+
+//   div {
+//     display: flex;
+//     flex-direction: column !important;
+//   }
+// `;
+
+// const Icon = styled.span`
+//   padding: 12px;
+//   background-color: ${({ color }) => color};
+//   border-radius: 100%;
+//   width: 24px;
+//   height: 24px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   outline: 4px solid
+//     ${({ checked }) => (checked ? '#e1e1e1' : 'transparent')};
+
+//   span {
+//     display: ${({ checked }) => (checked ? 'block' : 'none')};
+//   }
+// `;
+
+const TextInput = styled(StyledTextInput)`
+  height: 36px;
+  border-radius: 0.5rem;
+  width: 100%;
+  border: ${({ hasError }) =>
+    hasError ? '1px solid red !important' : 'none'};
+  vertical-align: middle;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 4px;
+  text-indent: 0px;
+  background-color: #fff;
+
+  & + span {
+    color: ${({ hasError }) =>
+      hasError ? 'red !important' : 'inherit'};
+  }
+
+  &:focus {
+    outline: none;
+    font-weight: bolder;
+  }
+`;
+
+const SimpleButton = styled.button`
+  border: 1px solid #b1b1b1;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 7px 14px;
+  cursor: pointer;
+`;
+
+const Container = styled.div``;
 
 export {
   Header,
@@ -167,4 +272,9 @@ export {
   Row,
   CreateCompany,
   CompanyContainer,
+  ModalContainer,
+  Container,
+  SimpleButton,
+  StyledButton,
+  TextInput,
 };
