@@ -42,6 +42,7 @@ const {
 } = require('../services/notification.services');
 const {
   findCompanyById,
+  companyAdminSuperAdminList,
 } = require('../services/company/company.services');
 
 const notificationBuilder = (
@@ -171,7 +172,7 @@ module.exports.notifyToBoardMembers = async (
       adminUser._id,
     );
     boardMember.members.forEach(async (account) => {
-      if (account.toString() !== senderName) {
+      if (account_id.toString() !== senderName) {
         notification = await createNotification(notification);
         notification = await notification
           .populate('company', 'uniqueName _id')
@@ -226,7 +227,6 @@ module.exports.notifyToTaskMember = async (
     notification = await notification
       .populate('company', 'uniqueName _id')
       .execPopulate();
-    console.log(notification);
     let userNotification = await createNotificationForUser(
       userNotificationBuilder(notification._id, adminUser._id),
     );
@@ -349,6 +349,56 @@ module.exports.createMemberAddNotification = async (
   } catch (error) {
     logger.error(`Notifications: ${error}`);
     //next(error);
+  }
+};
+
+module.exports.createPendingAssociateRequest = async (
+  companyId,
+  associateCompany,
+  adminUser,
+) => {
+  try {
+    console.log(companyId, associateCompany);
+    const company = await findCompanyById(companyId);
+    let associateAdminSuperAdminList =
+      await companyAdminSuperAdminList(associateCompany);
+    let notification = await createNotification(
+      notificationBuilder(
+        `${_.upperFirst(
+          company.name,
+        )} wants to add you as a partner.`,
+        'assiociate',
+        associate,
+        null,
+        null,
+        null,
+        null,
+        null,
+        companyId,
+        null,
+        null,
+        adminUser._id,
+      ),
+    );
+    associateAdminSuperAdminList.forEach(async (account) => {
+      console.log(account);
+      notification = await notification
+        .populate('company', 'uniqueName _id')
+        .execPopulate();
+      let userNotification = await createNotificationForUser(
+        userNotificationBuilder(
+          notification._id,
+          account.account._id,
+        ),
+      );
+      userNotification = {
+        ...userNotification._doc,
+        notification,
+      };
+      await triggerUnreadNotifications(account.account._id);
+    });
+  } catch (error) {
+    logger.error(`Notification: ${error}`);
   }
 };
 

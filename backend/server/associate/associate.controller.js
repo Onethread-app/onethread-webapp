@@ -7,7 +7,7 @@ const { sendJSONresponse } = require('../helpers/jsonResponse');
 const { log } = require('debug');
 const _ = require('lodash');
 const {
-  createCompanyRoleNotification,
+  createPendingAssociateRequest,
 } = require('../notification/notification.controller');
 const {
   associateIndex,
@@ -36,47 +36,58 @@ const get = async (req, res, next) => {
 
 const createPending = async (req, res, next) => {
   try {
+    console.log(req.body);
+    const companyId = req.body.company.id;
+    const assoId = req.body.associateCompany._id;
     let associate = await Associate.findOne({
-      company: req.body.company.id,
-      associateCompany: req.body.associateCompany,
+      company: companyId,
+      associateCompany: assoId,
       isAccepted: false,
       isRejected: true,
     });
 
     if (_.isEmpty(associate)) {
+      console.log(associate);
       associate = new Associate({
-        company: req.body.company,
-        associateCompany: req.body.associateCompany,
+        company: companyId,
+        associateCompany: assoId,
         isAccepted: false,
         isRejected: false,
         account: req.user._id,
       });
+      await associate.save();
+      console.log(associate);
     } else {
       associate.isRejected = false;
+      await associate.save();
     }
 
-    await associate.save();
-    const text = `${req.body.company.name} wants to add you as their associate`;
-    createCompanyRoleNotification(
-      req.body.associateCompany,
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-      'associate',
-    );
+    console.log(associate);
+
+    // const text = `${req.body.company.name} wants to add you as their associate`;
+    // createCompanyRoleNotification(
+    //   req.body.associateCompany,
+    //   {
+    //     _id: req.user._id,
+    //     name: req.user.name,
+    //     pusherSock: req.headers.clientid,
+    //   },
+    //   text,
+    //   'associate',
+    // );
     await Associate.populate(associate, {
       path: 'associateCompany',
       select: '_id name type',
     });
-    //await associate.populate('associateCompany', '_id name type').execPopulate;
-
+    await createPendingAssociateRequest(companyId, assoId, {
+      _id: req.user._id,
+      name: req.user.name,
+      pusherSock: req.headers.clientid,
+    });
     return res.status(201).json(associate);
   } catch (error) {
+    console.log(error);
     logger.error(`Associate pending: ${error}`);
-
     next(error);
   }
 };
