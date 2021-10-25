@@ -32,7 +32,7 @@ export const CompanyName = styled.h3`
   font-weight: 600;
   font-size: 24px;
   line-height: 36px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   margin: 0;
   padding: 0;
 `;
