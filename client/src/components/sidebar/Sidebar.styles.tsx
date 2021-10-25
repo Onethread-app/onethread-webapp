@@ -103,7 +103,7 @@ const Company = styled(NavLink)`
 
   span {
     padding: 0 0.5rem 0 0;
-    width: 125px;
+    width: calc(100% - 20px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -114,7 +114,7 @@ const Container = styled.div`
   --padding: ${(props) => (props.leftOpen ? '1rem' : '0')};
   --item-padding: ${(props) =>
     props.leftOpen ? '12px 14px 11px' : '1rem 0'};
-  max-width: 220px;
+  /* max-width: 220px; */
   width: 100%;
   display: flex;
   flex-direction: column;
