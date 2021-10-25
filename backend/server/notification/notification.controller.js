@@ -42,6 +42,7 @@ const {
 } = require('../services/notification.services');
 const {
   findCompanyById,
+  companyAdminSuperAdminList,
 } = require('../services/company/company.services');
 
 const notificationBuilder = (
@@ -80,6 +81,7 @@ const userNotificationBuilder = (notiId, account) => {
     account: account,
   };
 };
+
 module.exports.createCompanyRoleNotification = async (
   company,
   adminUser,
@@ -148,21 +150,22 @@ module.exports.notifyToBoardMembers = async (
   try {
     const senderFullName = await findAccountById(senderName);
     const task = await findTaskById(taskId);
-    // TODO: notify to task member instead of board member
-    let boardMember = await findBoardById(task.boardId);
+    let projectMembers = await teamMemberListFindByProjectId(
+      task.project,
+    );
     const sourceColumnName = await findColumnById(sourceColumnId);
     const destName = await findColumnById(destinationColumnId);
     let notification = notificationBuilder(
       `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
         senderFullName.lastName,
-      )} moved task ${task.name} from ${sourceColumnName.name} to ${
-        destName.name
-      }`,
+      )} change the task ${task.name} status ${
+        sourceColumnName.name
+      } to ${destName.name}`,
       'subtask',
       null,
       task.project,
       null,
-      task.boardId,
+      null,
       taskId,
       null,
       company,
@@ -170,25 +173,31 @@ module.exports.notifyToBoardMembers = async (
       destinationColumnId,
       adminUser._id,
     );
-    boardMember.members.forEach(async (account) => {
-      if (account.toString() !== senderName) {
+    projectMembers = projectMembers.map((m) => {
+      return { account: m.member.account };
+    });
+    projectMembers.forEach(async (member) => {
+      if (member.account._id.toString() !== senderName) {
         notification = await createNotification(notification);
         notification = await notification
           .populate('company', 'uniqueName _id')
           .execPopulate();
         let userNotification = await createNotificationForUser(
-          userNotificationBuilder(notification._id, account),
+          userNotificationBuilder(
+            notification._id,
+            member.account._id,
+          ),
         );
         userNotification = {
           ...userNotification._doc,
           notification,
         };
         sendNotification(
-          account._id,
+          member.account._id,
           userNotification,
           adminUser.pusherSock,
         );
-        await triggerUnreadNotifications(account._id);
+        await triggerUnreadNotifications(member.account._id);
       }
     });
   } catch (error) {
@@ -209,7 +218,7 @@ module.exports.notifyToTaskMember = async (
       notificationBuilder(
         `${_.upperFirst(account.firstName)} ${_.upperFirst(
           account.lastName,
-        )} sent a note in task ${task.name} `,
+        )} comment on task ${task.name} `,
         'task',
         null,
         task.project,
@@ -226,12 +235,11 @@ module.exports.notifyToTaskMember = async (
     notification = await notification
       .populate('company', 'uniqueName _id')
       .execPopulate();
-    console.log(notification);
     let userNotification = await createNotificationForUser(
-      userNotificationBuilder(notification._id, adminUser._id),
+      userNotificationBuilder(notification._id, member),
     );
     userNotification = {
-      ...userNotification._doc,
+      userNotification,
       notification,
     };
     sendNotification(member, userNotification, adminUser.pusherSock);
@@ -252,7 +260,7 @@ module.exports.sendNotificationToProjectTeamMates = async (
 ) => {
   try {
     let uName = await findAccountById(senderName);
-    let teamMembers = await teamMemberListFindByProjectId(pid);
+    let projectMembers = await teamMemberListFindByProjectId(pid);
     const board = await findBoardById(boardId);
     let notification = await createNotification(
       notificationBuilder(
@@ -272,10 +280,10 @@ module.exports.sendNotificationToProjectTeamMates = async (
         adminUser._id,
       ),
     );
-    teamMembers = teamMembers.map((m) => {
+    projectMembers = projectMembers.map((m) => {
       return { account: m.member.account };
     });
-    teamMembers.forEach(async (member) => {
+    projectMembers.forEach(async (member) => {
       if (member.account._id.toString() !== adminUser._id) {
         let userNotification = await createNotificationForUser(
           userNotificationBuilder(notification._id, member.account),
@@ -284,7 +292,6 @@ module.exports.sendNotificationToProjectTeamMates = async (
           ...userNotification._doc,
           notification,
         };
-        console.log(member);
         sendNotification(
           member.account._id,
           userNotification,
@@ -352,6 +359,155 @@ module.exports.createMemberAddNotification = async (
   }
 };
 
+module.exports.createPendingAssociateRequest = async (
+  companyId,
+  associateCompany,
+  adminUser,
+) => {
+  try {
+    const company = await findCompanyById(companyId);
+    let associateAdminSuperAdminList =
+      await companyAdminSuperAdminList(associateCompany);
+    let notification = await createNotification(
+      notificationBuilder(
+        `${_.upperFirst(
+          company.name,
+        )} wants to add you as a partner.`,
+        'associate',
+        associateCompany,
+        null,
+        null,
+        null,
+        null,
+        null,
+        companyId,
+        null,
+        null,
+        adminUser._id,
+      ),
+    );
+    associateAdminSuperAdminList.forEach(async (member) => {
+      notification = await notification
+        .populate('company', 'uniqueName _id')
+        .execPopulate();
+      let userNotification = await createNotificationForUser(
+        userNotificationBuilder(notification._id, member.account._id),
+      );
+      userNotification = {
+        ...userNotification._doc,
+        notification,
+      };
+      sendNotification(
+        member.account._id,
+        userNotification,
+        adminUser.pusherSock,
+      );
+      await triggerUnreadNotifications(member.account._id);
+    });
+  } catch (error) {
+    logger.error(`Notification: ${error}`);
+  }
+};
+
+module.exports.rejectAssociateRequest = async (
+  companyId,
+  associateCompany,
+  adminUser,
+) => {
+  try {
+    const company = await findCompanyById(companyId);
+    let associateAdminSuperAdminList =
+      await companyAdminSuperAdminList(associateCompany);
+    let notification = await createNotification(
+      notificationBuilder(
+        `${_.upperFirst(
+          company.name,
+        )} rejected your partner request.`,
+        'associate',
+        associateCompany,
+        null,
+        null,
+        null,
+        null,
+        null,
+        companyId,
+        null,
+        null,
+        adminUser._id,
+      ),
+    );
+    associateAdminSuperAdminList.forEach(async (member) => {
+      notification = await notification
+        .populate('company', 'uniqueName _id')
+        .execPopulate();
+      let userNotification = await createNotificationForUser(
+        userNotificationBuilder(notification._id, member.account._id),
+      );
+      userNotification = {
+        ...userNotification._doc,
+        notification,
+      };
+      sendNotification(
+        member.account._id,
+        userNotification,
+        adminUser.pusherSock,
+      );
+      await triggerUnreadNotifications(member.account._id);
+    });
+  } catch (error) {
+    logger.error(`Notification: ${error}`);
+  }
+};
+
+module.exports.acceptAssociateRequest = async (
+  companyId,
+  associateCompany,
+  adminUser,
+) => {
+  try {
+    const company = await findCompanyById(companyId);
+    let associateAdminSuperAdminList =
+      await companyAdminSuperAdminList(associateCompany);
+    let notification = await createNotification(
+      notificationBuilder(
+        `${_.upperFirst(
+          company.name,
+        )} accepted your partner request.`,
+        'associate',
+        associateCompany,
+        null,
+        null,
+        null,
+        null,
+        null,
+        companyId,
+        null,
+        null,
+        adminUser._id,
+      ),
+    );
+    associateAdminSuperAdminList.forEach(async (member) => {
+      notification = await notification
+        .populate('company', 'uniqueName _id')
+        .execPopulate();
+      let userNotification = await createNotificationForUser(
+        userNotificationBuilder(notification._id, member),
+      );
+      userNotification = {
+        ...userNotification._doc,
+        notification,
+      };
+      sendNotification(
+        member.account._id,
+        userNotification,
+        adminUser.pusherSock,
+      );
+      await triggerUnreadNotifications(member.account);
+    });
+  } catch (error) {
+    logger.error(`Notification: ${error}`);
+  }
+};
 // TODO: this service is not working
 module.exports.createTeamAddNotification = async (
   senderName,
@@ -440,7 +596,7 @@ module.exports.taskAssignNotificationToUsers = async (
       notification,
     };
     sendNotification(
-      adminUser._id,
+      reciever,
       userNotification,
       adminUser.pusherSock,
     );

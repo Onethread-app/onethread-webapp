@@ -1,4 +1,7 @@
 const express = require('express');
+
+const schemaValidator = require('../helpers/joiSchemaValidator');
+const associateValidation = require('./associate.validation');
 const associateCtrl = require('./associate.controller');
 const companyCtrl = require('../company/company.controller');
 
@@ -16,7 +19,7 @@ router
     authorization,
     subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-    // SchemaValidator(joiSchema.createAssociate),
+    schemaValidator(associateValidation.createAssociate),
     associateCtrl.createPending,
   )
   .get(

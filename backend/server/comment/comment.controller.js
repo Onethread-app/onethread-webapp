@@ -66,7 +66,7 @@ const create = async (req, res, next) => {
       memberList.push(taskMembers[0].taskId.account.toString());
       memberList = memberList.filter(onlyUnique);
       memberList.map(async (member) => {
-        if (member.toString() !== req.user._id) {
+        if (member !== req.user._id) {
           await notifyToTaskMember(
             req.user._id,
             req.headers.companyid,

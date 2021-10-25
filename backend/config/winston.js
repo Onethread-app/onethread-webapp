@@ -3,11 +3,9 @@ const winston = require('winston');
 const getFileAndLine = (info) => {
   if (info instanceof Error || info.level === 'error') {
     if (info.metadata.stack) {
-      const fileLineName = info.metadata.stack
-        .split('\n')
-        .slice()[1]
-        .split('(')[1]
-        .split(')')[0];
+      const fileLineName = info.metadata.stack.split('\n').slice()[1];
+      // .split('(')[1]
+      // .split(')')[0];
 
       return fileLineName;
     }
