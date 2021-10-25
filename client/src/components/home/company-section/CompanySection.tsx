@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ICompanyByUser } from 'stores/user/Reducer';
 
@@ -59,9 +59,9 @@ const CompanySection = (props: Props) => {
     return Math.floor(Math.random() * max);
   };
 
-  const getRandomColor = () => {
+  const getRandomColor = useCallback(() => {
     return Color[getRandomInt(6)]?.value;
-  };
+  }, []);
 
   useEffect(() => {
     if (
