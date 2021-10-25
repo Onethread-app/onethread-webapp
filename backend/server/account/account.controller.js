@@ -26,6 +26,8 @@ const {
 const chalk = require('chalk');
 const { createSlug } = require('../helpers/SlugCreator');
 
+const { getTaskMembers } = require('../task/task.controller');
+
 const {
   savePushSubscription,
   removePushSubscription,
@@ -53,11 +55,15 @@ const {
   validateEmail,
 } = require('../utils/utils.controller');
 
+const {
+  findSubtasksByTaskId,
+} = require('../services/task/subtask/subtask.service');
+
 const options = [
   {
     path: 'taskId',
     select:
-      '_id name boardId columnId project dueDate status priority',
+      '_id name account boardId columnId project dueDate status priority',
     populate: [
       {
         path: 'project',
@@ -81,7 +87,7 @@ const options = [
   },
   {
     path: 'account',
-    select: '_id firstName lastName',
+    select: '_id firstName lastName profileImage',
   },
   {
     path: 'assignedPerson',
@@ -1000,7 +1006,46 @@ const userTaskList = async (req, res, next) => {
     const filteredTask = tasks.filter(
       (task) => task.taskId !== null && task.taskId.status !== 'done',
     );
-    return sendJSONresponse(res, 200, filteredTask);
+
+    const response = [];
+    await Promise.all(
+      filteredTask.map(async (ft) => {
+        const taskMembers = await getTaskMembers(ft.taskId._id);
+        const members = taskMembers.map((tMember) => {
+          return tMember.assignedPerson;
+        });
+
+        const modifiedTask = {
+          _id: ft.taskId._id,
+          name: ft.taskId.name,
+          account: {
+            _id: ft.account._id,
+            firstName: ft.account.firstName,
+            lastName: ft.account.lastName,
+            name: ft.account.name,
+            profileImage: ft.account.profileImage,
+          },
+          status: ft.taskId.status,
+          dueDate: ft.taskId.dueDate,
+          boardId: ft.taskId.boardId._id,
+          priority: ft.taskId.priority,
+          members,
+          createdAt: ft.taskId.createdAt,
+          project: {
+            _id: ft.taskId.project._id,
+            name: ft.taskId.project.name,
+          },
+          company: {
+            _id: ft.taskId.project.company._id,
+            uniqueName: ft.taskId.project.company.uniqueName,
+          },
+          subtasks: await findSubtasksByTaskId(ft.taskId._id),
+        };
+        response.push(modifiedTask);
+      }),
+    );
+
+    return sendJSONresponse(res, 200, response);
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
