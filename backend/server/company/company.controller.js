@@ -46,6 +46,10 @@ const {
   numbOfTasksOfACompany,
 } = require('../services/company/company.services');
 
+const {
+  findSubtasksByTaskId,
+} = require('../services/task/subtask/subtask.service');
+
 // create a company profile
 const changeName = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -622,18 +626,24 @@ const companyTasks = async (allProjectIds, withDone = false) => {
       })
         .sort({ priority: 0 })
         .select(
-          '_id name status dueDate project boardId priority createdAt',
+          '_id name account status dueDate project boardId priority createdAt',
         )
-        .populate({
-          path: 'project',
-          select: '_id name',
-          populate: [
-            {
-              path: 'company',
-              select: '_id uniqueName',
-            },
-          ],
-        });
+        .populate([
+          {
+            path: 'project',
+            select: '_id name',
+            populate: [
+              {
+                path: 'company',
+                select: '_id uniqueName',
+              },
+            ],
+          },
+          {
+            path: 'account',
+            select: '_id firstName lastName profileImage',
+          },
+        ]);
     } else {
       tasks = await Task.find({
         project: { $in: allProjectIds },
@@ -641,29 +651,30 @@ const companyTasks = async (allProjectIds, withDone = false) => {
       })
         .sort({ priority: 0 })
         .select(
-          '_id name status dueDate project boardId priority createdAt',
+          '_id name account status dueDate project boardId priority createdAt',
         )
-        .populate({
-          path: 'project',
-          select: '_id name',
-          populate: [
-            {
-              path: 'company',
-              select: '_id uniqueName',
-            },
-          ],
-        });
+        .populate([
+          {
+            path: 'project',
+            select: '_id name',
+            populate: [
+              {
+                path: 'company',
+                select: '_id uniqueName',
+              },
+            ],
+          },
+          {
+            path: 'account',
+            select: '_id firstName lastName profileImage',
+          },
+        ]);
     }
 
     await Promise.all(
       tasks.map(async (task) => {
         let modifiedTask = {};
-        const totalSubtasks = await SubTask.find({
-          taskId: task._id,
-        }).countDocuments();
-        const doneSubtasks = await SubTask.find({
-          $and: [{ taskId: task._id, done: true }],
-        }).countDocuments();
+        const subtasks = await findSubtasksByTaskId(task._id);
 
         const taskMembers = await getTaskMembers(task._id);
         const members = taskMembers.map((tMember) => {
@@ -672,6 +683,7 @@ const companyTasks = async (allProjectIds, withDone = false) => {
 
         modifiedTask._id = task._id;
         modifiedTask.name = task.name;
+        modifiedTask.account = task.account;
         modifiedTask.status = task.status;
         modifiedTask.dueDate = task.dueDate;
         modifiedTask.members = members;
@@ -686,8 +698,7 @@ const companyTasks = async (allProjectIds, withDone = false) => {
           _id: task.project.company._id,
           uniqueName: task.project.company.uniqueName,
         };
-        modifiedTask.doneSubtasks = doneSubtasks;
-        modifiedTask.totalSubtasks = totalSubtasks;
+        modifiedTask.subtasks = subtasks;
         taskCompilation.push(modifiedTask);
       }),
     );
@@ -713,10 +724,7 @@ const allCompanytasks = async (req, res, next) => {
     const allProjectIds = projectList.map((p) => p._id);
     const taskCompilation = await companyTasks(allProjectIds, true);
     const sortedTasks = sortTasksByStatus(taskCompilation);
-    return sendJSONresponse(res, 200, {
-      success: true,
-      tasks: sortedTasks,
-    });
+    return sendJSONresponse(res, 200, sortedTasks);
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);
