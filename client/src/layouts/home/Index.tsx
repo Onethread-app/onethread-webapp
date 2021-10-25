@@ -64,6 +64,16 @@ const Index = (props: any) => {
     props.getAllUserTasks();
   }, [props.currentCompany]);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowToaster(false);
+      setErrorMessage('');
+      setSuccessMessage('');
+    }, 3000);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showToaster]);
+
   return isMobileOnly ? (
     <div className="home-container">
       <div>

@@ -217,10 +217,6 @@ const ProjectContainer = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  min-width: min(50vw, 600px);
-  width: auto;
-  max-width: 90vw;
-  max-height: 80vh;
   background: #ffffff;
   padding: 50px 55px 50px 40px;
   border-radius: 4px;
@@ -232,6 +228,7 @@ const ModalContainer = styled.div`
 
   .react-select {
     width: 250px;
+    max-height: 300px;
   }
 `;
 
