@@ -106,7 +106,9 @@ const CompanySection = (props: Props) => {
                 <Avatar bgColor={getRandomColor()}>
                   {company.company?.name[0]}
                 </Avatar>
-                <span>{company.company?.name}</span>
+                <span className="capitalize">
+                  {company.company?.name}
+                </span>
               </div>
               <Footer>
                 <span>
