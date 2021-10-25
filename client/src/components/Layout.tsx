@@ -20,7 +20,7 @@ import { useBeforeunload } from 'react-beforeunload';
 
 import { Navbar } from '@blueprintjs/core/lib/esm/components/navbar/navbar';
 
-import { User } from 'stores/user/Reducer';
+import { ICompanyByUser, User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { ICompanyRoom, IRoom } from 'stores/room/Reducer';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
@@ -45,8 +45,8 @@ import { setSubscriptionNotExpire } from 'stores/subscriptionBilling/Actions';
 import { CURRENT_ROOM } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 
-import arrowLeft from '../resources/images/arrow left.svg';
-import arrowRight from '../resources/images/arrow right.svg';
+import arrowLeft from '../resources/images/leftArrow.svg';
+import arrowRight from '../resources/images/rightArrow.svg';
 import companyProfile from '../resources/images/sidebarCompanyProfile.svg';
 import dashboard from '../resources/images/sideBarDashboard.svg';
 import project from '../resources/images/ProjectsIcon.svg';
@@ -60,8 +60,10 @@ import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
 import ErrorText from 'layouts/company/settings/ErrorText';
 import NavbarTop from 'components/navbar/Navbar';
-import { Sidebar } from 'components/Sidebar';
+// import { Sidebar } from 'components/Sidebar';
 import { customStylesForModal } from 'layouts/company/settings/Index';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
+import Sidebar from './sidebar/Sidebar';
 
 interface LayoutProps {
   Component: React.ComponentClass | React.FunctionComponent;
@@ -79,6 +81,7 @@ interface LayoutInternalProps
   getSingleProject: (pid: string) => void;
   fetchRooms: () => void;
   company: ICompany;
+  userCompanies: ICompanyByUser[];
   companyRooms: ICompanyRoom[];
   rightSidebarOpen: boolean;
   project: any;
@@ -96,6 +99,7 @@ interface LayoutInternalProps
   getRoomDiscussions: (roomId: string) => void;
   addTrackedTime: (payload: ICurrentTrack) => void;
   setSubscriptionNotExpire: () => void;
+  getAllCompaniesByUserId: (arg: string) => void;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -325,6 +329,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     setSubscriptionExpired(props.subscriptiontExpired);
   }, [props.subscriptiontExpired]);
 
+  useEffect(() => {
+    if (props.user._id && props.userCompanies.length === 0)
+      props.getAllCompaniesByUserId(props.user._id);
+  }, [props.user._id]);
+
   useBeforeunload((event) => {
     if (props.currentlyTracking.name !== '') {
       event.preventDefault();
@@ -377,11 +386,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 className={`relative`}
                 style={{
                   transition: 'width 0.4s',
-                  width: !leftOpen ? '15%' : '4%',
+                  width: !leftOpen ? '15%' : '55px',
                 }}
               >
                 <div>
-                  <Sidebar
+                  {/* <Sidebar
                     user={props.user}
                     company={props.company}
                     type={
@@ -392,6 +401,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     leftOpen={!leftOpen}
                     project={props.project}
                     companyRooms={props.companyRooms}
+                  /> */}
+                  <Sidebar
+                    leftOpen={leftOpen}
+                    companies={props.userCompanies}
+                    user={props.user}
+                    project={props.project}
                   />
                 </div>
               </div>
@@ -409,12 +424,18 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 }}
               >
                 <span
-                  className="pointer absolute bp3-icon z-3 top-1 left--1"
+                  className="pointer absolute bg-white flex justify-center items-center w-3 h-3 bp3-icon z-3 top-1 left--1"
+                  style={{
+                    padding: '10px 12px',
+                    border: '1px solid #D8D8D8',
+                    borderRadius: '999px',
+                  }}
                   onClick={() => setLeftOpen(!leftOpen)}
                 >
                   <img
                     src={!leftOpen ? arrowLeft : arrowRight}
-                    className="br2 w2"
+                    className="br2"
+                    style={{ width: '0.5rem' }}
                     color="#34b3e9"
                     alt=""
                   />
@@ -723,6 +744,7 @@ const mapStateToProps = (state: any) => {
     currentlyTracking: state.timeTrackerReducer.currentlyTracking,
     subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
+    userCompanies: state.userReducer.user.companies,
   };
 };
 
@@ -739,6 +761,7 @@ export const Layout = connect(mapStateToProps, {
   getRoomSharedFiles,
   addTrackedTime,
   setSubscriptionNotExpire,
+  getAllCompaniesByUserId,
 })(withRouter(LayoutComponent));
 
 export default Layout;
