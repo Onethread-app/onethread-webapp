@@ -298,26 +298,7 @@ const getMembers = async (req, res, next) => {
 const addMember = async (req, res, next) => {
   try {
     const requestedMembers = req.body.assignmembers;
-    const boardID = req.task.boardId;
-
-    //get current task board to check members in board
-
-    const currentTaskBoard = await Board.findOne({
-      _id: boardID,
-    });
-
-    //convert current taskboard members to check the difference between them
-
-    const Members = currentTaskBoard.members.map((member) =>
-      member.toString(),
-    );
-
-    //new members who are  not in baord
-
-    const newBoardmember = _.difference(requestedMembers, Members);
-
-    //new members to add in task
-
+    // TODOS: check if the member already assigned
     const newMembers = requestedMembers.map((memberId) => {
       return {
         taskId: req.task._id,
@@ -325,12 +306,12 @@ const addMember = async (req, res, next) => {
         assignedPerson: memberId,
       };
     });
-
+    console.log(newMembers);
     //check the difference's
     //if new member who is already in board , just add in task
     //others add them in board first
 
-    if (_.isEmpty(newBoardmember)) {
+    if (_.isEmpty(newMembers)) {
       TaskAssign.insertMany(newMembers).then((taskMember) => {
         TaskAssign.find({
           taskId: req.task._id,
@@ -360,21 +341,12 @@ const addMember = async (req, res, next) => {
                     pusherSock: req.headers.clientid,
                   },
                 );
-                await triggerUnreadNotifications(
-                  e.assignedPerson._id,
-                );
               }
             });
-            res.status(201).send(result);
+            return sendJSONresponse(res, 201, result);
           });
       });
     } else {
-      await Board.updateOne(
-        { _id: boardID },
-        { $addToSet: { members: newBoardmember } },
-        { safe: true, upsert: true, new: true },
-      );
-
       TaskAssign.insertMany(newMembers).then((taskMember) => {
         TaskAssign.find({
           taskId: req.task._id,
@@ -407,7 +379,7 @@ const addMember = async (req, res, next) => {
                 );
               }
             });
-            res.status(201).send(result);
+            return sendJSONresponse(res, 201, result);
           });
       });
     }
