@@ -57,6 +57,7 @@ module.exports = {
       companyId: schema.company.required(),
       deadline: schema.deadline,
       color: schema.color,
+      budget: schema.budget,
     }),
   }),
   addAssociate: Joi.object().keys({

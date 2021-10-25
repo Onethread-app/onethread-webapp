@@ -221,13 +221,15 @@ const ModalContainer = styled.div`
   padding: 50px 55px 50px 40px;
   border-radius: 4px;
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.2);
+  min-width: min(800px, 100vw);
+  min-height: min-content(480px, 80vh);
 
   .label {
     min-width: 100px;
   }
 
   .react-select {
-    width: 250px;
+    /* width: 250px; */
     max-height: 300px;
   }
 `;

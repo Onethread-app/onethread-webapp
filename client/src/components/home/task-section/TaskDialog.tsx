@@ -295,15 +295,9 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
       props.currentBoard.project === project[0]?.value &&
       props.fetchingBoards === false
     ) {
-      console.log('inside column id');
-      console.log({
-        'id from variable': project,
-        'id from c.board': props.currentBoard?.project,
-        'column id': columnId,
-      });
-      const id = props.currentBoard.columns.filter(
+      const id = props.currentBoard?.columns.filter(
         (col) => col.name.toLowerCase() === 'to do',
-      )[0]._id;
+      )[0]?._id;
       setColumnId(id);
     }
   }, [project, props.currentBoard, props.fetchingBoards]);

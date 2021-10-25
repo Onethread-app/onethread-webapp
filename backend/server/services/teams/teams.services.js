@@ -11,13 +11,27 @@ const options = [
       },
     ],
   },
+  {
+    path: 'project',
+    select: '_id name status deadline createdAt',
+  },
 ];
+
 const teamMemberListFindByProjectId = async (pid) => {
   return await Team.find({ project: pid })
     .select('member')
     .populate(options)
     .exec();
 };
+
+const findAllProjectsByMemberId = async (id) => {
+  return await Team.find({ member: id })
+    .select('project')
+    .populate(options)
+    .exec();
+};
+
 module.exports = {
   teamMemberListFindByProjectId,
+  findAllProjectsByMemberId,
 };
