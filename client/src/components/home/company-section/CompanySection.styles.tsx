@@ -176,6 +176,10 @@ const CompanyContainer = styled.div`
   padding: 14px;
   margin-bottom: 1rem;
   overflow-x: auto;
+
+  .capitalize {
+    text-transform: capitalize;
+  }
 `;
 
 const StyledButton = styled.button`
