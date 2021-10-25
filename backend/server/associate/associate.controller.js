@@ -8,6 +8,8 @@ const { log } = require('debug');
 const _ = require('lodash');
 const {
   createPendingAssociateRequest,
+  rejectAssociateRequest,
+  acceptAssociateRequest,
 } = require('../notification/notification.controller');
 const {
   associateIndex,
@@ -36,8 +38,7 @@ const get = async (req, res, next) => {
 
 const createPending = async (req, res, next) => {
   try {
-    console.log(req.body);
-    const companyId = req.body.company.id;
+    const companyId = req.body.company._id;
     const assoId = req.body.associateCompany._id;
     let associate = await Associate.findOne({
       company: companyId,
@@ -47,7 +48,6 @@ const createPending = async (req, res, next) => {
     });
 
     if (_.isEmpty(associate)) {
-      console.log(associate);
       associate = new Associate({
         company: companyId,
         associateCompany: assoId,
@@ -56,25 +56,10 @@ const createPending = async (req, res, next) => {
         account: req.user._id,
       });
       await associate.save();
-      console.log(associate);
     } else {
       associate.isRejected = false;
       await associate.save();
     }
-
-    console.log(associate);
-
-    // const text = `${req.body.company.name} wants to add you as their associate`;
-    // createCompanyRoleNotification(
-    //   req.body.associateCompany,
-    //   {
-    //     _id: req.user._id,
-    //     name: req.user.name,
-    //     pusherSock: req.headers.clientid,
-    //   },
-    //   text,
-    //   'associate',
-    // );
     await Associate.populate(associate, {
       path: 'associateCompany',
       select: '_id name type',
@@ -84,9 +69,8 @@ const createPending = async (req, res, next) => {
       name: req.user.name,
       pusherSock: req.headers.clientid,
     });
-    return res.status(201).json(associate);
+    return sendJSONresponse(res, 201, associate);
   } catch (error) {
-    console.log(error);
     logger.error(`Associate pending: ${error}`);
     next(error);
   }
@@ -118,21 +102,16 @@ const acceptPending = async (req, res, next) => {
         `Elasticsearch document added on ${associateIndex}`,
       ),
     );
-
-    const text = `${associate.associateCompany.name} accepted you as their associate`;
-
-    createCompanyRoleNotification(
-      associate.associateCompany,
+    await acceptAssociateRequest(
+      req.headers.companyid,
+      associate.company,
       {
         _id: req.user._id,
         name: req.user.name,
         pusherSock: req.headers.clientid,
       },
-      text,
-      'associate',
     );
-
-    return res.status(200).json(associate);
+    return sendJSONresponse(resw, 200, associate);
   } catch (error) {
     logger.error(`Associate accept: ${error}`);
     next(error);
@@ -141,7 +120,6 @@ const acceptPending = async (req, res, next) => {
 
 const rejectPending = async (req, res, next) => {
   try {
-    //console.log();
     let associate = await Associate.findOneAndUpdate(
       { _id: req.body.associateId },
       { isRejected: true },
@@ -152,22 +130,19 @@ const rejectPending = async (req, res, next) => {
       path: 'associateCompany',
       select: '_id name type',
     });
-    const text = `${associate.associateCompany.name} rejected you as their associate`;
-
-    createCompanyRoleNotification(
-      associate.associateCompany,
+    await rejectAssociateRequest(
+      req.headers.companyid,
+      associate.company,
       {
         _id: req.user._id,
         name: req.user.name,
         pusherSock: req.headers.clientid,
       },
-      text,
-      'associate',
     );
-    return res.status(200).json({ remove: true });
+    logger.info(`successfully rejected`);
+    return sendJSONresponse(res, 200, { remove: true });
   } catch (error) {
-    logger.error(`Associate accept: ${error}`);
-
+    logger.error(`Associate Reject: ${error}`);
     next(error);
   }
 };

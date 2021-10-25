@@ -5,9 +5,9 @@ import i18next from 'i18next';
 export const returnErrorText = (error) => {
   if (error.response) {
     const { data, config } = error.response;
-    console.log(
-      `${data.type} on method ${config.method} at ${config.baseURL}${config.url}`,
-    );
+    // console.log(
+    //   `${data.type} on method ${config.method} at ${config.baseURL}${config.url}`,
+    // );
     if (data.type === 'Network Error') {
       return `${i18next.t('app.Error-text.Network-Error')}`;
     } else if (data.status === 400) {
@@ -32,9 +32,9 @@ export const returnErrorText = (error) => {
 const handleError = (error, errorHandler) => {
   if (error.response) {
     const { data, config } = error.response;
-    console.log(
-      `${data.type} on method ${config.method} at ${config.baseURL}${config.url}`,
-    );
+    // console.log(
+    //   `${data.type} on method ${config.method} at ${config.baseURL}${config.url}`,
+    // );
     if (data.type === 'Network Error') {
       errorHandler('Network Error');
     } else if (data.status === 400) {

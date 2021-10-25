@@ -253,7 +253,6 @@ module.exports.contactSaleMail = async (email, subject, message) => {
       logger.info(data.MessageId);
     })
     .catch((err) => {
-      console.log(err);
       logger.error(err, err.stack);
     });
 };

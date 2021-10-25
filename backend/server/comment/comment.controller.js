@@ -66,8 +66,7 @@ const create = async (req, res, next) => {
       memberList.push(taskMembers[0].taskId.account.toString());
       memberList = memberList.filter(onlyUnique);
       memberList.map(async (member) => {
-        console.log(member);
-        if (member._id.toString() !== req.user._id) {
+        if (member !== req.user._id) {
           await notifyToTaskMember(
             req.user._id,
             req.headers.companyid,
@@ -77,7 +76,7 @@ const create = async (req, res, next) => {
               name: req.user.name,
               pusherSock: req.headers.clientid,
             },
-            member._id,
+            member,
           );
           logger.info(`successfully notify to user`);
         }

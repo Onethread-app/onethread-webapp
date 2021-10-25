@@ -202,7 +202,19 @@ const create = async (req, res, next) => {
         dueDate: req.body.dueDate,
       });
       const createdTask = await task.save();
-
+      await sendNotificationToProjectTeamMates(
+        req.user._id,
+        companyId,
+        pid,
+        createdTask._id,
+        columnId,
+        boardId,
+        {
+          _id: req.user._id,
+          name: req.user.name,
+          pusherSock: req.headers.clientid,
+        },
+      );
       const members = await addMemberToTask(
         req.body.assignmembers,
         createdTask._id,
@@ -246,19 +258,7 @@ const create = async (req, res, next) => {
         totalSpent: createdTask.totalSpent,
       };
       logger.info(`Task column create`);
-      await sendNotificationToProjectTeamMates(
-        req.user._id,
-        companyId,
-        pid,
-        createdTask._id,
-        columnId,
-        boardId,
-        {
-          _id: req.user._id,
-          name: req.user.name,
-          pusherSock: req.headers.clientid,
-        },
-      );
+
       return sendJSONresponse(res, 201, responseData);
     } else {
       sendErrorResponse(res, 400, 'ValidationError', {
@@ -306,7 +306,6 @@ const addMember = async (req, res, next) => {
         assignedPerson: memberId,
       };
     });
-    console.log(newMembers);
     //check the difference's
     //if new member who is already in board , just add in task
     //others add them in board first

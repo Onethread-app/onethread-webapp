@@ -76,7 +76,6 @@ const create = async (req, res, next) => {
 
     return sendJSONresponse(res, 201, { room, roomMember });
   } catch (e) {
-    console.log(e);
     logger.error(`Room: ${e}`);
     next(e);
   }

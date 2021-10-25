@@ -104,7 +104,7 @@ const LinkGeneratorPopup = () => {
 
   const handleSubmit = () => {
     if (isValid && errorMessage === '') {
-      console.log(teamName);
+      // console.log(teamName);
       Cookies.set('channel', teamName);
       Cookies.set('baseMode', 'avc');
       Cookies.set('transcode', 'interop');
@@ -127,7 +127,7 @@ const LinkGeneratorPopup = () => {
             setConferenceLink(link);
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
           });
       }
     }
