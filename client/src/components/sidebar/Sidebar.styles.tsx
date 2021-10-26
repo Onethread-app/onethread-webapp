@@ -110,6 +110,11 @@ const Company = styled(NavLink)`
   }
 `;
 
+const CompanyContainer = styled.div`
+  max-height: 400px;
+  overflow-y: auto;
+`;
+
 const Container = styled.div`
   --padding: ${(props) => (props.leftOpen ? '1rem' : '0')};
   --item-padding: ${(props) =>
@@ -120,6 +125,8 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   .active-link {
     background: #1f1f42;
@@ -153,4 +160,5 @@ export {
   Item,
   Company,
   Favourites,
+  CompanyContainer,
 };
