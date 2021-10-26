@@ -253,7 +253,7 @@ const getCompany = async (req, res, next) => {
     let member = await Member.findOne({
       account: req.user._id,
       company: company._id,
-    }).select('-_id role');
+    }).select('_id role');
     let certificate = await Certificate.find({
       company: company._id,
     }).select('-__v');
@@ -267,6 +267,7 @@ const getCompany = async (req, res, next) => {
         role: member.role,
         certificate: certificate,
         totalMember: memberCount,
+        member: member._id,
       },
     });
   } catch (error) {

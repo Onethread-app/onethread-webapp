@@ -120,6 +120,7 @@ const Index = (props: IProps) => {
         deadline: values.date,
         companyId: company,
         color: checkColor,
+        budget: values.budget ? Number(values.budget) : 0,
       });
       setSuccessMessage(
         `The project ${values.name} has been created in ${selectValue[0].label}`,
@@ -213,6 +214,7 @@ const Index = (props: IProps) => {
       ) {
         setLoading(false);
         props.setOpenProjectDialog(false);
+        setCreatingProject(false);
         setShowToaster(true);
       }
       if (
@@ -222,11 +224,16 @@ const Index = (props: IProps) => {
         setLoading(false);
         setSuccessMessage('');
         setErrorMessage(props.errorOnCreatingProject);
+        setCreatingProject(false);
         setShowToaster(true);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.errorOnCreatingProject, props.projectLoading]);
+  }, [
+    props.errorOnCreatingProject,
+    props.projectLoading,
+    creatingProject,
+  ]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -289,7 +296,7 @@ const Index = (props: IProps) => {
                 options={options}
                 onChange={handleCompanyChange}
                 formatCreateLabel={(userInput) => `New: ${userInput}`}
-                className="w-100 react-select"
+                className="react-select w-100"
               />
             </div>
             {assignedCompanyError && (
@@ -302,7 +309,7 @@ const Index = (props: IProps) => {
                 Required
               </small>
             )}
-            <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
+            <div className="w-100 flex flex-row justify-start items-center mt3 h3 mr-auto">
               <label className="label">Due date:</label>
               <Field<string>
                 name="date"
@@ -320,7 +327,7 @@ const Index = (props: IProps) => {
                           input.value ? new Date(input.value) : null
                         }
                         onChange={input.onChange}
-                        className="due-date-input due-date-subtask"
+                        className="due-date-input due-date-subtask w-100"
                         KeyboardButtonProps={{
                           'aria-label': 'change date',
                         }}
@@ -328,7 +335,7 @@ const Index = (props: IProps) => {
                           'app.project.Project-boards.Select-date',
                         )}
                         minDate={new Date()}
-                        style={{ width: '250px' }}
+                        // style={{ width: '250px' }}
                       />
                     </MuiPickersUtilsProvider>
                     {checkError(meta) && (
@@ -339,6 +346,33 @@ const Index = (props: IProps) => {
                         {meta.error || meta.submitError}
                       </small>
                     )}
+                  </>
+                )}
+              />
+            </div>
+            <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
+              <label className="label">Budget:</label>
+              <Field<string>
+                name="budget"
+                type="string"
+                parse={(value: string) =>
+                  value.replaceAll(/[^0-9]/g, '')
+                }
+                render={({ input, meta }) => (
+                  <>
+                    <input
+                      {...input}
+                      value={input.value ?? ''}
+                      style={{
+                        width: '100%',
+                        boxShadow:
+                          'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
+                        border: 'none',
+                        padding: '0.5rem',
+                        borderRadius: '0.2rem',
+                      }}
+                      placeholder="Enter your budget for this project"
+                    />
                   </>
                 )}
               />
