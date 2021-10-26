@@ -28,6 +28,7 @@ const {
 const { sortProjectsByStatus } = require('../helpers/utils');
 const {
   findAllProjectsByMemberId,
+  findAllFavouriteProjectsByMemberId,
 } = require('../services/teams/teams.services');
 
 const isPidExist = async (pid) => {
@@ -1182,6 +1183,43 @@ const getAllProjectForUser = async (req, res, next) => {
   }
 };
 
+const favouriteProject = async (req, res, next) => {
+  try {
+    const favProject = await Team.findOneAndUpdate(
+      { project: req.query.pid, member: req.body.memberId },
+      { $set: { isFavourite: req.body.isFavourite } },
+      { safe: true, upsert: true },
+    );
+
+    return sendJSONresponse(res, 200, {
+      message: `${
+        req.body.isFavourite ? 'Favourite' : 'Unfavourite'
+      } a project`,
+      favProject,
+    });
+  } catch (error) {
+    logger.error(`Project ${error}`);
+    next(error);
+  }
+};
+
+const getAllFavouriteProjects = async (req, res, next) => {
+  try {
+    let members = await Member.find({
+      account: req.user._id,
+    }).select('_id');
+    members = members.map((member) => member._id);
+    console.log(members);
+    const projects = await findAllFavouriteProjectsByMemberId(
+      members,
+    );
+    return sendJSONresponse(res, 200, projects);
+  } catch (error) {
+    logger.error(`Project ${error}`);
+    next(error);
+  }
+};
+
 module.exports = {
   calculateProjectStatus,
   createNewProjectForCompany,
@@ -1211,4 +1249,6 @@ module.exports = {
   getListOverview,
   deleteTeamMember,
   getAllProjectForUser,
+  favouriteProject,
+  getAllFavouriteProjects,
 };

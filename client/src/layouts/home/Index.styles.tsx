@@ -32,9 +32,6 @@ const Avatar = styled.div`
   border-radius: 5px;
   color: white;
   margin-right: 0.5rem;
-
-  & + span {
-  }
 `;
 
 const Row = styled.div`

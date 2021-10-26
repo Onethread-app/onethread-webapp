@@ -31,7 +31,7 @@ const teamMember = new Schema(
       type: Boolean,
       default: false,
     },
-    isFavorite: {
+    isFavourite: {
       type: Boolean,
       default: false,
     },

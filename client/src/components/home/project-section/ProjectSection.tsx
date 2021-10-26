@@ -104,7 +104,7 @@ const Index = (props: IProps) => {
         isOpen={openProjectDialog}
       >
         <ProjectDialog
-          setProjects={setProjects}
+          // setProjects={setProjects}
           useToaster={props.useToaster}
           setOpenProjectDialog={setOpenProjectDialog}
         />
