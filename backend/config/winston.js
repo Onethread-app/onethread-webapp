@@ -1,19 +1,5 @@
 const winston = require('winston');
 
-const getFileAndLine = (info) => {
-  if (info instanceof Error || info.level === 'error') {
-    if (info.metadata.stack) {
-      const fileLineName = info.metadata.stack.split('\n').slice()[1];
-      // .split('(')[1]
-      // .split(')')[0];
-
-      return fileLineName;
-    }
-    return '';
-  }
-  return '';
-};
-
 const logger = new winston.createLogger({
   levels: winston.config.npm.levels,
   defaultMeta: { service: 'user-service' },
@@ -24,10 +10,7 @@ const logger = new winston.createLogger({
     winston.format.timestamp(),
     winston.format.prettyPrint(),
     winston.format.printf((log) => {
-      const errLine = getFileAndLine(log);
-      return `${log.level}: ${!errLine ? '' : errLine} ${
-        process.pid
-      } ${log.message} ${log.timestamp} `;
+      return `${log.level}: ${process.pid} ${log.message} ${log.timestamp} `;
     }),
   ),
   transports: [
@@ -42,7 +25,6 @@ const logger = new winston.createLogger({
       json: false,
       filename: 'tigrow.error.log',
       level: 'error',
-      prettyPrint: true,
     }),
     new winston.transports.File({
       colorize: true,
