@@ -11,6 +11,10 @@ const {
 const subCtrl = require('../subscription/subscription.controller');
 
 router
+  .route('/lists')
+  .get(authorization, projectCtrl.getAllProjectForUser);
+
+router
   .route('/change-title')
   .put(
     authorization,

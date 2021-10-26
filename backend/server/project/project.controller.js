@@ -26,6 +26,9 @@ const {
 } = require('../room/room.controller');
 // const { ISOformat } = require('../helpers/DateFormat');
 const { sortProjectsByStatus } = require('../helpers/utils');
+const {
+  findAllProjectsByMemberId,
+} = require('../services/teams/teams.services');
 
 const isPidExist = async (pid) => {
   let checkExist = await Project.findOne(
@@ -178,6 +181,7 @@ const createNewProjectFromHome = async (req, res, next) => {
       company: req.body.companyId,
       description: '',
       outline: '',
+      budget: req.body.budget,
     });
     await project
       .save()
@@ -543,7 +547,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
     }).populate('project', '_id');
     let memberExistInProject = await Team.find({
       $and: [{ account: req.user._id }, { removed: false }],
-    }).populate('project', '_id');
+    }).populate('member project', '_id');
 
     acceptedProject = acceptedProject.map((data) => {
       return data.project._id;
@@ -1159,7 +1163,21 @@ const deleteTeamMember = async (req, res, next) => {
       message: 'member deleted successfully',
     });
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Project: ${error}`);
+    next(error);
+  }
+};
+
+const getAllProjectForUser = async (req, res, next) => {
+  try {
+    let members = await Member.find({
+      account: req.user._id,
+    }).select('_id');
+    members = members.map((member) => member._id);
+    const projects = await findAllProjectsByMemberId(members);
+    return sendJSONresponse(res, 200, projects);
+  } catch (error) {
+    logger.error(`Project ${error}`);
     next(error);
   }
 };
@@ -1192,4 +1210,5 @@ module.exports = {
   deleteProject,
   getListOverview,
   deleteTeamMember,
+  getAllProjectForUser,
 };
