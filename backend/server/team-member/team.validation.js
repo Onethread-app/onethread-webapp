@@ -18,6 +18,7 @@ const schema = {
   department: idSchema.id,
   division: idSchema.id,
   position: Joi.string(),
+  isFavorite: Joi.boolean(),
   role: Joi.string().valid([
     'superAdmin',
     'admin',
@@ -54,6 +55,7 @@ module.exports = {
     }),
     params: memberId,
   }),
+
   // updateCompany: Joi.object().keys({
   //   body: Joi.object().keys({
   //     address: schema.address.required(),
