@@ -179,26 +179,25 @@ a:hover {
 
 /**  custom scrollbar **/
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 30px;
-  background-color: #3484f0;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 30px;
-  background: rgba(255, 255, 255, 0.87);
-  border: 1px solid #ccc;
+  background: #f1f1f1;
+  border: none;
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 30px;
-  background: #3484f0;
-  border: 1px solid #ccc;
+  background: #b3b3b3;
+  border: none;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f61c5;
+  background: #a1a1a1;
 }
 
 .ml5-tigrow {

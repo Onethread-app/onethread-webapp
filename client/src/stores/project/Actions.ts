@@ -422,3 +422,17 @@ export const deleteTeamMember = (teamId: string) => ({
   type: ProjectActionTypes.DELETE_TEAM_MEMBER_START,
   payload: teamId,
 });
+
+export const getAllUserProjects = () => ({
+  type: ProjectActionTypes.GET_ALL_USER_PROJECTS_START,
+});
+
+export const getAllUserProjectsSuccess = (response: any) => ({
+  type: ProjectActionTypes.GET_ALL_USER_PROJECTS_SUCCESS,
+  payload: response,
+});
+
+export const getAllUserProjectsFailure = (errorMessage: any) => ({
+  type: ProjectActionTypes.GET_ALL_USER_PROJECTS_FAILURE,
+  payload: errorMessage,
+});

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { CompanyContainer } from 'components/home/company-section/CompanySection.styles';
 
 const SuccessToaster = styled.div`
   padding: 30px 39px 30px 20px;
@@ -52,7 +53,7 @@ const Container = styled.div`
   /* row-gap: 0.25rem; */
   padding: 30px 30px;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background-color: #f1f1f1;
 
   form {
@@ -62,14 +63,16 @@ const Container = styled.div`
     align-items: flex-start;
   }
 
-  span {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 10px;
-    line-height: 15px;
-    letter-spacing: 0.16em;
-    color: #323030;
+  ${CompanyContainer} {
+    span {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 10px;
+      line-height: 15px;
+      letter-spacing: 0.16em;
+      color: #323030;
+    }
   }
 `;
 

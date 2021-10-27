@@ -13,7 +13,35 @@ const options = [
   },
   {
     path: 'project',
-    select: '_id name status deadline createdAt',
+    select: '-files',
+    populate: [
+      {
+        path: 'associate',
+        select: 'company associateCompany',
+        populate: [
+          {
+            path: 'company',
+            select: '_id',
+          },
+          {
+            path: 'associateCompany',
+            select: '_id',
+          },
+        ],
+      },
+      {
+        path: 'company',
+        select: '_id uniqueName',
+      },
+      {
+        path: 'departments',
+        select: 'name _id',
+      },
+      {
+        path: 'concernedAdmin',
+        select: 'name _id',
+      },
+    ],
   },
 ];
 

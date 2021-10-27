@@ -27,6 +27,7 @@ const chalk = require('chalk');
 const { createSlug } = require('../helpers/SlugCreator');
 
 const { getTaskMembers } = require('../task/task.controller');
+const { sortTasksByStatus } = require('../helpers/utils');
 
 const {
   savePushSubscription,
@@ -1038,14 +1039,16 @@ const userTaskList = async (req, res, next) => {
           company: {
             _id: ft.taskId.project.company._id,
             uniqueName: ft.taskId.project.company.uniqueName,
+            name: ft.taskId.project.company.name,
           },
           subtasks: await findSubtasksByTaskId(ft.taskId._id),
         };
         response.push(modifiedTask);
       }),
     );
+    const sortedTasks = sortTasksByStatus(response);
 
-    return sendJSONresponse(res, 200, response);
+    return sendJSONresponse(res, 200, sortedTasks);
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);

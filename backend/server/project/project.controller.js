@@ -1175,8 +1175,21 @@ const getAllProjectForUser = async (req, res, next) => {
       account: req.user._id,
     }).select('_id');
     members = members.map((member) => member._id);
-    const projects = await findAllProjectsByMemberId(members);
-    return sendJSONresponse(res, 200, projects);
+    const teamProjects = await findAllProjectsByMemberId(members);
+    const projects = await Promise.all(
+      teamProjects.map(async (tP) => {
+        const { taskNumbers, doneTasks } = await getTasksNumbers(
+          tP.project._id,
+        );
+        return {
+          ...tP.project._doc,
+          totalTasks: taskNumbers,
+          remainingTasks: taskNumbers - doneTasks,
+        };
+      }),
+    );
+    const sortedProjects = sortProjectsByStatus(projects);
+    return sendJSONresponse(res, 200, sortedProjects);
   } catch (error) {
     logger.error(`Project ${error}`);
     next(error);

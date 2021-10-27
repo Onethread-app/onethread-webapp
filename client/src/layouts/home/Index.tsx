@@ -2,11 +2,8 @@ import { isMobileOnly } from 'react-device-detect';
 import { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 
-import { getAllCompaniesByUserId } from 'stores/user/Actions';
 // import { getProjectsIndividual } from 'stores/project/Actions';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
-import { getCompanyDetails } from 'stores/company/Actions';
-import { getAllUserTasks } from 'stores/task/Actions';
 import { capitalizeFirstLetter } from 'helpers/utils';
 
 import VideoConference from 'components/home/VideoConference';
@@ -46,23 +43,6 @@ const Index = (props: any) => {
   useEffect(() => {
     dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
   }, []);
-
-  useEffect(() => {
-    if (props.user._id && props.companies.length === 0) {
-      props.getAllCompaniesByUserId(props.user._id);
-    }
-    // props.getProjectsIndividual();
-  }, [props.user]);
-
-  useEffect(() => {
-    if (props.currentCompany.name === '') {
-      props.getCompanyDetails(props.companies[0]?.company.uniqueName);
-    }
-  }, [props.companies, props.currentCompany]);
-
-  useEffect(() => {
-    props.getAllUserTasks();
-  }, [props.currentCompany]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -118,8 +98,4 @@ const mapStateToProps = (state: any) => ({
   companies: state.userReducer.user.companies,
 });
 
-export default connect(mapStateToProps, {
-  getAllCompaniesByUserId,
-  getCompanyDetails,
-  getAllUserTasks,
-})(Index);
+export default connect(mapStateToProps)(Index);
