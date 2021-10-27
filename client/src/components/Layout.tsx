@@ -501,7 +501,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 style={{
                   transition: 'width 0.4s',
                   width: props.rightSidebarOpen ? '30%' : '0%',
-                  zIndex: 5,
+                  zIndex: 1,
                 }}
               >
                 <div

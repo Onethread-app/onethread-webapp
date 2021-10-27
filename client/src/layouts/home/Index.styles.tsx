@@ -51,7 +51,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   /* row-gap: 0.25rem; */
-  padding: 30px 30px;
+  padding: 5px 30px;
   width: 100%;
   min-height: 100%;
   background-color: #f1f1f1;
