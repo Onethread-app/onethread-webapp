@@ -13,6 +13,7 @@ import {
   StyledTableBody,
   StyledProjectTableData,
   SortIcon,
+  StyledTableRowContainer,
 } from '../table/StyledTable.styles';
 
 interface IProjectsTable {
@@ -77,6 +78,7 @@ const ProjectsTable = (props: IProjectsTable) => {
                   {...column.getHeaderProps(
                     column.getSortByToggleProps(),
                   )}
+                  key={column.id}
                 >
                   {column.render('Header')}
                   <SortIcon>
@@ -113,28 +115,31 @@ const ProjectsTable = (props: IProjectsTable) => {
           {page.map((row) => {
             prepareRow(row);
             return (
-              <StyledTableRow
-                {...row.getRowProps()}
-                onClick={() => handleClick(row.original)}
-              >
-                {row.cells.map((cell) => (
-                  <StyledProjectTableData
-                    cols={visibleColumns.length}
-                    title={
-                      cell.column.id === 'name'
-                        ? cell.row.original[cell.column.id]
-                        : ''
-                    }
-                    {...cell.getCellProps()}
-                  >
-                    {cell.render('Cell')}
-                  </StyledProjectTableData>
-                ))}
-                <MoreVertIcon
-                  fontSize="small"
-                  onClick={handleOptionsClick}
-                />
-              </StyledTableRow>
+              <StyledTableRowContainer key={row.id}>
+                <StyledTableRow
+                  {...row.getRowProps()}
+                  onClick={() => handleClick(row.original)}
+                >
+                  {row.cells.map((cell) => (
+                    <StyledProjectTableData
+                      cols={visibleColumns.length}
+                      title={
+                        cell.column.id === 'name'
+                          ? cell.row.original[cell.column.id]
+                          : ''
+                      }
+                      {...cell.getCellProps()}
+                      key={cell.column.id}
+                    >
+                      {cell.render('Cell')}
+                    </StyledProjectTableData>
+                  ))}
+                  <MoreVertIcon
+                    fontSize="small"
+                    onClick={handleOptionsClick}
+                  />
+                </StyledTableRow>
+              </StyledTableRowContainer>
             );
           })}
         </StyledTableBody>

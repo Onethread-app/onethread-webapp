@@ -67,6 +67,8 @@ import {
   updateProjectLoading,
   deleteProjectFailure,
   deleteProjectSuccess,
+  getAllUserProjectsSuccess,
+  getAllUserProjectsFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getCompanyId } from 'stores/company/Selector';
@@ -651,6 +653,18 @@ export function* deleteTeamMemberAsync({ payload }: any) {
   }
 }
 
+export function* getAllUserProjectsAsync() {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(`projects/lists`, headers);
+      yield put(getAllUserProjectsSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(getAllUserProjectsFailure(returnErrorText(error)));
+  }
+}
+
 export function* clearProjectReducerAsync() {
   yield put(clearCurrentBoard());
   yield put({ type: CLEAR_PROJECT_REDUCER_STATE });
@@ -831,6 +845,13 @@ export function* onDeleteTeamMember() {
   );
 }
 
+export function* onGetAllUserProjects() {
+  yield takeLatest(
+    ProjectActionTypes.GET_ALL_USER_PROJECTS_START,
+    getAllUserProjectsAsync,
+  );
+}
+
 export const deleteTeamMemberSuccess = (response: any) => ({
   type: ProjectActionTypes.DELETE_TEAM_MEMBER_SUCCESS,
   payload: response,
@@ -868,5 +889,6 @@ export default function* projectSaga() {
     call(onGetIndividualProjectList),
     call(onClearProjectReducer),
     call(onDeleteTeamMember),
+    call(onGetAllUserProjects),
   ]);
 }

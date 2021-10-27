@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { ICompanyByUser } from 'stores/user/Reducer';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
+import { ICompanyByUser, User } from 'stores/user/Reducer';
 
 import Plus from '../../../resources/images/plus.png';
 import Vector from '../../../resources/images/Vector.png';
@@ -18,15 +19,18 @@ import {
   CompanyContainer,
 } from './CompanySection.styles';
 
-import { getCompanyDetails } from 'stores/company/Actions';
 import { CompanySignupForm } from './CompanyDialog';
 
 interface Props {
+  useToaster: () => {};
+}
+
+interface ICompanySectionInternalProps extends Props {
+  user: User;
   companies: ICompanyByUser[];
   creatingCompany: boolean;
   errorOnCreatingCompany: string;
-  getCompanyDetails: (name: string) => void;
-  useToaster: () => {};
+  getAllCompaniesByUserId: (userId) => void;
 }
 
 export const Color = [
@@ -39,22 +43,12 @@ export const Color = [
   { code: 6, value: '#5A1DD6' },
 ];
 
-const CompanySection = (props: Props) => {
-  const {
-    companies,
-    creatingCompany,
-    errorOnCreatingCompany,
-    getCompanyDetails,
-  } = props;
+const CompanySection = (props: ICompanySectionInternalProps) => {
+  const { creatingCompany, errorOnCreatingCompany } = props;
   const [showCompanyDialog, setShowCompanyDialog] =
     useState<boolean>(false);
 
-  const handleCompanyChange = (company: {
-    _id: string;
-    uniqueName: string;
-  }) => {
-    getCompanyDetails(company.uniqueName);
-  };
+  const companies = useMemo(() => props.companies, [props.companies]);
 
   const getRandomInt = (max) => {
     return Math.floor(Math.random() * max);
@@ -74,6 +68,12 @@ const CompanySection = (props: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creatingCompany, errorOnCreatingCompany]);
+
+  useEffect(() => {
+    if (props.user._id && props.companies.length === 0) {
+      props.getAllCompaniesByUserId(props.user._id);
+    }
+  }, [props.user, props.companies]);
 
   return (
     <div>
@@ -100,10 +100,7 @@ const CompanySection = (props: Props) => {
             key={company.company.uniqueName}
           >
             <Company>
-              <div
-                style={{ width: '100%' }}
-                onClick={() => handleCompanyChange(company.company)}
-              >
+              <div style={{ width: '100%' }}>
                 <Avatar bgColor={getRandomColor()}>
                   {company.company?.name[0]}
                 </Avatar>
@@ -144,11 +141,12 @@ const CompanySection = (props: Props) => {
 };
 
 const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
   companies: state.userReducer.user.companies,
   creatingCompany: state.companyReducer.creatingCompany,
   errorOnCreatingCompany: state.companyReducer.errorOnCreatingCompany,
 });
 
-export default connect(mapStateToProps, { getCompanyDetails })(
-  CompanySection,
-);
+export default connect(mapStateToProps, {
+  getAllCompaniesByUserId,
+})(CompanySection);

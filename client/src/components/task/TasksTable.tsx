@@ -1,4 +1,6 @@
+import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
+import { isNil } from 'lodash';
 
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -10,7 +12,12 @@ import {
   StyledTableBody,
   StyledTaskTableData,
   SortIcon,
+  StyledTableRowContainer,
+  StyledSubRow,
+  StyledSubRowData,
+  StyledSubRowBody,
 } from '../table/StyledTable.styles';
+import moment from 'moment';
 
 interface ITasksTable {
   getTableProps: any;
@@ -57,45 +64,73 @@ const TasksTable = (props: ITasksTable) => {
     );
   };
 
+  const renderRowSubComponent = useCallback(({ row }) => {
+    const { subtasks } = row.original;
+
+    return (
+      <StyledSubRowBody>
+        {subtasks.map((subtask) => (
+          <StyledSubRow>
+            <Icon
+              icon={subtask.done ? 'tick-circle' : 'circle'}
+              iconSize={16}
+              className="mr3"
+              color={subtask.done ? '#2EB67D' : 'inherit'}
+            />
+            <StyledSubRowData>{subtask.name}</StyledSubRowData>
+            <StyledSubRowData>
+              {!isNil(subtask.dueDate)
+                ? moment(subtask.dueDate).format('DD/MM/yyyy')
+                : 'Not Set'}
+            </StyledSubRowData>
+          </StyledSubRow>
+        ))}
+      </StyledSubRowBody>
+    );
+  }, []);
+
   return (
     <>
       <StyledTable {...getTableProps()}>
         <StyledTableHeader>
           {headerGroups.map((headerGroup) => (
             <StyledTableRow {...headerGroup.getHeaderGroupProps()}>
-              <Icon icon="circle" iconSize={16} className="o-0 mr3" />
+              <Icon icon="circle" iconSize={16} className="o-0 mr4" />
               {headerGroup.headers.map((column) => (
                 <StyledTaskTableData
                   cols={visibleColumns.length}
                   {...column.getHeaderProps(
                     column.getSortByToggleProps(),
                   )}
+                  key={column.id}
                 >
                   {column.render('Header')}
-                  <SortIcon>
-                    <Icon
-                      icon="symbol-triangle-up"
-                      size={7.5}
-                      color={
-                        column.isSorted
-                          ? column.isSortedDesc
-                            ? '#cfcfcf'
-                            : '#000'
-                          : '#cfcfcf'
-                      }
-                    />
-                    <Icon
-                      icon="symbol-triangle-down"
-                      size={7.5}
-                      color={
-                        column.isSorted
-                          ? column.isSortedDesc
-                            ? '#000'
+                  {column.id !== 'expander' && (
+                    <SortIcon>
+                      <Icon
+                        icon="symbol-triangle-up"
+                        size={7.5}
+                        color={
+                          column.isSorted
+                            ? column.isSortedDesc
+                              ? '#cfcfcf'
+                              : '#000'
                             : '#cfcfcf'
-                          : '#cfcfcf'
-                      }
-                    />
-                  </SortIcon>
+                        }
+                      />
+                      <Icon
+                        icon="symbol-triangle-down"
+                        size={7.5}
+                        color={
+                          column.isSorted
+                            ? column.isSortedDesc
+                              ? '#000'
+                              : '#cfcfcf'
+                            : '#cfcfcf'
+                        }
+                      />
+                    </SortIcon>
+                  )}
                 </StyledTaskTableData>
               ))}
             </StyledTableRow>
@@ -105,50 +140,57 @@ const TasksTable = (props: ITasksTable) => {
           {page.map((row) => {
             prepareRow(row);
             return (
-              <StyledTableRow
-                {...row.getRowProps()}
-                onClick={() => handleClick(row.original)}
-              >
-                <Icon
-                  icon={
-                    row.original.status === 'done'
-                      ? 'tick-circle'
-                      : 'circle'
-                  }
-                  iconSize={16}
-                  className="mr3 pointer"
-                  color={
-                    row.original.status === 'done'
-                      ? '#2EB67D'
-                      : 'inherit'
-                  }
-                  style={{
-                    cursor:
+              <StyledTableRowContainer key={row.id}>
+                <StyledTableRow {...row.getRowProps()}>
+                  <Icon
+                    icon={
                       row.original.status === 'done'
-                        ? 'no-drop'
-                        : 'pointer',
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    console.log('clicked');
-                  }}
-                />
-                {row.cells.map((cell) => {
-                  return (
-                    <StyledTaskTableData
-                      cols={visibleColumns.length}
-                      title={
-                        cell.column.id === 'name'
-                          ? cell.row.original[cell.column.id]
-                          : ''
-                      }
-                      {...cell.getCellProps()}
-                    >
-                      {cell.render('Cell')}
-                    </StyledTaskTableData>
-                  );
-                })}
-              </StyledTableRow>
+                        ? 'tick-circle'
+                        : 'circle'
+                    }
+                    iconSize={16}
+                    className="mr3 pointer"
+                    color={
+                      row.original.status === 'done'
+                        ? '#2EB67D'
+                        : 'inherit'
+                    }
+                    style={{
+                      cursor:
+                        row.original.status === 'done'
+                          ? 'no-drop'
+                          : 'pointer',
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('clicked');
+                    }}
+                  />
+                  {row.cells.map((cell) => {
+                    return (
+                      <StyledTaskTableData
+                        cols={visibleColumns.length}
+                        title={
+                          cell.column.id === 'name'
+                            ? cell.row.original[cell.column.id]
+                            : ''
+                        }
+                        onClick={
+                          cell.column.id !== 'expander'
+                            ? () => handleClick(row.original)
+                            : null
+                        }
+                        {...cell.getCellProps()}
+                      >
+                        {cell.render('Cell')}
+                      </StyledTaskTableData>
+                    );
+                  })}
+                </StyledTableRow>
+                {row.isExpanded
+                  ? renderRowSubComponent({ row })
+                  : null}
+              </StyledTableRowContainer>
             );
           })}
         </StyledTableBody>
