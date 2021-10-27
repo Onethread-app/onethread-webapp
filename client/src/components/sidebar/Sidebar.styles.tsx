@@ -70,7 +70,7 @@ const Favourites = styled.div`
     padding: 1rem;
     background: #373760;
     border-radius: 8px;
-    width: 180px;
+    /* width: 180px; */
     height: 64px;
     display: flex;
     justify-content: flex-start;
@@ -136,6 +136,10 @@ const Container = styled.div`
   .left-open {
     display: ${(props: { leftOpen: boolean }) =>
       props.leftOpen ? 'flex' : 'none'};
+  }
+
+  img {
+    padding: ${(props) => (!props.leftOpen ? '0' : '')};
   }
 
   ${Item} {
