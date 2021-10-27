@@ -1,11 +1,22 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
+import {
+  useTable,
+  useGlobalFilter,
+  useFilters,
+  useSortBy,
+  // useAsyncDebounce,
+  usePagination,
+} from 'react-table';
 
 import { ICompanyByUser, User } from 'stores/user/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
-import { createProjectInCompany } from 'stores/project/Actions';
+import {
+  createProjectInCompany,
+  getAllUserProjects,
+} from 'stores/project/Actions';
 import {
   clearErrorOnCompanyCreate,
   createCompanyActionFailure,
@@ -17,6 +28,9 @@ import Hamburger from '../../../resources/images/hamburger.png';
 import { Container, Header, Row } from './ProjectSection.styles';
 import ProjectDialog from './ProjectDialog';
 import { Dialog } from '@blueprintjs/core';
+import ProjectsTableSkeleton from 'components/project/ProjectsTableSkeleton';
+import { ProjectTableColumns } from 'components/project/ProjectTableColumns';
+import ProjectsTable from 'components/project/ProjectsTable';
 
 interface INewCompanyResponse {
   message: string;
@@ -47,7 +61,9 @@ interface IProps {
   currentCompany: any;
   saveProjectForm: any;
   previousData: any;
-  allProjects: IProject[];
+  userProjects: IProject[];
+  fetchingUserProjects: boolean;
+  errorOnFetchingUserProjects: string;
   createCompanyActionSuccess: (arg: INewCompanyResponse) => void;
   createCompanyActionFailure: (arg: string) => void;
   useToaster: () => {
@@ -58,16 +74,74 @@ interface IProps {
     setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
     setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
   };
+  getAllUserProjects: () => void;
 }
 
 const Index = (props: IProps) => {
   const [openProjectDialog, setOpenProjectDialog] =
     useState<boolean>(false);
   const [projects, setProjects] = useState<IProject[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const data = useMemo(() => projects, [projects]);
+  const columns = useMemo(() => ProjectTableColumns, []);
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    visibleColumns,
+    // allColumns,
+    state,
+    // setGlobalFilter,
+    page,
+    setPageSize,
+    gotoPage,
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: {
+        pageSize: 6,
+        hiddenColumns: ['createdAt'],
+        // sortBy: [{ id: 'status', desc: true }],
+      },
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination,
+  );
+
+  const {
+    // globalFilter,
+    pageSize,
+    pageIndex,
+  } = state;
 
   useEffect(() => {
-    setProjects(props.allProjects);
-  }, [props.allProjects]);
+    if (props.user._id) {
+      props.getAllUserProjects();
+      setLoading(true);
+    }
+  }, [props.user._id]);
+
+  useEffect(() => {
+    if (
+      loading === true &&
+      props.fetchingUserProjects === false &&
+      props.errorOnFetchingUserProjects === ''
+    ) {
+      setProjects(props.userProjects);
+      setLoading(false);
+    }
+  }, [
+    props.userProjects,
+    loading,
+    props.fetchingUserProjects,
+    props.errorOnFetchingUserProjects,
+  ]);
 
   return (
     <Container>
@@ -76,25 +150,33 @@ const Index = (props: IProps) => {
         <img src={Hamburger} alt="" />
       </Header>
       {projects.length === 0 ? (
-        <Row>
-          No project has been created.{' '}
-          <Link
-            to="#"
-            onClick={() => setOpenProjectDialog(!openProjectDialog)}
-          >
-            Create Project
-          </Link>
-        </Row>
+        loading ? (
+          <ProjectsTableSkeleton />
+        ) : (
+          <Row>
+            No project has been created.{' '}
+            <Link
+              to="#"
+              onClick={() => setOpenProjectDialog(!openProjectDialog)}
+            >
+              Create Project
+            </Link>
+          </Row>
+        )
       ) : (
-        <Row>
-          {projects.length} project found.{' '}
-          <Link
-            to="#"
-            onClick={() => setOpenProjectDialog(!openProjectDialog)}
-          >
-            Create Project
-          </Link>
-        </Row>
+        <ProjectsTable
+          getTableProps={getTableProps}
+          getTableBodyProps={getTableBodyProps}
+          headerGroups={headerGroups}
+          rows={rows}
+          prepareRow={prepareRow}
+          visibleColumns={visibleColumns}
+          page={page}
+          gotoPage={gotoPage}
+          pageSize={pageSize}
+          pageIndex={pageIndex}
+          setPageSize={setPageSize}
+        />
       )}
       <Dialog
         canOutsideClickClose={false}
@@ -122,8 +204,11 @@ const mapStateToProps = (state: any) => ({
   creatingCompany: state.companyReducer.creatingCompany,
   errorOnCreatingCompany: state.companyReducer.errorOnCreatingCompany,
   errorOnCreatingProject: state.projectReducer.error,
+  fetchingUserProjects: state.projectReducer.fetchingUserProjects,
+  errorOnFetchingUserProjects:
+    state.projectReducer.errorOnFetchingUserProjects,
   previousData: state.projectFormReducer.data,
-  allProjects: state.projectReducer.allProjects,
+  userProjects: state.projectReducer.userProjects,
 });
 
 export default connect(mapStateToProps, {
@@ -133,4 +218,5 @@ export default connect(mapStateToProps, {
   saveProjectForm,
   createCompanyActionSuccess,
   createCompanyActionFailure,
+  getAllUserProjects,
 })(Index);

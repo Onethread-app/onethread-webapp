@@ -2,6 +2,8 @@ import { format } from 'date-fns';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+
 import { toTitleCase } from 'helpers/utils';
 
 import MemberGroup from 'components/member/MemberGroup';
@@ -72,6 +74,25 @@ const customDueDateFilter = (rows, id, filterValue) => {
 };
 
 export const TaskTableColumns = [
+  {
+    Header: () => null,
+    id: 'expander',
+    sticky: 'center',
+    Cell: ({ row }) => (
+      <span
+        {...row.getToggleRowExpandedProps()}
+        className="flex items-center"
+      >
+        {row.original.subtasks.length > 0 ? (
+          row.isExpanded ? (
+            <Icon icon="caret-down" />
+          ) : (
+            <Icon icon="caret-right" />
+          )
+        ) : null}
+      </span>
+    ),
+  },
   {
     Header: 'Task Name',
     Footer: 'Task Name',

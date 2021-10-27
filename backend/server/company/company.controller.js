@@ -636,7 +636,7 @@ const companyTasks = async (allProjectIds, withDone = false) => {
             populate: [
               {
                 path: 'company',
-                select: '_id uniqueName',
+                select: '_id uniqueName name',
               },
             ],
           },
@@ -661,7 +661,7 @@ const companyTasks = async (allProjectIds, withDone = false) => {
             populate: [
               {
                 path: 'company',
-                select: '_id uniqueName',
+                select: '_id uniqueName name',
               },
             ],
           },
@@ -698,6 +698,7 @@ const companyTasks = async (allProjectIds, withDone = false) => {
         modifiedTask.company = {
           _id: task.project.company._id,
           uniqueName: task.project.company.uniqueName,
+          name: task.project.company.name,
         };
         modifiedTask.subtasks = subtasks;
         taskCompilation.push(modifiedTask);
@@ -725,7 +726,10 @@ const allCompanytasks = async (req, res, next) => {
     const allProjectIds = projectList.map((p) => p._id);
     const taskCompilation = await companyTasks(allProjectIds, true);
     const sortedTasks = sortTasksByStatus(taskCompilation);
-    return sendJSONresponse(res, 200, sortedTasks);
+    return sendJSONresponse(res, 200, {
+      success: true,
+      tasks: sortedTasks,
+    });
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import {
   useTable,
   useGlobalFilter,
@@ -8,6 +8,7 @@ import {
   useSortBy,
   useAsyncDebounce,
   usePagination,
+  useExpanded,
 } from 'react-table';
 
 import { CompanyTasksContext } from './CompanyTasksContext';
@@ -124,6 +125,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
     useFilters,
     useGlobalFilter,
     useSortBy,
+    useExpanded,
     usePagination,
   );
 
@@ -178,7 +180,9 @@ const CompanyTasks = (props: ICompanyTasks) => {
   ]);
 
   useEffect(() => {
-    setTaskList(companyTaskList);
+    !isNil(companyTaskList) &&
+      !isEmpty(companyTaskList) &&
+      setTaskList(companyTaskList);
   }, [companyTaskList]);
 
   useEffect(() => {
@@ -197,15 +201,15 @@ const CompanyTasks = (props: ICompanyTasks) => {
     setFilter('dueDate', filterValue);
   }, [selectedDueDateOption, selectedDueDateRange]);
 
+  console.log(taskList);
+
   return (
     <CompanyTasksContext.Provider value={providerValue}>
       <Container>
         <HeaderContainer>
           <Header>
             Tasks{' '}
-            {companyTaskList.length > 0 && (
-              <span>({companyTaskList.length})</span>
-            )}
+            {taskList.length > 0 && <span>({taskList.length})</span>}
           </Header>
           <SortAndFilter>
             <AlignCenter>
@@ -248,19 +252,22 @@ const CompanyTasks = (props: ICompanyTasks) => {
                 <StyledFilterPopover>
                   <p className="bb">Customize Table</p>
 
-                  {allColumns.map((column) => (
-                    <div key={column.id}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={column.isVisible}
-                          disabled={column.id === 'name'}
-                          {...column.getToggleHiddenProps()}
-                        />{' '}
-                        {column.Header}
-                      </label>
-                    </div>
-                  ))}
+                  {allColumns.map(
+                    (column) =>
+                      column.id !== 'expander' && (
+                        <div key={column.id}>
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={column.isVisible}
+                              disabled={column.id === 'name'}
+                              {...column.getToggleHiddenProps()}
+                            />{' '}
+                            {column.Header}
+                          </label>
+                        </div>
+                      ),
+                  )}
                 </StyledFilterPopover>
               }
               target={<MoreVertIcon fontSize="small" />}

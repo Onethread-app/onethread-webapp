@@ -39,6 +39,8 @@ export interface IProject {
   };
 }
 
+export interface IProjectForTable {}
+
 export interface IPendingProject {
   _id: string;
   project: IProject;
@@ -77,6 +79,7 @@ export interface IProjectTeam {
 
 const initialState = {
   allProjects: [],
+  userProjects: [],
   allArchive: [],
   pendingProjects: [],
   projectDetails: {
@@ -103,12 +106,14 @@ const initialState = {
   unarchivingProject: false,
   updatingProject: false,
   deletingProject: false,
+  fetchingUserProjects: false,
   error: '',
   errorOnGettingAllProjects: '',
   errorOnUnarchive: '',
   errorOnUpdatingProject: '',
   errorOnSingleProjectLoading: '',
   errorOnDeletingProject: '',
+  errorOnFetchingUserProjects: '',
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -369,6 +374,23 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         projectList: [...state.projectList, action.payload],
+      };
+    case ProjectActionTypes.GET_ALL_USER_PROJECTS_START:
+      return {
+        ...state,
+        errorOnFetchingUserProjects: '',
+        fetchingAllUserProjects: true,
+      };
+    case ProjectActionTypes.GET_ALL_USER_PROJECTS_SUCCESS:
+      return {
+        ...state,
+        userProjects: action.payload,
+        fetchingAllUserProjects: false,
+      };
+    case ProjectActionTypes.GET_ALL_USER_PROJECTS_FAILURE:
+      return {
+        ...state,
+        errorOnFetchingUserProjects: action.payload,
       };
     case PROJECT.PROJECT_LIST_CLEAR:
       return {
