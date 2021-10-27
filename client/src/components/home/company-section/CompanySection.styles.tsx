@@ -7,7 +7,7 @@ const Header = styled.header`
   line-height: 27px;
   color: var(--dark-color, #000000);
   padding-bottom: 12px;
-  padding-top: 12px;
+  padding-top: 5px;
   border-bottom: 1px solid #e0e0e0;
   transform: rotate(0.13deg);
   display: flex;
@@ -177,7 +177,7 @@ const CompanyContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   column-gap: 24px;
-  padding: 14px;
+  padding: 5px;
   margin-bottom: 1rem;
   overflow-x: auto;
 

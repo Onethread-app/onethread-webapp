@@ -100,20 +100,22 @@ const CompanySignupFormComponent = (
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <label>Create Company</label>
             <Field<string>
               name="name"
               type="text"
               validate={composeValidators(required)}
               render={({ input, meta }) => (
-                <TextInput
-                  {...input}
-                  placeholder="Company name (Required)"
-                  hasError={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
-                  }
-                />
+                <div className="flex justify-start items-center mt3 mb3">
+                  <label className="">Name</label>
+                  <TextInput
+                    {...input}
+                    placeholder="Company Name (required)"
+                    hasError={
+                      checkError(meta) &&
+                      (meta.error || meta.submitError)
+                    }
+                  />
+                </div>
               )}
             />
             <Field<string>
