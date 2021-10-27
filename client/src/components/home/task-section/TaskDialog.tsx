@@ -12,14 +12,13 @@ import DateFnsUtils from '@date-io/date-fns';
 
 import { tigrowApi } from 'config';
 import { ICompanyTeamMembers } from 'stores/company/Reducer';
-import {
-  createTask,
-  getAllBoards,
-  getAllUserTasks,
-  getSelectedBoard,
-} from 'stores/task/Actions';
+import { createTask, getAllUserTasks } from 'stores/task/Actions';
 import { saveTaskForm } from 'stores/taskForm/Actions';
-import { priorityColor, formTokenConfig } from 'stores/UtilsActions';
+import {
+  tokenConfig,
+  priorityColor,
+  formTokenConfig,
+} from 'stores/UtilsActions';
 
 import {
   checkError,
@@ -45,12 +44,7 @@ import {
   SimpleButton,
 } from './TaskSection.styles';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
-import {
-  errorToaster,
-  successToaster,
-} from 'components/toast/Toaster';
 import { IProject } from 'stores/project/Reducer';
-import { SmallTextAvatar } from 'components/avatar/TextAvatar';
 
 interface ICreateTaskDialogProps {
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -58,22 +52,16 @@ interface ICreateTaskDialogProps {
 
 interface ICreateTaskDialogInternalProps
   extends ICreateTaskDialogProps {
+  userProjects: IProject[];
   projectId: string;
-  currentBoard: any;
   creatingTask: boolean;
   errorOnCreatingTask: string;
   createTask: (task: any) => void;
   saveTaskForm: any;
   previousData: any;
-  projects: [];
-  boardList: { _id: string }[];
-  fetchingBoards: boolean;
   companies: any;
   getCompanyDetails: (arg0: string) => void;
   createProjectSuccess: () => void;
-  // getAllProjects: () => void;
-  getAllBoards: (arg: string) => void;
-  getSelectedBoard: (arg: string) => void;
   getSingleProject: (arg: string) => void;
   getAllUserTasks: () => void;
   userProjects: IProject[];
@@ -111,13 +99,24 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   const [project, setProject] = useState<any>([]);
   const [projectOptions, setProjectOptions] = useState<any>([{}]);
   const [companyOptions, setCompanyOptions] = useState<any>({});
-  const [columnId, setColumnId] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [companyLoading, setCompanyLoading] =
     useState<boolean>(false);
   const [projectLoading, setProjectLoading] =
     useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [taskStatus, setTaskStatus] = useState<
+    {
+      value: string;
+      label: string;
+    }[]
+  >([{ value: '', label: '' }]);
+
+  const {
+    showToaster,
+    setShowToaster,
+    setErrorMessage,
+    setSuccessMessage,
+  } = props.useToaster();
 
   const onSubmit = (values) => {
     if (!company[0].value) {
@@ -131,10 +130,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
         ...values,
         assignmembers: selectedTeamMember,
         priority: selectedOption.value,
-        boardId: props.currentBoard._id,
         projectId: project[0]?.value,
-        columnId,
-        companyId: company[0]?.value,
       };
       props.createTask(modifiedTask);
       setCreatingTask(true);
@@ -179,9 +175,8 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           successToaster(
             `The project ${response.data.project.name} has been created`,
           );
-          // props.getAllProjects();
-          props.getSingleProject(response.data.project._id);
-          props.getAllBoards(response.data.project._id);
+          // props.getSingleProject(response.data.project._id);
+          // props.getAllBoards(response.data.project._id);
         }
         // setErrorMessage('');
       } catch (err) {
@@ -196,8 +191,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           label: selected.label,
         },
       ]);
-      props.getSingleProject(selected.value);
-      props.getAllBoards(selected.value);
+      // props.getSingleProject(selected.value);
       setProjectLoading(false);
     }
   };
@@ -251,18 +245,22 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           isSubscribed: selected.isSubscribed,
         },
       ]);
-      setProject([{}]);
-      const optionsProject = props.userProjects
-        .filter(
-          (project: IProject) =>
-            project.company._id === selected.value,
-        )
-        .map((project: IProject) => ({
-          value: project._id,
-          label: project.name,
-        }));
-      setProjectOptions(optionsProject);
+      if (company[0]?.value && company[0]?.value !== selected.value) {
+        setProject({});
+      }
+      getProjectsForCompany(selected.value);
     }
+  };
+
+  const getProjectsForCompany = (companyId: string) => {
+    const companyProjects = props.userProjects
+      .filter((project) => project.company._id === companyId)
+      .map((project) => ({
+        value: project._id,
+        label: project.name,
+        uniqueName: project.company.uniqueName,
+      }));
+    setProjectOptions(companyProjects);
   };
 
   useEffect(() => {
@@ -271,42 +269,10 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
         value: company.company._id,
         label: company.company.name,
         uniqueName: company.company.uniqueName,
-        isSubscribed: company.company.isSubscribed,
       };
     });
     setCompanyOptions(optionsCompany);
   }, [props.companies]);
-
-  useEffect(() => {
-    if (props.boardList.length > 0) {
-      props.getSelectedBoard(props.boardList[0]._id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.boardList]);
-
-  useEffect(() => {
-    if (
-      props.currentBoard.project === project[0]?.value &&
-      props.fetchingBoards === false
-    ) {
-      const id = props.currentBoard.columns?.filter(
-        (col) => col.name.toLowerCase() === 'to do',
-      )[0]?._id;
-      setColumnId(id);
-    }
-  }, [project, props.currentBoard, props.fetchingBoards]);
-
-  useEffect(() => {
-    if (
-      props.currentBoard.name !== '' &&
-      props.fetchingBoards === false
-    ) {
-      const id = props.currentBoard.columns.filter(
-        (col) => col.name.toLowerCase() === 'to do',
-      )[0]._id;
-      setColumnId(id);
-    }
-  }, [props.currentBoard, props.fetchingBoards]);
 
   useEffect(() => {
     const loadTeamMembers = async () => {
@@ -322,6 +288,36 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project[0]?.value]);
+
+  useEffect(() => {
+    const loadTaskStatus = async () => {
+      const headers = formTokenConfig(company[0].value);
+      const response = await tigrowApi.get(
+        `taskStatus?pid=${project[0].value}`,
+        headers,
+      );
+      setTaskStatus([
+        ...response.data.map((status) => ({
+          value: status._id,
+          label: status.name,
+        })),
+      ]);
+      console.log(taskStatus);
+    };
+    if (project[0]?.value) {
+      loadTaskStatus();
+    }
+  }, [project[0]?.value]);
+
+  // useEffect(() => {
+  //   const optionsProject = props.projects.map(
+  //     (project: { _id: string; name: string }) => ({
+  //       value: project._id,
+  //       label: project.name,
+  //     }),
+  //   );
+  //   setProjectOptions(optionsProject);
+  // }, [props.projects]);
 
   useEffect(() => {
     if (selectedTeamMember.length) {
@@ -453,50 +449,34 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     </div>
                   )}
                 />
-                <div className="w-100 flex flex-row justify-between items-center mt2 mb3 mr-auto">
-                  <div className="w-100 flex justify-start items-center">
-                    <label className="text-width">Company:</label>
-                    <Select
-                      id="company"
-                      placeholder="Required"
-                      value={company}
-                      isLoading={companyLoading}
-                      isDisabled={companyLoading}
-                      options={companyOptions}
-                      onChange={handleCompany}
-                      // formatCreateLabel={(userInput) =>
-                      //   `New: ${userInput}`
-                      // }
-                      className="w-100 react-select"
-                      isOptionDisabled={(option) => {
-                        return option.isSubscribed === false;
+                <div className="w-100 flex flex-row justify-start items-center mt2 mb3 mr-auto">
+                  <label className="text-width">Company:</label>
+                  <Select
+                    id="company"
+                    placeholder="Required"
+                    value={company}
+                    isLoading={companyLoading}
+                    isDisabled={companyLoading}
+                    options={companyOptions}
+                    onChange={handleCompany}
+                    className="w-100"
+                  />
+                  {assignedCompanyError && (
+                    <small
+                      style={{
+                        color: 'red',
+                        margin: '1rem 0rem',
                       }}
-                      formatOptionLabel={(data) => (
-                        <div className="flex items-center">
-                          {typeof data.label === 'string' ? (
-                            <SmallTextAvatar
-                              name={data.label.slice(0, 1)}
-                            />
-                          ) : null}
-                          <span className="ml2">{data.label}</span>
-                        </div>
-                      )}
-                    />
-                    {assignedCompanyError && (
-                      <small
-                        style={{
-                          color: 'red',
-                          margin: '1rem 0rem',
-                        }}
-                      >
-                        Required
-                      </small>
-                    )}
-                  </div>
-                  <div className="w-100 flex justify-end items-center">
-                    <Field<string>
-                      name="assignmembers"
-                      render={({ input, meta }) => (
+                    >
+                      Required
+                    </small>
+                  )}
+                </div>
+                <div className="row flex items-center justify-between w-100 mb3">
+                  <Field<string>
+                    name="projectId"
+                    render={({ input, meta }) => (
+                      <div className="mb3">
                         <div className="flex items-center">
                           <label className="ml3 w-4 mr3">
                             In:
@@ -579,6 +559,49 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                             </div>
                           )}
                         />
+                      </div>
+                    )}
+                  />
+                </div>
+                <div className="row flex items-center justify-between w-100 mb3">
+                  <Field<string>
+                    name="status"
+                    render={({ input, meta }) => (
+                      <div className="mb3">
+                        <div className="flex items-center">
+                          <label className="text-width">
+                            Status:
+                            <div>
+                              {assignedPeojectError && (
+                                <small
+                                  style={{
+                                    color: 'red',
+                                    margin: '1rem 0rem',
+                                  }}
+                                >
+                                  Required
+                                </small>
+                              )}
+                            </div>
+                          </label>
+                          <Creatable
+                            className="w-100 react-select"
+                            name="status"
+                            value={project}
+                            options={projectOptions}
+                            onChange={handleProject}
+                            formatCreateLabel={(userInput) =>
+                              `New: ${userInput}`
+                            }
+                            isDisabled={
+                              projectLoading
+                                ? true
+                                : company[0]?.value
+                                ? false
+                                : true
+                            }
+                          />
+                        </div>
                       </div>
                     )}
                   />
@@ -667,16 +690,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                   <SimpleButton>Invite members</SimpleButton>
                   <SimpleButton>Create subtask</SimpleButton> 
                   </div>
-                  */}
-                  <StyledButton
-                    type="submit"
-                    disabled={
-                      project[0]?.value !==
-                      props.currentBoard?.project
-                        ? true
-                        : false
-                    }
-                  >
+                  <StyledButton type="submit">
                     {loading ? (
                       <>
                         Creating Task{' '}
@@ -705,17 +719,13 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  projectId: state.projectReducer.projectDetails._id,
-  projects: state.projectReducer.allProjects,
   userProjects: state.projectReducer.userProjects,
-  boardList: state.taskIndexReducer.taskReducer.boardList,
-  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
+  projectId: state.projectReducer.projectDetails._id,
   creatingTask: state.taskIndexReducer.taskReducer.creatingTask,
   errorOnCreatingTask:
     state.taskIndexReducer.taskReducer.errorOnCreatingTask,
   previousData: state.taskFormReducer.data,
   companies: state.userReducer.user.companies,
-  fetchingBoards: state.taskIndexReducer.taskReducer.fetchingBoards,
 });
 
 export default connect(mapStateToProps, {
@@ -723,8 +733,7 @@ export default connect(mapStateToProps, {
   saveTaskForm,
   getCompanyDetails,
   createProjectSuccess,
-  getAllBoards,
-  getSelectedBoard,
+  getAllProjects,
   getSingleProject,
   getAllUserTasks,
 })(TaskDialog);

@@ -91,7 +91,6 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
   const handleSubmit = async (e: any) => {
     const payload = {
       file: imageSelected,
-      columnId: props.currentTask.columnId,
       taskId: props.currentTask._id,
     };
     await props.taskFileUpload(payload);

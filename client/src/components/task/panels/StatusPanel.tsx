@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 
-import { useCompanyTasksContext } from '../CompanyTasksContext';
+import { useTasksTableContext } from '../TasksTableContext';
 
 import { getUniqueList } from 'helpers/utils';
 import { SelectItem } from './StyledPanel';
 
 const StatusPanel = () => {
   const { tasks, selectedStatusList, setSelectedStatusList } =
-    useCompanyTasksContext();
+    useTasksTableContext();
 
   const [allStatus, setAllStatus] = useState<any>([]);
 

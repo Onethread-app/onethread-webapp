@@ -14,6 +14,11 @@ const TabPanel = (props: ITabPanelProps) => {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       {...other}
+      style={{
+        display: value === index ? 'flex' : 'inherit',
+        flexGrow: value === index ? 1 : 'inherit',
+        flexDirection: value === index ? 'column' : 'inherit',
+      }}
     >
       {value === index && children}
     </div>

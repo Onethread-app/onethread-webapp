@@ -25,7 +25,6 @@ import { ITask } from 'stores/task/Reducer';
 import {
   getSelectedTaskDetails,
   deleteTask,
-  ITaskDelete,
 } from 'stores/task/Actions';
 import { priorityColor } from 'stores/UtilsActions';
 
@@ -36,15 +35,15 @@ import MemberGroup from 'components/member/MemberGroup';
 const ThirdRow = styled.div`
   overflow: hidden;
   height: 0;
-  transition: all 0.3s ease-in;
-  transition-delay: 0.4s;
+  transition: all 0.2s ease-in;
+  transition-delay: 0.3s;
 `;
 
 const SecondRow = styled.div`
   overflow: hidden;
   height: 0;
-  transition: all 0.3s ease-in;
-  transition-delay: 0.4s;
+  transition: all 0.2s ease-in;
+  transition-delay: 0.3s;
 `;
 
 const TaskDueDate = styled.div`
@@ -101,27 +100,32 @@ interface IColumnTaskItemInternalProps extends IColumnTaskItem {
   projectId: string;
   deletingTask: boolean;
   errorOnTaskDelete: string;
-  getSelectedTaskDetails: (task: string) => void;
-  deleteTask: ({ taskId, columnId }: ITaskDelete) => void;
+  getSelectedTaskDetails: ({ taskId, companyId, projectId }) => void;
+  deleteTask: ({ taskId, companyId, projectId }) => void;
 }
 
 const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   const { task } = props;
   const history = useHistory();
-  // const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [taskDelete, setTaskDelete] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
-
   const handleClick = () => {
-    props.getSelectedTaskDetails(task._id);
+    props.getSelectedTaskDetails({
+      taskId: task._id,
+      companyId: task.company._id,
+      projectId: task.project._id,
+    });
     setLoading(true);
   };
 
   const handleTaskDelete = () => {
-    const payload = { taskId: task._id, columnId: task.columnId };
-    props.deleteTask(payload);
+    props.deleteTask({
+      taskId: task._id,
+      companyId: task.company._id,
+      projectId: task.project._id,
+    });
     setDeletingTask(true);
   };
 
@@ -133,7 +137,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
     ) {
       setLoading(false);
       history.push(
-        `/company/${props.uniqueCompanyName}/project/${props.projectId}/board/${task.boardId}/task/${task._id}`,
+        `/company/${props.uniqueCompanyName}/project/${props.projectId}/task/${task._id}`,
       );
     }
   }, [loading, props.fetchingTask, props.taskError]);
@@ -151,7 +155,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
 
   return (
     <>
-      <Draggable draggableId={task._id} index={props.index}>
+      <Draggable draggableId={String(task._id)} index={props.index}>
         {(provided, snapshot) => {
           const allowedProps = { ref: provided.innerRef };
           return (

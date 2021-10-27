@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react';
 import { uniqBy } from 'lodash';
 
-import { useCompanyTasksContext } from '../CompanyTasksContext';
+import { useTasksTableContext } from '../TasksTableContext';
 
 import { SelectItem } from './StyledPanel';
 
 const ProjectsPanel = () => {
   const { tasks, selectedProjectList, setSelectedProjectList } =
-    useCompanyTasksContext();
+    useTasksTableContext();
 
   const [allProjects, setAllProjects] = useState<any>([]);
 
   const handleSelect = (checked, value) => {
     if (checked) {
-      setSelectedProjectList((prev) => [...prev, value]);
+      setSelectedProjectList &&
+        setSelectedProjectList((prev) => [...prev, value]);
     } else {
-      setSelectedProjectList(
-        selectedProjectList.filter((item) => item !== value),
-      );
+      setSelectedProjectList &&
+        setSelectedProjectList(
+          selectedProjectList?.filter((item) => item !== value),
+        );
     }
   };
 
@@ -44,7 +46,7 @@ const ProjectsPanel = () => {
           <label>
             <input
               type="checkbox"
-              checked={selectedProjectList.includes(project.id)}
+              checked={selectedProjectList?.includes(project.id)}
               onChange={(e) => {
                 handleSelect((e.target as any).checked, project.id);
               }}

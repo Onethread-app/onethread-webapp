@@ -1,21 +1,24 @@
+import { ITaskStatus } from 'stores/task/Reducer';
+
 interface ITaskStatusTag {
-  status: string;
+  status: ITaskStatus;
 }
 
 const TaskStatusTag = (props: ITaskStatusTag) => {
+  console.log(props.status);
   return (
     <span
       className="bp3-tag ttc"
       style={{
         background:
-          props.status === 'done'
+          props.status.name === 'done'
             ? '#2EB67D'
-            : props.status === 'in-progress'
+            : props.status.name === 'in-progress'
             ? '#08A0F7'
             : '#FFA800',
       }}
     >
-      {props.status.replace(/-/g, ' ')}
+      {props.status.name.replace(/-/g, ' ')}
     </span>
   );
 };

@@ -14,24 +14,19 @@ const TaskSchema = new mongoose.Schema(
       trim: true,
     },
     status: {
-      type: String,
-      trim: true,
+      type: Schema.Types.ObjectId,
+      ref: 'TaskStatus',
       required: true,
-    },
-    priority: {
-      type: Number,
-      enum: [0, 1, 2, 3, 4],
-      default: 2,
     },
     account: {
       type: Schema.Types.ObjectId,
       ref: 'Account',
       required: true,
     },
-    project: {
-      type: Schema.Types.ObjectId,
-      ref: 'Project',
-      required: true,
+    priority: {
+      type: Number,
+      enum: [0, 1, 2, 3, 4],
+      default: 2,
     },
     dueDate: {
       type: Date,
@@ -46,24 +41,27 @@ const TaskSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    columnId: {
+    project: {
       type: Schema.Types.ObjectId,
-      ref: 'BoardColumn',
+      ref: 'Project',
       required: true,
     },
-    boardId: {
+    company: {
       type: Schema.Types.ObjectId,
-      ref: 'Board',
+      ref: 'Company',
       required: true,
     },
-    removed: {
+    isCompleted: {
       type: Boolean,
       default: false,
+    },
+    parentTask: {
+      type: Schema.Types.ObjectId,
+      ref: 'Task',
+      default: null,
     },
   },
   { timestamps: true },
 );
-
-TaskSchema.index({ project: 1 }, { unique: true });
 
 module.exports = mongoose.model('Task', TaskSchema);

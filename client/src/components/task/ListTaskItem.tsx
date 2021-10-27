@@ -23,7 +23,6 @@ import { IColumn, ITask } from 'stores/task/Reducer';
 import {
   dragAndDropTask,
   deleteTask,
-  ITaskDelete,
   getSelectedTaskDetails,
 } from 'stores/task/Actions';
 
@@ -128,8 +127,8 @@ interface IListTaskItemInternalProps extends IListTaskItemProps {
     destinationColumnId: string,
     taskIndexOfDestinationColumn: number,
   ) => void;
-  deleteTask: ({ taskId, columnId }: ITaskDelete) => void;
-  getSelectedTaskDetails: (task: string) => void;
+  deleteTask: ({ taskId, companyId, projectId }) => void;
+  getSelectedTaskDetails: ({ taskId, companyId, projectId }) => void;
 }
 
 const ListTaskItem = (props: IListTaskItemInternalProps) => {
@@ -142,8 +141,8 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
   );
   const [selectedOption, setSelectedOption] = useState<ISelectOption>(
     {
-      value: task.columnId,
-      label: task.status.toLowerCase().split('-').join(' '),
+      value: task.status._id,
+      label: task.status.name.toLowerCase().split('-').join(' '),
     },
   );
   const [taskDelete, setTaskDelete] = useState(false);
@@ -152,23 +151,27 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
   const [deletingTask, setDeletingTask] = useState(false);
 
   const handleClick = () => {
-    props.getSelectedTaskDetails(task._id);
+    props.getSelectedTaskDetails({
+      taskId: task._id,
+      companyId: task.company._id,
+      projectId: task.project._id,
+    });
     setLoading(true);
   };
 
   const handleTick = (e) => {
     e.stopPropagation();
-    if (task.status !== 'done') {
+    if (task.status.name !== 'done') {
       setTick(!tick);
-      const doneCol = columns.filter(
-        (col) => col.name.toLowerCase() === 'done',
-      );
-      props.dragAndDropTask(
-        task._id,
-        task.columnId,
-        doneCol[0]._id,
-        0,
-      );
+      // const doneCol = columns.filter(
+      //   (col) => col.name.toLowerCase() === 'done',
+      // );
+      // props.dragAndDropTask(
+      //   task._id,
+      //   task.columnId,
+      //   doneCol[0]._id,
+      //   0,
+      // );
     }
   };
 
@@ -183,29 +186,30 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
     );
     if (selected[0]) {
       setSelectedOption(selected[0]);
-      props.dragAndDropTask(
-        task._id,
-        task.columnId,
-        e.target.value,
-        0,
-      );
+      // props.dragAndDropTask(
+      //   task._id,
+      //   task.columnId,
+      //   e.target.value,
+      //   0,
+      // );
     }
   };
 
   const handleTaskDelete = () => {
-    const payload = { taskId: task._id, columnId: task.columnId };
-    props.deleteTask(payload);
+    // const payload = { taskId: task._id, columnId: task.columnId };
+    // props.deleteTask(payload);
     setDeletingTask(true);
+    console.log('deleting task');
   };
 
   useEffect(() => {
     setSelectedOption((prev) => {
       return {
         ...prev,
-        label: task.status.toLowerCase().split('-').join(' '),
+        label: task.status.name.toLowerCase().split('-').join(' '),
       };
     });
-    if (task.status === 'done') {
+    if (task.status.name === 'done') {
       setTick(true);
     } else setTick(false);
   }, [task.status]);
@@ -214,10 +218,10 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
     setSelectedOption((prev) => {
       return {
         ...prev,
-        value: task.columnId,
+        value: task.status._id,
       };
     });
-  }, [task.columnId]);
+  }, [task.status._id]);
 
   useEffect(() => {
     if (columns) {
@@ -238,7 +242,7 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
       props.taskError === ''
     ) {
       history.push(
-        `/company/${props.uniqueCompanyName}/project/${props.projectId}/board/${task.boardId}/task/${task._id}`,
+        `/company/${props.uniqueCompanyName}/project/${props.projectId}/task/${task._id}`,
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -271,7 +275,8 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
             className="mr4 pointer"
             color={tick ? '#2EB67D' : 'inherit'}
             style={{
-              cursor: task.status === 'done' ? 'no-drop' : 'pointer',
+              cursor:
+                task.status.name === 'done' ? 'no-drop' : 'pointer',
             }}
             onClick={handleTick}
           />
