@@ -387,6 +387,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 style={{
                   transition: 'width 0.4s',
                   width: !leftOpen ? '15%' : '55px',
+                  maxWidth: '250px',
                 }}
               >
                 <div>
@@ -703,26 +704,29 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           </MobileOnlyView>
         </>
       )}
-      {subscriptionExpired === true &&
-        props.company.role !== 'superAdmin' && (
-          <Modal
-            isOpen={subscriptionExpired}
-            onRequestClose={closeSubErrorModal}
-            style={customStylesForModal}
-            contentLabel="Example Modal"
-          >
-            <ErrorText
-              closeModal={closeSubErrorModal}
-              text={`${
-                props.company.role === 'superAdmin'
-                  ? 'Your Subscription has expired'
-                  : 'Your Subscription has expired, contact with Super Admin'
-              }`}
-              subtext="To keep using Onethread without interruption you need to pay your
+      {props.match.url.includes(
+        `/company/${props.company?.uniqueName}`,
+      ) &&
+      subscriptionExpired === true &&
+      props.company.role !== 'superAdmin' ? (
+        <Modal
+          isOpen={subscriptionExpired}
+          onRequestClose={closeSubErrorModal}
+          style={customStylesForModal}
+          contentLabel="Example Modal"
+        >
+          <ErrorText
+            closeModal={closeSubErrorModal}
+            text={`${
+              props.company.role === 'superAdmin'
+                ? 'Your Subscription has expired'
+                : 'Your Subscription has expired, contact with Super Admin'
+            }`}
+            subtext="To keep using Onethread without interruption you need to pay your
             dues."
-            />
-          </Modal>
-        )}
+          />
+        </Modal>
+      ) : null}
     </div>
   );
 };
