@@ -254,6 +254,14 @@ router
   );
 
 router
+  .route('/tasks')
+  .get(
+    authorization,
+    schemaValidator(projectValidation.getTasks),
+    projectCtrl.getTasks,
+  );
+
+router
   .route('/:projectId/teams/:accountId')
   .delete(
     authorization,

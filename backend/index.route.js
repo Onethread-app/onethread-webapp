@@ -32,6 +32,7 @@ const videoConferencesRoute = require('./server/videoConferences/videoConference
 const feedbackRoutes = require('./server/feedback/feedback.route');
 const reportRoutes = require('./server/report/report.route');
 const timeTrackerRoutes = require('./server/time-tracker/time-tracker.route');
+const taskStatusRoutes = require('./server/task/taskStatus/taskStatus.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -56,6 +57,7 @@ router.use('/files', fileRoutes);
 router.use('/boards', boardRoutes);
 router.use('/boardColumns', boardColumnRoutes);
 router.use('/tasks', taskRoutes);
+router.use('/taskStatus', taskStatusRoutes);
 router.use('/subTasks', subTasks);
 router.use('/utils', utilsRoutes);
 router.use('/projects', projectRoutes);

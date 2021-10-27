@@ -63,7 +63,7 @@ const TasksTable = (props: ITasksTable) => {
 
   const handleClick = (task) => {
     history.push(
-      `/company/${task.company.uniqueName}/project/${task.project._id}/board/${task.boardId}/task/${task._id}`,
+      `/company/${task.company.uniqueName}/project/${task.project._id}/task/${task._id}`,
     );
   };
 

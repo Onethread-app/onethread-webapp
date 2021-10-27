@@ -26,10 +26,7 @@ import { ICompanyRoom, IRoom } from 'stores/room/Reducer';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 import { fetchUserAction } from 'stores/auth/Actions';
 import { getCompanyDetails } from 'stores/company/Actions';
-import {
-  getSelectedBoard,
-  getSelectedTaskDetails,
-} from 'stores/task/Actions';
+import { getSelectedTaskDetails } from 'stores/task/Actions';
 import {
   getSingleProject,
   getUserFavouriteProjects,
@@ -83,7 +80,6 @@ interface LayoutInternalProps
   fetchingUser: boolean;
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => any;
-  getSelectedBoard: (boardId: string) => any;
   getSelectedTaskDetails: (taskId: string) => any;
   getSingleProject: (pid: string) => void;
   fetchRooms: () => void;
@@ -92,7 +88,6 @@ interface LayoutInternalProps
   companyRooms: ICompanyRoom[];
   rightSidebarOpen: boolean;
   project: any;
-  boardId: string;
   taskId: string;
   companyLoading: boolean;
   projectLoading: boolean;
@@ -136,10 +131,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   };
   const updateProjectReducer = () => {
     props.getSingleProject((props.match.params as any).projectId);
-  };
-
-  const updateBoardReducer = () => {
-    props.getSelectedBoard((props.match.params as any).boardId);
   };
 
   const updateTaskReducer = () => {
@@ -221,26 +212,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       updateProjectReducer();
     }
   }, [props.match, props.company._id, props.project._id]);
-
-  useEffect(() => {
-    const { path } = props.match;
-    const { boardId } = props.match.params as any;
-    if (
-      path.includes('boardId') &&
-      (isNil(boardId) === true || boardId === 'undefined')
-    ) {
-      props.history.push(`/notFound`);
-    }
-    if (
-      !isEmpty(props.company._id) &&
-      !isEmpty(props.project._id) &&
-      !isEmpty(boardId) &&
-      boardId !== props.boardId
-    ) {
-      updateBoardReducer();
-    }
-    // props.fetchRooms();
-  }, [props.match, props.project._id, props.boardId]);
 
   useEffect(() => {
     const { path } = props.match;
@@ -789,7 +760,6 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
     rightSidebarOpen: state.layoutReducer.rightSidebar.open,
     project: state.projectReducer.projectDetails,
-    boardId: state.taskIndexReducer.taskReducer.currentBoard._id,
     taskId: state.taskIndexReducer.taskReducer.currentTask._id,
     companyRooms: state.roomReducer.companyRooms,
     rooms: state.roomReducer.rooms,
@@ -807,7 +777,6 @@ const mapStateToProps = (state: any) => {
 export const Layout = connect(mapStateToProps, {
   fetchUserAction,
   getCompanyDetails,
-  getSelectedBoard,
   getSelectedTaskDetails,
   getSingleProject,
   fetchRooms,

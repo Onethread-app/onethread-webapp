@@ -1,5 +1,26 @@
 const _ = require('lodash');
 
+// const { getTaskMembers } = require('../task/task.controller');
+const TaskAssign = require('../task/taskAssign.model');
+const {
+  findSubtasksByTaskId,
+} = require('../services/task/subtask/subtask.service');
+
+const getTaskMembers = async (taskId) => {
+  const taskMembers = await TaskAssign.find({
+    taskId,
+  })
+    .select('_id assignedPerson')
+    .populate([
+      {
+        path: 'assignedPerson',
+        select: '_id firstName lastName profileImage',
+      },
+    ])
+    .exec();
+  return taskMembers;
+};
+
 const sortTasksByStatus = (tasks) => {
   const primaryStatus = ['in-progress', 'to-do', 'done'];
   const rank = {
@@ -32,7 +53,29 @@ const sortProjectsByStatus = (projects) => {
   });
 };
 
+const getFormattedTaskForClient = async (tasks) => {
+  const formattedTasks = [];
+  for (let i = 0; i < tasks.length; i += 1) {
+    const task = tasks[i];
+    const subtasks = await findSubtasksByTaskId(task._id);
+    const taskMembers = await getTaskMembers(task._id);
+    const members = taskMembers.map((tMember) => {
+      return tMember.assignedPerson;
+    });
+
+    const formattedTask = {
+      ...task._doc,
+      subtasks,
+      members,
+    };
+    formattedTasks.push(formattedTask);
+  }
+  return formattedTasks;
+};
+
 module.exports = {
   sortTasksByStatus,
   sortProjectsByStatus,
+  getFormattedTaskForClient,
+  getTaskMembers,
 };

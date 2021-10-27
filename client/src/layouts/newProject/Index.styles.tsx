@@ -22,6 +22,7 @@ export const BackButton = styled.div`
   justify-content: start;
   gap: 0.4rem;
   cursor: pointer;
+  color: #323030 !important;
 `;
 
 export const ProjectTop = styled.div`
@@ -29,7 +30,7 @@ export const ProjectTop = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 `;
 
 export const Container = styled.div`

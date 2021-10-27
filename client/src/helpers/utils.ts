@@ -129,3 +129,31 @@ export const flattenObject = function (ob) {
   }
   return toReturn;
 };
+
+function compareObjects(o1, o2) {
+  var k = '';
+  for (k in o1) if (o1[k] != o2[k]) return false;
+  for (k in o2) if (o1[k] != o2[k]) return false;
+  return true;
+}
+
+function itemExists(haystack, needle) {
+  for (var i = 0; i < haystack.length; i++)
+    if (compareObjects(haystack[i], needle)) return true;
+  return false;
+}
+
+export const globalFilterFn = (tasks, filterValue) => {
+  let results: any = [];
+  console.log(tasks.flat());
+  for (let i = 0; i < tasks.length; i++) {
+    for (let key in tasks[i]) {
+      console.log(tasks[i][key], filterValue);
+      if (String(tasks[i][key]).includes(filterValue)) {
+        if (!itemExists(results, tasks[i])) results.push(tasks[i]);
+      } else globalFilterFn(tasks[i][key], filterValue);
+    }
+  }
+  console.log(results);
+  return results;
+};

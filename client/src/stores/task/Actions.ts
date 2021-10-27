@@ -8,12 +8,11 @@ import {
 
 export interface ITaskDelete {
   taskId: string;
-  columnId: string;
+  // columnId: string;
 }
 
 export interface ITaskFileUpload {
   file: any;
-  columnId: string;
   taskId: string;
 }
 
@@ -80,6 +79,19 @@ export const getAllCompanyTasksFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
+export const getAllProjectTasks = () => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_PROJECT_START,
+});
+
+export const getAllProjectTasksSuccess = (response: any) => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_PROJECT_SUCCESS,
+  payload: response,
+});
+
+export const getAllProjectTasksFailure = (errorMessage: any) => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_PROJECT_FAILURE,
+  payload: errorMessage,
+});
 export const getSelectedBoard = (boardId: string | undefined) => ({
   type: TaskActionType.SELECT_BOARD_START,
   payload: boardId,

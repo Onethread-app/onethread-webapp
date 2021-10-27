@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 
-import { useCompanyTasksContext } from '../CompanyTasksContext';
+import { useTasksTableContext } from '../TasksTableContext';
 
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
@@ -17,11 +18,12 @@ const FilterPanel = () => {
     selectedProjectList,
     selectedDueDateOption,
     selectedStatusList,
-  } = useCompanyTasksContext();
+  } = useTasksTableContext();
   const [selectedPanel, setSelectedPanel] = useState<number | null>(
     null,
   );
-
+  const { projectId }: any = useParams();
+  console.log(projectId);
   return (
     <PanelsContainer>
       {selectedPanel === null ? (
@@ -40,13 +42,15 @@ const FilterPanel = () => {
             <p>Due Date</p>
             <ChevronRightIcon />
           </PanelTitle>
-          <PanelTitle
-            onClick={() => setSelectedPanel(2)}
-            active={!isEmpty(selectedProjectList)}
-          >
-            <p>Project</p>
-            <ChevronRightIcon />
-          </PanelTitle>
+          {!projectId && (
+            <PanelTitle
+              onClick={() => setSelectedPanel(2)}
+              active={!isEmpty(selectedProjectList)}
+            >
+              <p>Project</p>
+              <ChevronRightIcon />
+            </PanelTitle>
+          )}
         </PanelsTitleContainer>
       ) : (
         <PanelView

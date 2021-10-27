@@ -88,7 +88,7 @@ const Timer = (props: ITimerInternalProps) => {
     const payload = {
       name: task.name,
       task: task._id,
-      column: task.columnId,
+      column: task.status._id, // need to change
       project: projectId,
       company: companyId,
       startTime: new Date(),

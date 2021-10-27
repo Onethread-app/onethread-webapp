@@ -1,3 +1,10 @@
+import { useEffect, useMemo } from 'react';
+import {
+  // Link,
+  //   NavLink,
+  useHistory,
+} from 'react-router-dom';
+
 import {
   withStyles,
   Theme,
@@ -5,14 +12,12 @@ import {
 } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
-// interface StyledTabsProps {
-//   value: number;
-//   onChange: (event: React.ChangeEvent<{}>, newValue: number) => void;
-// }
+import { isNil } from 'lodash';
 
 interface StyledTabProps {
   label: string;
+  value?: number;
+  tab?: number;
 }
 
 export const StyledTabs = withStyles({
@@ -45,4 +50,14 @@ export const StyledTab = withStyles((theme: Theme) =>
     },
     selected: {},
   }),
-)((props: StyledTabProps) => <Tab disableRipple {...props} />);
+)((props: StyledTabProps) => {
+  const history = useHistory();
+  const tab = useMemo(() => props.tab, [props.tab]);
+
+  useEffect(() => {
+    !isNil(tab) &&
+      history.replace(`${history.location.pathname}?tab=${tab}`);
+  }, [tab]);
+
+  return <Tab disableRipple {...props} />;
+});

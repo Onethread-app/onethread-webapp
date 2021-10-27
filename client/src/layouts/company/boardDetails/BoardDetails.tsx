@@ -28,7 +28,7 @@ import CalendarView, {
   ITaskForCalendar,
 } from 'components/calendar/CalendarView';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
-import ColumnsContainer from 'components/column/ColumnsContainer';
+// import ColumnsContainer from 'components/column/ColumnsContainer';
 import TaskList from 'components/task/TaskList';
 import MemberGroup from 'components/member/MemberGroup';
 import MultiSelectComponent from 'components/dashboard/project-status/MultiSelectComponent';
@@ -119,7 +119,7 @@ const BoardDetails = (props: IBoardDetails) => {
       start: new Date(t.createdAt),
       end: new Date(t.dueDate),
       allDay: true,
-      redirectTo: `/company/${props.company.uniqueName}/project/${t.project}/board/${t.boardId}/task/${t._id}`,
+      redirectTo: `/company/${props.company.uniqueName}/project/${t.project}/task/${t._id}`,
       priority: t.priority,
     }));
     setTasksForCalendarView(cTasks);
@@ -388,13 +388,16 @@ const BoardDetails = (props: IBoardDetails) => {
         </SecondaryHeader>
       </div>
       {view === 'board' && <PriorityColorList />}
-      {view === 'board' ? (
-        <ColumnsContainer />
-      ) : view === 'list' ? (
-        <TaskList />
-      ) : view === 'calendar' ? (
-        <CalendarView tasks={tasksForCalendarView} />
-      ) : null}
+      {
+        //   view === 'board' ? (
+        //   <ColumnsContainer />
+        // ) :
+        view === 'list' ? (
+          <TaskList />
+        ) : view === 'calendar' ? (
+          <CalendarView tasks={tasksForCalendarView} />
+        ) : null
+      }
     </Container>
   );
 };

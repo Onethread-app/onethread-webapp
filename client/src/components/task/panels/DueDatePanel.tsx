@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useCompanyTasksContext } from '../CompanyTasksContext';
+import { useTasksTableContext } from '../TasksTableContext';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -13,7 +13,7 @@ const DueDatePanel = () => {
     setSelectedDueDateOption,
     selectedDueDateRange,
     setSelectedDueDateRange,
-  } = useCompanyTasksContext();
+  } = useTasksTableContext();
 
   const handleRangeChange = (range: DateRange) => {
     setSelectedDueDateRange(range);

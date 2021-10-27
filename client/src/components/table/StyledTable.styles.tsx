@@ -248,6 +248,7 @@ export const Container = styled.div`
   flex-direction: column;
   margin: 0;
   padding: 2rem 0 0 0;
+  flex-grow: 1;
 
   h1,
   h2,

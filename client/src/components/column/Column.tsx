@@ -2,22 +2,23 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 
-import { IColumn } from 'stores/task/Reducer';
+import { ITaskStatus } from 'stores/task/Reducer';
 import TasksContainer from 'components/task/TasksContainer';
 
 const ColumnContainer = styled.div`
   padding: 1rem 0.5rem;
   max-width: 300px;
   min-width: 235px;
-  box-shadow: ${(props) =>
+  /* box-shadow: ${(props) =>
     `rgb(0 0 0 / 20%) 0px 4px 6px 0px, ${
       props.isDragging ? '#3484F0' : 'rgba(0, 0, 0, 0.1)'
     }  0px 2px 4px 0px, ${
       props.isDragging ? '#3484F0' : 'rgba(255, 255, 255, 0.05)'
-    } 0px 0px 0px 1px inset`};
+    } 0px 0px 0px 1px inset`}; */
   gap: 0.75rem;
   border-radius: 5px;
   transition: height 0.5s ease-in;
+  height: 100%;
 `;
 
 const ColumnHeader = styled.h3`
@@ -51,36 +52,39 @@ const HeaderIcon = styled.span`
 
 interface IColumnProps {
   index: number;
-  column: IColumn;
+  status: ITaskStatus;
 }
 
 const Column = (props: IColumnProps) => {
+  const { status } = props;
   const [columnName] = useState(
-    props.column.name.toLowerCase().split(' ').join('-'),
+    status.name.toLowerCase().split(' ').join('-'),
   );
 
   return (
-    <Draggable draggableId={props.column._id} index={props.index}>
-      {(provided, snapshot) => (
-        <div
-          className="flex flex-column"
-          {...provided.draggableProps}
-          ref={provided.innerRef}
-        >
-          <ColumnContainer
-            className={`flex flex-column justify-center mb3`}
-            isDragging={snapshot.isDragging}
-            columnName={columnName}
+    <Draggable draggableId={status._id} index={props.index}>
+      {(provided, snapshot) => {
+        return (
+          <div
+            className="flex flex-column"
+            {...provided.draggableProps}
+            ref={provided.innerRef}
           >
-            <ColumnHeader {...provided.dragHandleProps}>
-              <HeaderIcon columnName={columnName} />
-              {props.column.name}{' '}
-              <span className="ml2">{`(${props.column.tasks?.length})`}</span>
-            </ColumnHeader>
-            <TasksContainer column={props.column} />
-          </ColumnContainer>
-        </div>
-      )}
+            <ColumnContainer
+              className={`flex flex-column justify-center mb3`}
+              isDragging={snapshot.isDragging}
+              columnName={columnName}
+            >
+              <ColumnHeader {...provided.dragHandleProps}>
+                <HeaderIcon columnName={columnName} />
+                {status.name}{' '}
+                {/* <span className="ml2">{`(${props.column.tasks?.length})`}</span> */}
+              </ColumnHeader>
+              <TasksContainer status={status} />
+            </ColumnContainer>
+          </div>
+        );
+      }}
     </Draggable>
   );
 };

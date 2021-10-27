@@ -131,6 +131,11 @@ module.exports = {
       name: schema.name.required(),
     }),
   }),
+  getTasks: Joi.object().keys({
+    query: Joi.object().keys({
+      pid: schema.pid.required(),
+    }),
+  }),
   deleteTeamMember: Joi.object().keys({
     params: accountId,
   }),

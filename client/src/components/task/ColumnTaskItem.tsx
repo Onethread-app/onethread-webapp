@@ -102,13 +102,12 @@ interface IColumnTaskItemInternalProps extends IColumnTaskItem {
   deletingTask: boolean;
   errorOnTaskDelete: string;
   getSelectedTaskDetails: (task: string) => void;
-  deleteTask: ({ taskId, columnId }: ITaskDelete) => void;
+  deleteTask: ({ taskId }: ITaskDelete) => void;
 }
 
 const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   const { task } = props;
   const history = useHistory();
-  // const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [taskDelete, setTaskDelete] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
@@ -120,7 +119,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   };
 
   const handleTaskDelete = () => {
-    const payload = { taskId: task._id, columnId: task.columnId };
+    const payload = { taskId: task._id };
     props.deleteTask(payload);
     setDeletingTask(true);
   };
@@ -133,7 +132,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
     ) {
       setLoading(false);
       history.push(
-        `/company/${props.uniqueCompanyName}/project/${props.projectId}/board/${task.boardId}/task/${task._id}`,
+        `/company/${props.uniqueCompanyName}/project/${props.projectId}/task/${task._id}`,
       );
     }
   }, [loading, props.fetchingTask, props.taskError]);

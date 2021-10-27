@@ -13,7 +13,7 @@ const idSchema = {
 const taskSchema = {
   name: Joi.string(),
   description: Joi.string(),
-  status: Joi.string(),
+  status: idSchema.id,
   priority: Joi.number(),
   account: idSchema.id,
   project: idSchema.id,
@@ -28,9 +28,7 @@ module.exports = {
     body: Joi.object().keys({
       name: taskSchema.name.required(),
       description: taskSchema.description.allow(''),
-      status: taskSchema.status,
-      columnId: taskSchema.columnId.required(),
-      boardId: taskSchema.boardId.required(),
+      status: taskSchema.status.required(),
       dueDate: taskSchema.dueDate.required(),
       priority: taskSchema.priority.required(),
       assignmembers: Joi.array().items().required(),
@@ -43,10 +41,8 @@ module.exports = {
   dragTask: Joi.object().keys({
     body: Joi.object().keys({
       taskId: Joi.string().required(),
-      status: taskSchema.status.required(),
-      sourceColumnId: Joi.string().required(),
-      destinationColumnId: Joi.string().required(),
-      taskIndexOfDestinationColumn: Joi.number().required(),
+      sourceStatusId: Joi.string().required(),
+      destinationStatusId: Joi.string().required(),
     }),
   }),
   updateTask: Joi.object().keys({
@@ -58,14 +54,10 @@ module.exports = {
     }),
   }),
   deleteTask: Joi.object().keys({
-    body: Joi.object().keys({
-      columnId: taskSchema.columnId.required(),
-    }),
     params: Joi.object().keys({
       taskId: taskSchema.taskId,
     }),
   }),
-
   addMember: Joi.object().keys({
     body: Joi.object().keys({
       assignmembers: Joi.array().items().required(),

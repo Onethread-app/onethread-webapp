@@ -8,7 +8,7 @@ const { createSlug } = require('../helpers/SlugCreator');
 const Task = require('../task/task.model');
 const SubTask = require('../task/subtask/subtask.model');
 const Boardcolumn = require('../boardColumn/boardColumn.model');
-const { getTaskMembers } = require('../task/task.controller');
+const { getTaskMembers } = require('../helpers/utils');
 const {
   projectTeamMembers,
 } = require('../team-member/team.controller');
@@ -626,25 +626,19 @@ const companyTasks = async (allProjectIds, withDone = false) => {
         project: { $in: allProjectIds },
       })
         .sort({ priority: 0 })
-        .select(
-          '_id name account status dueDate project boardId priority createdAt',
-        )
         .populate([
+          { path: 'project', select: '_id name' },
+          { path: 'company', select: '_id name uniqueName' },
           {
-            path: 'project',
+            path: 'status',
             select: '_id name',
-            populate: [
-              {
-                path: 'company',
-                select: '_id uniqueName name',
-              },
-            ],
           },
           {
             path: 'account',
             select: '_id firstName lastName profileImage',
           },
-        ]);
+        ])
+        .exec();
     } else {
       tasks = await Task.find({
         project: { $in: allProjectIds },
@@ -691,15 +685,8 @@ const companyTasks = async (allProjectIds, withDone = false) => {
         modifiedTask.boardId = task.boardId;
         modifiedTask.priority = task.priority;
         modifiedTask.createdAt = task.createdAt;
-        modifiedTask.project = {
-          _id: task.project._id,
-          name: task.project.name,
-        };
-        modifiedTask.company = {
-          _id: task.project.company._id,
-          uniqueName: task.project.company.uniqueName,
-          name: task.project.company.name,
-        };
+        modifiedTask.project = task.project;
+        modifiedTask.company = task.company;
         modifiedTask.subtasks = subtasks;
         taskCompilation.push(modifiedTask);
       }),

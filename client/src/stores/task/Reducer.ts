@@ -11,6 +11,11 @@ export interface IColumn {
   tasks?: ITask[];
 }
 
+export interface ITaskStatus {
+  _id: string;
+  name: string;
+}
+
 export interface IFile {
   _id: string;
   link: string;
@@ -55,24 +60,31 @@ export interface TaskBoard {
 export interface ITask {
   _id: string;
   name: string;
-  description?: string;
-  columnId: string;
-  currentColumnName: string;
+  description: string;
   createdAt: Date | null;
   createdBy: string;
-  status: string;
+  status: ITaskStatus;
   assignedMembers?: ITaskMember[];
   dueDate?: Date | null;
   priority: number;
   file?: IFile[];
   comments?: Object[];
-  column?: IColumn;
-  boardId?: string;
+  timeSpent: number;
   activityCount?: number;
-  timeSpent?: number;
-  project?: {
+  project: {
     _id: string;
     name: string;
+  };
+  company: {
+    _id: string;
+    name: string;
+    uniqueName: string;
+  };
+  account: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    profileImage?: string;
   };
 }
 
@@ -115,6 +127,7 @@ export interface ITaskReducer {
   currentTask: ITask;
   userTasks: ITask[];
   companyTaskList: ITask[];
+  projectTaskList: ITask[];
   boardError: string;
   boardColumnError: string;
   boardTaskError: string;
@@ -126,6 +139,7 @@ export interface ITaskReducer {
   fetchingTask: boolean;
   fetchingUserTasks: boolean;
   fetchingCompanyTasks: boolean;
+  fetchingProjectTasks: boolean;
   updatingColumn: boolean;
   updatingBoard: boolean;
   updatingBoardName: boolean;
@@ -142,6 +156,7 @@ export interface ITaskReducer {
   errorOnTaskDelete: string;
   errorOnUploadingTaskFile: string;
   errorOnTaskFileDelete: string;
+  errorOnFetchingProjectTasks: string;
   errorOnFetchingCompanyTasks: string;
 }
 
@@ -165,27 +180,37 @@ const InitialState: ITaskReducer = {
     _id: '',
     name: '',
     description: '',
-    columnId: '',
-    currentColumnName: '',
     createdAt: null,
     createdBy: '',
-    status: '',
+    status: {
+      _id: '',
+      name: '',
+    },
     assignedMembers: [],
     dueDate: null,
     priority: 2,
     file: [],
     comments: [],
-    column: {
+    company: {
       _id: '',
       name: '',
-      positionInBoard: 0,
+      uniqueName: '',
     },
-    boardId: '',
-    activityCount: 0,
+    project: {
+      _id: '',
+      name: '',
+    },
+    account: {
+      _id: '',
+      firstName: '',
+      lastName: '',
+      profileImage: '',
+    },
     timeSpent: 0,
   },
   userTasks: [],
   companyTaskList: [],
+  projectTaskList: [],
   creatingBoard: false,
   creatingTask: false,
   fetchingBoards: false,
@@ -194,6 +219,7 @@ const InitialState: ITaskReducer = {
   fetchingTask: false,
   fetchingUserTasks: false,
   fetchingCompanyTasks: false,
+  fetchingProjectTasks: false,
   updatingColumn: false,
   updatingBoard: false,
   updatingBoardName: false,
@@ -214,6 +240,7 @@ const InitialState: ITaskReducer = {
   errorOnUploadingTaskFile: '',
   errorOnTaskFileDelete: '',
   errorOnFetchingCompanyTasks: '',
+  errorOnFetchingProjectTasks: '',
 };
 
 export const TaskReducer = (state = InitialState, action: any) => {
@@ -299,6 +326,24 @@ export const TaskReducer = (state = InitialState, action: any) => {
         ...state,
         fetchingCompanyTasks: false,
         errorOnFetchingCompanyTasks: action.payload,
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_PROJECT_START:
+      return {
+        ...state,
+        fetchingProjectTasks: true,
+        errorOnFetchingProjectTasks: '',
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_PROJECT_SUCCESS:
+      return {
+        ...state,
+        projectTaskList: action.payload,
+        fetchingProjectTasks: false,
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_PROJECT_FAILURE:
+      return {
+        ...state,
+        errorOnFetchingProjectTasks: action.payload,
+        fetchingProjectTasks: false,
       };
     case TaskActionType.SELECT_BOARD_START:
       return {

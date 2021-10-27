@@ -30,6 +30,8 @@ const {
   findAllProjectsByMemberId,
   findAllFavouriteProjectsByMemberId,
 } = require('../services/teams/teams.services');
+const { getFormattedTaskForClient } = require('../helpers/utils');
+const { get } = require('lodash');
 
 const isPidExist = async (pid) => {
   let checkExist = await Project.findOne(
@@ -71,7 +73,7 @@ const getTasksNumbers = async (pid) => {
     project: { $in: pid },
   }).countDocuments();
   const doneTasks = await Task.find({
-    $and: [{ project: { $in: pid }, status: 'done' }],
+    $and: [{ project: { $in: pid }, isCompleted: true }],
   }).countDocuments();
   return { taskNumbers, doneTasks };
 };
@@ -1257,6 +1259,32 @@ const getAllFavouriteProjects = async (req, res, next) => {
   }
 };
 
+const getTasks = async (req, res, next) => {
+  try {
+    const tasks = await Task.find({
+      project: req.query.pid,
+    })
+      .populate([
+        { path: 'project', select: '_id name' },
+        { path: 'company', select: '_id name uniqueName' },
+        {
+          path: 'status',
+          select: '_id name',
+        },
+        {
+          path: 'account',
+          select: '_id firstName lastName profileImage',
+        },
+      ])
+      .exec();
+    const formattedTasks = await getFormattedTaskForClient(tasks);
+    return sendJSONresponse(res, 200, formattedTasks);
+  } catch (error) {
+    logger.error(`Project ${error}`);
+    next(error);
+  }
+};
+
 module.exports = {
   calculateProjectStatus,
   createNewProjectForCompany,
@@ -1288,4 +1316,5 @@ module.exports = {
   getAllProjectForUser,
   favouriteProject,
   getAllFavouriteProjects,
+  getTasks,
 };

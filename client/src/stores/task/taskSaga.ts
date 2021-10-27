@@ -47,6 +47,8 @@ import {
   getAllUserTasksFailure,
   getAllCompanyTasksFailure,
   getAllCompanyTasksSuccess,
+  getAllProjectTasksSuccess,
+  getAllProjectTasksFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
@@ -139,6 +141,22 @@ function* getAllCompanyTasksAsync() {
     yield put(getAllCompanyTasksFailure(returnErrorText(error)));
   } finally {
     yield put(hideLoading());
+  }
+}
+
+function* getAllProjectTasksAsync() {
+  try {
+    const headers = tokenConfig();
+    const projectId = yield select(getProjectId);
+    if ((headers.headers as any).Authorization) {
+      const response = yield tigrowApi.get(
+        `/projects/tasks?pid=${projectId}`,
+        headers,
+      );
+      yield put(getAllProjectTasksSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(getAllProjectTasksFailure(returnErrorText(error)));
   }
 }
 
@@ -291,13 +309,13 @@ export function* dragAndDrop({
       // find the dragged task, removed from source and save destination column index
       allColumns.forEach((column, i) => {
         if (sourceColumnId === column._id) {
-          const index = column.tasks!.findIndex(
-            (task) => task._id === taskId,
-          );
-          column.tasks![index].status = status;
-          column.tasks![index].columnId = destinationColumnId;
-          addedTask = column.tasks!.slice(index, index + 1)[0];
-          column.tasks!.splice(index, 1);
+          // const index = column.tasks!.findIndex(
+          //   (task) => task._id === taskId,
+          // );
+          // column.tasks![index].status = status;
+          // column.tasks![index].columnId = destinationColumnId;
+          // addedTask = column.tasks!.slice(index, index + 1)[0];
+          // column.tasks!.splice(index, 1);
         }
         if (destinationColumnId === column._id) {
           destCol = i;
@@ -358,29 +376,31 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
   try {
     yield put(showLoading());
     const headers = tokenConfig();
-    // const projectId = yield select(getProjectId);
+    console.log(payload);
+    const projectId = yield select(getProjectId);
     // if (projectId) {
     if ((headers as any).headers.Authorization && payload) {
-      const res = yield tigrowApi.get(`tasks/${payload}`, headers);
-      const response = {
-        _id: res.data._id,
-        name: res.data.name,
-        createdAt: res.data.createdAt,
-        dueDate: res.data.dueDate,
-        createdBy:
-          res.data.account.firstName +
-          ' ' +
-          res.data.account.lastName,
-        description: res.data.description,
-        priority: res.data.priority,
-        currentColumnName: res.data.columnId.name,
-        columnId: res.data.columnId._id,
-        boardId: res.data.boardId,
-        file: res.data.file,
-        status: res.data.status,
-        timeSpent: res.data.timeSpent,
-      };
-      yield put(getSelectedTaskDetailsSuccess(response));
+      const res = yield tigrowApi.get(
+        `tasks/${payload}/?pid=${projectId}`,
+        headers,
+      );
+      console.log(res);
+      // const response = {
+      //   _id: res.data._id,
+      //   name: res.data.name,
+      //   createdAt: res.data.createdAt,
+      //   dueDate: res.data.dueDate,
+      //   createdBy:
+      //     res.data.account.firstName +
+      //     ' ' +
+      //     res.data.account.lastName,
+      //   description: res.data.description,
+      //   priority: res.data.priority,
+      //   file: res.data.file,
+      //   status: res.data.status,
+      //   timeSpent: res.data.timeSpent,
+      // };
+      yield put(getSelectedTaskDetailsSuccess(res.data));
     }
     // } else {
     //   yield put(updateTaskLoading(false));
@@ -462,7 +482,7 @@ export function* taskFileUploadAsync({ payload }: any) {
         taskId: res.data.task,
         link: res.data.link,
         s3Key: res.data.s3key,
-        columnId: payload.columnId,
+        columnId: payload.columnId, // need to change
       };
       yield all([
         put(taskFileUploadSuccess(response)),
@@ -502,7 +522,7 @@ export function* deleteTaskAsync({ payload }: any) {
         `tasks/${payload.taskId}?pid=${projectId}`,
         {
           data: {
-            columnId: payload.columnId,
+            // columnId: payload.columnId,
           },
           headers: headers.headers,
         },
@@ -538,6 +558,13 @@ export function* onGetAllCompanyTasks() {
   yield takeLatest(
     TaskActionType.GET_ALL_TASKS_FOR_COMPANY_START,
     getAllCompanyTasksAsync,
+  );
+}
+
+export function* onGetAllProjectTasks() {
+  yield takeLatest(
+    TaskActionType.GET_ALL_TASKS_FOR_PROJECT_START,
+    getAllProjectTasksAsync,
   );
 }
 
@@ -616,6 +643,7 @@ export default function* taskSaga() {
     call(onGetAllBoards),
     call(onGetAllUserTasks),
     call(onGetAllCompanyTasks),
+    call(onGetAllProjectTasks),
     call(onGetSelectedBoard),
     call(onUpdateBoardName),
     call(onCreateColumn),
