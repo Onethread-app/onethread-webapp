@@ -109,7 +109,7 @@ const Sidebar = (props: Props) => {
             ))}
           </CompanyContainer>
         ) : null}
-        <Item to={`/pprojects`} activeClassName="active-link">
+        <Item to={`/projects`} activeClassName="active-link">
           <img src={project} alt="Project icon" />
           <span className="left-open">Projects</span>
         </Item>

@@ -15,6 +15,18 @@ router
   .get(authorization, projectCtrl.getAllProjectForUser);
 
 router
+  .route('/favourite')
+  .put(
+    authorization,
+    projectCtrl.favouriteProject,
+    schemaValidator(projectValidation.favouriteProject),
+  );
+
+router
+  .route('/favourite-list')
+  .get(authorization, projectCtrl.getAllFavouriteProjects);
+
+router
   .route('/change-title')
   .put(
     authorization,

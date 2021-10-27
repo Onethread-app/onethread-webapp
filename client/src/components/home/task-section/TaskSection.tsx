@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import { Header, ModalContainer, Row } from './TaskSection.styles';
+import { Header, Row } from './TaskSection.styles';
 import Hamburger from '../../../resources/images/hamburger.png';
 import TaskDialog from './TaskDialog';
 import { connect } from 'react-redux';
@@ -49,12 +49,10 @@ const TaskSection = (props: Props) => {
         </Row>
       )}
       <Dialog open={openTaskDialog} maxWidth={'lg'}>
-        <ModalContainer>
-          <TaskDialog
-            setShowDialog={setOpenTaskDialog}
-            useToaster={props.useToaster}
-          />
-        </ModalContainer>
+        <TaskDialog
+          setShowDialog={setOpenTaskDialog}
+          useToaster={props.useToaster}
+        />
       </Dialog>
     </div>
   );
