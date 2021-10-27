@@ -26,7 +26,14 @@ const teamMemberListFindByProjectId = async (pid) => {
 
 const findAllProjectsByMemberId = async (id) => {
   return await Team.find({ member: id })
-    .select('project')
+    .select('project isFavourite')
+    .populate(options)
+    .exec();
+};
+
+const findAllFavouriteProjectsByMemberId = async (id) => {
+  return await Team.find({ member: id, isFavourite: true })
+    .select('project isFavourite')
     .populate(options)
     .exec();
 };
@@ -34,4 +41,5 @@ const findAllProjectsByMemberId = async (id) => {
 module.exports = {
   teamMemberListFindByProjectId,
   findAllProjectsByMemberId,
+  findAllFavouriteProjectsByMemberId,
 };

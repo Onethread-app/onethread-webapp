@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Dialog } from '@blueprintjs/core';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { ICompanyByUser } from 'stores/user/Reducer';
 
@@ -14,10 +17,8 @@ import {
   CreateCompany,
   CompanyContainer,
 } from './CompanySection.styles';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+
 import { getCompanyDetails } from 'stores/company/Actions';
-import { Dialog } from '@material-ui/core';
 import { CompanySignupForm } from './CompanyDialog';
 
 interface Props {
@@ -126,9 +127,11 @@ const CompanySection = (props: Props) => {
       </CompanyContainer>
       {showCompanyDialog ? (
         <Dialog
-          onClose={() => setShowCompanyDialog(!showCompanyDialog)}
-          open={showCompanyDialog}
-          maxWidth={'lg'}
+          isOpen={showCompanyDialog}
+          canOutsideClickClose={false}
+          autoFocus
+          style={{ borderRadius: '1rem' }}
+          className="w-auto h-auto pb0"
         >
           <CompanySignupForm
             setShowDialog={setShowCompanyDialog}

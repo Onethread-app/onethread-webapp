@@ -134,4 +134,13 @@ module.exports = {
   deleteTeamMember: Joi.object().keys({
     params: accountId,
   }),
+  favouriteProject: Joi.object().keys({
+    body: Joi.object().keys({
+      memberId: schema.memberId.required(),
+      isFavourite: Joi.boolean().required(),
+    }),
+    query: Joi.object().keys({
+      pid: schema.pid.required(),
+    }),
+  }),
 };

@@ -60,10 +60,14 @@ import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
 import ErrorText from 'layouts/company/settings/ErrorText';
 import NavbarTop from 'components/navbar/Navbar';
-// import { Sidebar } from 'components/Sidebar';
 import { customStylesForModal } from 'layouts/company/settings/Index';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import Sidebar from './sidebar/Sidebar';
+import UpdatedNavbar from './updatedNavbar/Navbar';
+import {
+  ErrorToaster,
+  SuccessToaster,
+} from 'layouts/home/Index.styles';
 
 interface LayoutProps {
   Component: React.ComponentClass | React.FunctionComponent;
@@ -114,6 +118,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     view: 'default',
     roomId: '',
   });
+
+  const [showToaster, setShowToaster] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
   const [subscriptionExpired, setSubscriptionExpired] =
     useState(false);
 
@@ -137,6 +146,17 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
     props.setSubscriptionNotExpire();
     props.history.push(`/${props.user.name}/home`);
+  };
+
+  const useToaster = () => {
+    return {
+      showToaster,
+      successMessage,
+      errorMessage,
+      setShowToaster,
+      setErrorMessage,
+      setSuccessMessage,
+    };
   };
 
   useEffect(() => {
@@ -334,6 +354,16 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       props.getAllCompaniesByUserId(props.user._id);
   }, [props.user._id]);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowToaster(false);
+      setErrorMessage('');
+      setSuccessMessage('');
+    }, 3000);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showToaster]);
+
   useBeforeunload((event) => {
     if (props.currentlyTracking.name !== '') {
       event.preventDefault();
@@ -385,9 +415,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
               <div
                 className={`relative`}
                 style={{
-                  transition: 'width 0.4s',
+                  transition: 'width 0.4s ease-in-out',
                   width: !leftOpen ? '15%' : '55px',
-                  maxWidth: '250px',
+                  // minWidth: !leftOpen ? '150px' : '55px',
+                  margin: '0 auto',
                 }}
               >
                 <div>
@@ -442,13 +473,17 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   />
                 </span>
                 <div className="flex flex-column h-100">
-                  <NavbarTop
+                  {/* <NavbarTop
                     scrollTop={scrollTop}
                     type={
                       (props.match.params as any).cname
                         ? 'company'
                         : 'default'
                     }
+                  /> */}
+                  <UpdatedNavbar
+                    scrollTop={scrollTop}
+                    useToaster={useToaster}
                   />
                   <div
                     ref={scrollRef}
@@ -704,6 +739,14 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           </MobileOnlyView>
         </>
       )}
+
+      {Boolean(showToaster && errorMessage) ? (
+        <ErrorToaster>{errorMessage}</ErrorToaster>
+      ) : null}
+      {Boolean(showToaster && successMessage) ? (
+        <SuccessToaster>{successMessage}</SuccessToaster>
+      ) : null}
+
       {props.match.url.includes(
         `/company/${props.company?.uniqueName}`,
       ) &&

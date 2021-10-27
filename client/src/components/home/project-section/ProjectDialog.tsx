@@ -80,7 +80,7 @@ interface IProps {
     setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
     setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
   };
-  setProjects: React.Dispatch<React.SetStateAction<IProject[]>>;
+  // setProjects: React.Dispatch<React.SetStateAction<IProject[]>>;
 }
 
 const Index = (props: IProps) => {
@@ -101,7 +101,7 @@ const Index = (props: IProps) => {
     useState<boolean>(false);
   const [creatingProject, setCreatingProject] =
     useState<boolean>(false);
-  const { setProjects } = props;
+  // const [projects,setProjects] = useState<IProject[]>([]);
 
   const {
     showToaster,
@@ -185,6 +185,11 @@ const Index = (props: IProps) => {
     }
   };
 
+  // useEffect(() => {
+  //   setProjects(props.allProjects);
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [props.allProjects]);
+
   useEffect(() => {
     if (props.companies.length > 0) {
       const gettingOptionsFromCompanies = props.companies.map(
@@ -200,11 +205,6 @@ const Index = (props: IProps) => {
     setDefaultValues(props.previousData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    setProjects(props.allProjects);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.allProjects]);
 
   useEffect(() => {
     if (creatingProject) {
