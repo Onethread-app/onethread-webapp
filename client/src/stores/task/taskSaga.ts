@@ -2,6 +2,7 @@ import { all, put, call, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
 import {
+  formTokenConfig,
   tokenConfig,
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
@@ -49,8 +50,13 @@ import {
   getAllCompanyTasksSuccess,
   getAllProjectTasksSuccess,
   getAllProjectTasksFailure,
+  createTaskStatusSuccess,
+  createTaskStatusFailure,
+  getAllTaskStatusInProjectSuccess,
+  getAllTaskStatusInProjectFailure,
   updateTaskStatusFailure,
-  updateTaskStatusSuccess,
+  createSubTaskSuccess,
+  createSubTaskFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
@@ -256,25 +262,25 @@ export function* updateColumn({ payload }: any) {
 
 export function* createTask({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const projectId = yield select(getProjectId);
-    const { columnId } = payload;
-    const col = yield select(selectColumnName(columnId));
-    const newPayload = {
-      status: col[0].name.toLowerCase().split(' ').join('-'),
-      ...payload,
-    };
+    const { companyId, projectId, ...newPayload } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
         `tasks?pid=${projectId}`,
         newPayload,
         headers,
       );
-      const responseValue = {
-        ...response.data,
-        columnId: payload.columnId,
-      };
-      yield put(createTaskSuccess(responseValue));
+
+      const currentCompanyId = yield select(getCompanyId);
+      const currentProjectId = yield select(getProjectId);
+
+      yield put(
+        createTaskSuccess({
+          task: response.data,
+          currentCompanyId,
+          currentProjectId,
+        }),
+      );
     }
   } catch (error) {
     yield put(
@@ -381,35 +387,14 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
   try {
     yield put(showLoading());
     const headers = tokenConfig();
-    console.log(payload);
     const projectId = yield select(getProjectId);
-    // if (projectId) {
     if ((headers as any).headers.Authorization && payload) {
       const res = yield tigrowApi.get(
         `tasks/${payload}/?pid=${projectId}`,
         headers,
       );
-      console.log(res);
-      // const response = {
-      //   _id: res.data._id,
-      //   name: res.data.name,
-      //   createdAt: res.data.createdAt,
-      //   dueDate: res.data.dueDate,
-      //   createdBy:
-      //     res.data.account.firstName +
-      //     ' ' +
-      //     res.data.account.lastName,
-      //   description: res.data.description,
-      //   priority: res.data.priority,
-      //   file: res.data.file,
-      //   status: res.data.status,
-      //   timeSpent: res.data.timeSpent,
-      // };
       yield put(getSelectedTaskDetailsSuccess(res.data));
     }
-    // } else {
-    //   yield put(updateTaskLoading(false));
-    // }
   } catch (error) {
     yield put(getSelectedTaskDetailsFailure(returnErrorText(error)));
   } finally {
@@ -419,53 +404,30 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
 
 export function* updateTask({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const taskId = yield select(getCurrentTaskId);
-    const projectId = yield select(getProjectId);
-    const currentBoard = yield select(getCurrentBoard);
+    const headers = formTokenConfig(payload.company._id);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.put(
-        `tasks/${taskId}?pid=${projectId}`,
-        payload,
+        `tasks/${payload._id}?pid=${payload.project._id}`,
+        {
+          name: payload.name,
+          status: payload.status,
+          description: payload.description,
+          dueDate: payload.dueDate,
+          priority: payload.priority,
+        },
         headers,
       );
-      const response = {
-        _id: res.data._id,
-        name: res.data.name,
-        createdAt: res.data.createdAt,
-        dueDate: res.data.dueDate,
-        createdBy:
-          res.data.account.firstName +
-          ' ' +
-          res.data.account.lastName,
-        description: res.data.description,
-        priority: res.data.priority,
-        currentColumnName: res.data.columnId.name,
-        columnId: res.data.columnId._id,
-      };
 
-      const allColumns = currentBoard.columns!;
-      allColumns.forEach((column, i) => {
-        if (response.columnId === column._id) {
-          const index = column.tasks!.findIndex(
-            (task) => task._id === taskId,
-          );
-          column.tasks![index].status = response.currentColumnName
-            .toLowerCase()
-            .split(' ')
-            .join('-');
-          column.tasks![index]._id = response._id;
-          column.tasks![index].name = response.name;
-          column.tasks![index].dueDate = response.dueDate;
-          column.tasks![index].description = response.description;
-          column.tasks![index].priority = response.priority;
-          column.tasks![index].currentColumnName =
-            response.currentColumnName;
-          column.tasks![index].columnId = response.columnId;
-        }
-      });
+      const companyId = yield select(getCompanyId);
+      const projectId = yield select(getProjectId);
 
-      yield put(updateTaskSuccess({ allColumns, response }));
+      yield put(
+        updateTaskSuccess({
+          updatedTask: res.data,
+          companyId,
+          projectId,
+        }),
+      );
     }
   } catch (error) {
     errorMessgeHandler(error);
@@ -520,20 +482,15 @@ export function* taskFileDeleteAsync({ payload }: any) {
 
 export function* deleteTaskAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const projectId = yield select(getProjectId);
+    const { taskId, projectId, companyId } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization && payload) {
       const response = yield tigrowApi.delete(
-        `tasks/${payload.taskId}?pid=${projectId}`,
-        {
-          data: {
-            // columnId: payload.columnId,
-          },
-          headers: headers.headers,
-        },
+        `tasks/${taskId}?pid=${projectId}`,
+        headers,
       );
       if (response.status === 200) {
-        yield put(deleteTaskSuccess(payload));
+        yield put(deleteTaskSuccess(taskId));
       }
     }
   } catch (error) {
@@ -541,21 +498,75 @@ export function* deleteTaskAsync({ payload }: any) {
   }
 }
 
-function* updateTaskStatusAsync({ payload }) {
+export function* createTaskStatusAsync({ payload }: any) {
   try {
-    console.log(payload);
-    const headers = tokenConfig();
+    const { projectId, companyId, ...newPayload } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
-      yield put(updateTaskStatusSuccess(payload));
-      const response = yield tigrowApi.put(
-        `tasks/${payload._id}?pid=${payload.project._id}`,
-        { status: payload.status._id },
+      const response = yield tigrowApi.post(
+        `taskStatus?pid=${projectId}`,
+        newPayload,
         headers,
       );
-      console.log(response);
+      yield put(createTaskStatusSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(createTaskStatusFailure(returnErrorText(error)));
+  }
+}
+
+export function* getAllTaskStatusInProjectAsync({ payload }: any) {
+  try {
+    const { projectId, companyId } = payload;
+    const headers = formTokenConfig(companyId);
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(
+        `taskStatus?pid=${projectId}`,
+        headers,
+      );
+      yield put(getAllTaskStatusInProjectSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(
+      getAllTaskStatusInProjectFailure(returnErrorText(error)),
+    );
+  }
+}
+
+export function* updateTaskStatusAsync({ payload }: any) {
+  try {
+    const { projectId, companyId, taskStatusId, ...newPayload } =
+      payload;
+    const headers = formTokenConfig(companyId);
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.put(
+        `taskStatus/${taskStatusId}?pid=${projectId}`,
+        newPayload,
+        headers,
+      );
+      yield put(updateTaskSuccess(response.data));
     }
   } catch (error) {
     yield put(updateTaskStatusFailure(returnErrorText(error)));
+  }
+}
+
+export function* createSubTask(payload) {
+  try {
+    const { projectId, companyId, taskId, name } = payload;
+    const headers = formTokenConfig(companyId);
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.post(
+        `tasks/${taskId}/subtask?pid=${projectId}`,
+        {
+          name,
+        },
+        headers,
+      );
+      yield put(createSubTaskSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(createSubTaskFailure(returnErrorText(error)));
   }
 }
 
@@ -660,11 +671,29 @@ export function* onDeleteTask() {
   yield takeEvery(TaskActionType.DELETE_TASK_START, deleteTaskAsync);
 }
 
+export function* onCreateTaskStatus() {
+  yield takeEvery(
+    TaskActionType.CREATE_TASK_STATUS,
+    createTaskStatusAsync,
+  );
+}
+
+export function* onGetAllTaskStatusInProject() {
+  yield takeEvery(
+    TaskActionType.GET_ALL_TASK_STATUS,
+    getAllTaskStatusInProjectAsync,
+  );
+}
+
 export function* onUpdateTaskStatus() {
-  yield takeLatest(
-    TaskActionType.UPDATE_TASK_STATUS_START,
+  yield takeEvery(
+    TaskActionType.UPDATE_TASK_STATUS,
     updateTaskStatusAsync,
   );
+}
+
+export function* onCreateSubTask() {
+  yield takeEvery(TaskActionType.CREATE_SUBTASK, createSubTask);
 }
 
 export default function* taskSaga() {
@@ -686,6 +715,9 @@ export default function* taskSaga() {
     call(onTaskFileUpload),
     call(onTaskFileDelete),
     call(onDeleteTask),
+    call(onCreateTaskStatus),
+    call(onGetAllTaskStatusInProject),
     call(onUpdateTaskStatus),
+    call(onCreateSubTask),
   ]);
 }

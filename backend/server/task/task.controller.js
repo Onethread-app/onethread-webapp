@@ -37,6 +37,20 @@ const {
   getAssignedMembers,
 } = require('../services/task/task.service');
 
+const populateArray = [
+  { path: 'project', select: '_id name' },
+  { path: 'company', select: '_id name uniqueName' },
+  {
+    path: 'status',
+    select: '_id name',
+  },
+  {
+    path: 'account',
+    select: '_id firstName lastName profileImage',
+  },
+  { path: 'file', select: '_id link s3Key' },
+];
+
 // OK
 const addMemberToTask = async (assignmembers, taskId, req) => {
   const requestedMembers = assignmembers;
@@ -47,6 +61,7 @@ const addMemberToTask = async (assignmembers, taskId, req) => {
       assignedPerson: memberId,
     };
   });
+  // TODO: Permission Error
   await TaskAssign.insertMany(newMembers);
   const members = await TaskAssign.find({
     taskId,
@@ -84,19 +99,6 @@ const load = async (req, res, next, id) => {
   try {
     console.log(req.body);
     logger.info('Task is loading....');
-    const populateArray = [
-      { path: 'project', select: '_id name' },
-      { path: 'company', select: '_id name uniqueName' },
-      {
-        path: 'status',
-        select: '_id name',
-      },
-      {
-        path: 'account',
-        select: '_id firstName lastName profileImage',
-      },
-      { path: 'file', select: '_id link s3Key' },
-    ];
     const task = await Task.findById(id).populate(populateArray);
 
     if (!task) {
@@ -150,9 +152,44 @@ const createSubtask = async (req, res, next) => {
     logger.error(`SubTask Creation: ${error}`);
     next(error);
   }
+
+  const task = await Task.findById(id).populate([
+    { path: 'project', select: '_id name' },
+    { path: 'company', select: '_id name uniqueName' },
+    {
+      path: 'status',
+      select: '_id name',
+    },
+    {
+      path: 'account',
+      select: '_id firstName lastName profileImage',
+    },
+    { path: 'file', select: '_id link s3Key' },
+  ]);
+
+  if (!task) {
+    return sendErrorResponse(res, 404, 'NotFound', {
+      success: false,
+      message: 'No valid entry found for provided Task ID',
+    });
+  }
+
+  req.task = task;
+  next();
 };
 
 // OK
+
+const isEqual = (a, b) => {
+  if (!a || !b) return false;
+  return a.toString() === b.toString();
+};
+
+// Headers: companyid
+// query: pid
+// body: status, name, description, priority, dueDate,
+// private
+
 const create = async (req, res, next) => {
   try {
     // Get Company & Project ID
@@ -182,7 +219,7 @@ const create = async (req, res, next) => {
       priority: req.body.priority,
       dueDate: req.body.dueDate,
       company: companyId,
-    });
+    }).populate(populateArray);
 
     const members = await addMemberToTask(
       req.body.assignmembers,
@@ -355,7 +392,6 @@ const suggestMemberForCreatingTask = async (req, res, next) => {
     })
       .select('_id account')
       .populate('account', '_id name');
-
     let members = projectMembers.map((m) => m.account);
     return sendJSONresponse(res, 200, members);
   } catch (error) {

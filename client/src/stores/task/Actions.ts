@@ -4,7 +4,7 @@ import {
   ITask,
   SortTasksBy,
   IFilterUser,
-  ITaskStatus,
+  // ITaskStatus,
 } from './Reducer';
 
 export interface ITaskDelete {
@@ -332,8 +332,33 @@ export const clearCompanyTasks = () => ({
   type: TaskActionType.CLEAR_COMPANY_TASKS,
 });
 
-export const updateTaskStatus = (payload: ITaskStatus) => ({
-  type: TaskActionType.UPDATE_TASK_STATUS_START,
+export const createTaskStatus = (payload: {
+  name: string;
+  type: string;
+  positionInBoard: number;
+  projectId: string;
+}) => ({
+  type: TaskActionType.CREATE_TASK_STATUS,
+  payload,
+});
+
+export const createTaskStatusSuccess = (response: any) => ({
+  type: TaskActionType.CREATE_TASK_STATUS_SUCCESS,
+  payload: response,
+});
+
+export const createTaskStatusFailure = (errorMessage: string) => ({
+  type: TaskActionType.CREATE_TASK_STATUS_FAILURE,
+  payload: errorMessage,
+});
+
+export const updateTaskStatus = (payload: {
+  name: string;
+  positionInBoard: number;
+  taskStatusId: string;
+  projectId: string;
+}) => ({
+  type: TaskActionType.UPDATE_TASK_STATUS,
   payload,
 });
 
@@ -342,7 +367,44 @@ export const updateTaskStatusSuccess = (response: any) => ({
   payload: response,
 });
 
-export const updateTaskStatusFailure = (errorMessage: any) => ({
+export const updateTaskStatusFailure = (errorMessage: string) => ({
   type: TaskActionType.UPDATE_TASK_STATUS_FAILURE,
+  payload: errorMessage,
+});
+
+export const getAllTaskStatusInProject = (projectId: string) => ({
+  type: TaskActionType.GET_ALL_TASK_STATUS,
+  payload: projectId,
+});
+
+export const getAllTaskStatusInProjectSuccess = (response: any) => ({
+  type: TaskActionType.GET_ALL_TASK_STATUS_SUCCESS,
+  payload: response,
+});
+
+export const getAllTaskStatusInProjectFailure = (
+  errorMessage: string,
+) => ({
+  type: TaskActionType.GET_ALL_TASK_STATUS_FAILURE,
+  payload: errorMessage,
+});
+
+export const createSubTask = (payload: {
+  name: string;
+  taskId: string;
+  projectId: string;
+  companyId: string;
+}) => ({
+  type: TaskActionType.CREATE_SUBTASK,
+  payload,
+});
+
+export const createSubTaskSuccess = (payload) => ({
+  type: TaskActionType.CREATE_SUBTASK_SUCCESS,
+  payload,
+});
+
+export const createSubTaskFailure = (errorMessage: string) => ({
+  type: TaskActionType.CREATE_SUBTASK_FAILURE,
   payload: errorMessage,
 });
