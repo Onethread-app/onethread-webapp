@@ -156,7 +156,7 @@ const CreateCompany = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: 200ms transform ease-in-out;
+  transition: 300ms transform ease-in;
 
   img {
     margin-top: 38.5px auto 0;
@@ -164,7 +164,11 @@ const CreateCompany = styled.div`
   }
 
   &:hover {
-    transform: scaleX(1.05);
+    transform: scale(1.025);
+  }
+
+  &:active {
+    transform: scale(1);
   }
 `;
 

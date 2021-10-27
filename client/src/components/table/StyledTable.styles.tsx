@@ -7,16 +7,30 @@ export const SortIcon = styled.div`
   flex-direction: column;
 `;
 
-export const StyledTableData = styled.div`
+export const StyledDataContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1rem;
   font-weight: 500;
-  width: ${(props) => `${100 / props.cols}%`};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`;
+
+export const StyledTableData = styled(StyledDataContainer)`
+  width: ${(props) => `${100 / props.cols}%`};
+`;
+
+export const StyledSubRowData = styled(StyledDataContainer)`
+  &:nth-child(2) {
+    flex-grow: 1;
+    justify-content: start;
+  }
+
+  &:last-child {
+    min-width: 18%;
+  }
 `;
 
 export const StyledProjectTableData = styled(StyledTableData)`
@@ -26,7 +40,16 @@ export const StyledProjectTableData = styled(StyledTableData)`
 `;
 
 export const StyledTaskTableData = styled(StyledTableData)`
+  &:not(:first-child) {
+    width: ${(props) => `${100 / (props.cols - 1)}%`};
+  }
+
   &:nth-child(2) {
+    width: 24px;
+  }
+
+  &:nth-child(2),
+  &:nth-child(3) {
     display: -webkit-box;
     margin: auto 0;
     justify-content: start;
@@ -37,10 +60,27 @@ export const StyledTableRow = styled.div`
   display: flex;
   flex: 1;
   align-items: center;
-  background: #ffffff;
-  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
   padding: 14px;
   cursor: pointer;
+  width: 100%;
+`;
+
+export const StyledSubRow = styled(StyledTableRow)`
+  padding: 0.75rem 1.5rem;
+  background: #f8f8f8;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #e8e8e8;
+  }
+`;
+
+export const StyledTableRowContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 
   &:first-child {
     border-radius: 8px 8px 0 0;
@@ -48,11 +88,24 @@ export const StyledTableRow = styled.div`
 
   &:last-child {
     border-radius: 0 0 8px 8px;
+
+    ${StyledSubRow} {
+      &:last-child {
+        border-radius: 0 0 8px 8px;
+      }
+    }
   }
 
   &:not(:last-child) {
     border-bottom: 1px solid #e8e8e8;
   }
+`;
+
+export const StyledSubRowBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
 `;
 
 export const StyledTableBody = styled.div`
@@ -61,7 +114,15 @@ export const StyledTableBody = styled.div`
   width: 100%;
   min-width: 760px;
 
-  ${StyledTableRow} {
+  &:hover {
+    ${StyledSubRow} {
+      &:last-child {
+        border-radius: 8px;
+      }
+    }
+  }
+
+  ${StyledTableRowContainer} {
     transition: all 0.2s ease-in;
 
     &:hover {
