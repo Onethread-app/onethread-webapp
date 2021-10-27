@@ -15,6 +15,7 @@ import favourites from 'resources/images/favorite.png';
 import onethread from 'resources/images/onethread.png';
 import {
   Company,
+  CompanyContainer,
   Container,
   ContainerBody,
   Favourites,
@@ -92,7 +93,7 @@ const Sidebar = (props: Props) => {
           </span>
         </Item>
         {leftOpen === false && showCompanies ? (
-          <>
+          <CompanyContainer>
             {companies.map((company) => (
               <Company
                 activeClassName="active-link"
@@ -106,7 +107,7 @@ const Sidebar = (props: Props) => {
                 </span>
               </Company>
             ))}
-          </>
+          </CompanyContainer>
         ) : null}
         <Item to={`/pprojects`} activeClassName="active-link">
           <img src={project} alt="Project icon" />
