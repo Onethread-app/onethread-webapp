@@ -106,7 +106,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "build:dev": "env-cmd -f .env.development react-scripts start",
-    "build:test": "env-cmd -f .env.test react-scripts build",
+    "build:test": "GENERATE_SOURCEMAP=false env-cmd -f .env.test react-scripts build",
     "build:prod": "GENERATE_SOURCEMAP=false env-cmd -f env.production react-scripts build",
     "eject": "react-scripts eject"
   },
