@@ -22,7 +22,7 @@ let host = ``;
 if (config.env === 'production') {
   host = `https://www.onethread.app`;
 } else if (config.env === 'test') {
-  host = `https://stage.tigrow.co`;
+  host = `https://stage.onethread.app`;
 } else if (config.env === 'test3') {
   host = `http://test3.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
 } else if (config.env === 'test4') {

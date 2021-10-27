@@ -548,9 +548,7 @@ const getAccount = async (req, res, next) => {
   try {
     let userInfo = await findAccountById(req.user._id);
     let count = 0;
-    if (userInfo.skillArea.length === 0) {
-      count++;
-    }
+
     if (userInfo.education.length === 0) {
       count++;
     }
