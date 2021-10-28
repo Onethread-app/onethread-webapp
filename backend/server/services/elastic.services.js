@@ -9,6 +9,7 @@ const memberIndex = 'members';
 const skillIndex = 'skillareas';
 const companyIndex = 'companies';
 const associateIndex = 'associates';
+const labelIndex = 'labels';
 
 const elasticUrl =
   process.env.ELASTIC_SEARCH_ADDRESS || 'http://localhost:9200';
@@ -243,6 +244,59 @@ async function createCompany(index, mapping, model) {
   }
 }
 
+async function createTaskLabel(index, mapping, model) {
+  try {
+    if (await esclient.indices.exists({ index })) {
+      await esclient.indices.delete({ index });
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch existing index ${index} is deleted`,
+        ),
+      );
+    }
+
+    await esclient.indices.create({
+      index: index,
+      body: mapping,
+    });
+
+    const bulk = [];
+
+    const dataset = await model.find({});
+
+    if (!isEmpty(dataset)) {
+      dataset.forEach((data) => {
+        bulk.push({
+          index: { _index: index },
+        });
+        bulk.push({
+          mongo_id: data._id.toString(),
+          name: data.name,
+          createdBy: data.createdBy,
+          color: data.color,
+          description: data.description,
+          company: data.company,
+        });
+      });
+      await esclient.bulk({ body: bulk });
+
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch successfully created index ${index} with bulk`,
+        ),
+      );
+    } else {
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch successfully created index ${index}`,
+        ),
+      );
+    }
+  } catch (error) {
+    logger.error(chalk.redBright(error));
+  }
+}
+
 async function createAssociate(index, mapping, model) {
   try {
     if (await esclient.indices.exists({ index })) {
@@ -326,6 +380,25 @@ function bulkInsert(indexName, dataset, structure) {
   return esclient.bulk({ body: bulk });
 }
 
+const storeLabelInElk = async (label) => {
+  await setDocument(labelIndex, '_doc', {
+    mongo_id: label._id,
+    name: label.name,
+    color: label.color,
+    company: label.company,
+  });
+};
+
+const deleteLabelFromELKByMongoId = async (id) => {
+  await deleteDocument(labelIndex, '_doc', {
+    query: {
+      match: {
+        mongo_id: id,
+      },
+    },
+  });
+};
+
 function deleteDocument(indexName, indexType, body) {
   return esclient.deleteByQuery({
     index: indexName,
@@ -403,6 +476,19 @@ const skillMapping = {
   },
 };
 
+const labelMapping = {
+  mappings: {
+    properties: {
+      mongo_id: { type: 'text' },
+      name: { type: 'text' },
+      createdBy: { type: 'text' },
+      color: { type: 'text' },
+      description: { type: 'text' },
+      company: { type: 'text' },
+    },
+  },
+};
+
 const companyMappnig = {
   mappings: {
     properties: {
@@ -419,6 +505,7 @@ module.exports = {
   createMembers,
   accountIndex,
   memberIndex,
+  labelIndex,
   accountMapping,
   memberMapping,
   messageMapping,
@@ -435,6 +522,10 @@ module.exports = {
   associateMapping,
   associateIndex,
   createAssociate,
+  createTaskLabel,
+  labelMapping,
+  storeLabelInElk,
+  deleteLabelFromELKByMongoId,
 };
 
 // function createMessages(index,model,mapping, structure){
@@ -479,7 +570,6 @@ module.exports = {
 //   } catch (error) {
 //     logger.error(error)
 //   }
-
 // }
 
 // module.exports.skillStructure = data => {
