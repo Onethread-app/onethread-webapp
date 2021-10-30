@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
-
+import moment from 'moment';
+import { IconNames } from '@blueprintjs/icons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { ITask } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 
@@ -77,6 +79,73 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               companyId={props.company._id}
               projectId={props.currentProjectId}
             />
+          </div>
+          <div className="flex justify-end">
+            {props.currentTask!.dueDate && (
+              <>
+                {Math.ceil(
+                  moment(props.currentTask!.dueDate).diff(
+                    moment(),
+                    'days',
+                    true,
+                  ),
+                ) === 0 ? (
+                  <p className="fw6 red mv2">Deadline ends today</p>
+                ) : Math.ceil(
+                    moment(props.currentTask!.dueDate).diff(
+                      moment(),
+                      'days',
+                      true,
+                    ),
+                  ) < 0 ? (
+                  <p className="fw6 red mv2">Expired</p>
+                ) : Math.ceil(
+                    moment(props.currentTask!.dueDate).diff(
+                      moment(),
+                      'days',
+                      true,
+                    ),
+                  ) === 1 ? (
+                  <p className="fw6 mv2 flex items-center">
+                    <Icon
+                      style={{
+                        color: '#323030',
+                      }}
+                      icon={IconNames.TIME}
+                      iconSize={12}
+                      className="grow pointer pl2 pr2"
+                    />{' '}
+                    {Math.ceil(
+                      moment(props.currentTask!.dueDate).diff(
+                        moment(),
+                        'days',
+                        true,
+                      ),
+                    )}{' '}
+                    day remaining
+                  </p>
+                ) : (
+                  <p className="fw6  mv2 flex items-center">
+                    <Icon
+                      style={{
+                        color: '#323030',
+                      }}
+                      icon={IconNames.TIME}
+                      iconSize={12}
+                      className="grow pointer pl2 pr2"
+                    />{' '}
+                    {Math.ceil(
+                      moment(props.currentTask!.dueDate).diff(
+                        moment(),
+                        'days',
+                        true,
+                      ),
+                    )}{' '}
+                    days remaining
+                  </p>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
