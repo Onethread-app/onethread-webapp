@@ -362,6 +362,7 @@ module.exports.createMemberAddNotification = async (
 module.exports.createPendingAssociateRequest = async (
   companyId,
   associateCompany,
+  associateId,
   adminUser,
 ) => {
   try {
@@ -374,22 +375,26 @@ module.exports.createPendingAssociateRequest = async (
           company.name,
         )} wants to add you as a partner.`,
         'associate',
+        associateId,
+        null,
+        null,
+        null,
+        null,
+        null,
         associateCompany,
-        null,
-        null,
-        null,
-        null,
-        null,
-        companyId,
         null,
         null,
         adminUser._id,
       ),
     );
+    notification = await notification
+      .populate({
+        path: 'company',
+        select: 'uniqueName _id',
+      })
+      .execPopulate();
+
     associateAdminSuperAdminList.forEach(async (member) => {
-      notification = await notification
-        .populate('company', 'uniqueName _id')
-        .execPopulate();
       let userNotification = await createNotificationForUser(
         userNotificationBuilder(notification._id, member.account._id),
       );

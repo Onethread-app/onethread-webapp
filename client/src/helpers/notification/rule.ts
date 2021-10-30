@@ -68,6 +68,7 @@ export const notificationType = {
       return `/company/${notification.company.uniqueName}/project/${notification.project}/overview`;
     },
   },
+
   task: {
     img: board,
     path: async (notification: any) => {
