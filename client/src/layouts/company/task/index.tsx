@@ -14,7 +14,6 @@ import { ActivityView } from './activity/ActivityView';
 import { TaskDetails } from './taskDetails';
 import TaskInfoViewComponent from './TaskInfoView/Index';
 import SuspenseLoader from 'components/loader/SuspenseLoader';
-import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 
 export const customStyles = {
   content: {
@@ -72,23 +71,6 @@ const TaskPageComponent = (props: TaskInternalProps) => {
 
   return (
     <div className="cf h-100" style={{ zIndex: 4 }}>
-      <BreadCrumbs
-        items={[
-          {
-            text: `Board`,
-            href: `/company/${props.company.uniqueName}/project/${props.currentProject._id}/board`,
-          },
-          {
-            text: `${props.currentBoard!.name}`,
-            href: `/company/${props.company.uniqueName}/project/${props.currentProject._id}/board/${props.currentBoard._id}`,
-          },
-          {
-            text: `${props.currentTask.name}`,
-            href: `/company/${props.company.uniqueName}/project/${props.currentProject._id}/board/${props.currentBoard._id}/task/${props.currentTask._id}`,
-          },
-        ]}
-      />
-
       {loading === true ? (
         <SuspenseLoader insideComponent />
       ) : (
