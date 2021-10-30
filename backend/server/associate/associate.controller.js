@@ -64,11 +64,16 @@ const createPending = async (req, res, next) => {
       path: 'associateCompany',
       select: '_id name type',
     });
-    await createPendingAssociateRequest(companyId, assoId, {
-      _id: req.user._id,
-      name: req.user.name,
-      pusherSock: req.headers.clientid,
-    });
+    await createPendingAssociateRequest(
+      companyId,
+      assoId,
+      associate._id,
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
+    );
     return sendJSONresponse(res, 201, associate);
   } catch (error) {
     logger.error(`Associate pending: ${error}`);
@@ -111,7 +116,7 @@ const acceptPending = async (req, res, next) => {
         pusherSock: req.headers.clientid,
       },
     );
-    return sendJSONresponse(resw, 200, associate);
+    return sendJSONresponse(res, 200, associate);
   } catch (error) {
     logger.error(`Associate accept: ${error}`);
     next(error);
