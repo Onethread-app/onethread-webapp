@@ -1,7 +1,7 @@
 import { useCallback, useState, memo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { IProject } from 'stores/project/Reducer';
-import { ICompanyByUser } from 'stores/user/Reducer';
+import { ICompanyByUser, User } from 'stores/user/Reducer';
 
 import logo from 'resources/images/onethread-text.png';
 import home from 'resources/images/Home.png';
@@ -14,7 +14,7 @@ import star from 'resources/images/Star.png';
 import favourites from 'resources/images/favorite.png';
 import onethread from 'resources/images/onethread.png';
 import {
-  Company,
+  ArrayItem,
   CompanyContainer,
   Container,
   ContainerBody,
@@ -25,9 +25,10 @@ import {
 
 interface Props {
   leftOpen: boolean;
-  user: any;
+  user: User;
   companies: ICompanyByUser[];
   project: IProject;
+  favouriteProjects: any;
 }
 
 export const Color = [
@@ -95,7 +96,7 @@ const Sidebar = (props: Props) => {
         {leftOpen === false && showCompanies ? (
           <CompanyContainer>
             {companies.map((company) => (
-              <Company
+              <ArrayItem
                 activeClassName="active-link"
                 to={`/company/${company.company?.uniqueName}`}
                 bgcolor={getRandomColor()}
@@ -105,15 +106,15 @@ const Sidebar = (props: Props) => {
                 <span className="left-open capitalize">
                   {company.company?.name}
                 </span>
-              </Company>
+              </ArrayItem>
             ))}
           </CompanyContainer>
         ) : null}
-        <Item to={`/projects`} activeClassName="active-link">
+        <Item to="/projects" activeClassName="active-link">
           <img src={project} alt="Project icon" />
           <span className="left-open">Projects</span>
         </Item>
-        <Item to={`/tasks`} activeClassName="active-link">
+        <Item to="/tasks" activeClassName="active-link">
           <img src={task} alt="Tasks icon" />
           <span className="left-open">Tasks</span>
         </Item>
@@ -125,6 +126,19 @@ const Sidebar = (props: Props) => {
       </ContainerBody>
       <Favourites className="left-open">
         <span className="left-open">Favourites</span>
+        {props.favouriteProjects.map((fP) => (
+          <ArrayItem
+            activeClassName="active-link"
+            to={`/company/${fP.project.company.uniqueName}/project/${fP.project._id}`}
+            bgcolor={getRandomColor()}
+            key={fP.project._id}
+          >
+            <i></i>
+            <span className="left-open capitalize">
+              {fP.project.name}
+            </span>
+          </ArrayItem>
+        ))}
         <div>
           <img src={star} alt="" />
           Star projects for easy access

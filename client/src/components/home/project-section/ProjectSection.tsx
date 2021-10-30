@@ -142,7 +142,6 @@ const Index = (props: IProps) => {
     props.fetchingUserProjects,
     props.errorOnFetchingUserProjects,
   ]);
-
   return (
     <Container>
       <Header>

@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Header = styled.div`
@@ -31,7 +31,7 @@ const ContainerBody = styled.div`
   row-gap: 0.25rem;
 `;
 
-const Item = styled(NavLink)`
+const Item = styled(Link)`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -54,6 +54,7 @@ const Item = styled(NavLink)`
 
 const Favourites = styled.div`
   width: 100%;
+  max-height: 400px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -78,7 +79,7 @@ const Favourites = styled.div`
   }
 `;
 
-const Company = styled(NavLink)`
+const ArrayItem = styled(NavLink)`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -121,10 +122,13 @@ const Container = styled.div`
     props.leftOpen ? '12px 14px 11px' : '1rem 0'};
   /* max-width: 220px; */
   width: 100%;
+  height: 90vh;
   display: flex;
+  margin-top: 0;
+  margin-bottom: auto;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   overflow-x: hidden;
   overflow-y: auto;
 
@@ -149,7 +153,7 @@ const Container = styled.div`
 
   ${Header} {
     margin-left: ${(props) => (props.leftOpen ? 'auto' : '0.5rem')};
-    margin-bottom: ${(props) => (props.leftOpen ? 'auto' : '0.5rem')};
+    margin-bottom: ${(props) => (props.leftOpen ? '0' : '0.5rem')};
   }
 
   .capitalize {
@@ -162,7 +166,7 @@ export {
   Header,
   ContainerBody,
   Item,
-  Company,
+  ArrayItem,
   Favourites,
   CompanyContainer,
 };
