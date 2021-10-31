@@ -71,7 +71,7 @@ const Favourites = styled.div`
     background: #373760;
     border-radius: 8px;
     /* width: 180px; */
-    height: 64px;
+    /* height: 64px; */
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
@@ -119,7 +119,7 @@ const Container = styled.div`
   --padding: ${(props) => (props.leftOpen ? '1rem' : '0')};
   --item-padding: ${(props) =>
     props.leftOpen ? '12px 14px 11px' : '1rem 0'};
-  /* max-width: 220px; */
+  height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
