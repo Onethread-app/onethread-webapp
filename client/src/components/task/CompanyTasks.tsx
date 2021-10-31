@@ -201,8 +201,6 @@ const CompanyTasks = (props: ICompanyTasks) => {
     setFilter('dueDate', filterValue);
   }, [selectedDueDateOption, selectedDueDateRange]);
 
-  console.log(taskList);
-
   return (
     <CompanyTasksContext.Provider value={providerValue}>
       <Container>
