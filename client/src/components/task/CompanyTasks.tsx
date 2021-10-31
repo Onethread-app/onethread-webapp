@@ -35,6 +35,8 @@ import {
   StyledFilterPopover,
   StyledInput,
 } from 'components/table/StyledTable.styles';
+import { Dialog } from '@blueprintjs/core';
+import TaskDialog from 'components/home/task-section/TaskDialog';
 
 interface ICompanyTasks {
   companyTaskList: ITask[];
@@ -53,6 +55,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
     uniqueCompanyName,
     gettingCompanyDetails,
   } = props;
+  const [openTaskDialog, setOpenTaskDialog] =
+    useState<boolean>(false);
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState<string>('');
   const [taskList, setTaskList] = useState<ITask[]>([]);
@@ -91,6 +95,21 @@ const CompanyTasks = (props: ICompanyTasks) => {
       selectedStatusList,
     ],
   );
+
+  const [showToaster, setShowToaster] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const useToaster = () => {
+    return {
+      showToaster,
+      setShowToaster,
+      successMessage,
+      setSuccessMessage,
+      setErrorMessage,
+      errorMessage,
+    };
+  };
 
   const {
     getTableProps,
@@ -293,8 +312,23 @@ const CompanyTasks = (props: ICompanyTasks) => {
             gotoPage={gotoPage}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setOpenTaskDialog={setOpenTaskDialog}
           />
         )}
+        <Dialog
+          canOutsideClickClose={true}
+          canEscapeKeyClose={true}
+          autoFocus
+          style={{ borderRadius: '1rem' }}
+          className="w-auto h-auto pb0"
+          onClose={() => setOpenTaskDialog(false)}
+          isOpen={openTaskDialog}
+        >
+          <TaskDialog
+            setShowDialog={setOpenTaskDialog}
+            useToaster={useToaster}
+          ></TaskDialog>
+        </Dialog>
       </Container>
     </CompanyTasksContext.Provider>
   );

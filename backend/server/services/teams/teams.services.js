@@ -45,6 +45,29 @@ const options = [
   },
 ];
 
+const favouriteProjectOptions = [
+  {
+    path: 'member',
+    select: 'account',
+    populate: [
+      {
+        path: 'account',
+        select: '_id email',
+      },
+    ],
+  },
+  {
+    path: 'project',
+    select: '_id name color',
+    populate: [
+      {
+        path: 'company',
+        select: '_id uniqueName',
+      },
+    ],
+  },
+];
+
 const teamMemberListFindByProjectId = async (pid) => {
   return await Team.find({ project: pid })
     .select('member')
@@ -62,7 +85,7 @@ const findAllProjectsByMemberId = async (id) => {
 const findAllFavouriteProjectsByMemberId = async (id) => {
   return await Team.find({ member: id, isFavourite: true })
     .select('project isFavourite')
-    .populate(options)
+    .populate(favouriteProjectOptions)
     .exec();
 };
 

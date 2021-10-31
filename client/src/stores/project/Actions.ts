@@ -436,3 +436,19 @@ export const getAllUserProjectsFailure = (errorMessage: any) => ({
   type: ProjectActionTypes.GET_ALL_USER_PROJECTS_FAILURE,
   payload: errorMessage,
 });
+
+export const getUserFavouriteProjects = () => ({
+  type: ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_START,
+});
+
+export const getUserFavouriteProjectsSuccess = (response: any) => ({
+  type: ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_SUCCESS,
+  payload: response,
+});
+
+export const getUserFavouriteProjectFailure = (
+  errorMessage: any,
+) => ({
+  type: ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_FAILURE,
+  payload: errorMessage,
+});

@@ -16,6 +16,7 @@ import {
   StyledSubRow,
   StyledSubRowData,
   StyledSubRowBody,
+  CreatableItem,
 } from '../table/StyledTable.styles';
 import moment from 'moment';
 
@@ -31,6 +32,7 @@ interface ITasksTable {
   pageSize: any;
   pageIndex: number;
   setPageSize: any;
+  setOpenTaskDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TasksTable = (props: ITasksTable) => {
@@ -46,6 +48,7 @@ const TasksTable = (props: ITasksTable) => {
     gotoPage,
     pageSize,
     setPageSize,
+    setOpenTaskDialog,
   } = props;
   const history = useHistory();
 
@@ -193,6 +196,9 @@ const TasksTable = (props: ITasksTable) => {
               </StyledTableRowContainer>
             );
           })}
+          <CreatableItem onClick={() => setOpenTaskDialog(true)}>
+            <span>+ </span> Add new tasks
+          </CreatableItem>
         </StyledTableBody>
       </StyledTable>
       <div className="flex justify-center mt2 w-100">
