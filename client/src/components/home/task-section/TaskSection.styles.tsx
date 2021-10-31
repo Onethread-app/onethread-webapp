@@ -47,20 +47,10 @@ const StyledButton = styled.button`
 
 const Header = styled.header`
   font-weight: 500;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 27px;
-  color: var(--dark-color, #323030);
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e0e0e0;
-  transform: rotate(0.13deg);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  img {
-    margin-right: 12px;
-    cursor: pointer;
-  }
+  flex-direction: row;
 `;
 
 const TextInput = styled(StyledTextInput)`
@@ -185,7 +175,7 @@ const ModalContainer = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 0.5rem;
+  padding: 0.5rem 0;
   overflow: auto;
 `;
 

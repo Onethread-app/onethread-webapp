@@ -163,7 +163,7 @@ export const StyledTable = styled.div`
   flex-direction: column;
   position: relative;
   max-width: 100%;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   padding: 0.25rem;
 
   @media only screen and (max-width: 768px) {
@@ -213,9 +213,9 @@ export const SortAndFilter = styled.div`
   }
 `;
 
-export const Header = styled.h3`
+export const Header = styled.p`
   font-weight: 500;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 27px;
 
   span {

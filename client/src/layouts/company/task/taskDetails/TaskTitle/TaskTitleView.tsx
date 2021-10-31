@@ -25,40 +25,42 @@ export const TaskTitleViewComponent = (
           setNameEdit={(e) => setNameEdit(!nameEdit)}
         />
       ) : (
-        <div>
-          <h5
-            style={{
-              fontSize: '12px',
-              color: '#666666',
-              lineHeight: '0px',
-              fontWeight: 400,
-              margin: '0.2rem 0rem',
-            }}
-          >
-            TASK
-          </h5>
-          <h3
-            title="Click to edit title"
-            className="fw6 mb0 mv2 dim"
-            style={{
-              cursor: 'text',
-              fontSize: '25px',
-            }}
-            onClick={() => {
-              props.company && projectPermit(props.company.role)
-                ? setNameEdit(true)
-                : setNameEdit(false);
-            }}
-          >
-            {props.currentTask!.name}
-          </h3>
+        <>
+          <div className="flex justify-content items-center">
+            <h5
+              style={{
+                fontSize: '12px',
+                color: '#666666',
+                lineHeight: '0px',
+                fontWeight: 400,
+                margin: '0.2rem 0.2rem 0.2rem 0',
+              }}
+            >
+              TASK
+            </h5>
+            <h3
+              title="Click to edit title"
+              className="fw6 mb0 mv2 dim"
+              style={{
+                cursor: 'text',
+                fontSize: '25px',
+              }}
+              onClick={() => {
+                props.company && projectPermit(props.company.role)
+                  ? setNameEdit(true)
+                  : setNameEdit(false);
+              }}
+            >
+              {props.currentTask!.name}
+            </h3>
+          </div>
           <h5
             style={{
               fontSize: '14px',
               color: '#666666',
               lineHeight: '15px',
               fontWeight: 400,
-              margin: '0.2rem 0rem',
+              margin: '0.2rem',
             }}
           >
             Task created by {props.currentTask!.createdBy} at{' '}
@@ -66,7 +68,7 @@ export const TaskTitleViewComponent = (
               'MMMM d, YYYY',
             )}
           </h5>
-        </div>
+        </>
       )}
     </>
   );

@@ -150,18 +150,18 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
         </div>
       </div>
       <div className="w-100">
-        <div className="mv3">
+        <div className="mv1">
           <TaskDescriptionView />
         </div>
         {isMobileOnly && (
-          <div className="mv3">
+          <div className="mv1">
             <ActivityView />
           </div>
         )}
-        <div className="mv3">
+        <div className="mv1">
           <SubTaskView />
         </div>
-        <div className="mv3">
+        <div className="mv1">
           <TaskFiles />
         </div>
       </div>

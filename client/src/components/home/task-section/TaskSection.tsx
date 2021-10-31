@@ -5,24 +5,36 @@ import {
   useGlobalFilter,
   useFilters,
   useSortBy,
-  // useAsyncDebounce,
+  useAsyncDebounce,
   usePagination,
   useExpanded,
 } from 'react-table';
 
 import { getAllUserTasks } from 'stores/task/Actions';
 
-import { Header, Row } from './TaskSection.styles';
+import { Container, Header } from './TaskSection.styles';
 
-import Hamburger from '../../../resources/images/hamburger.png';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import TaskDialog from './TaskDialog';
 import { TaskTableColumns } from 'components/task/TaskTableColumns';
 import TasksTable from 'components/task/TasksTable';
 import TaskTableSkeleton from 'components/task/TaskTableSkeleton';
-import { CreatableItem } from 'components/table/StyledTable.styles';
-import { Dialog } from '@blueprintjs/core';
+import {
+  CreatableItem,
+  HeaderContainer,
+  SortAndFilter,
+  StyledFilterPopover,
+  StyledInput,
+} from 'components/table/StyledTable.styles';
+import { Dialog, Icon, Popover } from '@blueprintjs/core';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { AlignCenter } from 'components/UtilComponents';
+import { isEmpty, isNil } from 'lodash';
+import { ClickAwayListener } from '@material-ui/core';
+import TasksFilter from 'components/task/TasksFilter';
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import { DateRange } from '@blueprintjs/datetime';
 
 interface Props {
   userTasks: any;
@@ -44,12 +56,27 @@ interface ITaskSectionInternalProps extends Props {
 }
 
 const TaskSection = (props: ITaskSectionInternalProps) => {
+  const { userTasks } = props;
   const [openTaskDialog, setOpenTaskDialog] =
     useState<boolean>(false);
+  const [showInputField, setShowInputField] =
+    useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [tasks, setTasks] = useState([]);
+  const [taskList, setTaskList] = useState([]);
   const [expand, setExpand] = useState<boolean>(true);
-  const data = useMemo(() => tasks, [tasks]);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedStatusList, setSelectedStatusList] = useState<any>(
+    [],
+  );
+  const [selectedProjectList, setSelectedProjectList] = useState<any>(
+    [],
+  );
+  const [selectedDueDateOption, setSelectedDueDateOption] =
+    useState<string>('');
+  const [selectedDueDateRange, setSelectedDueDateRange] =
+    useState<DateRange>([null, null]);
+
+  const data = useMemo(() => taskList, [taskList]);
   const columns = useMemo(() => TaskTableColumns, []);
 
   const {
@@ -59,11 +86,11 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     rows,
     prepareRow,
     visibleColumns,
-    // allColumns,
+    allColumns,
     state,
-    // setFilter,
-    // setAllFilters,
-    // setGlobalFilter,
+    setFilter,
+    setAllFilters,
+    setGlobalFilter,
     page,
     setPageSize,
     gotoPage,
@@ -84,11 +111,20 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     usePagination,
   );
 
-  const {
-    // globalFilter,
-    pageSize,
-    pageIndex,
-  } = state;
+  const handleClearFilter = () => {
+    setSelectedStatusList([]);
+    setSelectedProjectList([]);
+    setSelectedDueDateRange([null, null]);
+    setSelectedDueDateOption('');
+    setTaskList(userTasks);
+    setAllFilters([]);
+  };
+
+  const handleSearchChange = useAsyncDebounce((e) => {
+    setGlobalFilter(e.target.value || undefined);
+  }, 500);
+
+  const { globalFilter, pageSize, pageIndex } = state;
 
   useEffect(() => {
     if (props.userId) {
@@ -103,49 +139,153 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
       props.fetchingUserTasks === false &&
       props.errorOnFetchingUserTasks === ''
     ) {
-      setTasks(props.userTasks);
+      setTaskList(userTasks);
       setLoading(false);
     }
   }, [
     loading,
     props.fetchingUserTasks,
     props.errorOnFetchingUserTasks,
-    props.userTasks,
+    userTasks,
   ]);
 
+  useEffect(() => {
+    if (
+      loading === true &&
+      props.fetchingUserTasks === false &&
+      props.errorOnFetchingUserTasks === ''
+    ) {
+      setTaskList(userTasks);
+      setLoading(false);
+    }
+  }, [
+    loading,
+    props.fetchingUserTasks,
+    props.errorOnFetchingUserTasks,
+    userTasks,
+  ]);
+
+  useEffect(() => {
+    !isNil(userTasks) &&
+      !isEmpty(userTasks) &&
+      setTaskList(userTasks);
+  }, [userTasks]);
+
+  useEffect(() => {
+    setFilter('project', selectedProjectList);
+  }, [selectedProjectList]);
+
+  useEffect(() => {
+    setFilter('status', selectedStatusList);
+  }, [selectedStatusList]);
+
+  useEffect(() => {
+    const filterValue = {
+      type: selectedDueDateOption,
+      range: selectedDueDateRange,
+    };
+    setFilter('dueDate', filterValue);
+  }, [selectedDueDateOption, selectedDueDateRange]);
+
   return (
-    <div>
-      <Header>
-        <span className="flex items-center">
-          Tasks due soon{' '}
-          {expand ? (
-            <ExpandLessIcon
-              className="ml3 pointer"
-              onClick={() => setExpand(false)}
-            />
-          ) : (
-            <ExpandMoreIcon
-              className="ml3 pointer"
-              onClick={() => setExpand(true)}
-            />
-          )}
-        </span>
-        <img src={Hamburger} alt="" />
-      </Header>
+    <Container>
+      <HeaderContainer>
+        <Header>
+          <span className="flex items-center">
+            {expand ? (
+              <ArrowDropDownIcon
+                className="mr2 pointer"
+                onClick={() => setExpand(false)}
+              />
+            ) : (
+              <ArrowRightIcon
+                className="mr2 pointer"
+                onClick={() => setExpand(true)}
+              />
+            )}
+            Tasks due soon
+          </span>
+        </Header>
+        <SortAndFilter>
+          <AlignCenter>
+            {(!isEmpty(selectedStatusList) ||
+              !isEmpty(selectedProjectList) ||
+              !isEmpty(selectedDueDateOption)) && (
+              <ClearOutlinedIcon
+                fontSize="small"
+                onClick={handleClearFilter}
+              />
+            )}
+          </AlignCenter>
+          <ClickAwayListener
+            onClickAway={() => {
+              if (globalFilter === '' || globalFilter === undefined) {
+                setShowInputField(false);
+              }
+            }}
+          >
+            <AlignCenter
+              onClick={() => {
+                setShowInputField(true);
+              }}
+            >
+              {showInputField ? (
+                <StyledInput onChange={handleSearchChange} />
+              ) : (
+                <Icon icon="search" />
+              )}
+              Search
+            </AlignCenter>
+          </ClickAwayListener>
+          <TasksFilter
+            filterOpen={filterOpen}
+            setFilterOpen={setFilterOpen}
+          />
+          <Popover
+            interactionKind="click"
+            position="bottom-right"
+            content={
+              <StyledFilterPopover>
+                <p className="bb">Customize Table</p>
+
+                {allColumns.map(
+                  (column) =>
+                    column.id !== 'expander' && (
+                      <div key={column.id}>
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={column.isVisible}
+                            disabled={column.id === 'name'}
+                            {...column.getToggleHiddenProps()}
+                          />{' '}
+                          {column.Header}
+                        </label>
+                      </div>
+                    ),
+                )}
+              </StyledFilterPopover>
+            }
+            target={<MoreVertIcon fontSize="small" />}
+          />
+        </SortAndFilter>
+      </HeaderContainer>
       {expand ? (
         <>
-          {tasks.length === 0 ? (
+          {taskList.length === 0 ? (
             loading ? (
               <TaskTableSkeleton />
             ) : (
-              <Row>
-                No task has been created.{' '}
+              <div className="flex flex-column">
+                <span className="mb2 mt2">
+                  No task has been created.{' '}
+                </span>
                 <CreatableItem
                   onClick={() => setOpenTaskDialog(true)}
                 >
                   <span>+ </span> Add new tasks
                 </CreatableItem>
-              </Row>
+              </div>
             )
           ) : (
             <TasksTable
@@ -179,7 +319,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
           useToaster={props.useToaster}
         />
       </Dialog>
-    </div>
+    </Container>
   );
 };
 

@@ -172,6 +172,20 @@ const CreateCompany = styled.div`
   }
 `;
 
+const CompanySkeletons = styled.div`
+  width: 120px;
+  height: 126px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: 300ms transform ease-in;
+  background: #8a8787;
+`;
+
 const CompanyContainer = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -285,4 +299,5 @@ export {
   SimpleButton,
   StyledButton,
   TextInput,
+  CompanySkeletons,
 };
