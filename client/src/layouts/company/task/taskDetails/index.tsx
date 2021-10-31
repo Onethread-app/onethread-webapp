@@ -80,7 +80,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               projectId={props.currentProjectId}
             />
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end ml-auto">
             {props.currentTask!.dueDate && (
               <>
                 {Math.ceil(
@@ -90,7 +90,9 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                     true,
                   ),
                 ) === 0 ? (
-                  <p className="fw6 red mv2">Deadline ends today</p>
+                  <p className="fw6 red ml-auto mv2">
+                    Deadline ends today
+                  </p>
                 ) : Math.ceil(
                     moment(props.currentTask!.dueDate).diff(
                       moment(),
@@ -98,7 +100,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                       true,
                     ),
                   ) < 0 ? (
-                  <p className="fw6 red mv2">Expired</p>
+                  <p className="fw6 red ml-auto mv2">Expired</p>
                 ) : Math.ceil(
                     moment(props.currentTask!.dueDate).diff(
                       moment(),
@@ -106,7 +108,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                       true,
                     ),
                   ) === 1 ? (
-                  <p className="fw6 mv2 flex items-center">
+                  <p className="fw6 mv2 flex ml-auto items-center">
                     <Icon
                       style={{
                         color: '#323030',

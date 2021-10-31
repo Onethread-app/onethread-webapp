@@ -33,17 +33,18 @@ export const TaskTitleViewComponent = (
                 color: '#666666',
                 lineHeight: '0px',
                 fontWeight: 400,
-                margin: '0.2rem 0.2rem 0.2rem 0',
+                margin: 'auto 0.2rem auto 0',
               }}
             >
               TASK
             </h5>
-            <h3
+            <p
               title="Click to edit title"
-              className="fw6 mb0 mv2 dim"
+              className="fw6 dim"
               style={{
                 cursor: 'text',
                 fontSize: '25px',
+                marginBlock: 'auto',
               }}
               onClick={() => {
                 props.company && projectPermit(props.company.role)
@@ -52,7 +53,7 @@ export const TaskTitleViewComponent = (
               }}
             >
               {props.currentTask!.name}
-            </h3>
+            </p>
           </div>
           <h5
             style={{
