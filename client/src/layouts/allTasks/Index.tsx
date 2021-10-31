@@ -5,11 +5,11 @@ import {
   useGlobalFilter,
   useFilters,
   useSortBy,
-  // useAsyncDebounce,
+  useAsyncDebounce,
   usePagination,
   useExpanded,
 } from 'react-table';
-
+import { isEmpty, isNil } from 'lodash';
 import { getAllUserTasks } from 'stores/task/Actions';
 
 import { ClickAwayListener } from '@material-ui/core';
@@ -25,11 +25,15 @@ import {
   SortAndFilter,
   StyledFilterPopover,
   CreatableItem,
+  StyledInput,
   // StyledInput,
 } from 'components/table/StyledTable.styles';
 import { AlignCenter } from 'components/UtilComponents';
-import { Dialog, Popover } from '@blueprintjs/core';
+import { Dialog, Icon, Popover } from '@blueprintjs/core';
 import { Container } from './Index.styles';
+import { DateRange } from '@blueprintjs/datetime';
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import TasksFilter from 'components/task/TasksFilter';
 
 interface Props {
   userTasks: any;
@@ -46,13 +50,27 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   const [openTaskDialog, setOpenTaskDialog] =
     useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [tasks, setTasks] = useState([]);
-  const data = useMemo(() => tasks, [tasks]);
+  const [taskList, setTaskList] = useState([]);
+  const data = useMemo(() => taskList, [taskList]);
   const columns = useMemo(() => TaskTableColumns, []);
-
+  const [showInputField, setShowInputField] =
+    useState<boolean>(false);
+  const [selectedStatusList, setSelectedStatusList] = useState<any>(
+    [],
+  );
+  const [selectedProjectList, setSelectedProjectList] = useState<any>(
+    [],
+  );
+  const [selectedDueDateOption, setSelectedDueDateOption] =
+    useState<string>('');
+  const [selectedDueDateRange, setSelectedDueDateRange] =
+    useState<DateRange>([null, null]);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [showToaster, setShowToaster] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const { userTasks } = props;
 
   const useToaster = () => {
     return {
@@ -74,9 +92,9 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     visibleColumns,
     allColumns,
     state,
-    // setFilter,
-    // setAllFilters,
-    // setGlobalFilter,
+    setFilter,
+    setAllFilters,
+    setGlobalFilter,
     page,
     setPageSize,
     gotoPage,
@@ -110,129 +128,94 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
       props.fetchingUserTasks === false &&
       props.errorOnFetchingUserTasks === ''
     ) {
-      setTasks(props.userTasks);
+      setTaskList(userTasks);
       setLoading(false);
     }
   }, [
     loading,
     props.fetchingUserTasks,
     props.errorOnFetchingUserTasks,
-    props.userTasks,
+    userTasks,
   ]);
   const { globalFilter, pageSize, pageIndex } = state;
 
-  // const handleSearchChange = useAsyncDebounce(
-  // (e) => {
-  // setGlobalFilter(e.target.value || undefined);
-  //   },
-  //   500,
-  // );
+  const handleSearchChange = useAsyncDebounce((e) => {
+    setGlobalFilter(e.target.value || undefined);
+  }, 500);
 
-  // const handleClearFilter = () => {
-  // setSelectedStatusList([]);
-  // setSelectedProjectList([]);
-  // setSelectedDueDateRange([null, null]);
-  // setSelectedDueDateOption('');
-  // setTaskList(companyTaskList);
-  // setAllFilters([]);
-  // };
+  const handleClearFilter = () => {
+    setSelectedStatusList([]);
+    setSelectedProjectList([]);
+    setSelectedDueDateRange([null, null]);
+    setSelectedDueDateOption('');
+    setTaskList(userTasks);
+    setAllFilters([]);
+  };
 
-  // useEffect(() => {
-  //   if (uniqueCompanyName) {
-  //     props.getAllCompanyTasks();
-  //   }
-  // }, [uniqueCompanyName]);
+  useEffect(() => {
+    !isNil(userTasks) &&
+      !isEmpty(userTasks) &&
+      setTaskList(userTasks);
+  }, [userTasks]);
 
-  // useEffect(() => {
-  //   if (gettingCompanyDetails === false) {
-  //     if (
-  //       loadingData === true &&
-  //       fetchingCompanyTasks === false &&
-  //       errorOnFetchingCompanyTasks === ''
-  //     ) {
-  //       setLoadingData(false);
-  //     }
-  //     if (
-  //       loadingData === true &&
-  //       fetchingCompanyTasks === false &&
-  //       errorOnFetchingCompanyTasks !== ''
-  //     ) {
-  //       setError(
-  //         'There was a problem fetching task list, try reloading the page.',
-  //       );
-  //       setLoadingData(false);
-  //     }
-  //   } else {
-  //     setLoadingData(true);
-  //   }
-  // }, [
-  //   loadingData,
-  //   gettingCompanyDetails,
-  //   fetchingCompanyTasks,
-  //   errorOnFetchingCompanyTasks,
-  // ]);
+  useEffect(() => {
+    setFilter('project', selectedProjectList);
+  }, [selectedProjectList]);
 
-  // useEffect(() => {
-  //   !isNil(companyTaskList) &&
-  //     !isEmpty(companyTaskList) &&
-  //     setTaskList(companyTaskList);
-  // }, [companyTaskList]);
+  useEffect(() => {
+    setFilter('status', selectedStatusList);
+  }, [selectedStatusList]);
 
-  // useEffect(() => {
-  //   setFilter('project', selectedProjectList);
-  // }, [selectedProjectList]);
-
-  // useEffect(() => {
-  //   setFilter('status', selectedStatusList);
-  // }, [selectedStatusList]);
-
-  // useEffect(() => {
-  //   const filterValue = {
-  //     type: selectedDueDateOption,
-  //     range: selectedDueDateRange,
-  //   };
-  //   setFilter('dueDate', filterValue);
-  // }, [selectedDueDateOption, selectedDueDateRange]);
+  useEffect(() => {
+    const filterValue = {
+      type: selectedDueDateOption,
+      range: selectedDueDateRange,
+    };
+    setFilter('dueDate', filterValue);
+  }, [selectedDueDateOption, selectedDueDateRange]);
 
   return (
     <Container>
       <HeaderContainer>
         <Header>
-          Tasks {tasks.length > 0 && <span>({tasks.length})</span>}
+          Tasks{' '}
+          {taskList.length > 0 && <span>({taskList.length})</span>}
         </Header>
         <SortAndFilter>
           <AlignCenter>
-            {/* {(!isEmpty(selectedStatusList) ||
+            {(!isEmpty(selectedStatusList) ||
               !isEmpty(selectedProjectList) ||
               !isEmpty(selectedDueDateOption)) && (
               <ClearOutlinedIcon
                 fontSize="small"
                 onClick={handleClearFilter}
               />
-            )} */}
+            )}
           </AlignCenter>
           <ClickAwayListener
             onClickAway={() => {
               if (globalFilter === '' || globalFilter === undefined) {
-                // setShowInputField(false);
+                setShowInputField(false);
               }
             }}
           >
             <AlignCenter
-              onClick={() => {}} /*setShowInputField(true)*/
+              onClick={() => {
+                setShowInputField(true);
+              }}
             >
-              {/* {showInputField ? (
+              {showInputField ? (
                 <StyledInput onChange={handleSearchChange} />
               ) : (
                 <Icon icon="search" />
-              )} */}
+              )}
               Search
             </AlignCenter>
           </ClickAwayListener>
-          {/* <TasksFilter
+          <TasksFilter
             filterOpen={filterOpen}
             setFilterOpen={setFilterOpen}
-          /> */}
+          />
           <Popover
             interactionKind="click"
             position="bottom-right"
@@ -262,7 +245,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
           />
         </SortAndFilter>
       </HeaderContainer>
-      {tasks.length === 0 ? (
+      {taskList.length === 0 ? (
         loading ? (
           <TaskTableSkeleton />
         ) : (

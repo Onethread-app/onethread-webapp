@@ -17,6 +17,7 @@ import {
   Footer,
   CreateCompany,
   CompanyContainer,
+  CompanySkeletons,
 } from './CompanySection.styles';
 
 import { CompanySignupForm } from './CompanyDialog';
@@ -43,10 +44,13 @@ export const Color = [
   { code: 6, value: '#5A1DD6' },
 ];
 
+export const dummyArray = [1, 2, 3, 4];
+
 const CompanySection = (props: ICompanySectionInternalProps) => {
   const { creatingCompany, errorOnCreatingCompany } = props;
   const [showCompanyDialog, setShowCompanyDialog] =
     useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const companies = useMemo(() => props.companies, [props.companies]);
 
@@ -72,6 +76,10 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
   useEffect(() => {
     if (props.user._id && props.companies.length === 0) {
       props.getAllCompaniesByUserId(props.user._id);
+      setLoading(true);
+    }
+    if (props.companies.length > 0) {
+      setLoading(false);
     }
   }, [props.user, props.companies]);
 
@@ -93,34 +101,43 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
             <span>Company</span>
           </CreateCompany>
         </Link>
-
-        {companies.map((company, i) => (
-          <Link
-            to={`/company/${company.company.uniqueName}`}
-            key={company.company.uniqueName}
-          >
-            <Company>
-              <div style={{ width: '100%' }}>
-                <Avatar bgColor={getRandomColor()}>
-                  {company.company?.name[0]}
-                </Avatar>
-                <span className="capitalize">
-                  {company.company?.name}
-                </span>
-              </div>
-              <Footer>
-                <span>
-                  <img src={Union} alt="" />
-                  <p>{company.company.numberOfProjects}</p>
-                </span>
-                <span>
-                  <img src={Vector} alt="" />
-                  <p>{company.company.numberOfTasks}</p>
-                </span>
-              </Footer>
-            </Company>
-          </Link>
-        ))}
+        {loading ? (
+          <>
+            {[...Array(5)].map((x) => (
+              <CompanySkeletons id={x} />
+            ))}
+          </>
+        ) : (
+          <>
+            {companies.map((company, i) => (
+              <Link
+                to={`/company/${company.company.uniqueName}`}
+                key={company.company.uniqueName}
+              >
+                <Company>
+                  <div style={{ width: '100%' }}>
+                    <Avatar bgColor={getRandomColor()}>
+                      {company.company?.name[0]}
+                    </Avatar>
+                    <span className="capitalize">
+                      {company.company?.name}
+                    </span>
+                  </div>
+                  <Footer>
+                    <span>
+                      <img src={Union} alt="" />
+                      <p>{company.company.numberOfProjects}</p>
+                    </span>
+                    <span>
+                      <img src={Vector} alt="" />
+                      <p>{company.company.numberOfTasks}</p>
+                    </span>
+                  </Footer>
+                </Company>
+              </Link>
+            ))}
+          </>
+        )}
       </CompanyContainer>
       {showCompanyDialog ? (
         <Dialog

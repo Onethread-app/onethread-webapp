@@ -5,7 +5,7 @@ import {
   useGlobalFilter,
   useFilters,
   useSortBy,
-  // useAsyncDebounce,
+  useAsyncDebounce,
   usePagination,
 } from 'react-table';
 
@@ -23,7 +23,7 @@ import {
 } from 'stores/company/Actions';
 import { saveProjectForm } from 'stores/projectForm/Actions';
 
-import { Dialog, Popover } from '@blueprintjs/core';
+import { Dialog, Icon, Popover } from '@blueprintjs/core';
 import ProjectsTableSkeleton from 'components/project/ProjectsTableSkeleton';
 import { ProjectTableColumns } from 'components/project/ProjectTableColumns';
 import ProjectsTable from 'components/project/ProjectsTable';
@@ -36,8 +36,10 @@ import {
   HeaderContainer,
   SortAndFilter,
   StyledFilterPopover,
+  StyledInput,
 } from 'components/table/StyledTable.styles';
-// import { ClickAwayListener } from '@material-ui/core';
+import { ClickAwayListener } from '@material-ui/core';
+import { AlignCenter } from 'components/UtilComponents';
 
 interface INewCompanyResponse {
   message: string;
@@ -83,7 +85,8 @@ const Index = (props: IProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const data = useMemo(() => projects, [projects]);
   const columns = useMemo(() => ProjectTableColumns, []);
-
+  const [showInputField, setShowInputField] =
+    useState<boolean>(false);
   const [showToaster, setShowToaster] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -108,7 +111,7 @@ const Index = (props: IProps) => {
     visibleColumns,
     allColumns,
     state,
-    // setGlobalFilter,
+    setGlobalFilter,
     page,
     setPageSize,
     gotoPage,
@@ -119,7 +122,7 @@ const Index = (props: IProps) => {
       initialState: {
         pageSize: 10,
         hiddenColumns: ['createdAt'],
-        // sortBy: [{ id: 'status', desc: true }],
+        sortBy: [{ id: 'status', desc: true }],
       },
     },
     useFilters,
@@ -127,12 +130,11 @@ const Index = (props: IProps) => {
     useSortBy,
     usePagination,
   );
+  const { globalFilter, pageSize, pageIndex } = state;
 
-  const {
-    // globalFilter,
-    pageSize,
-    pageIndex,
-  } = state;
+  const handleSearchChange = useAsyncDebounce((e) => {
+    setGlobalFilter(e.target.value || undefined);
+  }, 500);
 
   useEffect(() => {
     if (props.user._id) {
@@ -164,7 +166,7 @@ const Index = (props: IProps) => {
           {projects.length > 0 && <span>({projects.length})</span>}
         </Header>
         <SortAndFilter>
-          {/* <ClickAwayListener
+          <ClickAwayListener
             onClickAway={() => {
               if (globalFilter === '' || globalFilter === undefined) {
                 setShowInputField(false);
@@ -177,9 +179,9 @@ const Index = (props: IProps) => {
               ) : (
                 <Icon icon="search" />
               )}
-            Search
+              Search
             </AlignCenter>
-          </ClickAwayListener> */}
+          </ClickAwayListener>
           <Popover
             interactionKind="click"
             position="bottom-right"

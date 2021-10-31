@@ -5,7 +5,7 @@ import {
   useGlobalFilter,
   useFilters,
   useSortBy,
-  // useAsyncDebounce,
+  useAsyncDebounce,
   usePagination,
 } from 'react-table';
 
@@ -23,16 +23,24 @@ import {
 } from 'stores/company/Actions';
 import { saveProjectForm } from 'stores/projectForm/Actions';
 
-import Hamburger from '../../../resources/images/hamburger.png';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Container, Header, Row } from './ProjectSection.styles';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { Container, Header } from './ProjectSection.styles';
 import ProjectDialog from './ProjectDialog';
-import { Dialog } from '@blueprintjs/core';
+import { Dialog, Icon, Popover } from '@blueprintjs/core';
 import ProjectsTableSkeleton from 'components/project/ProjectsTableSkeleton';
 import { ProjectTableColumns } from 'components/project/ProjectTableColumns';
 import ProjectsTable from 'components/project/ProjectsTable';
-import { CreatableItem } from 'components/table/StyledTable.styles';
+import {
+  CreatableItem,
+  HeaderContainer,
+  SortAndFilter,
+  StyledFilterPopover,
+  StyledInput,
+} from 'components/table/StyledTable.styles';
+import { ClickAwayListener } from '@material-ui/core';
+import { AlignCenter } from 'components/UtilComponents';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 interface INewCompanyResponse {
   message: string;
@@ -88,7 +96,8 @@ const Index = (props: IProps) => {
 
   const data = useMemo(() => projects, [projects]);
   const columns = useMemo(() => ProjectTableColumns, []);
-
+  const [showInputField, setShowInputField] =
+    useState<boolean>(false);
   const {
     getTableProps,
     getTableBodyProps,
@@ -96,9 +105,9 @@ const Index = (props: IProps) => {
     rows,
     prepareRow,
     visibleColumns,
-    // allColumns,
+    allColumns,
     state,
-    // setGlobalFilter,
+    setGlobalFilter,
     page,
     setPageSize,
     gotoPage,
@@ -118,11 +127,11 @@ const Index = (props: IProps) => {
     usePagination,
   );
 
-  const {
-    // globalFilter,
-    pageSize,
-    pageIndex,
-  } = state;
+  const { globalFilter, pageSize, pageIndex } = state;
+
+  const handleSearchChange = useAsyncDebounce((e) => {
+    setGlobalFilter(e.target.value || undefined);
+  }, 500);
 
   useEffect(() => {
     if (props.user._id) {
@@ -148,37 +157,81 @@ const Index = (props: IProps) => {
   ]);
   return (
     <Container>
-      <Header>
-        <span className="flex items-center">
-          Recent projects{' '}
-          {expand ? (
-            <ExpandLessIcon
-              className="ml3 pointer"
-              onClick={() => setExpand(false)}
-            />
-          ) : (
-            <ExpandMoreIcon
-              className="ml3 pointer"
-              onClick={() => setExpand(true)}
-            />
-          )}
-        </span>
-        <img src={Hamburger} alt="" />
-      </Header>
+      <HeaderContainer>
+        <Header>
+          <span className="flex items-center">
+            {expand ? (
+              <ArrowDropDownIcon
+                className="mr2 pointer"
+                onClick={() => setExpand(false)}
+              />
+            ) : (
+              <ArrowRightIcon
+                className="mr2 pointer"
+                onClick={() => setExpand(true)}
+              />
+            )}
+          </span>
+          Recent projects
+        </Header>
+        <SortAndFilter>
+          <ClickAwayListener
+            onClickAway={() => {
+              if (globalFilter === '' || globalFilter === undefined) {
+                setShowInputField(false);
+              }
+            }}
+          >
+            <AlignCenter onClick={() => setShowInputField(true)}>
+              {showInputField ? (
+                <StyledInput onChange={handleSearchChange} />
+              ) : (
+                <Icon icon="search" />
+              )}
+              Search
+            </AlignCenter>
+          </ClickAwayListener>
+          <Popover
+            interactionKind="click"
+            position="bottom-right"
+            content={
+              <StyledFilterPopover>
+                <p className="bb">Customize Table</p>
+                {allColumns.map((column) => (
+                  <div key={column.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={column.isVisible}
+                        disabled={column.id === 'name'}
+                        {...column.getToggleHiddenProps()}
+                      />{' '}
+                      {column.Header}
+                    </label>
+                  </div>
+                ))}
+              </StyledFilterPopover>
+            }
+            target={<MoreVertIcon fontSize="small" />}
+          />
+        </SortAndFilter>
+      </HeaderContainer>
       {expand ? (
         <>
           {projects.length === 0 ? (
             loading ? (
               <ProjectsTableSkeleton />
             ) : (
-              <Row>
-                No project has been created.{' '}
+              <div className="flex flex-column">
+                <span className="mb2 mt2">
+                  No project has been created.{' '}
+                </span>
                 <CreatableItem
                   onClick={() => setOpenProjectDialog(true)}
                 >
                   <span>+ </span> Create Project
                 </CreatableItem>
-              </Row>
+              </div>
             )
           ) : (
             <ProjectsTable
