@@ -1182,6 +1182,8 @@ const getAllProjectForUser = async (req, res, next) => {
           tP.project._id,
         );
         return {
+          isFavourite: tP.isFavourite,
+          member: tP.member._id,
           ...tP.project._doc,
           totalTasks: taskNumbers,
           remainingTasks: taskNumbers - doneTasks,
@@ -1198,7 +1200,7 @@ const getAllProjectForUser = async (req, res, next) => {
 
 const favouriteProject = async (req, res, next) => {
   try {
-    const favProject = await Team.findOneAndUpdate(
+    await Team.findOneAndUpdate(
       { project: req.query.pid, member: req.body.memberId },
       { $set: { isFavourite: req.body.isFavourite } },
       { safe: true, upsert: true },
@@ -1208,7 +1210,6 @@ const favouriteProject = async (req, res, next) => {
       message: `${
         req.body.isFavourite ? 'Favourite' : 'Unfavourite'
       } a project`,
-      favProject,
     });
   } catch (error) {
     logger.error(`Project ${error}`);
@@ -1222,7 +1223,6 @@ const getAllFavouriteProjects = async (req, res, next) => {
       account: req.user._id,
     }).select('_id');
     members = members.map((member) => member._id);
-    console.log(members);
     const projects = await findAllFavouriteProjectsByMemberId(
       members,
     );

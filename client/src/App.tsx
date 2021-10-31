@@ -112,7 +112,10 @@ const AddMembers = lazy(() => import('layouts/addMembers/Index'));
 const JoinCompanyPage = lazy(
   () => import('layouts/joinCompany/Index'),
 );
-
+const AllTasksPage = lazy(() => import('layouts/allTasks/Index'));
+const AllProjectsPage = lazy(
+  () => import('layouts/allProjects/Index'),
+);
 const PrivateRoute = (props: {
   component: any;
   path: string | string[];
@@ -259,6 +262,16 @@ const App = () => {
           />
 
           <PrivateRoute exact path="/" component={Demo} />
+          <PrivateRoute
+            path="/tasks"
+            exact={false}
+            component={AllTasksPage}
+          />
+          <PrivateRoute
+            path="/projects"
+            exact={false}
+            component={AllProjectsPage}
+          />
           <PrivateRoute
             path="/:username"
             exact={true}

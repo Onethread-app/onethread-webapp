@@ -419,6 +419,24 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ),
         loading: false,
       };
+    case ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_START:
+      return {
+        ...state,
+        fetchingUserFavouriteProjects: true,
+        fetchingUserFavouriteProjectsError: '',
+      };
+    case ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_SUCCESS:
+      return {
+        ...state,
+        favouriteProjects: action.payload,
+        fetchingUserFavouriteProjects: false,
+      };
+    case ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_FAILURE:
+      return {
+        ...state,
+        fetchingUserFavouriteProjects: false,
+        fetchingUserFavouriteProjectsError: action.payload,
+      };
     default:
       return state;
   }

@@ -263,10 +263,12 @@ const UpdatedNavbar = (props: Props) => {
       ) : null}
 
       <Dialog
-        canOutsideClickClose={false}
+        canOutsideClickClose={true}
+        canEscapeKeyClose={true}
         autoFocus
         style={{ borderRadius: '1rem' }}
         className="w-auto h-auto pb0"
+        onClose={() => setOpenProjectDialog(false)}
         isOpen={openProjectDialog}
       >
         <ProjectDialog
@@ -278,9 +280,11 @@ const UpdatedNavbar = (props: Props) => {
 
       <Dialog
         isOpen={openCompanyDialog}
-        canOutsideClickClose={false}
+        canEscapeKeyClose={true}
+        canOutsideClickClose={true}
         autoFocus
         style={{ borderRadius: '1rem' }}
+        onClose={() => setOpenCompanyDialog(false)}
         className="w-auto h-auto pb0"
       >
         <CompanySignupForm
@@ -291,9 +295,11 @@ const UpdatedNavbar = (props: Props) => {
 
       <Dialog
         isOpen={openTaskDialog}
-        canOutsideClickClose={false}
+        canOutsideClickClose={true}
+        canEscapeKeyClose={true}
         autoFocus
         style={{ borderRadius: '1rem' }}
+        onClose={() => setOpenTaskDialog(false)}
         className="w-auto h-auto pb0"
       >
         <TaskDialog

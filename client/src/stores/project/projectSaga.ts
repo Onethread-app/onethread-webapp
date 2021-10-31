@@ -69,6 +69,8 @@ import {
   deleteProjectSuccess,
   getAllUserProjectsSuccess,
   getAllUserProjectsFailure,
+  getUserFavouriteProjectsSuccess,
+  getUserFavouriteProjectFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getCompanyId } from 'stores/company/Selector';
@@ -665,6 +667,22 @@ export function* getAllUserProjectsAsync() {
   }
 }
 
+export function* getFavouriteUserProjectsAsync() {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(
+        `projects/favourite-list`,
+        headers,
+      );
+      console.log(response.data);
+      yield put(getUserFavouriteProjectsSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(getUserFavouriteProjectFailure(returnErrorText(error)));
+  }
+}
+
 export function* clearProjectReducerAsync() {
   yield put(clearCurrentBoard());
   yield put({ type: CLEAR_PROJECT_REDUCER_STATE });
@@ -862,6 +880,13 @@ export const deleteTeamMemberFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
+export function* getFavouriteUserProjectsHandler() {
+  yield takeLatest(
+    ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_START,
+    getFavouriteUserProjectsAsync,
+  );
+}
+
 export default function* projectSaga() {
   yield all([
     call(onCreateProject),
@@ -890,5 +915,6 @@ export default function* projectSaga() {
     call(onClearProjectReducer),
     call(onDeleteTeamMember),
     call(onGetAllUserProjects),
+    call(getFavouriteUserProjectsHandler),
   ]);
 }
