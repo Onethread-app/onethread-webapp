@@ -122,7 +122,7 @@ export const StyledTableBody = styled.div`
     }
   }
 
-  ${StyledTableRowContainer} {
+  /* ${StyledTableRowContainer} {
     transition: all 0.2s ease-in;
 
     &:hover {
@@ -133,7 +133,7 @@ export const StyledTableBody = styled.div`
     &:active {
       transform: scale(1);
     }
-  }
+  } */
 `;
 
 export const StyledTableHeader = styled.div`
