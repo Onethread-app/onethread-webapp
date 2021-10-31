@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   useTable,
@@ -14,13 +13,16 @@ import {
 import { getAllUserTasks } from 'stores/task/Actions';
 
 import { Header, Row } from './TaskSection.styles';
-import { Dialog } from '@material-ui/core';
 
 import Hamburger from '../../../resources/images/hamburger.png';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TaskDialog from './TaskDialog';
 import { TaskTableColumns } from 'components/task/TaskTableColumns';
 import TasksTable from 'components/task/TasksTable';
 import TaskTableSkeleton from 'components/task/TaskTableSkeleton';
+import { CreatableItem } from 'components/table/StyledTable.styles';
+import { Dialog } from '@blueprintjs/core';
 
 interface Props {
   userTasks: any;
@@ -46,6 +48,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [tasks, setTasks] = useState([]);
+  const [expand, setExpand] = useState<boolean>(true);
   const data = useMemo(() => tasks, [tasks]);
   const columns = useMemo(() => TaskTableColumns, []);
 
@@ -113,36 +116,64 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   return (
     <div>
       <Header>
-        Tasks due soon
+        <span className="flex items-center">
+          Tasks due soon{' '}
+          {expand ? (
+            <ExpandLessIcon
+              className="ml3 pointer"
+              onClick={() => setExpand(false)}
+            />
+          ) : (
+            <ExpandMoreIcon
+              className="ml3 pointer"
+              onClick={() => setExpand(true)}
+            />
+          )}
+        </span>
         <img src={Hamburger} alt="" />
       </Header>
-      {tasks.length === 0 ? (
-        loading ? (
-          <TaskTableSkeleton />
-        ) : (
-          <Row>
-            No task has been created.{' '}
-            <Link to="#" onClick={() => setOpenTaskDialog(true)}>
-              Create Task
-            </Link>
-          </Row>
-        )
-      ) : (
-        <TasksTable
-          getTableProps={getTableProps}
-          getTableBodyProps={getTableBodyProps}
-          headerGroups={headerGroups}
-          rows={rows}
-          prepareRow={prepareRow}
-          visibleColumns={visibleColumns}
-          page={page}
-          pageIndex={pageIndex}
-          gotoPage={gotoPage}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      )}
-      <Dialog open={openTaskDialog} maxWidth={'lg'}>
+      {expand ? (
+        <>
+          {tasks.length === 0 ? (
+            loading ? (
+              <TaskTableSkeleton />
+            ) : (
+              <Row>
+                No task has been created.{' '}
+                <CreatableItem
+                  onClick={() => setOpenTaskDialog(true)}
+                >
+                  <span>+ </span> Add new tasks
+                </CreatableItem>
+              </Row>
+            )
+          ) : (
+            <TasksTable
+              getTableProps={getTableProps}
+              getTableBodyProps={getTableBodyProps}
+              headerGroups={headerGroups}
+              rows={rows}
+              prepareRow={prepareRow}
+              visibleColumns={visibleColumns}
+              page={page}
+              pageIndex={pageIndex}
+              gotoPage={gotoPage}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setOpenTaskDialog={setOpenTaskDialog}
+            />
+          )}
+        </>
+      ) : null}
+      <Dialog
+        canOutsideClickClose={true}
+        canEscapeKeyClose={true}
+        autoFocus
+        style={{ borderRadius: '1rem' }}
+        className="w-auto h-auto pb0"
+        isOpen={openTaskDialog}
+        onClose={() => setOpenTaskDialog(false)}
+      >
         <TaskDialog
           setShowDialog={setOpenTaskDialog}
           useToaster={props.useToaster}

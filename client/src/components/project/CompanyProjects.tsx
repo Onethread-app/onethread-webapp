@@ -29,6 +29,8 @@ import {
 } from 'components/table/StyledTable.styles';
 import ProjectsTableSkeleton from './ProjectsTableSkeleton';
 import { AlignCenter } from 'components/UtilComponents';
+import { Dialog } from '@blueprintjs/core';
+import ProjectDialog from 'components/home/project-section/ProjectDialog';
 
 interface ICompanyProjects {
   projectList: IProject[];
@@ -47,12 +49,29 @@ const CompanyProjects = (props: ICompanyProjects) => {
     errorOnGettingAllProjects,
     uniqueCompanyName,
   } = props;
+  const [openProjectDialog, setOpenProjectDialog] =
+    useState<boolean>(false);
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const [showInputField, setShowInputField] =
     useState<boolean>(false);
   const data = useMemo(() => projectList, [projectList]);
   const columns = useMemo(() => ProjectTableColumns, []);
+
+  const [showToaster, setShowToaster] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const useToaster = () => {
+    return {
+      showToaster,
+      setShowToaster,
+      successMessage,
+      setSuccessMessage,
+      setErrorMessage,
+      errorMessage,
+    };
+  };
 
   const {
     getTableProps,
@@ -201,8 +220,22 @@ const CompanyProjects = (props: ICompanyProjects) => {
           pageSize={pageSize}
           pageIndex={pageIndex}
           setPageSize={setPageSize}
+          setOpenProjectDialog={setOpenProjectDialog}
         />
       )}
+      <Dialog
+        canOutsideClickClose={true}
+        autoFocus
+        style={{ borderRadius: '1rem' }}
+        className="w-auto h-auto pb0"
+        onClose={() => setOpenProjectDialog(false)}
+        isOpen={openProjectDialog}
+      >
+        <ProjectDialog
+          useToaster={useToaster}
+          setOpenProjectDialog={setOpenProjectDialog}
+        />
+      </Dialog>
     </Container>
   );
 };

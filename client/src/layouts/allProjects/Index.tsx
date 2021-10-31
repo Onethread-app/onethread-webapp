@@ -1,0 +1,277 @@
+import { useEffect, useMemo, useState } from 'react';
+import { connect } from 'react-redux';
+import {
+  useTable,
+  useGlobalFilter,
+  useFilters,
+  useSortBy,
+  // useAsyncDebounce,
+  usePagination,
+} from 'react-table';
+
+import { ICompanyByUser, User } from 'stores/user/Reducer';
+import { IProject } from 'stores/project/Reducer';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
+import {
+  createProjectInCompany,
+  getAllUserProjects,
+} from 'stores/project/Actions';
+import {
+  clearErrorOnCompanyCreate,
+  createCompanyActionFailure,
+  createCompanyActionSuccess,
+} from 'stores/company/Actions';
+import { saveProjectForm } from 'stores/projectForm/Actions';
+
+import { Dialog, Popover } from '@blueprintjs/core';
+import ProjectsTableSkeleton from 'components/project/ProjectsTableSkeleton';
+import { ProjectTableColumns } from 'components/project/ProjectTableColumns';
+import ProjectsTable from 'components/project/ProjectsTable';
+import { Container } from './Index.styles';
+import ProjectDialog from 'components/home/project-section/ProjectDialog';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {
+  CreatableItem,
+  Header,
+  HeaderContainer,
+  SortAndFilter,
+  StyledFilterPopover,
+} from 'components/table/StyledTable.styles';
+// import { ClickAwayListener } from '@material-ui/core';
+
+interface INewCompanyResponse {
+  message: string;
+  company: {
+    _id: string;
+    name: string;
+    uniqueName: string;
+    type: string;
+    email: string;
+    address: string;
+    legalOwnerName: string;
+    legalOwnerMail: string;
+    role: string;
+  };
+}
+
+interface IProps {
+  user: User;
+  companies: ICompanyByUser[];
+  projectLoading: boolean;
+  getAllCompaniesByUserId: (id: string) => void;
+  createProjectInCompany: (val: {}) => void;
+  clearErrorOnCompanyCreate: () => void;
+  companyName: string;
+  creatingCompany: boolean;
+  errorOnCreatingCompany: string;
+  errorOnCreatingProject: string;
+  currentCompany: any;
+  saveProjectForm: any;
+  previousData: any;
+  userProjects: IProject[];
+  fetchingUserProjects: boolean;
+  errorOnFetchingUserProjects: string;
+  createCompanyActionSuccess: (arg: INewCompanyResponse) => void;
+  createCompanyActionFailure: (arg: string) => void;
+  getAllUserProjects: () => void;
+}
+
+const Index = (props: IProps) => {
+  const [openProjectDialog, setOpenProjectDialog] =
+    useState<boolean>(false);
+  const [projects, setProjects] = useState<IProject[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const data = useMemo(() => projects, [projects]);
+  const columns = useMemo(() => ProjectTableColumns, []);
+
+  const [showToaster, setShowToaster] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const useToaster = () => {
+    return {
+      showToaster,
+      setShowToaster,
+      successMessage,
+      setSuccessMessage,
+      setErrorMessage,
+      errorMessage,
+    };
+  };
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    visibleColumns,
+    allColumns,
+    state,
+    // setGlobalFilter,
+    page,
+    setPageSize,
+    gotoPage,
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: {
+        pageSize: 10,
+        hiddenColumns: ['createdAt'],
+        // sortBy: [{ id: 'status', desc: true }],
+      },
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination,
+  );
+
+  const {
+    // globalFilter,
+    pageSize,
+    pageIndex,
+  } = state;
+
+  useEffect(() => {
+    if (props.user._id) {
+      props.getAllUserProjects();
+      setLoading(true);
+    }
+  }, [props.user._id]);
+
+  useEffect(() => {
+    if (
+      loading === true &&
+      props.fetchingUserProjects === false &&
+      props.errorOnFetchingUserProjects === ''
+    ) {
+      setProjects(props.userProjects);
+      setLoading(false);
+    }
+  }, [
+    props.userProjects,
+    loading,
+    props.fetchingUserProjects,
+    props.errorOnFetchingUserProjects,
+  ]);
+  return (
+    <Container>
+      <HeaderContainer>
+        <Header>
+          Projects{' '}
+          {projects.length > 0 && <span>({projects.length})</span>}
+        </Header>
+        <SortAndFilter>
+          {/* <ClickAwayListener
+            onClickAway={() => {
+              if (globalFilter === '' || globalFilter === undefined) {
+                setShowInputField(false);
+              }
+            }}
+          >
+            <AlignCenter onClick={() => setShowInputField(true)}>
+              {showInputField ? (
+                <StyledInput onChange={handleSearchChange} />
+              ) : (
+                <Icon icon="search" />
+              )}
+            Search
+            </AlignCenter>
+          </ClickAwayListener> */}
+          <Popover
+            interactionKind="click"
+            position="bottom-right"
+            content={
+              <StyledFilterPopover>
+                <p className="bb">Customize Table</p>
+                {allColumns.map((column) => (
+                  <div key={column.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={column.isVisible}
+                        disabled={column.id === 'name'}
+                        {...column.getToggleHiddenProps()}
+                      />{' '}
+                      {column.Header}
+                    </label>
+                  </div>
+                ))}
+              </StyledFilterPopover>
+            }
+            target={<MoreVertIcon fontSize="small" />}
+          />
+        </SortAndFilter>
+      </HeaderContainer>
+      {projects.length === 0 ? (
+        loading ? (
+          <ProjectsTableSkeleton />
+        ) : (
+          <div className="flex flex-col">
+            No project has been created.{' '}
+            <CreatableItem onClick={() => setOpenProjectDialog(true)}>
+              <span>+ </span> Create Project
+            </CreatableItem>
+          </div>
+        )
+      ) : (
+        <ProjectsTable
+          getTableProps={getTableProps}
+          getTableBodyProps={getTableBodyProps}
+          headerGroups={headerGroups}
+          rows={rows}
+          prepareRow={prepareRow}
+          visibleColumns={visibleColumns}
+          page={page}
+          gotoPage={gotoPage}
+          pageSize={pageSize}
+          pageIndex={pageIndex}
+          setPageSize={setPageSize}
+          setOpenProjectDialog={setOpenProjectDialog}
+        />
+      )}
+      <Dialog
+        canOutsideClickClose={true}
+        canEscapeKeyClose={true}
+        autoFocus
+        style={{ borderRadius: '1rem' }}
+        className="w-auto h-auto pb0"
+        onClose={() => setOpenProjectDialog(false)}
+        isOpen={openProjectDialog}
+      >
+        <ProjectDialog
+          useToaster={useToaster}
+          setOpenProjectDialog={setOpenProjectDialog}
+        />
+      </Dialog>
+    </Container>
+  );
+};
+
+const mapStateToProps = (state: any) => ({
+  companies: state.userReducer.user.companies,
+  user: state.userReducer.user,
+  projectLoading: state.projectReducer.projectLoading,
+  companyName: state.companyReducer.currentCompany.uniqueName,
+  currentCompany: state.companyReducer.currentCompany,
+  creatingCompany: state.companyReducer.creatingCompany,
+  errorOnCreatingCompany: state.companyReducer.errorOnCreatingCompany,
+  errorOnCreatingProject: state.projectReducer.error,
+  fetchingUserProjects: state.projectReducer.fetchingUserProjects,
+  errorOnFetchingUserProjects:
+    state.projectReducer.errorOnFetchingUserProjects,
+  previousData: state.projectFormReducer.data,
+  userProjects: state.projectReducer.userProjects,
+});
+
+export default connect(mapStateToProps, {
+  getAllCompaniesByUserId,
+  createProjectInCompany,
+  clearErrorOnCompanyCreate,
+  saveProjectForm,
+  createCompanyActionSuccess,
+  createCompanyActionFailure,
+  getAllUserProjects,
+})(Index);

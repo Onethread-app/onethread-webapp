@@ -30,7 +30,10 @@ import {
   getSelectedBoard,
   getSelectedTaskDetails,
 } from 'stores/task/Actions';
-import { getSingleProject } from 'stores/project/Actions';
+import {
+  getSingleProject,
+  getUserFavouriteProjects,
+} from 'stores/project/Actions';
 import {
   fetchRooms,
   getRoomMembers,
@@ -104,6 +107,8 @@ interface LayoutInternalProps
   addTrackedTime: (payload: ICurrentTrack) => void;
   setSubscriptionNotExpire: () => void;
   getAllCompaniesByUserId: (arg: string) => void;
+  getUserFavouriteProjects: () => void;
+  favouriteProjects: any;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -350,8 +355,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   }, [props.subscriptiontExpired]);
 
   useEffect(() => {
-    if (props.user._id && props.userCompanies.length === 0)
+    if (props.user._id && props.userCompanies.length === 0) {
       props.getAllCompaniesByUserId(props.user._id);
+      props.getUserFavouriteProjects();
+    }
   }, [props.user._id]);
 
   useEffect(() => {
@@ -439,6 +446,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     companies={props.userCompanies}
                     user={props.user}
                     project={props.project}
+                    favouriteProjects={props.favouriteProjects}
                   />
                 </div>
               </div>
@@ -792,6 +800,7 @@ const mapStateToProps = (state: any) => {
     subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
     userCompanies: state.userReducer.user.companies,
+    favouriteProjects: state.projectReducer.favouriteProjects,
   };
 };
 
@@ -809,6 +818,7 @@ export const Layout = connect(mapStateToProps, {
   addTrackedTime,
   setSubscriptionNotExpire,
   getAllCompaniesByUserId,
+  getUserFavouriteProjects,
 })(withRouter(LayoutComponent));
 
 export default Layout;
