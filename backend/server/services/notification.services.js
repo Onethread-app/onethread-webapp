@@ -1,8 +1,8 @@
-//const Pusher = require('pusher');
-//const config = require('../../config/config');
-const _ = require('lodash');
-const { pusherChannel } = require('./pusher.services');
-const { adminFirebase } = require('./firebase.services');
+// const Pusher = require('pusher');
+// const config = require('../../config/config');
+const _ = require("lodash");
+const { pusherChannel } = require("./pusher.services");
+const { adminFirebase } = require("./firebase.services");
 
 // const channels_client = new Pusher({
 //   appId: config.pusherChanel.appid,
@@ -21,9 +21,9 @@ const { adminFirebase } = require('./firebase.services');
 //   });
 
 module.exports.sendCompanyNotification = async (
-  company, //fromHeader
+  company, // fromHeader
   adminUser,
-  userNoti,
+  userNoti
 ) => {
   let userNotification = userNoti;
 
@@ -33,17 +33,17 @@ module.exports.sendCompanyNotification = async (
     company.toString(),
     `${company}-superAdmin`,
     userNotification,
-    adminUser.pusherSock,
+    adminUser.pusherSock
   );
 };
 
 module.exports.sendCompanyRoleNotification = async (
-  company, //fromHeader
+  company, // fromHeader
   companyChannels,
   adminUser,
-  userNoti,
+  userNoti
 ) => {
-  let companyChannelsPusher = companyChannels.map((c) => {
+  const companyChannelsPusher = companyChannels.map((c) => {
     return `${company.toString()}-${c}`;
   });
 
@@ -55,7 +55,7 @@ module.exports.sendCompanyRoleNotification = async (
     companyChannelsPusher,
     company.toString(),
     [userNotification],
-    adminUser.pusherSock,
+    adminUser.pusherSock
   );
 
   // var message = [{
@@ -72,7 +72,7 @@ module.exports.sendCompanyRoleNotification = async (
   const notification = {
     title: userNoti.type,
     body: userNoti.text,
-    icon: 'https://www.tigrow.co/static/media/TiGrowLogoFinal.2668af93.png',
+    icon: "https://www.tigrow.co/static/media/TiGrowLogoFinal.2668af93.png",
   };
   let messages = companyChannelsPusher.map((topic) => {
     return {
@@ -89,24 +89,24 @@ module.exports.sendCompanyRoleNotification = async (
 };
 
 module.exports.sendMultipleNotification = async (
-  company, //fromHeader
+  company, // fromHeader
   companyChannels,
   adminUser,
-  userNoties,
+  userNoties
 ) => {
-  let userNotifications = userNoties.map((c) => {
+  const userNotifications = userNoties.map((c) => {
     return { notification: c, read: false };
   });
 
-  let companyChannelsPusher = companyChannels.map((c) => {
+  const companyChannelsPusher = companyChannels.map((c) => {
     return `${company.toString()}-${c}`;
   });
 
   pusherChannel.trigger(
     companyChannelsPusher,
     company.toString(),
-    userNotifications, //ARRAY
-    adminUser.pusherSock,
+    userNotifications, // ARRAY
+    adminUser.pusherSock
   );
 };
 
@@ -115,25 +115,22 @@ module.exports.sendCompanyAndProjectNotification = async (
   companyChannels,
   projectChannel,
   adminUser,
-  userNoti,
+  userNoti
 ) => {
-  let companyChannelsPusher = companyChannels.map((c) => {
+  const companyChannelsPusher = companyChannels.map((c) => {
     return `${project.company.toString()}-${c}`;
   });
 
-  let projectChannelPusher = projectChannel.map((p) => {
+  const projectChannelPusher = projectChannel.map((p) => {
     return `${project._id.toString()}-${p}`;
   });
 
-  let allChannel = _.union(
-    companyChannelsPusher,
-    projectChannelPusher,
-  );
+  const allChannel = _.union(companyChannelsPusher, projectChannelPusher);
 
   let userNotification = userNoti;
   if (Array.isArray(userNotification)) {
     userNotification = userNoti.map((c) => {
-      //multiple
+      // multiple
       return { notification: c, read: false };
     });
   } else {
@@ -145,32 +142,19 @@ module.exports.sendCompanyAndProjectNotification = async (
     allChannel,
     project.company.toString(),
     userNotification,
-    adminUser.pusherSock,
+    adminUser.pusherSock
   );
 };
 
-module.exports.sendNotification = (
-  userId,
-  notification,
-  socketId,
-) => {
+module.exports.sendNotification = (userId, notification, socketId) => {
   pusherChannel.trigger(
     `private-${userId}`,
-    'new-notification',
+    "new-notification",
     notification,
-    socketId,
+    socketId
   );
 };
 
-module.exports.sendMessageNotification = (
-  userId,
-  message,
-  socketId,
-) => {
-  pusherChannel.trigger(
-    `private-${userId}`,
-    'new-message',
-    message,
-    socketId,
-  );
+module.exports.sendMessageNotification = (userId, message, socketId) => {
+  pusherChannel.trigger(`private-${userId}`, "new-message", message, socketId);
 };

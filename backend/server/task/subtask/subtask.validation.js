@@ -4,7 +4,7 @@ const Joi = require('@hapi/joi');
 const idSchema = {
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
-    .error((errors) => {
+    .error(() => {
       return {
         message: 'Invalid ID',
       };

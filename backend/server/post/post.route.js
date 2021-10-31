@@ -1,8 +1,9 @@
 const express = require('express');
 const { validate } = require('express-validation');
+const passport = require('passport');
 const paramValidation = require('./post.validation');
 const psotCtrl = require('./post.controller');
-const passport = require('passport');
+
 const requireAuth = passport.authenticate('jwt', { session: false });
 const { permit, authSelf } = require('../helpers/permission');
 

@@ -1,6 +1,7 @@
 // Education Information
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 const educationSchema = new Schema({
   degree: {
     type: String,

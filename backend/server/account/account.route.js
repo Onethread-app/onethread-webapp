@@ -1,6 +1,7 @@
 const express = require('express');
 const passportService = require('../services/passport.services');
 const paramValidation = require('./account.validation');
+
 const router = express.Router();
 
 const accountCtrl = require('./account.controller');
@@ -69,12 +70,8 @@ router
 
 router.route('/').get(authorization, accountCtrl.getAccount);
 router.route('/skill-area').get(authorization, accountCtrl.skillArea);
-router
-  .route('/task-list')
-  .get(authorization, accountCtrl.userTaskList);
-router
-  .route('/subtasks')
-  .get(authorization, accountCtrl.userSubtasks);
+router.route('/task-list').get(authorization, accountCtrl.userTaskList);
+router.route('/subtasks').get(authorization, accountCtrl.userSubtasks);
 router
   .route('/:subTaskId/done')
   .put(
@@ -95,9 +92,7 @@ router
     schemaValidator(paramValidation.logout),
     accountCtrl.logout,
   );
-router
-  .route('/forget-password')
-  .post(accountCtrl.sendEmailForForgetPassword);
+router.route('/forget-password').post(accountCtrl.sendEmailForForgetPassword);
 router
   .route('/reset-password/')
   .put(

@@ -1,3 +1,4 @@
+const helmet = require('helmet');
 const config = require('./config');
 
 require('elastic-apm-node').start({
@@ -24,16 +25,15 @@ const cors = require('cors');
 const httpStatus = require('http-status');
 const expressWinston = require('express-winston');
 const expressValidation = require('express-validation');
-const helmet = require('helmet');
+
 const winstonInstance = require('./winston');
 
 const routes = require('../index.route');
 const { APIError } = require('../server/helpers/APIError');
-const {
-  sendErrorResponse,
-} = require('../server/helpers/jsonResponse');
+const { sendErrorResponse } = require('../server/helpers/jsonResponse');
 
 const mongoErrorHandler = require('../server/helpers/mongoErrorFormat');
+
 const app = express();
 
 if (config.env === 'development' || config.env === 'production') {
@@ -101,13 +101,10 @@ app.use((err, req, res, next) => {
       .join(' and ');
     const error = new APIError(unifiedErrorMessage, err.status, true);
     return next(error);
-  } else if (!(err instanceof APIError)) {
+  }
+  if (!(err instanceof APIError)) {
     logger.error(`${err.message}`);
-    const apiError = new APIError(
-      err.message,
-      err.status,
-      err.isPublic,
-    );
+    const apiError = new APIError(err.message, err.status, err.isPublic);
     return next(apiError);
   }
   return next(err);
@@ -131,10 +128,9 @@ if (config.env !== 'test') {
 
 // // error handler, send stacktrace only during development
 app.use((err, req, res, next) => {
-  const stack =
-    config.env === 'development' ? err.stack.split('\n') : {};
-  let frame = err.stack;
-  let lineNumber = frame.split(':')[1];
+  const stack = config.env === 'development' ? err.stack.split('\n') : {};
+  const frame = err.stack;
+  const lineNumber = frame.split(':')[1];
   const response = {
     message: err.isPublic ? err.message : httpStatus[err.status],
     stack,

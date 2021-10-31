@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const member = new Schema(
   {
@@ -20,7 +21,7 @@ const member = new Schema(
       enum: [
         'superAdmin',
         'admin',
-        'employee', //employee is member
+        'employee', // employee is member
       ],
       default: 'employee',
       required: true,
@@ -51,7 +52,7 @@ const member = new Schema(
 
 member.index({ account: 1, company: 1 }, { unique: true });
 
-let Member = mongoose.model('Member', member);
+const Member = mongoose.model('Member', member);
 
 module.exports = {
   Member,

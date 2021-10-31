@@ -13,10 +13,10 @@ const sendMail = async (req, res, next) => {
   try {
     const { name, email, subject, message } = req.body;
     const contact = new Contact({
-      name: name,
-      email: email,
-      subject: subject,
-      message: message,
+      name,
+      email,
+      subject,
+      message,
     });
     await contact.save();
     await contactSaleMail(contact.email, contact.subject, contact.message);

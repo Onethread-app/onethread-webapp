@@ -1,55 +1,48 @@
-const TimeTracker = require('./time-tracker.model');
-const Task = require('../task/task.model');
-const Subtask = require('../task/subtask/subtask.model');
-const { Project } = require('../project/project.model');
+const TimeTracker = require("./time-tracker.model");
+const Task = require("../task/task.model");
+const Subtask = require("../task/subtask/subtask.model");
+const { Project } = require("../project/project.model");
 
-const logger = require('../../config/winston');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const logger = require("../../config/winston");
+const { sendJSONresponse } = require("../helpers/jsonResponse");
 
 const ttPopulateOptions = [
   {
-    path: 'task',
-    select: '_id name boardId',
+    path: "task",
+    select: "_id name boardId",
     populate: [
       {
-        path: 'boardId',
-        select: '_id',
+        path: "boardId",
+        select: "_id",
       },
     ],
   },
   {
-    path: 'subtask',
-    select: '_id name',
+    path: "subtask",
+    select: "_id name",
   },
   {
-    path: 'column',
-    select: '_id name',
+    path: "column",
+    select: "_id name",
   },
   {
-    path: 'project',
-    select: '_id name',
+    path: "project",
+    select: "_id name",
   },
   {
-    path: 'company',
-    select: '_id name uniqueName',
+    path: "company",
+    select: "_id name uniqueName",
   },
   {
-    path: 'account',
-    select: '_id firstName lastName name profileImage',
+    path: "account",
+    select: "_id firstName lastName name profileImage",
   },
 ];
 
 const create = async (req, res, next) => {
   try {
-    const {
-      startTime,
-      duration,
-      task,
-      subtask,
-      column,
-      project,
-      company,
-    } = req.body;
+    const { startTime, duration, task, subtask, column, project, company } =
+      req.body;
 
     const timeTracker = new TimeTracker({
       account: req.user._id,
@@ -69,7 +62,7 @@ const create = async (req, res, next) => {
         {
           $inc: { timeSpent: duration },
         },
-        { new: true },
+        { new: true }
       );
     }
 
@@ -78,7 +71,7 @@ const create = async (req, res, next) => {
       {
         $inc: { timeSpent: duration },
       },
-      { new: true },
+      { new: true }
     );
 
     await Project.findByIdAndUpdate(
@@ -86,7 +79,7 @@ const create = async (req, res, next) => {
       {
         $inc: { timeSpent: duration },
       },
-      { new: true },
+      { new: true }
     );
 
     sendJSONresponse(res, 200, {
@@ -118,9 +111,7 @@ const findByTask = async (req, res, next) => {
     const timeTrackers = await TimeTracker.find({
       task: req.query.taskId,
     })
-      .select(
-        '_id startTime duration task subtask column project company',
-      )
+      .select("_id startTime duration task subtask column project company")
       .populate(ttPopulateOptions)
       .sort({ startTime: -1 })
       .exec();
@@ -136,9 +127,7 @@ const findBySubtask = async (req, res, next) => {
     const timeTrackers = await TimeTracker.find({
       subtask: req.query.subtaskId,
     })
-      .select(
-        '_id startTime duration task subtask column project company',
-      )
+      .select("_id startTime duration task subtask column project company")
       .populate(ttPopulateOptions)
       .sort({ startTime: -1 })
       .exec();
@@ -154,9 +143,7 @@ const findByProject = async (req, res, next) => {
     const timeTrackers = await TimeTracker.find({
       project: req.query.projectId,
     })
-      .select(
-        '_id startTime duration task subtask column project company',
-      )
+      .select("_id startTime duration task subtask column project company")
       .populate(ttPopulateOptions)
       .sort({ startTime: -1 })
       .exec();
@@ -172,9 +159,7 @@ const findByCompany = async (req, res, next) => {
     const timeTrackers = await TimeTracker.find({
       project: req.query.projectId,
     })
-      .select(
-        '_id startTime duration task subtask column project company',
-      )
+      .select("_id startTime duration task subtask column project company")
       .populate(ttPopulateOptions)
       .sort({ startTime: -1 })
       .exec();

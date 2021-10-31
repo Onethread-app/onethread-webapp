@@ -3,6 +3,7 @@ const util = require('util');
 const debug = require('debug')('express-mongoose-es6-rest-api:index');
 
 Promise = require('bluebird');
+
 const loggerDispatcher = 'Index';
 // config should be imported before importing any other file
 const config = require('./config/config');
@@ -31,11 +32,7 @@ mongoose.connection.on('error', () => {
 // print mongoose logs in dev env
 if (config.mongooseDebug) {
   mongoose.set('debug', (collectionName, method, query, doc) => {
-    debug(
-      `${collectionName}.${method}`,
-      util.inspect(query, false, 20),
-      doc,
-    );
+    debug(`${collectionName}.${method}`, util.inspect(query, false, 20), doc);
   });
 }
 
@@ -69,9 +66,7 @@ if (!module.parent) {
 
   // listen on port config.port
   app.listen(config.port, () => {
-    logger.info(
-      `Ok, server is running on port ${config.port} (${config.env})`,
-    );
+    logger.info(`Ok, server is running on port ${config.port} (${config.env})`);
   });
 }
 

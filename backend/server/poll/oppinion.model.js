@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
-let tagLimit = function (tagList) {
+const tagLimit = function (tagList) {
   return tagList.length <= 10;
 };
 
@@ -24,7 +24,7 @@ const OpinionSchema = new mongoose.Schema({
     default: false,
   },
   blocked: {
-    //after report admin
+    // after report admin
     type: Boolean,
     default: false,
   },

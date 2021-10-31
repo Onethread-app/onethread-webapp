@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const notificationSchema = new Schema(
   {
@@ -47,8 +48,8 @@ const notificationSchema = new Schema(
       ref: 'Task',
     },
     subtask: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'SubTask',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'SubTask',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
@@ -63,7 +64,7 @@ const notificationSchema = new Schema(
       ref: 'BoardColumn',
     },
     registerUser: {
-      //assign user in task
+      // assign user in task
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
     },

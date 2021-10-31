@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 // report issue schema
 const reportSchema = new Schema(
@@ -27,10 +28,7 @@ const reportSchema = new Schema(
   },
 );
 
-let Report = mongoose.model(
-  'Report',
-  reportSchema,
-);
+const Report = mongoose.model('Report', reportSchema);
 
 module.exports = {
   Report,

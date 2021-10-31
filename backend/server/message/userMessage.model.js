@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 const UserMessageSchema = new Schema(
   {
     read: {
@@ -34,7 +35,7 @@ const UserMessageSchema = new Schema(
   },
 );
 
-let UserMessage = mongoose.model('UserMessage', UserMessageSchema);
+const UserMessage = mongoose.model('UserMessage', UserMessageSchema);
 
 module.exports = {
   UserMessage,

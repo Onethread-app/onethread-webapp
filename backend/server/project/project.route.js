@@ -1,13 +1,12 @@
 const express = require('express');
 const projectValidation = require('./project.validation');
+
 const router = express.Router();
 
 const schemaValidator = require('../helpers/joiSchemaValidator');
 const projectCtrl = require('./project.controller');
 const companyCtrl = require('../company/company.controller');
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+const { authorization } = require('../middlewares/authorizationMiddleware');
 const subCtrl = require('../subscription/subscription.controller');
 
 router
@@ -32,11 +31,7 @@ router
     authorization,
     subCtrl.subscriptionExpireCheck(),
     schemaValidator(projectValidation.updateProject),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
+    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
     projectCtrl.updateProject,
   );
 // authentication
@@ -71,12 +66,7 @@ router
   .get(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser(
-      'all',
-      'admin',
-      'superAdmin',
-      'employee',
-    ),
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin', 'employee'),
     schemaValidator(projectValidation.showProjectList),
     projectCtrl.showAllProjectsForCompany,
   );
@@ -154,11 +144,7 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
+    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
     schemaValidator(projectValidation.updateProjectOutline),
     projectCtrl.updateProjectOutline,
   );
@@ -168,11 +154,7 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
+    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
     schemaValidator(projectValidation.updateProjectDescription),
     projectCtrl.updateProjectDescription,
   );
@@ -213,11 +195,7 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
+    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
     projectCtrl.updateRole,
   );
 router
@@ -231,25 +209,17 @@ router
   .route('/project-list/:memberId')
   .get(authorization, projectCtrl.projectListForMember);
 
-//TODOS: need to add permission, subscriptioncheck, validation
-router
-  .route('/overview')
-  .get(authorization, projectCtrl.projectOverview);
+// TODOS: need to add permission, subscriptioncheck, validation
+router.route('/overview').get(authorization, projectCtrl.projectOverview);
 
-router
-  .route('/list/overview')
-  .get(authorization, projectCtrl.getListOverview);
+router.route('/list/overview').get(authorization, projectCtrl.getListOverview);
 
 router
   .route('/delete-project')
   .delete(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
+    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
     projectCtrl.deleteProject,
   );
 

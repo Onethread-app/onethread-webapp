@@ -3,9 +3,7 @@ const crypto = require('crypto');
 const Account = require('./account.model');
 const { Member } = require('../company/member/member.model');
 const { Team } = require('../team-member/team.model');
-const {
-  PendingMember,
-} = require('../company/member/pendingMember.model');
+const { PendingMember } = require('../company/member/pendingMember.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
@@ -47,9 +45,7 @@ const {
 const Task = require('../task/task.model');
 const SubTask = require('../task/subtask/subtask.model');
 const TaskAssign = require('../task/taskAssign.model');
-const {
-  subtaskPopulateOptionsForUser,
-} = require('../helpers/PopulateOptions');
+const { subtaskPopulateOptionsForUser } = require('../helpers/PopulateOptions');
 
 const {
   generateToken,
@@ -561,10 +557,7 @@ const getAccount = async (req, res, next) => {
     if (userInfo.gender === '' || userInfo.gender === undefined) {
       count++;
     }
-    if (
-      userInfo.bloodGroup === '' ||
-      userInfo.bloodGroup === undefined
-    ) {
+    if (userInfo.bloodGroup === '' || userInfo.bloodGroup === undefined) {
       count++;
     }
     if (userInfo.location === '' || userInfo.location === undefined) {
@@ -573,14 +566,14 @@ const getAccount = async (req, res, next) => {
     if (userInfo.about === '' || userInfo.about === undefined) {
       count++;
     }
-    let compilation = ((count / 12) * 100).toFixed(2);
-    let teamNumber = await Team.find({
+    const compilation = ((count / 12) * 100).toFixed(2);
+    const teamNumber = await Team.find({
       account: req.user._id,
     }).countDocuments();
     userInfo = {
       ...userInfo._doc,
       complete: compilation,
-      teamNumber: teamNumber,
+      teamNumber,
     };
     return sendJSONresponse(res, 200, {
       success: true,
@@ -594,9 +587,9 @@ const getAccount = async (req, res, next) => {
 
 const userDailyProgress = async (req, res, next) => {
   try {
-    let startToday = new Date();
+    const startToday = new Date();
     startToday.setHours(0, 0, 0, 0);
-    let endToday = new Date();
+    const endToday = new Date();
     endToday.setHours(23, 59, 59, 999);
     const taskList = await Task.find({
       dueDate: { $gte: startToday, $lt: endToday },
@@ -604,7 +597,7 @@ const userDailyProgress = async (req, res, next) => {
     });
     let taskId = taskList.map((e) => e._id);
     const assignTaskNumber = await TaskAssign.find({
-      taskId: taskId,
+      taskId,
       assignedPerson: req.user._id,
     }).countDocuments();
     const doneTaskList = await Task.find({
@@ -613,7 +606,7 @@ const userDailyProgress = async (req, res, next) => {
     });
     taskId = doneTaskList.map((e) => e._id);
     const completeNumber = await TaskAssign.find({
-      taskId: taskId,
+      taskId,
       assignedPerson: req.user._id,
     }).countDocuments();
     let dailyProgress = 0;
@@ -636,7 +629,7 @@ const skillArea = async (req, res, next) => {
     const user = await findAccountById(req.user._id);
     return sendJSONresponse(res, 200, {
       success: true,
-      user: user,
+      user,
     });
   } catch (error) {
     logger.error(`Account: ${error}`);
@@ -769,10 +762,7 @@ const logout = async (req, res, next) => {
 const sendEmailForForgetPassword = async (req, res, next) => {
   try {
     const token = crypto.randomBytes(20).toString('hex');
-    const verifyToken = crypto
-      .createHash('sha256')
-      .update(token)
-      .digest('hex');
+    const verifyToken = crypto.createHash('sha256').update(token).digest('hex');
     const user = await Account.findOne({
       email: req.body.email,
     });
@@ -805,14 +795,14 @@ const sendEmailForForgetPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   try {
     const { password, token } = req.body;
-    let multi = client.multi();
+    const multi = client.multi();
     multi.get(`resetPasswordToken:${token}`);
     multi.exec(async (err, data) => {
       if (err) {
         logger.error(`${err}`);
         next(err);
       }
-      let userID = JSON.parse(data[0]);
+      const userID = JSON.parse(data[0]);
       if (typeof userID === 'string') {
         const user = await Account.findById({
           _id: userID,
@@ -825,11 +815,10 @@ const resetPassword = async (req, res, next) => {
         return sendJSONresponse(res, 200, {
           message: 'Password Changed',
         });
-      } else {
-        return sendErrorResponse(res, 401, 'TokenExpireError', {
-          message: 'Time is expired',
-        });
       }
+      return sendErrorResponse(res, 401, 'TokenExpireError', {
+        message: 'Time is expired',
+      });
     });
   } catch (err) {
     logger.error(`password does not change`);
@@ -839,10 +828,10 @@ const resetPassword = async (req, res, next) => {
 
 const tokenRefresh = async (req, res, next) => {
   try {
-    const refreshToken = req.body.refreshToken;
+    const { refreshToken } = req.body;
     // check if a refresh token exist in blacklist
     let isBlackListed;
-    let multi = client.multi();
+    const multi = client.multi();
     multi.get(`BlackList:${refreshToken}`);
     multi.exec(function (err, data) {
       // if data object is null token is not blacklisted
@@ -857,103 +846,83 @@ const tokenRefresh = async (req, res, next) => {
       return sendErrorResponse(res, 401, 'AuthError', {
         message: 'invalid token',
       });
-    } else {
-      await jwt.verify(
-        refreshToken,
-        config.refreshTokenSecret,
-        async function (err, user) {
-          if (err) {
-            return sendErrorResponse(res, 401, 'AuthError', {
-              message: err.message,
-            });
-          }
-          const payLoad = {
-            email: user.email,
-            _id: user._id,
-            name: user.name,
-          };
-          // convert to msec
-          // add local time zone offset
-          // get UTC time in msec
-          // create new Date object for different city
-          const refreshTokenExpire =
-            user.exp * 1000 +
-            new Date(user.exp * 1000).getTimezoneOffset() *
-              60 *
-              1000 -
-            (Date.now() +
-              new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
-          const oldAccessToken = req.body.accessToken;
-          await jwt.verify(
-            oldAccessToken,
-            config.accessTokenSecret,
-            (err, verified) => {
-              // if access token expired
-              // add refresh token in blacklist
-              // make new access and refresh token
-              if (err) {
-                addTokenToBlackList(refreshToken, refreshTokenExpire);
-                const accessToken = jwt.sign(
-                  payLoad,
-                  config.accessTokenSecret,
-                  {
-                    expiresIn: config.accessTokenExpire,
-                  },
-                );
-                const newRefreshToken = jwt.sign(
-                  payLoad,
-                  config.refreshTokenSecret,
-                  {
-                    expiresIn: config.refreshTokenExpire,
-                  },
-                );
-                const response = {
-                  accessToken: accessToken,
-                  token_type: 'Bearer',
-                  refreshToken: newRefreshToken,
-                };
-                return sendJSONresponse(res, 200, response);
-              } else {
-                let oldAccessTokenExpire =
-                  verified.exp * 1000 +
-                  new Date(verified.exp * 1000).getTimezoneOffset() *
-                    60 *
-                    1000 -
-                  (Date.now() +
-                    new Date(Date.now()).getTimezoneOffset() *
-                      60 *
-                      1000);
-                addTokenToBlackList(
-                  oldAccessToken,
-                  oldAccessTokenExpire,
-                );
-                addTokenToBlackList(refreshToken, refreshTokenExpire);
-                const accessToken = jwt.sign(
-                  payLoad,
-                  config.accessTokenSecret,
-                  {
-                    expiresIn: config.accessTokenExpire,
-                  },
-                );
-                const newRefreshToken = jwt.sign(
-                  payLoad,
-                  config.refreshTokenSecret,
-                  {
-                    expiresIn: config.refreshTokenExpire,
-                  },
-                );
-                const response = {
-                  accessToken: accessToken,
-                  token_type: 'Bearer',
-                  refreshToken: newRefreshToken,
-                };
-                return sendJSONresponse(res, 200, response);
-              }
-            },
-          );
-        },
-      );
     }
+    await jwt.verify(
+      refreshToken,
+      config.refreshTokenSecret,
+      async function (err, user) {
+        if (err) {
+          return sendErrorResponse(res, 401, 'AuthError', {
+            message: err.message,
+          });
+        }
+        const payLoad = {
+          email: user.email,
+          _id: user._id,
+          name: user.name,
+        };
+        // convert to msec
+        // add local time zone offset
+        // get UTC time in msec
+        // create new Date object for different city
+        const refreshTokenExpire =
+          user.exp * 1000 +
+          new Date(user.exp * 1000).getTimezoneOffset() * 60 * 1000 -
+          (Date.now() + new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+        const oldAccessToken = req.body.accessToken;
+        await jwt.verify(
+          oldAccessToken,
+          config.accessTokenSecret,
+          (err, verified) => {
+            // if access token expired
+            // add refresh token in blacklist
+            // make new access and refresh token
+            if (err) {
+              addTokenToBlackList(refreshToken, refreshTokenExpire);
+              const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
+                expiresIn: config.accessTokenExpire,
+              });
+              const newRefreshToken = jwt.sign(
+                payLoad,
+                config.refreshTokenSecret,
+                {
+                  expiresIn: config.refreshTokenExpire,
+                },
+              );
+              const response = {
+                accessToken,
+                token_type: 'Bearer',
+                refreshToken: newRefreshToken,
+              };
+              return sendJSONresponse(res, 200, response);
+            }
+            const oldAccessTokenExpire =
+              verified.exp * 1000 +
+              new Date(verified.exp * 1000).getTimezoneOffset() * 60 * 1000 -
+              (Date.now() +
+                new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+            addTokenToBlackList(oldAccessToken, oldAccessTokenExpire);
+            addTokenToBlackList(refreshToken, refreshTokenExpire);
+            const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
+              expiresIn: config.accessTokenExpire,
+            });
+            const newRefreshToken = jwt.sign(
+              payLoad,
+              config.refreshTokenSecret,
+              {
+                expiresIn: config.refreshTokenExpire,
+              },
+            );
+            const response = {
+              accessToken,
+              token_type: 'Bearer',
+              refreshToken: newRefreshToken,
+            };
+            return sendJSONresponse(res, 200, response);
+          },
+        );
+      },
+    );
   } catch (err) {
     logger.error(`${err}`);
     next(err);
@@ -992,10 +961,7 @@ const userTaskList = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   try {
     const tasks = await TaskAssign.find({
-      $or: [
-        { account: req.user._id },
-        { assignedPerson: req.user._id },
-      ],
+      $or: [{ account: req.user._id }, { assignedPerson: req.user._id }],
     })
       .sort({ createdAt: -1 })
       .skip(+skip)
@@ -1055,9 +1021,9 @@ const userTaskList = async (req, res, next) => {
 
 const userDueTask = async (req, res, next) => {
   try {
-    let yesterday = new Date();
+    const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    let yesWeek = new Date();
+    const yesWeek = new Date();
     yesWeek.setDate(yesWeek.getDate() - 7);
     const dueTask = await Task.find({
       dueDate: { $lt: yesterday, $gte: yesWeek },
@@ -1065,13 +1031,13 @@ const userDueTask = async (req, res, next) => {
     }).sort({ createdAt: -1 });
     taskId = dueTask.map((e) => e._id);
     const assignToUserDue = await TaskAssign.find({
-      taskId: taskId,
+      taskId,
       assignedPerson: req.user._id,
     })
       .select('taskId')
       .populate(options);
     const assignByUserDue = await TaskAssign.find({
-      taskId: taskId,
+      taskId,
       account: req.user._id,
       assignedPerson: { $nin: { _id: req.user._id } },
     })
@@ -1136,7 +1102,7 @@ const saveLanguage = async (req, res, next) => {
     return sendJSONresponse(res, 200, {
       message: 'language updated',
     });
-  } catch {
+  } catch (error) {
     logger.error(`report: ${error}`);
     next(error);
   }

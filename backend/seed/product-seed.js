@@ -41,10 +41,7 @@ const levelTwo = {
 
   'Auto & Transportation': ['Vehicles & Accessories'],
 
-  'Bags, Shoes & Accessories': [
-    'Luggage, Bags & Cases',
-    'Shoes & Accessories',
-  ],
+  'Bags, Shoes & Accessories': ['Luggage, Bags & Cases', 'Shoes & Accessories'],
 
   Electronics: [
     'Consumer Electronic',
@@ -113,21 +110,19 @@ function insert(levelOne, levelTwo) {
   levelOne.forEach((data) => {
     // format data
 
-    let postData = {
+    const postData = {
       name: data,
 
       type: 'business-category',
     };
 
-    //post data
+    // post data
 
     axios
 
       .post(url, postData)
 
       .then((res) => {
-        
-
         // insert level two
 
         levelTwo[res.data.newCategory.name].forEach((element) => {
@@ -147,15 +142,11 @@ function insert(levelOne, levelTwo) {
               );
             })
 
-            .catch((err) => {
-              
-            });
+            .catch((err) => {});
         });
       })
 
-      .catch((err) => {
-        
-      });
+      .catch((err) => {});
   });
 }
 

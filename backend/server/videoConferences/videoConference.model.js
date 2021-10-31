@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 const VideoConferenceSchema = new Schema(
   {
     link: {
@@ -25,7 +26,7 @@ const VideoConferenceSchema = new Schema(
   },
 );
 
-let VideoConference = mongoose.model(
+const VideoConference = mongoose.model(
   'VideoConference',
   VideoConferenceSchema,
 );

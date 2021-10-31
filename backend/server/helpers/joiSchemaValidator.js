@@ -1,8 +1,5 @@
 const _ = require('lodash');
-const {
-  sendErrorResponse,
-  sendJSONresponse,
-} = require('../helpers/jsonResponse');
+const { sendErrorResponse, sendJSONresponse } = require('./jsonResponse');
 
 module.exports = (_schema, useJoiError = true) => {
   const _useJoiError = _.isBoolean(useJoiError) && useJoiError;
@@ -35,8 +32,7 @@ module.exports = (_schema, useJoiError = true) => {
           }),
         };
         const customError = {
-          error:
-            'Invalid request data. Please review request and try again.',
+          error: 'Invalid request data. Please review request and try again.',
         };
         return sendJSONresponse(
           res,

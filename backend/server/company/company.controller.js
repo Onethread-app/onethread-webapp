@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const Account = require('../account/account.model');
 const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
@@ -9,17 +10,11 @@ const Task = require('../task/task.model');
 const SubTask = require('../task/subtask/subtask.model');
 const Boardcolumn = require('../boardColumn/boardColumn.model');
 const { getTaskMembers } = require('../task/task.controller');
-const {
-  projectTeamMembers,
-} = require('../team-member/team.controller');
-const {
-  triggerNotification,
-} = require('../services/webpush.services');
+const { projectTeamMembers } = require('../team-member/team.controller');
+const { triggerNotification } = require('../services/webpush.services');
 // const { ISOformat } = require('../helpers/DateFormat');
 
-const {
-  Subscription,
-} = require('../subscription/subscription.model');
+const { Subscription } = require('../subscription/subscription.model');
 
 const {
   createCompanyRoleNotification,
@@ -32,7 +27,6 @@ const {
   memberIndex,
   companyIndex,
 } = require('../services/elastic.services');
-const chalk = require('chalk');
 const {
   sendJSONresponse,
   sendErrorResponse,
@@ -76,7 +70,7 @@ const changeName = async (req, res, next) => {
     req.company.uniqueName = createSlug(req.body.name);
     const company = await req.company.save();
 
-    //notification
+    // notification
 
     // const text = `company name has been updated by ${req.user.name}`;
     // createCompanyRoleNotification(
@@ -155,9 +149,7 @@ const createCompany = async (req, res, next) => {
     });
 
     logger.info(
-      chalk.blueBright(
-        `Elasticsearch document added on ${companyIndex}`,
-      ),
+      chalk.blueBright(`Elasticsearch document added on ${companyIndex}`),
     );
 
     const elasticMember = await newMember.save();
@@ -176,9 +168,7 @@ const createCompany = async (req, res, next) => {
     });
 
     logger.info(
-      chalk.blueBright(
-        `Elasticsearch document added on ${memberIndex}`,
-      ),
+      chalk.blueBright(`Elasticsearch document added on ${memberIndex}`),
     );
 
     return sendJSONresponse(res, 201, {
@@ -205,14 +195,14 @@ const createCompany = async (req, res, next) => {
 const getCompanyIndividual = async (req, res, next) => {
   try {
     // populate options
-    let options = [
+    const options = [
       {
         path: 'company',
         select: '_id name uniqueName logo',
       },
     ];
 
-    let companies = await Member.find({
+    const companies = await Member.find({
       account: req.params.account,
       removed: false,
     })
@@ -243,21 +233,21 @@ const getCompanyIndividual = async (req, res, next) => {
 const getCompany = async (req, res, next) => {
   try {
     // company details
-    let company = await Company.findOne({
+    const company = await Company.findOne({
       uniqueName: req.params.cname,
     }).select(
       '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
     );
 
     // role info
-    let member = await Member.findOne({
+    const member = await Member.findOne({
       account: req.user._id,
       company: company._id,
     }).select('_id role');
     let certificate = await Certificate.find({
       company: company._id,
     }).select('-__v');
-    let memberCount = await Member.find({
+    const memberCount = await Member.find({
       company: company._id,
     }).countDocuments();
 
@@ -265,7 +255,7 @@ const getCompany = async (req, res, next) => {
       company: {
         ...company._doc,
         role: member.role,
-        certificate: certificate,
+        certificate,
         totalMember: memberCount,
         member: member._id,
       },
@@ -340,10 +330,10 @@ const updateRole = async (req, res, next) => {
   }
 
   try {
-    //Company.deleteMany({}, function(err, result) {
+    // Company.deleteMany({}, function(err, result) {
 
-    //});
-    //req.company.optionalRole = req.body.optionalRole;
+    // });
+    // req.company.optionalRole = req.body.optionalRole;
     const company = await Company.findOneAndUpdate(
       { _id: req.company._id },
       { $set: { optionalRole: req.body.optionalRole } },
@@ -353,7 +343,7 @@ const updateRole = async (req, res, next) => {
       },
     ).exec();
 
-    //await req.company.save();
+    // await req.company.save();
 
     return res.status(200).json({
       message: `Company's role updated`,
@@ -373,11 +363,10 @@ const getCompanyLoad = async (req, res, next) => {
     if (company) {
       req.company = company;
       return next();
-    } else {
-      return res.status(404).json({
-        message: 'No valid entry found for provided Company Name',
-      });
     }
+    return res.status(404).json({
+      message: 'No valid entry found for provided Company Name',
+    });
   } catch (error) {
     next(error);
   }
@@ -389,7 +378,7 @@ const deleteCompany = async (req, res, next) => {
     .exec()
     .then((result) => {
       if (result) {
-        //Store this company's ref into Account
+        // Store this company's ref into Account
         Account.findOneAndUpdate(
           { _id: req.user._id },
           { $pull: { companies: req.params.id } },
@@ -424,9 +413,7 @@ const authorizeUser = (functionalRole, ...userRoles) => {
       const member = await Member.findOne({
         account: req.user._id,
         company:
-          req.headers.companyid ||
-          req.params.companyId ||
-          req.body.companyId, //apatoto pore name or id hobe
+          req.headers.companyid || req.params.companyId || req.body.companyId, // apatoto pore name or id hobe
       }).exec();
       if (
         !member ||
@@ -491,7 +478,7 @@ const searchCompany = async (req, res, next) => {
       isRejected: false,
     }).exec();
 
-    let associateCompanyId = associate.map((m) => {
+    const associateCompanyId = associate.map((m) => {
       if (m.company.toString() === companyId) {
         return m.associateCompany;
       }
@@ -500,7 +487,7 @@ const searchCompany = async (req, res, next) => {
     associateCompanyId.push(companyId);
 
     if (name) {
-      let body = {
+      const body = {
         size: 200,
         from: 0,
         query: {
@@ -508,7 +495,7 @@ const searchCompany = async (req, res, next) => {
             must: [
               {
                 match_phrase_prefix: {
-                  name: name,
+                  name,
                 },
               },
             ],
@@ -530,11 +517,10 @@ const searchCompany = async (req, res, next) => {
         message: `Search complete for ${name}`,
         data: response.hits.hits,
       });
-    } else {
-      return sendErrorResponse(res, 400, 'EmptySearchError', {
-        message: `query error`,
-      });
     }
+    return sendErrorResponse(res, 400, 'EmptySearchError', {
+      message: `query error`,
+    });
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);
@@ -575,14 +561,14 @@ const editCertification = async (req, res, next) => {
           certificate[key] = req.body[key];
         }
       }
-
-      const editedCertificate = await certificate.save();
-
-      return sendJSONresponse(res, 200, {
-        message: 'Certification edited',
-        data: editedCertificate,
-      });
     }
+
+    const editedCertificate = await certificate.save();
+
+    return sendJSONresponse(res, 200, {
+      message: 'Certification edited',
+      data: editedCertificate,
+    });
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);
@@ -592,7 +578,7 @@ const editCertification = async (req, res, next) => {
 const parentOrg = async (req, res, next) => {
   try {
     const parentCom = req.body.parentcom;
-    let user = await Company.findByIdAndUpdate(
+    const user = await Company.findByIdAndUpdate(
       {
         _id: req.params.companyId,
       },
@@ -775,11 +761,11 @@ const dashBoard = async (req, res, next) => {
 const latestCompletedTasks = async (req, res, next) => {
   try {
     const companyId = req.headers.companyid;
-    let projectList = await Project.find({
+    const projectList = await Project.find({
       $or: [{ company: companyId }, { associate: companyId }],
       removed: false,
     }).select('name');
-    let completedTaskCompilation = [];
+    const completedTaskCompilation = [];
     for (let i = 0; i < projectList.length; i++) {
       const doneTask = await Task.find({
         $and: [
@@ -794,7 +780,7 @@ const latestCompletedTasks = async (req, res, next) => {
         .exec();
       completedTaskCompilation.push(doneTask);
     }
-    let organizedTask = [];
+    const organizedTask = [];
     completedTaskCompilation.map((cTask) => {
       cTask.map((task) => {
         organizedTask.push(task);
@@ -813,7 +799,7 @@ const latestCompletedTasks = async (req, res, next) => {
 const noticePostByCompany = async (req, res, next) => {
   try {
     const noticeText = req.body.text;
-    const companyId = req.params.companyId;
+    const { companyId } = req.params;
     const currentUserId = req.user._id;
 
     const memberId = await Member.findOne({

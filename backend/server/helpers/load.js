@@ -2,7 +2,7 @@ const load = (to, from, entity, Model, modelEntity) => {
   return async (req, res, next) => {
     try {
       let doc;
-      if (modelEntity == undefined) {
+      if (modelEntity === undefined) {
         doc = await Model.findOne({
           _id: req[from][entity],
         });
@@ -15,11 +15,10 @@ const load = (to, from, entity, Model, modelEntity) => {
       if (doc) {
         req[to] = doc;
         return next();
-      } else {
-        return res.status(404).json({
-          message: 'No valid entry found',
-        });
       }
+      return res.status(404).json({
+        message: 'No valid entry found',
+      });
     } catch (error) {
       return res.status(500).json({
         error,

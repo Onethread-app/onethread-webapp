@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 function companyUrlLimit(val) {
   return val.length <= 3;
@@ -7,10 +8,7 @@ function companyUrlLimit(val) {
 
 function checkUrl(val) {
   for (const e of val) {
-    if (
-      e.substring(0, 7) != 'http://' &&
-      e.substring(0, 8) != 'https://'
-    ) {
+    if (e.substring(0, 7) !== 'http://' && e.substring(0, 8) !== 'https://') {
       return false;
     }
   }
@@ -40,7 +38,7 @@ const certificate = new Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
-  }
+  },
 });
 
 // company schema
@@ -87,7 +85,7 @@ const company = new Schema(
           type: String,
           enum: [
             'editProfile',
-            'cRUDAnnouncement',//cRUDAnnoucment
+            'cRUDAnnouncement', // cRUDAnnoucment
             'archiveProject',
             'addRemoveModerator',
             'messageAssociate',
@@ -181,8 +179,8 @@ const company = new Schema(
   },
 );
 
-let Company = mongoose.model('Company', company);
-let Certificate = mongoose.model('Certificate', certificate);
+const Company = mongoose.model('Company', company);
+const Certificate = mongoose.model('Certificate', certificate);
 
 module.exports = {
   Company,

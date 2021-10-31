@@ -18,11 +18,10 @@ const load = (req, res, next, id) => {
       if (result) {
         req.post = result;
         return next();
-      } else {
-        return res
-          .status(400)
-          .json({ message: 'No valid entry found for provided ID' });
       }
+      return res
+        .status(400)
+        .json({ message: 'No valid entry found for provided ID' });
     })
     .catch((err) => {
       // console.log(err);
@@ -131,7 +130,7 @@ const create = (req, res, next) => {
  * @returns {post}
  */
 const update = (req, res, next) => {
-  const post = req.post;
+  const { post } = req;
   post.text = req.body.text;
   post.location = req.body.location;
 
@@ -158,9 +157,8 @@ const list = (req, res) => {
         return res.status(422).send({
           message: err,
         });
-      } else {
-        res.json(posts);
       }
+      res.json(posts);
     });
 };
 
@@ -176,7 +174,7 @@ const list = (req, res) => {
 // }
 
 const remove = (req, res, next) => {
-  const post = req.post;
+  const { post } = req;
   post.removed = true;
 
   post

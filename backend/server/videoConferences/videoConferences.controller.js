@@ -1,30 +1,11 @@
 const Account = require('../account/account.model');
+
 const logger = require('../../config/winston');
+
 // const { pusherChannel } = require('../services/pusher.services');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
+
 const { VideoConference } = require('./videoConference.model');
-
-// const getJoinee = async (req, res, next) => {
-//   try {
-//     const userInfo = await Account.findOne({
-//       _id: req.user._id,
-//     })
-//       .select('-password')
-//       .populate('skillArea', '_id name');
-
-//     pusherChannel.trigger('joinee', 'joined', {
-//       message: 'test messgae',
-//     });
-
-//     return sendJSONresponse(res, 200, {
-//       success: true,
-//       user: userInfo,
-//     });
-//   } catch (error) {
-//     logger.error(`${error}`);
-//     next(error);
-//   }
-// };
 
 const createVideoConferencRecord = async (req, res, next) => {
   try {
@@ -34,7 +15,7 @@ const createVideoConferencRecord = async (req, res, next) => {
       account: req.user._id,
     });
 
-    const account = await Account.findOne({
+    await Account.findOne({
       _id: req.user._id,
     });
 
@@ -42,7 +23,7 @@ const createVideoConferencRecord = async (req, res, next) => {
 
     return sendJSONresponse(res, 200, {
       success: true,
-      record: record,
+      record,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -58,7 +39,7 @@ const getAllRecordsForVideoConference = async (req, res, next) => {
 
     return sendJSONresponse(res, 200, {
       success: true,
-      records: records,
+      records,
     });
   } catch (error) {
     logger.error(`${error}`);

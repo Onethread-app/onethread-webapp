@@ -5,16 +5,14 @@ const associateValidation = require('./associate.validation');
 const associateCtrl = require('./associate.controller');
 const companyCtrl = require('../company/company.controller');
 
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+const { authorization } = require('../middlewares/authorizationMiddleware');
 
 const router = express.Router();
 const subCtrl = require('../subscription/subscription.controller');
 
 // get borad list
 router
-  .route('/:companyId') //companyId for authorization
+  .route('/:companyId') // companyId for authorization
   .post(
     authorization,
     subCtrl.subscriptionExpireCheck(),

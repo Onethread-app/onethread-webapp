@@ -1,7 +1,8 @@
-var elasticsearch = require('elasticsearch');
-const logger = require('../../config/winston');
-const chalk = require('chalk');
 const { isEmpty } = require('lodash');
+const chalk = require('chalk');
+const elasticsearch = require('elasticsearch');
+const logger = require('../../config/winston');
+
 require('dotenv').config();
 
 const accountIndex = 'accounts';
@@ -41,14 +42,12 @@ async function createAccounts(index, mapping, model) {
     if (await esclient.indices.exists({ index })) {
       await esclient.indices.delete({ index });
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch existing index ${index} is deleted`,
-        ),
+        chalk.blueBright(`ElasticSearch existing index ${index} is deleted`),
       );
     }
 
     await esclient.indices.create({
-      index: index,
+      index,
       body: mapping,
     });
 
@@ -78,9 +77,7 @@ async function createAccounts(index, mapping, model) {
       );
     } else {
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index}`,
-        ),
+        chalk.blueBright(`ElasticSearch successfully created index ${index}`),
       );
     }
   } catch (error) {
@@ -93,14 +90,12 @@ async function createMembers(index, mapping, model) {
     if (await esclient.indices.exists({ index })) {
       await esclient.indices.delete({ index });
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch existing index ${index} is deleted`,
-        ),
+        chalk.blueBright(`ElasticSearch existing index ${index} is deleted`),
       );
     }
 
     await esclient.indices.create({
-      index: index,
+      index,
       body: mapping,
     });
 
@@ -132,9 +127,7 @@ async function createMembers(index, mapping, model) {
       );
     } else {
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index}`,
-        ),
+        chalk.blueBright(`ElasticSearch successfully created index ${index}`),
       );
     }
   } catch (error) {
@@ -147,14 +140,12 @@ async function createSkillareas(index, mapping, model) {
     if (await esclient.indices.exists({ index })) {
       await esclient.indices.delete({ index });
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch existing index ${index} is deleted`,
-        ),
+        chalk.blueBright(`ElasticSearch existing index ${index} is deleted`),
       );
     }
 
     await esclient.indices.create({
-      index: index,
+      index,
       body: mapping,
     });
 
@@ -183,9 +174,7 @@ async function createSkillareas(index, mapping, model) {
       );
     } else {
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index}`,
-        ),
+        chalk.blueBright(`ElasticSearch successfully created index ${index}`),
       );
     }
   } catch (error) {
@@ -198,14 +187,12 @@ async function createCompany(index, mapping, model) {
     if (await esclient.indices.exists({ index })) {
       await esclient.indices.delete({ index });
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch existing index ${index} is deleted`,
-        ),
+        chalk.blueBright(`ElasticSearch existing index ${index} is deleted`),
       );
     }
 
     await esclient.indices.create({
-      index: index,
+      index,
       body: mapping,
     });
 
@@ -233,9 +220,7 @@ async function createCompany(index, mapping, model) {
       );
     } else {
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index}`,
-        ),
+        chalk.blueBright(`ElasticSearch successfully created index ${index}`),
       );
     }
   } catch (error) {
@@ -248,14 +233,12 @@ async function createAssociate(index, mapping, model) {
     if (await esclient.indices.exists({ index })) {
       await esclient.indices.delete({ index });
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch existing index ${index} is deleted`,
-        ),
+        chalk.blueBright(`ElasticSearch existing index ${index} is deleted`),
       );
     }
 
     await esclient.indices.create({
-      index: index,
+      index,
       body: mapping,
     });
 
@@ -288,9 +271,7 @@ async function createAssociate(index, mapping, model) {
       );
     } else {
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index}`,
-        ),
+        chalk.blueBright(`ElasticSearch successfully created index ${index}`),
       );
     }
   } catch (error) {
@@ -316,7 +297,7 @@ function search(indexName, indexType, body) {
 }
 
 function bulkInsert(indexName, dataset, structure) {
-  let bulk = [];
+  const bulk = [];
   dataset.forEach((data) => {
     bulk.push({
       index: { _index: indexName },
@@ -330,7 +311,7 @@ function deleteDocument(indexName, indexType, body) {
   return esclient.deleteByQuery({
     index: indexName,
     type: indexType,
-    body: body,
+    body,
   });
 }
 

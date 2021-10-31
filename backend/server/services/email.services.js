@@ -1,14 +1,14 @@
-const nodemailer = require('nodemailer');
-const AWS = require('aws-sdk');
-const hbs = require('nodemailer-express-handlebars');
+const nodemailer = require("nodemailer");
+const AWS = require("aws-sdk");
+const hbs = require("nodemailer-express-handlebars");
 
-const config = require('../../config/config');
-const logger = require('../../config/winston');
-const { capitalizeName } = require('../helpers/capitalizeLetter');
-const { todaysDate } = require('../helpers/DateFormat');
+const config = require("../../config/config");
+const logger = require("../../config/winston");
+const { capitalizeName } = require("../helpers/capitalizeLetter");
+const { todaysDate } = require("../helpers/DateFormat");
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+  host: "smtp.gmail.com",
   port: 465,
   secure: true,
   auth: {
@@ -19,52 +19,52 @@ const transporter = nodemailer.createTransport({
 });
 
 let host = ``;
-if (config.env === 'production') {
+if (config.env === "production") {
   host = `https://www.onethread.app`;
-} else if (config.env === 'test') {
+} else if (config.env === "test") {
   host = `https://stage.onethread.app`;
-} else if (config.env === 'test3') {
+} else if (config.env === "test3") {
   host = `http://test3.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
-} else if (config.env === 'test4') {
+} else if (config.env === "test4") {
   host = `http://test4.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
-} else if (config.env === 'local') {
+} else if (config.env === "local") {
   host = `http://localhost:3000`;
 } else {
   host = `http://localhost:3000`;
 }
 const options = {
   viewEngine: {
-    extName: '.handlebars',
-    partialsDir: 'templates',
-    layoutsDir: 'templates',
+    extName: ".handlebars",
+    partialsDir: "templates",
+    layoutsDir: "templates",
     defaultLayout: false,
   },
-  viewPath: 'templates',
+  viewPath: "templates",
 };
-transporter.use('compile', hbs(options));
+transporter.use("compile", hbs(options));
 module.exports.sendEmailForResetPassword = async (
   firstName,
   lastName,
   emailID,
-  token,
+  token
 ) => {
   const link = `${host}/reset-password/${token}`;
-  let name = firstName + ' ' + lastName;
+  const name = firstName + " " + lastName;
   const fullName = capitalizeName(name);
   const mailOptions = {
     from: config.emailAddress,
     to: emailID,
-    subject: 'Generated Token For Reset Password',
-    template: 'resetPassword-confirmation',
+    subject: "Generated Token For Reset Password",
+    template: "resetPassword-confirmation",
     context: {
       name: fullName,
-      link: link,
+      link,
     },
   };
 
   return transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      logger.error(' Message send to failed ' + err);
+      logger.error(" Message send to failed " + err);
     }
     logger.info(`send reset password mail to user successfully`);
     return info;
@@ -75,25 +75,25 @@ module.exports.sendEmailForVerifyAccount = async (
   firstName,
   lastName,
   emailID,
-  token,
+  token
 ) => {
   const link = `${host}/verify-account/${token}`;
-  let name = firstName + ' ' + lastName;
+  const name = firstName + " " + lastName;
   const fullName = capitalizeName(name);
   const mailOptions = {
     from: config.emailAddress,
     to: emailID,
-    subject: 'Please confirm your Email account',
-    template: 'signup-confirmation',
+    subject: "Please confirm your Email account",
+    template: "signup-confirmation",
     context: {
       name: fullName,
-      link: link,
+      link,
     },
   };
 
   return transporter.sendMail(mailOptions, function (err, res) {
     if (err) {
-      logger.error(' Message send to failed ' + err);
+      logger.error(" Message send to failed " + err);
     } else {
       logger.info(`send confirmation mail to user successfully`);
     }
@@ -105,27 +105,23 @@ module.exports.signupMail = async (email, token) => {
   const mailOptions = {
     from: config.emailAddress,
     to: email,
-    subject: 'Invitation To Join Onethread',
-    template: 'invitation-signup',
+    subject: "Invitation To Join Onethread",
+    template: "invitation-signup",
     context: {
-      link: link,
+      link,
     },
   };
 
   return transporter.sendMail(mailOptions);
 };
 
-module.exports.sendInviteColleague = async (
-  userEmail,
-  company,
-  emailList,
-) => {
+module.exports.sendInviteColleague = async (userEmail, company, emailList) => {
   const link = `${host}/signup`;
 
   const mailOptions = {
     from: config.emailAddress,
     to: emailList,
-    subject: 'Invitation to join company',
+    subject: "Invitation to join company",
     html: `
       <h1> Join ${company.name} on Onethread, </h1>
       <h2> ${userEmail} has invited you to join the company ${company.name}. join now to start collaborating!  <a href="${link}"> Link </a> </h2>
@@ -135,7 +131,7 @@ module.exports.sendInviteColleague = async (
 
   return transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      logger.error(' Message send to failed ' + err);
+      logger.error(" Message send to failed " + err);
     }
     logger.info(`send company invitation mail to users successfully`);
     return info;
@@ -145,7 +141,7 @@ module.exports.sendInviteColleague = async (
 module.exports.sendMailAsTaskReminder = async (
   todaysTaskNames,
   todaysSubtaskNames,
-  usernameEmailMapper,
+  usernameEmailMapper
 ) => {
   const usernames = Object.keys(usernameEmailMapper);
 
@@ -153,24 +149,19 @@ module.exports.sendMailAsTaskReminder = async (
     usernames.map(async (username) => {
       const link = `${host}/${username}/home`;
       const getMarkup = (task) => {
-        if (!task) return 'No task available';
-        return task.map((t) => `<li>${t.name}</li>`).join('');
+        if (!task) return "No task available";
+        return task.map((t) => `<li>${t.name}</li>`).join("");
       };
-      if (
-        !todaysTaskNames[username] &&
-        !todaysSubtaskNames[username]
-      ) {
+      if (!todaysTaskNames[username] && !todaysSubtaskNames[username]) {
         return false;
       }
       const taskListMarkup = getMarkup(todaysTaskNames[username]);
-      const subTaskListMarkup = getMarkup(
-        todaysSubtaskNames[username],
-      );
+      const subTaskListMarkup = getMarkup(todaysSubtaskNames[username]);
 
       const mailOptions = {
         from: config.emailAddress,
         to: usernameEmailMapper[username],
-        subject: `[Onethread] Task Reminder - ${todaysDate('.')}`,
+        subject: `[Onethread] Task Reminder - ${todaysDate(".")}`,
         html: `
       <h1> Task Reminder </h1>
       <h2> Todays Task </h2>
@@ -184,20 +175,18 @@ module.exports.sendMailAsTaskReminder = async (
 
       return transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-          logger.error(' Message send to failed ' + err);
+          logger.error(" Message send to failed " + err);
         }
-        logger.info(
-          `send company invitation mail to users successfully`,
-        );
+        logger.info(`send company invitation mail to users successfully`);
         return info;
       });
-    }),
+    })
   );
 };
 
 module.exports.contactSaleMail = async (email, subject, message) => {
   const sesConfig = {
-    apiVersion: '2010-12-01',
+    apiVersion: "2010-12-01",
     accessKeyId: config.awsSesAccessKey,
     secretAccessKey: config.awsSesSecretKey,
     region: config.sesRegion,
@@ -206,12 +195,12 @@ module.exports.contactSaleMail = async (email, subject, message) => {
     Destination: {
       /* required */
       CcAddresses: [
-        'contact@onethread.app',
-        'orvi@onethread.app',
+        "contact@onethread.app",
+        "orvi@onethread.app",
         /* more items */
       ],
       ToAddresses: [
-        'contact@onethread.app',
+        "contact@onethread.app",
         /* more items */
       ],
     },
@@ -220,12 +209,12 @@ module.exports.contactSaleMail = async (email, subject, message) => {
       Body: {
         /* required */
         Text: {
-          Charset: 'UTF-8',
+          Charset: "UTF-8",
           Data: `${message}`,
         },
       },
       Subject: {
-        Charset: 'UTF-8',
+        Charset: "UTF-8",
         Data: `${subject}`,
       },
     },
@@ -237,9 +226,7 @@ module.exports.contactSaleMail = async (email, subject, message) => {
   };
 
   // Create the promise and SES service object
-  const sendPromise = new AWS.SES(sesConfig)
-    .sendEmail(params)
-    .promise();
+  const sendPromise = new AWS.SES(sesConfig).sendEmail(params).promise();
 
   // Handle promise's fulfilled/rejected states
   sendPromise

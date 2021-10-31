@@ -1,21 +1,18 @@
+const webpush = require('web-push');
 const WebPushModel = require('../notification/webpush/webpush.model');
 const { ServiceError } = require('../helpers/APIError');
 
-const webpush = require('web-push');
 const config = require('../../config/config');
 const UserNotificationModel = require('../notification/userNotification.model');
 const { UserMessage } = require('../message/userMessage.model');
 const Account = require('../account/account.model');
+
 const publicVapidKey = config.vapidPublicKey;
 const privateVapidKey = config.vapidPrivateKey;
 
 const logger = require('../../config/winston');
 
-webpush.setVapidDetails(
-  config.clientUrl,
-  publicVapidKey,
-  privateVapidKey,
-);
+webpush.setVapidDetails(config.clientUrl, publicVapidKey, privateVapidKey);
 
 const webPushTTL = 60;
 
@@ -25,9 +22,7 @@ const savePushSubscription = (account, pushSubscription) => {
 
 const removePushSubscription = async (subscriptionId) => {
   if (!subscriptionId) return;
-  const pushSub = await WebPushModel.findByIdAndDelete(
-    subscriptionId,
-  );
+  const pushSub = await WebPushModel.findByIdAndDelete(subscriptionId);
   if (!pushSub) {
     throw new ServiceError(
       'SubscriptionNotFoundError',

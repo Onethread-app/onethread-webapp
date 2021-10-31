@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const logger = require('../../config/winston');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const logger = require("../../config/winston");
 
 const SALT_WORK_FACTOR = 10;
 
@@ -50,13 +50,13 @@ const accountsSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['guest', 'admin', 'company', 'user'],
-      default: 'user',
+      enum: ["guest", "admin", "company", "user"],
+      default: "user",
     },
     accountType: {
       type: String,
-      enum: ['premium', 'normal'],
-      default: 'normal',
+      enum: ["premium", "normal"],
+      default: "normal",
     },
     contactNo: {
       type: String,
@@ -64,8 +64,8 @@ const accountsSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      description: 'can be male,female & others',
-      enum: ['male', 'female', 'others'],
+      description: "can be male,female & others",
+      enum: ["male", "female", "others"],
     },
     // it must be empty
     // if null, it will create an duplicateError
@@ -77,7 +77,7 @@ const accountsSchema = new mongoose.Schema(
     },
     bloodGroup: {
       type: String,
-      enum: ['A+', 'A-', 'O+', 'O-', 'AB+', 'AB-', 'B+', 'B-'],
+      enum: ["A+", "A-", "O+", "O-", "AB+", "AB-", "B+", "B-"],
     },
     location: {
       type: String,
@@ -91,13 +91,13 @@ const accountsSchema = new mongoose.Schema(
     skillArea: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'SkillArea',
+        ref: "SkillArea",
       },
     ],
     companies: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Company',
+        ref: "Company",
       },
     ],
     isAccountVerified: {
@@ -107,13 +107,13 @@ const accountsSchema = new mongoose.Schema(
     jobExperience: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Jobexperience',
+        ref: "Jobexperience",
       },
     ],
     education: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Education',
+        ref: "Education",
       },
     ],
     version: {
@@ -122,22 +122,19 @@ const accountsSchema = new mongoose.Schema(
     },
     language: {
       type: mongoose.Schema.Types.String,
-      default: 'en',
-      enum: ['en', 'bn'],
+      default: "en",
+      enum: ["en", "bn"],
     },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-accountsSchema.index(
-  { email: 1, secondaryEmail: 1 },
-  { unique: true },
-);
+accountsSchema.index({ email: 1, secondaryEmail: 1 }, { unique: true });
 
-accountsSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+accountsSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   try {
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
     this.password = await bcrypt.hash(this.password, salt);
@@ -152,4 +149,4 @@ accountsSchema.methods.comparePassword = async function (data) {
   return bcrypt.compare(data, this.password);
 };
 
-module.exports = mongoose.model('Account', accountsSchema);
+module.exports = mongoose.model("Account", accountsSchema);

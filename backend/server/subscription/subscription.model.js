@@ -29,7 +29,7 @@ const subscriptionSchema = mongoose.Schema(
     timestamps: true,
   },
 );
-let Subscription = mongoose.model('Subscription', subscriptionSchema);
+const Subscription = mongoose.model('Subscription', subscriptionSchema);
 // subscriptionSchema.index({ company: 1, plan: 1 }, { unique: true });
 module.exports = {
   Subscription,

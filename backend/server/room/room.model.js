@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const RoomSchema = new mongoose.Schema(
   {
@@ -42,12 +43,9 @@ const RoomSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-RoomSchema.index(
-  { name: 1, company: 1, project: 1 },
-  { unique: true },
-);
+RoomSchema.index({ name: 1, company: 1, project: 1 }, { unique: true });
 
-let Room = mongoose.model('Room', RoomSchema);
+const Room = mongoose.model('Room', RoomSchema);
 
 module.exports = {
   Room,

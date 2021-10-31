@@ -1,24 +1,22 @@
-const { Team } = require('./team.model');
-const { Member } = require('../company/member/member.model');
-const { Project } = require('../project/project.model');
-const Board = require('../board/board.model');
-const { Room } = require('../room/room.model');
-const { ProjectRequest } = require('../request/request.model');
-const logger = require('../../config/winston');
+const { Team } = require("./team.model");
+const { Member } = require("../company/member/member.model");
+const { Project } = require("../project/project.model");
+const Board = require("../board/board.model");
+const { Room } = require("../room/room.model");
+const { ProjectRequest } = require("../request/request.model");
+const logger = require("../../config/winston");
 const {
   sendJSONresponse,
   sendErrorResponse,
-} = require('../helpers/jsonResponse');
+} = require("../helpers/jsonResponse");
 
 const {
   createTeamAddNotification,
-} = require('../notification/notification.controller');
+} = require("../notification/notification.controller");
 
-const { addToBoard } = require('../board/board.controller');
-const { createRoomMember } = require('../room/room.controller');
-const {
-  triggerUnreadNotifications,
-} = require('../services/webpush.services');
+const { addToBoard } = require("../board/board.controller");
+const { createRoomMember } = require("../room/room.controller");
+const { triggerUnreadNotifications } = require("../services/webpush.services");
 
 const changeRole = async (req, res, next) => {
   try {
@@ -46,33 +44,33 @@ const projectTeamMembers = async (pid) => {
     .sort({ createdAt: 1 })
     .skip(+skip)
     .limit(+limit)
-    .select('role')
+    .select("role")
     .populate([
       {
-        path: 'member',
-        select: '_id account designations',
+        path: "member",
+        select: "_id account designations",
         populate: [
           {
-            path: 'account',
-            select: '_id name firstName lastName email profileImage',
+            path: "account",
+            select: "_id name firstName lastName email profileImage",
           },
           {
-            path: 'designations',
-            select: 'division department position',
-            populate: [{ path: 'department', select: 'name' }],
+            path: "designations",
+            select: "division department position",
+            populate: [{ path: "department", select: "name" }],
           },
         ],
       },
       {
-        path: 'project',
-        select: 'company associate',
+        path: "project",
+        select: "company associate",
         populate: [
           {
-            path: 'associate',
-            select: 'associateCompany company',
+            path: "associate",
+            select: "associateCompany company",
             populate: {
-              path: 'associateCompany company',
-              select: '_id name type _id name type',
+              path: "associateCompany company",
+              select: "_id name type _id name type",
             },
           },
         ],
@@ -85,8 +83,8 @@ const projectTeamMembers = async (pid) => {
 // add team member
 const addTeamMember = async (req, res, next) => {
   // Check for JSON
-  if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {
+  if (!req.is("application/json")) {
+    return sendErrorResponse(res, 406, "ContentTypeError", {
       message: "Expects 'application/json'",
     });
   }
@@ -96,23 +94,21 @@ const addTeamMember = async (req, res, next) => {
     const projectOwner = await Project.findOne({
       _id: req.query.pid,
     });
-    let members = req.body.members;
+    let { members } = req.body;
     if (projectOwner.company.toString() === req.params.companyId) {
-      let accounts = members.map((member) => member.account);
+      const accounts = members.map((member) => member.account);
 
       // find previous members
       let prevMembers = await Team.find({
         account: { $in: accounts },
         project: req.query.pid,
         removed: true,
-      }).select('account');
+      }).select("account");
       prevMembers = prevMembers.map((member) => member.account);
       // filter new members
       members = members.filter((member) => {
         return !prevMembers.some((prevMemberAccount) => {
-          return (
-            prevMemberAccount.toString() === member.account.toString()
-          );
+          return prevMemberAccount.toString() === member.account.toString();
         });
       });
 
@@ -122,7 +118,7 @@ const addTeamMember = async (req, res, next) => {
           { account: { $in: prevMembers }, project: req.query.pid },
           {
             removed: false,
-          },
+          }
         );
       }
 
@@ -133,18 +129,18 @@ const addTeamMember = async (req, res, next) => {
             account: e.account,
             project: req.query.pid,
             member: e.member,
-            role: 'member',
+            role: "member",
           };
         });
         const team = await Team.create(members);
         // finding general board
         const board = await Board.findOne({
-          name: 'General',
+          name: "General",
           project: req.query.pid,
         });
         // finding general room
         const room = await Room.findOne({
-          name: 'General',
+          name: "General",
           project: req.query.pid,
         });
         members.map(async (e) => {
@@ -155,7 +151,7 @@ const addTeamMember = async (req, res, next) => {
             req.query.pid,
             e.account,
             room._id,
-            team[0]._id,
+            team[0]._id
           );
           await createTeamAddNotification(
             req.user._id,
@@ -166,60 +162,55 @@ const addTeamMember = async (req, res, next) => {
               _id: req.user._id,
               name: req.user.name,
               pusherSock: req.headers.clientid,
-            },
+            }
           );
         });
       }
       return sendJSONresponse(res, 201, {
-        message: 'New Team created',
+        message: "New Team created",
       });
-    } else {
-      const memberAllowNumber = await ProjectRequest.findOne({
-        project: req.query.pid,
-      }).select('size');
-      accounts = members.map((member) => member.account);
-      // find previous members
-      let prevMembers = await Team.find({
-        account: { $in: accounts },
-        project: req.query.pid,
-        removed: true,
-      }).select('account');
-      prevMembers = prevMembers.map((member) => member.account);
-      // filter new members
-      members = members.filter((member) => {
-        return !prevMembers.some((prevMemberAccount) => {
-          return (
-            prevMemberAccount.toString() === member.account.toString()
-          );
-        });
-      });
-      await Team.updateMany(
-        { account: { $in: prevMembers }, project: req.query.pid },
-        {
-          removed: false,
-        },
-      );
-
-      if (memberAllowNumber.size >= req.body.members.length) {
-        // need to insertMany method later
-        let members = req.body.members;
-        members.forEach(async (account) => {
-          await Team.insertMany({
-            account: account.account,
-            project: req.query.pid,
-            member: account.member,
-            role: 'member',
-          });
-        });
-        return sendJSONresponse(res, 200, {
-          message: 'special member add to project',
-        });
-      } else {
-        return sendErrorResponse(res, 400, 'LimitExceedError', {
-          message: `you are not allow more than ${memberAllowNumber.size}`,
-        });
-      }
     }
+    const memberAllowNumber = await ProjectRequest.findOne({
+      project: req.query.pid,
+    }).select("size");
+    const accounts = members.map((member) => member.account);
+    // find previous members
+    let prevMembers = await Team.find({
+      account: { $in: accounts },
+      project: req.query.pid,
+      removed: true,
+    }).select("account");
+    prevMembers = prevMembers.map((member) => member.account);
+    // filter new members
+    members = members.filter((member) => {
+      return !prevMembers.some((prevMemberAccount) => {
+        return prevMemberAccount.toString() === member.account.toString();
+      });
+    });
+    await Team.updateMany(
+      { account: { $in: prevMembers }, project: req.query.pid },
+      {
+        removed: false,
+      }
+    );
+
+    if (memberAllowNumber.size >= req.body.members.length) {
+      // need to insertMany method later
+      members.forEach(async (account) => {
+        await Team.insertMany({
+          account: account.account,
+          project: req.query.pid,
+          member: account.member,
+          role: "member",
+        });
+      });
+      return sendJSONresponse(res, 200, {
+        message: "special member add to project",
+      });
+    }
+    return sendErrorResponse(res, 400, "LimitExceedError", {
+      message: `you are not allow more than ${memberAllowNumber.size}`,
+    });
   } catch (error) {
     logger.error(`Team: ${error}`);
     next(error);
@@ -244,22 +235,22 @@ const associateListInProject = async (req, res, next) => {
   try {
     const companyId = req.headers.companyid;
     const { limit = 50, skip = 0, pid } = req.query;
-    let associateList = await Project.findOne({ _id: pid })
+    const associateList = await Project.findOne({ _id: pid })
       .sort({
         createdAt: 1,
       })
       .skip(+skip)
       .limit(+limit)
-      .select('associate')
+      .select("associate")
       .populate({
-        path: 'associate',
-        select: 'associateCompany company',
+        path: "associate",
+        select: "associateCompany company",
         populate: {
-          path: 'associateCompany company',
-          select: '_id name type _id name type',
+          path: "associateCompany company",
+          select: "_id name type _id name type",
         },
       });
-    let associate = associateList.associate;
+    const { associate } = associateList;
     associate.map((company) => {
       if (company.company._id.toString() === companyId) {
         company.company = undefined;
@@ -294,16 +285,19 @@ const getMemberLoad = async (req, res, next) => {
       member: req.params.memberId,
       project: req.query.pid,
     })
-      .populate('account', 'name email firstName lastName')
-      .populate('project', 'name');
+      .populate("account", "name email firstName lastName")
+      .populate("project", "name");
     if (member) {
       req.member = member;
       return next();
     } else {
-      return sendErrorResponse(res, 404, 'NotFound', {
-        message: 'No valid entry found for provided Member ID',
+      return sendErrorResponse(res, 404, "NotFound", {
+        message: "No valid entry found for provided Member ID",
       });
     }
+    return sendErrorResponse(res, 404, "MemberIdNotFoundError", {
+      message: "No valid entry found for provided Member ID",
+    });
   } catch (error) {
     logger.error(`Team: ${error}`);
     next(error);
@@ -312,18 +306,18 @@ const getMemberLoad = async (req, res, next) => {
 
 const searchTeamMember = async (req, res, next) => {
   try {
-    let projectMembers = await Team.find({ project: req.query.pid })
-      .select('_id member removed')
+    const projectMembers = await Team.find({ project: req.query.pid })
+      .select("_id member removed")
       .exec();
 
-    let companyMembers = await Member.find({
+    const companyMembers = await Member.find({
       company: req.params.companyId,
     })
-      .select('_id account removed')
-      .populate('account', '_id name firstName lastName email')
+      .select("_id account removed")
+      .populate("account", "_id name firstName lastName email")
       .exec();
 
-    let teams = companyMembers.filter((cm) => {
+    const teams = companyMembers.filter((cm) => {
       if (cm.removed === false) {
         return !projectMembers.some((pm) => {
           if (pm.removed === false) {

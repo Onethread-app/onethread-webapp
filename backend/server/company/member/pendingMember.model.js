@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const pendingMember = new Schema(
   {
@@ -33,7 +34,7 @@ const pendingMember = new Schema(
 
 pendingMember.index({ company: 1, email: 1 }, { unique: true });
 
-let PendingMember = mongoose.model('PendingMember', pendingMember);
+const PendingMember = mongoose.model('PendingMember', pendingMember);
 
 module.exports = {
   PendingMember,

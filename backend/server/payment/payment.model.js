@@ -32,13 +32,16 @@ const paymentSchema = mongoose.Schema(
       ref: 'Subscription',
     },
     reference: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     amount: {
       type: Number,
       required: true,
-      min : [1, 'The value of path `{PATH}` ({VALUE}) is beneath the limit ({MIN}).'],
+      min: [
+        1,
+        'The value of path `{PATH}` ({VALUE}) is beneath the limit ({MIN}).',
+      ],
     },
     company: {
       type: mongoose.Schema.ObjectId,

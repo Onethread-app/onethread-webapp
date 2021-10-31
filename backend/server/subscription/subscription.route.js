@@ -1,12 +1,10 @@
 const express = require('express');
 const subCtrl = require('./subscription.controller');
 const companyCtrl = require('../company/company.controller');
-const SchemaValidator = require('./../helpers/joiSchemaValidator');
+const SchemaValidator = require('../helpers/joiSchemaValidator');
 const subSchema = require('./subscription.validation');
 
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
+const { authorization } = require('../middlewares/authorizationMiddleware');
 
 const router = express.Router();
 

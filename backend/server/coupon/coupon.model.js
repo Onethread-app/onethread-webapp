@@ -20,10 +20,6 @@ const schema = new mongoose.Schema(
   },
 );
 
-const CouponModel = mongoose.model(
-  DOCUMENT_NAME,
-  schema,
-  COLLECTION_NAME,
-);
+const CouponModel = mongoose.model(DOCUMENT_NAME, schema, COLLECTION_NAME);
 
 module.exports = { CouponModel };

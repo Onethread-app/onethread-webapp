@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const announcement = new Schema(
   {
@@ -25,7 +26,7 @@ const announcement = new Schema(
   },
 );
 
-let Announcement = mongoose.model('Announcement', announcement);
+const Announcement = mongoose.model('Announcement', announcement);
 
 module.exports = {
   Announcement,

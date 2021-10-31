@@ -31,12 +31,12 @@ module.exports = {
   fileInTask: Joi.object().keys({
     query: Joi.object().keys({
       taskId: schema.taskId.required(),
-    })
+    }),
   }),
   fileDeleteInTask: Joi.object().keys({
     body: Joi.object().keys({
       taskId: schema.taskId.required(),
       fileId: schema.fileId.required(),
-    })
+    }),
   }),
 };

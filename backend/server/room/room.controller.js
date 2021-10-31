@@ -1,18 +1,18 @@
-const mongoose = require('mongoose');
-const { Room } = require('./room.model');
-const { Team } = require('../team-member/team.model');
-const { Message } = require('../message/message.model');
-const { UserMessage } = require('../message/userMessage.model');
-const { RoomMember } = require('./roomMember.model');
+const mongoose = require("mongoose");
+const { Room } = require("./room.model");
+const { Team } = require("../team-member/team.model");
+const { Message } = require("../message/message.model");
+const { UserMessage } = require("../message/userMessage.model");
+const { RoomMember } = require("./roomMember.model");
 const {
   addTeamMateIntoRoomNotification,
-} = require('../notification/notification.controller');
+} = require("../notification/notification.controller");
 
 const {
   sendJSONresponse,
   sendErrorResponse,
-} = require('../helpers/jsonResponse');
-const logger = require('../../config/winston');
+} = require("../helpers/jsonResponse");
+const logger = require("../../config/winston");
 
 const createRoom = async (company, project, account, name) => {
   const room = new Room({
@@ -26,13 +26,7 @@ const createRoom = async (company, project, account, name) => {
   return room;
 };
 
-const createRoomMember = async (
-  company,
-  project,
-  account,
-  room,
-  team,
-) => {
+const createRoomMember = async (company, project, account, room, team) => {
   const roomMember = new RoomMember({
     account,
     team,
@@ -54,7 +48,7 @@ const create = async (req, res, next) => {
       project: req.query.pid,
     });
     if (duplicate) {
-      return sendErrorResponse(res, 409, 'NotFound', {
+      return sendErrorResponse(res, 409, "NotFound", {
         message: `Room already exists`,
       });
     }
@@ -63,7 +57,7 @@ const create = async (req, res, next) => {
       req.headers.companyid,
       req.query.pid,
       req.user._id,
-      req.body.name,
+      req.body.name
     );
 
     const roomMember = await createRoomMember(
@@ -71,7 +65,7 @@ const create = async (req, res, next) => {
       req.query.pid,
       req.user._id,
       room._id,
-      req.team._id,
+      req.team._id
     );
 
     return sendJSONresponse(res, 201, { room, roomMember });
@@ -84,7 +78,7 @@ const create = async (req, res, next) => {
 const addMembers = async (req, res, next) => {
   try {
     const companyId = req.headers.companyid;
-    const pid = req.query.pid;
+    const { pid } = req.query;
     const roomId = req.body.room;
     const senderId = req.user._id;
     const roomMembers = req.body.members.map((member) => {
@@ -108,16 +102,16 @@ const addMembers = async (req, res, next) => {
         pusherSock: req.headers.clientid,
       },
       roomId,
-      pid,
+      pid
     );
 
     if (!result) {
-      return sendErrorResponse(res, 404, 'NotFound', {
-        message: 'No room found',
+      return sendErrorResponse(res, 404, "NotFound", {
+        message: "No room found",
       });
     }
     return sendJSONresponse(res, 201, {
-      message: 'new members added into room',
+      message: "new members added into room",
     });
   } catch (error) {
     logger.error(`Rooms: ${error}`);
@@ -131,11 +125,11 @@ const memberList = async (req, res, next) => {
       room: req.params.roomId,
       removed: false,
     })
-      .select('-_id account')
+      .select("-_id account")
       .populate([
         {
-          path: 'account',
-          select: 'name firstName lastName email profileImage',
+          path: "account",
+          select: "name firstName lastName email profileImage",
         },
       ]);
 
@@ -159,24 +153,22 @@ const suggestMember = async (req, res, next) => {
       room: roomId,
       removed: false,
     })
-      .select('-_id account')
+      .select("-_id account")
       .populate([
         {
-          path: 'account',
-          select: 'name firstName lastName email',
+          path: "account",
+          select: "name firstName lastName email",
         },
       ]);
 
-    let projectMembers = await Team.find({ project: pid })
-      .select('_id account')
-      .populate('account', '_id name firstName lastName email')
+    const projectMembers = await Team.find({ project: pid })
+      .select("_id account")
+      .populate("account", "_id name firstName lastName email")
       .exec();
 
     const teamMembers = projectMembers.filter((pm) => {
       return !roomMembers.some((rm) => {
-        return (
-          rm.account._id.toString() === pm.account._id.toString()
-        );
+        return rm.account._id.toString() === pm.account._id.toString();
       });
     });
 
@@ -195,15 +187,15 @@ const suggestMember = async (req, res, next) => {
 
 const getRoom = async (req, res, next) => {
   try {
-    let room = await Room.findOne({
+    const room = await Room.findOne({
       _id: req.params.roomId,
       removed: false,
     })
-      .select('-__v -members')
+      .select("-__v -members")
       .exec();
     if (!room) {
       return res.status(404).json({
-        message: 'No room found.',
+        message: "No room found.",
       });
     }
     return sendJSONresponse(res, 200, { room });
@@ -225,13 +217,13 @@ const list = async (req, res, next) => {
     })
       .skip(+skip)
       .limit(+limit)
-      .select('-_id room lastSeen')
+      .select("-_id room lastSeen")
       .populate([
         {
-          path: 'room',
+          path: "room",
           select:
-            'archive removed _id name company project account createdAt updatedAt',
-          populate: [{ path: 'company', select: '_id uniqueName' }],
+            "archive removed _id name company project account createdAt updatedAt",
+          populate: [{ path: "company", select: "_id uniqueName" }],
         },
       ]);
 
@@ -253,7 +245,7 @@ const list = async (req, res, next) => {
         },
         {
           $group: {
-            _id: '$room',
+            _id: "$room",
             count: {
               $sum: 1,
             },
@@ -285,7 +277,7 @@ const list = async (req, res, next) => {
         }).countDocuments();
         const modifiedRoom = { ...room, memberCount };
         modifiedRooms.push(modifiedRoom);
-      }),
+      })
     );
 
     return res.status(200).json({
@@ -306,18 +298,18 @@ const chats = async (req, res, next) => {
     })
       .skip(+skip)
       .limit(+limit)
-      .select('-_id room lastSeen')
+      .select("-_id room lastSeen")
       .populate([
         {
-          path: 'room',
+          path: "room",
           select:
-            'archive removed _id name company project account createdAt updatedAt',
+            "archive removed _id name company project account createdAt updatedAt",
           populate: [
             {
-              path: 'project',
-              select: '_id name',
+              path: "project",
+              select: "_id name",
             },
-            { path: 'company', select: '_id uniqueName' },
+            { path: "company", select: "_id uniqueName" },
           ],
         },
       ]);
@@ -328,49 +320,47 @@ const chats = async (req, res, next) => {
 
     const options = [
       {
-        path: 'room',
-        select: '_id name company project',
+        path: "room",
+        select: "_id name company project",
         populate: [
           {
-            path: 'project',
-            select: '_id name color',
+            path: "project",
+            select: "_id name color",
           },
           {
-            path: 'company',
-            select: '_id uniqueName',
+            path: "company",
+            select: "_id uniqueName",
           },
         ],
       },
       {
-        path: 'message',
-        select: 'account text type createdAt',
+        path: "message",
+        select: "account text type createdAt",
         populate: [
           {
-            path: 'account',
-            select: '_id firstName lastName profileImage',
+            path: "account",
+            select: "_id firstName lastName profileImage",
           },
         ],
       },
     ];
 
-    let uMessage = await Promise.all(
+    const uMessage = await Promise.all(
       roomIds.map(async (roomId) => {
-        let uMsg = await UserMessage.find({
+        const uMsg = await UserMessage.find({
           room: roomId,
           receiver: req.user._id,
           read: false,
         })
           .sort({ createdAt: -1 })
-          .select('read seen message receiver room')
+          .select("read seen message receiver room")
           .populate(options)
           .exec();
         return uMsg[0];
-      }),
+      })
     );
 
-    const filteredMessages = uMessage.filter(
-      (msg) => msg !== undefined,
-    );
+    const filteredMessages = uMessage.filter((msg) => msg !== undefined);
 
     return sendJSONresponse(res, 200, {
       rooms: filteredMessages,
@@ -389,17 +379,17 @@ const archiveRoom = async (req, res, next) => {
       },
       {
         archive: req.body.archive,
-      },
+      }
     );
 
     if (!room) {
       return res.status(404).json({
-        message: 'No room found',
+        message: "No room found",
       });
     }
 
     return res.status(200).json({
-      message: `Room ${req.body.archive ? 'archived' : 'activated'}.`,
+      message: `Room ${req.body.archive ? "archived" : "activated"}.`,
     });
   } catch (error) {
     next(error);
@@ -415,17 +405,17 @@ const updateLastSeen = async (req, res, next) => {
       },
       {
         lastSeen: new Date(),
-      },
+      }
     );
 
     if (!room) {
       return res.status(404).json({
-        message: 'No room found',
+        message: "No room found",
       });
     }
 
     return res.status(200).json({
-      message: 'Last seen updated',
+      message: "Last seen updated",
     });
   } catch (error) {
     logger.info(`Room: ${error}`);
