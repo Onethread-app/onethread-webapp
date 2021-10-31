@@ -250,3 +250,24 @@ export const Container = styled.div`
     padding: 0;
   }
 `;
+
+export const CreatableItem = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: auto;
+  margin-top: 4px;
+  cursor: pointer;
+  color: black;
+  height: 49px;
+  width: 100%;
+  border: 1px dashed #cacaca;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 0 1rem;
+
+  span {
+    color: var(--secondary-bg-color);
+    margin-right: 4px;
+  }
+`;

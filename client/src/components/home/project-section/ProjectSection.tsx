@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -25,12 +24,15 @@ import {
 import { saveProjectForm } from 'stores/projectForm/Actions';
 
 import Hamburger from '../../../resources/images/hamburger.png';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Container, Header, Row } from './ProjectSection.styles';
 import ProjectDialog from './ProjectDialog';
 import { Dialog } from '@blueprintjs/core';
 import ProjectsTableSkeleton from 'components/project/ProjectsTableSkeleton';
 import { ProjectTableColumns } from 'components/project/ProjectTableColumns';
 import ProjectsTable from 'components/project/ProjectsTable';
+import { CreatableItem } from 'components/table/StyledTable.styles';
 
 interface INewCompanyResponse {
   message: string;
@@ -82,6 +84,8 @@ const Index = (props: IProps) => {
     useState<boolean>(false);
   const [projects, setProjects] = useState<IProject[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [expand, setExpand] = useState<boolean>(true);
+
   const data = useMemo(() => projects, [projects]);
   const columns = useMemo(() => ProjectTableColumns, []);
 
@@ -142,51 +146,68 @@ const Index = (props: IProps) => {
     props.fetchingUserProjects,
     props.errorOnFetchingUserProjects,
   ]);
-
   return (
     <Container>
       <Header>
-        Recent projects
+        <span className="flex items-center">
+          Recent projects{' '}
+          {expand ? (
+            <ExpandLessIcon
+              className="ml3 pointer"
+              onClick={() => setExpand(false)}
+            />
+          ) : (
+            <ExpandMoreIcon
+              className="ml3 pointer"
+              onClick={() => setExpand(true)}
+            />
+          )}
+        </span>
         <img src={Hamburger} alt="" />
       </Header>
-      {projects.length === 0 ? (
-        loading ? (
-          <ProjectsTableSkeleton />
-        ) : (
-          <Row>
-            No project has been created.{' '}
-            <Link
-              to="#"
-              onClick={() => setOpenProjectDialog(!openProjectDialog)}
-            >
-              Create Project
-            </Link>
-          </Row>
-        )
-      ) : (
-        <ProjectsTable
-          getTableProps={getTableProps}
-          getTableBodyProps={getTableBodyProps}
-          headerGroups={headerGroups}
-          rows={rows}
-          prepareRow={prepareRow}
-          visibleColumns={visibleColumns}
-          page={page}
-          gotoPage={gotoPage}
-          pageSize={pageSize}
-          pageIndex={pageIndex}
-          setPageSize={setPageSize}
-        />
-      )}
+      {expand ? (
+        <>
+          {projects.length === 0 ? (
+            loading ? (
+              <ProjectsTableSkeleton />
+            ) : (
+              <Row>
+                No project has been created.{' '}
+                <CreatableItem
+                  onClick={() => setOpenProjectDialog(true)}
+                >
+                  <span>+ </span> Create Project
+                </CreatableItem>
+              </Row>
+            )
+          ) : (
+            <ProjectsTable
+              getTableProps={getTableProps}
+              getTableBodyProps={getTableBodyProps}
+              headerGroups={headerGroups}
+              rows={rows}
+              prepareRow={prepareRow}
+              visibleColumns={visibleColumns}
+              page={page}
+              gotoPage={gotoPage}
+              pageSize={pageSize}
+              pageIndex={pageIndex}
+              setPageSize={setPageSize}
+              setOpenProjectDialog={setOpenProjectDialog}
+            />
+          )}
+        </>
+      ) : null}
       <Dialog
-        canOutsideClickClose={false}
+        canOutsideClickClose={true}
+        canEscapeKeyClose={true}
         autoFocus
         style={{ borderRadius: '1rem' }}
         className="w-auto h-auto pb0"
         isOpen={openProjectDialog}
+        onClose={() => setOpenProjectDialog(false)}
       >
         <ProjectDialog
-          // setProjects={setProjects}
           useToaster={props.useToaster}
           setOpenProjectDialog={setOpenProjectDialog}
         />

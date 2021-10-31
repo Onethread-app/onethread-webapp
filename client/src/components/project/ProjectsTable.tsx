@@ -14,6 +14,7 @@ import {
   StyledProjectTableData,
   SortIcon,
   StyledTableRowContainer,
+  CreatableItem,
 } from '../table/StyledTable.styles';
 
 interface IProjectsTable {
@@ -28,6 +29,7 @@ interface IProjectsTable {
   pageSize: any;
   pageIndex: number;
   setPageSize: any;
+  setOpenProjectDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ProjectsTable = (props: IProjectsTable) => {
@@ -43,6 +45,7 @@ const ProjectsTable = (props: IProjectsTable) => {
     pageSize,
     pageIndex,
     setPageSize,
+    setOpenProjectDialog,
   } = props;
 
   const history = useHistory();
@@ -144,6 +147,9 @@ const ProjectsTable = (props: IProjectsTable) => {
           })}
         </StyledTableBody>
       </StyledTable>
+      <CreatableItem onClick={() => setOpenProjectDialog(true)}>
+        <span>+</span> Create Project
+      </CreatableItem>
       <div className="flex justify-center mt2 w-100">
         <TablePagination
           component="div"
