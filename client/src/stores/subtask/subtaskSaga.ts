@@ -93,6 +93,7 @@ function* updateSubTaskAsync({ payload }: any) {
       name: payload.name,
       done: payload.done,
       dueDate: payload.dueDate,
+      description: payload.description,
     };
 
     if ((headers as any).headers.Authorization) {
