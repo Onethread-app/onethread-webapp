@@ -53,6 +53,7 @@ export const SubTaskCreatorComponent = (
       const updateSubTaskData = {
         _id: props.subtask!._id,
         name: values.subtaskTitle,
+        description: values.subtaskDesc,
       };
       props.updateSubTask(updateSubTaskData);
       setUpdating(true);
