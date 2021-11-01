@@ -52,7 +52,7 @@ const ProjectsTable = (props: IProjectsTable) => {
 
   const handleClick = (project: IProject) => {
     history.push(
-      `/company/${project.company.uniqueName}/project/${project._id}/overview`,
+      `/company/${project.company.uniqueName}/project/${project._id}`,
     );
   };
 

@@ -283,6 +283,7 @@ export function* getSingleProjectAsync({ payload }: any) {
           `projects?pid=${payload}`,
           headers,
         );
+        console.log(response.data);
         yield all([
           put(getSingleProjectSuccess(response.data)),
           put(getRoleForProject(response.data._id)),
