@@ -1,8 +1,11 @@
 import { format } from 'date-fns';
-
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { toTitleCase } from 'helpers/utils';
 
 import StatusTag from './StatusTag';
+import { favouriteProject } from 'stores/project/Actions';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const ProjectTableColumns = [
   {
@@ -10,7 +13,38 @@ export const ProjectTableColumns = [
     Footer: 'Project Name',
     accessor: 'name',
     sticky: 'left',
-    Cell: ({ value }) => toTitleCase(value),
+    Cell: ({ row, value }) => {
+      const dispatch = useDispatch();
+      const currentCompanyMember = useSelector(
+        (state: any) => state.companyReducer.currentCompany.member,
+      );
+      const pid = row.original._id;
+      const member = row.original.member ?? currentCompanyMember;
+      const isFavourite = !row.original.isFavourite;
+      return (
+        <div className="flex justify-start items-center">
+          {toTitleCase(value) + '  '}
+          {row.original.isFavourite ? (
+            <StarIcon
+              style={{ color: 'gold' }}
+              onClick={() => {
+                dispatch(
+                  favouriteProject({ pid, member, isFavourite }),
+                );
+              }}
+            />
+          ) : (
+            <StarBorderIcon
+              onClick={() => {
+                dispatch(
+                  favouriteProject({ pid, member, isFavourite }),
+                );
+              }}
+            />
+          )}
+        </div>
+      );
+    },
   },
   {
     Header: 'Status',
