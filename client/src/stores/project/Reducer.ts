@@ -437,6 +437,30 @@ export const ProjectReducer = (state = initialState, action: any) => {
         fetchingUserFavouriteProjects: false,
         fetchingUserFavouriteProjectsError: action.payload,
       };
+    case ProjectActionTypes.FAVOURITE_PROJECT_SUCCESS:
+      return {
+        ...state,
+        allProjects: [
+          ...state.allProjects?.map((project: any) =>
+            project._id === action.payload.projectId
+              ? {
+                  ...project,
+                  isFavourite: action.payload.isFavourite,
+                }
+              : project,
+          ),
+        ],
+        userProjects: [
+          ...state.userProjects?.filter((project: any) =>
+            project._id === action.payload.projectId
+              ? {
+                  ...project,
+                  isFavourite: action.payload.isFavourite,
+                }
+              : project,
+          ),
+        ],
+      };
     default:
       return state;
   }

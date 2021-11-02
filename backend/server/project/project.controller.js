@@ -1201,11 +1201,10 @@ const getAllProjectForUser = async (req, res, next) => {
 const favouriteProject = async (req, res, next) => {
   try {
     await Team.findOneAndUpdate(
-      { project: req.query.pid, member: req.body.memberId },
+      { project: req.query.pid, member: req.body.member },
       { $set: { isFavourite: req.body.isFavourite } },
       { safe: true, upsert: true },
     );
-
     return sendJSONresponse(res, 200, {
       message: `${
         req.body.isFavourite ? 'Favourite' : 'Unfavourite'

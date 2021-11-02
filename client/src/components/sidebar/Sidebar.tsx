@@ -11,7 +11,7 @@ import task from 'resources/images/TasksIcon.png';
 import upArrow from 'resources/images/upArrow.png';
 import downArrow from 'resources/images/downArrow.png';
 import star from 'resources/images/Star.png';
-import favourites from 'resources/images/favorite.png';
+import documents from 'resources/images/favorite.png';
 import onethread from 'resources/images/onethread.png';
 import {
   ArrayItem,
@@ -118,27 +118,35 @@ const Sidebar = (props: Props) => {
           <img src={task} alt="Tasks icon" />
           <span className="left-open">Tasks</span>
         </Item>
-        {leftOpen ? (
-          <Item to={`/favourites`}>
-            <img src={favourites} alt="Files icon" />
-          </Item>
-        ) : null}
+        <Item to={`/documents`}>
+          <img src={documents} alt="Document icon" />
+          <span className="left-open">Documents</span>
+        </Item>
       </ContainerBody>
       <Favourites className="left-open">
         <span className="left-open">Favourites</span>
-        {props.favouriteProjects.map((fP) => (
-          <ArrayItem
-            activeClassName="active-link"
-            to={`/company/${fP.project.company.uniqueName}/project/${fP.project._id}`}
-            bgcolor={getRandomColor()}
-            key={fP.project._id}
-          >
-            <i></i>
-            <span className="left-open capitalize">
-              {fP.project.name}
-            </span>
-          </ArrayItem>
-        ))}
+        {props.favouriteProjects.length > 0 &&
+          props.favouriteProjects?.map(
+            (fP: {
+              project: {
+                company: { uniqueName: string };
+                _id: string;
+                name: string;
+              };
+            }) => (
+              <ArrayItem
+                activeClassName="active-link"
+                to={`/company/${fP.project.company.uniqueName}/project/${fP.project._id}/overview`}
+                bgcolor={getRandomColor()}
+                key={fP.project._id}
+              >
+                <i></i>
+                <span className="left-open capitalize">
+                  {fP.project.name}
+                </span>
+              </ArrayItem>
+            ),
+          )}
         <div>
           <img src={star} alt="" />
           Star projects for easy access

@@ -71,6 +71,9 @@ import {
   getAllUserProjectsFailure,
   getUserFavouriteProjectsSuccess,
   getUserFavouriteProjectFailure,
+  favouriteProjectFailure,
+  favouriteProjectSuccess,
+  getUserFavouriteProjects,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getCompanyId } from 'stores/company/Selector';
@@ -675,11 +678,38 @@ export function* getFavouriteUserProjectsAsync() {
         `projects/favourite-list`,
         headers,
       );
-      console.log(response.data);
       yield put(getUserFavouriteProjectsSuccess(response.data));
     }
   } catch (error) {
     yield put(getUserFavouriteProjectFailure(returnErrorText(error)));
+  }
+}
+
+export function* favouriteProjectAsync(action: {
+  payload: { pid: string; member: string; isFavourite: boolean };
+}) {
+  try {
+    const headers = tokenConfig();
+    const member = action.payload.member;
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.put(
+        `projects/favourite?pid=${action.payload.pid}`,
+        {
+          member,
+          isFavourite: action.payload.isFavourite,
+        },
+        headers,
+      );
+      yield put(
+        favouriteProjectSuccess({
+          projectId: action.payload.pid,
+          isFavourite: action.payload.isFavourite,
+        }),
+      );
+      yield put(getUserFavouriteProjects());
+    }
+  } catch (error) {
+    yield put(favouriteProjectFailure(returnErrorText(error)));
   }
 }
 
@@ -887,6 +917,13 @@ export function* getFavouriteUserProjectsHandler() {
   );
 }
 
+export function* favouriteProjectHandler() {
+  yield takeEvery(
+    ProjectActionTypes.FAVOURITE_PROJECT,
+    favouriteProjectAsync,
+  );
+}
+
 export default function* projectSaga() {
   yield all([
     call(onCreateProject),
@@ -916,5 +953,6 @@ export default function* projectSaga() {
     call(onDeleteTeamMember),
     call(onGetAllUserProjects),
     call(getFavouriteUserProjectsHandler),
+    call(favouriteProjectHandler),
   ]);
 }

@@ -452,3 +452,18 @@ export const getUserFavouriteProjectFailure = (
   type: ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_FAILURE,
   payload: errorMessage,
 });
+
+export const favouriteProject = (response) => ({
+  type: ProjectActionTypes.FAVOURITE_PROJECT,
+  payload: response,
+});
+
+export const favouriteProjectSuccess = (response: any) => ({
+  type: ProjectActionTypes.FAVOURITE_PROJECT_SUCCESS,
+  payload: response,
+});
+
+export const favouriteProjectFailure = (response: string) => ({
+  type: ProjectActionTypes.FAVOURITE_PROJECT_FAILURE,
+  payload: response,
+});
