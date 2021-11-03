@@ -25,7 +25,7 @@ export const CompanyIconAndName = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 1rem;
+  margin-bottom: ${(props) => (props.noMarginBottom ? '0' : '1rem')};
 `;
 
 export const CompanyName = styled.h3`

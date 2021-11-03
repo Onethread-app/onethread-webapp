@@ -710,7 +710,7 @@ const getProjectDetails = async (req, res, next) => {
       _id: req.query.pid,
     })
       .select(
-        'outline description color name status totalSpent company',
+        'outline description color name status totalSpent company createdAt deadline',
       )
       .populate([
         {

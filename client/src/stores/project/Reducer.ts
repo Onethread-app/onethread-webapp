@@ -31,8 +31,9 @@ export interface IProject {
   totalMember: number;
   concernAdmin: User;
   createdAt: Date;
-  status: String;
+  status: string;
   timeSpent?: number;
+  deadline: Date;
   company: {
     _id: string;
     uniqueName: string;
