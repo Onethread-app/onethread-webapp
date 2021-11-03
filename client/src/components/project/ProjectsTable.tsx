@@ -122,6 +122,7 @@ const ProjectsTable = (props: IProjectsTable) => {
                 <StyledTableRow
                   {...row.getRowProps()}
                   onClick={() => handleClick(row.original)}
+                  className="row"
                 >
                   {row.cells.map((cell) => (
                     <StyledProjectTableData
