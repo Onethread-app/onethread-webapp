@@ -35,7 +35,7 @@ import CreateOptionList from './CreateOptionList';
 import ProjectDialog from 'components/home/project-section/ProjectDialog';
 import { CompanySignupForm } from 'components/home/company-section/CompanyDialog';
 import TaskDialog from 'components/home/task-section/TaskDialog';
-
+import AnnouncementDialog from 'components/announcement/announcementDialog';
 interface Props extends RouteComponentProps {
   user: User;
   uniqueCompanyName: string;
@@ -76,7 +76,8 @@ const UpdatedNavbar = (props: Props) => {
     useState<boolean>(false);
   const [openTaskDialog, setOpenTaskDialog] =
     useState<boolean>(false);
-
+  const [openAnnouncementDialog, setOpenAnnouncementDialog] =
+    useState<boolean>(false);
   const { t } = useTranslation();
 
   const handleSearch = (e: { preventDefault: () => void }) => {
@@ -93,6 +94,7 @@ const UpdatedNavbar = (props: Props) => {
       setOpenCompanyDialog,
       setOpenProjectDialog,
       setOpenTaskDialog,
+      setOpenAnnouncementDialog,
     };
   };
 
@@ -305,6 +307,20 @@ const UpdatedNavbar = (props: Props) => {
         <TaskDialog
           setShowDialog={setOpenTaskDialog}
           useToaster={props.useToaster}
+        />
+      </Dialog>
+
+      <Dialog
+        isOpen={openAnnouncementDialog}
+        canEscapeKeyClose={true}
+        canOutsideClickClose={true}
+        autoFocus
+        style={{ borderRadius: '1rem' }}
+        onClose={() => setOpenAnnouncementDialog(false)}
+        className="w-auto h-auto pb0"
+      >
+        <AnnouncementDialog
+          setOpenAnnouncementDialog={setOpenAnnouncementDialog}
         />
       </Dialog>
     </Container>
