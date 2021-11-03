@@ -38,14 +38,6 @@ import { DateRange } from '@blueprintjs/datetime';
 
 interface Props {
   userTasks: any;
-  useToaster: () => {
-    showToaster: boolean;
-    successMessage: string;
-    errorMessage: string;
-    setShowToaster: React.Dispatch<React.SetStateAction<boolean>>;
-    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-    setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
-  };
 }
 
 interface ITaskSectionInternalProps extends Props {
@@ -314,10 +306,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
         isOpen={openTaskDialog}
         onClose={() => setOpenTaskDialog(false)}
       >
-        <TaskDialog
-          setShowDialog={setOpenTaskDialog}
-          useToaster={props.useToaster}
-        />
+        <TaskDialog setShowDialog={setOpenTaskDialog} />
       </Dialog>
     </Container>
   );

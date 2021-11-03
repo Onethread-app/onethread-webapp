@@ -45,17 +45,13 @@ import {
   ModalContainer,
 } from './TaskSection.styles';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import {
+  errorToaster,
+  successToaster,
+} from 'components/toast/Toaster';
 
 interface ICreateTaskDialogProps {
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  useToaster: () => {
-    showToaster: boolean;
-    successMessage: string;
-    errorMessage: string;
-    setShowToaster: React.Dispatch<React.SetStateAction<boolean>>;
-    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-    setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
-  };
 }
 
 interface ICreateTaskDialogInternalProps
@@ -118,13 +114,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
     useState<boolean>(false);
   const [projectLoading, setProjectLoading] =
     useState<boolean>(false);
-
-  const {
-    showToaster,
-    setShowToaster,
-    setErrorMessage,
-    setSuccessMessage,
-  } = props.useToaster();
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const onSubmit = (values) => {
     if (!company[0].value) {
@@ -186,15 +176,17 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           setSuccessMessage(
             `The project ${response.data.project.name} has been created`,
           );
+          successToaster(
+            `The project ${response.data.project.name} has been created`,
+          );
           props.getAllProjects();
           props.getSingleProject(response.data.project._id);
           props.getAllBoards(response.data.project._id);
         }
-        setErrorMessage('');
-        setShowToaster(true);
+        // setErrorMessage('');
       } catch (err) {
-        setErrorMessage(returnErrorText(err));
-        setShowToaster(true);
+        // setErrorMessage(returnErrorText(err));
+        errorToaster(returnErrorText(err));
       }
       setProjectLoading(false);
     } else {
@@ -239,9 +231,9 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   };
 
   const mdfy = (members) => {
-    const membersList = members.map((m) => ({
-      value: m._id,
-      label: m.name,
+    const membersList = members?.map((m) => ({
+      value: m?._id,
+      label: m?.name,
     }));
     return membersList;
   };
@@ -267,7 +259,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
       props.getCompanyDetails(selected.uniqueName);
       props.getAllProjects();
     }
-    setErrorMessage('');
+    // setErrorMessage('');
   };
 
   useEffect(() => {
@@ -383,8 +375,8 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
     ) {
       setLoading(false);
       setSuccessMessage('');
-      setErrorMessage(props.errorOnCreatingTask);
-      setShowToaster(true);
+      // setErrorMessage(props.errorOnCreatingTask);
+      errorToaster(props.errorOnCreatingTask);
       setCreatingTask(false);
     }
     if (
@@ -393,23 +385,13 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
       props.errorOnCreatingTask === ''
     ) {
       setLoading(false);
-      setShowToaster(true);
+      successToaster(successMessage);
       props.setShowDialog(false);
       props.getAllUserTasks();
       setCreatingTask(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creatingTask, props.creatingTask, props.errorOnCreatingTask]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowToaster(false);
-      setErrorMessage('');
-      setSuccessMessage('');
-    }, 3000);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showToaster]);
 
   return (
     <ModalContainer>

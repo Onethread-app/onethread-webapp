@@ -24,6 +24,10 @@ import {
   SimpleButton,
   StyledButton,
 } from './announcementDialog.styles';
+import {
+  errorToaster,
+  successToaster,
+} from 'components/toast/Toaster';
 
 interface IProps {
   setOpenAnnouncementDialog: React.Dispatch<
@@ -93,6 +97,9 @@ const Index = (props: IProps) => {
         props.announcementLoading === false
       ) {
         setLoading(false);
+        successToaster(
+          'The announcement has been created successfully',
+        );
         props.setOpenAnnouncementDialog(false);
       }
       if (
@@ -100,6 +107,7 @@ const Index = (props: IProps) => {
         props.announcementLoading === false
       ) {
         setLoading(false);
+        errorToaster(props.announcementError);
       }
     }
   }, [props.announcementError, props.announcementLoading]);

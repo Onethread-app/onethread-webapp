@@ -87,20 +87,6 @@ const Index = (props: IProps) => {
   const columns = useMemo(() => ProjectTableColumns, []);
   const [showInputField, setShowInputField] =
     useState<boolean>(false);
-  const [showToaster, setShowToaster] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-
-  const useToaster = () => {
-    return {
-      showToaster,
-      setShowToaster,
-      successMessage,
-      setSuccessMessage,
-      setErrorMessage,
-      errorMessage,
-    };
-  };
 
   const {
     getTableProps,
@@ -243,10 +229,7 @@ const Index = (props: IProps) => {
         onClose={() => setOpenProjectDialog(false)}
         isOpen={openProjectDialog}
       >
-        <ProjectDialog
-          useToaster={useToaster}
-          setOpenProjectDialog={setOpenProjectDialog}
-        />
+        <ProjectDialog setOpenProjectDialog={setOpenProjectDialog} />
       </Dialog>
     </Container>
   );
