@@ -169,6 +169,16 @@ export const StyledTable = styled.div`
   @media only screen and (max-width: 768px) {
     overflow-x: auto;
   }
+
+  .row .is-favourite {
+    visibility: hidden;
+  }
+
+  .row:hover {
+    .is-favourite {
+      visibility: visible;
+    }
+  }
 `;
 
 export const StyledFilterPopover = styled.div`
