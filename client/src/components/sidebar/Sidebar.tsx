@@ -125,7 +125,7 @@ const Sidebar = (props: Props) => {
       </ContainerBody>
       <Favourites className="left-open">
         <span className="left-open">Favourites</span>
-        {props.favouriteProjects.length > 0 &&
+        {props.favouriteProjects?.length > 0 &&
           props.favouriteProjects?.map(
             (fP: {
               project: {
