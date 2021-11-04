@@ -580,7 +580,8 @@
         "Type": "Please Select a company type",
         "Email": "Company Email Address",
         "Legal-name": "Legal Owner's Name",
-        "Legal-email": "Legal Owner's Email Address"
+        "Legal-email": "Legal Owner's Email Address",
+        "Name-not-required": "Company Name"
       },
 
       "Start-project": {

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { isNumber, isEmpty, isEqual } from 'lodash';
 import { connect } from 'react-redux';
 
-import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+// import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { HTMLSelect } from '@blueprintjs/core/lib/esm/components/html-select/htmlSelect';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
@@ -12,7 +12,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { editCompanyInfoAction } from 'stores/company/Actions';
 import { saveCompanyBasicInfoForm } from 'stores/companyBasicInfoForm/Actions';
 
-import { InputGroupField } from 'components/fields/InputGroupField';
+import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 
 interface CompanyInfoProps {
   companyInfo: ICompany;
@@ -135,25 +135,23 @@ const CompanyInfoFormComponent = (
 
   return (
     <form className="fl w-100 pa4">
-      <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
+      <h1 className="f5 lh-title mb3">
         {t('app.company.Company-profile.Basic')}
       </h1>
-      <div className={` ${errors.name ? 'mb3' : 'mb4'}`}>
-        <InputGroupField
+      <div className={` ${errors.name ? 'mb2' : 'mb3'}`}>
+        <InputGroupFieldWithLabel
           id="name"
           value={values.name}
           onChange={handleChange('name')}
-          placeHolder={`${t(
-            'app.forms.Create-company.Name',
-          )} (Required)`}
-          leftIcon="user"
+          placeHolder={`${t('app.forms.Create-company.Name')}`}
+          // leftIcon="user"
           style={{
             boxShadow: 'none',
+            height: '2.5rem',
           }}
-          className={`br0 ${
-            errors.name ? 'bb b--red' : 'bb b--lightBlue'
+          className={`br2 ${
+            errors.name ? 'ba b--red' : 'ba b--black-40'
           }`}
-          leftIconColor={`${errors.name ? 'red' : '#34b3e9'}`}
           validationOnBlur={() => {
             if (isEmpty(values.name)) {
               const nameError = { ...errors, name: 'Required' };
@@ -169,6 +167,7 @@ const CompanyInfoFormComponent = (
               setErrors(nameError);
             }
           }}
+          label={`${t('app.forms.Create-company.Name-not-required')}`}
         />
         {errors.name ? (
           <small style={{ color: 'red' }}>{errors.name}</small>
@@ -176,22 +175,23 @@ const CompanyInfoFormComponent = (
           ''
         )}
       </div>
-      <div className={` ${errors.type ? 'mb3' : 'mb4'}`}>
-        <div className="flex">
-          <div className=" f5 pa1 bb b--lightBlue">
-            <Icon icon={'briefcase'} className="tigrow-lightBlue" />
+      <div className={` ${errors.type ? 'mb2' : 'mb3'}`}>
+        <div className="flex flex-column">
+          <div className="fw5" style={{ fontSize: '.8rem' }}>
+            {t('app.company.Company-profile.Type')}
           </div>
           <HTMLSelect
             fill={true}
             minimal={true}
             onChange={onChangeSelectField('type')}
-            className=" bb b--lightBlue"
+            className="br2 ba b--black-40"
             style={{
               boxShadow: 'none',
               borderRadius: '0px',
               backgroundColor: 'white',
               flex: '1',
               outline: 'none',
+              height: '2.5rem',
             }}
           >
             <option selected value={values.type}>
@@ -210,22 +210,21 @@ const CompanyInfoFormComponent = (
           ''
         )}
       </div>
-      <div className={` ${errors.address ? 'mb3' : 'mb4'}`}>
-        <InputGroupField
+      <div className={` ${errors.address ? 'mb2' : 'mb3'}`}>
+        <InputGroupFieldWithLabel
           id="address"
           value={values.address}
           onChange={handleChange('address')}
           placeHolder={`${t(
             'app.forms.Create-company.Address',
           )} (Required)`}
-          leftIcon="map-marker"
           style={{
             boxShadow: 'none',
+            height: '2.5rem',
           }}
-          className={`br0 ${
-            errors.address ? 'bb b--red' : 'bb b--lightBlue'
+          className={`br2 ${
+            errors.address ? 'ba b--red' : 'ba b--black-40'
           }`}
-          leftIconColor={`${errors.address ? 'red' : '#3F61C5'}`}
           validationOnBlur={() => {
             if (isEmpty(values.address)) {
               const addressError = { ...errors, address: 'Required' };
@@ -245,6 +244,7 @@ const CompanyInfoFormComponent = (
               setErrors(addressError);
             }
           }}
+          label={`${t('app.forms.Create-company.Address')}`}
         />
         {errors.address ? (
           <small style={{ color: 'red' }}>{errors.address}</small>
@@ -252,20 +252,19 @@ const CompanyInfoFormComponent = (
           ''
         )}
       </div>
-      <div className={` ${errors.email ? 'mb3' : 'mb4'}`}>
-        <InputGroupField
+      <div className={` ${errors.email ? 'mb2' : 'mb3'}`}>
+        <InputGroupFieldWithLabel
           id="email"
           value={values.email}
           onChange={handleChange('email')}
           placeHolder={t('app.forms.Create-company.Email')}
-          leftIcon="envelope"
           style={{
             boxShadow: 'none',
+            height: '2.5rem',
           }}
-          className={`br0 ${
-            errors.email ? 'bb b--red' : 'bb b--lightBlue'
+          className={`br2 ${
+            errors.email ? 'ba b--red' : 'ba b--black-40'
           }`}
-          leftIconColor={`${errors.email ? 'red' : '#34b3e9'}`}
           validationOnBlur={() => {
             if (checkLegalOwnerMail() && !isEmpty(values.email)) {
               const companyEmailError = {
@@ -288,6 +287,7 @@ const CompanyInfoFormComponent = (
               setErrors(emailError);
             }
           }}
+          label={t('app.forms.Create-company.Email')}
         />
         {errors.email ? (
           <small style={{ color: 'red' }}>{errors.email}</small>
@@ -295,21 +295,18 @@ const CompanyInfoFormComponent = (
           ''
         )}
       </div>
-      <div className={` ${errors.legalOwnerName ? 'mb3' : 'mb4'}`}>
-        <InputGroupField
+      <div className={` ${errors.legalOwnerName ? 'mb2' : 'mb3'}`}>
+        <InputGroupFieldWithLabel
           id="legalOwnerName"
           value={values.legalOwnerName}
           onChange={handleChange('legalOwnerName')}
           placeHolder={t('app.forms.Create-company.Legal-name')}
-          leftIcon="mugshot"
           style={{
             boxShadow: 'none',
+            height: '2.5rem',
           }}
-          className={`br0 ${
-            errors.legalOwnerName ? 'bb b--red' : 'bb b--lightBlue'
-          }`}
-          leftIconColor={`${
-            errors.legalOwnerName ? 'red' : '#34b3e9'
+          className={`br2 ${
+            errors.legalOwnerName ? 'ba b--red' : 'ba b--black-40'
           }`}
           validationOnBlur={() => {
             if (
@@ -330,6 +327,7 @@ const CompanyInfoFormComponent = (
               setErrors(legalOwnerNameError);
             }
           }}
+          label={t('app.forms.Create-company.Legal-name')}
         />
         {errors.legalOwnerName ? (
           <small style={{ color: 'red' }}>
@@ -339,21 +337,18 @@ const CompanyInfoFormComponent = (
           ''
         )}
       </div>
-      <div className={` ${errors.legalOwnerMail ? 'mb3' : 'mb4'}`}>
-        <InputGroupField
+      <div className={` ${errors.legalOwnerMail ? 'mb2' : 'mb3'}`}>
+        <InputGroupFieldWithLabel
           id="legalOwnerMail"
           value={values.legalOwnerMail}
           onChange={handleChange('legalOwnerMail')}
           placeHolder={t('app.forms.Create-company.Legal-email')}
-          leftIcon="envelope"
           style={{
             boxShadow: 'none',
+            height: '2.5rem',
           }}
-          className={`br0 ${
-            errors.legalOwnerMail ? 'bb b--red' : 'bb b--lightBlue'
-          }`}
-          leftIconColor={`${
-            errors.legalOwnerMail ? 'red' : '#3F61C5'
+          className={`br2 ${
+            errors.legalOwnerMail ? 'ba b--red' : 'ba b--black-40'
           }`}
           validationOnBlur={() => {
             if (
@@ -383,6 +378,7 @@ const CompanyInfoFormComponent = (
               setErrors(legalOwnerMailError);
             }
           }}
+          label={t('app.forms.Create-company.Legal-email')}
         />
         {errors.legalOwnerMail ? (
           <small style={{ color: 'red' }}>
@@ -424,7 +420,7 @@ const CompanyInfoFormComponent = (
             props.setShowDialog(false);
           }}
         >
-          cancel
+          Cancel
         </Button>
       </div>
     </form>
