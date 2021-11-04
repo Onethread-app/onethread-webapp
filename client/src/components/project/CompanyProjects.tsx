@@ -58,21 +58,6 @@ const CompanyProjects = (props: ICompanyProjects) => {
   const data = useMemo(() => projectList, [projectList]);
   const columns = useMemo(() => ProjectTableColumns, []);
 
-  const [showToaster, setShowToaster] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-
-  const useToaster = () => {
-    return {
-      showToaster,
-      setShowToaster,
-      successMessage,
-      setSuccessMessage,
-      setErrorMessage,
-      errorMessage,
-    };
-  };
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -231,10 +216,7 @@ const CompanyProjects = (props: ICompanyProjects) => {
         onClose={() => setOpenProjectDialog(false)}
         isOpen={openProjectDialog}
       >
-        <ProjectDialog
-          useToaster={useToaster}
-          setOpenProjectDialog={setOpenProjectDialog}
-        />
+        <ProjectDialog setOpenProjectDialog={setOpenProjectDialog} />
       </Dialog>
     </Container>
   );

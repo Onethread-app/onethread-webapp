@@ -38,6 +38,10 @@ import {
   Icon,
   StyledButton,
 } from './ProjectSection.styles';
+import {
+  successToaster,
+  errorToaster,
+} from 'components/toast/Toaster';
 
 interface INewCompanyResponse {
   message: string;
@@ -72,14 +76,6 @@ interface IProps {
   allProjects: IProject[];
   createCompanyActionSuccess: (arg: INewCompanyResponse) => void;
   createCompanyActionFailure: (arg: string) => void;
-  useToaster: () => {
-    showToaster: boolean;
-    successMessage: string;
-    errorMessage: string;
-    setShowToaster: React.Dispatch<React.SetStateAction<boolean>>;
-    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-    setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
-  };
   // setProjects: React.Dispatch<React.SetStateAction<IProject[]>>;
 }
 
@@ -102,13 +98,7 @@ const Index = (props: IProps) => {
   const [creatingProject, setCreatingProject] =
     useState<boolean>(false);
   // const [projects,setProjects] = useState<IProject[]>([]);
-
-  const {
-    showToaster,
-    setShowToaster,
-    setErrorMessage,
-    setSuccessMessage,
-  } = props.useToaster();
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const { t } = useTranslation();
 
@@ -161,11 +151,12 @@ const Index = (props: IProps) => {
           setSuccessMessage(
             `The company ${response.data.company.name} has been created`,
           );
-          setShowToaster(true);
+          successToaster(
+            `The company ${response.data.company.name} has been created`,
+          );
         } catch (err) {
           props.createCompanyActionFailure(returnErrorText(err));
-          setErrorMessage(returnErrorText(err));
-          setShowToaster(true);
+          errorToaster(returnErrorText(err));
         }
         setCompanyLoading(false);
       }
@@ -184,11 +175,6 @@ const Index = (props: IProps) => {
       ]);
     }
   };
-
-  // useEffect(() => {
-  //   setProjects(props.allProjects);
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [props.allProjects]);
 
   useEffect(() => {
     if (props.companies.length > 0) {
@@ -214,8 +200,8 @@ const Index = (props: IProps) => {
       ) {
         setLoading(false);
         props.setOpenProjectDialog(false);
+        successToaster(successMessage);
         setCreatingProject(false);
-        setShowToaster(true);
       }
       if (
         props.projectLoading === false &&
@@ -223,9 +209,8 @@ const Index = (props: IProps) => {
       ) {
         setLoading(false);
         setSuccessMessage('');
-        setErrorMessage(props.errorOnCreatingProject);
+        errorToaster(props.errorOnCreatingProject);
         setCreatingProject(false);
-        setShowToaster(true);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -234,16 +219,6 @@ const Index = (props: IProps) => {
     props.projectLoading,
     creatingProject,
   ]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowToaster(false);
-      setErrorMessage('');
-      setSuccessMessage('');
-    }, 3000);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showToaster]);
 
   useEffect(() => {
     if (company) {

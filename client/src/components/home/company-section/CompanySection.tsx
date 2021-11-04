@@ -22,15 +22,9 @@ import {
 
 import { CompanySignupForm } from './CompanyDialog';
 
-interface Props {
-  useToaster: () => {};
-}
-
-interface ICompanySectionInternalProps extends Props {
+interface ICompanySectionInternalProps {
   user: User;
   companies: ICompanyByUser[];
-  creatingCompany: boolean;
-  errorOnCreatingCompany: string;
   getAllCompaniesByUserId: (userId) => void;
 }
 
@@ -47,7 +41,6 @@ export const Color = [
 export const dummyArray = [1, 2, 3, 4];
 
 const CompanySection = (props: ICompanySectionInternalProps) => {
-  const { creatingCompany, errorOnCreatingCompany } = props;
   const [showCompanyDialog, setShowCompanyDialog] =
     useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -61,17 +54,6 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
   const getRandomColor = useCallback(() => {
     return Color[getRandomInt(6)]?.value;
   }, []);
-
-  useEffect(() => {
-    if (
-      showCompanyDialog &&
-      creatingCompany === false &&
-      errorOnCreatingCompany === ''
-    ) {
-      setShowCompanyDialog(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [creatingCompany, errorOnCreatingCompany]);
 
   useEffect(() => {
     if (props.user._id && props.companies.length === 0) {
@@ -147,10 +129,7 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
           style={{ borderRadius: '1rem' }}
           className="w-auto h-auto pb0"
         >
-          <CompanySignupForm
-            setShowDialog={setShowCompanyDialog}
-            useToaster={props.useToaster}
-          />
+          <CompanySignupForm setShowDialog={setShowCompanyDialog} />
         </Dialog>
       ) : null}
     </div>
@@ -160,8 +139,6 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
 const mapStateToProps = (state: any) => ({
   user: state.userReducer.user,
   companies: state.userReducer.user.companies,
-  creatingCompany: state.companyReducer.creatingCompany,
-  errorOnCreatingCompany: state.companyReducer.errorOnCreatingCompany,
 });
 
 export default connect(mapStateToProps, {

@@ -27,7 +27,8 @@ export const ProjectTableColumns = [
           {row.original.isFavourite ? (
             <StarIcon
               style={{ color: 'gold' }}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 dispatch(
                   favouriteProject({ pid, member, isFavourite }),
                 );
@@ -36,7 +37,8 @@ export const ProjectTableColumns = [
             />
           ) : (
             <StarBorderIcon
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 dispatch(
                   favouriteProject({ pid, member, isFavourite }),
                 );

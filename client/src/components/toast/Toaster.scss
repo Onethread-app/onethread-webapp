@@ -1,0 +1,109 @@
+.toast-container {
+  --toaster-bg-color: #ffffff;
+  --toaster-border-color: var(--secondary-bg-color);
+  color: #000 !important;
+  border-radius: 8px !important;
+  background: var(--toaster-bg-color) !important;
+  border: 1px solid var(--toaster-border-color) !important;
+  box-shadow: 0px 1px 5px rgba(248, 175, 175, 0.1) !important;
+  margin: 0.5rem !important;
+}
+
+.toast-container-after {
+  overflow: hidden;
+  position: relative;
+}
+
+.toast-container-after::after {
+  --toaster-right-border: var(--secondary-bg-color);
+  top: 0;
+  left: 0;
+  content: '';
+  width: 3px;
+  height: 100%;
+  position: absolute;
+  display: inline-block;
+  background-color: var(--toaster-right-border);
+}
+
+.toast-success-container {
+  @extend .toast-container;
+  --toaster-border-color: #00a150;
+}
+
+.toast-success-container-after {
+  @extend .toast-container-after;
+}
+
+.toast-success-container-after::after {
+  @extend .toast-container-after::after;
+  --toaster-right-border: #00a150;
+}
+
+.toast-error-container {
+  @extend .toast-container;
+  --toaster-border-color: #f44336;
+}
+
+.toast-error-container-after {
+  @extend .toast-container-after;
+}
+
+.toast-error-container-after::after {
+  @extend .toast-container-after::after;
+  --toaster-right-border: #f44336;
+}
+
+.toast-warning-container {
+  @extend .toast-container;
+  --toaster-border-color: #ffeb3b;
+}
+
+.toast-warning-container-after {
+  @extend .toast-container-after;
+}
+
+.toast-warning-container-after::after {
+  @extend .toast-container-after::after;
+  --toaster-right-border: #ffeb3b;
+}
+
+.toast-info-container {
+  @extend .toast-container;
+  --toaster-border-color: #2196f3;
+}
+
+.toast-info-container-after {
+  @extend .toast-container-after;
+}
+
+.toast-info-container-after::after {
+  @extend .toast-container-after::after;
+  --toaster-right-border: #2196f3;
+}
+
+.success {
+  color: #00a150;
+  margin: 0 0.5rem;
+}
+
+.error {
+  color: #f44336;
+  margin: 0 0.5rem;
+}
+
+.warning {
+  color: #ffeb3b;
+  margin: 0 0.5rem;
+}
+
+.info {
+  color: #2196f3;
+  margin: 0 0.5rem;
+}
+
+.toast-body {
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 358px, 100%;
+}

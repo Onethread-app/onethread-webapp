@@ -96,21 +96,6 @@ const CompanyTasks = (props: ICompanyTasks) => {
     ],
   );
 
-  const [showToaster, setShowToaster] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-
-  const useToaster = () => {
-    return {
-      showToaster,
-      setShowToaster,
-      successMessage,
-      setSuccessMessage,
-      setErrorMessage,
-      errorMessage,
-    };
-  };
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -324,10 +309,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
           onClose={() => setOpenTaskDialog(false)}
           isOpen={openTaskDialog}
         >
-          <TaskDialog
-            setShowDialog={setOpenTaskDialog}
-            useToaster={useToaster}
-          ></TaskDialog>
+          <TaskDialog setShowDialog={setOpenTaskDialog}></TaskDialog>
         </Dialog>
       </Container>
     </CompanyTasksContext.Provider>
