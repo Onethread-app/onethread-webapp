@@ -17,6 +17,7 @@ import SuspenseLoader from 'components/loader/SuspenseLoader';
 import { isAuthenticate } from 'stores/UtilsActions';
 
 import GlobalStyle from './App.styles';
+import { toast } from 'react-toastify';
 
 const AutoLoginPage = lazy(() => import('components/AutoLogin'));
 const NewLanding = lazy(() => import('layouts/landingx/Index'));
@@ -176,6 +177,7 @@ const NotFound = () => (
 );
 
 const App = () => {
+  toast.configure();
   // const location: any = useLocation();
   // const background = location.state && location.state.background;
   return (

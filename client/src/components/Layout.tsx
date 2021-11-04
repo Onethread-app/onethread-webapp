@@ -17,6 +17,7 @@ import Modal from 'react-modal';
 import { connect, useDispatch } from 'react-redux';
 import { isEmpty, isEqual, isNil } from 'lodash';
 import { useBeforeunload } from 'react-beforeunload';
+import { ToastContainer, Slide } from 'react-toastify';
 
 import { Navbar } from '@blueprintjs/core/lib/esm/components/navbar/navbar';
 
@@ -71,7 +72,7 @@ import {
   ErrorToaster,
   SuccessToaster,
 } from 'layouts/home/Index.styles';
-
+import 'react-toastify/dist/ReactToastify.minimal.css';
 interface LayoutProps {
   Component: React.ComponentClass | React.FunctionComponent;
 }
@@ -151,17 +152,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
     props.setSubscriptionNotExpire();
     props.history.push(`/${props.user.name}/home`);
-  };
-
-  const useToaster = () => {
-    return {
-      showToaster,
-      successMessage,
-      errorMessage,
-      setShowToaster,
-      setErrorMessage,
-      setSuccessMessage,
-    };
   };
 
   useEffect(() => {
@@ -412,6 +402,18 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         </p>
       ) : (
         <>
+          <ToastContainer
+            autoClose={5000}
+            position={'top-center'}
+            draggable={false}
+            closeButton={false}
+            closeOnClick={false}
+            hideProgressBar={true}
+            pauseOnHover={false}
+            pauseOnFocusLoss={false}
+            theme="light"
+            transition={Slide}
+          />
           <CustomView condition={!isMobileOnly}>
             <div
               id="main-layout"
@@ -489,10 +491,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                         : 'default'
                     }
                   /> */}
-                  <UpdatedNavbar
-                    scrollTop={scrollTop}
-                    useToaster={useToaster}
-                  />
+                  <UpdatedNavbar scrollTop={scrollTop} />
                   <div
                     ref={scrollRef}
                     className="flex-grow-1 overflow-y-auto bg-white"
