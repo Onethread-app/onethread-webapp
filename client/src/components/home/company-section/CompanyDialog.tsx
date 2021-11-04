@@ -79,7 +79,7 @@ const CompanySignupFormComponent = (
 
   return (
     <ModalContainer>
-      <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
+      <h1 className="f5 lh-title mb1">
         {t('app.forms.Create-company.Create')}
       </h1>
       <Form
