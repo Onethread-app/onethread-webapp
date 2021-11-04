@@ -26,6 +26,7 @@ interface InputGroupFieldProps {
   error?: string;
   autoFocus?: boolean;
   keypress?: (e: any) => void;
+  variant?: string;
 }
 
 export const InputGroupField = (props: InputGroupFieldProps) => (
@@ -84,6 +85,7 @@ interface InputGroupFieldWithLabelProps extends InputGroupFieldProps {
   helperText?: string;
   inline?: boolean;
   required?: boolean;
+  labelClassName?: string;
 }
 
 export const InputGroupFieldWithLabel = (
@@ -93,7 +95,10 @@ export const InputGroupFieldWithLabel = (
     inline={props.inline}
     intent={props.error ? Intent.DANGER : Intent.NONE}
     label={
-      <div className="fw5" style={{ fontSize: '.8rem' }}>
+      <div
+        className={`fw5 ${props.labelClassName}`}
+        style={{ fontSize: '.8rem' }}
+      >
         {props.label}
       </div>
     }
