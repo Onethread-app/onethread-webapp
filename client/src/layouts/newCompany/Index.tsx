@@ -1,5 +1,6 @@
 import { ChangeEvent, useState, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
+import { Dialog } from '@blueprintjs/core';
 
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
@@ -19,6 +20,7 @@ import {
   CompanyEditButton,
 } from './Index.styles';
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton';
+import { CompanyInfoForm } from 'layouts/company/profile/BasicInformationEditor';
 
 const CompanyProjects = lazy(
   () => import('components/project/CompanyProjects'),
@@ -39,6 +41,7 @@ interface ICompanyDashboardProps {
 const Index = (props: ICompanyDashboardProps) => {
   const { company, gettingCompanyDetails } = props;
   const [value, setValue] = useState<number>(0);
+  const [showDialog, setShowDialog] = useState<boolean>(false);
 
   const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -66,7 +69,9 @@ const Index = (props: ICompanyDashboardProps) => {
           ) : (
             <>
               <CompanyName>{company.name}</CompanyName>
-              <CompanyEditButton>Edit Company</CompanyEditButton>
+              <CompanyEditButton onClick={() => setShowDialog(true)}>
+                Edit Company
+              </CompanyEditButton>
             </>
           )}
         </CompanyOptions>
@@ -89,6 +94,20 @@ const Index = (props: ICompanyDashboardProps) => {
           </Suspense>
         </TabPanel>
       ))}
+      {showDialog ? (
+        <Dialog
+          onClose={() => {
+            setShowDialog(!showDialog);
+          }}
+          isOpen={showDialog}
+          className="bg-white"
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          autoFocus
+        >
+          <CompanyInfoForm setShowDialog={setShowDialog} />
+        </Dialog>
+      ) : null}
     </Container>
   );
 };
