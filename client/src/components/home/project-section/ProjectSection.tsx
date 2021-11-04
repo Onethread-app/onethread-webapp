@@ -76,14 +76,6 @@ interface IProps {
   errorOnFetchingUserProjects: string;
   createCompanyActionSuccess: (arg: INewCompanyResponse) => void;
   createCompanyActionFailure: (arg: string) => void;
-  useToaster: () => {
-    showToaster: boolean;
-    successMessage: string;
-    errorMessage: string;
-    setShowToaster: React.Dispatch<React.SetStateAction<boolean>>;
-    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-    setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
-  };
   getAllUserProjects: () => void;
 }
 
@@ -260,10 +252,7 @@ const Index = (props: IProps) => {
         isOpen={openProjectDialog}
         onClose={() => setOpenProjectDialog(false)}
       >
-        <ProjectDialog
-          useToaster={props.useToaster}
-          setOpenProjectDialog={setOpenProjectDialog}
-        />
+        <ProjectDialog setOpenProjectDialog={setOpenProjectDialog} />
       </Dialog>
     </Container>
   );

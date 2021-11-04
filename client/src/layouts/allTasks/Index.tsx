@@ -66,22 +66,8 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   const [selectedDueDateRange, setSelectedDueDateRange] =
     useState<DateRange>([null, null]);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [showToaster, setShowToaster] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { userTasks } = props;
-
-  const useToaster = () => {
-    return {
-      showToaster,
-      setShowToaster,
-      successMessage,
-      setSuccessMessage,
-      setErrorMessage,
-      errorMessage,
-    };
-  };
 
   const {
     getTableProps,
@@ -281,10 +267,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
         isOpen={openTaskDialog}
         onClose={() => setOpenTaskDialog(false)}
       >
-        <TaskDialog
-          setShowDialog={setOpenTaskDialog}
-          useToaster={useToaster}
-        />
+        <TaskDialog setShowDialog={setOpenTaskDialog} />
       </Dialog>
     </Container>
   );

@@ -29,17 +29,6 @@ const Index = (props: any) => {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const useToaster = () => {
-    return {
-      showToaster,
-      successMessage,
-      errorMessage,
-      setShowToaster,
-      setErrorMessage,
-      setSuccessMessage,
-    };
-  };
-
   useEffect(() => {
     dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
   }, []);
@@ -79,9 +68,9 @@ const Index = (props: any) => {
         <Avatar>{props.user?.firstName?.substring(0, 2)}</Avatar> Hi,{' '}
         {capitalizeFirstLetter(props.user.firstName)}
       </Row>
-      <CompanySection useToaster={useToaster} />
-      <ProjectSection useToaster={useToaster} />
-      <TaskSection useToaster={useToaster} />
+      <CompanySection />
+      <ProjectSection />
+      <TaskSection />
       {Boolean(showToaster && errorMessage) ? (
         <ErrorToaster>{errorMessage}</ErrorToaster>
       ) : null}

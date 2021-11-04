@@ -22,6 +22,10 @@ import {
   composeValidators,
   required,
 } from 'components/final-form/utils';
+import {
+  errorToaster,
+  successToaster,
+} from 'components/toast/Toaster';
 
 const CompanySignupFormComponent = (
   props: {
@@ -31,19 +35,16 @@ const CompanySignupFormComponent = (
     companyName: string;
     creatingCompany: boolean;
     errorOnCreatingCompany: string;
-    useToaster: () => any;
   } & RouteComponentProps,
 ) => {
   const { t } = useTranslation();
   const [currentCompanyName, setCurrentCompanyName] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const { setShowToaster, setErrorMessage, setSuccessMessage } =
-    props.useToaster();
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const handleCreateCompany = async (values) => {
     setLoading(true);
-    await props.createCompanyAction(values);
+    props.createCompanyAction(values);
     setSuccessMessage(`The company ${values.name} has been created`);
   };
 
@@ -61,8 +62,7 @@ const CompanySignupFormComponent = (
       props.errorOnCreatingCompany === '' &&
       props.companyName !== currentCompanyName
     ) {
-      setErrorMessage('');
-      setShowToaster(true);
+      successToaster(successMessage);
       setLoading(false);
       props.setShowDialog(false);
       //   props.history.push(`/company/${props.companyName}/dashboard`);
@@ -73,8 +73,7 @@ const CompanySignupFormComponent = (
     if (props.errorOnCreatingCompany) {
       setLoading(false);
       setSuccessMessage('');
-      setErrorMessage(props.errorOnCreatingCompany);
-      setShowToaster(true);
+      errorToaster(props.errorOnCreatingCompany);
     }
   }, [props.errorOnCreatingCompany]);
 

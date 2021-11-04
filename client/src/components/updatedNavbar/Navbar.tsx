@@ -50,14 +50,6 @@ interface Props extends RouteComponentProps {
   fetchRooms: () => void;
   fetchChats: () => void;
   logoutAction: (history: History) => void;
-  useToaster: () => {
-    showToaster: boolean;
-    successMessage: string;
-    errorMessage: string;
-    setShowToaster: React.Dispatch<React.SetStateAction<boolean>>;
-    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-    setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
-  };
   scrollTop: number;
 }
 
@@ -275,7 +267,6 @@ const UpdatedNavbar = (props: Props) => {
       >
         <ProjectDialog
           // setProjects={setProjects}
-          useToaster={props.useToaster}
           setOpenProjectDialog={setOpenProjectDialog}
         />
       </Dialog>
@@ -289,10 +280,7 @@ const UpdatedNavbar = (props: Props) => {
         onClose={() => setOpenCompanyDialog(false)}
         className="w-auto h-auto pb0"
       >
-        <CompanySignupForm
-          setShowDialog={setOpenCompanyDialog}
-          useToaster={props.useToaster}
-        />
+        <CompanySignupForm setShowDialog={setOpenCompanyDialog} />
       </Dialog>
 
       <Dialog
@@ -304,10 +292,7 @@ const UpdatedNavbar = (props: Props) => {
         onClose={() => setOpenTaskDialog(false)}
         className="w-auto h-auto pb0"
       >
-        <TaskDialog
-          setShowDialog={setOpenTaskDialog}
-          useToaster={props.useToaster}
-        />
+        <TaskDialog setShowDialog={setOpenTaskDialog} />
       </Dialog>
 
       <Dialog
