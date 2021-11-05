@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { toast, TypeOptions } from 'react-toastify';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
@@ -26,6 +27,7 @@ export const toaster = (props: IProps) => {
         ),
         {
           position: 'top-center',
+          icon: false,
           autoClose: 5000,
           hideProgressBar: true,
           closeOnClick: false,
@@ -56,7 +58,7 @@ export const toaster = (props: IProps) => {
           closeOnClick: false,
           pauseOnHover: false,
           draggable: true,
-          icon: toast.error,
+          icon: false,
           bodyClassName: 'toast-body',
           className:
             'toast-error-container toast-error-container-after',
@@ -82,7 +84,7 @@ export const toaster = (props: IProps) => {
           closeOnClick: false,
           pauseOnHover: false,
           draggable: true,
-          icon: toast.info,
+          icon: false,
           bodyClassName: 'toast-body',
           className:
             'toast-info-container toast-info-container-after',
@@ -108,7 +110,7 @@ export const toaster = (props: IProps) => {
           closeOnClick: false,
           pauseOnHover: false,
           draggable: true,
-          icon: toast.warning,
+          icon: false,
           bodyClassName: 'toast-body',
           className:
             'toast-warning-container toast-warning-container-after',
@@ -145,6 +147,48 @@ export const toaster = (props: IProps) => {
       break;
     }
   }
+};
+
+export const AnnouncementToaster = (company: {
+  name: string;
+  uniqueName: string;
+}) => {
+  toast(
+    ({ toastProps, closeToast, data }) => (
+      <div className="flex items-center">
+        <CheckCircleOutlineIcon className="success" />
+        <div className="flex flex-column">
+          <div>
+            The announcement has been created in {company.name}
+          </div>
+          <Link
+            to={{
+              pathname: `/company/${company.uniqueName}`,
+              state: {
+                tab: 'announcement',
+              },
+            }}
+            className="mt2 green"
+          >
+            Check it out!
+          </Link>
+        </div>
+      </div>
+    ),
+    {
+      position: 'top-center',
+      icon: false,
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: false,
+      draggable: true,
+      bodyClassName: 'toast-body',
+      className:
+        'toast-success-container toast-success-container-after',
+      theme: 'light',
+    },
+  );
 };
 
 export const successToaster = (message: string, style = {}) => {
