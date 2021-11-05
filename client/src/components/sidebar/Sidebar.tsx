@@ -136,7 +136,7 @@ const Sidebar = (props: Props) => {
             }) => (
               <ArrayItem
                 activeClassName="active-link"
-                to={`/company/${fP.project.company.uniqueName}/project/${fP.project._id}/overview`}
+                to={`/company/${fP.project.company.uniqueName}/project/${fP.project._id}`}
                 bgcolor={getRandomColor()}
                 key={fP.project._id}
               >

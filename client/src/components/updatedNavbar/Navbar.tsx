@@ -35,7 +35,7 @@ import CreateOptionList from './CreateOptionList';
 import ProjectDialog from 'components/home/project-section/ProjectDialog';
 import { CompanySignupForm } from 'components/home/company-section/CompanyDialog';
 import TaskDialog from 'components/home/task-section/TaskDialog';
-import AnnouncementDialog from 'components/announcement/announcementDialog';
+import AnnouncementDialog from 'components/announcement/AnnouncementDialog';
 interface Props extends RouteComponentProps {
   user: User;
   uniqueCompanyName: string;
@@ -306,6 +306,7 @@ const UpdatedNavbar = (props: Props) => {
       >
         <AnnouncementDialog
           setOpenAnnouncementDialog={setOpenAnnouncementDialog}
+          setOpenCompanyDialog={setOpenCompanyDialog}
         />
       </Dialog>
     </Container>
