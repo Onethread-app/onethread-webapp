@@ -204,7 +204,7 @@ const StyledButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px 16px 7px;
+  padding: 8px 16px;
   height: 33px;
   white-space: nowrap;
   background: #08a0f7;

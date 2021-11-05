@@ -183,11 +183,11 @@ const CompanySignupFormComponent = (
                   setLoading(false);
                 }}
               >
-                cancel
+                Cancel
               </SimpleButton>
               <StyledButton
                 type="submit"
-                className="w4 grow h2 pointer"
+                className="grow h2 pointer"
                 style={{
                   background: '#34b3e9',
                   outline: 'none',
@@ -195,7 +195,13 @@ const CompanySignupFormComponent = (
                 }}
                 disabled={loading}
               >
-                {loading ? <Spinner size={15} /> : 'Save'}
+                {loading ? (
+                  <>
+                    Creating Company <Spinner size={15} />
+                  </>
+                ) : (
+                  'Create Company'
+                )}
               </StyledButton>
             </div>
           </form>

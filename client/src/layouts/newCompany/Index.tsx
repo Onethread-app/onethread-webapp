@@ -1,4 +1,10 @@
-import { ChangeEvent, useState, lazy, Suspense } from 'react';
+import {
+  ChangeEvent,
+  useState,
+  lazy,
+  Suspense,
+  useEffect,
+} from 'react';
 import { connect } from 'react-redux';
 import { Dialog } from '@blueprintjs/core';
 
@@ -21,6 +27,7 @@ import {
 } from './Index.styles';
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton';
 import { CompanyInfoForm } from 'layouts/company/profile/BasicInformationEditor';
+import { useLocation } from 'react-router';
 
 const CompanyProjects = lazy(
   () => import('components/project/CompanyProjects'),
@@ -30,6 +37,9 @@ const CompanyTasks = lazy(
 );
 const ColleaguesPage = lazy(
   () => import('layouts/company/colleagues/Index'),
+);
+const CompanyAnnouncements = lazy(
+  () => import('components/announcement/CompanyAnnouncements'),
 );
 
 interface ICompanyDashboardProps {
@@ -42,6 +52,13 @@ const Index = (props: ICompanyDashboardProps) => {
   const { company, gettingCompanyDetails } = props;
   const [value, setValue] = useState<number>(0);
   const [showDialog, setShowDialog] = useState<boolean>(false);
+  const location: {
+    pathname: string;
+    state: {
+      tab: string;
+    };
+  } = useLocation();
+  const tab = location?.state?.tab || '';
 
   const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -52,7 +69,17 @@ const Index = (props: ICompanyDashboardProps) => {
     { component: <CompanyTasks />, label: 'Tasks' },
     { component: <ColleaguesPage />, label: 'Collaborators' },
     { label: 'Discussion' },
+    {
+      component: <CompanyAnnouncements company={props.company} />,
+      label: 'Announcements',
+    },
   ];
+
+  useEffect(() => {
+    if (tab === 'announcement') {
+      setValue(4);
+    }
+  }, []);
 
   return (
     <Container>
