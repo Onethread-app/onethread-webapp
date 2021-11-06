@@ -43,6 +43,8 @@ const Container = styled.div`
     background: #08a0f7;
     border-radius: 4px;
     color: white;
+    display: flex;
+    align-items: center;
 
     &:hover {
       background: #08a0f7;

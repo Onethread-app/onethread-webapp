@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { ICompanyByUser, User } from 'stores/user/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 
 import Plus from '../../../resources/images/plus.png';
 import Vector from '../../../resources/images/Vector.png';
@@ -21,11 +22,14 @@ import {
 } from './CompanySection.styles';
 
 import { CompanySignupForm } from './CompanyDialog';
+import { getCompanyDetails } from 'stores/company/Actions';
 
 interface ICompanySectionInternalProps {
   user: User;
   companies: ICompanyByUser[];
+  currentCompany: ICompany;
   getAllCompaniesByUserId: (userId) => void;
+  getCompanyDetails: (arg: string) => void;
 }
 
 export const Color = [
@@ -62,6 +66,13 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
     }
     if (props.companies.length > 0) {
       setLoading(false);
+    }
+
+    if (
+      props.companies.length > 0 &&
+      props.currentCompany.name === ''
+    ) {
+      props.getCompanyDetails(props.companies[0]?.company.uniqueName);
     }
   }, [props.user, props.companies]);
 
@@ -139,8 +150,10 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
 const mapStateToProps = (state: any) => ({
   user: state.userReducer.user,
   companies: state.userReducer.user.companies,
+  currentCompany: state.companyReducer.currentCompany,
 });
 
 export default connect(mapStateToProps, {
   getAllCompaniesByUserId,
+  getCompanyDetails,
 })(CompanySection);

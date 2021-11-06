@@ -16,6 +16,7 @@ import { getCompanyAnnouncement } from 'stores/company/Actions';
 
 interface Props {
   company: ICompany;
+  userCompanyLoading: boolean;
   getCompanyAnnouncement: () => void;
 }
 
@@ -68,7 +69,12 @@ const CompanyAnnouncements = (props: Props) => {
   };
 
   useEffect(() => {
-    props.getCompanyAnnouncement();
+    if (
+      props.company.announce === undefined ||
+      props.company.announce.length === 0
+    ) {
+      props.getCompanyAnnouncement();
+    }
   }, [props.company]);
 
   return (
@@ -82,7 +88,8 @@ const CompanyAnnouncements = (props: Props) => {
             {t('app.company.Dashboard.Announce')}
           </h3>
 
-          {companyPermit(props.company.role) && (
+          {companyPermit(props.company.role) &&
+          props.userCompanyLoading === false ? (
             <button
               onClick={() =>
                 setShowAnnouncementDialog(!showAnnouncementDialog)
@@ -104,7 +111,7 @@ const CompanyAnnouncements = (props: Props) => {
                 {t('app.company.Dashboard.Create-Announcement')}
               </span>
             </button>
-          )}
+          ) : null}
         </div>
         {props.company?.announce && (
           <div className="w-100-l w-100 pa3 shadow-1 br2">
@@ -218,7 +225,9 @@ const CompanyAnnouncements = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state: any) => ({});
+const mapStateToProps = (state: any) => ({
+  userCompanyLoading: state.userReducer.userCompanyLoading,
+});
 
 export default connect(mapStateToProps, {
   getCompanyAnnouncement,
