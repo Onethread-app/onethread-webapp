@@ -1,6 +1,7 @@
 import { all, put, call, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 import {
+  formTokenConfig,
   tokenConfig,
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
@@ -74,6 +75,9 @@ import {
   favouriteProjectFailure,
   favouriteProjectSuccess,
   getUserFavouriteProjects,
+  newDeleteProjectSuccess,
+  newArchiveProjectSuccess,
+  newUnarchiveProjectSuccess,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getCompanyId } from 'stores/company/Selector';
@@ -87,6 +91,10 @@ import {
 } from 'stores/user/Selector';
 import { clearCurrentBoard, getAllBoards } from 'stores/task/Actions';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import {
+  errorToaster,
+  successToaster,
+} from 'components/toast/Toaster';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -104,7 +112,10 @@ export function* createProjectAsync({ payload }: any) {
         reqBody,
         headers,
       );
-      yield all([put(createProjectSuccess()), put(getAllProjects())]);
+      yield all([
+        put(createProjectSuccess()),
+        // put(getAllProjects(currentCompanyId)),
+      ]);
     }
   } catch (error) {
     yield put(createProjectFailure(returnErrorText(error)));
@@ -132,10 +143,14 @@ export function* getAllProjectsAsync() {
 
 export function* createProjectInCompanyAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
+    const headers = payload.companyId
+      ? formTokenConfig(payload.companyId)
+      : tokenConfig();
+    const currentCompanyId = yield select(getCompanyId);
     const companyId = payload.companyId
       ? payload.companyId
-      : yield select(getCompanyId);
+      : currentCompanyId;
+
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,
@@ -143,16 +158,20 @@ export function* createProjectInCompanyAsync({ payload }: any) {
         deadline: payload.deadline ? payload.deadline : undefined,
         companyId,
         budget: payload.budget ?? 0,
+        currency: payload.currency,
       };
-      yield tigrowApi.post(
+      const response = yield tigrowApi.post(
         `projects/create-project`,
         reqBody,
         headers,
       );
       yield all([
-        put(createProjectInCompanySuccess()),
-        put(getAllProjects()),
+        put(createProjectInCompanySuccess(response.data.project)),
+        // put(getAllProjects()),
       ]);
+      // currentCompanyId
+      //   ? yield put(getAllProjects(payload.companyId))
+      //   : yield put(getAllUserProjects());
     }
   } catch (error) {
     yield put(createProjectInCompanyFailure(returnErrorText(error)));
@@ -161,17 +180,19 @@ export function* createProjectInCompanyAsync({ payload }: any) {
 
 export function* archiveProjectAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
+    const headers = payload.companyId
+      ? formTokenConfig(payload.companyId)
+      : tokenConfig();
     if ((headers as any).headers.Authorization) {
       yield tigrowApi.put(
-        `projects/archive?pid=${payload}`,
+        `projects/archive?pid=${payload.projectId}`,
         null,
         headers,
       );
       yield all([
         put(archiveProjectSuccess()),
-        put(getAllProjects()),
-        put(getProjectArchive()),
+        // put(getAllProjects()),
+        // put(getProjectArchive()),
       ]);
     }
   } catch (error) {
@@ -184,16 +205,33 @@ export function* unarchiveProjectAsync({ payload }: any) {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.put(
-        `projects/unarchive?pid=${payload}`,
+        `projects/unarchive?pid=${payload.projectId}`,
         null,
         headers,
       );
 
       yield all([
         put(unarchiveProjectSuccess(response.data.project)),
-        put(getAllProjects()),
-        put(getProjectArchive()),
+        // put(getAllProjects()),
+        // put(getProjectArchive()),
       ]);
+    }
+  } catch (error) {
+    yield put(unarchiveProjectFailure(returnErrorText(error)));
+  }
+}
+
+export function* newUnarchiveProjectAsync({ payload }: any) {
+  try {
+    const headers = formTokenConfig(payload.companyId);
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.put(
+        `projects/unarchive?pid=${payload.projectId}`,
+        null,
+        headers,
+      );
+
+      yield all([put(newUnarchiveProjectSuccess(payload.projectId))]);
     }
   } catch (error) {
     yield put(unarchiveProjectFailure(returnErrorText(error)));
@@ -246,14 +284,19 @@ export function* updateProjectAsync({
   projectId,
   color,
   deadline,
+  companyId,
+  budget,
+  currency,
 }: any) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: projectName,
-        color: color,
-        deadline: deadline,
+        color,
+        deadline,
+        budget,
+        currency,
       };
       const response = yield tigrowApi.put(
         `projects/change-title?pid=${projectId}`,
@@ -262,7 +305,7 @@ export function* updateProjectAsync({
       );
       yield all([
         put(updateProjectSuccess(response.data)),
-        put(getAllProjects()),
+        // put(getAllProjects()),
       ]);
     }
   } catch (error) {
@@ -714,6 +757,44 @@ export function* favouriteProjectAsync(action: {
   }
 }
 
+export function* newArchiveProjectAsync({ payload }: any) {
+  try {
+    const headers = formTokenConfig(payload.companyId);
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.put(
+        `projects/archive?pid=${payload.projectId}`,
+        null,
+        headers,
+      );
+      successToaster('The project has been archived successfully.');
+      yield all([put(newArchiveProjectSuccess(payload.projectId))]);
+    }
+  } catch (error) {
+    errorToaster(returnErrorText(error));
+    yield put(archiveProjectFailure(returnErrorText(error)));
+  }
+}
+
+export function* newDeleteProjectAsync({ payload }: any) {
+  try {
+    yield put(showLoading());
+    const headers = formTokenConfig(payload.companyId);
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.delete(
+        `/projects/delete-project?pid=${payload.projectId}`,
+        headers,
+      );
+      successToaster('The project has been deleted successfully.');
+      yield all([put(newDeleteProjectSuccess(payload.projectId))]);
+    }
+  } catch (error) {
+    errorToaster(returnErrorText(error));
+    yield put(deleteProjectFailure(returnErrorText(error)));
+  } finally {
+    yield put(hideLoading());
+  }
+}
+
 export function* clearProjectReducerAsync() {
   yield put(clearCurrentBoard());
   yield put({ type: CLEAR_PROJECT_REDUCER_STATE });
@@ -925,6 +1006,27 @@ export function* favouriteProjectHandler() {
   );
 }
 
+export function* onNewArchiveProject() {
+  yield takeEvery(
+    ProjectActionTypes.NEW_ARCHIVE_PROJECT_START,
+    newArchiveProjectAsync,
+  );
+}
+
+export function* onNewUnarchiveProject() {
+  yield takeEvery(
+    ProjectActionTypes.NEW_UNARCHIVE_PROJECT_START,
+    newUnarchiveProjectAsync,
+  );
+}
+
+export function* onNewDeleteProject() {
+  yield takeEvery(
+    ProjectActionTypes.NEW_DELETE_PROJECT_START,
+    newDeleteProjectAsync,
+  );
+}
+
 export default function* projectSaga() {
   yield all([
     call(onCreateProject),
@@ -955,5 +1057,8 @@ export default function* projectSaga() {
     call(onGetAllUserProjects),
     call(getFavouriteUserProjectsHandler),
     call(favouriteProjectHandler),
+    call(onNewArchiveProject),
+    call(onNewDeleteProject),
+    call(onNewUnarchiveProject),
   ]);
 }

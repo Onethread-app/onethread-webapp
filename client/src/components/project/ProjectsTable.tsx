@@ -1,4 +1,6 @@
 import { useHistory } from 'react-router-dom';
+import { Dialog, Popover, Position } from '@blueprintjs/core';
+import { useState } from 'react';
 
 import { IProject } from 'stores/project/Reducer';
 
@@ -16,6 +18,19 @@ import {
   StyledTableRowContainer,
   CreatableItem,
 } from '../table/StyledTable.styles';
+import { connect } from 'react-redux';
+import {
+  newArchiveProject,
+  newDeleteProject,
+  newUnarchiveProject,
+} from 'stores/project/Actions';
+import {
+  DangerButton,
+  SimpleButton,
+  // SuccessButton,
+  Container,
+  List,
+} from './Project.styles';
 
 interface IProjectsTable {
   getTableProps: any;
@@ -32,7 +47,15 @@ interface IProjectsTable {
   setOpenProjectDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ProjectsTable = (props: IProjectsTable) => {
+interface IProjectsFunctions {
+  newArchiveProject: ({ projectId, companyId }) => void;
+  newDeleteProject: ({ projectId, companyId }) => void;
+  newUnarchiveProject: ({ projectId, companyId }) => void;
+}
+
+const ProjectsTable = (
+  props: IProjectsTable & IProjectsFunctions,
+) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -49,6 +72,14 @@ const ProjectsTable = (props: IProjectsTable) => {
   } = props;
 
   const history = useHistory();
+  const [showPopover, setShowPopover] = useState<string>('');
+  const [selectedProject, setSelectedProject] = useState<any>('');
+  const [showArchiveProject, setShowArchiveProject] =
+    useState<boolean>(false);
+  const [showUnarchiveProject, setShowUnarchiveProject] =
+    useState<boolean>(false);
+  const [showDeleteProject, setShowDeleteProject] =
+    useState<boolean>(false);
 
   const handleClick = (project: IProject) => {
     history.push(
@@ -56,7 +87,8 @@ const ProjectsTable = (props: IProjectsTable) => {
     );
   };
 
-  const handleOptionsClick = (e) => {
+  const handleOptionsClick = (e, id) => {
+    setShowPopover(id);
     e.stopPropagation();
   };
 
@@ -67,6 +99,30 @@ const ProjectsTable = (props: IProjectsTable) => {
   const handleChangeRowsPerPage = (e) => {
     setPageSize(parseInt(e.target.value, 10));
     gotoPage(0);
+  };
+
+  const handleArchiveProject = () => {
+    props.newArchiveProject({
+      projectId: selectedProject._id,
+      companyId: selectedProject.company._id,
+    });
+    setShowArchiveProject(false);
+  };
+
+  const handleUnarchiveProject = () => {
+    props.newUnarchiveProject({
+      projectId: selectedProject._id,
+      companyId: selectedProject.company._id,
+    });
+    setShowUnarchiveProject(false);
+  };
+
+  const handleDeleteProject = () => {
+    props.newDeleteProject({
+      projectId: selectedProject._id,
+      companyId: selectedProject.company._id,
+    });
+    setShowDeleteProject(false);
   };
 
   return (
@@ -138,9 +194,65 @@ const ProjectsTable = (props: IProjectsTable) => {
                       {cell.render('Cell')}
                     </StyledProjectTableData>
                   ))}
-                  <MoreVertIcon
-                    fontSize="small"
-                    onClick={handleOptionsClick}
+                  <Popover
+                    popoverClassName="bp3-popover-content-sizing"
+                    position={Position.BOTTOM_RIGHT}
+                    isOpen={
+                      row.original._id === showPopover ? true : false
+                    }
+                    onClose={() => setShowPopover('')}
+                    content={
+                      <div className="flex flex-column">
+                        {/* <List
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowUpdateProject(true);
+                            setSelectedProject(row.original);
+                          }}
+                        >
+                          Edit
+                        </List> */}
+                        {row.original.status === 'archived' ? (
+                          <List
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedProject(row.original);
+                              setShowUnarchiveProject(true);
+                            }}
+                          >
+                            Unarchive
+                          </List>
+                        ) : (
+                          <List
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedProject(row.original);
+                              setShowArchiveProject(true);
+                            }}
+                          >
+                            Archive
+                          </List>
+                        )}
+                        <List
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProject(row.original);
+                            setShowDeleteProject(true);
+                          }}
+                          className="mt1"
+                        >
+                          Delete
+                        </List>
+                      </div>
+                    }
+                    target={
+                      <MoreVertIcon
+                        fontSize="small"
+                        onClick={(e) =>
+                          handleOptionsClick(e, row.original._id)
+                        }
+                      />
+                    }
                   />
                 </StyledTableRow>
               </StyledTableRowContainer>
@@ -168,8 +280,105 @@ const ProjectsTable = (props: IProjectsTable) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </div>
+      {showArchiveProject ? (
+        <Dialog
+          isOpen={showArchiveProject}
+          onClose={() => setShowArchiveProject(false)}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          className="pb0"
+        >
+          <Container>
+            <div>Do you want to archive this project?</div>
+            <div className="w-100 flex justify-center">
+              <DangerButton
+                className="mr2"
+                onClick={handleArchiveProject}
+              >
+                Yes
+              </DangerButton>
+              <SimpleButton
+                className="ml2"
+                onClick={() => {
+                  setShowArchiveProject(false);
+                }}
+              >
+                Cancel
+              </SimpleButton>
+            </div>
+          </Container>
+        </Dialog>
+      ) : null}
+      {showUnarchiveProject ? (
+        <Dialog
+          isOpen={showUnarchiveProject}
+          onClose={() => setShowUnarchiveProject(false)}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          className="pb0"
+        >
+          <Container>
+            <div>Do you want to unarchive this project?</div>
+            <div className="w-100 flex justify-center">
+              <DangerButton
+                className="mr2"
+                onClick={handleUnarchiveProject}
+              >
+                Yes
+              </DangerButton>
+              <SimpleButton
+                className="ml2"
+                onClick={() => {
+                  setShowUnarchiveProject(false);
+                }}
+              >
+                Cancel
+              </SimpleButton>
+            </div>
+          </Container>
+        </Dialog>
+      ) : null}
+      {showDeleteProject ? (
+        <Dialog
+          isOpen={showDeleteProject}
+          onClose={() => setShowDeleteProject(false)}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          className="pb0"
+        >
+          <Container>
+            <div>
+              This will delete everything of this project including
+              all it's tasks, subtasks, and rooms. Do you still want
+              to proceed?
+            </div>
+            <div className="w-100 flex justify-center">
+              <DangerButton
+                className="mr2"
+                onClick={handleDeleteProject}
+              >
+                Yes
+              </DangerButton>
+              <SimpleButton
+                className="ml2"
+                onClick={() => {
+                  setShowDeleteProject(false);
+                }}
+              >
+                Cancel
+              </SimpleButton>
+            </div>
+          </Container>
+        </Dialog>
+      ) : null}
     </>
   );
 };
 
-export default ProjectsTable;
+const mapStateToProps = (state: any) => ({});
+
+export default connect(mapStateToProps, {
+  newArchiveProject,
+  newDeleteProject,
+  newUnarchiveProject,
+})(ProjectsTable);

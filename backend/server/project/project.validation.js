@@ -17,6 +17,7 @@ const schema = {
   description: Joi.string().max(2500).allow(''),
   outline: Joi.string().max(5000).allow(''),
   budget: Joi.number().min(0),
+  currency: Joi.string(),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
   deadline: Joi.date(),
@@ -58,6 +59,7 @@ module.exports = {
       deadline: schema.deadline,
       color: schema.color,
       budget: schema.budget,
+      currency: schema.currency,
     }),
   }),
   addAssociate: Joi.object().keys({

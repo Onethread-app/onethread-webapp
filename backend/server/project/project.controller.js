@@ -183,6 +183,7 @@ const createNewProjectFromHome = async (req, res, next) => {
       description: '',
       outline: '',
       budget: req.body.budget,
+      currency: req.body.currency,
     });
     await project
       .save()
@@ -627,7 +628,10 @@ const showAllProjectsForCompany = async (req, res, next) => {
       company: req.params.companyId,
     }).select('_id');
     members = members.map((member) => member._id);
-    const teamProjects = await findAllProjectsByMemberId(members);
+    let teamProjects = await findAllProjectsByMemberId(members);
+    teamProjects = teamProjects.filter(
+      (tp) => tp.project.hasDeleted === false,
+    );
     const projects = await Promise.all(
       teamProjects.map(async (tP) => {
         const { taskNumbers, doneTasks } = await getTasksNumbers(
@@ -774,10 +778,9 @@ const archiveProject = async (req, res) => {
     if (projectExist) {
       const project = await Project.findOneAndUpdate(
         { _id: req.query.pid },
-        { $set: { removed: true } },
+        { $set: { removed: true, status: 'archived' } },
         { safe: true, upsert: true, new: true },
       );
-
       logger.info(`Project: Archive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         message: `Archive a project`,
@@ -807,11 +810,11 @@ const unarchiveProject = async (req, res) => {
     if (projectExist) {
       const project = await Project.findOneAndUpdate(
         { _id: req.query.pid },
-        { $set: { removed: false } },
+        { $set: { removed: false, status: 'ongoing' } },
         { safe: true, upsert: true, new: true },
       );
 
-      logger.info(`Project: Archive a project  ${req.query.pid}`);
+      logger.info(`Project: Unarchive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         message: `Unarchived project`,
         project,
@@ -1200,7 +1203,10 @@ const getAllProjectForUser = async (req, res, next) => {
       account: req.user._id,
     }).select('_id');
     members = members.map((member) => member._id);
-    const teamProjects = await findAllProjectsByMemberId(members);
+    let teamProjects = await findAllProjectsByMemberId(members);
+    teamProjects = teamProjects.filter(
+      (tp) => tp.project.hasDeleted === false,
+    );
     const projects = await Promise.all(
       teamProjects.map(async (tP) => {
         const { taskNumbers, doneTasks } = await getTasksNumbers(

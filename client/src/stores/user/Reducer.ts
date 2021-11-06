@@ -24,6 +24,7 @@ import {
   REFRESH_USER_TOKEN_SUCCESS,
   REFRESH_USER_TOKEN_START,
   REFRESH_USER_TOKEN_FAILURE,
+  USER_COMPANIES,
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 export interface ICompanyByUser {
@@ -35,6 +36,7 @@ export interface ICompanyByUser {
     logo?: string;
     numberOfProjects: number;
     numberOfTasks: number;
+    isSubscribed: boolean;
   };
 }
 export interface IProfilePhoto {
@@ -109,6 +111,7 @@ const InitialState = {
     fetchingUser: true,
   },
   error: '',
+  userCompanyLoading: false,
 };
 
 export const UserReducer = (state = InitialState, action: any) => {
@@ -150,9 +153,15 @@ export const UserReducer = (state = InitialState, action: any) => {
           skillArea: [...action.payload],
         },
       };
+    case USER_COMPANIES:
+      return {
+        ...state,
+        userCompanyLoading: true,
+      };
     case USER_COMPANIES_UPDATE:
       return {
         ...state,
+        userCompanyLoading: false,
         user: {
           ...state.user,
           companies: action.payload.companies,

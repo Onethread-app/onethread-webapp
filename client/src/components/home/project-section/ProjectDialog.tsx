@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
+// import Creatable from 'react-select/creatable';
 import Creatable from 'react-select/creatable';
+import { currencies } from 'currencies.json';
+import Select from 'react-select';
+
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 import {
   KeyboardDateTimePicker,
@@ -42,6 +46,8 @@ import {
   successToaster,
   errorToaster,
 } from 'components/toast/Toaster';
+import { SmallTextAvatar } from 'components/avatar/TextAvatar';
+import { IProjectFormState } from 'stores/projectForm/Reducer';
 
 interface INewCompanyResponse {
   message: string;
@@ -57,6 +63,11 @@ interface INewCompanyResponse {
     role: string;
   };
 }
+
+// interface ICompanyOptions {
+//   value: string;
+//   label: string;
+// }
 
 interface IProps {
   setOpenProjectDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -89,16 +100,22 @@ const Index = (props: IProps) => {
   const [companyLoading, setCompanyLoading] =
     useState<boolean>(false);
   const [options, setOptions] = useState<
-    { value: string; label: string }[]
+    { value: string; label: string; isSubscribed: boolean }[]
   >([]);
-  const [data, setData] = useState({});
+  const [data, setData] = useState<IProjectFormState>({
+    ...props.previousData,
+  });
   const [company, setCompany] = useState<string>('');
   const [assignedCompanyError, setAssignedCompanyError] =
     useState<boolean>(false);
+  const [selectCurrency, setSelectCurrency] = useState<
+    { name: string; symbol: string }[]
+  >([]);
+  const [successMessage, setSuccessMessage] = useState<string>('');
   const [creatingProject, setCreatingProject] =
     useState<boolean>(false);
-  // const [projects,setProjects] = useState<IProject[]>([]);
-  const [successMessage, setSuccessMessage] = useState<string>('');
+
+  const { previousData } = props;
 
   const { t } = useTranslation();
 
@@ -107,18 +124,29 @@ const Index = (props: IProps) => {
       setLoading(true);
       props.createProjectInCompany({
         name: values.name,
-        deadline: values.date,
         companyId: company,
         color: checkColor,
         budget: values.budget ? Number(values.budget) : 0,
+        currency: selectCurrency[0]?.symbol,
+        deadline: values.date || undefined,
       });
       setSuccessMessage(
-        `The project ${values.name} has been created in ${selectValue[0].label}`,
+        `The project ${values.name} has been created in ${selectValue[0]?.label}`,
       );
       setCreatingProject(true);
     } else {
       setAssignedCompanyError(true);
     }
+  };
+
+  const handleCurrencyChange = async (selected: any) => {
+    setSelectCurrency([
+      {
+        name: selected.name,
+        symbol: selected.symbol,
+      },
+    ]);
+    setData({ ...data, currency: { ...selected } });
   };
 
   const handleCompanyChange = async (selected: any) => {
@@ -132,7 +160,6 @@ const Index = (props: IProps) => {
             { name: selected.value },
             headers,
           );
-          props.createCompanyActionSuccess(response.data);
           setCompany(response.data.company._id);
           setSelectValue([
             {
@@ -145,17 +172,22 @@ const Index = (props: IProps) => {
             {
               value: response.data.company._id,
               label: response.data.company.name,
+              isSubscribed: true,
             },
           ]);
+          setData({
+            ...data,
+            company: {
+              value: response.data.company._id,
+              label: response.data.company.name,
+              isSubscribed: true,
+            },
+          });
           props.getAllCompaniesByUserId(props.user?._id);
-          setSuccessMessage(
-            `The company ${response.data.company.name} has been created`,
-          );
           successToaster(
             `The company ${response.data.company.name} has been created`,
           );
         } catch (err) {
-          props.createCompanyActionFailure(returnErrorText(err));
           errorToaster(returnErrorText(err));
         }
         setCompanyLoading(false);
@@ -164,8 +196,7 @@ const Index = (props: IProps) => {
       setCompany(selected.value);
       setData({
         ...data,
-        value: selected.value,
-        label: selected.label,
+        company: { ...selected },
       });
       setSelectValue([
         {
@@ -177,54 +208,67 @@ const Index = (props: IProps) => {
   };
 
   useEffect(() => {
+    setData({ ...previousData });
+    setSelectValue([{ ...previousData?.company }]);
+    setCompany(previousData?.company?.value);
+    setSelectCurrency([
+      { ...(previousData?.currency || currencies[0]) },
+    ]);
+    setCheckColor(previousData?.label || 0);
+  }, []);
+
+  useEffect(() => {
+    props.saveProjectForm(data);
+  }, [data]);
+
+  useEffect(() => {
     if (props.companies.length > 0) {
       const gettingOptionsFromCompanies = props.companies.map(
         (c: ICompanyByUser) => ({
           value: c.company._id,
           label: c.company.name,
+          uniqueName: c.company.uniqueName,
+          isSubscribed: c.company.isSubscribed,
         }),
       );
       setOptions(gettingOptionsFromCompanies);
     }
   }, [props.companies]);
+
   useEffect(() => {
     setDefaultValues(props.previousData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (creatingProject) {
-      if (
-        props.projectLoading === false &&
-        props.errorOnCreatingProject === ''
-      ) {
-        setLoading(false);
-        props.setOpenProjectDialog(false);
-        successToaster(successMessage);
-        setCreatingProject(false);
-      }
-      if (
-        props.projectLoading === false &&
-        props.errorOnCreatingProject !== ''
-      ) {
-        setLoading(false);
-        setSuccessMessage('');
-        errorToaster(props.errorOnCreatingProject);
-        setCreatingProject(false);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    props.errorOnCreatingProject,
-    props.projectLoading,
-    creatingProject,
-  ]);
-
-  useEffect(() => {
     if (company) {
       setAssignedCompanyError(false);
     }
   }, [company]);
+
+  useEffect(() => {
+    if (creatingProject) {
+      if (
+        props.errorOnCreatingProject === '' &&
+        props.projectLoading === false
+      ) {
+        props.saveProjectForm({});
+        props.setOpenProjectDialog(false);
+        setLoading(false);
+        successToaster(successMessage);
+        setCreatingProject(false);
+      }
+      if (
+        props.errorOnCreatingProject !== '' &&
+        props.projectLoading === false
+      ) {
+        setLoading(false);
+        errorToaster(returnErrorText(props.errorOnCreatingProject));
+        setCreatingProject(false);
+        setSuccessMessage('');
+      }
+    }
+  }, [props.errorOnCreatingProject, props.projectLoading]);
 
   return (
     <ModalContainer>
@@ -247,14 +291,18 @@ const Index = (props: IProps) => {
           <form onSubmit={handleSubmit}>
             <label>PROJECT</label>
             <Field<string>
+              defaultValue={data?.name}
               name="name"
               type="text"
               validate={composeValidators(required)}
-              placeholder="Project name"
               render={({ input, meta }) => (
                 <TextInput
                   {...input}
-                  placeholder="Project name"
+                  onChange={(e: { target: { value: string } }) => {
+                    input.onChange(e.target.value);
+                    setData({ ...data, name: e.target.value });
+                  }}
+                  placeholder="Project name (required)"
                   hasError={
                     checkError(meta) &&
                     (meta.error || meta.submitError)
@@ -262,16 +310,35 @@ const Index = (props: IProps) => {
                 />
               )}
             />
-            <div className="w-100 flex flex-row justify-start items-center mt3 mr-auto">
+            <div className="w-100 flex flex-row justify-start items-center mt2 mr-auto">
               <label className="label">Company:</label>
               <Creatable
+                defaultValue={data?.company}
                 value={defaultValues.value && selectValue}
                 id="company"
                 isLoading={companyLoading}
                 options={options}
                 onChange={handleCompanyChange}
-                formatCreateLabel={(userInput) => `New: ${userInput}`}
-                className="react-select w-100"
+                className="react-select w-60"
+                isOptionDisabled={(option) =>
+                  option.isSubscribed === false
+                }
+                formatCreateLabel={(inputValue: string) => (
+                  <div className="w-100 font-bold flex">
+                    <div className="h-100 mr2">New</div> {inputValue}
+                  </div>
+                )}
+                createOptionPosition="first"
+                formatOptionLabel={(data) => (
+                  <div className="flex items-center">
+                    {typeof data.label === 'string' ? (
+                      <SmallTextAvatar
+                        name={data.label.slice(0, 1)}
+                      />
+                    ) : null}
+                    <span className="ml2">{data.label}</span>
+                  </div>
+                )}
               />
             </div>
             {assignedCompanyError && (
@@ -284,7 +351,7 @@ const Index = (props: IProps) => {
                 Required
               </small>
             )}
-            <div className="w-100 flex flex-row justify-start items-center mt3 h3 mr-auto">
+            <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
               <label className="label">Due date:</label>
               <Field<string>
                 name="date"
@@ -295,14 +362,21 @@ const Index = (props: IProps) => {
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDateTimePicker
                         disablePast
+                        defaultValue={data?.deadline}
                         inputVariant="outlined"
                         id="date-picker-dialog"
                         format="MM/dd/yyyy"
                         value={
                           input.value ? new Date(input.value) : null
                         }
-                        onChange={input.onChange}
-                        className="due-date-input due-date-subtask w-100"
+                        onChange={(date) => {
+                          input.onChange(date);
+                          setData({
+                            ...data,
+                            deadline: date,
+                          });
+                        }}
+                        className="due-date-input due-date-subtask w-60"
                         KeyboardButtonProps={{
                           'aria-label': 'change date',
                         }}
@@ -325,43 +399,73 @@ const Index = (props: IProps) => {
                 )}
               />
             </div>
-            <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
-              <label className="label">Budget:</label>
-              <Field<string>
-                name="budget"
-                type="string"
-                parse={(value: string) =>
-                  value.replaceAll(/[^0-9]/g, '')
-                }
-                render={({ input, meta }) => (
-                  <>
-                    <input
-                      {...input}
-                      value={input.value ?? ''}
-                      style={{
-                        width: '100%',
-                        boxShadow:
-                          'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
-                        border: 'none',
-                        padding: '0.5rem',
-                        borderRadius: '0.2rem',
-                      }}
-                      placeholder="Enter your budget for this project"
+            <div className="w-100 flex flex-row justify-start items-center mr-auto">
+              <div className="flex mr3 w-70 items-center">
+                <label className="label">Budget:</label>
+                <Field<string>
+                  defaultValue={data?.budget}
+                  name="budget"
+                  type="string"
+                  parse={(value: string) =>
+                    value.replaceAll(/[^0-9]/g, '')
+                  }
+                  render={({ input, meta }) => (
+                    <>
+                      <input
+                        {...input}
+                        onChange={(e) => {
+                          input.onChange(e.target.value);
+                          setData({
+                            ...data,
+                            budget: e.target.value,
+                          });
+                        }}
+                        value={input.value ?? ''}
+                        style={{
+                          width: '100%',
+                          boxShadow:
+                            'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
+                          border: 'none',
+                          padding: '0.5rem',
+                          borderRadius: '0.2rem',
+                          height: 'auto',
+                        }}
+                        placeholder="Enter your budget for this project"
+                      />
+                    </>
+                  )}
+                />
+              </div>
+              <div className="flex w-30">
+                {/* <label className=""></label> */}
+                <Field<string>
+                  name="currency"
+                  type="string"
+                  render={({ input, meta }) => (
+                    <Select
+                      value={selectCurrency}
+                      id="currency"
+                      options={currencies}
+                      onChange={handleCurrencyChange}
+                      className="react-select w-100"
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.symbol}
                     />
-                  </>
-                )}
-              />
+                  )}
+                />
+              </div>
             </div>
-            <div className="w-100 flex flex-row justify-start items-center mt2">
+            <div className="w-100 flex flex-row justify-start mt3 items-center">
               <label className="label">Label:</label>
-              <div className="w-100 flex flex-row justify-start items-center mt3">
+              <div className="w-100 flex flex-row justify-start items-center">
                 {Color.map((color) => (
                   <label
                     onClick={() => {
                       setCheckColor(color.code);
+                      setData({ ...data, label: color?.code });
                     }}
                     key={color.code}
-                    className="mr3 pointer"
+                    className="mr4 pointer flex items-center"
                   >
                     <Icon
                       color={color.value}
@@ -378,8 +482,9 @@ const Index = (props: IProps) => {
                     <Field
                       name="label"
                       type="radio"
+                      defaultValue={data?.label}
                       component={StyledRadioInput}
-                      value={color.value}
+                      value={color.code}
                       key={color.code}
                     />
                   </label>
@@ -387,7 +492,10 @@ const Index = (props: IProps) => {
               </div>
             </div>
             <div className="flex flex-row w-100 justify-between items-center mt3">
-              <StyledButton type="submit">
+              <StyledButton
+                type="submit"
+                disabled={company ? false : true}
+              >
                 {loading ? (
                   <>
                     Creating Project

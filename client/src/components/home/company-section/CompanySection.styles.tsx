@@ -60,10 +60,8 @@ const Footer = styled.div`
 const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: min(50vw, 720px);
   width: auto;
-  max-width: 95vw;
-  max-height: 95vh;
+  min-width: min(300px, 90vw);
   background: #ffffff;
   padding: 30px 50px 50px 50px;
   border-radius: 4px;
@@ -217,48 +215,23 @@ const StyledButton = styled.button`
   }
 `;
 
-// const Column = styled.div`
-//   display: flex;
-//   flex-direction: column !important;
-//   width: max-content;
-//   justify-content: flex-start;
-//   align-items: center;
-
-//   div {
-//     display: flex;
-//     flex-direction: column !important;
-//   }
-// `;
-
-// const Icon = styled.span`
-//   padding: 12px;
-//   background-color: ${({ color }) => color};
-//   border-radius: 100%;
-//   width: 24px;
-//   height: 24px;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   outline: 4px solid
-//     ${({ checked }) => (checked ? '#e1e1e1' : 'transparent')};
-
-//   span {
-//     display: ${({ checked }) => (checked ? 'block' : 'none')};
-//   }
-// `;
-
 const TextInput = styled(StyledTextInput)`
   height: 36px;
-  border-radius: 0.5rem;
+  border-radius: 4px;
   width: 100%;
   border: ${({ hasError }) =>
     hasError ? '1px solid red !important' : 'none'};
   vertical-align: middle;
-  font-size: 24px;
   font-weight: bold;
   margin-top: 4px;
   text-indent: 0px;
   background-color: #fff;
+  width: 100%;
+  box-shadow: rgb(0 0 0 / 2%) 0px 1px 3px 0px,
+    rgb(27 31 35 / 15%) 0px 0px 0px 1px;
+  padding: 0.5 rem;
+  color: #000 !important;
+  text-indent: 5px;
 
   & + span {
     color: ${({ hasError }) =>
@@ -266,7 +239,10 @@ const TextInput = styled(StyledTextInput)`
   }
 
   &:focus {
-    outline: none;
+    outline: ${({ hasError }) =>
+      hasError
+        ? '1px transparent !important'
+        : '1px #08a0f7 !important'};
     font-weight: bolder;
   }
 `;
@@ -282,6 +258,7 @@ const SimpleButton = styled.button`
   line-height: 18px;
   padding: 7px 14px;
   cursor: pointer;
+  background-color: #fff;
 `;
 
 const Container = styled.div``;

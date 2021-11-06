@@ -2,6 +2,7 @@ import { all, put, call, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
 import {
+  formTokenConfig,
   tokenConfig,
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
@@ -233,8 +234,12 @@ export function* updateColumn({ payload }: any) {
 
 export function* createTask({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const projectId = yield select(getProjectId);
+    const headers = payload.companyId
+      ? formTokenConfig(payload.companyId)
+      : tokenConfig();
+    const projectId = payload.projectId
+      ? payload.projectId
+      : yield select(getProjectId);
     const { columnId } = payload;
     const col = yield select(selectColumnName(columnId));
     const newPayload = {
