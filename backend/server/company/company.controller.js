@@ -44,6 +44,7 @@ const {
   numOfProjectInACompany,
   allProjectIdOfCompany,
   numbOfTasksOfACompany,
+  checkCompanySubscription,
 } = require('../services/company/company.services');
 
 const {
@@ -220,17 +221,22 @@ const getCompanyIndividual = async (req, res, next) => {
       .populate(options);
 
     let container = [];
-    for (let company of companies) {
-      let comDetails = company.toJSON();
-      if (comDetails.company) {
-        comDetails.company.numberOfProjects =
-          await numOfProjectInACompany(company.company._id);
+    await Promise.all(
+      companies.map(async (company) => {
+        let comDetails = company.toJSON();
+        if (comDetails.company) {
+          comDetails.company.numberOfProjects =
+            await numOfProjectInACompany(company.company._id);
 
-        comDetails.company.numberOfTasks =
-          await numbOfTasksOfACompany(company.company._id);
-      }
-      container.push(comDetails);
-    }
+          comDetails.company.numberOfTasks =
+            await numbOfTasksOfACompany(company.company._id);
+
+          comDetails.company.isSubscribed =
+            await checkCompanySubscription(company.company._id);
+        }
+        container.push(comDetails);
+      }),
+    );
 
     return sendJSONresponse(res, 200, { companies: container });
   } catch (error) {
