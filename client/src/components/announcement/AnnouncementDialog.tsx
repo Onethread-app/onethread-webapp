@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 import Select from 'react-select';
-// import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -16,7 +15,6 @@ import { ICompanyByUser, User } from 'stores/user/Reducer';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import {
   addAnnouncement,
-  getCompanyAnnouncement,
   getCompanyDetails,
 } from 'stores/company/Actions';
 import {
@@ -29,7 +27,7 @@ import {
   errorToaster,
 } from 'components/toast/Toaster';
 import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
+import { formTokenConfig } from 'stores/UtilsActions';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 interface IProps {
@@ -45,7 +43,6 @@ interface IProps {
   getCompanyDetails: (arg: string) => void;
   announcementLoading: boolean;
   announcementError: string;
-  getCompanyAnnouncement: () => void;
 }
 
 interface ICompanyOptionProps {
@@ -67,7 +64,7 @@ const Index = (props: IProps) => {
   const onSubmit = async (values: any) => {
     if (company) {
       setLoading(true);
-      const headers = tokenConfig();
+      const headers = formTokenConfig(company);
       try {
         await tigrowApi.post(
           `company/${company}/announcements`,
@@ -80,7 +77,6 @@ const Index = (props: IProps) => {
           uniqueName: selectValue[0].uniqueName,
         });
         props.setOpenAnnouncementDialog(false);
-        props.getCompanyAnnouncement();
       } catch (error) {
         setLoading(false);
         errorToaster(returnErrorText(error));
@@ -230,16 +226,7 @@ const Index = (props: IProps) => {
                     )}
                   />
                 </div>
-                <div className="flex flex-row w-100 justify-end items-center mt3">
-                  <SimpleButton
-                    type="button"
-                    className="mr3"
-                    onClick={() =>
-                      props.setOpenAnnouncementDialog(false)
-                    }
-                  >
-                    Cancel
-                  </SimpleButton>
+                <div className="flex flex-row w-100 justify-between items-center mt3">
                   <StyledButton type="submit">
                     {loading ? (
                       <>
@@ -250,6 +237,14 @@ const Index = (props: IProps) => {
                       'Create Announcement'
                     )}
                   </StyledButton>
+                  <SimpleButton
+                    type="button"
+                    onClick={() =>
+                      props.setOpenAnnouncementDialog(false)
+                    }
+                  >
+                    Cancel
+                  </SimpleButton>
                 </div>
               </form>
             )}
@@ -302,7 +297,6 @@ const mapStateToProps = (state: any) => ({
 export default connect(mapStateToProps, {
   getAllCompaniesByUserId,
   addAnnouncement,
-  getCompanyAnnouncement,
   //   addAnnouncementSuccess,
   //   addAnnouncementFailure,
   getCompanyDetails,

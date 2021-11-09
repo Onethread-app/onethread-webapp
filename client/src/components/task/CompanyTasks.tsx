@@ -37,6 +37,7 @@ import {
 } from 'components/table/StyledTable.styles';
 import { Dialog } from '@blueprintjs/core';
 import TaskDialog from 'components/home/task-section/TaskDialog';
+import { Link } from 'react-router-dom';
 
 interface ICompanyTasks {
   companyTaskList: ITask[];
@@ -280,9 +281,19 @@ const CompanyTasks = (props: ICompanyTasks) => {
           loadingData ? (
             <TaskTableSkeleton />
           ) : error ? (
-            <div>{error}</div>
+            <div className="mt3">{error}</div>
           ) : (
-            <div>No Tasks</div>
+            <div className="mt3">
+              No Tasks.{' '}
+              <Link
+                to="#"
+                onClick={() => {
+                  setOpenTaskDialog(true);
+                }}
+              >
+                Add New Task?
+              </Link>
+            </div>
           )
         ) : (
           <TasksTable

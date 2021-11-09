@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { ICompanyByUser, User } from 'stores/user/Reducer';
+import { ICompany } from 'stores/company/Reducer';
+import { clearCompanyState } from 'stores/company/Actions';
 
 import Plus from '../../../resources/images/plus.png';
 import Vector from '../../../resources/images/Vector.png';
@@ -25,7 +27,9 @@ import { CompanySignupForm } from './CompanyDialog';
 interface ICompanySectionInternalProps {
   user: User;
   companies: ICompanyByUser[];
+  currentCompany: ICompany;
   getAllCompaniesByUserId: (userId) => void;
+  clearCompanyState: () => void;
 }
 
 export const Color = [
@@ -60,10 +64,13 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
       props.getAllCompaniesByUserId(props.user._id);
       setLoading(true);
     }
-    if (props.companies.length > 0) {
+    if (props.companies.length > 0 && loading === true) {
       setLoading(false);
     }
-  }, [props.user, props.companies]);
+    if (props.currentCompany.name) {
+      props.clearCompanyState();
+    }
+  }, [props.user, props.companies, loading]);
 
   return (
     <div>
@@ -85,7 +92,7 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
         </Link>
         {loading ? (
           <>
-            {[0, 1, 2, 3, 4].map((x) => (
+            {[1, 2, 3, 4, 5].map((x) => (
               <CompanySkeletons id={x} key={x} />
             ))}
           </>
@@ -124,7 +131,11 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
       {showCompanyDialog ? (
         <Dialog
           isOpen={showCompanyDialog}
-          canOutsideClickClose={false}
+          canOutsideClickClose={true}
+          canEscapeKeyClose={true}
+          onClose={() => {
+            setShowCompanyDialog(false);
+          }}
           autoFocus
           style={{ borderRadius: '1rem' }}
           className="w-auto h-auto pb0"
@@ -139,8 +150,10 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
 const mapStateToProps = (state: any) => ({
   user: state.userReducer.user,
   companies: state.userReducer.user.companies,
+  currentCompany: state.companyReducer.currentCompany,
 });
 
 export default connect(mapStateToProps, {
   getAllCompaniesByUserId,
+  clearCompanyState,
 })(CompanySection);

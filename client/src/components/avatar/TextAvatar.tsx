@@ -1,6 +1,6 @@
 import Skeleton from '@material-ui/lab/Skeleton';
 
-import { NameAvatar } from './TextAvatar.styles';
+import { NameAvatar, SmallNameAvatar } from './TextAvatar.styles';
 
 interface ITextAvatarProps {
   name: string;
@@ -16,3 +16,11 @@ export const TextAvatarSkeleton = () => (
   <Skeleton width={40} height={40} />
 );
 export default TextAvatar;
+
+export const SmallTextAvatar = (
+  props: { bgColor?: string } & ITextAvatarProps,
+) => {
+  const { name, bgColor } = props;
+
+  return <SmallNameAvatar bgColor={bgColor}>{name}</SmallNameAvatar>;
+};

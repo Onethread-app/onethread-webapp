@@ -1,14 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import { Field, Form } from 'react-final-form';
 
 import { Spinner } from '@blueprintjs/core/lib/esm/components/spinner/spinner';
 
 import {
   createCompanyAction,
   clearErrorOnCompanyCreate,
+  clearCompanyState,
 } from 'stores/company/Actions';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
+import {
+  checkError,
+  composeValidators,
+  required,
+} from 'components/final-form/utils';
 
 import {
   ModalContainer,
@@ -16,12 +25,7 @@ import {
   TextInput,
   StyledButton,
 } from './CompanySection.styles';
-import { Field, Form } from 'react-final-form';
-import {
-  checkError,
-  composeValidators,
-  required,
-} from 'components/final-form/utils';
+
 import {
   errorToaster,
   successToaster,
@@ -32,50 +36,50 @@ const CompanySignupFormComponent = (
     setShowDialog: (val: boolean) => void;
     createCompanyAction: (val: any) => void;
     clearErrorOnCompanyCreate: () => void;
+    clearCompanyState: () => void;
+    companyCreated: boolean;
     companyName: string;
     creatingCompany: boolean;
     errorOnCreatingCompany: string;
+    getAllCompaniesByUserId: (userId: string) => void;
+    userId: string;
   } & RouteComponentProps,
 ) => {
   const { t } = useTranslation();
-  const [currentCompanyName, setCurrentCompanyName] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
 
   const handleCreateCompany = async (values) => {
     setLoading(true);
-    props.createCompanyAction(values);
     setSuccessMessage(`The company ${values.name} has been created`);
+    props.createCompanyAction(values);
   };
 
   useEffect(() => {
-    setCurrentCompanyName(props.companyName);
-    return () => {
-      props.clearErrorOnCompanyCreate();
-    };
-  }, []);
-
-  useEffect(() => {
     if (
-      loading &&
-      props.creatingCompany === false &&
       props.errorOnCreatingCompany === '' &&
-      props.companyName !== currentCompanyName
+      props.creatingCompany === false &&
+      props.companyCreated === true
     ) {
-      successToaster(successMessage);
       setLoading(false);
       props.setShowDialog(false);
-      //   props.history.push(`/company/${props.companyName}/dashboard`);
+      successToaster(successMessage);
+      props.clearCompanyState();
     }
-  }, [props.creatingCompany]);
-
-  useEffect(() => {
-    if (props.errorOnCreatingCompany) {
+    if (
+      props.creatingCompany === false &&
+      props.companyCreated === false &&
+      props.errorOnCreatingCompany !== ''
+    ) {
       setLoading(false);
-      setSuccessMessage('');
-      errorToaster(props.errorOnCreatingCompany);
+      errorToaster(returnErrorText(props.errorOnCreatingCompany));
+      props.clearErrorOnCompanyCreate();
     }
-  }, [props.errorOnCreatingCompany]);
+  }, [
+    props.errorOnCreatingCompany,
+    props.creatingCompany,
+    props.companyCreated,
+  ]);
 
   return (
     <ModalContainer>
@@ -129,17 +133,9 @@ const CompanySignupFormComponent = (
               render={({ input, meta }) => (
                 <div className="flex justify-start items-center mt3 mb3">
                   <label className="">Email Address</label>
-                  <input
+                  <TextInput
                     {...input}
                     value={input.value ?? ''}
-                    style={{
-                      width: '100%',
-                      boxShadow:
-                        'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
-                      border: 'none',
-                      padding: '0.5rem',
-                      borderRadius: '0.2rem',
-                    }}
                     placeholder="Company email address"
                   />
                 </div>
@@ -151,32 +147,43 @@ const CompanySignupFormComponent = (
               render={({ input, meta }) => (
                 <div className="flex justify-start items-center mb3">
                   <label className="">Address</label>
-                  <input
+                  <TextInput
                     {...input}
                     value={input.value ?? ''}
-                    style={{
-                      width: '100%',
-                      boxShadow:
-                        'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
-                      border: 'none',
-                      padding: '0.5rem',
-                      borderRadius: '0.2rem',
-                    }}
                     placeholder="Company address"
                   />
                 </div>
               )}
             />
 
-            <div className="flex justify-end">
+            <div className="flex justify-between">
+              <StyledButton
+                type="submit"
+                className="h2 pointer"
+                // style={{
+                //   background: '#34b3e9',
+                //   outline: 'none',
+                //   color: 'white',
+                // }}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    Creating Company{' '}
+                    <Spinner className="ml2" size={15} />
+                  </>
+                ) : (
+                  'Create Company'
+                )}
+              </StyledButton>
               <SimpleButton
-                className="w4 grow h2 pointer mr3"
-                style={{
-                  background: '#fff',
-                  outline: 'none',
-                  border: '1px solid #34b3e9',
-                  color: '#34b3e9',
-                }}
+                className="h2 pointer"
+                // style={{
+                //   background: '#fff',
+                //   outline: 'none',
+                //   border: '1px solid #34b3e9',
+                //   color: '#34b3e9',
+                // }}
                 onClick={(e: any) => {
                   e.preventDefault();
                   props.setShowDialog(false);
@@ -185,24 +192,6 @@ const CompanySignupFormComponent = (
               >
                 Cancel
               </SimpleButton>
-              <StyledButton
-                type="submit"
-                className="grow h2 pointer"
-                style={{
-                  background: '#34b3e9',
-                  outline: 'none',
-                  color: 'white',
-                }}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    Creating Company <Spinner size={15} />
-                  </>
-                ) : (
-                  'Create Company'
-                )}
-              </StyledButton>
             </div>
           </form>
         )}
@@ -215,12 +204,16 @@ const mapStateToProps = (state: any) => {
   return {
     companyName: state.companyReducer.currentCompany.uniqueName,
     creatingCompany: state.companyReducer.creatingCompany,
+    companyCreated: state.companyReducer.companyCreated,
     errorOnCreatingCompany:
       state.companyReducer.errorOnCreatingCompany,
+    userId: state.userReducer.user._id,
   };
 };
 
 export const CompanySignupForm = connect(mapStateToProps, {
   createCompanyAction,
+  getAllCompaniesByUserId,
   clearErrorOnCompanyCreate,
+  clearCompanyState,
 })(withRouter(CompanySignupFormComponent));

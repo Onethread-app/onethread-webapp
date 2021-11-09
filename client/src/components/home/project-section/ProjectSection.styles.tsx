@@ -16,6 +16,7 @@ const StyledButton = styled.button`
   border-radius: 4px;
   color: #fff;
   border: none;
+  cursor: pointer;
 
   &:disabled {
     background: rgba(8, 160, 247, 0.6);
@@ -63,7 +64,9 @@ const TextInput = styled(StyledTextInput)`
   border-radius: 0.5rem;
   width: 100%;
   border: ${({ hasError }) =>
-    hasError ? '1px solid red !important' : 'none'};
+    hasError
+      ? '1px solid red !important'
+      : '1px solid transparent !important'};
   vertical-align: middle;
   font-size: 24px;
   font-weight: bold;
@@ -211,11 +214,11 @@ const ModalContainer = styled.div`
   padding: 50px 55px 50px 40px;
   border-radius: 4px;
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.2);
-  min-width: min(800px, 100vw);
-  min-height: min-content(480px, 80vh);
+  min-width: min(300px, 90vw);
+  min-height: min(280px, 80vh);
 
   .label {
-    min-width: 100px;
+    min-width: 120px;
   }
 
   .react-select {
@@ -235,6 +238,7 @@ const SimpleButton = styled.button`
   line-height: 18px;
   padding: 7px 14px;
   cursor: pointer;
+  background-color: #ffffff;
 `;
 
 const Container = styled.div``;
