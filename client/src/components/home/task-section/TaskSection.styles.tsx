@@ -60,7 +60,7 @@ const TextInput = styled(StyledTextInput)`
   max-width: 350px;
   border: ${({ hasError }) => (hasError ? '1px solid red' : 'none')};
   vertical-align: middle;
-  font-size: 24px;
+  /* font-size: 24px; */
   font-weight: bold;
   margin-top: 4px;
   text-indent: 0px;
@@ -69,45 +69,6 @@ const TextInput = styled(StyledTextInput)`
   &:focus {
     outline: none;
     font-weight: bolder;
-  }
-`;
-
-const Row = styled.div`
-  display: flex;
-  justify-content: ${({ justify }) => justify ?? 'center'};
-  align-items: center;
-  width: 100%;
-  padding: 1rem 0;
-  column-gap: 4px;
-
-  & > label {
-    width: 20%;
-  }
-
-  input[type='date'],
-  select {
-    min-width: 167px;
-    height: 30px;
-    border: 1px solid #b1b1b1;
-    box-sizing: border-box;
-    border-radius: 4px;
-  }
-
-  textarea {
-    padding: 0.5rem;
-    width: 70%;
-    max-width: 526px;
-    height: 138px;
-    background: #ffffff;
-    border: 1px solid #e2e2e2;
-    box-sizing: border-box;
-    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-  }
-
-  div {
-    display: flex;
-    column-gap: 0.5rem;
   }
 `;
 
@@ -122,7 +83,6 @@ const SimpleButton = styled.button`
   line-height: 18px;
   padding: 7px 14px;
   cursor: pointer;
-  margin-right: 13px;
   background-color: transparent;
 `;
 
@@ -152,14 +112,6 @@ const ModalContainer = styled.div`
   border-radius: 4px;
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.2);
 
-  textarea {
-    background: #ffffff;
-    border: 1px solid #e2e2e2;
-    box-sizing: border-box;
-    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-  }
-
   a,
   button {
     cursor: pointer;
@@ -171,17 +123,40 @@ const ModalContainer = styled.div`
 
   .react-select {
     min-width: 200px;
+    max-width: 100%;
+    word-wrap: break-word;
+    border: 1px solid #b1b1b1;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-size: 14px;
   }
 `;
 
 const Container = styled.div`
   padding: 0.5rem 0;
   overflow: auto;
+
+  textarea {
+    background: #ffffff;
+    box-sizing: border-box;
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    height: 138px;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #b1b1b1;
+  }
+
+  .due-date-input {
+    border: 1px solid #b1b1b1;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-size: 14px;
+  }
 `;
 
 export {
   Header,
-  Row,
   TextInput,
   SimpleButton,
   ModalContainer,

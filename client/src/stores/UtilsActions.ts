@@ -42,6 +42,35 @@ export const tokenConfig = () => {
   };
 };
 
+export const formTokenConfig = (companyId: string) => {
+  const token =
+    typeof window !== undefined &&
+    localStorage.getItem('ot_access_id')
+      ? JSON.parse(localStorage.getItem('ot_access_id')!)
+      : null;
+  if (
+    !localStorage.getItem('ot_access_id') ||
+    !localStorage.getItem('ot_refresh_id')
+  ) {
+    localStorage.removeItem('ot_access_id');
+    localStorage.removeItem('ot_refresh_id');
+    toaster.show({
+      message: 'Token is invalid. Please sign in.',
+      intent: 'danger',
+    });
+    History.push('/signin');
+    window.location.reload();
+  }
+  return {
+    headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      ClientId: store.getState().notificationReducer.socketId,
+      CompanyId: companyId,
+    },
+  };
+};
+
 export const adminTokenConfig = () => {
   return {
     headers: {

@@ -8,6 +8,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { upperFirst } from 'lodash';
 
 import chatIcon from '../../resources/images/chatIcon.svg';
+// import AddIcon from '@material-ui/icons/Add';
 import notificationIcon from '../../resources/images/notification.svg';
 import NotificationPopover from 'components/notification/NotificationPopover';
 import { Avatar, Container } from './Navbar.styles';
@@ -38,6 +39,7 @@ import TaskDialog from 'components/home/task-section/TaskDialog';
 import AnnouncementDialog from 'components/announcement/AnnouncementDialog';
 interface Props extends RouteComponentProps {
   user: User;
+  userCompanyLoading: boolean;
   uniqueCompanyName: string;
   companyId: string;
   read: number;
@@ -109,18 +111,20 @@ const UpdatedNavbar = (props: Props) => {
         />
       </form>
       <div className="nav-buttons-container">
-        <Popover
-          popoverClassName="bg-white popover"
-          position={Position.BOTTOM_LEFT}
-          content={
-            <CreateOptionList listProps={createOptionsListProps} />
-          }
-          target={
-            <div className="mr2 pointer">
-              <Button className="create-button">Create +</Button>
-            </div>
-          }
-        />
+        {props.userCompanyLoading === false ? (
+          <Popover
+            popoverClassName="bg-white popover"
+            position={Position.BOTTOM_LEFT}
+            content={
+              <CreateOptionList listProps={createOptionsListProps} />
+            }
+            target={
+              <div className="mr2 pointer">
+                <Button className="create-button">Create +</Button>
+              </div>
+            }
+          />
+        ) : null}
         <Popover
           popoverClassName="bg-white"
           position={Position.BOTTOM}
@@ -316,6 +320,7 @@ const UpdatedNavbar = (props: Props) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
+    userCompanyLoading: state.userReducer.userCompanyLoading,
     uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
     companyId: state.companyReducer.currentCompany._id,
     seen: state.notificationReducer.seen,

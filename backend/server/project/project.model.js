@@ -30,7 +30,7 @@ const projectSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['not-started', 'ongoing', 'completed'],
+      enum: ['not-started', 'ongoing', 'completed', 'archived'],
       default: 'not-started',
     },
     concernedAdmin: {
@@ -92,6 +92,9 @@ const projectSchema = new Schema(
     },
     budget: {
       type: Number,
+    },
+    currency: {
+      type: String,
     },
     version: {
       type: Number,
