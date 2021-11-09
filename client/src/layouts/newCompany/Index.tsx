@@ -79,7 +79,7 @@ const Index = (props: ICompanyDashboardProps) => {
     if (tab === 'announcement') {
       setValue(4);
     }
-  }, []);
+  }, [location.state]);
 
   return (
     <Container>

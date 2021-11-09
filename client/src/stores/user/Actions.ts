@@ -21,6 +21,7 @@ import {
   REFRESH_USER_TOKEN_SUCCESS,
   REFRESH_USER_TOKEN_FAILURE,
   CLEAR_USER_REDUCER_STATE,
+  USER_COMPANIES,
 } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
@@ -150,6 +151,7 @@ export const getAllCompaniesByUserId =
   (userId: string, type?: string) =>
   async (dispatch: any, getState: any) => {
     try {
+      dispatch({ type: USER_COMPANIES });
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.get(

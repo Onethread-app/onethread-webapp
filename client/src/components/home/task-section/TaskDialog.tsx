@@ -3,7 +3,6 @@ import Creatable from 'react-select/creatable';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import { Field, Form } from 'react-final-form';
-import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 import {
   KeyboardDateTimePicker,
@@ -20,7 +19,7 @@ import {
   getSelectedBoard,
 } from 'stores/task/Actions';
 import { saveTaskForm } from 'stores/taskForm/Actions';
-import { tokenConfig, priorityColor } from 'stores/UtilsActions';
+import { priorityColor, formTokenConfig } from 'stores/UtilsActions';
 
 import {
   checkError,
@@ -36,19 +35,22 @@ import {
 } from 'stores/company/Actions';
 import {
   createProjectSuccess,
-  getAllProjects,
+  // getAllProjects,
   getSingleProject,
 } from 'stores/project/Actions';
 import {
   StyledButton,
   Container,
   ModalContainer,
+  SimpleButton,
 } from './TaskSection.styles';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 import {
   errorToaster,
   successToaster,
 } from 'components/toast/Toaster';
+import { IProject } from 'stores/project/Reducer';
+import { SmallTextAvatar } from 'components/avatar/TextAvatar';
 
 interface ICreateTaskDialogProps {
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -69,11 +71,12 @@ interface ICreateTaskDialogInternalProps
   companies: any;
   getCompanyDetails: (arg0: string) => void;
   createProjectSuccess: () => void;
-  getAllProjects: () => void;
+  // getAllProjects: () => void;
   getAllBoards: (arg: string) => void;
   getSelectedBoard: (arg: string) => void;
   getSingleProject: (arg: string) => void;
   getAllUserTasks: () => void;
+  userProjects: IProject[];
 }
 
 export interface IOption {
@@ -99,7 +102,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   const [creatingTask, setCreatingTask] = useState(false);
   const [company, setCompany] = useState<any>({});
   const [assignedUserError, setAssignedUserError] = useState(false);
-  const [assignedPeojectError, setAssignedPeojectError] =
+  const [assignedProjectError, setAssignedProjectError] =
     useState(false);
   const [assignedCompanyError, setAssignedCompanyError] =
     useState(false);
@@ -121,7 +124,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
       setAssignedCompanyError(true);
     }
     if (!project[0].value) {
-      setAssignedPeojectError(true);
+      setAssignedProjectError(true);
     }
     if (selectedTeamMember.length) {
       const modifiedTask = {
@@ -131,8 +134,8 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
         boardId: props.currentBoard._id,
         projectId: project[0]?.value,
         columnId,
+        companyId: company[0]?.value,
       };
-      // console.log('task', modifiedTask);
       props.createTask(modifiedTask);
       setCreatingTask(true);
       props.saveTaskForm({});
@@ -148,7 +151,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
     if (selected.__isNew__) {
       setProjectLoading(true);
       try {
-        const headers = tokenConfig();
+        const headers = formTokenConfig(company[0].value);
         if ((headers as any).headers.Authorization) {
           const reqBody = {
             name: selected.value,
@@ -173,13 +176,10 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
             },
           ]);
           props.createProjectSuccess();
-          setSuccessMessage(
-            `The project ${response.data.project.name} has been created`,
-          );
           successToaster(
             `The project ${response.data.project.name} has been created`,
           );
-          props.getAllProjects();
+          // props.getAllProjects();
           props.getSingleProject(response.data.project._id);
           props.getAllBoards(response.data.project._id);
         }
@@ -199,12 +199,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
       props.getSingleProject(selected.value);
       props.getAllBoards(selected.value);
       setProjectLoading(false);
-      console.log({
-        'Id from select': selected.value,
-        'id from variable': project,
-        'id from c.board': props.currentBoard?.project,
-        'column id': columnId,
-      });
     }
   };
 
@@ -254,12 +248,21 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           value: selected.value,
           label: selected.label,
           uniqueName: selected.uniqueName,
+          isSubscribed: selected.isSubscribed,
         },
       ]);
-      props.getCompanyDetails(selected.uniqueName);
-      props.getAllProjects();
+      setProject([{}]);
+      const optionsProject = props.userProjects
+        .filter(
+          (project: IProject) =>
+            project.company._id === selected.value,
+        )
+        .map((project: IProject) => ({
+          value: project._id,
+          label: project.name,
+        }));
+      setProjectOptions(optionsProject);
     }
-    // setErrorMessage('');
   };
 
   useEffect(() => {
@@ -268,6 +271,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
         value: company.company._id,
         label: company.company.name,
         uniqueName: company.company.uniqueName,
+        isSubscribed: company.company.isSubscribed,
       };
     });
     setCompanyOptions(optionsCompany);
@@ -293,17 +297,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   }, [project, props.currentBoard, props.fetchingBoards]);
 
   useEffect(() => {
-    const optionsCompany = props.companies.map((company) => {
-      return {
-        value: company.company._id,
-        label: company.company.name,
-        uniqueName: company.company.uniqueName,
-      };
-    });
-    setCompanyOptions(optionsCompany);
-  }, [props.companies]);
-
-  useEffect(() => {
     if (
       props.currentBoard.name !== '' &&
       props.fetchingBoards === false
@@ -317,7 +310,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
 
   useEffect(() => {
     const loadTeamMembers = async () => {
-      const headers = tokenConfig();
+      const headers = formTokenConfig(company[0].value);
       const response = await tigrowApi.get(
         `/tasks/suggest-member?pid=${project[0].value}`,
         headers,
@@ -329,16 +322,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project[0]?.value]);
-
-  useEffect(() => {
-    const optionsProject = props.projects.map(
-      (project: { _id: string; name: string }) => ({
-        value: project._id,
-        label: project.name,
-      }),
-    );
-    setProjectOptions(optionsProject);
-  }, [props.projects]);
 
   useEffect(() => {
     if (selectedTeamMember.length) {
@@ -396,7 +379,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   return (
     <ModalContainer>
       <Container>
-        <div className="flex justify-end">
+        {/* <div className="flex justify-end">
           <Button
             style={{
               background: 'transparent',
@@ -409,7 +392,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
               props.setShowDialog(false);
             }}
           />
-        </div>
+        </div> */}
         {/* {errorText && <h3 className="tc fw5 f4 red">{errorText}</h3>} */}
         <Form
           onSubmit={onSubmit}
@@ -464,48 +447,61 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                           checkError(meta) &&
                           (meta.error || meta.submitError)
                         }
-                        placeHolder="Task Name (Required)"
+                        placeHolder="Task Name"
                         autoFocus={true}
                       />
                     </div>
                   )}
                 />
-                <div className="w-100 flex flex-row justify-start items-center mt2 mb3 mr-auto">
-                  <label className="text-width">Company:</label>
-                  <Select
-                    id="company"
-                    placeholder="Required"
-                    value={company}
-                    isLoading={companyLoading}
-                    isDisabled={companyLoading}
-                    options={companyOptions}
-                    onChange={handleCompany}
-                    formatCreateLabel={(userInput) =>
-                      `New: ${userInput}`
-                    }
-                    className="w-100"
-                  />
-                  {assignedCompanyError && (
-                    <small
-                      style={{
-                        color: 'red',
-                        margin: '1rem 0rem',
+                <div className="w-100 flex flex-row justify-between items-center mt2 mb3 mr-auto">
+                  <div className="w-100 flex justify-start items-center">
+                    <label className="text-width">Company:</label>
+                    <Select
+                      id="company"
+                      placeholder="Required"
+                      value={company}
+                      isLoading={companyLoading}
+                      isDisabled={companyLoading}
+                      options={companyOptions}
+                      onChange={handleCompany}
+                      // formatCreateLabel={(userInput) =>
+                      //   `New: ${userInput}`
+                      // }
+                      className="w-100 react-select"
+                      isOptionDisabled={(option) => {
+                        return option.isSubscribed === false;
                       }}
-                    >
-                      Required
-                    </small>
-                  )}
-                </div>
-                <div className="row flex items-center justify-between w-100 mb3">
-                  <Field<string>
-                    name="assignmembers"
-                    render={({ input, meta }) => (
-                      <div className="mb3">
+                      formatOptionLabel={(data) => (
                         <div className="flex items-center">
-                          <label className="text-width">
+                          {typeof data.label === 'string' ? (
+                            <SmallTextAvatar
+                              name={data.label.slice(0, 1)}
+                            />
+                          ) : null}
+                          <span className="ml2">{data.label}</span>
+                        </div>
+                      )}
+                    />
+                    {assignedCompanyError && (
+                      <small
+                        style={{
+                          color: 'red',
+                          margin: '1rem 0rem',
+                        }}
+                      >
+                        Required
+                      </small>
+                    )}
+                  </div>
+                  <div className="w-100 flex justify-end items-center">
+                    <Field<string>
+                      name="assignmembers"
+                      render={({ input, meta }) => (
+                        <div className="flex items-center">
+                          <label className="ml3 w-4 mr3">
                             In:
                             <div>
-                              {assignedPeojectError && (
+                              {assignedProjectError && (
                                 <small
                                   style={{
                                     color: 'red',
@@ -535,42 +531,54 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                             }
                           />
                         </div>
-                      </div>
-                    )}
-                  />
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="row flex items-center w-100 mb3">
                   <Field<string>
                     name="assignmembers"
                     render={({ input, meta }) => (
-                      <div className="mb3 ml3">
-                        <div className="flex items-center">
-                          <label className="text-width">
-                            Assign to:
-                            <div>
-                              {assignedUserError && (
-                                <small
-                                  style={{
-                                    color: 'red',
-                                    margin: '1rem 0rem',
-                                  }}
-                                >
-                                  Required
-                                </small>
-                              )}
-                            </div>
-                          </label>
+                      <div className="flex items-center w-100">
+                        <label className="text-width">
+                          Assign to:
+                          <div>
+                            {assignedUserError && (
+                              <small
+                                style={{
+                                  color: 'red',
+                                  margin: '1rem 0rem',
+                                }}
+                              >
+                                Required
+                              </small>
+                            )}
+                          </div>
+                        </label>
 
-                          <Select
-                            isMulti
-                            className="w-100 react-select"
-                            name="assignmembers"
-                            value={memberValue}
-                            options={teamMembers}
-                            onChange={handleMember}
-                            isDisabled={
-                              project[0]?.value ? false : true
-                            }
-                          />
-                        </div>
+                        <Select
+                          isMulti
+                          className="w-100 react-select"
+                          name="assignmembers"
+                          value={memberValue}
+                          options={teamMembers}
+                          onChange={handleMember}
+                          isDisabled={
+                            project[0]?.value ? false : true
+                          }
+                          formatOptionLabel={(data) => (
+                            <div className="flex items-center">
+                              {typeof data.label === 'string' ? (
+                                <SmallTextAvatar
+                                  name={data.label.slice(0, 2)}
+                                />
+                              ) : null}
+                              <span className="ml2">
+                                {data.label}
+                              </span>
+                            </div>
+                          )}
+                        />
                       </div>
                     )}
                   />
@@ -612,7 +620,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                             KeyboardButtonProps={{
                               'aria-label': 'change date',
                             }}
-                            placeholder="Enter a date(Required)"
+                            placeholder="Enter a date"
                             minDate={new Date()}
                             style={{ width: '250px' }}
                           />
@@ -621,9 +629,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     )}
                   />
                   <div className="flex items-center w-100 mb3">
-                    <label className="text-width ml1">
-                      Priority:
-                    </label>
+                    <label className="ml2 mr2">Priority:</label>
                     <div className="w-100">
                       <Select
                         className="w-100 react-select"
@@ -637,7 +643,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                 <Field<string>
                   name="description"
                   render={({ input, meta }) => (
-                    <div className="mv1 flex">
+                    <div className="w-100 flex">
                       <label className="text-width">
                         Description:
                       </label>
@@ -649,26 +655,19 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                           input.onChange(e);
                           handleChange('description', e.target.value);
                         }}
-                        style={{
-                          width: '100%',
-                          height: '150px',
-                          boxShadow:
-                            'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
-                          border: 'none',
-                          padding: '0.5rem',
-                          borderRadius: '0.2rem',
-                        }}
                         placeholder="Add some details about the task"
                       />
                     </div>
                   )}
                 />
                 <div className="flex justify-between mt3">
+                  {/* 
                   <div>
-                    {/* <SimpleButton>Attach files</SimpleButton>
+                    <SimpleButton>Attach files</SimpleButton>
                   <SimpleButton>Invite members</SimpleButton>
-                  <SimpleButton>Create subtask</SimpleButton> */}
+                  <SimpleButton>Create subtask</SimpleButton> 
                   </div>
+                  */}
                   <StyledButton
                     type="submit"
                     disabled={
@@ -687,6 +686,14 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                       'Create Task'
                     )}
                   </StyledButton>
+                  <SimpleButton
+                    onClick={() => {
+                      props.setShowDialog(false);
+                    }}
+                    type="button"
+                  >
+                    Cancel
+                  </SimpleButton>
                 </div>
               </div>
             </form>
@@ -700,6 +707,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
 const mapStateToProps = (state: any) => ({
   projectId: state.projectReducer.projectDetails._id,
   projects: state.projectReducer.allProjects,
+  userProjects: state.projectReducer.userProjects,
   boardList: state.taskIndexReducer.taskReducer.boardList,
   currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
   creatingTask: state.taskIndexReducer.taskReducer.creatingTask,
@@ -713,11 +721,8 @@ const mapStateToProps = (state: any) => ({
 export default connect(mapStateToProps, {
   createTask,
   saveTaskForm,
-  // createCompanyAction,
-  // createCompanyActionSuccess,
   getCompanyDetails,
   createProjectSuccess,
-  getAllProjects,
   getAllBoards,
   getSelectedBoard,
   getSingleProject,

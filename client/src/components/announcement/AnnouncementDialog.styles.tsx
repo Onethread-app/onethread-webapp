@@ -37,7 +37,11 @@ const ModalContainer = styled.div`
     box-shadow: 0 0 0 0 rgb(19 124 189 / 0%),
       0 0 0 0 rgb(19 124 189 / 0%),
       inset 0 0 0 1px rgb(16 22 26 / 15%),
-      inset 0 1px 1px rgb(16 22 26 / 20%);
+      inset 0 1px 1px rgb(16 22 26 / 20%),
+      inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border: 1px solid #e2e2e2;
+    box-sizing: border-box;
   }
 
   .react-select {
@@ -58,6 +62,7 @@ const SimpleButton = styled.button`
   line-height: 18px;
   padding: 7px 14px;
   cursor: pointer;
+  background-color: #fff;
 `;
 
 const Container = styled.div``;

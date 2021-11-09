@@ -126,27 +126,18 @@ const Index = (props: IProps) => {
   }, 500);
 
   useEffect(() => {
-    if (props.user._id) {
+    if (props.user._id && props.userProjects?.length === 0) {
       props.getAllUserProjects();
       setLoading(true);
     }
   }, [props.user._id]);
 
   useEffect(() => {
-    if (
-      loading === true &&
-      props.fetchingUserProjects === false &&
-      props.errorOnFetchingUserProjects === ''
-    ) {
+    if (props.userProjects?.length > 0) {
       setProjects(props.userProjects);
       setLoading(false);
     }
-  }, [
-    props.userProjects,
-    loading,
-    props.fetchingUserProjects,
-    props.errorOnFetchingUserProjects,
-  ]);
+  }, [props.userProjects]);
   return (
     <Container>
       <HeaderContainer>

@@ -31,6 +31,7 @@ import ProjectsTableSkeleton from './ProjectsTableSkeleton';
 import { AlignCenter } from 'components/UtilComponents';
 import { Dialog } from '@blueprintjs/core';
 import ProjectDialog from 'components/home/project-section/ProjectDialog';
+import { Link } from 'react-router-dom';
 
 interface ICompanyProjects {
   projectList: IProject[];
@@ -38,7 +39,8 @@ interface ICompanyProjects {
   gettingCompanyDetails: boolean;
   errorOnGettingAllProjects: string;
   uniqueCompanyName: string;
-  getAllProjects: () => void;
+  currentCompanyId: string;
+  getAllProjects: (companyId: string) => void;
 }
 
 const CompanyProjects = (props: ICompanyProjects) => {
@@ -100,7 +102,7 @@ const CompanyProjects = (props: ICompanyProjects) => {
 
   useEffect(() => {
     if (uniqueCompanyName) {
-      props.getAllProjects();
+      props.getAllProjects(props.currentCompanyId);
     }
   }, [uniqueCompanyName]);
 
@@ -188,9 +190,20 @@ const CompanyProjects = (props: ICompanyProjects) => {
         loadingData ? (
           <ProjectsTableSkeleton />
         ) : error ? (
-          <div>{error}</div>
+          <div className="mt3">{error}</div>
         ) : (
-          <div>No Projects</div>
+          <div className="mt3">
+            No Projects.{' '}
+            <Link
+              className="ml2"
+              to="#"
+              onClick={() => {
+                setOpenProjectDialog(true);
+              }}
+            >
+              Create New Project?
+            </Link>
+          </div>
         )
       ) : (
         <ProjectsTable
@@ -228,6 +241,7 @@ const mapStateToProps = (state: any) => ({
   errorOnGettingAllProjects:
     state.projectReducer.errorOnGettingAllProjects,
   uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
+  currentCompanyId: state.companyReducer.currentCompany.id,
   gettingCompanyDetails: state.companyReducer.gettingCompanyDetails,
 });
 
