@@ -33,7 +33,6 @@ export const ProjectTableColumns = [
                   favouriteProject({ pid, member, isFavourite }),
                 );
               }}
-              className="is-favourite"
             />
           ) : (
             <StarBorderIcon
