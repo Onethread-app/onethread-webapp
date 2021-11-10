@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
-  background: var(--secondary-bg-color, #34b3e9);
+  background: var(--secondary-bg-color, #08a0f7);
   width: fit-content;
   padding: 1rem;
   color: var(--secondary-color, #fff);

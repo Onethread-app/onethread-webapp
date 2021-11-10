@@ -20,7 +20,7 @@ export const ProfileSettingsComponent = () => {
         type="submit"
         className="grow pointer outline-0 shadow-0-ns h2 changepass"
         style={{
-          background: '#34b3e9',
+          background: '#08A0F7',
           color: 'white',
         }}
         onClick={() => setShowDialog(true)}

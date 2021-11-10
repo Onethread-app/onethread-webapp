@@ -32,15 +32,15 @@ export const StyledTab = withStyles((theme: Theme) =>
     root: {
       textTransform: 'capitalize',
       '&:hover': {
-        color: '#34B3E9',
+        color: '#08A0F7',
         opacity: 1,
       },
       '&$selected': {
-        color: '#34B3E9',
+        color: '#08A0F7',
         fontWeight: theme.typography.fontWeightMedium,
       },
       '&:focus': {
-        color: '#34B3E9',
+        color: '#08A0F7',
       },
     },
     selected: {},

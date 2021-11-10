@@ -7,7 +7,8 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 const joiSchema = require('./company.validation');
 const companyCtrl = require('./company.controller');
-const subCtrl = require('../subscription/subscription.controller');
+const companyMiddleWare = require('../middlewares/companyRoleMiddleware');
+const subCtrl = require('../middlewares/subscriptionCheckerMiddleware');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
 const memberRoutes = require('./member/member.route');
@@ -59,7 +60,7 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyMiddleWare.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateBasicInfo),
     companyCtrl.updateBasicInfo,
   );
@@ -70,7 +71,7 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyMiddleWare.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
   );
@@ -79,20 +80,20 @@ router
   .post(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyMiddleWare.authorizeUser('all', 'admin', 'superAdmin'),
     companyCtrl.addCertifications,
   )
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyMiddleWare.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.editCertification),
     companyCtrl.editCertification,
   );
 router.route('/:companyId/parentorg').put(
   authorization,
   subCtrl.subscriptionExpireCheck(),
-  companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+  companyMiddleWare.authorizeUser('all', 'admin', 'superAdmin'),
   // SchemaValidator(joiSchema.parentOrg),
   companyCtrl.parentOrg,
 );
@@ -103,7 +104,7 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyMiddleWare.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeName),
     companyCtrl.changeName,
   );
@@ -113,7 +114,7 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyMiddleWare.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeRole),
     companyCtrl.updateRole,
   );
@@ -122,7 +123,7 @@ router
   .post(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyMiddleWare.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.createNotice),
     companyCtrl.noticePostByCompany,
   );

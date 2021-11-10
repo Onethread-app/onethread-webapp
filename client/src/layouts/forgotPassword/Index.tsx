@@ -89,7 +89,7 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
               <Button
                 className="grow pointer white bp3-minimal w-100 mt3"
                 style={{
-                  background: '#34b3e9',
+                  background: '#08A0F7',
                   outline: 'none',
                   color: 'white',
                   height: '42px',

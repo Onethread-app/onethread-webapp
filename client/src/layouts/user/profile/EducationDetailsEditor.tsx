@@ -357,7 +357,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
             <Button
               className="w4 grow h2 pointer mr3"
               style={{
-                background: '#34b3e9',
+                background: '#08A0F7',
                 outline: 'none',
                 color: 'white',
               }}
@@ -372,8 +372,8 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
               style={{
                 background: '#fff',
                 outline: 'none',
-                border: '1px solid #34b3e9',
-                color: '#34b3e9',
+                border: '1px solid #08A0F7',
+                color: '#08A0F7',
               }}
               onClick={(e: any) => {
                 e.preventDefault();

@@ -126,12 +126,8 @@ export function* getAllProjectsAsync() {
   try {
     yield put(showLoading());
     const headers = tokenConfig();
-    const companyId = yield select(getCompanyId);
     if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(
-        `projects/${companyId}/lists`,
-        headers,
-      );
+      const response = yield tigrowApi.get(`projects/lists`, headers);
       yield put(getAllProjectsSuccess(response.data));
     }
   } catch (error) {

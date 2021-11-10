@@ -81,7 +81,7 @@ export const TaskDescriptionEditorComponent = (
                 <Button
                   className="mr2"
                   type="submit"
-                  style={{ background: '#34b3e9' }}
+                  style={{ background: '#08A0F7' }}
                   loading={submitting}
                   icon={
                     <Icon

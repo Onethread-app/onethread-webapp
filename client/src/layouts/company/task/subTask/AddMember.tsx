@@ -134,7 +134,7 @@ const AddSubtaskMember = (props: IAddSubtaskMemberInternalProps) => {
             <Button
               className="grow pointer white bp3-minimal w4 mt2"
               style={{
-                background: '#34b3e9',
+                background: '#08A0F7',
                 outline: 'none',
                 color: 'white',
               }}

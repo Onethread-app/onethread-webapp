@@ -9,30 +9,18 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 
 const router = express.Router();
-const subCtrl = require('../subscription/subscription.controller');
+const subCtrl = require('../middlewares/subscriptionCheckerMiddleware');
 
 router
   .route('/')
   .get(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
     boardColumnCtrl.list,
   )
   .post(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
     SchemaValidator(joiSchema.createBoardColumn),
     boardColumnCtrl.create,
   );
@@ -42,12 +30,6 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
     SchemaValidator(joiSchema.updateBoardColumn),
     boardColumnCtrl.update,
   );

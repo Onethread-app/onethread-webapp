@@ -25,7 +25,7 @@ const StyledDiv = styled.div`
 `;
 
 const StyledContainer = styled.div`
-  --secondary-bg-color: #34b3e9;
+  --secondary-bg-color: #08a0f7;
   --secondary-color: white;
   margin: 0;
 

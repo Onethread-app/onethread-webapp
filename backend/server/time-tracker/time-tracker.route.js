@@ -7,7 +7,7 @@ const {
 const SchemaValidator = require('../helpers/joiSchemaValidator');
 const timeTrackerSchema = require('./time-tracker.validation');
 
-const subCtrl = require('../subscription/subscription.controller');
+const subCtrl = require('../middlewares/subscriptionCheckerMiddleware');
 const trackControl = require('./time-tracker.controller');
 
 const router = express.Router();

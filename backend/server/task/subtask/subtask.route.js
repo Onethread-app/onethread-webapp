@@ -3,11 +3,13 @@ const passport = require('passport');
 const subTaskCtrl = require('./subtask.controller');
 const SchemaValidator = require('./../../helpers/joiSchemaValidator');
 const joiSchema = require('./subtask.validation');
-const subCtrl = require('../../subscription/subscription.controller');
+const subCtrl = require('../../middlewares/subscriptionCheckerMiddleware');
 const {
   authorization,
 } = require('../../middlewares/authorizationMiddleware');
-const projectCtrl = require('../../project/project.controller');
+const {
+  authorizeProjectRole,
+} = require('../../middlewares/projectRoleMiddleware');
 const router = express.Router();
 
 router.use('/', subCtrl.subscriptionExpireCheck());
@@ -16,7 +18,7 @@ router
   .route('/')
   .get(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -26,7 +28,7 @@ router
   )
   .post(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -40,7 +42,7 @@ router
   .route('/:subTaskId')
   .get(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -50,7 +52,7 @@ router
   )
   .put(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -61,7 +63,7 @@ router
   )
   .delete(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -75,7 +77,7 @@ router
   .route('/:subTaskId/member')
   .post(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -86,7 +88,7 @@ router
   )
   .get(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -96,7 +98,7 @@ router
   )
   .delete(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',

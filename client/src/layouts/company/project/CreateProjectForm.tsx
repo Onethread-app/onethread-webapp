@@ -154,7 +154,7 @@ const FormComponent = (props: {
                             <Icon
                               icon="calendar"
                               className="mr2"
-                              style={{ color: '#34b3e9' }}
+                              style={{ color: '#08A0F7' }}
                               iconSize={30}
                             />
                           </div>
@@ -242,7 +242,7 @@ const FormComponent = (props: {
                 <Button
                   className="w4 grow h2 pointer mr3"
                   style={{
-                    background: '#34b3e9',
+                    background: '#08A0F7',
                     outline: 'none',
                     color: 'white',
                   }}
