@@ -35,7 +35,7 @@ export const ProjectTop = styled.div`
 export const Container = styled.div`
   width: 100%;
   min-height: 100%;
-  padding: 2rem 2rem 0 2rem;
+  padding: 0 2rem;
   color: #323030;
   background: #f1f1f1;
 `;
