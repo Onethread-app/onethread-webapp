@@ -528,104 +528,10 @@ const rejectProjectRequest = async (req, res, next) => {
 };
 
 const showAllProjectsForCompany = async (req, res, next) => {
-  // try {
-  //   const { limit = 50, skip = 0 } = req.query;
-  //   let companyId = req.params.companyId;
-  //   let associateId = await Associate.find({
-  //     $or: [
-  //       { company: req.params.companyId },
-  //       { associateCompany: req.params.companyId },
-  //     ],
-  //     isAccepted: true,
-  //     removed: false,
-  //     isRejected: false,
-  //   }).select('_id');
-  //   associateId = associateId.map((data) => {
-  //     return data._id;
-  //   });
-  //   let acceptedProject = await ProjectRequest.find({
-  //     isAccepted: true,
-  //     associate: associateId,
-  //   }).populate('project', '_id');
-  //   let memberExistInProject = await Team.find({
-  //     $and: [{ account: req.user._id }, { removed: false }],
-  //   })
-  //     .select('isFavourite')
-  //     .populate('member project', '_id');
-  //   acceptedProject = acceptedProject.map((data) => {
-  //     return data.project._id;
-  //   });
-  //   memberExistInProject = memberExistInProject.map((data) => {
-  //     return data.project._id;
-  //   });
-  //   await Project.find({
-  //     $and: [
-  //       {
-  //         _id: { $in: memberExistInProject },
-  //         hasDeleted: false,
-  //       },
-  //       {
-  //         $or: [
-  //           { _id: { $in: acceptedProject } },
-  //           { company: companyId },
-  //         ],
-  //       },
-  //     ],
-  //   })
-  //     .where('removed')
-  //     .equals(false)
-  //     .populate([
-  //       {
-  //         path: 'associate',
-  //         select: 'company associateCompany',
-  //         populate: [
-  //           {
-  //             path: 'company',
-  //             select: '_id',
-  //           },
-  //           {
-  //             path: 'associateCompany',
-  //             select: '_id',
-  //           },
-  //         ],
-  //       },
-  //       {
-  //         path: 'company',
-  //         select: '_id uniqueName',
-  //       },
-  //     ])
-  //     .populate('departments concernedAdmin', 'name _id ')
-  //     // .select('-type -__v  -files -version -optionalRole ')
-  //     .sort({ createdAt: -1 })
-  //     .skip(+skip)
-  //     // .limit(+limit)
-  //     .exec()
-  //     .then(async (result) => {
-  //       let modifiedResult = await Promise.all(
-  //         result.map(async (res) => {
-  //           const { taskNumbers, doneTasks } = await getTasksNumbers(
-  //             res._id,
-  //           );
-  //           let projectObj = {
-  //             ...res._doc,
-  //             totalTasks: taskNumbers,
-  //             remainingTasks: taskNumbers - doneTasks,
-  //           };
-  //           return projectObj;
-  //         }),
-  //       );
-  //       const sortedProjects = sortProjectsByStatus(modifiedResult);
-  //       return sendJSONresponse(res, 200, sortedProjects);
-  //     })
-  //     .catch((error) => {
-  //       logger.error(`${error}`);
-  //       next(error);
-  //     });
-  // }
   try {
     let members = await Member.find({
       account: req.user._id,
-      company: req.params.companyId,
+      company: req.headers.companyid,
     }).select('_id');
     members = members.map((member) => member._id);
     let teamProjects = await findAllProjectsByMemberId(members);
@@ -1001,33 +907,6 @@ const archiveProjectList = async (req, res, next) => {
     });
 };
 
-const authorizeProjectRole = (functionalRole, ...userRoles) => {
-  return async function (req, res, next) {
-    try {
-      const team = await Team.findOne({
-        $and: [
-          { account: req.user._id },
-          { project: req.query.pid },
-          { removed: false },
-        ],
-      });
-      if (
-        !team ||
-        (functionalRole === 'all' && !userRoles.includes(team.role))
-      ) {
-        return sendErrorResponse(res, 403, 'PermissionError', {
-          message: `Restricted`,
-        });
-      }
-      req.team = team;
-      next();
-    } catch (error) {
-      logger.error(`Project: ${error}`);
-      next(error);
-    }
-  };
-};
-
 // get companies list for individual user
 const getProjectIndividual = async (req, res, next) => {
   try {
@@ -1283,7 +1162,6 @@ module.exports = {
   projectPendingRequest,
   acceptProjectRequest,
   rejectProjectRequest,
-  authorizeProjectRole,
   updateRole,
   getProjectIndividual,
   projectListForMember,

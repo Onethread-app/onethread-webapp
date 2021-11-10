@@ -478,7 +478,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     src={!leftOpen ? arrowLeft : arrowRight}
                     className="br2"
                     style={{ width: '0.5rem' }}
-                    color="#34b3e9"
+                    color="#08A0F7"
                     alt=""
                   />
                 </span>
@@ -560,10 +560,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                           <NavLink
                             exact
                             activeStyle={{
-                              background: '#34b3e9',
+                              background: '#08A0F7',
                               color: 'white',
                             }}
-                            style={{ color: '#34b3e9' }}
+                            style={{ color: '#08A0F7' }}
                             to={`/company/${props.company.uniqueName}`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
@@ -582,10 +582,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                           <NavLink
                             exact
                             activeStyle={{
-                              background: '#34b3e9',
+                              background: '#08A0F7',
                               color: 'white',
                             }}
-                            style={{ color: '#34b3e9' }}
+                            style={{ color: '#08A0F7' }}
                             to={`/company/${props.company.uniqueName}/dashboard`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
@@ -604,10 +604,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                           <NavLink
                             exact
                             activeStyle={{
-                              background: '#34b3e9',
+                              background: '#08A0F7',
                               color: 'white',
                             }}
-                            style={{ color: '#34b3e9' }}
+                            style={{ color: '#08A0F7' }}
                             to={`/company/${props.company.uniqueName}/project`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
@@ -626,10 +626,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                           <NavLink
                             exact
                             activeStyle={{
-                              background: '#34b3e9',
+                              background: '#08A0F7',
                               color: 'white',
                             }}
-                            style={{ color: '#34b3e9' }}
+                            style={{ color: '#08A0F7' }}
                             to={`/company/${props.company.uniqueName}/colleague`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
@@ -648,10 +648,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                           <NavLink
                             exact
                             activeStyle={{
-                              background: '#34b3e9',
+                              background: '#08A0F7',
                               color: 'white',
                             }}
-                            style={{ color: '#34b3e9' }}
+                            style={{ color: '#08A0F7' }}
                             to={`/company/${props.company.uniqueName}/associates`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
@@ -672,10 +672,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               <NavLink
                                 exact
                                 activeStyle={{
-                                  background: '#34b3e9',
+                                  background: '#08A0F7',
                                   color: 'white',
                                 }}
-                                style={{ color: '#34b3e9' }}
+                                style={{ color: '#08A0F7' }}
                                 to={`/company/${props.company.uniqueName}/settings`}
                                 className="hover-bg-black-20 pa2 flex flex-column items-center"
                               >
@@ -695,10 +695,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                           <NavLink
                             exact
                             activeStyle={{
-                              background: '#34b3e9',
+                              background: '#08A0F7',
                               color: 'white',
                             }}
-                            style={{ color: '#34b3e9' }}
+                            style={{ color: '#08A0F7' }}
                             to={`/company/${props.company.uniqueName}/feedback`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >

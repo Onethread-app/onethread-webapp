@@ -23,10 +23,10 @@ const SmallContainer = styled.div`
 const TextLink = styled(Link)`
   text-decoration: none;
   font-size: inherit;
-  color: var(--secondary-bg-color, #34b3e9);
+  color: var(--secondary-bg-color, #08a0f7);
 
   &:hover {
-    color: var(--secondary-bg-color, #34b3e9);
+    color: var(--secondary-bg-color, #08a0f7);
   }
 `;
 

@@ -343,7 +343,7 @@ const CompletedProjectsComponent = (
                       style={{
                         color:
                           currentProjectPage > 1
-                            ? '#34b3e9'
+                            ? '#08A0F7'
                             : '#656565',
                       }}
                     />
@@ -367,7 +367,7 @@ const CompletedProjectsComponent = (
                           Math.ceil(
                             filteredProjects.length / itemsPerPage,
                           )
-                            ? '#34b3e9'
+                            ? '#08A0F7'
                             : '#656565',
                       }}
                     />

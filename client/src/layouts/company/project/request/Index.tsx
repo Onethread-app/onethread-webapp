@@ -93,7 +93,7 @@ const ProjectRequestComponent = (
                     <Button
                       className="w4 grow h2 pointer"
                       style={{
-                        background: '#34b3e9',
+                        background: '#08A0F7',
                         outline: 'none',
                         color: 'white',
                         border: 'none',

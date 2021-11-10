@@ -1,6 +1,6 @@
 const express = require('express');
 const subCtrl = require('./subscription.controller');
-const companyCtrl = require('../company/company.controller');
+const companyCtrl = require('../middlewares/companyRoleMiddleware');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 const subSchema = require('./subscription.validation');
 
@@ -29,19 +29,17 @@ router
   )
   .put(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
+    // subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('superAdmin'),
     SchemaValidator(subSchema.changeSubscriptionPlan),
     subCtrl.changeSubscriptionPlan,
   );
-router
-  .route('/:companyId/renew-subscription')
-  .put(
-    authorization,
-    subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser('superAdmin'),
-    SchemaValidator(subSchema.renewSub),
-    subCtrl.renewSubscription,
-  );
+router.route('/:companyId/renew-subscription').put(
+  authorization,
+  // subCtrl.subscriptionExpireCheck(),
+  companyCtrl.authorizeUser('superAdmin'),
+  SchemaValidator(subSchema.renewSub),
+  subCtrl.renewSubscription,
+);
 
 module.exports = router;

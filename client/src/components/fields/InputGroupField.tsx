@@ -44,7 +44,7 @@ export const InputGroupField = (props: InputGroupFieldProps) => (
         <Icon
           icon={props.leftIcon}
           color={
-            props.leftIconColor ? props.leftIconColor : '#34b3e9'
+            props.leftIconColor ? props.leftIconColor : '#08A0F7'
           }
         />
       ) : (

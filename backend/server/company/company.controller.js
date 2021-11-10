@@ -6,12 +6,7 @@ const { Member } = require('./member/member.model');
 const Plan = require('../plan/plan.model');
 const { createSlug } = require('../helpers/SlugCreator');
 const Task = require('../task/task.model');
-const SubTask = require('../task/subtask/subtask.model');
-const Boardcolumn = require('../boardColumn/boardColumn.model');
 const { getTaskMembers } = require('../task/task.controller');
-const {
-  projectTeamMembers,
-} = require('../team-member/team.controller');
 const {
   triggerNotification,
 } = require('../services/webpush.services');
@@ -21,9 +16,6 @@ const {
   Subscription,
 } = require('../subscription/subscription.model');
 
-const {
-  createCompanyRoleNotification,
-} = require('../notification/notification.controller');
 const { sortTasksByStatus } = require('../helpers/utils');
 
 const {
@@ -422,32 +414,6 @@ const deleteCompany = async (req, res, next) => {
     .catch((err) => {
       res.status(500).json({ error: err });
     });
-};
-
-const authorizeUser = (functionalRole, ...userRoles) => {
-  return async function (req, res, next) {
-    try {
-      const member = await Member.findOne({
-        account: req.user._id,
-        company:
-          req.headers.companyid ||
-          req.params.companyId ||
-          req.body.companyId, //apatoto pore name or id hobe
-      }).exec();
-      if (
-        !member ||
-        (functionalRole === 'all' && !userRoles.includes(member.role))
-      ) {
-        return sendErrorResponse(res, 403, 'PermissionError', {
-          message: `Restricted`,
-        });
-      }
-      next();
-    } catch (error) {
-      logger.error(`Company: ${error}`);
-      next(error);
-    }
-  };
 };
 
 const FindCompanyAtBeginning = async (req, res, next) => {
@@ -922,7 +888,6 @@ const adminSuperAdminFinder = async (req, res, next) => {
 };
 
 module.exports = {
-  authorizeUser,
   createCompany,
   getCompany,
   updateBasicInfo,

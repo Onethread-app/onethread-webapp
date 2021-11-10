@@ -34,13 +34,13 @@ body {
   color: rgb(74, 73, 73);
 }
 .bg-tigrowLightBlue {
-  background-color: #34b3e9;
+  background-color: #08a0f7;
 }
 .bg-tigrow-darkBlue {
-  background-color: #34b3e9;
+  background-color: #08a0f7;
 }
 .bg-tigrowNewDarkBlue {
-  background-color: #34b3e9;
+  background-color: #08a0f7;
 }
 .bg-tigrowLightestBlue {
   background-color: #6ed8d844;
@@ -49,17 +49,17 @@ body {
   background-color: #f5f6fa;
 }
 .bg-tigrowDarkBlue {
-  background-color: #34b3e9;
+  background-color: #08a0f7;
 }
 .bg-tigrow {
   background-color: #f5f6fa;
 }
 
 .b--lightBlue {
-  border-color: #34b3e9;
+  border-color: #08a0f7;
 }
 .b--tigrow-darkBlue {
-  border-color: #34b3e9;
+  border-color: #08a0f7;
 }
 
 .b--tigrowLightGray-1 {
@@ -67,11 +67,11 @@ body {
 }
 
 .tigrow-darkBlue {
-  color: #34b3e9;
+  color: #08a0f7;
 }
 
 .tigrow-lightBlue {
-  color: #34b3e9;
+  color: #08a0f7;
 }
 .tigrow-darkGray {
   color: #555555;

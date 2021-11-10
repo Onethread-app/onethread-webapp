@@ -3,14 +3,14 @@ const express = require('express');
 const schemaValidator = require('../helpers/joiSchemaValidator');
 const associateValidation = require('./associate.validation');
 const associateCtrl = require('./associate.controller');
-const companyCtrl = require('../company/company.controller');
+const companyCtrl = require('../middlewares/companyRoleMiddleware');
 
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
 
 const router = express.Router();
-const subCtrl = require('../subscription/subscription.controller');
+const subCtrl = require('../middlewares/subscriptionCheckerMiddleware');
 
 // get borad list
 router
