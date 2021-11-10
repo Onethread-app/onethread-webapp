@@ -1,7 +1,10 @@
 import { useCallback, useState, memo } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 import { IProject } from 'stores/project/Reducer';
 import { ICompanyByUser, User } from 'stores/user/Reducer';
+import { clearCompanyState } from 'stores/company/Actions';
 
 import logo from 'resources/images/onethread-text.png';
 import home from 'resources/images/Home.png';
@@ -22,6 +25,7 @@ import {
   Header,
   Item,
 } from './Sidebar.styles';
+import { setSubscriptionNotExpire } from 'stores/subscriptionBilling/Actions';
 
 interface Props {
   leftOpen: boolean;
@@ -29,6 +33,9 @@ interface Props {
   companies: ICompanyByUser[];
   project: IProject;
   favouriteProjects: any;
+  subscriptionExpired: boolean;
+  clearCompanyState: () => void;
+  setSubscriptionNotExpire: () => void;
 }
 
 export const Color = [
@@ -44,6 +51,7 @@ export const Color = [
 const Sidebar = (props: Props) => {
   const { user, companies, leftOpen } = props;
   const [showCompanies, setShowCompanies] = useState<boolean>(true);
+  const history = useHistory();
 
   const getRandomInt = (max: number) => {
     return Math.floor(Math.random() * max);
@@ -98,9 +106,18 @@ const Sidebar = (props: Props) => {
             {companies.map((company) => (
               <ArrayItem
                 activeClassName="active-link"
-                to={`/company/${company.company?.uniqueName}`}
+                to={`/company/${company.company.uniqueName}`}
                 bgcolor={getRandomColor()}
                 key={company.company?._id}
+                onClick={() => {
+                  if (props.subscriptionExpired) {
+                    props.clearCompanyState();
+                    props.setSubscriptionNotExpire();
+                  }
+                  history.push(
+                    `/company/${company.company.uniqueName}/`,
+                  );
+                }}
               >
                 <i></i>
                 <span className="left-open capitalize">
@@ -125,28 +142,29 @@ const Sidebar = (props: Props) => {
       </ContainerBody>
       <Favourites className="left-open">
         <span className="left-open">Favourites</span>
-        {props.favouriteProjects?.length > 0 &&
-          props.favouriteProjects?.map(
-            (fP: {
-              project: {
-                company: { uniqueName: string };
-                _id: string;
-                name: string;
-              };
-            }) => (
-              <ArrayItem
-                activeClassName="active-link"
-                to={`/company/${fP.project.company.uniqueName}/project/${fP.project._id}`}
-                bgcolor={getRandomColor()}
-                key={fP.project._id}
-              >
-                <i></i>
-                <span className="left-open capitalize">
-                  {fP.project.name}
-                </span>
-              </ArrayItem>
-            ),
-          )}
+        {props.favouriteProjects?.length > 0
+          ? props.favouriteProjects.map(
+              (fP: {
+                project: {
+                  company: { uniqueName: string };
+                  _id: string;
+                  name: string;
+                };
+              }) => (
+                <ArrayItem
+                  activeClassName="active-link"
+                  to={`/company/${fP.project.company.uniqueName}/project/${fP.project._id}`}
+                  bgcolor={getRandomColor()}
+                  key={fP.project._id}
+                >
+                  <i></i>
+                  <span className="left-open capitalize">
+                    {fP.project.name}
+                  </span>
+                </ArrayItem>
+              ),
+            )
+          : null}
         <div>
           <img src={star} alt="" />
           Star projects for easy access
@@ -156,4 +174,11 @@ const Sidebar = (props: Props) => {
   );
 };
 
-export default memo(Sidebar);
+const mapStateToProps = (state: any) => ({
+  subscriptionExpired: state.subscriptionReducer.subscriptionExpired,
+});
+
+export default connect(mapStateToProps, {
+  clearCompanyState,
+  setSubscriptionNotExpire,
+})(memo(Sidebar));

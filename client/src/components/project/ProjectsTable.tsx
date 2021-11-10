@@ -1,6 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import { Dialog, Popover, Position } from '@blueprintjs/core';
 import { useState } from 'react';
+import { connect } from 'react-redux';
 
 import { IProject } from 'stores/project/Reducer';
 
@@ -18,7 +19,6 @@ import {
   StyledTableRowContainer,
   CreatableItem,
 } from '../table/StyledTable.styles';
-import { connect } from 'react-redux';
 import {
   newArchiveProject,
   newDeleteProject,
@@ -51,6 +51,7 @@ interface IProjectsFunctions {
   newArchiveProject: ({ projectId, companyId }) => void;
   newDeleteProject: ({ projectId, companyId }) => void;
   newUnarchiveProject: ({ projectId, companyId }) => void;
+  userCompanyLoading: boolean;
 }
 
 const ProjectsTable = (
@@ -260,9 +261,11 @@ const ProjectsTable = (
           })}
         </StyledTableBody>
       </StyledTable>
-      <CreatableItem onClick={() => setOpenProjectDialog(true)}>
-        <span>+</span> Create Project
-      </CreatableItem>
+      {props.userCompanyLoading === false ? (
+        <CreatableItem onClick={() => setOpenProjectDialog(true)}>
+          <span>+</span> Create Project
+        </CreatableItem>
+      ) : null}
       <div className="flex justify-center mt2 w-100">
         <TablePagination
           component="div"
@@ -375,7 +378,9 @@ const ProjectsTable = (
   );
 };
 
-const mapStateToProps = (state: any) => ({});
+const mapStateToProps = (state: any) => ({
+  userCompanyLoading: state.userReducer.userCompanyLoading,
+});
 
 export default connect(mapStateToProps, {
   newArchiveProject,

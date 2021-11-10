@@ -19,6 +19,7 @@ import {
   CreatableItem,
 } from '../table/StyledTable.styles';
 import moment from 'moment';
+import { connect } from 'react-redux';
 
 interface ITasksTable {
   getTableProps: any;
@@ -33,6 +34,7 @@ interface ITasksTable {
   pageIndex: number;
   setPageSize: any;
   setOpenTaskDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  userCompanyLoading: boolean;
 }
 
 const TasksTable = (props: ITasksTable) => {
@@ -49,6 +51,7 @@ const TasksTable = (props: ITasksTable) => {
     pageSize,
     setPageSize,
     setOpenTaskDialog,
+    userCompanyLoading,
   } = props;
   const history = useHistory();
 
@@ -196,9 +199,11 @@ const TasksTable = (props: ITasksTable) => {
               </StyledTableRowContainer>
             );
           })}
-          <CreatableItem onClick={() => setOpenTaskDialog(true)}>
-            <span>+ </span> Add new tasks
-          </CreatableItem>
+          {userCompanyLoading === false ? (
+            <CreatableItem onClick={() => setOpenTaskDialog(true)}>
+              <span>+ </span> Add new tasks
+            </CreatableItem>
+          ) : null}
         </StyledTableBody>
       </StyledTable>
       <div className="flex justify-center mt2 w-100">
@@ -222,4 +227,8 @@ const TasksTable = (props: ITasksTable) => {
   );
 };
 
-export default TasksTable;
+const mapStateToProps = (state) => ({
+  userCompanyLoading: state.userReducer.userCompanyLoading,
+});
+
+export default connect(mapStateToProps, {})(TasksTable);
