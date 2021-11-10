@@ -53,7 +53,7 @@ const HEADER = styled.h3`
   font-weight: 500;
   font-size: 25.168px;
   line-height: 38px;
-  color: #34b3e9;
+  color: #08a0f7;
 `;
 
 const TEXTINPUT = styled.input`
@@ -69,7 +69,7 @@ const TEXTINPUT = styled.input`
 `;
 
 const DONE = styled.button`
-  background: #34b3e9;
+  background: #08a0f7;
   color: #fff;
   border-radius: 8.45662px;
   outline: none;
@@ -163,7 +163,7 @@ const CreateProjectDialog = (props: ICreateProjectDialog) => {
     if (!payload.companyId) {
       setErrorMessage('Company name is invalid');
     } else if (!payload.name) {
-      setErrorMessage('Project name is required');
+      setErrorMessage('#08A0F7 is required');
     } else {
       props.createProjectInCompany(payload);
       setCreating(true);

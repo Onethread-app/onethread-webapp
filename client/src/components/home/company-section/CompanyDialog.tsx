@@ -112,7 +112,7 @@ const CompanySignupFormComponent = (
                   <label className="">Name</label>
                   <TextInput
                     {...input}
-                    placeholder="Company Name (required)"
+                    placeholder="Required"
                     hasError={
                       checkError(meta) &&
                       (meta.error || meta.submitError)
@@ -161,7 +161,7 @@ const CompanySignupFormComponent = (
                 type="submit"
                 className="h2 pointer"
                 // style={{
-                //   background: '#34b3e9',
+                //   background: '#08A0F7',
                 //   outline: 'none',
                 //   color: 'white',
                 // }}
@@ -181,8 +181,8 @@ const CompanySignupFormComponent = (
                 // style={{
                 //   background: '#fff',
                 //   outline: 'none',
-                //   border: '1px solid #34b3e9',
-                //   color: '#34b3e9',
+                //   border: '1px solid #08A0F7',
+                //   color: '#08A0F7',
                 // }}
                 onClick={(e: any) => {
                   e.preventDefault();

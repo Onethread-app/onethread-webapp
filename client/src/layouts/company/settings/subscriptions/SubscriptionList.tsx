@@ -74,7 +74,7 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                           <CardContent>
                             <h3
                               style={{
-                                color: '#34b3e9',
+                                color: '#08A0F7',
                                 marginBottom: '0',
                               }}
                             >

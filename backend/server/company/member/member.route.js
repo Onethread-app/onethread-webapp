@@ -3,10 +3,12 @@ const router = express.Router();
 const {
   authorization,
 } = require('../../middlewares/authorizationMiddleware');
-const subCtrl = require('../../subscription/subscription.controller');
+const subCtrl = require('../../middlewares/subscriptionCheckerMiddleware');
 const joiSchema = require('./member.validation');
 const memberCtrl = require('./member.controller');
-const { authorizeUser } = require('../company.controller');
+const {
+  authorizeUser,
+} = require('../../middlewares/companyRoleMiddleware');
 
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 

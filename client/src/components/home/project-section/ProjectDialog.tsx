@@ -5,7 +5,7 @@ import Creatable from 'react-select/creatable';
 import { currencies } from 'currencies.json';
 import Select from 'react-select';
 
-import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+import { Spinner } from '@blueprintjs/core/lib/esm/components/spinner/spinner';
 import {
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
@@ -272,6 +272,9 @@ const Index = (props: IProps) => {
 
   return (
     <ModalContainer>
+      <h1 className="f5 lh-title mb1">
+        {t('app.forms.Start-project.Create-project')}
+      </h1>
       <Form
         onSubmit={onSubmit}
         validate={(values: any) => {
@@ -289,29 +292,26 @@ const Index = (props: IProps) => {
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <label>PROJECT</label>
             <Field<string>
-              defaultValue={data?.name}
               name="name"
               type="text"
               validate={composeValidators(required)}
               render={({ input, meta }) => (
-                <TextInput
-                  {...input}
-                  onChange={(e: { target: { value: string } }) => {
-                    input.onChange(e.target.value);
-                    setData({ ...data, name: e.target.value });
-                  }}
-                  placeholder="Project name (required)"
-                  hasError={
-                    checkError(meta) &&
-                    (meta.error || meta.submitError)
-                  }
-                />
+                <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
+                  <label className="label">Project Name</label>
+                  <TextInput
+                    {...input}
+                    placeholder="Required"
+                    hasError={
+                      checkError(meta) &&
+                      (meta.error || meta.submitError)
+                    }
+                  />
+                </div>
               )}
             />
             <div className="w-100 flex flex-row justify-start items-center mt2 mr-auto">
-              <label className="label">Company:</label>
+              <label className="label">Company</label>
               <Creatable
                 defaultValue={data?.company}
                 value={defaultValues.value && selectValue}
@@ -352,7 +352,7 @@ const Index = (props: IProps) => {
               </small>
             )}
             <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
-              <label className="label">Due date:</label>
+              <label className="label">Due date</label>
               <Field<string>
                 name="date"
                 validate={required}
@@ -400,8 +400,8 @@ const Index = (props: IProps) => {
               />
             </div>
             <div className="w-100 flex flex-row justify-start items-center mr-auto">
-              <div className="flex mr3 w-70 items-center">
-                <label className="label">Budget:</label>
+              <div className="w-100 flex mr3 items-center">
+                <label className="label">Budget</label>
                 <Field<string>
                   defaultValue={data?.budget}
                   name="budget"
@@ -456,58 +456,62 @@ const Index = (props: IProps) => {
               </div>
             </div>
             <div className="w-100 flex flex-row justify-start mt3 items-center">
-              <label className="label">Label:</label>
-              <div className="w-100 flex flex-row justify-start items-center">
-                {Color.map((color) => (
-                  <label
-                    onClick={() => {
-                      setCheckColor(color.code);
-                      setData({ ...data, label: color?.code });
-                    }}
-                    key={color.code}
-                    className="mr4 pointer flex items-center"
+              <label className="label">Label</label>
+
+              {Color.map((color) => (
+                <label
+                  onClick={() => {
+                    setCheckColor(color.code);
+                    setData({ ...data, label: color?.code });
+                  }}
+                  key={color.code}
+                  className="pointer mb3 flex items-center"
+                >
+                  <Icon
+                    color={color.value}
+                    checked={checkColor === color.code}
                   >
-                    <Icon
-                      color={color.value}
-                      checked={checkColor === color.code}
-                    >
-                      <span>
-                        <CheckIcon
-                          className={`${
-                            checkColor === color.code ? 'white' : ''
-                          }`}
-                        />
-                      </span>
-                    </Icon>
-                    <Field
-                      name="label"
-                      type="radio"
-                      defaultValue={data?.label}
-                      component={StyledRadioInput}
-                      value={color.code}
-                      key={color.code}
-                    />
-                  </label>
-                ))}
-              </div>
+                    <span>
+                      <CheckIcon
+                        className={`${
+                          checkColor === color.code ? 'white' : ''
+                        }`}
+                      />
+                    </span>
+                  </Icon>
+                  <Field
+                    name="label"
+                    type="radio"
+                    defaultValue={data?.label}
+                    component={StyledRadioInput}
+                    value={color.code}
+                    key={color.code}
+                  />
+                </label>
+              ))}
             </div>
-            <div className="flex flex-row w-100 justify-between items-center mt3">
+            <div className="flex justify-between">
               <StyledButton
                 type="submit"
-                disabled={company ? false : true}
+                className="h2 pointer"
+                disabled={loading}
               >
                 {loading ? (
                   <>
-                    Creating Project
-                    <CircularProgress className="ml2" size={20} />
+                    Creating Project{' '}
+                    <Spinner className="ml2" size={15} />
                   </>
                 ) : (
                   'Create Project'
                 )}
               </StyledButton>
               <SimpleButton
-                type="button"
-                onClick={() => props.setOpenProjectDialog(false)}
+                className="h2 pointer"
+                onClick={(e: any) => {
+                  e.preventDefault();
+                  props.setOpenProjectDialog(false);
+                  setLoading(false);
+                }}
               >
                 Cancel
               </SimpleButton>

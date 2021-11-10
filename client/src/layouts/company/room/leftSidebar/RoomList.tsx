@@ -16,7 +16,7 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
   const roomBgColor = [
     '#D8315B',
     '#9F7DE8',
-    '#34b3e9',
+    '#08A0F7',
     '#456990',
     '#CDA2AB',
     '#FE5E41',

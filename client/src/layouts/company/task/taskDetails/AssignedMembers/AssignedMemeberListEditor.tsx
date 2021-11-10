@@ -29,7 +29,7 @@ export const AssignedMemeberListEditorComponent = (
             <Button
               className="grow h2 pointer white bp3-minimal w4 mr3"
               style={{
-                background: '#34b3e9',
+                background: '#08A0F7',
                 outline: 'none',
                 color: 'white',
               }}
@@ -46,8 +46,8 @@ export const AssignedMemeberListEditorComponent = (
               style={{
                 background: '#fff',
                 outline: 'none',
-                border: '1px solid #34b3e9',
-                color: '#34b3e9',
+                border: '1px solid #08A0F7',
+                color: '#08A0F7',
               }}
               onClick={() => setDeletePopover(false)}
             >

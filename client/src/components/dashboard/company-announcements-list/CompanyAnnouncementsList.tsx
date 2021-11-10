@@ -63,7 +63,7 @@ const CompanyAnnouncementsList = (props: any) => {
       <div className="w-50-ns w-100">
         <div className="flex justify-between items-center">
           <h3
-            style={{ color: '#34b3e9' }}
+            style={{ color: '#08A0F7' }}
             className="justify-center f3-ns f5"
           >
             {t('app.company.Dashboard.Announce')}
@@ -76,7 +76,7 @@ const CompanyAnnouncementsList = (props: any) => {
               }
               className="bp3-button w5 h2 pointer fr"
               style={{
-                background: '#34b3e9',
+                background: '#08A0F7',
                 outline: 'none',
                 color: '#fff',
               }}

@@ -343,7 +343,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
+            activeStyle={{ background: '#08A0F7', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
@@ -354,7 +354,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
+            activeStyle={{ background: '#08A0F7', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
@@ -365,7 +365,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
+            activeStyle={{ background: '#08A0F7', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Room</small>
@@ -374,7 +374,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
+            activeStyle={{ background: '#08A0F7', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
@@ -385,7 +385,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
+            activeStyle={{ background: '#08A0F7', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
@@ -396,7 +396,7 @@ const TaskPageComponent = (
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
             to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
-            activeStyle={{ background: '#34b3e9', color: 'white' }}
+            activeStyle={{ background: '#08A0F7', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>

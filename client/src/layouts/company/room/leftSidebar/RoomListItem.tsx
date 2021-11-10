@@ -150,7 +150,7 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
                 width="20px"
                 height="20px"
                 style={{}}
-                color="#34b3e9"
+                color="#08A0F7"
                 alt=""
               />
               <span className="f5 ml2 fw7">

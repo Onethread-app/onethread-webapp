@@ -211,7 +211,7 @@ export const SignInPageComponent = (
                                     <Icon
                                       icon="envelope"
                                       style={{
-                                        color: '#34b3e9',
+                                        color: '#08A0F7',
                                       }}
                                     />
                                   </span>
@@ -264,7 +264,7 @@ export const SignInPageComponent = (
                                     <Icon
                                       icon="lock"
                                       style={{
-                                        color: '#34b3e9',
+                                        color: '#08A0F7',
                                       }}
                                     />
                                   </span>
@@ -295,7 +295,7 @@ export const SignInPageComponent = (
                                       style={{
                                         width: '15px',
                                         height: '15px',
-                                        color: '#34b3e9',
+                                        color: '#08A0F7',
                                       }}
                                     />
                                   </span>
@@ -322,7 +322,7 @@ export const SignInPageComponent = (
                     <Button
                       className="grow h2 pointer white bp3-minimal w4"
                       style={{
-                        background: '#34b3e9',
+                        background: '#08A0F7',
                         outline: 'none',
                         color: 'white',
                         width: '100%',
@@ -360,8 +360,8 @@ export const SignInPageComponent = (
                         style={{
                           background: '#fff',
                           outline: 'none',
-                          border: '2px solid #34b3e9',
-                          color: '#34b3e9',
+                          border: '2px solid #08A0F7',
+                          color: '#08A0F7',
                           fontSize: '18px',
                           padding: '10px 0px',
                         }}

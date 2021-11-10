@@ -324,7 +324,7 @@ const ProjectStatusComponent = (props) => {
         <h3
           className="f3-ns f5"
           style={{
-            color: '#34b3e9',
+            color: '#08A0F7',
             fontSize: '2.3rem',
             textAlign: 'center',
           }}
