@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import { User } from 'stores/user/Reducer';
@@ -77,9 +78,11 @@ const Index = (props: IProjectDashboardProps) => {
   return (
     <Container>
       <ProjectTop>
-        <BackButton>
-          <img src={BackImg} alt="go back" /> See Al Projects
-        </BackButton>
+        <Link to={`/company/${company.uniqueName}`}>
+          <BackButton>
+            <img src={BackImg} alt="go back" /> See All Projects
+          </BackButton>
+        </Link>
         <CompanyIconAndName noMarginBottom>
           {gettingCompanyDetails ? (
             <>
