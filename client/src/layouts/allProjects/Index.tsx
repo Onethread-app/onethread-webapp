@@ -198,7 +198,7 @@ const Index = (props: IProps) => {
           <ProjectsTableSkeleton />
         ) : (
           <div className="flex flex-col">
-            No project has been created.{' '}
+            <div>No project has been created.</div>
             <CreatableItem onClick={() => setOpenProjectDialog(true)}>
               <span>+ </span> Create Project
             </CreatableItem>

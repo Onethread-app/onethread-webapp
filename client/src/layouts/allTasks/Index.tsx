@@ -236,7 +236,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
           <TaskTableSkeleton />
         ) : (
           <div className="flex flex-col">
-            No task has been created.{' '}
+            <div>No task has been created.</div>
             <CreatableItem onClick={() => setOpenTaskDialog(true)}>
               <span>+ </span> Add new task
             </CreatableItem>
