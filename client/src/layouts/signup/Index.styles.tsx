@@ -98,7 +98,7 @@ const FormContainer = styled.div`
   }
 
   p a {
-    color: #34b3e9;
+    color: #08a0f7;
     text-decoration: underline;
   }
 

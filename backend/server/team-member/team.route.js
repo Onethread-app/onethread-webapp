@@ -5,34 +5,32 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 const teamValidation = require('./team.validation');
 const teamCtrl = require('./team.controller');
-const projectCtrl = require('../project/project.controller');
+const {
+  authorizeProjectRole,
+} = require('../middlewares/projectRoleMiddleware');
 const SchemaValidator = require('../helpers/joiSchemaValidator');
-const subCtrl = require('../subscription/subscription.controller');
+const subCtrl = require('../middlewares/subscriptionCheckerMiddleware');
 router
   .route('/:companyId/search')
   .get(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    subCtrl.subscriptionExpireCheck(),
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
       'member',
     ),
-    subCtrl.subscriptionExpireCheck(),
     teamCtrl.searchTeamMember,
   );
 
 router.route('/:companyId/add-team-member').post(
   authorization,
-  // TODO: member validations
-  projectCtrl.authorizeProjectRole(
-    'all',
-    'admin',
-    'projectModerator',
-    'member',
-  ),
-  // SchemaValidator(joiSchema.newMember),
   subCtrl.subscriptionExpireCheck(),
+  // TODO: member validations
+  authorizeProjectRole('all', 'admin', 'projectModerator', 'member'),
+  // SchemaValidator(joiSchema.newMember),
+
   teamCtrl.addTeamMember,
 );
 // .get(authorization, teamCtrl.list);
@@ -41,7 +39,7 @@ router
   .get(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -55,7 +53,7 @@ router
   .get(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -75,7 +73,7 @@ router
   .route('/:memberId/change-role')
   .put(
     authorization,
-    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
+    authorizeProjectRole('all', 'admin', 'projectModerator'),
     subCtrl.subscriptionExpireCheck(),
     SchemaValidator(teamValidation.changeRole),
     teamCtrl.changeRole,

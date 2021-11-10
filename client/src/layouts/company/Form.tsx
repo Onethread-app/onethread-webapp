@@ -173,7 +173,7 @@ const CompanySignupFormComponent = (
             className={`br0 ${
               errors.name ? 'bb b--red' : 'bb b--lightBlue'
             }`}
-            leftIconColor={`${errors.name ? 'red' : '#34b3e9'}`}
+            leftIconColor={`${errors.name ? 'red' : '#08A0F7'}`}
             validationOnBlur={() => {
               if (isEmpty(values.name)) {
                 const companyNameError = {
@@ -219,7 +219,7 @@ const CompanySignupFormComponent = (
             className={`br0 ${
               errors.address ? 'bb b--red' : 'bb b--lightBlue'
             }`}
-            leftIconColor={`${errors.address ? 'red' : '#34b3e9'}`}
+            leftIconColor={`${errors.address ? 'red' : '#08A0F7'}`}
             // validationOnBlur={() => {
             //   if (isEmpty(values.address)) {
             //     const companyAddressError = {
@@ -298,7 +298,7 @@ const CompanySignupFormComponent = (
             className={`br0 ${
               errors.email ? 'bb b--red' : 'bb b--lightBlue'
             }`}
-            leftIconColor={`${errors.email ? 'red' : '#34b3e9'}`}
+            leftIconColor={`${errors.email ? 'red' : '#08A0F7'}`}
             validationOnBlur={() => {
               if (checkLegalOwnerMail() && !isEmpty(values.email)) {
                 const companyEmailError = {
@@ -339,7 +339,7 @@ const CompanySignupFormComponent = (
               boxShadow: 'none',
             }}
             className={'br0 bb b--lightBlue'}
-            leftIconColor="#34b3e9"
+            leftIconColor="#08A0F7"
             validationOnBlur={() => {
               if (values.legalOwnerName.length > 32) {
                 const legalOwnerNameError = {
@@ -380,7 +380,7 @@ const CompanySignupFormComponent = (
               errors.legalOwnerMail ? 'bb b--red' : 'bb b--lightBlue'
             }`}
             leftIconColor={`${
-              errors.legalOwnerMail ? 'red' : '#34b3e9'
+              errors.legalOwnerMail ? 'red' : '#08A0F7'
             }`}
             validationOnBlur={() => {
               if (
@@ -423,8 +423,8 @@ const CompanySignupFormComponent = (
           style={{
             background: '#fff',
             outline: 'none',
-            border: '1px solid #34b3e9',
-            color: '#34b3e9',
+            border: '1px solid #08A0F7',
+            color: '#08A0F7',
           }}
           onClick={(e: any) => {
             e.preventDefault();
@@ -438,7 +438,7 @@ const CompanySignupFormComponent = (
           type="submit"
           className="w4 grow h2 pointer"
           style={{
-            background: '#34b3e9',
+            background: '#08A0F7',
             outline: 'none',
             color: 'white',
           }}

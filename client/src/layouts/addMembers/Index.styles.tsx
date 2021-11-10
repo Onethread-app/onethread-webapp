@@ -56,7 +56,7 @@ const StyledLinkContainer = styled.div`
   }
 
   &::focus-within {
-    border: 2px solid var(--primary-bg-color, #34b3e9);
+    border: 2px solid var(--primary-bg-color, #08a0f7);
   }
 `;
 
@@ -208,7 +208,7 @@ const FormContainer = styled.div`
   }
 
   p a {
-    color: #34b3e9;
+    color: #08a0f7;
     text-decoration: underline;
   }
 
@@ -218,7 +218,7 @@ const FormContainer = styled.div`
     align-items: center;
 
     ${TextLink} {
-      color: var(--primary-color, #34b3e9);
+      color: var(--primary-color, #08a0f7);
     }
   }
 
@@ -253,7 +253,7 @@ const Container = styled.div`
 
   ${StyledButton}:focus {
     outline: none;
-    box-shadow: 0 0 0 3px var(--primary-bg-color, #34b3e9);
+    box-shadow: 0 0 0 3px var(--primary-bg-color, #08a0f7);
   }
 
   ${StyledButton}:disabled {

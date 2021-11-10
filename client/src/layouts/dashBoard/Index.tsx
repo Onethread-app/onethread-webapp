@@ -134,7 +134,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 <div className="w-50-ns w-100">
                   <h3
                     className="f3-ns f5"
-                    style={{ color: '#34b3e9' }}
+                    style={{ color: '#08A0F7' }}
                   >
                     {t('app.company.Dashboard.Update-of-task')}
                   </h3>
@@ -176,7 +176,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                   >
                                     <span
                                       className="ttc"
-                                      style={{ color: '#34b3e9' }}
+                                      style={{ color: '#08A0F7' }}
                                     >
                                       {task.name}
                                     </span>{' '}

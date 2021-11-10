@@ -123,7 +123,7 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
               <AddColumnButton
                 onClick={() => setShowColumnFormDialog(true)}
               >
-                <Icon icon="plus" color="#34B3E9" />
+                <Icon icon="plus" color="#08A0F7" />
               </AddColumnButton>
               {showColumnFormDialog && (
                 <RightSidebar

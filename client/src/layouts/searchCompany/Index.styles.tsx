@@ -72,7 +72,7 @@ const FormContainer = styled.div`
   }
 
   p a {
-    color: #34b3e9;
+    color: #08a0f7;
     text-decoration: underline;
   }
 
@@ -160,7 +160,7 @@ const Wrapper = styled.div`
 
   input:checked + .card {
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-    background-color: var(--secondary-bg-color, #34b3e9);
+    background-color: var(--secondary-bg-color, #08a0f7);
     color: white;
 
     span {

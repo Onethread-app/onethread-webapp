@@ -3,13 +3,7 @@ const { Subscription } = require('./subscription.model');
 const Plan = require('../plan/plan.model');
 const logger = require('../../config/winston.js');
 
-const {
-  sendJSONresponse,
-  sendErrorResponse,
-} = require('../helpers/jsonResponse');
-const {
-  findCompanyById,
-} = require('../services/company/company.services');
+const { sendJSONresponse } = require('../helpers/jsonResponse');
 
 const createSubscriptionForCompany = async (req, res, next) => {
   try {
@@ -96,12 +90,8 @@ const renewSubscription = async (req, res, next) => {
     next(error);
   }
 };
-const subscriptionExpireCheck = () => {
-  return async (req, res, next) => {
-    try {
-      const validCompanyId =
-        req.headers.companyid || req.body.companyId;
 
+<<<<<<< HEAD
       if (!validCompanyId) {
         return sendErrorResponse(res, 400, 'ValidationError', {
           message: `companyId is required`,
@@ -145,10 +135,11 @@ const subscriptionExpireCheck = () => {
     }
   };
 };
+=======
+>>>>>>> f87a521d... enh: improve UI
 module.exports = {
   createSubscriptionForCompany,
   currentSubscriptionPlan,
   changeSubscriptionPlan,
   renewSubscription,
-  subscriptionExpireCheck,
 };

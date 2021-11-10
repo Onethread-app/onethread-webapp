@@ -5,7 +5,9 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 const joiSchema = require('./room.validation');
 const roomCtrl = require('./room.controller');
-const projectCtrl = require('./../project/project.controller');
+const {
+  authorizeProjectRole,
+} = require('../middlewares/projectRoleMiddleware');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
 const router = express.Router();
@@ -16,7 +18,7 @@ router
   .post(
     authorization,
     SchemaValidator(joiSchema.createRoom),
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
@@ -76,7 +78,7 @@ router
   .route('/:roomId')
   .get(
     authorization,
-    projectCtrl.authorizeProjectRole(
+    authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',

@@ -154,7 +154,7 @@ const AddDesignationFormComponent = (
                   onChange={input.onChange}
                   leftIcon="id-number"
                   leftIconColor={`${
-                    checkError(meta) ? 'red' : '#34b3e9'
+                    checkError(meta) ? 'red' : '#08A0F7'
                   }`}
                   style={{ boxShadow: 'none' }}
                   error={
@@ -168,7 +168,7 @@ const AddDesignationFormComponent = (
               <Button
                 className="grow h2 pointer white bp3-minimal w4 mt4"
                 style={{
-                  background: '#34b3e9',
+                  background: '#08A0F7',
                   outline: 'none',
                   color: 'white',
                 }}

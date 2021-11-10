@@ -124,7 +124,7 @@ const UpdateProjectComponent = (
                     <Icon
                       icon="calendar"
                       className="mr2"
-                      style={{ color: '#34b3e9' }}
+                      style={{ color: '#08A0F7' }}
                       iconSize={30}
                     />
                   </div>
@@ -243,8 +243,8 @@ const UpdateProjectComponent = (
               style={{
                 background: '#fff',
                 outline: 'none',
-                border: '1px solid #34b3e9',
-                color: '#34b3e9',
+                border: '1px solid #08A0F7',
+                color: '#08A0F7',
               }}
               onClick={(e: any) => {
                 e.preventDefault();

@@ -222,12 +222,12 @@ const CustomMentionEditor = (
         <EmojiSelect closeOnEmojiSelect />
         <AttachFileIcon
           className="pointer"
-          style={{ color: '#34b3e9', margin: '0 .5rem' }}
+          style={{ color: '#08A0F7', margin: '0 .5rem' }}
           onClick={() => props.setShowFileDialog(true)}
         />
         <SendIcon
           className="pointer"
-          style={{ color: '#34b3e9', margin: '0 .5rem' }}
+          style={{ color: '#08A0F7', margin: '0 .5rem' }}
           onClick={() => handleSend()}
         />
       </div>
