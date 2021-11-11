@@ -131,7 +131,7 @@ const get = async (req, res, next) => {
     })
       .select(
         '_id status name color priority description dueDate columnId boardId project timeSpent createdAt',
-      )
+      ).sort({'createdAt': -1})
       .exec()
       .then((result) => {
         let mTasks = Promise.all(
