@@ -220,7 +220,7 @@ const searchSkillSet = async (req, res, next) => {
       })
       .catch((err) => {
         logger.error(`${err}`);
-        
+
         return next(err);
       });
     // console.log(userSkill);

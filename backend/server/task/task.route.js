@@ -3,7 +3,6 @@ const taskCtrl = require('./task.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 const joiSchema = require('./task.validation');
 const subCtrl = require('../subscription/subscription.controller');
-const projectCtrl = require('../project/project.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
@@ -65,6 +64,5 @@ router
   .get(authorization, taskCtrl.suggestMember);
 
 router.param('taskId', taskCtrl.load);
-
 
 module.exports = router;

@@ -7,6 +7,9 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
+const {
+  findCompanyById,
+} = require('../services/company/company.services');
 
 const createSubscriptionForCompany = async (req, res, next) => {
   try {
@@ -96,10 +99,25 @@ const renewSubscription = async (req, res, next) => {
 const subscriptionExpireCheck = () => {
   return async (req, res, next) => {
     try {
+      const validCompanyId =
+        req.headers.companyid || req.body.companyId;
+
+      if (!validCompanyId) {
+        return sendErrorResponse(res, 400, 'ValidationError', {
+          message: `companyId is required`,
+        });
+      }
+      const isCompanyExist = await findCompanyById(validCompanyId);
+      if (!isCompanyExist) {
+        return sendErrorResponse(res, 404, 'NotFoundError', {
+          message: `companyId does not exist`,
+        });
+      }
       const subscribe = await Subscription.find({
-        company: req.headers.companyid || req.body.companyId,
+        company: validCompanyId,
         isActive: true,
       }).sort({ _id: -1 });
+
       if (!subscribe) {
         return sendErrorResponse(res, 404, 'CompanyIdNotFoundError', {
           message: `companyId not found`,
