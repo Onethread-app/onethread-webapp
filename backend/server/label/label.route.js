@@ -1,6 +1,6 @@
 const express = require('express');
 const labelCtrl = require('./label.controller');
-const subCtrl = require('../subscription/subscription.controller');
+const subCtrl = require('../middlewares/subscriptionCheckerMiddleware');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');

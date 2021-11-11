@@ -100,7 +100,6 @@ const renewSubscription = async (req, res, next) => {
     next(error);
   }
 };
-
 module.exports = {
   createSubscriptionForCompany,
   currentSubscriptionPlan,
