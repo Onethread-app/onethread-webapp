@@ -32,17 +32,19 @@ const videoConferencesRoute = require('./server/videoConferences/videoConference
 const feedbackRoutes = require('./server/feedback/feedback.route');
 const reportRoutes = require('./server/report/report.route');
 const timeTrackerRoutes = require('./server/time-tracker/time-tracker.route');
+const labelRoutes = require('./server/label/label.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
 // TODO: use glob to match *.route files
+// TODO: rename the endpoints with hyphen and plural words
 
 // mount account user routes at /account
 router.use('/accounts', accountRoutes);
 router.use('/messages', messageRoutes);
-router.use('/category', categoryRoutes);
+router.use('/category', categoryRoutes); // categories
 router.use('/comments', commentRoutes);
-router.use('/company', companyRoutes);
+router.use('/company', companyRoutes); // companies
 router.use('/educations', educationRoutes);
 router.use('/jobs', jobRoutes);
 router.use('/posts', postRoutes);
@@ -54,22 +56,23 @@ router.use('/rooms', roomRoutes);
 router.use('/skills', skillRoutes);
 router.use('/files', fileRoutes);
 router.use('/boards', boardRoutes);
-router.use('/boardColumns', boardColumnRoutes);
+router.use('/boardColumns', boardColumnRoutes); // board-columns
 router.use('/tasks', taskRoutes);
 router.use('/subTasks', subTasks);
 router.use('/utils', utilsRoutes);
 router.use('/projects', projectRoutes);
-router.use('/associate', associateRoutes);
+router.use('/associate', associateRoutes); // associates
 router.use('/notifications', notificationRoutes);
-router.use('/channel', channelRoutes);
+router.use('/channel', channelRoutes); // channels
 router.use('/teams', teamRoutes);
-router.use('/contact', contactRoutes);
+router.use('/contact', contactRoutes); // contacts
 router.use('/plans', planRoutes);
 router.use('/payments', paymentRoute);
 router.use('/subscriptions', subscriptionRoutes);
 router.use('/video-conferences', videoConferencesRoute);
-router.use('/feedback', feedbackRoutes);
+router.use('/feedback', feedbackRoutes); // feedbacks
 router.use('/reports', reportRoutes);
-router.use('/track', timeTrackerRoutes);
+router.use('/track', timeTrackerRoutes); // tracks
+router.use('/labels', labelRoutes);
 
 module.exports = router;
