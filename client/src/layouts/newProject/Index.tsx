@@ -71,7 +71,10 @@ const Index = (props: IProjectDashboardProps) => {
   const allTabs = [
     { component: <ProjectTasks />, label: 'Tasks' },
     { component: <ProjectWiki />, label: 'Wiki' },
-    { component: <ProjectCollaborators />, label: 'Collaborators' },
+    {
+      component: <ProjectCollaborators />,
+      label: 'Teammates',
+    },
     { component: <ProjectDiscussion />, label: 'Discussion' },
   ];
 

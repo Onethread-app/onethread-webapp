@@ -44,7 +44,7 @@ const CompanyDashboard = lazy(
 );
 const DashboardView = lazy(() => import('layouts/dashBoard/Index'));
 const ColleaguesPage = lazy(
-  () => import('layouts/company/colleagues/Index'),
+  () => import('layouts/company/colleagues/NewIndex'),
 );
 const BoardPage = lazy(() => import('layouts/company/board/Index'));
 const AssociatesDetailsView = lazy(
@@ -71,9 +71,9 @@ const ProjectPage = lazy(
 const ProjectSettingsPage = lazy(
   () => import('layouts/company/project/settings/Index'),
 );
-const ProjectTeamPage = lazy(
-  () => import('layouts/company/project/team/Index'),
-);
+// const ProjectTeamPage = lazy(
+//   () => import('layouts/company/project/team/Index'),
+// );
 const RoomPage = lazy(() => import('layouts/company/room/Index'));
 const RoomPageMobile = lazy(
   () => import('layouts/company/room/IndexMobile'),
@@ -375,11 +375,11 @@ const App = () => {
             exact={true}
             component={ProjectDashboard}
           />
-          <PrivateRoute
+          {/* <PrivateRoute
             path="/company/:cname/project/:projectId/team"
             exact={true}
             component={ProjectTeamPage}
-          />
+          /> */}
           <PrivateRoute
             path="/company/:cname/project/:projectId/settings"
             exact={true}

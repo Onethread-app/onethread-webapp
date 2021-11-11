@@ -53,7 +53,7 @@ router
     projectCtrl.addAssociateInProject,
   );
 router
-  .route('/lists')
+  .route('/company-lists')
   .get(
     authorization,
     subCtrl.subscriptionExpireCheck(),
