@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import { upperFirst, chunk } from 'lodash';
 
-import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import { HTMLTable } from '@blueprintjs/core/lib/esm/components/html-table/htmlTable';
 import Snackbar from '@material-ui/core/Snackbar/Snackbar';
 import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
@@ -32,11 +31,10 @@ import { companyPermit } from 'stores/UtilsActions';
 import Navbar from 'components/navbar/Navbar';
 import { InviteColleagueView } from './InviteColleagueView';
 import { Loading } from 'components/Loading';
-import MemberTable from '../../../components/MemberTable/MemberTable';
-import SearchOption from 'components/SearchOption/SearchOption';
 import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
 
 import './Index.scss';
+import CompanyColleagues from './CompanyColleagues';
 
 interface Colleagues {
   company: ICompany;
@@ -57,14 +55,6 @@ interface Colleagues {
   invitingColleague: boolean;
   errorOnInvitingColleague: string;
 }
-
-const load = async (
-  _getCompanyMembers: () => void,
-  _getCompanyPendingMembers: (limit?: number, skip?: number) => void,
-) => {
-  await _getCompanyMembers();
-  await _getCompanyPendingMembers();
-};
 
 export const getDivisionName = {
   director: 'Director',
@@ -109,15 +99,11 @@ const ColleaguesPageComponent = (props: Colleagues) => {
   >([]);
   const [members, setMembers] = useState<ICompanyMembers[]>([]);
   const [colleaguesList, setColleaguesList] = useState<any[]>([]);
-  const [rows, setRows] = useState<any[]>(colleaguesList);
-
-  useEffect(() => {
-    setRows(colleaguesList);
-  }, [colleaguesList]);
 
   useEffect(() => {
     if (props.company._id) {
-      load(props.getCompanyMembers, props.getCompanyPendingMembers);
+      props.getCompanyMembers();
+      props.getCompanyPendingMembers();
       if (props.subscriptiontExpired) {
         props.company.role === 'superAdmin'
           ? window.location.replace(
@@ -151,7 +137,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
   }, [props.company]);
 
   useEffect(() => {
-    let colleaguesList = members.map((m: any, i) => ({
+    let allColleagues = members.map((m: any, i) => ({
       id: m._id,
       name: `${upperFirst(m.account.firstName)}${' '}${upperFirst(
         m.account.lastName,
@@ -172,72 +158,16 @@ const ColleaguesPageComponent = (props: Colleagues) => {
       designations: m.designations,
       m: m,
     }));
-    setColleaguesList(colleaguesList);
+    setColleaguesList(allColleagues);
   }, [members]);
 
   return (
     <>
       {isMobileOnly && <Navbar type="company" />}
-      <div
-        className="ph5-ns ph3 pb5 pt5 pt0-ns"
-        style={{ background: '#E5E5E5', minHeight: '100%' }}
-      >
-        <div
-          className="flex justify-between items-center mt2"
-          style={{ borderBottom: '2px solid #E0E0E0' }}
-        >
-          {isMobileOnly ? undefined : (
-            <h1 className="tigrow-lightGray-1">
-              {t('app.company.Colleagues.Colleagues')} (
-              {members.length})
-            </h1>
-          )}
-          <div className="colleagues-top-area">
-            <SearchOption
-              list={colleaguesList}
-              rows={rows}
-              setRows={setRows}
-            />
-            {companyPermit(props.company.role) ? (
-              <div>
-                <Button
-                  className="grow fr h2 pointer white bp3-minimal ml2 mb1"
-                  style={{
-                    background: '#08A0F7',
-                    outline: 'none',
-                    color: 'white',
-                  }}
-                  onClick={() => setShowDialog(!showDialog)}
-                >
-                  {t('app.company.Colleagues.Add-Colleagues')}
-                </Button>
-                <Button
-                  className="grow fr h2 pointer white bp3-minimal ml2 mb1"
-                  style={{
-                    background: '#08A0F7',
-                    outline: 'none',
-                    color: 'white',
-                  }}
-                  onClick={() =>
-                    setshowDialogForInviteColleague(
-                      !showDialogForInviteColleague,
-                    )
-                  }
-                >
-                  {t('app.company.Colleagues.Invite-Colleagues')}
-                </Button>
-              </div>
-            ) : undefined}
-          </div>
-        </div>
-
-        {colleaguesList.length && (
-          <MemberTable
-            type={'colleagues'}
-            props={props}
-            rows={rows}
-          />
-        )}
+      <div style={{ minHeight: '100%' }}>
+        {colleaguesList.length ? (
+          <CompanyColleagues colleagues={colleaguesList} type="" />
+        ) : null}
 
         {/* pending list starts */}
         {companyPermit(props.company.role) ? (
@@ -278,7 +208,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
               )}
             </HTMLTable>
           </>
-        ) : undefined}
+        ) : null}
         {/* pending list ends */}
       </div>
       <Snackbar
@@ -351,7 +281,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const ColleaguesPage = connect(mapStateToProps, {
+export const NewColleaguesPage = connect(mapStateToProps, {
   getCompanyMembers,
   getAllDepartments,
   addDesignation,
@@ -362,4 +292,4 @@ export const ColleaguesPage = connect(mapStateToProps, {
   inviteColleagueInBulk,
 })(ColleaguesPageComponent);
 
-export default ColleaguesPage;
+export default NewColleaguesPage;
