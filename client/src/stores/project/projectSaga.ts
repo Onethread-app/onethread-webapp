@@ -127,7 +127,10 @@ export function* getAllProjectsAsync() {
     yield put(showLoading());
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(`projects/lists`, headers);
+      const response = yield tigrowApi.get(
+        `projects/company-lists`,
+        headers,
+      );
       yield put(getAllProjectsSuccess(response.data));
     }
   } catch (error) {

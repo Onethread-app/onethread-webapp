@@ -36,7 +36,7 @@ const CompanyTasks = lazy(
   () => import('components/task/CompanyTasks'),
 );
 const ColleaguesPage = lazy(
-  () => import('layouts/company/colleagues/Index'),
+  () => import('layouts/company/colleagues/NewIndex'),
 );
 const CompanyAnnouncements = lazy(
   () => import('components/announcement/CompanyAnnouncements'),
@@ -67,7 +67,7 @@ const Index = (props: ICompanyDashboardProps) => {
   const allTabs = [
     { component: <CompanyProjects />, label: 'Projects' },
     { component: <CompanyTasks />, label: 'Tasks' },
-    { component: <ColleaguesPage />, label: 'Collaborators' },
+    { component: <ColleaguesPage />, label: 'Colleagues' },
     { label: 'Discussion' },
     {
       component: <CompanyAnnouncements company={props.company} />,

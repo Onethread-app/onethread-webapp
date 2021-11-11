@@ -1,4 +1,6 @@
+const logger = require('../../config/winston');
 const { Member } = require('../company/member/member.model');
+const { sendErrorResponse } = require('../helpers/jsonResponse');
 const authorizeUser = (functionalRole, ...userRoles) => {
   return async function (req, res, next) {
     try {
