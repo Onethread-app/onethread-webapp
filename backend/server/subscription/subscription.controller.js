@@ -3,17 +3,7 @@ const { Subscription } = require('./subscription.model');
 const Plan = require('../plan/plan.model');
 const logger = require('../../config/winston.js');
 
-<<<<<<< HEAD
-const {
-  sendJSONresponse,
-  sendErrorResponse,
-} = require('../helpers/jsonResponse');
-const {
-  findCompanyById,
-} = require('../services/company/company.services');
-=======
 const { sendJSONresponse } = require('../helpers/jsonResponse');
->>>>>>> Bugfix/form (#321)
 
 const createSubscriptionForCompany = async (req, res, next) => {
   try {
