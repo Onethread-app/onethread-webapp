@@ -105,6 +105,7 @@ module.exports = {
       color: schema.color,
       deadline: schema.deadline,
       budget: schema.budget,
+      currency: schema.currency,
     }),
     query: Joi.object().keys({
       pid: schema.pid.required(),

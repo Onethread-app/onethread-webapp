@@ -660,6 +660,7 @@ const updateProject = async (req, res, next) => {
           color: req.body.color,
           deadline: req.body.deadline,
           budget: req.body.budget,
+          currency: req.body.currency,
           status,
         },
       },
@@ -1110,7 +1111,7 @@ const getAllProjectForUser = async (req, res, next) => {
 
 const favouriteProject = async (req, res, next) => {
   try {
-    await Team.findOneAndUpdate(
+    const project = await Team.findOneAndUpdate(
       { project: req.query.pid, member: req.body.member },
       { $set: { isFavourite: req.body.isFavourite } },
       { safe: true, upsert: true },

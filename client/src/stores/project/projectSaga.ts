@@ -278,34 +278,18 @@ export function* getArchivedProjectsAsync() {
   }
 }
 
-export function* updateProjectAsync({
-  projectName,
-  projectId,
-  color,
-  deadline,
-  companyId,
-  budget,
-  currency,
-}: any) {
+export function* updateProjectAsync({ payload }) {
   try {
-    const headers = tokenConfig();
+    console.log(payload);
+    const { companyId, projectId, ...newPayload } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
-      const reqBody = {
-        name: projectName,
-        color,
-        deadline,
-        budget,
-        currency,
-      };
       const response = yield tigrowApi.put(
         `projects/change-title?pid=${projectId}`,
-        reqBody,
+        newPayload,
         headers,
       );
-      yield all([
-        put(updateProjectSuccess(response.data)),
-        // put(getAllProjects()),
-      ]);
+      yield all([put(updateProjectSuccess(response.data))]);
     }
   } catch (error) {
     yield put(updateProjectFailure(returnErrorText(error)));
@@ -753,6 +737,7 @@ export function* favouriteProjectAsync(action: {
     }
   } catch (error) {
     yield put(favouriteProjectFailure(returnErrorText(error)));
+    errorToaster(returnErrorText(error));
   }
 }
 

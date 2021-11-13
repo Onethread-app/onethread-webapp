@@ -21,6 +21,7 @@ export interface IMember {
   _id: string;
 }
 export interface IProject {
+  isFavourite: boolean;
   _id: string;
   name: string;
   color: number;
@@ -34,6 +35,8 @@ export interface IProject {
   status: string;
   timeSpent?: number;
   deadline: Date;
+  budget: number;
+  currency: string;
   company: {
     _id: string;
     uniqueName: string;
@@ -144,6 +147,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         projectLoading: true,
+        error: '',
       };
     case ProjectActionTypes.ADD_PROJECT_ASSOCIATES_SUCCESS:
     case ProjectActionTypes.UPDATE_PROJECT_ROLE_SUCCESS:

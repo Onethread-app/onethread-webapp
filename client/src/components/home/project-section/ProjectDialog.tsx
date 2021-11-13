@@ -456,7 +456,7 @@ const Index = (props: IProps) => {
               </div>
             </div>
             <div className="w-100 flex flex-row justify-start mt3 items-center">
-              <label className="label">Label</label>
+              <label className="label mb3">Label</label>
 
               {Color.map((color) => (
                 <label
@@ -465,7 +465,7 @@ const Index = (props: IProps) => {
                     setData({ ...data, label: color?.code });
                   }}
                   key={color.code}
-                  className="pointer mb3 flex items-center"
+                  className="pointer mb3 flex items-center mr4"
                 >
                   <Icon
                     color={color.value}
