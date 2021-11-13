@@ -55,6 +55,11 @@ const TaskSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    parentTask: {
+      type: Schema.Types.ObjectId,
+      ref: 'Task',
+      default: null,
+    },
   },
   { timestamps: true },
 );

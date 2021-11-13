@@ -4,7 +4,7 @@ const _ = require('lodash');
 const TaskAssign = require('../task/taskAssign.model');
 const {
   findSubtasksByTaskId,
-} = require('../services/task/subtask/subtask.service');
+} = require('../services/task/task.service');
 
 const getTaskMembers = async (taskId) => {
   const taskMembers = await TaskAssign.find({

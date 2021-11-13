@@ -8,7 +8,8 @@ const TaskStatusSchema = new mongoose.Schema(
       trim: true,
     },
     project: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project',
       required: true,
     },
     account: {

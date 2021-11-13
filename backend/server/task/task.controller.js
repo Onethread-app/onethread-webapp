@@ -32,9 +32,14 @@ const { getTaskMembers } = require('../helpers/utils');
 const {
   sendMailAsTaskReminder,
 } = require('../services/email.services');
+const {
+  findSubtasksByTaskId,
+  getAssignedMembers,
+} = require('../services/task/task.service');
 
+// OK
 const addMemberToTask = async (assignmembers, taskId, req) => {
-  const requestedMembers = req.body.assignmembers;
+  const requestedMembers = assignmembers;
   const newMembers = assignmembers.map((memberId) => {
     return {
       taskId: taskId,
@@ -42,7 +47,6 @@ const addMemberToTask = async (assignmembers, taskId, req) => {
       assignedPerson: memberId,
     };
   });
-  // TODO: Permission Error
   await TaskAssign.insertMany(newMembers);
   const members = await TaskAssign.find({
     taskId,
@@ -77,46 +81,77 @@ const addMemberToTask = async (assignmembers, taskId, req) => {
 
 // OK
 const load = async (req, res, next, id) => {
-  const task = await Task.findById(id).populate([
-    { path: 'project', select: '_id name' },
-    { path: 'company', select: '_id name uniqueName' },
-    {
-      path: 'status',
-      select: '_id name',
-    },
-    {
-      path: 'account',
-      select: '_id firstName lastName profileImage',
-    },
-    { path: 'file', select: '_id link s3Key' },
-  ]);
+  try {
+    logger.info('Task is loading....');
+    const populateArray = [
+      { path: 'project', select: '_id name' },
+      { path: 'company', select: '_id name uniqueName' },
+      {
+        path: 'status',
+        select: '_id name',
+      },
+      {
+        path: 'account',
+        select: '_id firstName lastName profileImage',
+      },
+      { path: 'file', select: '_id link s3Key' },
+    ];
+    const task = await Task.findById(id).populate(populateArray);
 
-  if (!task) {
-    return sendErrorResponse(res, 404, 'NotFound', {
-      success: false,
-      message: 'No valid entry found for provided Task ID',
-    });
+    if (!task) {
+      return sendErrorResponse(res, 404, 'NotFound', {
+        success: false,
+        message: 'No valid entry found for provided Task ID',
+      });
+    }
+    // Tasks
+    const taskDetails = task.toJSON();
+    // Subtasks
+    taskDetails.subTasks = await findSubtasksByTaskId(
+      task._id,
+      populateArray,
+    );
+    // Members
+    taskDetails.members = await getAssignedMembers(task._id);
+    req.task = taskDetails;
+    logger.info('Task loading completed');
+    next();
+  } catch (error) {
+    logger.error(`Task Load: ${error}`);
+    next(error);
   }
-
-  req.task = task;
-  next();
 };
 
-// Private route
-// headers: companyid
-// query: pid
-// body: name, description, status, priority, dueDate, assignmembers
+// OK
+const createSubtask = async (req, res, next) => {
+  try {
+    const draftStatus = await TaskStatus.findOne({
+      project: req.query.pid,
+      name: 'Draft',
+    });
+    if (!draftStatus) {
+      return sendErrorResponse(res, 404, 'NotFound', {
+        message: 'Task Status (Draft) not found',
+      });
+    }
+    const subTask = await Task.create({
+      name: req.body.name,
+      description: req.body.description,
+      account: req.user._id,
+      parentTask: req.task._id,
+      company: req.headers.companyid,
+      project: req.query.pid,
+      status: draftStatus._id,
+    });
 
-const isEqual = (a, b) => {
-  if (!a || !b) return false;
-  return a.toString() === b.toString();
+    return sendJSONresponse(res, 201, subTask);
+  } catch (error) {
+    logger.error(`SubTask Creation: ${error}`);
+    next(error);
+  }
 };
 
-// Headers: companyid
-// query: pid
-// body: status, name, description, priority, dueDate,
-// private
-
+// OK
 const create = async (req, res, next) => {
   try {
     // Get Company & Project ID
@@ -124,19 +159,15 @@ const create = async (req, res, next) => {
     const pid = req.query.pid;
 
     // Get Task Status
-    const taskStatus = await TaskStatus.findById(
-      req.body.status,
-    ).select('project');
+    const taskStatus = await TaskStatus.findOne({
+      name: 'Draft',
+      project: pid,
+    }).select('_id project');
 
     // Validation & Error Checking
     if (!taskStatus) {
-      sendErrorResponse(res, 404, 'NotFound', {
-        message: 'Task Status not found',
-      });
-    }
-    if (!isEqual(taskStatus.project, pid)) {
-      sendErrorResponse(res, 400, 'ValidationError', {
-        message: 'Project ID mismatch',
+      return sendErrorResponse(res, 404, 'NotFound', {
+        message: 'Task Status (Draft) not found',
       });
     }
 
@@ -145,7 +176,7 @@ const create = async (req, res, next) => {
       name: req.body.name,
       description: req.body.description,
       account: req.user._id,
-      status: req.body.status,
+      status: taskStatus._id,
       project: pid,
       priority: req.body.priority,
       dueDate: req.body.dueDate,
@@ -173,7 +204,6 @@ const create = async (req, res, next) => {
       assignedMembers: members,
       project: task.project,
     };
-    logger.info(`Task column create`);
     // await sendNotificationToProjectTeamMates(
     //   req.user._id,
     //   companyId,
@@ -195,28 +225,20 @@ const create = async (req, res, next) => {
 };
 
 const get = (req, res, next) => {
-  return res.json(req.task);
+  return sendJSONresponse(res, 200, req.task);
 };
 
 const getMembers = async (req, res, next) => {
   try {
-    const taskAssign = await TaskAssign.find({
-      taskId: req.task._id,
-    })
-      .select('_id assignedPerson account')
-      .populate([
-        {
-          path: 'assignedPerson account',
-          select: '_id firstName lastName profileImage',
-        },
-      ]);
-    return res.status(200).send(taskAssign);
+    const taskAssign = await getAssignedMembers(req.task._id);
+    return sendJSONresponse(res, 200, taskAssign);
   } catch (error) {
     logger.error(`Task- Get Members: ${error}`);
     next(error);
   }
 };
 
+// TODO: Not Done
 const addMember = async (req, res, next) => {
   try {
     const requestedMembers = req.body.assignmembers;
@@ -336,7 +358,7 @@ const suggestMemberForCreatingTask = async (req, res, next) => {
     let members = projectMembers.map((m) => m.account);
     return sendJSONresponse(res, 200, members);
   } catch (error) {
-    logger.info(`Task Member: ${error}`);
+    logger.info(`Suggest member for creating task: ${error}`);
     next(error);
   }
 };
@@ -365,26 +387,23 @@ const suggestMember = async (req, res, next) => {
     });
 
     members = members.map((m) => m.account);
-    return res.status(200).json({ members });
+    return sendJSONresponse(res, 200, { members });
   } catch (error) {
     logger.error(`Suggest member: ${error}`);
-    logger.next(error);
+    next(error);
   }
 };
 
 const deleteMember = async (req, res, next) => {
   try {
-    await TaskAssign.findOneAndDelete({
-      _id: req.query.assignedMemberid,
-      taskId: req.params.taskId,
-    });
-    res.status(200).json({ message: 'MEMBER DELETED' });
+    await TaskAssign.findByIdAndDelete(req.query.assignedMemberid);
+    return sendJSONresponse(res, 200, { message: 'Member deleted' });
   } catch (error) {
-    logger.error(`Delete Member: ${error}`);
+    logger.error(`Delete member: ${error}`);
     next(error);
   }
 };
-
+// OK
 const update = async (req, res, next) => {
   try {
     const task = await Task.findByIdAndUpdate(
@@ -404,14 +423,11 @@ const update = async (req, res, next) => {
   }
 };
 
+// OK
 const deleteTask = async (req, res, next) => {
   try {
     const taskId = req.params.taskId;
-    const subTasks = await SubTask.find({ taskId }).select('_id');
-    const subTaskIds = subTasks.map((sub) => sub._id);
-    if (subTaskIds.length > 0) {
-      await SubTask.deleteMany({ _id: { $in: subTaskIds } });
-    }
+    await Task.deleteMany({ parentTask: taskId });
     await Task.findByIdAndDelete(taskId);
     const status = await calculateProjectStatus(req.query.pid);
     await Project.findByIdAndUpdate(
@@ -422,6 +438,26 @@ const deleteTask = async (req, res, next) => {
     return sendJSONresponse(res, 200, { message: 'Task Deleted.' });
   } catch (error) {
     logger.error(`Task Deletion: ${error}`);
+    next(error);
+  }
+};
+// OK
+const markAsCompleted = async (req, res, next) => {
+  try {
+    await Task.findByIdAndUpdate(
+      { _id: req.task._id },
+      { $set: { isCompleted: true } },
+      { safe: true, upsert: true, new: true },
+    );
+    const status = await calculateProjectStatus(req.query.pid);
+    await Project.findByIdAndUpdate(
+      { _id: req.query.pid },
+      { $set: { status } },
+      { safe: true, upsert: true, new: true },
+    );
+    return sendJSONresponse(res, 200, { success: true });
+  } catch (error) {
+    logger.error(`Task - Mark as Completed: ${error}`);
     next(error);
   }
 };
@@ -464,7 +500,7 @@ const dragTask = async (req, res, next) => {
     //   req.body.destinationColumnId,
     // );
 
-    return res.status(200).json({ success: true });
+    return sendJSONresponse(res, 200, { success: true });
   } catch (error) {
     logger.error(`Drag task: ${error}`);
     next(error);
@@ -493,16 +529,22 @@ const taskReminder = async (req, res, next) => {
     tomorrowEnd.setHours(23, 59, 59, 999);
 
     // Todays Task
+    // TaskQuery - 1
     const taskListToday = await Task.find({
       dueDate: { $gte: startToday, $lte: endToday },
+      parentTask: null,
     });
     let taskId = taskListToday.map((i) => i._id);
+    let todayTaskIds = taskId;
     const todayCounter = {};
-
-    const userTaskListToday = await TaskAssign.find({ taskId })
+    let userTaskListToday = await TaskAssign.find({ taskId })
       .populate({ path: 'account', select: '_id name email' })
       .populate({ path: 'assignedPerson', select: '_id name email' })
       .populate({ path: 'taskId', select: '_id name' });
+
+    userTaskListToday = userTaskListToday.filter(
+      (ut) => ut.account && ut.assignedPerson && ut.taskId,
+    );
 
     for (let task of userTaskListToday) {
       // Assigned by me
@@ -546,13 +588,19 @@ const taskReminder = async (req, res, next) => {
     }
 
     const tomorrowCounter = {};
+    // TaskQuery - 2
     const taskListTomorrow = await Task.find({
       dueDate: { $gte: startToday, $lte: tomorrowEnd },
+      parentTask: null,
     });
     taskId = taskListTomorrow.map((i) => i._id);
-    const userTaskListTomorrow = await TaskAssign.find({ taskId })
+    let userTaskListTomorrow = await TaskAssign.find({ taskId })
       .populate({ path: 'account', select: '_id name email' })
       .populate({ path: 'assignedPerson', select: '_id name email' });
+
+    userTaskListTomorrow = userTaskListTomorrow.filter(
+      (ut) => ut.account && ut.assignedPerson && ut.taskId,
+    );
 
     for (let task of userTaskListTomorrow) {
       // Assign by me
@@ -578,8 +626,9 @@ const taskReminder = async (req, res, next) => {
       usernameEmailMapper[assignedTo] = task.assignedPerson.email;
     }
 
-    const subtaskList = await SubTask.find({
-      taskId,
+    // TaskQuery-3
+    const subtaskList = await Task.find({
+      parentTask: todayTaskIds,
       dueDate: { $gte: startToday, $lte: endToday },
     })
       .populate({ path: 'account', select: '_id name email' })
@@ -680,4 +729,6 @@ module.exports = {
   suggestMemberForCreatingTask,
   suggestMember,
   taskReminder,
+  createSubtask,
+  markAsCompleted,
 };

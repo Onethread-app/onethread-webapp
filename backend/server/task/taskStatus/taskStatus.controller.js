@@ -5,6 +5,10 @@ const {
   sendErrorResponse,
 } = require('../../helpers/jsonResponse');
 
+const {
+  createTaskStatus,
+} = require('../../services/task/taskStatus/taskStatus.service');
+
 // load the task-status
 const load = async (req, res, next, id) => {
   try {
@@ -37,12 +41,12 @@ const create = async (req, res, next) => {
         message: 'Task Status already exists',
       });
     }
-    const taskStatus = await TaskStatus.create({
-      name: req.body.name,
-      project: req.query.pid,
-      positionInBoard: req.body.positionInBoard,
-      account: req.user._id,
-    });
+    const taskStatus = await createTaskStatus(
+      req.body.name,
+      req.query.pid,
+      req.body.positionInBoard,
+      req.user._id,
+    );
     return sendJSONresponse(res, 201, {
       _id: taskStatus._id,
       name: taskStatus.name,

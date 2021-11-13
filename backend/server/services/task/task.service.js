@@ -37,7 +37,41 @@ const findTaskMembersById = async (_id) => {
     .populate(taskAssignOptions)
     .exec();
 };
+
+const getAssignedMembers = async (taskId) => {
+  return TaskAssign.find({ taskId })
+    .select('_id assignedPerson account')
+    .populate([
+      {
+        path: 'assignedPerson account',
+        select: '_id firstName lastName profileImage',
+      },
+    ]);
+};
+
+const findSubtasksByTaskId = async (
+  parentTask,
+  populateArray = [],
+) => {
+  let subtasks = await Task.find({ parentTask })
+    .select('-updatedAt')
+    .populate(populateArray);
+
+  console.log(subtasks);
+  let subtaskWithMembers = [];
+  await Promise.all(
+    subtasks.map(async (subtask) => {
+      const st = subtask.toJSON();
+      st.members = await getAssignedMembers(st._id);
+      subtaskWithMembers.push(st);
+    }),
+  );
+  return subtaskWithMembers;
+};
+
 module.exports = {
   findTaskById,
   findTaskMembersById,
+  getAssignedMembers,
+  findSubtasksByTaskId,
 };

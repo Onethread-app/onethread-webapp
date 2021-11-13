@@ -28,7 +28,6 @@ module.exports = {
     body: Joi.object().keys({
       name: taskSchema.name.required(),
       description: taskSchema.description.allow(''),
-      status: taskSchema.status.required(),
       dueDate: taskSchema.dueDate.required(),
       priority: taskSchema.priority.required(),
       assignmembers: Joi.array().items().required(),
@@ -36,6 +35,13 @@ module.exports = {
 
     query: Joi.object().keys({
       pid: taskSchema.project.required(),
+    }),
+  }),
+
+  createSubtask: Joi.object().keys({
+    body: Joi.object().keys({
+      name: taskSchema.name.required(),
+      description: taskSchema.description,
     }),
   }),
   dragTask: Joi.object().keys({

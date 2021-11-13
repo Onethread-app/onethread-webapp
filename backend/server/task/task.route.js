@@ -21,6 +21,22 @@ router
     taskCtrl.create,
   );
 
+router
+  .route('/suggest-member')
+  .get(authorization, taskCtrl.suggestMemberForCreatingTask);
+
+router
+  .route('/:taskId/subtask')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.createSubtask),
+    taskCtrl.createSubtask,
+  );
+
+router
+  .route('/:taskId/mark-as-completed')
+  .post(authorization, taskCtrl.markAsCompleted);
+
 // OK
 router
   .route('/:taskId')
@@ -36,11 +52,20 @@ router
     taskCtrl.deleteTask,
   );
 
+router
+  .route('/dragTask')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.dragTask),
+    taskCtrl.dragTask,
+  );
+
 // OK
 router
-  .route('/suggest-member')
-  .get(authorization, taskCtrl.suggestMemberForCreatingTask);
+  .route('/:taskId/suggest-member')
+  .get(authorization, taskCtrl.suggestMember);
 
+// OK
 router
   .route('/member/:taskId')
   .get(authorization, taskCtrl.getMembers)
@@ -54,19 +79,6 @@ router
     SchemaValidator(joiSchema.deleteMember),
     taskCtrl.deleteMember,
   );
-
-router
-  .route('/dragTask')
-  .post(
-    authorization,
-    SchemaValidator(joiSchema.dragTask),
-    taskCtrl.dragTask,
-  );
-
-// OK
-router
-  .route('/:taskId/suggest-member')
-  .get(authorization, taskCtrl.suggestMember);
 
 // OK
 router.param('taskId', taskCtrl.load);

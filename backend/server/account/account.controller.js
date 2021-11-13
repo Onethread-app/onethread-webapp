@@ -58,7 +58,7 @@ const {
 
 const {
   findSubtasksByTaskId,
-} = require('../services/task/subtask/subtask.service');
+} = require('../services/task/task.service');
 
 const options = [
   {
@@ -1062,6 +1062,7 @@ const userDueTask = async (req, res, next) => {
     const dueTask = await Task.find({
       dueDate: { $lt: yesterday, $gte: yesWeek },
       status: { $ne: 'done' },
+      parentTask: null,
     }).sort({ createdAt: -1 });
     taskId = dueTask.map((e) => e._id);
     const assignToUserDue = await TaskAssign.find({
