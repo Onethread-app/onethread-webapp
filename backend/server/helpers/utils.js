@@ -79,9 +79,15 @@ const getFormattedTaskForClient = async (tasks) => {
   return formattedTasks;
 };
 
+const getIds = (array) => {
+  if (Array.isArray(array)) return array.map((a) => a._id);
+  return [];
+};
+
 module.exports = {
   sortTasksByStatus,
   sortProjectsByStatus,
   getFormattedTaskForClient,
   getTaskMembers,
+  getIds,
 };

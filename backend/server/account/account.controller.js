@@ -26,8 +26,12 @@ const {
 const chalk = require('chalk');
 const { createSlug } = require('../helpers/SlugCreator');
 
-const { getTaskMembers } = require('../task/task.controller');
-const { sortTasksByStatus } = require('../helpers/utils');
+const {
+  getAssignedMembers,
+  findTodaysTask,
+  findAssignedNumberOfTasks,
+} = require('../services/task/task.service');
+const { sortTasksByStatus, getIds } = require('../helpers/utils');
 
 const {
   getAllStatusInProject,
@@ -49,7 +53,7 @@ const {
   addTokenToBlackList,
 } = require('../services/account/account.service');
 const Task = require('../task/task.model');
-const SubTask = require('../task/subtask/subtask.model');
+const SubTask = require('../task/subtask/subtask.model'); // TODO: REMOVE
 const TaskAssign = require('../task/taskAssign.model');
 const {
   subtaskPopulateOptionsForUser,
@@ -596,37 +600,32 @@ const getAccount = async (req, res, next) => {
   }
 };
 
+// TODO: Recheck
 const userDailyProgress = async (req, res, next) => {
   try {
-    let startToday = new Date();
-    startToday.setHours(0, 0, 0, 0);
-    let endToday = new Date();
-    endToday.setHours(23, 59, 59, 999);
-    const taskList = await Task.find({
-      dueDate: { $gte: startToday, $lt: endToday },
-      status: { $ne: 'done' },
-    });
-    let taskId = taskList.map((e) => e._id);
-    const assignTaskNumber = await TaskAssign.find({
-      taskId: taskId,
-      assignedPerson: req.user._id,
-    }).countDocuments();
-    const doneTaskList = await Task.find({
-      dueDate: { $gte: startToday, $lt: endToday },
-      status: 'done',
-    });
-    taskId = doneTaskList.map((e) => e._id);
-    const completeNumber = await TaskAssign.find({
-      taskId: taskId,
-      assignedPerson: req.user._id,
-    }).countDocuments();
+    // not completed tasks
+    const taskList = await findTodaysTask(false);
+    let taskId = getIds(taskList);
+    // not completed - number of assigned task
+    const notComAssignedTask = await findAssignedNumberOfTasks(
+      taskId,
+      req.user._id,
+    );
+
+    // completed tasks
+    const doneTaskList = await findTodaysTask(true);
+    taskId = getIds(doneTaskList);
+    // completed - number of assigned task
+    const comAssignedTask = await findAssignedNumberOfTasks(
+      taskId,
+      req.user._id,
+    );
     let dailyProgress = 0;
-    if (assignTaskNumber === 0) {
+    if (notComAssignedTask === 0) {
       dailyProgress = 100;
     } else {
-      dailyProgress = parseInt(
-        ((completeNumber / assignTaskNumber) * 100).toFixed(2),
-      );
+      dailyProgress = comAssignedTask / notComAssignedTask;
+      dailyProgress = parseInt((dailyProgress * 100).toFixed(2));
     }
 
     return sendJSONresponse(res, 200, dailyProgress);
@@ -635,6 +634,7 @@ const userDailyProgress = async (req, res, next) => {
     next(error);
   }
 };
+
 const skillArea = async (req, res, next) => {
   try {
     const user = await findAccountById(req.user._id);
@@ -992,6 +992,8 @@ const changePassword = async (req, res, next) => {
     next(error);
   }
 };
+
+// TODO: Recheck
 const userTaskList = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   try {
@@ -1013,7 +1015,7 @@ const userTaskList = async (req, res, next) => {
     const response = [];
     await Promise.all(
       filteredTask.map(async (ft) => {
-        const taskMembers = await getTaskMembers(ft.taskId._id);
+        const taskMembers = await getAssignedMembers(ft.taskId._id);
         const members = taskMembers.map((tMember) => {
           return tMember.assignedPerson;
         });

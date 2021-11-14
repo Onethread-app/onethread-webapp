@@ -49,6 +49,28 @@ const getAssignedMembers = async (taskId) => {
     ]);
 };
 
+const findTodaysTask = async (isCompleted = undefined) => {
+  let startToday = new Date();
+  startToday.setHours(0, 0, 0, 0);
+  let endToday = new Date();
+  endToday.setHours(23, 59, 59, 999);
+  let query = {
+    dueDate: { $gte: startToday, $lt: endToday },
+    parentTask: null,
+  };
+  if (typeof isCompleted === 'boolean') {
+    query.isCompleted = isCompleted;
+  }
+  return Task.find(query);
+};
+
+const findAssignedNumberOfTasks = async (taskId, assignedPerson) => {
+  return TaskAssign.find({
+    taskId,
+    assignedPerson,
+  }).countDocuments();
+};
+
 const findSubtasksByTaskId = async (
   parentTask,
   populateArray = [],
@@ -74,4 +96,6 @@ module.exports = {
   findTaskMembersById,
   getAssignedMembers,
   findSubtasksByTaskId,
+  findTodaysTask,
+  findAssignedNumberOfTasks,
 };
