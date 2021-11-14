@@ -103,8 +103,8 @@ const CompanySection = (props: ICompanySectionInternalProps) => {
         </Link>
         {loading ? (
           <>
-            {[...Array(5)].map((x) => (
-              <CompanySkeletons id={x} />
+            {[...Array(5)].map((x, i) => (
+              <CompanySkeletons id={x} key={i} />
             ))}
           </>
         ) : (

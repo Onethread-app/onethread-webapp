@@ -71,6 +71,7 @@ export interface ITask {
   comments?: Object[];
   timeSpent: number;
   activityCount?: number;
+  statusList: ITaskStatus[];
   project: {
     _id: string;
     name: string;
@@ -153,6 +154,7 @@ export interface ITaskReducer {
   errorOnUpdatingBoardName: string;
   errorOnFetchingBoard: string;
   errorOnFetchingUserTasks: string;
+  errorOnUpdatingTask: string;
   errorOnTaskDelete: string;
   errorOnUploadingTaskFile: string;
   errorOnTaskFileDelete: string;
@@ -191,6 +193,7 @@ const InitialState: ITaskReducer = {
     priority: 2,
     file: [],
     comments: [],
+    statusList: [],
     company: {
       _id: '',
       name: '',
@@ -236,11 +239,16 @@ const InitialState: ITaskReducer = {
   errorOnUpdatingBoardName: '',
   errorOnFetchingBoard: '',
   errorOnFetchingUserTasks: '',
+  errorOnUpdatingTask: '',
   errorOnTaskDelete: '',
   errorOnUploadingTaskFile: '',
   errorOnTaskFileDelete: '',
   errorOnFetchingCompanyTasks: '',
   errorOnFetchingProjectTasks: '',
+};
+
+export const updateTaskStatus = (tasks, task) => {
+  return tasks.map((t) => (t._id === task._id ? task : t));
 };
 
 export const TaskReducer = (state = InitialState, action: any) => {
@@ -766,6 +774,39 @@ export const TaskReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         companyTaskList: [],
+      };
+    case TaskActionType.UPDATE_TASK_STATUS_START:
+      return {
+        ...state,
+        updatingTask: true,
+        errorOnUpdatingTask: '',
+      };
+    case TaskActionType.UPDATE_TASK_STATUS_SUCCESS:
+      return {
+        ...state,
+        currentTask:
+          action.payload._id === state.currentTask._id
+            ? {
+                ...state.currentTask,
+                status: action.payload.status,
+              }
+            : state.currentTask,
+        userTasks: updateTaskStatus(state.userTasks, action.payload),
+        companyTaskList: updateTaskStatus(
+          state.companyTaskList,
+          action.payload,
+        ),
+        projectTaskList: updateTaskStatus(
+          state.projectTaskList,
+          action.payload,
+        ),
+        updatingTask: false,
+      };
+    case TaskActionType.UPDATE_TASK_STATUS_FAILURE:
+      return {
+        ...state,
+        updatingTask: false,
+        errorOnUpdatingTask: action.payload,
       };
     default:
       return state;

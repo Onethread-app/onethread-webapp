@@ -50,6 +50,10 @@ const {
   findSubtasksByTaskId,
 } = require('../services/task/task.service');
 
+const {
+  getAllStatusInProject,
+} = require('../services/task/taskStatus/taskStatus.service');
+
 // create a company profile
 const changeName = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -652,6 +656,10 @@ const companyTasks = async (company, addDoneTasks = false) => {
         const taskMembers = await getTaskMembers(task._id);
         const members = taskMembers.map((t) => t.assignedPerson);
 
+        const statusList = await getAllStatusInProject(
+          task.project._id,
+        );
+
         modifiedTask._id = task._id;
         modifiedTask.name = task.name;
         modifiedTask.account = task.account;
@@ -664,7 +672,7 @@ const companyTasks = async (company, addDoneTasks = false) => {
         modifiedTask.project = task.project;
         modifiedTask.company = task.company;
         modifiedTask.subtasks = subtasks;
-
+        modifiedTask.statusList = statusList;
         taskCompilation.push(modifiedTask);
       }),
     );

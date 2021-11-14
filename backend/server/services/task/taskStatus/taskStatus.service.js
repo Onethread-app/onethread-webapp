@@ -10,7 +10,8 @@ const createTaskStatus = async (name, project, index, account) => {
 };
 
 const getAllStatusInProject = async (project) => {
-  return TaskStatus.find({ project });
+  const statues = await TaskStatus.find({ project });
+  return statues;
 };
 
 module.exports = {

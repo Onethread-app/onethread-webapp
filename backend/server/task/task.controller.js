@@ -82,6 +82,7 @@ const addMemberToTask = async (assignmembers, taskId, req) => {
 // OK
 const load = async (req, res, next, id) => {
   try {
+    console.log(req.body);
     logger.info('Task is loading....');
     const populateArray = [
       { path: 'project', select: '_id name' },
@@ -406,6 +407,7 @@ const deleteMember = async (req, res, next) => {
 // OK
 const update = async (req, res, next) => {
   try {
+    console.log('status', req.body);
     const task = await Task.findByIdAndUpdate(
       { _id: req.task._id },
       req.body,
@@ -413,6 +415,7 @@ const update = async (req, res, next) => {
     )
       .populate('account', '_id firstName lastName')
       .populate('status', '_id name');
+    console.log(task);
     return sendJSONresponse(res, 200, {
       message: 'Task Updated.',
       task,

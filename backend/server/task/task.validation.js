@@ -57,6 +57,7 @@ module.exports = {
       description: taskSchema.description.allow(''),
       dueDate: taskSchema.dueDate,
       priority: taskSchema.priority,
+      status: taskSchema.status,
     }),
   }),
   deleteTask: Joi.object().keys({

@@ -4,6 +4,7 @@ import {
   ITask,
   SortTasksBy,
   IFilterUser,
+  ITaskStatus,
 } from './Reducer';
 
 export interface ITaskDelete {
@@ -329,4 +330,19 @@ export const updateTaskTimeSpent = (payload: number) => ({
 
 export const clearCompanyTasks = () => ({
   type: TaskActionType.CLEAR_COMPANY_TASKS,
+});
+
+export const updateTaskStatus = (payload: ITaskStatus) => ({
+  type: TaskActionType.UPDATE_TASK_STATUS_START,
+  payload,
+});
+
+export const updateTaskStatusSuccess = (response: any) => ({
+  type: TaskActionType.UPDATE_TASK_STATUS_SUCCESS,
+  payload: response,
+});
+
+export const updateTaskStatusFailure = (errorMessage: any) => ({
+  type: TaskActionType.UPDATE_TASK_STATUS_FAILURE,
+  payload: errorMessage,
 });

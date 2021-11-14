@@ -30,6 +30,10 @@ const { getTaskMembers } = require('../task/task.controller');
 const { sortTasksByStatus } = require('../helpers/utils');
 
 const {
+  getAllStatusInProject,
+} = require('../services/task/taskStatus/taskStatus.service');
+
+const {
   savePushSubscription,
   removePushSubscription,
 } = require('../services/webpush.services');
@@ -1014,6 +1018,10 @@ const userTaskList = async (req, res, next) => {
           return tMember.assignedPerson;
         });
 
+        const statusList = await getAllStatusInProject(
+          task.project._id,
+        );
+
         const modifiedTask = {
           _id: ft.taskId._id,
           name: ft.taskId.name,
@@ -1030,6 +1038,7 @@ const userTaskList = async (req, res, next) => {
           priority: ft.taskId.priority,
           members,
           createdAt: ft.taskId.createdAt,
+          statusList,
           project: {
             _id: ft.taskId.project._id,
             name: ft.taskId.project.name,

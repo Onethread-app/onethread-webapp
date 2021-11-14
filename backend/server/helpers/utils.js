@@ -3,6 +3,10 @@ const _ = require('lodash');
 // const { getTaskMembers } = require('../task/task.controller');
 const TaskAssign = require('../task/taskAssign.model');
 const {
+  getAllStatusInProject,
+} = require('../services/task/taskStatus/taskStatus.service');
+
+const {
   findSubtasksByTaskId,
 } = require('../services/task/task.service');
 
@@ -62,11 +66,13 @@ const getFormattedTaskForClient = async (tasks) => {
     const members = taskMembers.map((tMember) => {
       return tMember.assignedPerson;
     });
+    const statusList = await getAllStatusInProject(task.project._id);
 
     const formattedTask = {
       ...task._doc,
       subtasks,
       members,
+      statusList,
     };
     formattedTasks.push(formattedTask);
   }

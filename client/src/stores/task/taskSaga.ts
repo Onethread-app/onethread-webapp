@@ -49,6 +49,8 @@ import {
   getAllCompanyTasksSuccess,
   getAllProjectTasksSuccess,
   getAllProjectTasksFailure,
+  updateTaskStatusFailure,
+  updateTaskStatusSuccess,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
@@ -118,6 +120,7 @@ function* getAllUserTasksAsync() {
         `accounts/task-list?date=${new Date()}`,
         headers,
       );
+      console.log(response.data);
       yield put(getAllUserTasksSuccess(response.data));
     }
   } catch (error) {
@@ -135,6 +138,7 @@ function* getAllCompanyTasksAsync() {
         `/company/${companyId}/all-tasks`,
         headers,
       );
+      console.log(response.data);
       yield put(getAllCompanyTasksSuccess(response.data.tasks));
     }
   } catch (error) {
@@ -153,6 +157,7 @@ function* getAllProjectTasksAsync() {
         `/projects/tasks?pid=${projectId}`,
         headers,
       );
+      console.log(response.data);
       yield put(getAllProjectTasksSuccess(response.data));
     }
   } catch (error) {
@@ -536,6 +541,24 @@ export function* deleteTaskAsync({ payload }: any) {
   }
 }
 
+function* updateTaskStatusAsync({ payload }) {
+  try {
+    console.log(payload);
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      yield put(updateTaskStatusSuccess(payload));
+      const response = yield tigrowApi.put(
+        `tasks/${payload._id}?pid=${payload.project._id}`,
+        { status: payload.status._id },
+        headers,
+      );
+      console.log(response);
+    }
+  } catch (error) {
+    yield put(updateTaskStatusFailure(returnErrorText(error)));
+  }
+}
+
 export function* onCreateBoard() {
   yield takeEvery(TaskActionType.CREATE_BOARD_START, createBoard);
 }
@@ -637,6 +660,13 @@ export function* onDeleteTask() {
   yield takeEvery(TaskActionType.DELETE_TASK_START, deleteTaskAsync);
 }
 
+export function* onUpdateTaskStatus() {
+  yield takeLatest(
+    TaskActionType.UPDATE_TASK_STATUS_START,
+    updateTaskStatusAsync,
+  );
+}
+
 export default function* taskSaga() {
   yield all([
     call(onCreateBoard),
@@ -656,5 +686,6 @@ export default function* taskSaga() {
     call(onTaskFileUpload),
     call(onTaskFileDelete),
     call(onDeleteTask),
+    call(onUpdateTaskStatus),
   ]);
 }
