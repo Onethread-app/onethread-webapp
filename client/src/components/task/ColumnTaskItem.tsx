@@ -36,15 +36,15 @@ import MemberGroup from 'components/member/MemberGroup';
 const ThirdRow = styled.div`
   overflow: hidden;
   height: 0;
-  transition: all 0.3s ease-in;
-  transition-delay: 0.4s;
+  transition: all 0.2s ease-in;
+  transition-delay: 0.3s;
 `;
 
 const SecondRow = styled.div`
   overflow: hidden;
   height: 0;
-  transition: all 0.3s ease-in;
-  transition-delay: 0.4s;
+  transition: all 0.2s ease-in;
+  transition-delay: 0.3s;
 `;
 
 const TaskDueDate = styled.div`
@@ -112,7 +112,6 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   const [taskDelete, setTaskDelete] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
-
   const handleClick = () => {
     props.getSelectedTaskDetails(task._id);
     setLoading(true);
@@ -150,7 +149,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
 
   return (
     <>
-      <Draggable draggableId={task._id} index={props.index}>
+      <Draggable draggableId={String(task._id)} index={props.index}>
         {(provided, snapshot) => {
           const allowedProps = { ref: provided.innerRef };
           return (

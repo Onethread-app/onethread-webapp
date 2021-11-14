@@ -15,6 +15,7 @@ import { TasksTableContext } from './TasksTableContext';
 import { getAllCompanyTasks } from 'stores/task/Actions';
 import { ITask } from 'stores/task/Reducer';
 import { TaskTableColumns } from './TaskTableColumns';
+import { formatTasksForCalendar, tasksFilterFn } from 'helpers/utils';
 
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
@@ -192,19 +193,40 @@ const CompanyTasks = (props: ICompanyTasks) => {
   useEffect(() => {
     if (!isNil(companyTaskList) && !isEmpty(companyTaskList)) {
       setTaskList(companyTaskList);
-      const cTasks: ITaskForCalendar[] = companyTaskList.map(
-        (t: any) => ({
-          title: t.name,
-          start: new Date(t.createdAt),
-          end: new Date(t.dueDate),
-          allDay: true,
-          redirectTo: `/company/${t.company.uniqueName}/project/${t.project._id}/task/${t._id}`,
-          priority: t.priority,
-        }),
+      setTasksForCalendarView(
+        formatTasksForCalendar(companyTaskList),
       );
-      setTasksForCalendarView(cTasks);
     }
   }, [companyTaskList]);
+
+  useEffect(() => {
+    if (
+      (!isNil(globalFilter) && !isEmpty(globalFilter)) ||
+      (!isNil(selectedDueDateOption) &&
+        !isEmpty(selectedDueDateOption)) ||
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList))
+    ) {
+      const tasks = tasksFilterFn(
+        companyTaskList,
+        globalFilter,
+        selectedDueDateOption,
+        selectedDueDateRange,
+        selectedStatusList,
+      );
+      setTasksForCalendarView(formatTasksForCalendar(tasks));
+    } else {
+      setTaskList(companyTaskList);
+      setTasksForCalendarView(
+        formatTasksForCalendar(companyTaskList),
+      );
+    }
+  }, [
+    companyTaskList,
+    globalFilter,
+    selectedDueDateOption,
+    selectedDueDateRange,
+    selectedStatusList,
+  ]);
 
   useEffect(() => {
     setFilter('project', selectedProjectList);

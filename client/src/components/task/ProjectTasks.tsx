@@ -17,6 +17,7 @@ import { getAllProjectTasks } from 'stores/task/Actions';
 import { ITask } from 'stores/task/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import { ICompany } from 'stores/company/Reducer';
+import { formatTasksForCalendar, tasksFilterFn } from 'helpers/utils';
 
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
@@ -163,19 +164,40 @@ const ProjectTasks = (props: IProjectTasksProps) => {
   useEffect(() => {
     if (!isNil(projectTaskList) && !isEmpty(projectTaskList)) {
       setTaskList(projectTaskList);
-      const cTasks: ITaskForCalendar[] = projectTaskList.map(
-        (t: any) => ({
-          title: t.name,
-          start: new Date(t.createdAt),
-          end: new Date(t.dueDate),
-          allDay: true,
-          redirectTo: `/company/${t.company.uniqueName}/project/${t.project._id}/task/${t._id}`,
-          priority: t.priority,
-        }),
+      setTasksForCalendarView(
+        formatTasksForCalendar(projectTaskList),
       );
-      setTasksForCalendarView(cTasks);
     }
   }, [projectTaskList, project._id, company._id]);
+
+  useEffect(() => {
+    if (
+      (!isNil(globalFilter) && !isEmpty(globalFilter)) ||
+      (!isNil(selectedDueDateOption) &&
+        !isEmpty(selectedDueDateOption)) ||
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList))
+    ) {
+      const tasks = tasksFilterFn(
+        projectTaskList,
+        globalFilter,
+        selectedDueDateOption,
+        selectedDueDateRange,
+        selectedStatusList,
+      );
+      setTasksForCalendarView(formatTasksForCalendar(tasks));
+    } else {
+      setTaskList(projectTaskList);
+      setTasksForCalendarView(
+        formatTasksForCalendar(projectTaskList),
+      );
+    }
+  }, [
+    projectTaskList,
+    globalFilter,
+    selectedDueDateOption,
+    selectedDueDateRange,
+    selectedStatusList,
+  ]);
 
   useEffect(() => {
     if (singleProjectLoading === false) {

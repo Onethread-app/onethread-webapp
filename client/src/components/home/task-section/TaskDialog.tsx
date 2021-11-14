@@ -498,9 +498,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     isDisabled={companyLoading}
                     options={companyOptions}
                     onChange={handleCompany}
-                    formatCreateLabel={(userInput) =>
-                      `New: ${userInput}`
-                    }
                     className="w-100"
                   />
                   {assignedCompanyError && (

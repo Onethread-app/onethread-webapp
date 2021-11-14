@@ -1,7 +1,7 @@
 import { createContext, Dispatch, useContext } from 'react';
 import { ITask } from 'stores/task/Reducer';
 
-type ITasksTableContext = {
+export type ITasksTableContext = {
   globalFilter: string | undefined;
   tasks: ITask[];
   selectedStatusList: string[];

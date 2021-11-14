@@ -3,18 +3,14 @@ import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 
 import { ITaskStatus } from 'stores/task/Reducer';
+import { useTasksTableContext } from 'components/task/TasksTableContext';
+
 import TasksContainer from 'components/task/TasksContainer';
 
 const ColumnContainer = styled.div`
   padding: 1rem 0.5rem;
   max-width: 300px;
   min-width: 235px;
-  /* box-shadow: ${(props) =>
-    `rgb(0 0 0 / 20%) 0px 4px 6px 0px, ${
-      props.isDragging ? '#3484F0' : 'rgba(0, 0, 0, 0.1)'
-    }  0px 2px 4px 0px, ${
-      props.isDragging ? '#3484F0' : 'rgba(255, 255, 255, 0.05)'
-    } 0px 0px 0px 1px inset`}; */
   gap: 0.75rem;
   border-radius: 5px;
   transition: height 0.5s ease-in;
@@ -57,6 +53,7 @@ interface IColumnProps {
 
 const Column = (props: IColumnProps) => {
   const { status } = props;
+  const { tasks } = useTasksTableContext();
   const [columnName] = useState(
     status.name.toLowerCase().split(' ').join('-'),
   );
@@ -78,7 +75,11 @@ const Column = (props: IColumnProps) => {
               <ColumnHeader {...provided.dragHandleProps}>
                 <HeaderIcon columnName={columnName} />
                 {status.name}{' '}
-                {/* <span className="ml2">{`(${props.column.tasks?.length})`}</span> */}
+                <span className="ml2">{`(${
+                  tasks.filter(
+                    (task) => task.status._id === status._id,
+                  ).length
+                })`}</span>
               </ColumnHeader>
               <TasksContainer status={status} />
             </ColumnContainer>

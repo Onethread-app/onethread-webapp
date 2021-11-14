@@ -22,7 +22,7 @@ const customStatusFilter = (rows, id, filterValue) => {
   return rows.filter((row) =>
     isEmpty(filterValue)
       ? row
-      : filterValue.includes(row.original.status),
+      : filterValue.includes(row.original.status._id),
   );
 };
 

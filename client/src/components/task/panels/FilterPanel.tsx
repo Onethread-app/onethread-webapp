@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 
+import PanelView from './PanelView';
 import { useTasksTableContext } from '../TasksTableContext';
 
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -11,7 +12,6 @@ import {
   PanelTitle,
   PanelsTitleContainer,
 } from './StyledPanel';
-import PanelView from './PanelView';
 
 const FilterPanel = () => {
   const {
@@ -23,7 +23,7 @@ const FilterPanel = () => {
     null,
   );
   const { projectId }: any = useParams();
-  console.log(projectId);
+
   return (
     <PanelsContainer>
       {selectedPanel === null ? (
