@@ -3,11 +3,13 @@ import {
   useState,
   lazy,
   Suspense,
+  useMemo,
   useEffect,
 } from 'react';
 import { connect } from 'react-redux';
 import { Dialog } from '@blueprintjs/core';
 
+import useQuery from 'helpers/hooks/useQuery';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
 
@@ -27,7 +29,6 @@ import {
 } from './Index.styles';
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton';
 import { CompanyInfoForm } from 'layouts/company/profile/BasicInformationEditor';
-import { useLocation } from 'react-router';
 
 const CompanyProjects = lazy(
   () => import('components/project/CompanyProjects'),
@@ -49,20 +50,20 @@ interface ICompanyDashboardProps {
 }
 
 const Index = (props: ICompanyDashboardProps) => {
-  const { company, gettingCompanyDetails } = props;
-  const [value, setValue] = useState<number>(0);
   const [showDialog, setShowDialog] = useState<boolean>(false);
-  const location: {
-    pathname: string;
-    state: {
-      tab: string;
-    };
-  } = useLocation();
-  const tab = location?.state?.tab || '';
-
+  const query = useQuery();
+  const tabValue = useMemo(() => {
+    return query.get('tab') || '0';
+  }, [query]);
+  const { company, gettingCompanyDetails } = props;
+  const [value, setValue] = useState<number>(parseInt(tabValue));
   const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    setValue(parseInt(tabValue));
+  }, [tabValue]);
 
   const allTabs = [
     { component: <CompanyProjects />, label: 'Projects' },
@@ -74,12 +75,6 @@ const Index = (props: ICompanyDashboardProps) => {
       label: 'Announcements',
     },
   ];
-
-  useEffect(() => {
-    if (tab === 'announcement') {
-      setValue(4);
-    }
-  }, [location.state]);
 
   return (
     <Container>
@@ -111,7 +106,7 @@ const Index = (props: ICompanyDashboardProps) => {
         scrollButtons="auto"
       >
         {allTabs.map((tab, i) => (
-          <StyledTab label={tab.label} key={i} />
+          <StyledTab label={tab.label} key={i} tab={value} />
         ))}
       </StyledTabs>
       {allTabs.map((tab, i) => (

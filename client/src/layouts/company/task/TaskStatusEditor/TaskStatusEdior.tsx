@@ -11,7 +11,7 @@ interface ISelectOption {
 }
 
 interface TaskInfoInternalProps {
-  currentTask?: ITask;
+  currentTask: ITask;
   columns: IColumn[];
   dragAndDropTask: (
     taskId: string,
@@ -56,10 +56,13 @@ const TaskStatusEdiorComponent = (props: TaskInfoInternalProps) => {
   );
 
   useEffect(() => {
-    if (currentTask?.columnId && currentTask?.status) {
+    if (currentTask.status) {
       setSelectedOption({
-        value: currentTask!.columnId!,
-        label: currentTask!.status.toLowerCase().split('-').join(' '),
+        value: currentTask!.status._id!,
+        label: currentTask!.status.name
+          .toLowerCase()
+          .split('-')
+          .join(' '),
       });
     }
   }, [currentTask]);
@@ -69,7 +72,7 @@ const TaskStatusEdiorComponent = (props: TaskInfoInternalProps) => {
       setSelectedOption((prev) => {
         return {
           ...prev,
-          label: currentTask!.status
+          label: currentTask!.status.name
             .toLowerCase()
             .split('-')
             .join(' '),
@@ -79,15 +82,15 @@ const TaskStatusEdiorComponent = (props: TaskInfoInternalProps) => {
   }, [currentTask!.status]);
 
   useEffect(() => {
-    if (currentTask?.columnId) {
+    if (currentTask?.status._id) {
       setSelectedOption((prev) => {
         return {
           ...prev,
-          value: currentTask!.columnId!,
+          value: currentTask!.status._id!,
         };
       });
     }
-  }, [currentTask!.columnId]);
+  }, [currentTask!.status._id]);
 
   useEffect(() => {
     if (columns) {
@@ -114,7 +117,7 @@ const TaskStatusEdiorComponent = (props: TaskInfoInternalProps) => {
       setSelectedOption(selected[0]);
       await props.dragAndDropTask(
         currentTask!._id,
-        currentTask!.columnId,
+        currentTask!.status._id,
         e.target.value,
         0,
       );

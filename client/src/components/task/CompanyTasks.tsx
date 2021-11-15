@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { isEmpty, isNil } from 'lodash';
@@ -11,10 +12,11 @@ import {
   useExpanded,
 } from 'react-table';
 
-import { CompanyTasksContext } from './CompanyTasksContext';
+import { TasksTableContext } from './TasksTableContext';
 import { getAllCompanyTasks } from 'stores/task/Actions';
 import { ITask } from 'stores/task/Reducer';
 import { TaskTableColumns } from './TaskTableColumns';
+import { formatTasksForCalendar, tasksFilterFn } from 'helpers/utils';
 
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
@@ -22,9 +24,11 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import { DateRange } from '@blueprintjs/datetime/lib/esm/common/dateRange';
+import { Dialog } from '@blueprintjs/core';
 
 import TaskTableSkeleton from './TaskTableSkeleton';
 import { AlignCenter } from 'components/UtilComponents';
+import TaskDialog from 'components/home/task-section/TaskDialog';
 import TasksTable from './TasksTable';
 import TasksFilter from './TasksFilter';
 import {
@@ -35,9 +39,11 @@ import {
   StyledFilterPopover,
   StyledInput,
 } from 'components/table/StyledTable.styles';
-import { Dialog } from '@blueprintjs/core';
-import TaskDialog from 'components/home/task-section/TaskDialog';
-import { Link } from 'react-router-dom';
+import TaskViewSelect from './TaskViewSelect';
+import CalendarView, {
+  ITaskForCalendar,
+} from 'components/calendar/CalendarView';
+import ColumnsContainer from 'components/column/ColumnsContainer';
 
 interface ICompanyTasks {
   companyTaskList: ITask[];
@@ -73,29 +79,15 @@ const CompanyTasks = (props: ICompanyTasks) => {
     useState<string>('');
   const [selectedDueDateRange, setSelectedDueDateRange] =
     useState<DateRange>([null, null]);
+  const [selectedView, setSelectedView] = useState<
+    'list' | 'board' | 'calendar'
+  >((localStorage.getItem('selectedView') as any) || 'list');
+  const [tasksForCalendarView, setTasksForCalendarView] = useState<
+    ITaskForCalendar[]
+  >([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const data = useMemo(() => taskList, [taskList]);
   const columns = useMemo(() => TaskTableColumns, []);
-  const providerValue = useMemo(
-    () => ({
-      tasks: data,
-      selectedStatusList,
-      selectedProjectList,
-      selectedDueDateOption,
-      selectedDueDateRange,
-      setSelectedStatusList,
-      setSelectedProjectList,
-      setSelectedDueDateOption,
-      setSelectedDueDateRange,
-    }),
-    [
-      data,
-      selectedDueDateOption,
-      selectedDueDateRange,
-      selectedProjectList,
-      selectedStatusList,
-    ],
-  );
 
   const {
     getTableProps,
@@ -185,10 +177,42 @@ const CompanyTasks = (props: ICompanyTasks) => {
   ]);
 
   useEffect(() => {
-    !isNil(companyTaskList) &&
-      !isEmpty(companyTaskList) &&
+    if (!isNil(companyTaskList) && !isEmpty(companyTaskList)) {
       setTaskList(companyTaskList);
+      setTasksForCalendarView(
+        formatTasksForCalendar(companyTaskList),
+      );
+    }
   }, [companyTaskList]);
+
+  useEffect(() => {
+    if (
+      (!isNil(globalFilter) && !isEmpty(globalFilter)) ||
+      (!isNil(selectedDueDateOption) &&
+        !isEmpty(selectedDueDateOption)) ||
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList))
+    ) {
+      const tasks = tasksFilterFn(
+        companyTaskList,
+        globalFilter,
+        selectedDueDateOption,
+        selectedDueDateRange,
+        selectedStatusList,
+      );
+      setTasksForCalendarView(formatTasksForCalendar(tasks));
+    } else {
+      setTaskList(companyTaskList);
+      setTasksForCalendarView(
+        formatTasksForCalendar(companyTaskList),
+      );
+    }
+  }, [
+    companyTaskList,
+    globalFilter,
+    selectedDueDateOption,
+    selectedDueDateRange,
+    selectedStatusList,
+  ]);
 
   useEffect(() => {
     setFilter('project', selectedProjectList);
@@ -206,14 +230,41 @@ const CompanyTasks = (props: ICompanyTasks) => {
     setFilter('dueDate', filterValue);
   }, [selectedDueDateOption, selectedDueDateRange]);
 
+  const providerValue = useMemo(
+    () => ({
+      globalFilter,
+      tasks: data,
+      selectedStatusList,
+      selectedProjectList,
+      selectedDueDateOption,
+      selectedDueDateRange,
+      setSelectedStatusList,
+      setSelectedProjectList,
+      setSelectedDueDateOption,
+      setSelectedDueDateRange,
+    }),
+    [
+      globalFilter,
+      data,
+      selectedDueDateOption,
+      selectedDueDateRange,
+      selectedProjectList,
+      selectedStatusList,
+    ],
+  );
+
   return (
-    <CompanyTasksContext.Provider value={providerValue}>
+    <TasksTableContext.Provider value={providerValue}>
       <Container>
         <HeaderContainer>
           <Header>
             Tasks{' '}
             {taskList.length > 0 && <span>({taskList.length})</span>}
           </Header>
+          <TaskViewSelect
+            selectedView={selectedView}
+            setSelectedView={setSelectedView}
+          />
           <SortAndFilter>
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
@@ -296,20 +347,26 @@ const CompanyTasks = (props: ICompanyTasks) => {
             </div>
           )
         ) : (
-          <TasksTable
-            getTableProps={getTableProps}
-            getTableBodyProps={getTableBodyProps}
-            headerGroups={headerGroups}
-            rows={rows}
-            prepareRow={prepareRow}
-            visibleColumns={visibleColumns}
-            page={page}
-            pageIndex={pageIndex}
-            gotoPage={gotoPage}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setOpenTaskDialog={setOpenTaskDialog}
-          />
+          {
+            list: (
+              <TasksTable
+                getTableProps={getTableProps}
+                getTableBodyProps={getTableBodyProps}
+                headerGroups={headerGroups}
+                rows={rows}
+                prepareRow={prepareRow}
+                visibleColumns={visibleColumns}
+                page={page}
+                pageIndex={pageIndex}
+                gotoPage={gotoPage}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                setOpenTaskDialog={setOpenTaskDialog}
+              />
+            ),
+            board: <ColumnsContainer taskList={companyTaskList} />,
+            calendar: <CalendarView tasks={tasksForCalendarView} />,
+          }[selectedView]
         )}
         <Dialog
           canOutsideClickClose={true}
@@ -323,7 +380,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
           <TaskDialog setShowDialog={setOpenTaskDialog}></TaskDialog>
         </Dialog>
       </Container>
-    </CompanyTasksContext.Provider>
+    </TasksTableContext.Provider>
   );
 };
 

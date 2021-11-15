@@ -10,7 +10,12 @@ import {
 
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 
-import { IColumn, TaskBoard } from 'stores/task/Reducer';
+import {
+  IColumn,
+  ITask,
+  ITaskStatus,
+  TaskBoard,
+} from 'stores/task/Reducer';
 import { dragAndDropTask, updateColumn } from 'stores/task/Actions';
 
 import Column from 'components/column/Column';
@@ -21,6 +26,7 @@ const ColumnsContainerDiv = styled.div`
   gap: 1.25rem;
   flex-grow: 1;
   padding: 1rem;
+  align-items: stretch;
 
   @media only screen and (max-width: 768px) {
     margin-bottom: 4rem;
@@ -36,6 +42,8 @@ const AddColumnButton = styled.div`
   box-sizing: border-box;
   border-radius: 8px;
   cursor: pointer;
+  height: 48px;
+  width: 48px;
 `;
 
 interface IColumnsContainerInternalProps {
@@ -48,9 +56,12 @@ interface IColumnsContainerInternalProps {
     taskIndexOfDestinationColumn: number,
   ) => void;
   updateColumn: (columnInfo: any) => void;
+  taskList: ITask[];
 }
 
 const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
+  const { taskList } = props;
+  const [statuses, setStatues] = useState<ITaskStatus[]>([]);
   const [columns, setColumns] = useState<IColumn[]>([]);
   const [showColumnFormDialog, setShowColumnFormDialog] =
     useState(false);
@@ -66,15 +77,17 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
       return;
     }
     if (result.type === 'task') {
-      props.dragAndDropTask(
-        result.draggableId,
-        result.source.droppableId,
-        result.destination.droppableId,
-        result.destination.index,
-      );
+      console.log(result);
+      // props.dragAndDropTask(
+      //   result.draggableId,
+      //   result.source.droppableId,
+      //   result.destination.droppableId,
+      //   result.destination.index,
+      // );
     }
 
     if (result.type === 'column') {
+      console.log(result);
       const newCols = Array.from(columns);
       const val = columns[result.source.index];
       newCols.splice(result.source.index, 1);
@@ -100,6 +113,24 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
     setColumns(cols);
   }, [props.columns]);
 
+  useEffect(() => {
+    const tempStatuses = taskList.map((task) => task.status);
+    const uniqueStatuses: ITaskStatus[] = [];
+    tempStatuses.forEach((status) => {
+      if (uniqueStatuses.length === 0) {
+        uniqueStatuses.push(status);
+      } else {
+        const isExist = uniqueStatuses.some((item) => {
+          return item._id === status._id;
+        });
+        if (!isExist) {
+          uniqueStatuses.push(status);
+        }
+      }
+    });
+    setStatues(uniqueStatuses);
+  }, [taskList]);
+
   return (
     <DragDropContext
       onDragEnd={(result: DropResult) => dragEnd(result)}
@@ -113,13 +144,21 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
           const allowedProps = { ref: provided.innerRef };
           return (
             <ColumnsContainerDiv
-              className={`flex flex-row overflow-x-auto items-start mw-100`}
+              className={`flex flex-row overflow-x-auto items-start mw-100 h-100`}
               {...provided.droppableProps}
               {...allowedProps}
             >
-              {columns.map((col: IColumn, index) => (
-                <Column column={col} index={index} key={col._id} />
+              {' '}
+              {statuses.map((status, index) => (
+                <Column
+                  status={status}
+                  index={index}
+                  key={status._id}
+                />
               ))}
+              {/* {columns.map((col: IColumn, index) => (
+                <Column column={col} index={index} key={col._id} />
+              ))} */}
               <AddColumnButton
                 onClick={() => setShowColumnFormDialog(true)}
               >

@@ -83,7 +83,7 @@ const Index = (props: IProjectDashboardProps) => {
       <ProjectTop>
         <Link to={`/company/${company.uniqueName}`}>
           <BackButton>
-            <img src={BackImg} alt="go back" /> See All Projects
+            <img src={BackImg} alt="go back" /> See all projects
           </BackButton>
         </Link>
         <CompanyIconAndName noMarginBottom>

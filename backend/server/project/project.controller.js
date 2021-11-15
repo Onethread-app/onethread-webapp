@@ -30,6 +30,13 @@ const {
   findAllProjectsByMemberId,
   findAllFavouriteProjectsByMemberId,
 } = require('../services/teams/teams.services');
+const { getFormattedTaskForClient } = require('../helpers/utils');
+const { get } = require('lodash');
+
+const {
+  createTaskStatus,
+  getAllStatusInProject,
+} = require('../services/task/taskStatus/taskStatus.service');
 
 const isPidExist = async (pid) => {
   let checkExist = await Project.findOne(
@@ -68,10 +75,13 @@ const projectRequestUpdate = async (pid, size) => {
 
 const getTasksNumbers = async (pid) => {
   const taskNumbers = await Task.find({
-    project: { $in: pid },
+    project: pid,
+    parentTask: null,
   }).countDocuments();
   const doneTasks = await Task.find({
-    $and: [{ project: { $in: pid }, status: 'done' }],
+    project: pid,
+    isCompleted: true,
+    parentTask: null,
   }).countDocuments();
   return { taskNumbers, doneTasks };
 };
@@ -90,71 +100,67 @@ const calculateProjectStatus = async (pid) => {
 
 const createNewProjectForCompany = async (req, res, next) => {
   try {
+    const companyId = req.headers.companyid || req.body.companyId;
+    if (!companyId) {
+      return sendErrorResponse(res, 400, 'ValidationError', {
+        message: `companyId is required`,
+      });
+    }
     const member = await Member.findOne({
       account: req.user._id,
-      company: req.headers.companyid || req.body.companyId,
-      removed: false,
+      company: companyId,
     });
     if (!member) {
       return sendErrorResponse(res, 404, 'NotFound', {
         message: 'You are not added in company',
       });
     }
-    const project = new Project({
+    const project = await Project.create({
       name: req.body.name,
       concernedAdmin: member.account,
       account: req.user._id,
       deadline: req.body.deadline,
       color: req.body.color,
-      company: req.headers.companyid || req.body.companyId,
+      company: companyId,
       description: '',
       outline: '',
     });
-    await project
-      .save()
-      .then(async (project) => {
-        logger.info(`new project created`);
-        const team = await teamCreate(
-          member.account,
-          member._id,
-          project._id,
-          'admin',
-        );
-        logger.info(
-          `${member.account} added into project id: ${project._id}`,
-        );
-        await createBoard(
-          'General',
-          project._id,
-          req.body.color,
-          req.user._id,
-        );
-        logger.info(`General Board Created`);
-        const room = await createRoom(
-          req.headers.companyid || req.body.companyId,
-          project._id,
-          req.user._id,
-          'General',
-        );
-        logger.info(`General Room Created`);
-        await createRoomMember(
-          req.headers.companyid || req.body.companyId,
-          project._id,
-          member.account,
-          room._id,
-          team._id,
-        );
-        logger.info(`General Room Member Created`);
-        return sendJSONresponse(res, 201, {
-          success: true,
-          message: 'New project created',
-          project,
-        });
-      })
-      .catch((error) => {
-        logger.error(`Project: ${error}`);
-        next(error);
-      });
+
+    logger.info(`new project created`);
+    const team = await teamCreate(
+      member.account,
+      member._id,
+      project._id,
+      'admin',
+    );
+    logger.info(
+      `${member.account} added into project id: ${project._id}`,
+    );
+
+    // TODO: Ques: value of positionInBoard okay ????
+    await createTaskStatus('Draft', project._id, 0, req.user._id);
+    logger.info(`Draft Status Created`);
+
+    const room = await createRoom(
+      companyId,
+      project._id,
+      req.user._id,
+      'General',
+    );
+    logger.info(`General Room Created`);
+    await createRoomMember(
+      companyId,
+      project._id,
+      member.account,
+      room._id,
+      team._id,
+    );
+    logger.info(`General Room Member Created`);
+    return sendJSONresponse(res, 201, {
+      success: true,
+      message: 'New project created',
+      project,
+    });
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);
@@ -166,14 +172,13 @@ const createNewProjectFromHome = async (req, res, next) => {
     const member = await Member.findOne({
       account: req.user._id,
       company: req.body.companyId,
-      removed: false,
     });
     if (!member) {
       return sendErrorResponse(res, 404, 'NotFound', {
         message: 'You are not added in company',
       });
     }
-    const project = new Project({
+    const project = await Project.create({
       name: req.body.name,
       concernedAdmin: member.account,
       account: req.user._id,
@@ -185,51 +190,43 @@ const createNewProjectFromHome = async (req, res, next) => {
       budget: req.body.budget,
       currency: req.body.currency,
     });
-    await project
-      .save()
-      .then(async (project) => {
-        logger.info(`new project created`);
-        const team = await teamCreate(
-          member.account,
-          member._id,
-          project._id,
-          'admin',
-        );
-        logger.info(
-          `${member.account} added into project id: ${project._id}`,
-        );
-        await createBoard(
-          'General',
-          project._id,
-          req.body.color,
-          req.user._id,
-        );
-        logger.info(`General Board Created`);
-        const room = await createRoom(
-          req.body.companyId,
-          project._id,
-          req.user._id,
-          'General',
-        );
-        logger.info(`General Room Created`);
-        await createRoomMember(
-          req.body.companyId,
-          project._id,
-          member.account,
-          room._id,
-          team._id,
-        );
-        logger.info(`General Room Member Created`);
-        return sendJSONresponse(res, 201, {
-          success: true,
-          message: 'New project created',
-          project,
-        });
-      })
-      .catch((error) => {
-        logger.error(`Project: ${error}`);
-        next(error);
-      });
+    logger.info(`new project created`);
+
+    const team = await teamCreate(
+      member.account,
+      member._id,
+      project._id,
+      'admin',
+    );
+    logger.info(
+      `${member.account} added into project id: ${project._id}`,
+    );
+
+    const room = await createRoom(
+      req.body.companyId,
+      project._id,
+      req.user._id,
+      'General',
+    );
+    logger.info(`General Room Created`);
+
+    await createRoomMember(
+      req.body.companyId,
+      project._id,
+      member.account,
+      room._id,
+      team._id,
+    );
+    logger.info(`General Room Member Created`);
+
+    await createTaskStatus('Draft', project._id, 0, req.user._id);
+    logger.info(`Draft Status Created`);
+
+    return sendJSONresponse(res, 201, {
+      success: true,
+      message: 'New project created',
+      project,
+    });
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);
@@ -638,11 +635,13 @@ const getProjectDetails = async (req, res, next) => {
       removed: false,
     }).populate('account', 'name profileImage');
 
-    let projectObj = {
+    const taskStatus = await getAllStatusInProject(req.query.pid);
+
+    return sendJSONresponse(res, 200, {
       ...project._doc,
       members,
-    };
-    return sendJSONresponse(res, 200, projectObj);
+      taskStatus,
+    });
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);
@@ -1142,6 +1141,32 @@ const getAllFavouriteProjects = async (req, res, next) => {
   }
 };
 
+const getTasks = async (req, res, next) => {
+  try {
+    const tasks = await Task.find({
+      project: req.query.pid,
+    })
+      .populate([
+        { path: 'project', select: '_id name' },
+        { path: 'company', select: '_id name uniqueName' },
+        {
+          path: 'status',
+          select: '_id name',
+        },
+        {
+          path: 'account',
+          select: '_id firstName lastName profileImage',
+        },
+      ])
+      .exec();
+    const formattedTasks = await getFormattedTaskForClient(tasks);
+    return sendJSONresponse(res, 200, formattedTasks);
+  } catch (error) {
+    logger.error(`Project ${error}`);
+    next(error);
+  }
+};
+
 module.exports = {
   calculateProjectStatus,
   createNewProjectForCompany,
@@ -1172,4 +1197,5 @@ module.exports = {
   getAllProjectForUser,
   favouriteProject,
   getAllFavouriteProjects,
+  getTasks,
 };

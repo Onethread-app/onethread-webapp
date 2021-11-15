@@ -1,7 +1,7 @@
 const subtaskPopulateOptions = [
   {
     path: 'taskId',
-    select: '_id name boardId columnId project dueDate status',
+    select: '_id name project dueDate status',
     populate: [
       {
         path: 'project',
@@ -12,14 +12,6 @@ const subtaskPopulateOptions = [
             select: '_id uniqueName',
           },
         ],
-      },
-      {
-        path: 'boardId',
-        select: '_id',
-      },
-      {
-        path: 'columnId',
-        select: '_id',
       },
     ],
   },
@@ -36,7 +28,7 @@ const subtaskPopulateOptions = [
 const subtaskPopulateOptionsForUser = [
   {
     path: 'taskId',
-    select: '_id name boardId columnId project dueDate status',
+    select: '_id name project dueDate status',
     populate: [
       {
         path: 'project',
@@ -47,14 +39,6 @@ const subtaskPopulateOptionsForUser = [
             select: '_id uniqueName',
           },
         ],
-      },
-      {
-        path: 'boardId',
-        select: '_id',
-      },
-      {
-        path: 'columnId',
-        select: '_id',
       },
     ],
   },

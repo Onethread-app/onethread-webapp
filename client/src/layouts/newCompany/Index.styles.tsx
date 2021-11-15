@@ -6,6 +6,8 @@ export const Container = styled.div`
   padding: 0rem 2rem 0 2rem;
   color: #323030;
   background: #f1f1f1;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const DashboardP = styled.p`

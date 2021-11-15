@@ -205,6 +205,7 @@ export const StyledInput = styled.input`
 export const SortAndFilter = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 1rem;
   color: #5a5a5a;
 
@@ -223,7 +224,7 @@ export const SortAndFilter = styled.div`
   }
 `;
 
-export const Header = styled.p`
+export const Header = styled.div`
   font-weight: 500;
   font-size: 20px;
   line-height: 27px;
@@ -241,6 +242,10 @@ export const HeaderContainer = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid #cfcfcf;
   padding: 0 0.25rem 0.5rem;
+
+  > div {
+    width: calc(100% / 3);
+  }
 `;
 
 export const Container = styled.div`
@@ -248,6 +253,7 @@ export const Container = styled.div`
   flex-direction: column;
   margin: 0;
   padding: 2rem 0 0 0;
+  flex-grow: 1;
 
   h1,
   h2,

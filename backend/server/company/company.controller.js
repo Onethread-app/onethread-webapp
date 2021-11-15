@@ -6,7 +6,7 @@ const { Member } = require('./member/member.model');
 const Plan = require('../plan/plan.model');
 const { createSlug } = require('../helpers/SlugCreator');
 const Task = require('../task/task.model');
-const { getTaskMembers } = require('../task/task.controller');
+const { getTaskMembers } = require('../helpers/utils');
 const {
   triggerNotification,
 } = require('../services/webpush.services');
@@ -41,7 +41,11 @@ const {
 
 const {
   findSubtasksByTaskId,
-} = require('../services/task/subtask/subtask.service');
+} = require('../services/task/task.service');
+
+const {
+  getAllStatusInProject,
+} = require('../services/task/taskStatus/taskStatus.service');
 
 // create a company profile
 const changeName = async (req, res, next) => {
@@ -365,9 +369,9 @@ const updateRole = async (req, res, next) => {
 // company will be found on req.company
 const getCompanyLoad = async (req, res, next) => {
   try {
-    const company = await Company.findOne({
-      _id: req.params.companyId,
-    }).populate('account', '_id firstName lastName email contactNo');
+    const company = await Company.findById(
+      req.params.companyId,
+    ).populate('account', '_id firstName lastName email contactNo');
     if (company) {
       req.company = company;
       return next();
@@ -588,91 +592,57 @@ const parentOrg = async (req, res, next) => {
   }
 };
 
-const companyTasks = async (allProjectIds, withDone = false) => {
+const companyTasks = async (company, addDoneTasks = false) => {
   try {
     let taskCompilation = [];
     let tasks = [];
+    let queryObject = { company };
+    let sortObject = { priority: 0 };
+    let populateArray = [
+      { path: 'project', select: '_id name' },
+      { path: 'company', select: '_id name uniqueName' },
+      {
+        path: 'status',
+        select: '_id name',
+      },
+      {
+        path: 'account',
+        select: '_id firstName lastName profileImage',
+      },
+    ];
+    let selectString = `_id name account status dueDate project priority createdAt`;
 
-    if (withDone) {
-      tasks = await Task.find({
-        project: { $in: allProjectIds },
-      })
-        .sort({ priority: 0 })
-        .select(
-          '_id name account status dueDate project boardId priority createdAt',
-        )
-        .populate([
-          {
-            path: 'project',
-            select: '_id name',
-            populate: [
-              {
-                path: 'company',
-                select: '_id uniqueName name',
-              },
-            ],
-          },
-          {
-            path: 'account',
-            select: '_id firstName lastName profileImage',
-          },
-        ]);
-    } else {
-      tasks = await Task.find({
-        project: { $in: allProjectIds },
-        status: { $ne: 'done' },
-      })
-        .sort({ priority: 0 })
-        .select(
-          '_id name account status dueDate project boardId priority createdAt',
-        )
-        .populate([
-          {
-            path: 'project',
-            select: '_id name',
-            populate: [
-              {
-                path: 'company',
-                select: '_id uniqueName name',
-              },
-            ],
-          },
-          {
-            path: 'account',
-            select: '_id firstName lastName profileImage',
-          },
-        ]);
+    if (!addDoneTasks) {
+      queryObject.isCompleted = false;
     }
+
+    tasks = await Task.find(queryObject)
+      .sort(sortObject)
+      .select(selectString)
+      .populate(populateArray);
 
     await Promise.all(
       tasks.map(async (task) => {
         let modifiedTask = {};
         const subtasks = await findSubtasksByTaskId(task._id);
-
         const taskMembers = await getTaskMembers(task._id);
-        const members = taskMembers.map((tMember) => {
-          return tMember.assignedPerson;
-        });
+        const members = taskMembers.map((t) => t.assignedPerson);
 
+        const statusList = await getAllStatusInProject(
+          task.project._id,
+        );
         modifiedTask._id = task._id;
         modifiedTask.name = task.name;
         modifiedTask.account = task.account;
         modifiedTask.status = task.status;
         modifiedTask.dueDate = task.dueDate;
         modifiedTask.members = members;
-        modifiedTask.boardId = task.boardId;
         modifiedTask.priority = task.priority;
         modifiedTask.createdAt = task.createdAt;
-        modifiedTask.project = {
-          _id: task.project._id,
-          name: task.project.name,
-        };
-        modifiedTask.company = {
-          _id: task.project.company._id,
-          uniqueName: task.project.company.uniqueName,
-          name: task.project.company.name,
-        };
+        modifiedTask.project = task.project;
+        modifiedTask.company = task.company;
         modifiedTask.subtasks = subtasks;
+        modifiedTask.statusList = statusList;
         taskCompilation.push(modifiedTask);
       }),
     );
@@ -682,7 +652,7 @@ const companyTasks = async (allProjectIds, withDone = false) => {
     );
     return taskCompilation;
   } catch (error) {
-    logger.error(`Compnay: ${error}`);
+    logger.error(`Company: ${error}`);
     return error;
   }
 };
@@ -690,20 +660,14 @@ const companyTasks = async (allProjectIds, withDone = false) => {
 const allCompanytasks = async (req, res, next) => {
   try {
     const companyId = req.params.companyId;
-    const projectList = await Project.find({
-      $or: [{ company: companyId }, { associate: companyId }],
-      removed: false,
-      hasDeleted: false,
-    }).exec();
-    const allProjectIds = projectList.map((p) => p._id);
-    const taskCompilation = await companyTasks(allProjectIds, true);
+    const taskCompilation = await companyTasks(companyId, true);
     const sortedTasks = sortTasksByStatus(taskCompilation);
     return sendJSONresponse(res, 200, {
       success: true,
       tasks: sortedTasks,
     });
   } catch (error) {
-    logger.error(`Company: ${error}`);
+    logger.error(`All Company Tasks: ${error}`);
     next(error);
   }
 };
@@ -721,13 +685,13 @@ const dashBoard = async (req, res, next) => {
       (p) => p.status === 'completed',
     ).length;
     let runningProjects = projectList.length - completedProjects;
-    const allProjectIds = projectList.map((p) => p._id);
 
     const totalTasks = await Task.countDocuments({
-      project: { $in: allProjectIds },
+      company: companyId,
+      parentTask: null,
     });
 
-    const taskCompilation = await companyTasks(allProjectIds);
+    const taskCompilation = await companyTasks(companyId);
 
     return sendJSONresponse(res, 200, {
       success: true,
@@ -762,7 +726,7 @@ const latestCompletedTasks = async (req, res, next) => {
         ],
       })
         .select('name updatedAt')
-        .populate('boardId project', 'name name')
+        .populate('project', 'name name')
         .exec();
       completedTaskCompilation.push(doneTask);
     }

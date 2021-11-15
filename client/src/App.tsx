@@ -341,7 +341,7 @@ const App = () => {
             component={BoardDetails}
           />
           <PrivateRoute
-            path="/company/:cname/project/:projectId/board/:boardId/task/:taskId"
+            path="/company/:cname/project/:projectId/task/:taskId"
             exact={true}
             component={TaskPage}
           />

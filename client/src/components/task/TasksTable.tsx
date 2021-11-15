@@ -1,10 +1,14 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { Popover, Position } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { isNil } from 'lodash';
+import moment from 'moment';
+import { connect } from 'react-redux';
 
+import { deleteTask, updateTask } from 'stores/task/Actions';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import TablePagination from '@material-ui/core/TablePagination';
-
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {
   StyledTable,
   StyledTableRow,
@@ -18,8 +22,9 @@ import {
   StyledSubRowBody,
   CreatableItem,
 } from '../table/StyledTable.styles';
-import moment from 'moment';
-import { connect } from 'react-redux';
+import { ITask } from 'stores/task/Reducer';
+import TaskTableOptions from './TaskTableOptions';
+import TaskTableModals from './TaskTableModals';
 
 interface ITasksTable {
   getTableProps: any;
@@ -37,7 +42,12 @@ interface ITasksTable {
   userCompanyLoading: boolean;
 }
 
-const TasksTable = (props: ITasksTable) => {
+interface ITasksTableFunctions {
+  deleteTask: ({ taskId, projectId, companyId }) => void;
+  updateTask: (task: ITask) => void;
+}
+
+const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -54,6 +64,12 @@ const TasksTable = (props: ITasksTable) => {
     userCompanyLoading,
   } = props;
   const history = useHistory();
+  const [showPopover, setShowPopover] = useState<string>('');
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [showEditTaskDialog, setShowEditTaskDialog] =
+    useState<boolean>(false);
+  const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
+    useState<boolean>(false);
 
   const handlePageChange = (event, value) => {
     gotoPage(value);
@@ -66,8 +82,23 @@ const TasksTable = (props: ITasksTable) => {
 
   const handleClick = (task) => {
     history.push(
-      `/company/${task.company.uniqueName}/project/${task.project._id}/board/${task.boardId}/task/${task._id}`,
+      `/company/${task.company.uniqueName}/project/${task.project._id}/task/${task._id}`,
     );
+  };
+
+  const handleOptionsClick = (e, task: ITask) => {
+    e.stopPropagation();
+    setSelectedTask(task);
+  };
+
+  const handleDeleteTask = () => {
+    props.deleteTask({
+      taskId: selectedTask._id,
+      projectId: selectedTask.project._id,
+      companyId: selectedTask.company._id,
+    });
+    setShowDeleteTaskDialog(false);
+    setShowPopover('');
   };
 
   const renderRowSubComponent = useCallback(({ row }) => {
@@ -192,6 +223,30 @@ const TasksTable = (props: ITasksTable) => {
                       </StyledTaskTableData>
                     );
                   })}
+                  <Popover
+                    popoverClassName="bp3-popover-content-sizing"
+                    position={Position.BOTTOM_RIGHT}
+                    isOpen={
+                      row.original._id === showPopover ? true : false
+                    }
+                    onClose={() => setShowPopover('')}
+                    content={
+                      <TaskTableOptions
+                        setShowDeleteTaskDialog={
+                          setShowDeleteTaskDialog
+                        }
+                        setShowEditTaskDialog={setShowEditTaskDialog}
+                      />
+                    }
+                    target={
+                      <MoreVertIcon
+                        fontSize="small"
+                        onClick={(e) =>
+                          handleOptionsClick(e, row.original._id)
+                        }
+                      />
+                    }
+                  />
                 </StyledTableRow>
                 {row.isExpanded
                   ? renderRowSubComponent({ row })
@@ -223,6 +278,13 @@ const TasksTable = (props: ITasksTable) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </div>
+      <TaskTableModals
+        handleDeleteTask={handleDeleteTask}
+        setShowDeleteTaskDialog={setShowDeleteTaskDialog}
+        setShowEditTaskDialog={setShowEditTaskDialog}
+        showDeleteTaskDialog={showDeleteTaskDialog}
+        showEditTaskDialog={showEditTaskDialog}
+      />
     </>
   );
 };
@@ -231,4 +293,7 @@ const mapStateToProps = (state) => ({
   userCompanyLoading: state.userReducer.userCompanyLoading,
 });
 
-export default connect(mapStateToProps, {})(TasksTable);
+export default connect(mapStateToProps, {
+  deleteTask,
+  updateTask,
+})(TasksTable);

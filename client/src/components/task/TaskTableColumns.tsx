@@ -7,8 +7,8 @@ import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { toTitleCase } from 'helpers/utils';
 
 import MemberGroup from 'components/member/MemberGroup';
-import TaskStatusTag from './TaskStatusTag';
 import TaskPriorityTag from './TaskPriorityTag';
+import TaskTagSelect from './TaskTagSelect';
 
 const customProjectFilter = (rows, id, filterValue) => {
   return rows.filter((row) =>
@@ -22,7 +22,7 @@ const customStatusFilter = (rows, id, filterValue) => {
   return rows.filter((row) =>
     isEmpty(filterValue)
       ? row
-      : filterValue.includes(row.original.status),
+      : filterValue.includes(row.original.status._id),
   );
 };
 
@@ -132,7 +132,7 @@ export const TaskTableColumns = [
     Footer: 'Status',
     accessor: 'status',
     sticky: 'center',
-    Cell: ({ value }) => <TaskStatusTag status={value} />,
+    Cell: ({ row }) => <TaskTagSelect task={row.original} />,
     filter: customStatusFilter,
   },
   {
