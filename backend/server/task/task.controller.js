@@ -218,7 +218,11 @@ const create = async (req, res, next) => {
       priority: req.body.priority,
       dueDate: req.body.dueDate,
       company: companyId,
-    }).populate(populateArray);
+    });
+
+    const populatedTask = await task
+      .populate(populateArray)
+      .execPopulate();
 
     const members = await addMemberToTask(
       req.body.assignmembers,
@@ -232,16 +236,9 @@ const create = async (req, res, next) => {
       { safe: true, upsert: true, new: true },
     );
 
-    const responseData = {
-      _id: task._id,
-      name: task.name,
-      description: task.description,
-      dueDate: task.dueDate,
-      priority: task.priority,
-      status: task.status,
-      assignedMembers: members,
-      project: task.project,
-    };
+    const responseData = populatedTask.toJSON();
+    responseData.members = members;
+    responseData.subTasks = [];
     // await sendNotificationToProjectTeamMates(
     //   req.user._id,
     //   companyId,
@@ -444,14 +441,20 @@ const deleteMember = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     console.log('status', req.body);
-    const task = await Task.findByIdAndUpdate(
+    let task = await Task.findByIdAndUpdate(
       { _id: req.task._id },
       req.body,
       { new: true },
-    )
-      .populate('account', '_id firstName lastName')
-      .populate('status', '_id name');
-    console.log(task);
+    ).populate(populateArray);
+
+    task = task.toJSON();
+    // Subtasks
+    task.subTasks = await findSubtasksByTaskId(
+      task._id,
+      populateArray,
+    );
+    // Members
+    task.members = await getAssignedMembers(task._id);
     return sendJSONresponse(res, 200, {
       message: 'Task Updated.',
       task,

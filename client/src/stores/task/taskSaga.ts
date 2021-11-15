@@ -7,10 +7,8 @@ import {
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
 import { TaskActionType } from './Types';
-import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
-import { Toaster } from '@blueprintjs/core';
 import {
   createBoardFailure,
   createBoardSuccess,
@@ -43,7 +41,6 @@ import {
   updateBoardNameFailure,
   updateBoardNameSuccess,
   dragAndDropTaskFailure,
-  updateCurrentTaskColumnId,
   getAllUserTasksSuccess,
   getAllUserTasksFailure,
   getAllCompanyTasksFailure,
@@ -57,15 +54,13 @@ import {
   updateTaskStatusFailure,
   createSubTaskSuccess,
   createSubTaskFailure,
+  taskMarkAsCompletedSuccess,
+  taskMarkAsCompletedFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
-import {
-  getCurrentBoard,
-  getCurrentTaskId,
-  selectColumnName,
-} from './Selector';
+import { getCurrentBoard } from './Selector';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;
@@ -291,78 +286,26 @@ export function* createTask({ payload }: any) {
 
 export function* dragAndDrop({
   taskId,
-  sourceColumnId,
-  destinationColumnId,
-  taskIndexOfDestinationColumn,
+  companyId,
+  destinationStatusId,
+  sourceStatusId,
 }: any) {
   try {
-    const headers = tokenConfig();
-    const currentBoard: TaskBoard = yield select(getCurrentBoard);
-    const destColumn = yield select(
-      selectColumnName(destinationColumnId),
-    );
-    const status = destColumn[0].name
-      .toLowerCase()
-      .split(' ')
-      .join('-');
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
-      const requestData = {
-        taskId,
-        status,
-        sourceColumnId,
-        destinationColumnId,
-        taskIndexOfDestinationColumn,
-      };
-      const allColumns = currentBoard.columns!;
-      let addedTask: ITask = {} as any;
-      let destCol = 0;
-
-      // find the dragged task, removed from source and save destination column index
-      allColumns.forEach((column, i) => {
-        if (sourceColumnId === column._id) {
-          // const index = column.tasks!.findIndex(
-          //   (task) => task._id === taskId,
-          // );
-          // column.tasks![index].status = status;
-          // column.tasks![index].columnId = destinationColumnId;
-          // addedTask = column.tasks!.slice(index, index + 1)[0];
-          // column.tasks!.splice(index, 1);
-        }
-        if (destinationColumnId === column._id) {
-          destCol = i;
-        }
-      });
-      allColumns[destCol].tasks!.splice(
-        taskIndexOfDestinationColumn,
-        0,
-        addedTask,
+      yield tigrowApi.post(
+        `tasks/dragTask`,
+        { sourceStatusId, destinationStatusId, taskId },
+        headers,
       );
-      const currentTaskId = yield select(getCurrentTaskId);
-      if (taskId === currentTaskId) {
-        yield put(
-          updateCurrentTaskColumnId({
-            columnId: destinationColumnId,
-            status,
-          }),
-        );
-      }
-      yield put(dragAndDropTaskSuccess(allColumns));
-      yield tigrowApi.post(`tasks/dragTask`, requestData, headers);
     }
+    yield put(
+      dragAndDropTaskSuccess({ taskId, destinationStatusId }),
+    );
   } catch (error) {
-    Toaster.create().show({
-      message: 'Operation Unsuccessful',
-      action: {
-        icon: 'refresh',
-        className: 'bp3-intent-warning b',
-        onClick: () => {
-          window.location.reload();
-        },
-        text: 'Reload',
-      },
-      timeout: 300000,
-    });
-    yield put(dragAndDropTaskFailure(returnErrorText(error)));
+    const errorText = returnErrorText(error);
+    // TODO: send errorText to error toaster
+    yield put(dragAndDropTaskFailure(errorText));
   }
 }
 
@@ -386,11 +329,11 @@ export function* addTeamMembersIntoBoard({ members, boardId }: any) {
 export function* getSelectedTaskDetailsAsync({ payload }: any) {
   try {
     yield put(showLoading());
-    const headers = tokenConfig();
-    const projectId = yield select(getProjectId);
+    const { companyId, projectId, taskId } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization && payload) {
       const res = yield tigrowApi.get(
-        `tasks/${payload}/?pid=${projectId}`,
+        `tasks/${taskId}/?pid=${projectId}`,
         headers,
       );
       yield put(getSelectedTaskDetailsSuccess(res.data));
@@ -423,7 +366,7 @@ export function* updateTask({ payload }: any) {
 
       yield put(
         updateTaskSuccess({
-          updatedTask: res.data,
+          updatedTask: res.data.task,
           companyId,
           projectId,
         }),
@@ -570,6 +513,29 @@ export function* createSubTask(payload) {
   }
 }
 
+export function* taskMarkAsCompleted({ payload }: any) {
+  try {
+    const { projectId, companyId, taskId } = payload;
+    const headers = formTokenConfig(companyId);
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.post(
+        `tasks/${taskId}/mark-as-completed?pid=${projectId}`,
+        {},
+        headers,
+      );
+      yield put(
+        taskMarkAsCompletedSuccess({
+          projectId,
+          companyId,
+          updatedTask: { _id: taskId, isCompleted: true },
+        }),
+      );
+    }
+  } catch (error) {
+    yield put(taskMarkAsCompletedFailure(returnErrorText(error)));
+  }
+}
+
 export function* onCreateBoard() {
   yield takeEvery(TaskActionType.CREATE_BOARD_START, createBoard);
 }
@@ -694,6 +660,13 @@ export function* onUpdateTaskStatus() {
 
 export function* onCreateSubTask() {
   yield takeEvery(TaskActionType.CREATE_SUBTASK, createSubTask);
+}
+
+export function* onTaskMarkAsCompleted() {
+  yield takeEvery(
+    TaskActionType.TASK_MARK_AS_COMPLETED,
+    taskMarkAsCompleted,
+  );
 }
 
 export default function* taskSaga() {

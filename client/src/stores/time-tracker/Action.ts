@@ -39,3 +39,18 @@ export const updateDurationPersecond = (duration: number) => ({
   type: TimeTrackerTypes.UPDATE_DURATION_PER_SECOND,
   payload: duration,
 });
+
+export const userTimeTracker = (payload) => ({
+  type: TimeTrackerTypes.USER_TIME_TRACKER,
+  payload,
+});
+
+export const userTimeTrackerSuccess = (response: any) => ({
+  type: TimeTrackerTypes.USER_TIME_TRACKER_SUCCESS,
+  payload: response,
+});
+
+export const userTimeTrackerFailure = (errorMessage: any) => ({
+  type: TimeTrackerTypes.USER_TIME_TRACKER_FAILURE,
+  payload: errorMessage,
+});

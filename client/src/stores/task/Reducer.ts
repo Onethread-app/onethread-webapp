@@ -76,6 +76,7 @@ export interface TaskBoard {
 export interface ITask {
   _id: string;
   name: string;
+  isCompleted: boolean;
   description: string;
   createdAt: Date | null;
   createdBy: string;
@@ -212,6 +213,7 @@ const InitialState: ITaskReducer = {
       _id: '',
       name: '',
     },
+    isCompleted: false,
     assignedMembers: [],
     dueDate: null,
     priority: 2,
@@ -529,10 +531,6 @@ export const TaskReducer = (state = InitialState, action: any) => {
     case TaskActionType.DRAG_AND_DROP_TASK_SUCCESS:
       return {
         ...state,
-        currentBoard: {
-          ...state.currentBoard,
-          columns: action.payload,
-        },
         dragAndDrop: false,
       };
     case TaskActionType.DRAG_AND_DROP_TASK_FAILURE:
@@ -559,11 +557,13 @@ export const TaskReducer = (state = InitialState, action: any) => {
         fetchingTask: false,
       };
     case TaskActionType.UPDATE_TASK_START:
+    case TaskActionType.TASK_MARK_AS_COMPLETED:
       return {
         ...state,
         updatingTask: true,
       };
     case TaskActionType.UPDATE_TASK_SUCCESS:
+    case TaskActionType.TASK_MARK_AS_COMPLETED_SUCCESS:
       const { updatedTask, companyId, projectId } = action.payload;
       return {
         ...state,
@@ -586,6 +586,7 @@ export const TaskReducer = (state = InitialState, action: any) => {
         updatingTask: false,
       };
     case TaskActionType.UPDATE_TASK_FAILURE:
+    case TaskActionType.TASK_MARK_AS_COMPLETED_FAILURE:
       return {
         ...state,
         taskError: action.payload,
