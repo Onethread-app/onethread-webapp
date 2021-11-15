@@ -36,7 +36,7 @@ router
 
 router
   .route('/:taskId/mark-as-completed')
-  .post(authorization, taskCtrl.markAsCompleted);
+  .put(authorization, taskCtrl.markAsCompleted);
 
 // OK
 router

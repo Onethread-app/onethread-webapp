@@ -408,3 +408,37 @@ export const createSubTaskFailure = (errorMessage: string) => ({
   type: TaskActionType.CREATE_SUBTASK_FAILURE,
   payload: errorMessage,
 });
+
+export const taskMarkAsCompleted = (payload: {
+  projectId: string;
+  taskId: string;
+  companyId: string;
+}) => ({
+  type: TaskActionType.TASK_MARK_AS_COMPLETED,
+  payload,
+});
+
+export const taskMarkAsCompletedSuccess = (response: any) => ({
+  type: TaskActionType.TASK_MARK_AS_COMPLETED_SUCCESS,
+  payload: response,
+});
+
+export const taskMarkAsCompletedFailure = (errorMessage: string) => ({
+  type: TaskActionType.TASK_MARK_AS_COMPLETED_FAILURE,
+  payload: errorMessage,
+});
+
+export const getTaskMembers = (payload: {}) => ({
+  type: TaskActionType.GET_TASK_MEMBERS,
+  payload,
+});
+
+export const getTaskMembersSuccess = (response: any) => ({
+  type: TaskActionType.GET_TASK_MEMBERS_SUCCESS,
+  payload: response,
+});
+
+export const getTaskMembersFailure = (errorMessage: string) => ({
+  type: TaskActionType.GET_TASK_MEMBERS_FAILURE,
+  payload: errorMessage,
+});
