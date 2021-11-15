@@ -70,6 +70,6 @@ router.use('/subscriptions', subscriptionRoutes);
 router.use('/video-conferences', videoConferencesRoute);
 router.use('/feedback', feedbackRoutes);
 router.use('/reports', reportRoutes);
-router.use('/track', timeTrackerRoutes);
+router.use('/time-trackers', timeTrackerRoutes);
 
 module.exports = router;

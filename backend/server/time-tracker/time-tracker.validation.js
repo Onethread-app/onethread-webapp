@@ -6,7 +6,6 @@ const timeTrackerSchema = {
   duration: Joi.number(),
   task: idSchema.id,
   project: idSchema.id,
-  task: idSchema.id,
 };
 
 module.exports = {
