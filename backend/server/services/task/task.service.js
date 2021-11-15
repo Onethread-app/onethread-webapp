@@ -78,8 +78,6 @@ const findSubtasksByTaskId = async (
   let subtasks = await Task.find({ parentTask })
     .select('-updatedAt')
     .populate(populateArray);
-
-  console.log(subtasks);
   let subtaskWithMembers = [];
   await Promise.all(
     subtasks.map(async (subtask) => {

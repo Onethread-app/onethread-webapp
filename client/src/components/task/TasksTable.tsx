@@ -289,7 +289,9 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  userCompanyLoading: state.userReducer.userCompanyLoading,
+});
 
 export default connect(mapStateToProps, {
   deleteTask,

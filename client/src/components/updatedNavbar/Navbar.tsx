@@ -62,7 +62,6 @@ export const compareChats = (a: any, b: any) => {
 };
 
 const UpdatedNavbar = (props: Props) => {
-  const [search, setSearch] = useState<string>('');
   const [openCompanyDialog, setOpenCompanyDialog] =
     useState<boolean>(false);
   const [showButtonReport, setShowButtonReport] = useState(false);
@@ -76,7 +75,6 @@ const UpdatedNavbar = (props: Props) => {
 
   const handleSearch = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log(search);
   };
   const handleSeenNotifications = async () => {
     props.seen !== 0 && props.seenNotification();
@@ -103,12 +101,12 @@ const UpdatedNavbar = (props: Props) => {
   return (
     <Container>
       <form onSubmit={handleSearch}>
-        <input
+        {/* <input
           type="text"
           name="search"
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search projects, colleages, tasks"
-        />
+        /> */}
       </form>
       <div className="nav-buttons-container">
         {props.userCompanyLoading === false ? (

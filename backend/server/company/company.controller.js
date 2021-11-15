@@ -631,7 +631,6 @@ const companyTasks = async (company, addDoneTasks = false) => {
         const statusList = await getAllStatusInProject(
           task.project._id,
         );
-
         modifiedTask._id = task._id;
         modifiedTask.name = task.name;
         modifiedTask.account = task.account;
@@ -653,7 +652,7 @@ const companyTasks = async (company, addDoneTasks = false) => {
     );
     return taskCompilation;
   } catch (error) {
-    logger.error(`Compnay: ${error}`);
+    logger.error(`Company: ${error}`);
     return error;
   }
 };

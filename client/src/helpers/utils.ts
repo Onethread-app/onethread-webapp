@@ -260,8 +260,6 @@ export const tasksFilterFn = (
   if (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) {
     tasks = filterTasksByStatus(tasks, selectedStatusList);
   }
-
-  console.log(tasks);
   return tasks;
 };
 

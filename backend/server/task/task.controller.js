@@ -440,7 +440,6 @@ const deleteMember = async (req, res, next) => {
 // OK
 const update = async (req, res, next) => {
   try {
-    console.log('status', req.body);
     let task = await Task.findByIdAndUpdate(
       { _id: req.task._id },
       req.body,

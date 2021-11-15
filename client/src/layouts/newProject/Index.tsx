@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
 
 import { User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';

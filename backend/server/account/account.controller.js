@@ -83,6 +83,10 @@ const options = [
           },
         ],
       },
+      {
+        path: 'status',
+        select: '_id name',
+      },
     ],
   },
   {
@@ -1012,7 +1016,7 @@ const userTaskList = async (req, res, next) => {
         });
 
         const statusList = await getAllStatusInProject(
-          task.project._id,
+          ft.taskId.project._id,
         );
 
         const modifiedTask = {

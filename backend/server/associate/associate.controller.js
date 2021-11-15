@@ -48,7 +48,6 @@ const createPending = async (req, res, next) => {
     });
 
     if (_.isEmpty(associate)) {
-      console.log(associate);
       associate = new Associate({
         company: companyId,
         associateCompany: assoId,
@@ -77,7 +76,6 @@ const createPending = async (req, res, next) => {
     );
     return sendJSONresponse(res, 201, associate);
   } catch (error) {
-    console.log(error);
     logger.error(`Associate pending: ${error}`);
     next(error);
   }

@@ -2,13 +2,13 @@ const express = require('express');
 const taskStatusCtrl = require('./taskStatus.controller');
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 const joiSchema = require('./taskStatus.validation');
-const projectCtrl = require('../../project/project.controller');
+const projectCtrl = require('../../middlewares/projectRoleMiddleware');
 const {
   authorization,
 } = require('../../middlewares/authorizationMiddleware');
 
 const router = express.Router();
-const subCtrl = require('../../subscription/subscription.controller');
+const subCtrl = require('../../middlewares/subscriptionCheckerMiddleware');
 
 // OK
 router

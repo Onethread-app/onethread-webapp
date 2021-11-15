@@ -89,10 +89,6 @@ const ProjectTasks = (props: IProjectTasksProps) => {
   const data = useMemo(() => taskList, [taskList]);
   const columns = useMemo(() => TaskTableColumns, []);
 
-  const [showToaster, setShowToaster] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -129,17 +125,6 @@ const ProjectTasks = (props: IProjectTasksProps) => {
     useExpanded,
     usePagination,
   );
-
-  const useToaster = () => {
-    return {
-      showToaster,
-      setShowToaster,
-      successMessage,
-      setSuccessMessage,
-      setErrorMessage,
-      errorMessage,
-    };
-  };
 
   const { globalFilter, pageSize, pageIndex } = state;
 
@@ -373,10 +358,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           onClose={() => setOpenTaskDialog(false)}
           isOpen={openTaskDialog}
         >
-          <TaskDialog
-            setShowDialog={setOpenTaskDialog}
-            useToaster={useToaster}
-          ></TaskDialog>
+          <TaskDialog setShowDialog={setOpenTaskDialog}></TaskDialog>
         </Dialog>
       </Container>
     </TasksTableContext.Provider>
