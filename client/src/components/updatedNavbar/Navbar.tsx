@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { withRouter } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { History } from 'history';
 import { connect } from 'react-redux';
 import { Badge } from '@material-ui/core';
@@ -21,6 +22,7 @@ import {
 } from '@blueprintjs/core';
 import { logoutAction } from 'stores/auth/Actions';
 import { companySubscriber } from 'helpers/notification/subscribers';
+import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 import {
   clearSeen,
   getNotifications,
@@ -37,6 +39,7 @@ import ProjectDialog from 'components/home/project-section/ProjectDialog';
 import { CompanySignupForm } from 'components/home/company-section/CompanyDialog';
 import TaskDialog from 'components/home/task-section/TaskDialog';
 import AnnouncementDialog from 'components/announcement/AnnouncementDialog';
+import TimerWatch from 'components/timer/TimerWatch';
 interface Props extends RouteComponentProps {
   user: User;
   userCompanyLoading: boolean;
@@ -53,6 +56,7 @@ interface Props extends RouteComponentProps {
   fetchChats: () => void;
   logoutAction: (history: History) => void;
   scrollTop: number;
+  currentlyTracking: ICurrentTrack;
 }
 
 export const compareChats = (a: any, b: any) => {
@@ -62,7 +66,7 @@ export const compareChats = (a: any, b: any) => {
 };
 
 const UpdatedNavbar = (props: Props) => {
-  const [search, setSearch] = useState<string>('');
+  // const [search, setSearch] = useState<string>('');
   const [openCompanyDialog, setOpenCompanyDialog] =
     useState<boolean>(false);
   const [showButtonReport, setShowButtonReport] = useState(false);
@@ -74,9 +78,10 @@ const UpdatedNavbar = (props: Props) => {
     useState<boolean>(false);
   const { t } = useTranslation();
 
+  const { taskId } = useParams<any>();
+
   const handleSearch = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log(search);
   };
   const handleSeenNotifications = async () => {
     props.seen !== 0 && props.seenNotification();
@@ -101,219 +106,227 @@ const UpdatedNavbar = (props: Props) => {
   }, []);
 
   return (
-    <Container>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          name="search"
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search projects, colleages, tasks"
-        />
-      </form>
-      <div className="nav-buttons-container">
-        {props.userCompanyLoading === false ? (
+    <>
+      {!!props.currentlyTracking.name &&
+        taskId !== props.currentlyTracking.task && <TimerWatch />}
+      <Container>
+        <form onSubmit={handleSearch}>
+          {/* <input
+            type="text"
+            name="search"
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search projects, colleages, tasks"
+          /> */}
+        </form>
+        <div className="nav-buttons-container">
+          {props.userCompanyLoading === false ? (
+            <Popover
+              popoverClassName="bg-white popover"
+              position={Position.BOTTOM_LEFT}
+              content={
+                <CreateOptionList
+                  listProps={createOptionsListProps}
+                />
+              }
+              target={
+                <div className="mr2 pointer">
+                  <Button className="create-button">Create +</Button>
+                </div>
+              }
+            />
+          ) : null}
           <Popover
-            popoverClassName="bg-white popover"
-            position={Position.BOTTOM_LEFT}
+            popoverClassName="bg-white"
+            position={Position.BOTTOM}
             content={
-              <CreateOptionList listProps={createOptionsListProps} />
+              <div
+                style={{
+                  maxHeight: '300px',
+                  width: isMobileOnly ? '320px' : '420px',
+                }}
+                className={`pt2 pb1 overflow-y-auto`}
+              >
+                {props.chats && props.chats.length ? (
+                  props.chats
+                    .sort(compareChats)
+                    .map((chat: IChat, index) => (
+                      <ChatListItem chat={chat} key={index} />
+                    ))
+                ) : (
+                  <p className="ph2">No room To Show</p>
+                )}
+              </div>
             }
             target={
-              <div className="mr2 pointer">
-                <Button className="create-button">Create +</Button>
+              <div className="mr3 pointer">
+                <Badge
+                  badgeContent={props.totalRoomUnread}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  color="secondary"
+                >
+                  <img src={chatIcon} alt="" />
+                </Badge>
               </div>
             }
           />
+          <Popover
+            popoverClassName="bg-white"
+            position={Position.BOTTOM}
+            content={<NotificationPopover />}
+            target={
+              <div className="mr2 pointer">
+                <Badge
+                  badgeContent={props.seen}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  color="secondary"
+                >
+                  <img
+                    src={notificationIcon}
+                    alt=""
+                    onClick={handleSeenNotifications}
+                  />
+                </Badge>
+              </div>
+            }
+          />
+          <Popover
+            popoverClassName="bp3-popover-content-sizing"
+            position={Position.BOTTOM}
+            content={
+              <ButtonGroup
+                minimal={true}
+                className="bp3-vertical bp3-fill"
+              >
+                <Button
+                  className="bp3-minimal outline-0 bp3-popover-dismiss"
+                  onClick={() =>
+                    props.history.push(`/${props.user.name}`)
+                  }
+                >
+                  <div className="dtc w1 w2-ns">
+                    <Avatar>
+                      {props.user?.firstName?.substring(0, 2)}
+                    </Avatar>
+                  </div>
+                  <div className="dtc v-mid pl3">
+                    <h1 className="f7 f6-ns fw4 lh-title black mv0">
+                      {`${upperFirst(
+                        props.user.firstName,
+                      )} ${upperFirst(props.user.lastName)}`}
+                    </h1>
+                  </div>
+                </Button>
+                <Button
+                  className="bp3-minimal outline-0 bp3-popover-dismiss"
+                  icon="cog"
+                  alignText="left"
+                  onClick={() =>
+                    props.history.push(`/${props.user.name}/settings`)
+                  }
+                >
+                  {t('app.company.Settings.Settings')}
+                </Button>
+                <Button
+                  className="bp3-minimal outline-0 bp3-popover-dismiss"
+                  onClick={(e: any) => setShowButtonReport(true)}
+                  icon="issue"
+                  alignText="left"
+                >
+                  {t('app.user.User-settings.Report-Issue')}
+                </Button>
+                <Button
+                  className="bp3-minimal outline-0 bp3-popover-dismiss"
+                  onClick={(e: any) =>
+                    props.logoutAction(props.history)
+                  }
+                  icon="log-in"
+                  alignText="left"
+                >
+                  {t('app.user.User-settings.Logout')}
+                </Button>
+              </ButtonGroup>
+            }
+            target={
+              <Avatar>
+                {props.user?.firstName?.substring(0, 2)}
+              </Avatar>
+            }
+          />
+        </div>
+        {showButtonReport ? (
+          <Dialog
+            onClose={() => setShowButtonReport(!showButtonReport)}
+            isOpen={showButtonReport}
+            style={{ background: '#fff' }}
+            canOutsideClickClose={false}
+          >
+            <div>
+              <ReportForm setShowButtonReport={setShowButtonReport} />
+            </div>
+          </Dialog>
         ) : null}
-        <Popover
-          popoverClassName="bg-white"
-          position={Position.BOTTOM}
-          content={
-            <div
-              style={{
-                maxHeight: '300px',
-                width: isMobileOnly ? '320px' : '420px',
-              }}
-              className={`pt2 pb1 overflow-y-auto`}
-            >
-              {props.chats && props.chats.length ? (
-                props.chats
-                  .sort(compareChats)
-                  .map((chat: IChat, index) => (
-                    <ChatListItem chat={chat} key={index} />
-                  ))
-              ) : (
-                <p className="ph2">No room To Show</p>
-              )}
-            </div>
-          }
-          target={
-            <div className="mr3 pointer">
-              <Badge
-                badgeContent={props.totalRoomUnread}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                color="secondary"
-              >
-                <img src={chatIcon} alt="" />
-              </Badge>
-            </div>
-          }
-        />
-        <Popover
-          popoverClassName="bg-white"
-          position={Position.BOTTOM}
-          content={<NotificationPopover />}
-          target={
-            <div className="mr2 pointer">
-              <Badge
-                badgeContent={props.seen}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                color="secondary"
-              >
-                <img
-                  src={notificationIcon}
-                  alt=""
-                  onClick={handleSeenNotifications}
-                />
-              </Badge>
-            </div>
-          }
-        />
-        <Popover
-          popoverClassName="bp3-popover-content-sizing"
-          position={Position.BOTTOM}
-          content={
-            <ButtonGroup
-              minimal={true}
-              className="bp3-vertical bp3-fill"
-            >
-              <Button
-                className="bp3-minimal outline-0 bp3-popover-dismiss"
-                onClick={() =>
-                  props.history.push(`/${props.user.name}`)
-                }
-              >
-                <div className="dtc w1 w2-ns">
-                  <Avatar>
-                    {props.user?.firstName?.substring(0, 2)}
-                  </Avatar>
-                </div>
-                <div className="dtc v-mid pl3">
-                  <h1 className="f7 f6-ns fw4 lh-title black mv0">
-                    {`${upperFirst(
-                      props.user.firstName,
-                    )} ${upperFirst(props.user.lastName)}`}
-                  </h1>
-                </div>
-              </Button>
-              <Button
-                className="bp3-minimal outline-0 bp3-popover-dismiss"
-                icon="cog"
-                alignText="left"
-                onClick={() =>
-                  props.history.push(`/${props.user.name}/settings`)
-                }
-              >
-                {t('app.company.Settings.Settings')}
-              </Button>
-              <Button
-                className="bp3-minimal outline-0 bp3-popover-dismiss"
-                onClick={(e: any) => setShowButtonReport(true)}
-                icon="issue"
-                alignText="left"
-              >
-                {t('app.user.User-settings.Report-Issue')}
-              </Button>
-              <Button
-                className="bp3-minimal outline-0 bp3-popover-dismiss"
-                onClick={(e: any) =>
-                  props.logoutAction(props.history)
-                }
-                icon="log-in"
-                alignText="left"
-              >
-                {t('app.user.User-settings.Logout')}
-              </Button>
-            </ButtonGroup>
-          }
-          target={
-            <Avatar>{props.user?.firstName?.substring(0, 2)}</Avatar>
-          }
-        />
-      </div>
-      {showButtonReport ? (
+
         <Dialog
-          onClose={() => setShowButtonReport(!showButtonReport)}
-          isOpen={showButtonReport}
-          style={{ background: '#fff' }}
-          canOutsideClickClose={false}
+          canOutsideClickClose={true}
+          canEscapeKeyClose={true}
+          autoFocus
+          style={{ borderRadius: '1rem' }}
+          className="w-auto h-auto pb0"
+          onClose={() => setOpenProjectDialog(false)}
+          isOpen={openProjectDialog}
         >
-          <div>
-            <ReportForm setShowButtonReport={setShowButtonReport} />
-          </div>
+          <ProjectDialog
+            // setProjects={setProjects}
+            setOpenProjectDialog={setOpenProjectDialog}
+          />
         </Dialog>
-      ) : null}
 
-      <Dialog
-        canOutsideClickClose={true}
-        canEscapeKeyClose={true}
-        autoFocus
-        style={{ borderRadius: '1rem' }}
-        className="w-auto h-auto pb0"
-        onClose={() => setOpenProjectDialog(false)}
-        isOpen={openProjectDialog}
-      >
-        <ProjectDialog
-          // setProjects={setProjects}
-          setOpenProjectDialog={setOpenProjectDialog}
-        />
-      </Dialog>
+        <Dialog
+          isOpen={openCompanyDialog}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          autoFocus
+          style={{ borderRadius: '1rem' }}
+          onClose={() => setOpenCompanyDialog(false)}
+          className="w-auto h-auto pb0"
+        >
+          <CompanySignupForm setShowDialog={setOpenCompanyDialog} />
+        </Dialog>
 
-      <Dialog
-        isOpen={openCompanyDialog}
-        canEscapeKeyClose={true}
-        canOutsideClickClose={true}
-        autoFocus
-        style={{ borderRadius: '1rem' }}
-        onClose={() => setOpenCompanyDialog(false)}
-        className="w-auto h-auto pb0"
-      >
-        <CompanySignupForm setShowDialog={setOpenCompanyDialog} />
-      </Dialog>
+        <Dialog
+          isOpen={openTaskDialog}
+          canOutsideClickClose={true}
+          canEscapeKeyClose={true}
+          autoFocus
+          style={{ borderRadius: '1rem' }}
+          onClose={() => setOpenTaskDialog(false)}
+          className="w-auto h-auto pb0"
+        >
+          <TaskDialog setShowDialog={setOpenTaskDialog} />
+        </Dialog>
 
-      <Dialog
-        isOpen={openTaskDialog}
-        canOutsideClickClose={true}
-        canEscapeKeyClose={true}
-        autoFocus
-        style={{ borderRadius: '1rem' }}
-        onClose={() => setOpenTaskDialog(false)}
-        className="w-auto h-auto pb0"
-      >
-        <TaskDialog setShowDialog={setOpenTaskDialog} />
-      </Dialog>
-
-      <Dialog
-        isOpen={openAnnouncementDialog}
-        canEscapeKeyClose={true}
-        canOutsideClickClose={true}
-        autoFocus
-        style={{ borderRadius: '1rem' }}
-        onClose={() => setOpenAnnouncementDialog(false)}
-        className="w-auto h-auto pb0"
-      >
-        <AnnouncementDialog
-          setOpenAnnouncementDialog={setOpenAnnouncementDialog}
-          setOpenCompanyDialog={setOpenCompanyDialog}
-        />
-      </Dialog>
-    </Container>
+        <Dialog
+          isOpen={openAnnouncementDialog}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          autoFocus
+          style={{ borderRadius: '1rem' }}
+          onClose={() => setOpenAnnouncementDialog(false)}
+          className="w-auto h-auto pb0"
+        >
+          <AnnouncementDialog
+            setOpenAnnouncementDialog={setOpenAnnouncementDialog}
+            setOpenCompanyDialog={setOpenCompanyDialog}
+          />
+        </Dialog>
+      </Container>
+    </>
   );
 };
 
@@ -328,6 +341,7 @@ const mapStateToProps = (state: any) => {
     chats: state.roomReducer.chats,
     currentRoom: state.roomReducer.currentRoom,
     totalRoomUnread: state.roomReducer.totalUnread,
+    currentlyTracking: state.timeTrackerReducer.currentlyTracking,
   };
 };
 

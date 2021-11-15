@@ -483,14 +483,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   />
                 </span>
                 <div className="flex flex-column h-100">
-                  {/* <NavbarTop
-                    scrollTop={scrollTop}
-                    type={
-                      (props.match.params as any).cname
-                        ? 'company'
-                        : 'default'
-                    }
-                  /> */}
                   <UpdatedNavbar scrollTop={scrollTop} />
                   <div
                     ref={scrollRef}
