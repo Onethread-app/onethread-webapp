@@ -6,8 +6,6 @@ const { Member } = require('./member/member.model');
 const Plan = require('../plan/plan.model');
 const { createSlug } = require('../helpers/SlugCreator');
 const Task = require('../task/task.model');
-const SubTask = require('../task/subtask/subtask.model');
-const Boardcolumn = require('../boardColumn/boardColumn.model');
 const { getTaskMembers } = require('../helpers/utils');
 const {
   projectTeamMembers,
@@ -638,7 +636,7 @@ const companyTasks = async (company, addDoneTasks = false) => {
         select: '_id firstName lastName profileImage',
       },
     ];
-    let selectString = `_id name account status dueDate project boardId priority createdAt`;
+    let selectString = `_id name account status dueDate project priority createdAt`;
 
     if (!addDoneTasks) {
       queryObject.isCompleted = false;
@@ -666,7 +664,6 @@ const companyTasks = async (company, addDoneTasks = false) => {
         modifiedTask.status = task.status;
         modifiedTask.dueDate = task.dueDate;
         modifiedTask.members = members;
-        modifiedTask.boardId = task.boardId;
         modifiedTask.priority = task.priority;
         modifiedTask.createdAt = task.createdAt;
         modifiedTask.project = task.project;
@@ -756,7 +753,7 @@ const latestCompletedTasks = async (req, res, next) => {
         ],
       })
         .select('name updatedAt')
-        .populate('boardId project', 'name name')
+        .populate('project', 'name name')
         .exec();
       completedTaskCompilation.push(doneTask);
     }

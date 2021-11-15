@@ -71,8 +71,7 @@ const {
 const options = [
   {
     path: 'taskId',
-    select:
-      '_id name account boardId columnId project dueDate status priority',
+    select: '_id name account project dueDate status priority',
     populate: [
       {
         path: 'project',
@@ -83,14 +82,6 @@ const options = [
             select: '_id uniqueName name',
           },
         ],
-      },
-      {
-        path: 'boardId',
-        select: '_id',
-      },
-      {
-        path: 'columnId',
-        select: '_id',
       },
     ],
   },
@@ -1036,7 +1027,6 @@ const userTaskList = async (req, res, next) => {
           },
           status: ft.taskId.status,
           dueDate: ft.taskId.dueDate,
-          boardId: ft.taskId.boardId._id,
           priority: ft.taskId.priority,
           members,
           createdAt: ft.taskId.createdAt,

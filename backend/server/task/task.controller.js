@@ -97,7 +97,6 @@ const addMemberToTask = async (assignmembers, taskId, req) => {
 // OK
 const load = async (req, res, next, id) => {
   try {
-    console.log(req.body);
     logger.info('Task is loading....');
     const task = await Task.findById(id).populate(populateArray);
 
@@ -232,6 +231,7 @@ const create = async (req, res, next) => {
       { $set: { status: 'ongoing' } },
       { safe: true, upsert: true, new: true },
     );
+
     const responseData = {
       _id: task._id,
       name: task.name,
