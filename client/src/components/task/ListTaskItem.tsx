@@ -23,7 +23,6 @@ import { IColumn, ITask } from 'stores/task/Reducer';
 import {
   dragAndDropTask,
   deleteTask,
-  ITaskDelete,
   getSelectedTaskDetails,
 } from 'stores/task/Actions';
 
@@ -128,8 +127,8 @@ interface IListTaskItemInternalProps extends IListTaskItemProps {
     destinationColumnId: string,
     taskIndexOfDestinationColumn: number,
   ) => void;
-  deleteTask: ({ taskId }: ITaskDelete) => void;
-  getSelectedTaskDetails: (task: string) => void;
+  deleteTask: ({ taskId, companyId, projectId }) => void;
+  getSelectedTaskDetails: ({ taskId, companyId, projectId }) => void;
 }
 
 const ListTaskItem = (props: IListTaskItemInternalProps) => {
@@ -152,7 +151,11 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
   const [deletingTask, setDeletingTask] = useState(false);
 
   const handleClick = () => {
-    props.getSelectedTaskDetails(task._id);
+    props.getSelectedTaskDetails({
+      taskId: task._id,
+      companyId: task.company._id,
+      projectId: task.project._id,
+    });
     setLoading(true);
   };
 

@@ -6,7 +6,7 @@ import { ITask, TaskBoard } from 'stores/task/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import {
-  getSelectedTaskDetails,
+  // getSelectedTaskDetails,
   getSelectedBoard,
 } from 'stores/task/Actions';
 
@@ -34,7 +34,7 @@ interface TaskInternalProps {
   subscriptiontExpired: boolean;
   fetchingTask: boolean;
   taskError: string;
-  getSelectedTaskDetails: (taskId: string) => void;
+  // getSelectedTaskDetails: () => void;
   getSelectedBoard: (boardId: string) => void;
 }
 
@@ -105,7 +105,7 @@ const mapStateToProps = (state: any) => {
 };
 
 export const TaskPage = connect(mapStateToProps, {
-  getSelectedTaskDetails,
+  // getSelectedTaskDetails,
   getSelectedBoard,
 })(TaskPageComponent);
 

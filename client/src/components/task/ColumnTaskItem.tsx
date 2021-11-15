@@ -25,7 +25,6 @@ import { ITask } from 'stores/task/Reducer';
 import {
   getSelectedTaskDetails,
   deleteTask,
-  ITaskDelete,
 } from 'stores/task/Actions';
 import { priorityColor } from 'stores/UtilsActions';
 
@@ -101,8 +100,8 @@ interface IColumnTaskItemInternalProps extends IColumnTaskItem {
   projectId: string;
   deletingTask: boolean;
   errorOnTaskDelete: string;
-  getSelectedTaskDetails: (task: string) => void;
-  deleteTask: ({ taskId }: ITaskDelete) => void;
+  getSelectedTaskDetails: ({ taskId, companyId, projectId }) => void;
+  deleteTask: ({ taskId, companyId, projectId }) => void;
 }
 
 const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
@@ -113,13 +112,20 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   const [showPopover, setShowPopover] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
   const handleClick = () => {
-    props.getSelectedTaskDetails(task._id);
+    props.getSelectedTaskDetails({
+      taskId: task._id,
+      companyId: task.company._id,
+      projectId: task.project._id,
+    });
     setLoading(true);
   };
 
   const handleTaskDelete = () => {
-    const payload = { taskId: task._id };
-    props.deleteTask(payload);
+    props.deleteTask({
+      taskId: task._id,
+      companyId: task.company._id,
+      projectId: task.project._id,
+    });
     setDeletingTask(true);
   };
 

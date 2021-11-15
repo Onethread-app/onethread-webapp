@@ -80,7 +80,7 @@ interface LayoutInternalProps
   fetchingUser: boolean;
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => any;
-  getSelectedTaskDetails: (taskId: string) => any;
+  getSelectedTaskDetails: ({ taskId, projectId, companyId }) => any;
   getSingleProject: (pid: string) => void;
   fetchRooms: () => void;
   company: ICompany;
@@ -134,7 +134,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   };
 
   const updateTaskReducer = () => {
-    props.getSelectedTaskDetails((props.match.params as any).taskId);
+    props.getSelectedTaskDetails({
+      taskId: (props.match.params as any).taskId,
+      companyId: props.company._id,
+      projectId: (props.match.params as any).projectId,
+    });
   };
 
   const closeSubErrorModal = () => {

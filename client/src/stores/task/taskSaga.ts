@@ -394,9 +394,17 @@ export function* taskFileUploadAsync({ payload }: any) {
         s3Key: res.data.s3key,
         columnId: payload.columnId, // need to change
       };
+      const companyId = yield select(getCompanyId);
+      const projectId = yield select(getProjectId);
       yield all([
         put(taskFileUploadSuccess(response)),
-        put(getSelectedTaskDetails(payload.taskId)),
+        put(
+          getSelectedTaskDetails({
+            taskId: payload.taskId,
+            companyId,
+            projectId,
+          }),
+        ),
       ]);
     }
   } catch (error) {
@@ -413,9 +421,17 @@ export function* taskFileDeleteAsync({ payload }: any) {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       yield tigrowApi.put(`files/file-delete-task`, reqBody, headers);
+      const companyId = yield select(getCompanyId);
+      const projectId = yield select(getProjectId);
       yield all([
         put(taskFileDeleteSuccess(payload)),
-        put(getSelectedTaskDetails(payload.taskId)),
+        put(
+          getSelectedTaskDetails({
+            taskId: payload.taskId,
+            companyId,
+            projectId,
+          }),
+        ),
       ]);
     }
   } catch (error) {

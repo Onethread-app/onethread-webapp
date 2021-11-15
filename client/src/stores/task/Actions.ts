@@ -212,9 +212,13 @@ export const addTeamMembersIntoBoardFailure = (
   payload: errorMessage,
 });
 
-export const getSelectedTaskDetails = (taskId: string) => ({
+export const getSelectedTaskDetails = (payload: {
+  taskId: string;
+  companyId: string;
+  projectId: string;
+}) => ({
   type: TaskActionType.SELECT_TASK_START,
-  payload: taskId,
+  payload,
 });
 
 export const getSelectedTaskDetailsSuccess = (response: any) => ({
