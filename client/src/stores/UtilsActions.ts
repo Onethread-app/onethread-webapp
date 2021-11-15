@@ -360,3 +360,32 @@ export const addSpace = (name: string) => {
   name = name.replace(/([A-Z])/g, ' $1').trim();
   return capitalizeName(name);
 };
+
+export const formTokenConfig = (companyId) => {
+  const token =
+    typeof window !== undefined &&
+    localStorage.getItem('ot_access_id')
+      ? JSON.parse(localStorage.getItem('ot_access_id')!)
+      : null;
+  if (
+    !localStorage.getItem('ot_access_id') ||
+    !localStorage.getItem('ot_refresh_id')
+  ) {
+    localStorage.removeItem('ot_access_id');
+    localStorage.removeItem('ot_refresh_id');
+    toaster.show({
+      message: 'Token is invalid. Please sign in.',
+      intent: 'danger',
+    });
+    History.push('/signin');
+    window.location.reload();
+  }
+  return {
+    headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      ClientId: store.getState().notificationReducer.socketId,
+      CompanyId: companyId,
+    },
+  };
+};
