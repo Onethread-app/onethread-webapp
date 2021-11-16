@@ -69,14 +69,8 @@ const CompanyAnnouncements = (props: Props) => {
   };
 
   useEffect(() => {
-    if (
-      props.company.announce === undefined ||
-      props.company.announce?.length === 0
-    ) {
-      props.getCompanyAnnouncement();
-      console.log('getCompanyAnnouncement');
-    }
-  }, [props.company.announce]);
+    props.getCompanyAnnouncement();
+  }, []);
 
   return (
     <>
@@ -228,6 +222,7 @@ const CompanyAnnouncements = (props: Props) => {
 
 const mapStateToProps = (state: any) => ({
   userCompanyLoading: state.userReducer.userCompanyLoading,
+  company: state.companyReducer.currentCompany,
 });
 
 export default connect(mapStateToProps, {

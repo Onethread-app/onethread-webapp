@@ -464,6 +464,7 @@ export function* getAllCompanyAnnouncementAsync() {
       yield put(
         getCompanyAnnouncementSuccess(response.data.announce),
       );
+      throw new Error('Error');
     }
   } catch (error) {
     yield put(getCompanyAnnouncementFailure(returnErrorText(error)));

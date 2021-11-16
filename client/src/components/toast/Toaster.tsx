@@ -162,12 +162,7 @@ export const AnnouncementToaster = (company: {
             The announcement has been created in {company.name}
           </div>
           <Link
-            to={{
-              pathname: `/company/${company.uniqueName}`,
-              state: {
-                tab: 'announcement',
-              },
-            }}
+            to={`/company/${company.uniqueName}?tab=4`}
             className="mt2 green"
           >
             Check it out!

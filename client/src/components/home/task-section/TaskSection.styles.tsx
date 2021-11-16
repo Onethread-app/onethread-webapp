@@ -133,7 +133,7 @@ const ModalContainer = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 0.5rem 0;
+  padding: 0.5rem;
   overflow: auto;
 
   textarea {
@@ -144,7 +144,6 @@ const Container = styled.div`
     height: 138px;
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #b1b1b1;
   }
 
   .due-date-input {

@@ -506,14 +506,23 @@ export const TaskReducer = (state = InitialState, action: any) => {
         action.payload;
       return {
         ...state,
-        userTasks: [...state.userTasks, { ...task }],
+        userTasks: [
+          ...state.userTasks,
+          { ...task, statusList: [{ ...task.status }] },
+        ],
         companyTaskList:
           currentCompanyId === task.company._id
-            ? [...state.companyTaskList, { ...task }]
+            ? [
+                ...state.companyTaskList,
+                { ...task, statusList: [{ ...task.status }] },
+              ]
             : state.companyTaskList,
         projectTaskList:
           currentProjectId === task.project._id
-            ? [...state.projectTaskList, { ...task }]
+            ? [
+                ...state.projectTaskList,
+                { ...task, statusList: [{ ...task.status }] },
+              ]
             : state.projectTaskList,
         creatingTask: false,
       };
@@ -570,17 +579,29 @@ export const TaskReducer = (state = InitialState, action: any) => {
         currentTask: updatedTask,
         userTasks: state.userTasks.map((task: ITask) =>
           task._id === updatedTask._id
-            ? { ...task, ...updatedTask }
+            ? {
+                ...task,
+                ...updatedTask,
+                statusList: updatedTask.status,
+              }
             : task,
         ),
         companyTaskList: state.companyTaskList.map((task: ITask) =>
           task.company._id === companyId
-            ? { ...task, ...updatedTask }
+            ? {
+                ...task,
+                ...updatedTask,
+                statusList: updatedTask.status,
+              }
             : task,
         ),
         projectTaskList: state.projectTaskList.map((task: ITask) =>
           task.project._id === projectId
-            ? { ...task, ...updatedTask }
+            ? {
+                ...task,
+                ...updatedTask,
+                statusList: updatedTask.status,
+              }
             : task,
         ),
         updatingTask: false,

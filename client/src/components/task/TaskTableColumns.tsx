@@ -83,7 +83,7 @@ export const TaskTableColumns = [
         {...row.getToggleRowExpandedProps()}
         className="flex items-center"
       >
-        {row.original.subtasks.length > 0 ? (
+        {row.original.subtasks?.length > 0 ? (
           row.isExpanded ? (
             <Icon icon="caret-down" />
           ) : (
