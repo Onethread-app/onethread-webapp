@@ -1,13 +1,9 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { isMobileOnly } from 'react-device-detect';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 
 import { User } from 'stores/user/Reducer';
-import { ICurrentTrack } from 'stores/time-tracker/Reducer';
-
-import TimerWatch from './timer/TimerWatch';
 import { userSubscriber } from 'layouts/company/room/channelSubscribe';
 
 interface SecondaryLayoutProps {
@@ -18,10 +14,6 @@ export const SecondaryLayout = (props: SecondaryLayoutProps) => {
   const user: User = useSelector(
     (state: any) => state.userReducer.user,
   );
-  const currentlyTracking: ICurrentTrack = useSelector(
-    (state: any) => state.timeTrackerReducer.currentlyTracking,
-  );
-  const { taskId }: any = useParams();
 
   useEffect(() => {
     async function subscribeUser() {
@@ -35,11 +27,6 @@ export const SecondaryLayout = (props: SecondaryLayoutProps) => {
   return props.Component ? (
     <div className={` ${isMobileOnly ? '' : 'relative'} h-100`}>
       <props.Component />
-      {!!currentlyTracking.name && taskId !== currentlyTracking.task && (
-        <div className="fixed" style={{ bottom: 20, right: 50 }}>
-          <TimerWatch />
-        </div>
-      )}
     </div>
   ) : null;
 };

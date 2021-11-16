@@ -406,18 +406,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 }}
               >
                 <div>
-                  {/* <Sidebar
-                    user={props.user}
-                    company={props.company}
-                    type={
-                      (props.match.params as any).cname
-                        ? 'company'
-                        : 'default'
-                    }
-                    leftOpen={!leftOpen}
-                    project={props.project}
-                    companyRooms={props.companyRooms}
-                  /> */}
                   <Sidebar
                     leftOpen={leftOpen}
                     companies={props.userCompanies}
@@ -458,14 +446,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   />
                 </span>
                 <div className="flex flex-column h-100">
-                  {/* <NavbarTop
-                    scrollTop={scrollTop}
-                    type={
-                      (props.match.params as any).cname
-                        ? 'company'
-                        : 'default'
-                    }
-                  /> */}
                   <UpdatedNavbar scrollTop={scrollTop} />
                   <div
                     ref={scrollRef}
