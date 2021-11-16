@@ -21,6 +21,7 @@ export interface IMember {
   _id: string;
 }
 export interface IProject {
+  isFavourite: boolean;
   _id: string;
   name: string;
   color: number;
@@ -34,6 +35,8 @@ export interface IProject {
   status: string;
   timeSpent?: number;
   deadline: Date;
+  budget: number;
+  currency: string;
   company: {
     _id: string;
     uniqueName: string;
@@ -194,9 +197,23 @@ export const ProjectReducer = (state = initialState, action: any) => {
         errorOnUpdatingProject: '',
       };
     case ProjectActionTypes.UPDATE_PROJECT_SUCCESS:
+      console.log(action.payload);
       return {
         ...state,
         updatingProject: false,
+        userProjects: state.userProjects.map((project: IProject) => {
+          if (project._id === action.payload.project._id) {
+            return { ...project, ...action.payload.project };
+          }
+          return project;
+        }),
+        allProjects: state.allProjects.map((project: IProject) => {
+          if (project._id === action.payload.project._id) {
+            return { ...project, ...action.payload.project };
+          }
+          return project;
+        }),
+        errorOnUpdatingProject: '',
       };
     case ProjectActionTypes.UPDATE_PROJECT_FAILURE:
       return {
