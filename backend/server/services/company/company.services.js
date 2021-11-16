@@ -44,6 +44,7 @@ const numbOfTasksOfACompany = async (companyId) => {
   return Task.countDocuments({
     project: projectIds,
     removed: false,
+    parentTask: null,
   });
 };
 
