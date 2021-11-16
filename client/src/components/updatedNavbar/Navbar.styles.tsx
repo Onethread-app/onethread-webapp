@@ -36,6 +36,7 @@ const Container = styled.div`
     column-gap: 1rem;
     margin: 0 2rem;
     align-items: center;
+    padding: 0.5rem 0;
   }
 
   .create-button {
@@ -56,6 +57,21 @@ const Container = styled.div`
     .bp3-popover-arrow {
       right: 20px !important;
     }
+  }
+
+  .bp3-popover-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .profile-pic {
+    display: flex;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: auto 0;
   }
 `;
 

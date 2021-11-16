@@ -121,7 +121,6 @@ function* getAllUserTasksAsync() {
         `accounts/task-list?date=${new Date()}`,
         headers,
       );
-      console.log(response.data);
       yield put(getAllUserTasksSuccess(response.data));
     }
   } catch (error) {
@@ -139,7 +138,6 @@ function* getAllCompanyTasksAsync() {
         `/company/${companyId}/all-tasks`,
         headers,
       );
-      console.log(response.data);
       yield put(getAllCompanyTasksSuccess(response.data.tasks));
     }
   } catch (error) {
@@ -158,7 +156,6 @@ function* getAllProjectTasksAsync() {
         `/projects/tasks?pid=${projectId}`,
         headers,
       );
-      console.log(response.data);
       yield put(getAllProjectTasksSuccess(response.data));
     }
   } catch (error) {
@@ -259,6 +256,7 @@ export function* createTask({ payload }: any) {
   try {
     const { companyId, projectId, ...newPayload } = payload;
     const headers = formTokenConfig(companyId);
+    console.log(payload);
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
         `tasks?pid=${projectId}`,
@@ -268,16 +266,18 @@ export function* createTask({ payload }: any) {
 
       const currentCompanyId = yield select(getCompanyId);
       const currentProjectId = yield select(getProjectId);
-
       yield put(
         createTaskSuccess({
-          task: response.data,
+          task: {
+            ...response.data,
+          },
           currentCompanyId,
           currentProjectId,
         }),
       );
     }
   } catch (error) {
+    console.log(error);
     yield put(
       createTaskFailure(returnErrorText(error) || 'Unknown error'),
     );

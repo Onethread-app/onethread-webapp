@@ -241,7 +241,17 @@ const UpdatedNavbar = (props: Props) => {
             </ButtonGroup>
           }
           target={
-            <Avatar>{props.user?.firstName?.substring(0, 2)}</Avatar>
+            props.user.profileImage !== '' ? (
+              <img
+                src={props.user.profileImage}
+                alt="profile"
+                className="profile-pic"
+              />
+            ) : (
+              <Avatar>
+                {props.user?.firstName?.substring(0, 2)}
+              </Avatar>
+            )
           }
         />
       </div>

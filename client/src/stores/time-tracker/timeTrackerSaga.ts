@@ -25,11 +25,11 @@ import { getCurrentTaskId } from 'stores/task/Selector';
 
 function* addTrackedTimeAsync({ payload }: any) {
   try {
-    const { projectId, companyId, ...newPayload } = payload;
-    const headers = formTokenConfig(companyId);
+    const { project, company, ...newPayload } = payload;
+    const headers = formTokenConfig(company);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.post(
-        `time-trackers?pid=${projectId}`,
+        `time-trackers?pid=${project}`,
         newPayload,
         headers,
       );
