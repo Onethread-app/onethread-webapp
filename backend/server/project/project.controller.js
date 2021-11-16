@@ -659,6 +659,7 @@ const updateProject = async (req, res, next) => {
           color: req.body.color,
           deadline: req.body.deadline,
           budget: req.body.budget,
+          currency: req.body.currency,
           status,
         },
       },

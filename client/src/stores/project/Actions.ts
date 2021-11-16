@@ -104,17 +104,9 @@ export const getProjectArchiveFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
-export const updateProject = (
-  projectName: string,
-  projectId: string,
-  color: string,
-  deadline: Date,
-) => ({
+export const updateProject = (payload) => ({
   type: ProjectActionTypes.UPDATE_PROJECT_START,
-  projectName,
-  projectId,
-  color,
-  deadline,
+  payload,
 });
 
 export const updateProjectSuccess = (response: any) => ({

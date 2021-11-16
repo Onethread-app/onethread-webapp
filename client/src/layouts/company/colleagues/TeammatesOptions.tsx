@@ -134,7 +134,7 @@ const TeammatesOptions = (props: Props) => {
               <Button
                 className="outline-0 bp3-large bp3-popover-dismiss"
                 onClick={async () => {
-                  await props.deleteTeamMember(row.id);
+                  props.deleteTeamMember(row.id);
                 }}
               >
                 <span className="red">Remove Member</span>
