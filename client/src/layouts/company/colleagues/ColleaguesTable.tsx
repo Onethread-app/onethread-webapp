@@ -113,6 +113,12 @@ const ColleaguesTable = (
     gotoPage(0);
   };
 
+  const checkPage = (o) => {
+    return props.type === 'teammates'
+      ? isEqual(o.member.account._id, props.user._id)
+      : isEqual(o.m.account._id, props.user._id);
+  };
+
   return (
     <>
       <StyledTable {...getTableProps()}>
@@ -181,6 +187,7 @@ const ColleaguesTable = (
                       {cell.render('Cell')}
                     </StyledProjectTableData>
                   ))}
+
                   <Popover
                     popoverClassName="bp3-popover-content-sizing"
                     position={Position.BOTTOM_RIGHT}
@@ -201,18 +208,21 @@ const ColleaguesTable = (
                       )
                     }
                     target={
-                      companyPermit(props.company.role) ||
-                      isEqual(
-                        row.original.m.account._id,
-                        props.user._id,
-                      ) ? (
-                        <MoreVertIcon
-                          fontSize="small"
-                          onClick={(e) =>
-                            handleOptionsClick(e, row.original.id)
-                          }
-                        />
-                      ) : undefined
+                      <MoreVertIcon
+                        fontSize="small"
+                        className={
+                          companyPermit(props.company.role) ||
+                          checkPage(row.original)
+                            ? ''
+                            : 'not-allowed'
+                        }
+                        onClick={(e) => {
+                          companyPermit(props.company.role) ||
+                          checkPage(row.original)
+                            ? handleOptionsClick(e, row.original.id)
+                            : e.stopPropagation();
+                        }}
+                      />
                     }
                   />
                 </StyledTableRow>

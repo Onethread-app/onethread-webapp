@@ -125,7 +125,7 @@ const ModalContainer = styled.div`
     min-width: 200px;
     max-width: 100%;
     word-wrap: break-word;
-    border: 1px solid #b1b1b1;
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     border-radius: 4px;
     font-size: 14px;
@@ -147,7 +147,7 @@ const Container = styled.div`
   }
 
   .due-date-input {
-    border: 1px solid #b1b1b1;
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     border-radius: 4px;
     font-size: 14px;

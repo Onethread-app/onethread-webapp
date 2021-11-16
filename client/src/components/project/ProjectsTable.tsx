@@ -1,6 +1,6 @@
 import { useHistory } from 'react-router-dom';
-import { Dialog, Popover, Position } from '@blueprintjs/core';
-import { useState } from 'react';
+import { Popover, Position } from '@blueprintjs/core';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { IProject } from 'stores/project/Reducer';
@@ -24,13 +24,9 @@ import {
   newDeleteProject,
   newUnarchiveProject,
 } from 'stores/project/Actions';
-import {
-  DangerButton,
-  SimpleButton,
-  // SuccessButton,
-  Container,
-  List,
-} from './Project.styles';
+import { successToaster } from 'components/toast/Toaster';
+import ProjectButtonOptions from './ProjectButtonOptions';
+import ProjectModals from './ProjectModals';
 
 interface IProjectsTable {
   getTableProps: any;
@@ -52,6 +48,8 @@ interface IProjectsFunctions {
   newDeleteProject: ({ projectId, companyId }) => void;
   newUnarchiveProject: ({ projectId, companyId }) => void;
   userCompanyLoading: boolean;
+  userId: string;
+  companies: any[];
 }
 
 const ProjectsTable = (
@@ -81,13 +79,49 @@ const ProjectsTable = (
     useState<boolean>(false);
   const [showDeleteProject, setShowDeleteProject] =
     useState<boolean>(false);
+  const [showUpdateProject, setShowUpdateProject] =
+    useState<boolean>(false);
+  const [showNoSubscription, setShowNoSubscription] =
+    useState<boolean>(false);
+  const [showContactUsDialog, setShowContactUsDialog] =
+    useState<boolean>(false);
+  const [response, setResponse] = useState({
+    status: 0,
+    message: '',
+  });
+  const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
+
+  const [companySubscriptionList, setCompanySubscriptionList] =
+    useState<any[]>([]);
+
+  const modalProps = () => {
+    return {
+      showArchiveProject,
+      setShowArchiveProject,
+      handleArchiveProject,
+      showUnarchiveProject,
+      setShowUnarchiveProject,
+      handleUnarchiveProject,
+      showUpdateProject,
+      setShowUpdateProject,
+      showContactUsDialog,
+      setShowContactUsDialog,
+      setShowNoSubscription,
+      showDeleteProject,
+      setShowDeleteProject,
+      handleDeleteProject,
+      showNoSubscription,
+      setResponse,
+      setShowSnackbar,
+      selectedProject,
+    };
+  };
 
   const handleClick = (project: IProject) => {
     history.push(
       `/company/${project.company.uniqueName}/project/${project._id}`,
     );
   };
-
   const handleOptionsClick = (e, id) => {
     setShowPopover(id);
     e.stopPropagation();
@@ -107,6 +141,7 @@ const ProjectsTable = (
       projectId: selectedProject._id,
       companyId: selectedProject.company._id,
     });
+    setSelectedProject('');
     setShowArchiveProject(false);
   };
 
@@ -115,6 +150,7 @@ const ProjectsTable = (
       projectId: selectedProject._id,
       companyId: selectedProject.company._id,
     });
+    setSelectedProject('');
     setShowUnarchiveProject(false);
   };
 
@@ -123,8 +159,34 @@ const ProjectsTable = (
       projectId: selectedProject._id,
       companyId: selectedProject.company._id,
     });
+    setSelectedProject('');
     setShowDeleteProject(false);
   };
+
+  // const handleNoSubscription = (e) => {
+  //   e.stopPropagation();
+  //   setShowNoSubscription(true);
+  // };
+
+  useEffect(() => {
+    let data: any = [];
+    if (props.companies.length > 0) {
+      props.companies.forEach((company) => {
+        if (company.company.isSubscribed) {
+          data.push(company.company._id);
+        }
+      });
+    }
+    setCompanySubscriptionList(data);
+  }, [props.companies]);
+
+  useEffect(() => {
+    if (showSnackbar) {
+      if (response.status === 201) {
+        successToaster(response.message);
+      }
+    }
+  }, [showSnackbar]);
 
   return (
     <>
@@ -195,66 +257,55 @@ const ProjectsTable = (
                       {cell.render('Cell')}
                     </StyledProjectTableData>
                   ))}
-                  <Popover
-                    popoverClassName="bp3-popover-content-sizing"
-                    position={Position.BOTTOM_RIGHT}
-                    isOpen={
-                      row.original._id === showPopover ? true : false
-                    }
-                    onClose={() => setShowPopover('')}
-                    content={
-                      <div className="flex flex-column">
-                        {/* <List
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowUpdateProject(true);
-                            setSelectedProject(row.original);
-                          }}
-                        >
-                          Edit
-                        </List> */}
-                        {row.original.status === 'archived' ? (
-                          <List
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedProject(row.original);
-                              setShowUnarchiveProject(true);
-                            }}
-                          >
-                            Unarchive
-                          </List>
-                        ) : (
-                          <List
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedProject(row.original);
-                              setShowArchiveProject(true);
-                            }}
-                          >
-                            Archive
-                          </List>
-                        )}
-                        <List
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedProject(row.original);
-                            setShowDeleteProject(true);
-                          }}
-                          className="mt1"
-                        >
-                          Delete
-                        </List>
-                      </div>
-                    }
-                    target={
-                      <MoreVertIcon
-                        fontSize="small"
-                        onClick={(e) =>
-                          handleOptionsClick(e, row.original._id)
-                        }
-                      />
-                    }
-                  />
+                  {companySubscriptionList.includes(
+                    row.original.company._id,
+                  ) ? (
+                    <Popover
+                      popoverClassName="bp3-popover-content-sizing"
+                      position={Position.BOTTOM_RIGHT}
+                      isOpen={
+                        row.original._id === showPopover
+                          ? true
+                          : false
+                      }
+                      onClose={() => setShowPopover('')}
+                      content={
+                        <ProjectButtonOptions
+                          setShowUpdateProject={setShowUpdateProject}
+                          setShowArchiveProject={
+                            setShowArchiveProject
+                          }
+                          setShowUnarchiveProject={
+                            setShowUnarchiveProject
+                          }
+                          setShowDeleteProject={setShowDeleteProject}
+                          setShowUpdateproject={setShowUpdateProject}
+                          setSelectedProject={setSelectedProject}
+                          project={row.original}
+                        />
+                      }
+                      target={
+                        <MoreVertIcon
+                          fontSize="small"
+                          className={
+                            row.original.concernedAdmin._id ===
+                            props.userId
+                              ? ''
+                              : 'not-allowed'
+                          }
+                          onClick={(e) =>
+                            row.original.concernedAdmin._id ===
+                            props.userId
+                              ? handleOptionsClick(
+                                  e,
+                                  row.original._id,
+                                )
+                              : e.stopPropagation()
+                          }
+                        />
+                      }
+                    />
+                  ) : null}
                 </StyledTableRow>
               </StyledTableRowContainer>
             );
@@ -283,103 +334,15 @@ const ProjectsTable = (
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </div>
-      {showArchiveProject ? (
-        <Dialog
-          isOpen={showArchiveProject}
-          onClose={() => setShowArchiveProject(false)}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
-          className="pb0"
-        >
-          <Container>
-            <div>Do you want to archive this project?</div>
-            <div className="w-100 flex justify-center">
-              <DangerButton
-                className="mr2"
-                onClick={handleArchiveProject}
-              >
-                Yes
-              </DangerButton>
-              <SimpleButton
-                className="ml2"
-                onClick={() => {
-                  setShowArchiveProject(false);
-                }}
-              >
-                Cancel
-              </SimpleButton>
-            </div>
-          </Container>
-        </Dialog>
-      ) : null}
-      {showUnarchiveProject ? (
-        <Dialog
-          isOpen={showUnarchiveProject}
-          onClose={() => setShowUnarchiveProject(false)}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
-          className="pb0"
-        >
-          <Container>
-            <div>Do you want to unarchive this project?</div>
-            <div className="w-100 flex justify-center">
-              <DangerButton
-                className="mr2"
-                onClick={handleUnarchiveProject}
-              >
-                Yes
-              </DangerButton>
-              <SimpleButton
-                className="ml2"
-                onClick={() => {
-                  setShowUnarchiveProject(false);
-                }}
-              >
-                Cancel
-              </SimpleButton>
-            </div>
-          </Container>
-        </Dialog>
-      ) : null}
-      {showDeleteProject ? (
-        <Dialog
-          isOpen={showDeleteProject}
-          onClose={() => setShowDeleteProject(false)}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
-          className="pb0"
-        >
-          <Container>
-            <div>
-              This will delete everything of this project including
-              all it's tasks, subtasks, and rooms. Do you still want
-              to proceed?
-            </div>
-            <div className="w-100 flex justify-center">
-              <DangerButton
-                className="mr2"
-                onClick={handleDeleteProject}
-              >
-                Yes
-              </DangerButton>
-              <SimpleButton
-                className="ml2"
-                onClick={() => {
-                  setShowDeleteProject(false);
-                }}
-              >
-                Cancel
-              </SimpleButton>
-            </div>
-          </Container>
-        </Dialog>
-      ) : null}
+      <ProjectModals modalProps={modalProps} />
     </>
   );
 };
 
 const mapStateToProps = (state: any) => ({
   userCompanyLoading: state.userReducer.userCompanyLoading,
+  userId: state.userReducer.user._id,
+  companies: state.userReducer.user.companies,
 });
 
 export default connect(mapStateToProps, {
