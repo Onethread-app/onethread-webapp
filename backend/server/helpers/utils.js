@@ -84,10 +84,15 @@ const getIds = (array) => {
   return [];
 };
 
+const removeDuplicateFromArray = (arr) => {
+  return arr.filter((val, idx, self) => self.indexOf(val) === idx);
+};
+
 module.exports = {
   sortTasksByStatus,
   sortProjectsByStatus,
   getFormattedTaskForClient,
   getTaskMembers,
   getIds,
+  removeDuplicateFromArray,
 };

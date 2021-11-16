@@ -1,5 +1,4 @@
 const Task = require('./task.model');
-const BoardColumn = require('./../boardColumn/boardColumn.model');
 const logger = require('../../config/winston');
 const TaskAssign = require('./taskAssign.model');
 const { Project } = require('../project/project.model');
@@ -7,7 +6,6 @@ const {
   calculateProjectStatus,
 } = require('../project/project.controller');
 const Board = require('../board/board.model');
-const SubTask = require('./subtask/subtask.model');
 const TaskStatus = require('./taskStatus/taskStatus.model');
 
 const {
@@ -61,7 +59,6 @@ const addMemberToTask = async (assignmembers, taskId, req) => {
       assignedPerson: memberId,
     };
   });
-  // TODO: Permission Error
   await TaskAssign.insertMany(newMembers);
   const members = await TaskAssign.find({
     taskId,
@@ -176,18 +173,6 @@ const createSubtask = async (req, res, next) => {
   req.task = task;
   next();
 };
-
-// OK
-
-const isEqual = (a, b) => {
-  if (!a || !b) return false;
-  return a.toString() === b.toString();
-};
-
-// Headers: companyid
-// query: pid
-// body: status, name, description, priority, dueDate,
-// private
 
 const create = async (req, res, next) => {
   try {
