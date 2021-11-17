@@ -100,6 +100,28 @@ const TextButton = styled.button`
   margin-bottom: 8px;
 `;
 
+const Container = styled.div`
+  padding: 0.5rem 0;
+  overflow: auto;
+
+  textarea {
+    background: #ffffff;
+    box-sizing: border-box;
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    height: 138px;
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  .due-date-input {
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+`;
+
 const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -130,27 +152,9 @@ const ModalContainer = styled.div`
     border-radius: 4px;
     font-size: 14px;
   }
-`;
 
-const Container = styled.div`
-  padding: 0.5rem;
-  overflow: auto;
-
-  textarea {
-    background: #ffffff;
-    box-sizing: border-box;
-    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    height: 138px;
-    width: 100%;
+  ${Container} {
     padding: 0.5rem;
-  }
-
-  .due-date-input {
-    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-    border-radius: 4px;
-    font-size: 14px;
   }
 `;
 

@@ -15,13 +15,15 @@ import {
   TrackedListDialogContainer,
   TrackItemListContainer,
 } from './TrackedListDialog.styles';
+import { ITask } from 'stores/task/Reducer';
 
 interface ITrackedListDialog {
   timerHover: boolean;
   trackList: ITrack[];
   taskTimeSpent: number;
   gettingList: boolean;
-  getTaskTrackers: () => void;
+  getTaskTrackers: (companyId: string) => void;
+  currentTask: ITask;
 }
 
 const TrackedListDialog = (props: ITrackedListDialog) => {
@@ -32,6 +34,7 @@ const TrackedListDialog = (props: ITrackedListDialog) => {
     taskTimeSpent,
     getTaskTrackers,
     gettingList,
+    currentTask,
   } = props;
   const [loading, setLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(
@@ -50,9 +53,11 @@ const TrackedListDialog = (props: ITrackedListDialog) => {
   };
 
   useEffect(() => {
-    getTaskTrackers();
-    setLoading(true);
-  }, []);
+    if (currentTask._id) {
+      getTaskTrackers(currentTask.company._id);
+      setLoading(true);
+    }
+  }, [props.currentTask._id]);
 
   useEffect(() => {
     if (loading === true && gettingList === false) {
@@ -110,6 +115,7 @@ const mapStateToProps = (state: any) => ({
   taskTimeSpent:
     state.taskIndexReducer.taskReducer.currentTask.timeSpent,
   gettingList: state.timeTrackerReducer.gettingTrackList,
+  currentTask: state.taskIndexReducer.taskReducer.currentTask,
 });
 
 export default connect(mapStateToProps, { getTaskTrackers })(

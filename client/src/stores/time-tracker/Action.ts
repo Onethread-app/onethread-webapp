@@ -21,8 +21,9 @@ export const addTrackedTimeFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
-export const getTaskTrackers = () => ({
+export const getTaskTrackers = (payload) => ({
   type: TimeTrackerTypes.GET_TRACKED_TIME_LIST_FOR_TASK_START,
+  payload,
 });
 
 export const getTaskTrackersSuccess = (response: any) => ({

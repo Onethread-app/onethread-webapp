@@ -16,12 +16,20 @@ import TaskSection from 'components/home/task-section/TaskSection';
 
 import { Avatar, Container, Row } from './Index.styles';
 import './Index.styles.scss';
+import { User } from 'stores/user/Reducer';
+import { clearCurrentTask } from 'stores/task/Actions';
 
-const Index = (props: any) => {
+interface IProps {
+  user: User;
+  clearCurrentTask: () => void;
+}
+
+const Index = (props: IProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    props.clearCurrentTask();
   }, []);
 
   return isMobileOnly ? (
@@ -46,8 +54,16 @@ const Index = (props: any) => {
     <Container>
       <span>PERSONAL DASHBOARD</span>
       <Row justify="flex-start">
-        <Avatar>{props.user?.firstName?.substring(0, 2)}</Avatar> Hi,{' '}
-        {capitalizeFirstLetter(props.user.firstName)}
+        {props.user.profileImage ? (
+          <img
+            className="profile-pic"
+            src={props.user.profileImage}
+            alt=""
+          />
+        ) : (
+          <Avatar>{props.user?.firstName?.substring(0, 2)}</Avatar>
+        )}{' '}
+        Hi, {capitalizeFirstLetter(props.user.firstName)}
       </Row>
       <CompanySection />
       <ProjectSection />
@@ -60,4 +76,6 @@ const mapStateToProps = (state: any) => ({
   user: state.userReducer.user,
 });
 
-export default connect(mapStateToProps)(Index);
+export default connect(mapStateToProps, {
+  clearCurrentTask,
+})(Index);
