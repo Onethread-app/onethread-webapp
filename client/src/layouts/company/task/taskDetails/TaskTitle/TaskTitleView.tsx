@@ -7,7 +7,7 @@ import moment from 'moment';
 import { TaskTitleEditor } from './TaskTitleEditor';
 
 interface TaskDetailsInternalProps {
-  currentTask?: ITask;
+  currentTask: ITask;
   company?: ICompany;
 }
 
@@ -22,6 +22,7 @@ export const TaskTitleViewComponent = (
         <TaskTitleEditor
           nameEdit={nameEdit}
           setNameEdit={(e) => setNameEdit(!nameEdit)}
+          currentTask={props.currentTask}
         />
       ) : (
         <div>

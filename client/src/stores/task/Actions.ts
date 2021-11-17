@@ -281,7 +281,7 @@ export const deleteTask = (payload: ITaskDelete) => ({
   payload,
 });
 
-export const deleteTaskSuccess = (payload: ITaskDelete) => ({
+export const deleteTaskSuccess = (payload) => ({
   type: TaskActionType.DELETE_TASK_SUCCESS,
   payload,
 });

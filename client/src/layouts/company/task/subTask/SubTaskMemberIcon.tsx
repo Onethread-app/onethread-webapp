@@ -4,14 +4,13 @@ import { Tooltip } from '@blueprintjs/core/lib/esm/components/tooltip/tooltip';
 
 import { ICompany } from 'stores/company/Reducer';
 import { ISubtaskMember } from 'stores/subtask/Reducer';
-import { IPayloadForDeletingMember } from 'stores/subtask/Actions';
 import { projectPermit } from 'stores/UtilsActions';
 
 interface ISubtaskMemberIcon {
   member: ISubtaskMember;
   subTaskId?: string;
   company?: ICompany;
-  deleteSubTaskMember: (payload: IPayloadForDeletingMember) => void;
+  deleteSubTaskMember: (payload) => void;
   deletingMember: boolean;
   errorOnDeletingMember: string;
 }

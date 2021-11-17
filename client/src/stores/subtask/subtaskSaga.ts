@@ -7,7 +7,7 @@ import {
   takeEvery,
 } from 'redux-saga/effects';
 
-import { tokenConfig } from 'stores/UtilsActions';
+import { formTokenConfig, tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 
 import { returnErrorText } from 'helpers/HandleSagaErrors';
@@ -35,18 +35,13 @@ import { getCurrentBoardId } from 'stores/task/Selector';
 
 function* createSubtaskAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const taskId = yield select(getCurrentTaskId);
-    const projectId = yield select(getProjectId);
-    const reqBody = {
-      ...payload,
-      taskId,
-    };
+    const { name, taskId, projectId, companyId } = payload;
+    const headers = formTokenConfig(companyId);
 
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
-        `subtasks?pid=${projectId}`,
-        reqBody,
+        `tasks/taskId/${taskId}/subtasks?pid=${projectId}`,
+        { name },
         headers,
       );
       yield all([

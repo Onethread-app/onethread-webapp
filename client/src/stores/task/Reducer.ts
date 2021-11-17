@@ -74,6 +74,7 @@ export interface TaskBoard {
 }
 
 export interface ITask {
+  parentTask: string;
   _id: string;
   name: string;
   isCompleted: boolean;
@@ -104,7 +105,7 @@ export interface ITask {
     lastName: string;
     profileImage?: string;
   };
-  subTasks: ISubTask[];
+  subTasks: ITask[];
 }
 
 export interface IBoard {
@@ -188,6 +189,7 @@ export interface ITaskReducer {
 }
 
 const initialCurrentTask = {
+  parentTask: 'null',
   _id: '',
   name: '',
   description: '',
@@ -285,6 +287,53 @@ const InitialState: ITaskReducer = {
 
 export const updateTaskStatus = (tasks, task) => {
   return tasks.map((t) => (t._id === task._id ? task : t));
+};
+
+export const updateTask = (tasks: ITask[], task: ITask) => {
+  return task.parentTask === 'null'
+    ? tasks.map((t: ITask) => (t._id === task._id ? task : t))
+    : tasks.map((t: ITask) =>
+        t._id === task.parentTask
+          ? {
+              ...t,
+              subTasks: t.subTasks.map((subTask: ITask) =>
+                subTask._id === task._id ? task : subTask,
+              ),
+            }
+          : t,
+      );
+};
+
+export const deleteTask = (
+  tasks: ITask[],
+  task: { _id: string; parentTask: string },
+) => {
+  return task.parentTask === 'null'
+    ? tasks.filter((t: ITask) => t._id !== task._id)
+    : tasks.map((t: ITask) =>
+        t._id === task.parentTask
+          ? {
+              ...t,
+              subTasks:
+                t.subTasks?.length > 0
+                  ? t.subTasks.filter(
+                      (subTask: ITask) => subTask?._id !== task._id,
+                    )
+                  : [],
+            }
+          : t,
+      );
+};
+
+export const addSubTask = (tasks: ITask[], task: ITask) => {
+  return tasks.map((t: ITask) =>
+    t._id === task.parentTask
+      ? {
+          ...t,
+          subTasks: [t.subTasks, task],
+        }
+      : t,
+  );
 };
 
 export const TaskReducer = (state = InitialState, action: any) => {
@@ -510,20 +559,33 @@ export const TaskReducer = (state = InitialState, action: any) => {
         ...state,
         userTasks: [
           ...state.userTasks,
-          { ...task, statusList: [{ ...task.status }] },
+          {
+            ...task,
+            members: task.members.map((member) => member.account),
+          },
         ],
         companyTaskList:
           currentCompanyId === task.company._id
             ? [
                 ...state.companyTaskList,
-                { ...task, statusList: [{ ...task.status }] },
+                {
+                  ...task,
+                  members: task.members.map(
+                    (member) => member.account,
+                  ),
+                },
               ]
             : state.companyTaskList,
         projectTaskList:
           currentProjectId === task.project._id
             ? [
                 ...state.projectTaskList,
-                { ...task, statusList: [{ ...task.status }] },
+                {
+                  ...task,
+                  members: task.members.map(
+                    (member) => member.account,
+                  ),
+                },
               ]
             : state.projectTaskList,
         creatingTask: false,
@@ -574,37 +636,18 @@ export const TaskReducer = (state = InitialState, action: any) => {
         updatingTask: true,
       };
     case TaskActionType.UPDATE_TASK_SUCCESS:
-    case TaskActionType.TASK_MARK_AS_COMPLETED_SUCCESS:
-      const { updatedTask, companyId, projectId } = action.payload;
+      const { updatedTask } = action.payload;
       return {
         ...state,
-        currentTask: updatedTask,
-        userTasks: state.userTasks.map((task: ITask) =>
-          task._id === updatedTask._id
-            ? {
-                ...task,
-                ...updatedTask,
-                statusList: updatedTask.status,
-              }
-            : task,
+        currentTask: updateTask([state.currentTask], updatedTask),
+        userTasks: updateTask(state.userTasks, updatedTask),
+        companyTaskList: updateTask(
+          state.companyTaskList,
+          updatedTask,
         ),
-        companyTaskList: state.companyTaskList.map((task: ITask) =>
-          task.company._id === companyId
-            ? {
-                ...task,
-                ...updatedTask,
-                statusList: updatedTask.status,
-              }
-            : task,
-        ),
-        projectTaskList: state.projectTaskList.map((task: ITask) =>
-          task.project._id === projectId
-            ? {
-                ...task,
-                ...updatedTask,
-                statusList: updatedTask.status,
-              }
-            : task,
+        projectTaskList: updateTask(
+          state.projectTaskList,
+          updatedTask,
         ),
         updatingTask: false,
       };
@@ -614,6 +657,10 @@ export const TaskReducer = (state = InitialState, action: any) => {
         ...state,
         taskError: action.payload,
         updatingTask: false,
+      };
+    case TaskActionType.TASK_MARK_AS_COMPLETED_SUCCESS:
+      return {
+        ...state,
       };
     case TaskActionType.UPDATE_TASK_TIME_SPENT:
       return {
@@ -693,17 +740,25 @@ export const TaskReducer = (state = InitialState, action: any) => {
         errorOnTaskDelete: '',
       };
     case TaskActionType.DELETE_TASK_SUCCESS:
+      let { taskId, parentTask } = action.payload;
       return {
         ...state,
-        userTasks: state.userTasks.filter(
-          (task: ITask) => task._id !== action.payload,
-        ),
-        companyTaskList: state.companyTaskList.filter(
-          (task: ITask) => task._id !== action.payload,
-        ),
-        projectTaskList: state.projectTaskList.filter(
-          (task: ITask) => task._id !== action.payload,
-        ),
+        currentTask: deleteTask([state.currentTask], {
+          _id: taskId,
+          parentTask,
+        }),
+        userTasks: deleteTask(state.userTasks, {
+          _id: taskId,
+          parentTask,
+        }),
+        companyTaskList: deleteTask(state.companyTaskList, {
+          _id: taskId,
+          parentTask,
+        }),
+        projectTaskList: deleteTask(state.projectTaskList, {
+          _id: taskId,
+          parentTask,
+        }),
         deletingTask: false,
       };
     case TaskActionType.DELETE_TASK_FAILURE: {
@@ -822,18 +877,28 @@ export const TaskReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         creatingSubTask: true,
-        errorOnSubTaskCreation: '',
+        errorOnCreatingSubTask: '',
       };
     case TaskActionType.CREATE_SUBTASK_SUCCESS:
       return {
         ...state,
+        currentTask: addSubTask([state.currentTask], action.payload),
+        userTasks: addSubTask(state.userTasks, action.payload),
+        companyTaskList: addSubTask(
+          state.companyTaskList,
+          action.payload,
+        ),
+        projectTaskList: addSubTask(
+          state.projectTaskList,
+          action.payload,
+        ),
         creatingSubTask: false,
       };
     case TaskActionType.CREATE_SUBTASK_FAILURE:
       return {
         ...state,
         creatingSubTask: false,
-        errorOnSubTaskCreation: action.payload,
+        errorOnCreatingSubTask: action.payload,
       };
     case TaskActionType.CLEAR_CURRENT_TASK:
       return {

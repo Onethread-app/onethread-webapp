@@ -38,7 +38,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   return (
     <div className="w-100 ph2">
       <div className="w-100">
-        <TaskTitleView />
+        <TaskTitleView currentTask={props.currentTask} />
       </div>
       <div className="w-100">
         <div className="flex justify-start">
@@ -179,6 +179,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const TaskDetails = connect(mapStateToProps)(
-  TaskDetailsComponent,
-);
+export const TaskDetails = connect(
+  mapStateToProps,
+  {},
+)(TaskDetailsComponent);

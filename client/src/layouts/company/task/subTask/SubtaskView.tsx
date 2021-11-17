@@ -15,20 +15,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-// import moment from 'moment';
 
-import { ISubTask } from 'stores/subtask/Reducer';
+// import { ISubTask } from 'stores/subtask/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import {
-  deleteSubTaskMember,
-  IPayloadForDeletingMember,
-} from 'stores/subtask/Actions';
-import {
-  getAllSubTask,
-  createSubTask,
-  updateSubTask,
-  deleteSubTask,
-} from 'stores/subtask/Actions';
+import { ITask } from 'stores/task/Reducer';
+import { deleteTask, updateTask } from 'stores/task/Actions';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { Loading } from 'components/Loading';
@@ -36,16 +27,24 @@ import SubTaskMemberIcon from './SubTaskMemberIcon';
 import { SubTaskCreator, SubTaskDelete } from './SubTaskEditor';
 import AddSubtaskMember from './AddMember';
 import DueDateEditor from './DueDateEditor';
+import { deleteMember } from 'stores/taskMembers/Action';
 
 interface ISubTaskViewInternalProps {
-  subTaskList: ISubTask[];
+  subTaskList: ITask[];
   company?: ICompany;
-  currentTaskId: string;
-  getAllSubTask: () => void;
-  createSubTask: (subTask: ISubTask) => void;
-  updateSubTask: (subTask: ISubTask) => void;
-  deleteSubTask: (subTask: ISubTask) => void;
-  deleteSubTaskMember: (payload: IPayloadForDeletingMember) => void;
+  currentTask: ITask;
+  updateTask: (payload) => void;
+  deleteTask: (payload: {
+    taskId: string;
+    projectId: string;
+    companyId: string;
+  }) => void;
+  deleteMember: (payload: {
+    taskId: string;
+    projectId: string;
+    companyId: string;
+    assignedMemberId: string;
+  }) => void;
   deletingMember: boolean;
   errorOnDeletingMember: string;
   loading: boolean;
@@ -62,20 +61,13 @@ export const SubTaskViewPageComponent = (
     _id: '',
     open: false,
   });
-  const [expandSubtask, setExpandSubtask] = useState<boolean>(true);
+  const [expandSubtask, setExpandSubtask] = useState<boolean>(false);
   // const [dueDatePopover, setDueDatePopover] = useState({
   //   _id: '',
   //   open: false,
   // });
 
-  useEffect(() => {
-    async function getAPI() {
-      if (props.fetchingTask === false) {
-        await props.getAllSubTask();
-      }
-    }
-    getAPI();
-  }, [props.fetchingTask, props.currentTaskId]);
+  useEffect(() => {}, []);
 
   const toggleMembersPopover = (id: string) => {
     setMembersPopover({ _id: id, open: !membersPopover.open });
@@ -111,7 +103,7 @@ export const SubTaskViewPageComponent = (
                 />
               )}
               {t('app.project.Project-boards.Subtask')} (
-              {props.subTaskList.length})
+              {props.subTaskList?.length || 0})
             </h1>
             <Icon
               style={{
@@ -124,11 +116,11 @@ export const SubTaskViewPageComponent = (
             />
           </div>
           <div className="flex justify-end">
-            {props.subTaskList.length > 0 && (
+            {expandSubtask && props.subTaskList?.length > 0 && (
               <h1 className="f6 blue">
                 {Math.floor(
                   (props.subTaskList.filter(
-                    (list) => list.done === true,
+                    (list) => list.isCompleted === true,
                   ).length /
                     props.subTaskList.length) *
                     100,
@@ -159,14 +151,14 @@ export const SubTaskViewPageComponent = (
           )}
           {expandSubtask ? (
             <div className="mr2">
-              {props.subTaskList.length > 0 && (
+              {props.subTaskList && props.subTaskList.length > 0 && (
                 <div>
                   <ProgressBar
                     stripes={false}
                     intent="primary"
                     value={
                       props.subTaskList.filter(
-                        (list) => list.done === true,
+                        (list) => list.isCompleted === true,
                       ).length / props.subTaskList.length
                     }
                   />
@@ -190,14 +182,15 @@ export const SubTaskViewPageComponent = (
                               }
                               control={
                                 <Checkbox
-                                  checked={subTask.done}
+                                  checked={subTask.isCompleted}
                                   color="primary"
                                   onChange={(event: any) => {
                                     const subtaskData = {
                                       _id: subTask._id,
-                                      done: event.target.checked,
+                                      isCompleted:
+                                        event.target.checked,
                                     };
-                                    props.updateSubTask(subtaskData);
+                                    props.updateTask(subtaskData);
                                   }}
                                 />
                               }
@@ -219,7 +212,7 @@ export const SubTaskViewPageComponent = (
                                       <SubTaskMemberIcon
                                         key={subMember._id}
                                         deleteSubTaskMember={
-                                          props.deleteSubTaskMember
+                                          props.deleteMember
                                         }
                                         member={subMember}
                                         subTaskId={subTask._id}
@@ -281,7 +274,9 @@ export const SubTaskViewPageComponent = (
                               </div>
                               <div className="mr3">
                                 <DueDateEditor
-                                  dueDate={subTask.dueDate}
+                                  dueDate={
+                                    subTask.dueDate || undefined
+                                  }
                                   subTask={subTask}
                                 />
                               </div>
@@ -294,7 +289,7 @@ export const SubTaskViewPageComponent = (
                                   }}
                                   icon="edit"
                                   onClick={async () => {
-                                    await setsubtask(subTask);
+                                    setsubtask(subTask);
                                     setShowSubTaskForm(true);
                                   }}
                                 />
@@ -303,7 +298,7 @@ export const SubTaskViewPageComponent = (
                               <div className="pt2">
                                 <SubTaskDelete
                                   subTask={subTask}
-                                  deleteSubTask={props.deleteSubTask}
+                                  deleteSubTask={props.deleteTask}
                                 />
                               </div>
                             </div>
@@ -342,22 +337,21 @@ export const SubTaskViewPageComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-    subTaskList: state.taskIndexReducer.subTaskReducer.subTaskList,
+    subTaskList:
+      state.taskIndexReducer.taskReducer.currentTask.subTasks,
     deletingMember:
       state.taskIndexReducer.subTaskReducer.deletingMember,
     errorOnDeletingMember:
       state.taskIndexReducer.subTaskReducer.errorOnDeletingMember,
     loading: state.taskIndexReducer.subTaskReducer.fetchingSubTask,
-    currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
     fetchingTask: state.taskIndexReducer.taskReducer.fetchingTask,
     company: state.companyReducer.currentCompany,
   };
 };
 
 export const SubTaskView = connect(mapStateToProps, {
-  getAllSubTask,
-  createSubTask,
-  updateSubTask,
-  deleteSubTask,
-  deleteSubTaskMember,
+  updateTask,
+  deleteTask,
+  deleteMember,
 })(withRouter(SubTaskViewPageComponent));

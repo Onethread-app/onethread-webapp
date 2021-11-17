@@ -7,6 +7,8 @@ const {
 } = require('../project/project.controller');
 const Board = require('../board/board.model');
 const TaskStatus = require('./taskStatus/taskStatus.model');
+const getAllStatusInProject =
+  require('../services/task/taskStatus/taskStatus.service').getAllStatusInProject;
 
 const {
   taskAssignNotificationToUsers,
@@ -109,6 +111,10 @@ const load = async (req, res, next, id) => {
     taskDetails.subTasks = await findSubtasksByTaskId(
       task._id,
       populateArray,
+    );
+    //statusList
+    taskDetails.statusList = await getAllStatusInProject(
+      taskDetails.project._id,
     );
     // Members
     taskDetails.members = await getAssignedMembers(task._id);
@@ -437,6 +443,8 @@ const update = async (req, res, next) => {
       task._id,
       populateArray,
     );
+    //statusList
+    task.statusList = await getAllStatusInProject(task.project._id);
     // Members
     task.members = await getAssignedMembers(task._id);
     return sendJSONresponse(res, 200, {
