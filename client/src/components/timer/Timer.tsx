@@ -32,7 +32,6 @@ interface ITimerInternalProps extends ITimerProps {
   errorOnAddingTrack: string;
   addItemToTrack: (item: ICurrentTrack) => void;
   addTrackedTime: (payload: ICurrentTrack) => void;
-  currentTask: ITask;
   getTaskTrackers: (companyId: string) => void;
 }
 
@@ -124,9 +123,12 @@ const Timer = (props: ITimerInternalProps) => {
     e.stopPropagation();
     setTimerOn(false);
     addTrackedTime(currentlyTracking);
-    if (props.currentTask._id === currentlyTracking.task) {
-      getTaskTrackers(currentlyTracking.company);
-    }
+    const timeout = () => {
+      setTimeout(() => {
+        props.getTaskTrackers(currentlyTracking.company);
+      }, 500);
+    };
+    timeout();
   };
 
   return (
@@ -164,7 +166,6 @@ const mapStateToProps = (state: any) => ({
   currentlyTracking: state.timeTrackerReducer.currentlyTracking,
   addingTrack: state.timeTrackerReducer.addingTrack,
   errorOnAddingTrack: state.timeTrackerReducer.errorOnAddingTrack,
-  currentTask: state.taskIndexReducer.taskReducer.currentTask,
 });
 
 export default connect(mapStateToProps, {
