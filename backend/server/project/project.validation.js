@@ -22,6 +22,7 @@ const schema = {
   concernedAdmin: idSchema.id,
   deadline: Joi.date(),
   color: Joi.number(),
+  positionInBoard: Joi.number(),
   company: idSchema.id,
   size: Joi.number().required(),
   associate: idSchema.id,
@@ -38,24 +39,18 @@ const accountId = Joi.object().keys({
 });
 
 module.exports = {
-  createNewProjectForCompany: Joi.object().keys({
-    body: Joi.object().keys({
-      name: schema.name.required(),
-      // concernedAdmin: Joi.object().keys({
-      //   memberId: schema.memberId.required(),
-      //   accountId: idSchema.id,
-      // }),
-      companyId: schema.company,
-      departments: schema.departments,
-      deadline: schema.deadline,
-      color: schema.color,
-      associates: schema.associates,
-    }),
-  }),
   createProjectFromHome: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
       companyId: schema.company.required(),
+      statusList: Joi.array()
+        .items(
+          Joi.object().keys({
+            name: schema.name.required(),
+            positionInBoard: schema.positionInBoard.required(),
+          }),
+        )
+        .required(),
       deadline: schema.deadline,
       color: schema.color,
       budget: schema.budget,

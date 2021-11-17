@@ -126,11 +126,11 @@ const createSubtask = async (req, res, next) => {
   try {
     const draftStatus = await TaskStatus.findOne({
       project: req.query.pid,
-      name: 'Draft',
+      positionInBoard: 0,
     });
     if (!draftStatus) {
       return sendErrorResponse(res, 404, 'NotFound', {
-        message: 'Task Status (Draft) not found',
+        message: 'Task Status not found',
       });
     }
     const subTask = await Task.create({
@@ -470,17 +470,22 @@ const deleteTask = async (req, res, next) => {
 // OK
 const markAsCompleted = async (req, res, next) => {
   try {
-    await Task.findByIdAndUpdate(
-      { _id: req.task._id },
-      { $set: { isCompleted: true } },
-      { safe: true, upsert: true, new: true },
+    await Promise.all(
+      req.body.task.map(async (task) => {
+        await Task.findByIdAndUpdate(
+          { _id: task },
+          { $set: { isCompleted: true, completedBy: req.user._id } },
+          { safe: true, upsert: true, new: true },
+        );
+        const status = await calculateProjectStatus(req.query.pid);
+        await Project.findByIdAndUpdate(
+          { _id: req.query.pid },
+          { $set: { status } },
+          { safe: true, upsert: true, new: true },
+        );
+      }),
     );
-    const status = await calculateProjectStatus(req.query.pid);
-    await Project.findByIdAndUpdate(
-      { _id: req.query.pid },
-      { $set: { status } },
-      { safe: true, upsert: true, new: true },
-    );
+
     return sendJSONresponse(res, 200, { success: true });
   } catch (error) {
     logger.error(`Task - Mark as Completed: ${error}`);

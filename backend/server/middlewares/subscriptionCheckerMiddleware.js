@@ -11,8 +11,9 @@ const subscriptionExpireCheck = () => {
     try {
       const validCompanyId =
         req.headers.companyid || req.body.companyId;
+      const mongoIdValidator = /^[0-9a-fA-F]{24}$/;
 
-      if (!validCompanyId) {
+      if (!validCompanyId || !mongoIdValidator.test(validCompanyId)) {
         return sendErrorResponse(res, 400, 'ValidationError', {
           message: `companyId is required`,
         });
@@ -35,6 +36,7 @@ const subscriptionExpireCheck = () => {
       let today = new Date().getTime();
       if (
         typeof subscribe === undefined ||
+        subscribe.length === 0 ||
         typeof subscribe[0] === undefined ||
         typeof subscribe[0].expireAt === undefined ||
         subscribe[0].expireAt < today
