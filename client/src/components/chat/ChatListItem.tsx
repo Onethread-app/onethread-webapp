@@ -37,13 +37,10 @@ const ChatListItem = (props: IChatListItem) => {
 
   const handleClick = () => {
     dispatch({ type: CHANGE_ROOM });
-    history.push(
-      `/company/${props.chat.room.company.uniqueName}/project/${
-        props.chat.room.project._id
-      }/room?roomId=${props.chat.room._id}${
-        queries.view ? '&view=' + queries.view : ''
-      }`,
-    );
+    history.push({
+      pathname: `/company/${props.chat.room.company.uniqueName}/project/${props.chat.room.project._id}`,
+      search: `?ptab=3&discussion=${queries.roomId}&thread=0`,
+    });
   };
 
   return (

@@ -57,6 +57,7 @@ export const Container = styled.div`
   row-gap: 1rem;
   background: #fff;
   border-radius: 1rem;
+  overflow-y: auto;
 `;
 
 export const List = styled.div`

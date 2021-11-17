@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 
 import { Form, Field } from 'react-final-form';
@@ -7,7 +7,7 @@ import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 import { IRoom } from 'stores/room/Reducer';
 import { createRoom } from 'stores/room/Actions';
-import { room } from 'stores/room/Types';
+import { CHANGE_ROOM, room } from 'stores/room/Types';
 
 import {
   required,
@@ -16,6 +16,7 @@ import {
 } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { checkError } from 'components/final-form/utils';
+import { IProject } from 'stores/project/Reducer';
 
 interface ICreateFormProps {
   setShowDialog: (val: boolean) => void;
@@ -28,6 +29,7 @@ interface ICreateFormInternalProps extends ICreateFormProps {
   roomLoading: boolean;
   uniqueCompanyName: string;
   currentRoom: IRoom;
+  currentProject: IProject;
 }
 
 const CreateFormComponent: React.FC<any> = (
@@ -35,11 +37,14 @@ const CreateFormComponent: React.FC<any> = (
 ) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const location = useLocation();
   const [submitted, setSubmitted] = useState(false);
 
   const onSubmit: any = (values: any) => {
-    props.createRoom(values);
+    props.createRoom({
+      ...values,
+      projectId: props.currentProject._id,
+      companyId: props.currentProject.company._id,
+    });
     setSubmitted(true);
   };
 
@@ -50,13 +55,9 @@ const CreateFormComponent: React.FC<any> = (
       props.roomLoading === false &&
       props.errorOnRoomCreate === ''
     ) {
-      const query = new URLSearchParams(location.search);
-      const view =
-        query.get('view') && query.get('view') === 'mobile'
-          ? 'mobile'
-          : 'default';
+      dispatch({ type: CHANGE_ROOM });
       history.push(
-        `/company/${props.uniqueCompanyName}/project/${props.currentRoom.project}/room?roomId=${props.currentRoom._id}&view=${view}`,
+        `/company/${props.uniqueCompanyName}/project/${props.currentRoom.project}?tab=3&discussion=${props.currentRoom._id}`,
       );
       setSubmitted(false);
       props.setShowDialog(false);
@@ -152,6 +153,7 @@ const mapStateToProps = (state: any) => {
     roomLoading: state.roomReducer.loading,
     uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
     currentRoom: state.roomReducer.currentRoom,
+    currentProject: state.projectReducer.projectDetails,
   };
 };
 

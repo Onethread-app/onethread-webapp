@@ -18,11 +18,14 @@ interface StyledTabProps {
   label: string;
   value?: number;
   tab?: number;
+  tabName?: string;
 }
 
 export const StyledTabs = withStyles({
   root: {
     borderTop: '1px solid #E0E0E0',
+    display: 'flex',
+    alignItems: 'center',
   },
   indicator: {
     top: '0px',
@@ -53,10 +56,16 @@ export const StyledTab = withStyles((theme: Theme) =>
 )((props: StyledTabProps) => {
   const history = useHistory();
   const tab = useMemo(() => props.tab, [props.tab]);
+  const tabName = useMemo(
+    () => props.tabName || 'tab',
+    [props.tabName],
+  );
 
   useEffect(() => {
     !isNil(tab) &&
-      history.replace(`${history.location.pathname}?tab=${tab}`);
+      history.replace(
+        `${history.location.pathname}?${tabName}=${tab}`,
+      );
   }, [tab]);
 
   return <Tab disableRipple {...props} />;

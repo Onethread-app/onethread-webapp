@@ -2,12 +2,13 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
-  min-height: 100%;
+  min-height: min(720px, 100%);
   padding: 0rem 2rem 0 2rem;
   color: #323030;
   background: #f1f1f1;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 `;
 
 export const DashboardP = styled.p`

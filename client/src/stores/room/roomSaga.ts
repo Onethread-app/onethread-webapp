@@ -8,7 +8,7 @@ import {
   CURRENT_ROOM,
 } from './Types';
 import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
+import { formTokenConfig, tokenConfig } from 'stores/UtilsActions';
 import { roomSubscribe } from 'layouts/company/room/channelSubscribe';
 import { IRoom } from './Reducer';
 import {
@@ -52,16 +52,15 @@ const takeLatest: any = Eff.takeLatest;
 
 function* createRoom({ payload }) {
   try {
-    const headers = tokenConfig();
+    const { companyId, projectId } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
-      const project = yield select(getProjectId);
       const response = yield tigrowApi.post(
-        `rooms?pid=${project}`,
-        {
-          ...payload,
-        },
+        `rooms?pid=${projectId}`,
+        { name: payload.name },
         headers,
       );
+      console.log(response);
       yield all([
         put(setRoomLoading(true)),
         put(createRoomSuccess(response.data.room)),
