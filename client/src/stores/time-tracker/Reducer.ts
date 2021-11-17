@@ -18,33 +18,31 @@ export interface ITrack {
   task: {
     _id: string;
     name: string;
-    boardId: {
+    parentTask: string;
+    subtask?: {
       _id: string;
+      name: string;
     };
-  };
-  subtask?: {
-    _id: string;
-    name: string;
-  };
-  column: {
-    _id: string;
-    name: string;
-  };
-  project: {
-    _id: string;
-    name: string;
-  };
-  company: {
-    _id: string;
-    name: string;
-    uniqueName: string;
-  };
-  account: {
-    _id: string;
-    name: string;
-    firstName: string;
-    lastName: string;
-    profileImage: string;
+    project: {
+      _id: string;
+      name: string;
+    };
+    company: {
+      _id: string;
+      name: string;
+      uniqueName: string;
+    };
+    account: {
+      _id: string;
+      name: string;
+      firstName: string;
+      lastName: string;
+      profileImage: string;
+    };
+    status: {
+      _id: string;
+      name: string;
+    };
   };
 }
 

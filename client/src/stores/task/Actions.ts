@@ -446,3 +446,7 @@ export const getTaskMembersFailure = (errorMessage: string) => ({
   type: TaskActionType.GET_TASK_MEMBERS_FAILURE,
   payload: errorMessage,
 });
+
+export const clearCurrentTask = () => ({
+  type: TaskActionType.CLEAR_CURRENT_TASK,
+});

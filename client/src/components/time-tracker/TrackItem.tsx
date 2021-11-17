@@ -32,9 +32,9 @@ const TrackItem = (props: ITrackItem) => {
       <TrackPart>
         {/* <TaskStatusTag status={item.column.name.replace(/ /g, '-')} /> */}
         <MemberIcon
-          _id={item.account._id}
-          name={`${item.account.firstName} ${item.account.lastName}`}
-          profileImage={item.account.profileImage}
+          _id={item.task.account._id}
+          name={`${item.task.account.firstName} ${item.task.account.lastName}`}
+          profileImage={item.task.account.profileImage}
           small
         />
       </TrackPart>

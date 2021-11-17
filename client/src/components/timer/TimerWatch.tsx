@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addTrackedTime } from 'stores/time-tracker/Action';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 import { StopButton, StyledWatch } from './Timer.styles';
-import PauseIcon from '@material-ui/icons/Pause';
+import StopIcon from '@material-ui/icons/Stop';
 
 const NewTimerWatch = () => {
   const currentlyTracking: ICurrentTrack = useSelector(
@@ -42,7 +42,7 @@ const NewTimerWatch = () => {
         </span>
       </StyledWatch>
       <StopButton onClick={handleStop}>
-        <PauseIcon />
+        <StopIcon />
         Stop
       </StopButton>
     </div>
