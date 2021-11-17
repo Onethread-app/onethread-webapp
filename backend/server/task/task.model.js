@@ -55,6 +55,10 @@ const TaskSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    completedBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'Account',
+    },
     parentTask: {
       type: Schema.Types.ObjectId,
       ref: 'Task',

@@ -82,4 +82,9 @@ module.exports = {
       assignedMemberid: idSchema.id.required(),
     }),
   }),
+  markAsCompleted: Joi.object().keys({
+    body: Joi.object().keys({
+      task: Joi.array().items(idSchema.id).required(),
+    }),
+  }),
 };

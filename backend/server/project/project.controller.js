@@ -34,29 +34,16 @@ const { getFormattedTaskForClient } = require('../helpers/utils');
 const { get } = require('lodash');
 
 const {
-  createTaskStatus,
+  createBulkTaskStatus,
   getAllStatusInProject,
 } = require('../services/task/taskStatus/taskStatus.service');
 
 const isPidExist = async (pid) => {
-  let checkExist = await Project.findOne(
-    {
-      _id: pid,
-    },
-    { removed: false },
-  );
-  return checkExist;
+  return Project.findOne({ _id: pid, removed: false });
 };
 
 const teamCreate = async (account, member, project, role) => {
-  let newTeam = new Team({
-    account,
-    member,
-    project,
-    role,
-  });
-  await newTeam.save();
-  return newTeam;
+  return Team.create({ account, member, project, role });
 };
 
 const projectRequestUpdate = async (pid, size) => {
@@ -96,75 +83,6 @@ const calculateProjectStatus = async (pid) => {
     status = 'ongoing';
   }
   return status;
-};
-
-const createNewProjectForCompany = async (req, res, next) => {
-  try {
-    const companyId = req.headers.companyid || req.body.companyId;
-    if (!companyId) {
-      return sendErrorResponse(res, 400, 'ValidationError', {
-        message: `companyId is required`,
-      });
-    }
-    const member = await Member.findOne({
-      account: req.user._id,
-      company: companyId,
-    });
-    if (!member) {
-      return sendErrorResponse(res, 404, 'NotFound', {
-        message: 'You are not added in company',
-      });
-    }
-    const project = await Project.create({
-      name: req.body.name,
-      concernedAdmin: member.account,
-      account: req.user._id,
-      deadline: req.body.deadline,
-      color: req.body.color,
-      company: companyId,
-      description: '',
-      outline: '',
-    });
-
-    logger.info(`new project created`);
-    const team = await teamCreate(
-      member.account,
-      member._id,
-      project._id,
-      'admin',
-    );
-    logger.info(
-      `${member.account} added into project id: ${project._id}`,
-    );
-
-    // TODO: Ques: value of positionInBoard okay ????
-    await createTaskStatus('Draft', project._id, 0, req.user._id);
-    logger.info(`Draft Status Created`);
-
-    const room = await createRoom(
-      companyId,
-      project._id,
-      req.user._id,
-      'General',
-    );
-    logger.info(`General Room Created`);
-    await createRoomMember(
-      companyId,
-      project._id,
-      member.account,
-      room._id,
-      team._id,
-    );
-    logger.info(`General Room Member Created`);
-    return sendJSONresponse(res, 201, {
-      success: true,
-      message: 'New project created',
-      project,
-    });
-  } catch (error) {
-    logger.error(`Project: ${error}`);
-    next(error);
-  }
 };
 
 const createNewProjectFromHome = async (req, res, next) => {
@@ -219,8 +137,12 @@ const createNewProjectFromHome = async (req, res, next) => {
     );
     logger.info(`General Room Member Created`);
 
-    await createTaskStatus('Draft', project._id, 0, req.user._id);
-    logger.info(`Draft Status Created`);
+    await createBulkTaskStatus(
+      req.body.statusList,
+      project._id,
+      req.user._id,
+    );
+    logger.info(`Status Created`);
 
     return sendJSONresponse(res, 201, {
       success: true,
@@ -1142,24 +1064,24 @@ const getAllFavouriteProjects = async (req, res, next) => {
   }
 };
 
+const populateArray = [
+  { path: 'project', select: '_id name' },
+  { path: 'company', select: '_id name uniqueName' },
+  {
+    path: 'status',
+    select: '_id name',
+  },
+  {
+    path: 'account',
+    select: '_id firstName lastName profileImage',
+  },
+];
+
 const getTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find({
       project: req.query.pid,
-    })
-      .populate([
-        { path: 'project', select: '_id name' },
-        { path: 'company', select: '_id name uniqueName' },
-        {
-          path: 'status',
-          select: '_id name',
-        },
-        {
-          path: 'account',
-          select: '_id firstName lastName profileImage',
-        },
-      ])
-      .exec();
+    }).populate(populateArray);
     const formattedTasks = await getFormattedTaskForClient(tasks);
     return sendJSONresponse(res, 200, formattedTasks);
   } catch (error) {
@@ -1170,7 +1092,6 @@ const getTasks = async (req, res, next) => {
 
 module.exports = {
   calculateProjectStatus,
-  createNewProjectForCompany,
   createNewProjectFromHome,
   addAssociateInProject,
   showAllProjectsForCompany,

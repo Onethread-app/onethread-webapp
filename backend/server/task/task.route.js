@@ -35,8 +35,12 @@ router
   );
 
 router
-  .route('/:taskId/mark-as-completed')
-  .put(authorization, taskCtrl.markAsCompleted);
+  .route('/mark-as-completed')
+  .put(
+    authorization,
+    SchemaValidator(joiSchema.markAsCompleted),
+    taskCtrl.markAsCompleted,
+  );
 
 // OK
 router
