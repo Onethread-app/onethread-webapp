@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Avatar = styled.div`
+export const Avatar = styled.div`
   text-transform: uppercase;
   background-color: ${(props: { bgColor: string }) =>
     props.bgColor || '#4ee0d7'};
@@ -14,7 +14,7 @@ const Avatar = styled.div`
   cursor: pointer;
 `;
 
-const Container = styled.div`
+export const Container = styled.div`
   width: 100%;
   background-color: #ffffff;
   display: flex;
@@ -63,19 +63,9 @@ const Container = styled.div`
     display: flex;
     align-items: center;
   }
-
-  .profile-pic {
-    display: flex;
-    align-items: center;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: auto 0;
-  }
 `;
 
-const CreateDialogList = styled.div`
+export const CreateDialogList = styled.div`
   background: #ffffff;
   border-radius: 8px;
   width: 176px;
@@ -95,4 +85,12 @@ const CreateDialogList = styled.div`
   }
 `;
 
-export { Container, Avatar, CreateDialogList };
+export const ProfilePicture = styled.img`
+  display: flex;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: auto 0;
+`;

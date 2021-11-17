@@ -16,7 +16,7 @@ import chatIcon from '../../resources/images/chatIcon.svg';
 // import AddIcon from '@material-ui/icons/Add';
 import notificationIcon from '../../resources/images/notification.svg';
 import NotificationPopover from 'components/notification/NotificationPopover';
-import { Avatar, Container } from './Navbar.styles';
+import { Avatar, Container, ProfilePicture } from './Navbar.styles';
 import {
   Button,
   ButtonGroup,
@@ -210,17 +210,24 @@ const UpdatedNavbar = (props: Props) => {
                     props.history.push(`/${props.user.name}`)
                   }
                 >
-                  <div className="dtc w1 w2-ns">
-                    <Avatar>
-                      {props.user?.firstName?.substring(0, 2)}
-                    </Avatar>
-                  </div>
-                  <div className="dtc v-mid pl3">
-                    <h1 className="f7 f6-ns fw4 lh-title black mv0">
-                      {`${upperFirst(
-                        props.user.firstName,
-                      )} ${upperFirst(props.user.lastName)}`}
-                    </h1>
+                  <div className="flex items-center">
+                    {props.user.profileImage !== '' ? (
+                      <ProfilePicture
+                        src={props.user.profileImage}
+                        alt="profile"
+                      />
+                    ) : (
+                      <Avatar>
+                        {props.user?.firstName?.substring(0, 2)}
+                      </Avatar>
+                    )}
+                    <div className="dtc v-mid pl3">
+                      <h1 className="f7 f6-ns fw4 lh-title black mv0">
+                        {`${upperFirst(
+                          props.user.firstName,
+                        )} ${upperFirst(props.user.lastName)}`}
+                      </h1>
+                    </div>
                   </div>
                 </Button>
                 <Button
@@ -255,10 +262,9 @@ const UpdatedNavbar = (props: Props) => {
             }
             target={
               props.user.profileImage !== '' ? (
-                <img
+                <ProfilePicture
                   src={props.user.profileImage}
                   alt="profile"
-                  className="profile-pic"
                 />
               ) : (
                 <Avatar>

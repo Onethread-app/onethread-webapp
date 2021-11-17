@@ -44,10 +44,10 @@ function* addTrackedTimeAsync({ payload }: any) {
   }
 }
 
-function* getTaskTrackersAsync() {
+function* getTaskTrackersAsync(action) {
   try {
     const currentTaskId = yield select(getCurrentTaskId);
-    const headers = tokenConfig();
+    const headers = formTokenConfig(action.payload);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.get(
         `time-trackers/task/${currentTaskId}`,
@@ -67,7 +67,7 @@ function* getTaskTrackersByUserAsync() {
       const res = yield tigrowApi.get(`time-trackers/user`, headers);
       yield put(getTaskTrackersSuccess(res.data));
     }
-  } catch (error) {
+  } catch (error: any) {
     yield put(getTaskTrackersFailure(returnErrorText(error)));
   }
 }

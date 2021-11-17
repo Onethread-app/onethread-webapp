@@ -74,6 +74,15 @@ const Container = styled.div`
       color: #323030;
     }
   }
+
+  .profile-pic {
+    display: flex;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+    margin: auto 0;
+  }
 `;
 
 export { Container, Row, Avatar, SuccessToaster, ErrorToaster };

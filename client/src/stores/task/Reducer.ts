@@ -187,6 +187,42 @@ export interface ITaskReducer {
   errorOnFetchingCompanyTasks: string;
 }
 
+const initialCurrentTask = {
+  _id: '',
+  name: '',
+  description: '',
+  createdAt: null,
+  createdBy: '',
+  status: {
+    _id: '',
+    name: '',
+  },
+  isCompleted: false,
+  assignedMembers: [],
+  dueDate: null,
+  priority: 2,
+  file: [],
+  comments: [],
+  statusList: [],
+  company: {
+    _id: '',
+    name: '',
+    uniqueName: '',
+  },
+  project: {
+    _id: '',
+    name: '',
+  },
+  account: {
+    _id: '',
+    firstName: '',
+    lastName: '',
+    profileImage: '',
+  },
+  timeSpent: 0,
+  subTasks: [],
+};
+
 const InitialState: ITaskReducer = {
   boardList: [] as any,
   currentBoard: {
@@ -203,41 +239,7 @@ const InitialState: ITaskReducer = {
     filteredUsers: [],
     preferredView: 'list',
   },
-  currentTask: {
-    _id: '',
-    name: '',
-    description: '',
-    createdAt: null,
-    createdBy: '',
-    status: {
-      _id: '',
-      name: '',
-    },
-    isCompleted: false,
-    assignedMembers: [],
-    dueDate: null,
-    priority: 2,
-    file: [],
-    comments: [],
-    statusList: [],
-    company: {
-      _id: '',
-      name: '',
-      uniqueName: '',
-    },
-    project: {
-      _id: '',
-      name: '',
-    },
-    account: {
-      _id: '',
-      firstName: '',
-      lastName: '',
-      profileImage: '',
-    },
-    timeSpent: 0,
-    subTasks: [],
-  },
+  currentTask: { ...initialCurrentTask },
   userTasks: [],
   companyTaskList: [],
   projectTaskList: [],
@@ -832,6 +834,11 @@ export const TaskReducer = (state = InitialState, action: any) => {
         ...state,
         creatingSubTask: false,
         errorOnSubTaskCreation: action.payload,
+      };
+    case TaskActionType.CLEAR_CURRENT_TASK:
+      return {
+        ...state,
+        currentTask: { ...initialCurrentTask },
       };
     default:
       return state;
