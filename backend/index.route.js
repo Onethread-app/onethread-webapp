@@ -32,6 +32,7 @@ const feedbackRoutes = require('./server/feedback/feedback.route');
 const reportRoutes = require('./server/report/report.route');
 const timeTrackerRoutes = require('./server/time-tracker/time-tracker.route');
 const taskStatusRoutes = require('./server/task/taskStatus/taskStatus.route');
+const labelRoutes = require('./server/label/label.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -72,5 +73,4 @@ router.use('/video-conferences', videoConferencesRoute);
 router.use('/feedback', feedbackRoutes); // feedbacks
 router.use('/reports', reportRoutes);
 router.use('/time-trackers', timeTrackerRoutes);
-
-module.exports = router;
+router.use('/labels', labelRoutes), (module.exports = router);
