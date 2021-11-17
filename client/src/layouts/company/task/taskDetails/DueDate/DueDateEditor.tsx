@@ -16,7 +16,8 @@ import { checkError } from 'components/final-form/utils';
 import '../../task.scss';
 
 interface IDueDateFormProps {
-  updateTask: (task: ITask) => any;
+  currentTask: ITask;
+  updateTask: (task) => any;
   dueDate: Date;
   updatingTask: boolean;
 }
@@ -25,7 +26,12 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
   const { t } = useTranslation();
 
   const onSubmit = async (values: any) => {
-    await props.updateTask(values);
+    await props.updateTask({
+      ...values,
+      taskId: props.currentTask._id,
+      projectId: props.currentTask.project._id,
+      companyId: props.currentTask.company._id,
+    });
   };
 
   return (
@@ -94,6 +100,7 @@ const mapStateToProps = (state: any) => {
   return {
     dueDate: state.taskIndexReducer.taskReducer.currentTask.dueDate,
     updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
   };
 };
 

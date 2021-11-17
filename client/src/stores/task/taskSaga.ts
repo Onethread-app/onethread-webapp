@@ -304,6 +304,7 @@ export function* dragAndDrop({
     );
   } catch (error) {
     const errorText = returnErrorText(error);
+
     // TODO: send errorText to error toaster
     yield put(dragAndDropTaskFailure(errorText));
   }
@@ -347,28 +348,28 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
 
 export function* updateTask({ payload }: any) {
   try {
-    const headers = formTokenConfig(payload.company._id);
+    const {
+      companyId,
+      projectId,
+      taskId,
+      parentTask,
+      ...newPayload
+    } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.put(
-        `tasks/${payload._id}?pid=${payload.project._id}`,
-        {
-          name: payload.name,
-          status: payload.status,
-          description: payload.description,
-          dueDate: payload.dueDate,
-          priority: payload.priority,
-        },
+        `tasks/${taskId}?pid=${projectId}`,
+        newPayload,
         headers,
       );
-
-      const companyId = yield select(getCompanyId);
-      const projectId = yield select(getProjectId);
+      const currentCompanyId = yield select(getCompanyId);
+      const currentProjectId = yield select(getProjectId);
 
       yield put(
         updateTaskSuccess({
           updatedTask: res.data.task,
-          companyId,
-          projectId,
+          companyId: currentCompanyId,
+          projectId: currentProjectId,
         }),
       );
     }
@@ -441,7 +442,7 @@ export function* taskFileDeleteAsync({ payload }: any) {
 
 export function* deleteTaskAsync({ payload }: any) {
   try {
-    const { taskId, projectId, companyId } = payload;
+    const { taskId, projectId, companyId, parentTask } = payload;
     const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization && payload) {
       const response = yield tigrowApi.delete(
@@ -449,7 +450,7 @@ export function* deleteTaskAsync({ payload }: any) {
         headers,
       );
       if (response.status === 200) {
-        yield put(deleteTaskSuccess(taskId));
+        yield put(deleteTaskSuccess({ taskId, parentTask }));
       }
     }
   } catch (error) {
@@ -510,21 +511,22 @@ export function* updateTaskStatusAsync({ payload }: any) {
   }
 }
 
-export function* createSubTask(payload) {
+export function* createSubTask(action) {
   try {
-    const { projectId, companyId, taskId, name } = payload;
+    const { projectId, companyId, taskId, ...newPayload } =
+      action.payload;
     const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
         `tasks/${taskId}/subtask?pid=${projectId}`,
-        {
-          name,
-        },
+        newPayload,
         headers,
       );
+      console.log(response.data);
       yield put(createSubTaskSuccess(response.data));
     }
   } catch (error) {
+    console.log(error);
     yield put(createSubTaskFailure(returnErrorText(error)));
   }
 }

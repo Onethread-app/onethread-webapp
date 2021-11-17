@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
-
+import { useEffect } from 'react';
 import { Form, Field } from 'react-final-form';
+
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import { EditableText } from '@blueprintjs/core/lib/esm/components/editable-text/editableText';
@@ -19,18 +20,31 @@ import { SubmitError } from 'components/final-form/SubmitError';
 interface ITaskTitleFormProps {
   setNameEdit: (val: boolean) => void;
   nameEdit: boolean;
-  currentTask?: ITask;
-  updateTask: (task: ITask) => any;
+  currentTask: ITask;
+  updateTask: (task) => any;
   updatingTask: boolean;
+  taskError: string;
 }
 
 const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
   const onSubmit = async (values: any) => {
-    const response = await props.updateTask(values);
-    if (response && !props.updatingTask) {
-      props.setNameEdit(false);
-    }
+    props.updateTask({
+      taskId: props.currentTask._id,
+      projectId: props.currentTask.project._id,
+      companyId: props.currentTask.company._id,
+      parentTask: 'null',
+      name: values.name,
+    });
+    props.setNameEdit(false);
   };
+
+  useEffect(() => {
+    if (!props.nameEdit) {
+      if (props.updatingTask === false && props.taskError === '') {
+        props.setNameEdit(false);
+      }
+    }
+  }, [props.updatingTask]);
 
   return (
     <div>
@@ -106,8 +120,8 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
 };
 const mapStateToProps = (state: any) => {
   return {
-    currentTask: state.taskIndexReducer.taskReducer.currentTask,
     updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+    taskError: state.taskIndexReducer.taskReducer.taskError,
   };
 };
 

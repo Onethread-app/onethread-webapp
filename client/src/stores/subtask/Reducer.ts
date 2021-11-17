@@ -1,5 +1,6 @@
 import { SubtaskActionTypes } from './Types';
 import { isEqual } from 'lodash';
+import { IFile } from 'stores/task/Reducer';
 
 export interface ISubtaskMember {
   _id: string;
@@ -8,12 +9,20 @@ export interface ISubtaskMember {
   profileImage?: string;
 }
 export interface ISubTask {
-  _id?: string;
-  name?: string;
-  done?: boolean;
-  dueDate?: Date;
-  description?: string;
-  assignedMembers?: [ISubtaskMember];
+  priority: number;
+  file: IFile[];
+  timeSpent: number;
+  isCompleted: boolean;
+  parentTask: string;
+  _id: string;
+  name: string;
+  account: string;
+  company: string;
+  project: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  description: string;
 }
 
 const InitialState = {
