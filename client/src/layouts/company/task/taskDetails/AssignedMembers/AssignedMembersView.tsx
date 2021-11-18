@@ -3,16 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { ITaskMember } from 'stores/taskMembers/Reducer';
 import { getAllMembers } from 'stores/taskMembers/Action';
 
 import { Loading } from 'components/Loading';
 import { AssignedMemeberListEditor } from './AssignedMemeberListEditor';
+import { IAccount, ITask } from 'stores/task/Reducer';
 
 interface IAssignedMembersViewComponentInternalProps {
-  getAllMembers: () => void;
-  taskMemberList: ITaskMember[];
-  currentTaskId: string;
+  currentTask: ITask;
 }
 
 export const AssignedMembersViewComponent = (
@@ -21,20 +19,21 @@ export const AssignedMembersViewComponent = (
 ) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
-
+  const [memberList, setMemberList] = useState<IAccount[]>([]);
   useEffect(() => {
-    async function getAllTaskMembers() {
-      await props.getAllMembers();
-      setLoading(false);
-    }
-    getAllTaskMembers();
-  }, [props.currentTaskId]);
+    setLoading(true);
+    let data: IAccount[] =
+      props.currentTask.members?.map((member) => member.account) ||
+      [];
+    setMemberList(data);
+    setLoading(false);
+  }, [props.currentTask._id]);
   return (
     <>
       {loading === false ? (
         <div>
           <h3> {t('app.project.Tasks.Viewers')}</h3>
-          {props.taskMemberList.map((list) => (
+          {memberList.map((list) => (
             <div
               className="pa1 flex items-center w-100"
               key={list._id}
@@ -49,7 +48,7 @@ export const AssignedMembersViewComponent = (
                   className="br2 h2 w2 pointer mh2"
                   alt="avatar"
                 />
-                <p>{list.name}</p>
+                <p>{`${list.firstName} ${list.lastName}`}</p>
               </div>
               <AssignedMemeberListEditor assignMemberId={list._id} />
             </div>
@@ -66,10 +65,10 @@ const mapStateToProps = (state: any) => {
   return {
     taskMemberList:
       state.taskIndexReducer.taskMembersReducer.taskMemberList,
-    currentTaskId: state.taskIndexReducer.taskReducer.currentTask._id,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
   };
 };
 
-export const AssignedMembersView = connect(mapStateToProps, {
+export default connect(mapStateToProps, {
   getAllMembers,
 })(withRouter(AssignedMembersViewComponent));

@@ -58,7 +58,7 @@ const favouriteProjectOptions = [
   },
   {
     path: 'project',
-    select: '_id name color',
+    select: '_id name color hasDeleted',
     populate: [
       {
         path: 'company',

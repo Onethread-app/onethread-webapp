@@ -59,7 +59,10 @@ export const TaskTitleViewComponent = (
               margin: '0.2rem 0rem',
             }}
           >
-            Task created by {props.currentTask!.createdBy} at{' '}
+            Task created by{' '}
+            {`${props.currentTask.account?.firstName} 
+              ${props.currentTask.account?.lastName}`}{' '}
+            at{' '}
             {moment(props.currentTask!.createdAt).format(
               'MMMM d, YYYY',
             )}

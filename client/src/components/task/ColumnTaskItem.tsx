@@ -21,7 +21,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
-import { ITask } from 'stores/task/Reducer';
+import { IAccount, ITask } from 'stores/task/Reducer';
 import {
   getSelectedTaskDetails,
   deleteTask,
@@ -111,6 +111,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   const [taskDelete, setTaskDelete] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
+  const [members, setMembers] = useState<IAccount[]>([]);
   const handleClick = () => {
     props.getSelectedTaskDetails({
       taskId: task._id,
@@ -128,6 +129,10 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
     });
     setDeletingTask(true);
   };
+
+  useEffect(() => {
+    setMembers([...task.members.map((member) => member.account)]);
+  }, [task]);
 
   useEffect(() => {
     if (
@@ -231,13 +236,9 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
                 className={`flex justify-between items-center`}
               >
                 <TaskPriorityTag priority={task.priority} />
-                {task.assignedMembers &&
-                  task.assignedMembers.length > 0 && (
-                    <MemberGroup
-                      members={task.assignedMembers}
-                      small
-                    />
-                  )}
+                {members && members.length > 0 && (
+                  <MemberGroup members={members} small />
+                )}
               </ThirdRow>
             </TaskItemContainer>
             // </Link>

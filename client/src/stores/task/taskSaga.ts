@@ -334,7 +334,7 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
     const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization && payload) {
       const res = yield tigrowApi.get(
-        `tasks/${taskId}/?pid=${projectId}`,
+        `tasks/${taskId}?pid=${projectId}`,
         headers,
       );
       yield put(getSelectedTaskDetailsSuccess(res.data));
@@ -362,14 +362,9 @@ export function* updateTask({ payload }: any) {
         newPayload,
         headers,
       );
-      const currentCompanyId = yield select(getCompanyId);
-      const currentProjectId = yield select(getProjectId);
-
       yield put(
         updateTaskSuccess({
           updatedTask: res.data.task,
-          companyId: currentCompanyId,
-          projectId: currentProjectId,
         }),
       );
     }

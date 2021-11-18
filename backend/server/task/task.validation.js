@@ -31,6 +31,7 @@ module.exports = {
       dueDate: taskSchema.dueDate.required(),
       priority: taskSchema.priority.required(),
       assignmembers: Joi.array().items().required(),
+      status: taskSchema.status.required(),
     }),
 
     query: Joi.object().keys({

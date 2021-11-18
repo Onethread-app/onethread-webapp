@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import moment from 'moment';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { toTitleCase } from 'helpers/utils';
@@ -62,7 +62,7 @@ export const ProjectTableColumns = [
     accessor: 'createdAt',
     Cell: ({ value }) => {
       return value
-        ? format(new Date(value), 'dd/MM/yyyy')
+        ? moment(value).format('MMMM d, YYYY')
         : 'Not scheduled';
     },
     sticky: 'center',
@@ -72,9 +72,7 @@ export const ProjectTableColumns = [
     Footer: 'Due Date',
     accessor: 'deadline',
     Cell: ({ value }) => {
-      return value
-        ? format(new Date(value), 'dd/MM/yyyy')
-        : 'Not Set';
+      return value ? moment(value).format('MMMM d, YYYY') : 'Not Set';
     },
     sticky: 'center',
   },

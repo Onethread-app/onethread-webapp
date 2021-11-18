@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { updateTaskStatus } from 'stores/task/Actions';
+import { updateTask } from 'stores/task/Actions';
 import { ITask } from 'stores/task/Reducer';
 
 const TagSelect = styled.select`
@@ -33,7 +33,7 @@ interface ISelectOption {
 
 interface ITaskTagSelect {
   task: ITask;
-  updateTaskStatus: (payload) => void;
+  updateTask: (payload) => void;
 }
 
 const TaskTagSelect = (props: ITaskTagSelect) => {
@@ -60,11 +60,12 @@ const TaskTagSelect = (props: ITaskTagSelect) => {
     if (selected[0]) {
       setSelectedOption(selected[0]);
       const payload = {
-        ...task,
+        taskId: task._id,
+        companyId: task.company._id,
+        projectId: task.project._id,
         status: { _id: selected[0].value, name: selected[0].label },
       };
-      console.log(payload);
-      props.updateTaskStatus(payload);
+      props.updateTask(payload);
     }
   };
 
@@ -84,7 +85,7 @@ const TaskTagSelect = (props: ITaskTagSelect) => {
     );
   }, [task.statusList]);
 
-  return task.statusList.length === 0 ? (
+  return task.statusList?.length === 0 ? (
     <span
       className="bp3-tag ttc"
       style={{
@@ -116,5 +117,5 @@ const TaskTagSelect = (props: ITaskTagSelect) => {
   );
 };
 export default connect(null, {
-  updateTaskStatus,
+  updateTask,
 })(TaskTagSelect);

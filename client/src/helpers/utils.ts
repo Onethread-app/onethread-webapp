@@ -285,3 +285,19 @@ export const formatTasksForCalendar = (projectTaskList) => {
     priority: t.priority,
   }));
 };
+
+// const tempStatuses = taskList.map((task) => task.status);
+// const uniqueStatuses: ITaskStatus[] = [];
+// tempStatuses.forEach((status) => {
+//   if (uniqueStatuses.length === 0) {
+//     uniqueStatuses.push(status);
+//   } else {
+//     const isExist = uniqueStatuses.some((item) => {
+//       return item._id === status._id;
+//     });
+//     if (!isExist) {
+//       uniqueStatuses.push(status);
+//     }
+//   }
+// });
+// setStatues(uniqueStatuses);

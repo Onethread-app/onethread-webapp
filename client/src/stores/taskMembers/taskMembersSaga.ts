@@ -94,7 +94,7 @@ export function* deleteMemberAsync({ payload }: any) {
     const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization && payload) {
       const response = yield tigrowApi.delete(
-        `tasks/member/${taskId}/?pid=${projectId}&assignedMemberid=${assignedMemberId}`,
+        `tasks/member/${taskId}?pid=${projectId}&assignedMemberid=${assignedMemberId}`,
         headers,
       );
       if (response.status === 200) {

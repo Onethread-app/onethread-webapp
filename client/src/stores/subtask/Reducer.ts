@@ -4,8 +4,8 @@ import { IFile } from 'stores/task/Reducer';
 
 export interface ISubtaskMember {
   _id: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   profileImage?: string;
 }
 export interface ISubTask {
