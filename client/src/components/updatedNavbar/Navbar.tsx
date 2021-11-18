@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { isMobileOnly } from 'react-device-detect';
-import { withRouter } from 'react-router';
+import { useHistory, withRouter } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { History } from 'history';
 import { connect } from 'react-redux';
@@ -17,6 +17,7 @@ import chatIcon from '../../resources/images/chatIcon.svg';
 import notificationIcon from '../../resources/images/notification.svg';
 import NotificationPopover from 'components/notification/NotificationPopover';
 import { Avatar, Container, ProfilePicture } from './Navbar.styles';
+import FeedbackOutlinedIcon from '@material-ui/icons/FeedbackOutlined';
 import {
   Button,
   ButtonGroup,
@@ -77,6 +78,7 @@ const UpdatedNavbar = (props: Props) => {
     useState<boolean>(false);
   const [openAnnouncementDialog, setOpenAnnouncementDialog] =
     useState<boolean>(false);
+  const history = useHistory();
   const { t } = useTranslation();
 
   const { taskId } = useParams<any>();
@@ -247,6 +249,17 @@ const UpdatedNavbar = (props: Props) => {
                   alignText="left"
                 >
                   {t('app.user.User-settings.Report-Issue')}
+                </Button>
+                <Button
+                  className="bp3-minimal outline-0 bp3-popover-dismiss flex items-center"
+                  onClick={() => history.push('/feedback')}
+                  alignText="left"
+                >
+                  <FeedbackOutlinedIcon
+                    fontSize="small"
+                    className="mr1"
+                  />
+                  {t('app.company.Feedback.Feedback')}
                 </Button>
                 <Button
                   className="bp3-minimal outline-0 bp3-popover-dismiss"

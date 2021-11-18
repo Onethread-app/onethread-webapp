@@ -278,6 +278,11 @@ const App = () => {
             component={AllProjectsPage}
           />
           <PrivateRoute
+            path="/feedback"
+            exact={true}
+            component={Feedback}
+          />
+          <PrivateRoute
             path="/:username"
             exact={true}
             component={UserProfilePage}
@@ -311,11 +316,6 @@ const App = () => {
             path="/company/:cname/feed"
             exact={true}
             component={FeedPage}
-          />
-          <PrivateRoute
-            path="/company/:cname/feedback"
-            exact={true}
-            component={Feedback}
           />
           <PrivateRoute
             path="/company/:cname/project/:projectId/room"
