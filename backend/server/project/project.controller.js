@@ -1057,7 +1057,10 @@ const getAllFavouriteProjects = async (req, res, next) => {
     const projects = await findAllFavouriteProjectsByMemberId(
       members,
     );
-    return sendJSONresponse(res, 200, projects);
+    const response = projects.filter(
+      (p) => p.project.hasDeleted === false,
+    );
+    return sendJSONresponse(res, 200, response);
   } catch (error) {
     logger.error(`Project ${error}`);
     next(error);

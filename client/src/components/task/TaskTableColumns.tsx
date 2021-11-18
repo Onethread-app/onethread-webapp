@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 
@@ -141,7 +140,7 @@ export const TaskTableColumns = [
     accessor: 'createdAt',
     Cell: ({ value }) => {
       return value
-        ? format(new Date(value), 'dd/MM/yyyy')
+        ? moment(value).format('MMMM d, YYYY')
         : 'Not scheduled';
     },
     sticky: 'center',
@@ -152,7 +151,7 @@ export const TaskTableColumns = [
     accessor: 'dueDate',
     Cell: ({ value }) => {
       return value
-        ? format(new Date(value), 'dd/MM/yyyy')
+        ? moment(value).format('MMMM d, YYYY')
         : 'Not scheduled';
     },
     filter: customDueDateFilter,

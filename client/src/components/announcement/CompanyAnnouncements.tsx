@@ -70,7 +70,7 @@ const CompanyAnnouncements = (props: Props) => {
 
   useEffect(() => {
     props.getCompanyAnnouncement();
-  }, []);
+  }, [props.company._id]);
 
   return (
     <>

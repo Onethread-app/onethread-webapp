@@ -45,6 +45,7 @@ import CalendarView, {
 } from 'components/calendar/CalendarView';
 import TaskViewSelect from './TaskViewSelect';
 import ColumnsContainer from 'components/column/ColumnsContainer';
+import { Link } from 'react-router-dom';
 
 interface IProjectTasksProps {
   projectTaskList: ITask[];
@@ -323,9 +324,14 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           loadingData ? (
             <TaskTableSkeleton />
           ) : error ? (
-            <div>{error}</div>
+            <div className="mt3 red">{error}</div>
           ) : (
-            <div>No Tasks</div>
+            <div className="mt3">
+              No Tasks{' '}
+              <Link to="#" onClick={() => setOpenTaskDialog(true)}>
+                Add new tasks?
+              </Link>
+            </div>
           )
         ) : (
           {
@@ -345,7 +351,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
                 setOpenTaskDialog={setOpenTaskDialog}
               />
             ),
-            board: <ColumnsContainer taskList={taskList} />,
+            board: <ColumnsContainer />,
             calendar: <CalendarView tasks={tasksForCalendarView} />,
           }[selectedView]
         )}
@@ -368,10 +374,11 @@ const ProjectTasks = (props: IProjectTasksProps) => {
 const mapStateToProps = (state: any) => ({
   projectTaskList: state.taskIndexReducer.taskReducer.projectTaskList,
   project: state.projectReducer.projectDetails,
-  fetchingProjectTasks: state.projectReducer.fetchingProjectTasks,
+  fetchingProjectTasks:
+    state.taskIndexReducer.taskReducer.fetchingProjectTasks,
   singleProjectLoading: state.projectReducer.singleProjectLoading,
   errorOnFetchingProjectTasks:
-    state.projectReducer.errorOnFetchingProjectTasks,
+    state.taskIndexReducer.taskReducer.errorOnFetchingProjectTasks,
   company: state.companyReducer.currentCompany,
 });
 

@@ -364,7 +364,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
                 setOpenTaskDialog={setOpenTaskDialog}
               />
             ),
-            board: <ColumnsContainer taskList={companyTaskList} />,
+            board: <ColumnsContainer />,
             calendar: <CalendarView tasks={tasksForCalendarView} />,
           }[selectedView]
         )}

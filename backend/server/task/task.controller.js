@@ -7,8 +7,9 @@ const {
 } = require('../project/project.controller');
 const Board = require('../board/board.model');
 const TaskStatus = require('./taskStatus/taskStatus.model');
-const getAllStatusInProject =
-  require('../services/task/taskStatus/taskStatus.service').getAllStatusInProject;
+const {
+  getAllStatusInProject,
+} = require('../services/task/taskStatus/taskStatus.service');
 
 const {
   taskAssignNotificationToUsers,
@@ -186,25 +187,27 @@ const create = async (req, res, next) => {
     const companyId = req.headers.companyid;
     const pid = req.query.pid;
 
+    // TODO: Do we need this?
     // Get Task Status
-    const taskStatus = await TaskStatus.findOne({
-      name: 'Draft',
-      project: pid,
-    }).select('_id project');
+    // const taskStatus = await TaskStatus.findOne({
+    //   name: 'Draft',
+    //   project: pid,
+    // }).select('_id project');
 
-    // Validation & Error Checking
-    if (!taskStatus) {
-      return sendErrorResponse(res, 404, 'NotFound', {
-        message: 'Task Status (Draft) not found',
-      });
-    }
+    // // Validation & Error Checking
+    // if (!taskStatus) {
+    //   return sendErrorResponse(res, 404, 'NotFound', {
+    //     message: 'Task Status (Draft) not found',
+    //   });
+    // }
+    console.log(req.body);
 
     // Create Task
     const task = await Task.create({
       name: req.body.name,
       description: req.body.description,
       account: req.user._id,
-      status: taskStatus._id,
+      status: req.body.status,
       project: pid,
       priority: req.body.priority,
       dueDate: req.body.dueDate,
@@ -221,6 +224,8 @@ const create = async (req, res, next) => {
       req,
     );
 
+    const statusList = await getAllStatusInProject(pid);
+
     await Project.findByIdAndUpdate(
       { _id: pid },
       { $set: { status: 'ongoing' } },
@@ -229,6 +234,7 @@ const create = async (req, res, next) => {
 
     const responseData = populatedTask.toJSON();
     responseData.members = members;
+    responseData.statusList = statusList;
     responseData.subTasks = [];
     // await sendNotificationToProjectTeamMates(
     //   req.user._id,

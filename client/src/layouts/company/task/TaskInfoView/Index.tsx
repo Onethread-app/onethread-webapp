@@ -11,8 +11,9 @@ import { DueDateEditor } from '../taskDetails/DueDate/DueDateEditor';
 // import { TaskStatusEdior } from '../TaskStatusEditor/TaskStatusEdior';
 import { PriorityEditorList } from '../taskDetails/Priority/PriorityEditorList';
 import { AssignedMembersEditor } from '../taskDetails/AssignedMembers/AssignedMembersEditor';
-import { AssignedMembersView } from '../taskDetails/AssignedMembers/AssignedMembersView';
+import AssignedMembersView from '../taskDetails/AssignedMembers/AssignedMembersView';
 import TaskLabel from 'components/label/TaskLabel';
+import TaskStatus from '../taskDetails/TaskStatus/TaskStatus';
 
 const TaskInfoViewComponent = () => {
   // const history = useHistory();
@@ -75,6 +76,7 @@ const TaskInfoViewComponent = () => {
           <DueDateEditor />
           <PriorityEditorList />
           <TaskLabel />
+          <TaskStatus />
           <div className="mt4">
             <AssignedMembersView />
           </div>

@@ -154,15 +154,10 @@ const CreateCompany = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: 300ms transform ease-in;
 
   img {
     margin-top: 38.5px auto 0;
     margin-bottom: 12px;
-  }
-
-  &:hover {
-    transform: scale(1.025);
   }
 
   &:active {

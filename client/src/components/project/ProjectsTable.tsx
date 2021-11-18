@@ -142,6 +142,7 @@ const ProjectsTable = (
       companyId: selectedProject.company._id,
     });
     setSelectedProject('');
+    setShowPopover('');
     setShowArchiveProject(false);
   };
 
@@ -151,6 +152,7 @@ const ProjectsTable = (
       companyId: selectedProject.company._id,
     });
     setSelectedProject('');
+    setShowPopover('');
     setShowUnarchiveProject(false);
   };
 
@@ -160,6 +162,7 @@ const ProjectsTable = (
       companyId: selectedProject.company._id,
     });
     setSelectedProject('');
+    setShowPopover('');
     setShowDeleteProject(false);
   };
 

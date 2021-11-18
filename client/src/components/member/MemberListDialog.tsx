@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import Avatar from '@material-ui/core/Avatar/Avatar';
 
-import { IBoardMember, ITaskMember } from 'stores/task/Reducer';
+import { IAccount } from 'stores/task/Reducer';
 
 import UserIcon from 'resources/images/profilePhoto.svg';
 
@@ -25,18 +25,19 @@ const MemberName = styled.h3`
 `;
 
 interface IMemberListDialog {
-  members: IBoardMember[] | ITaskMember[];
+  members: IAccount[];
 }
 
 const MemberListDialog = (props: IMemberListDialog) => {
+  console.log(props.members);
   return (
     <Container>
-      {props.members.map((member: IBoardMember | ITaskMember) => (
+      {props.members.map((member: IAccount) => (
         <MemberContainer key={member._id}>
           <Avatar
-            alt={`${member.firstName} ${member.lastName}`}
-            src={member.profileImage ?? UserIcon}
-            key={member._id}
+            alt={`${member?.firstName} ${member?.lastName}`}
+            src={member?.profileImage ?? UserIcon}
+            key={member?._id}
             className="mr2"
             style={{
               width: '1.3rem',
@@ -45,7 +46,7 @@ const MemberListDialog = (props: IMemberListDialog) => {
               zIndex: 0,
             }}
           />
-          <MemberName>{`${member.firstName} ${member.lastName}`}</MemberName>
+          <MemberName>{`${member?.firstName} ${member?.lastName}`}</MemberName>
         </MemberContainer>
       ))}
     </Container>

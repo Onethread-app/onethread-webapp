@@ -117,7 +117,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
             <StyledSubRowData>{subtask.name}</StyledSubRowData>
             <StyledSubRowData>
               {!isNil(subtask.dueDate)
-                ? moment(subtask.dueDate).format('DD/MM/yyyy')
+                ? moment(subtask.dueDate).format('MMMM d, YYYY')
                 : 'Not Set'}
             </StyledSubRowData>
           </StyledSubRow>

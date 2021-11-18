@@ -22,11 +22,16 @@ export interface IFile {
   s3Key: string;
 }
 
-export interface ITaskMember {
+export interface IAccount {
   _id: string;
   firstName: string;
   lastName: string;
   profileImage?: string;
+}
+export interface ITaskMember {
+  _id: string;
+  account: IAccount;
+  assignedPerson: IAccount;
 }
 
 export interface IBoardMember {
@@ -106,6 +111,7 @@ export interface ITask {
     profileImage?: string;
   };
   subTasks: ITask[];
+  members: ITaskMember[];
 }
 
 export interface IBoard {
@@ -223,6 +229,7 @@ const initialCurrentTask = {
   },
   timeSpent: 0,
   subTasks: [],
+  members: [],
 };
 
 const InitialState: ITaskReducer = {
@@ -290,18 +297,32 @@ export const updateTaskStatus = (tasks, task) => {
 };
 
 export const updateTask = (tasks: ITask[], task: ITask) => {
-  return task.parentTask === 'null'
-    ? tasks.map((t: ITask) => (t._id === task._id ? task : t))
-    : tasks.map((t: ITask) =>
-        t._id === task.parentTask
-          ? {
-              ...t,
-              subTasks: t.subTasks.map((subTask: ITask) =>
-                subTask._id === task._id ? task : subTask,
-              ),
-            }
-          : t,
-      );
+  // return task.parentTask === 'null'
+  //   ? tasks.map((t: ITask) => (t._id === task._id ? task : t))
+  //   : tasks.map((t: ITask) =>
+  //       t._id === task.parentTask
+  //         ? {
+  //             ...t,
+  //             subTasks: t.subTasks.map((subTask: ITask) =>
+  //               subTask._id === task._id ? task : subTask,
+  //             ),
+  //           }
+  //         : t,
+  //     );
+  return tasks.map((t: ITask) =>
+    task.parentTask === 'null'
+      ? t._id === task._id
+        ? task
+        : t
+      : t._id === task.parentTask
+      ? {
+          ...t,
+          subTasks: t.subTasks.map((subTask: ITask) =>
+            subTask._id === task._id ? task : subTask,
+          ),
+        }
+      : t,
+  );
 };
 
 export const deleteTask = (
@@ -639,15 +660,18 @@ export const TaskReducer = (state = InitialState, action: any) => {
       const { updatedTask } = action.payload;
       return {
         ...state,
-        currentTask: updateTask([state.currentTask], updatedTask),
-        userTasks: updateTask(state.userTasks, updatedTask),
-        companyTaskList: updateTask(
-          state.companyTaskList,
-          updatedTask,
+        currentTask:
+          state.currentTask._id === updatedTask._id
+            ? updatedTask
+            : state.currentTask,
+        projectTaskList: state.projectTaskList.map((task) =>
+          task._id === updatedTask._id ? updatedTask : task,
         ),
-        projectTaskList: updateTask(
-          state.projectTaskList,
-          updatedTask,
+        companyTaskList: state.companyTaskList.map((task) =>
+          task._id === updatedTask._id ? updatedTask : task,
+        ),
+        userTasks: state.userTasks.map((task) =>
+          task._id === updatedTask._id ? updatedTask : task,
         ),
         updatingTask: false,
       };
