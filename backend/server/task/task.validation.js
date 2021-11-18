@@ -67,7 +67,7 @@ module.exports = {
   }),
   addMember: Joi.object().keys({
     body: Joi.object().keys({
-      assignmembers: Joi.array().items().required(),
+      assignmembers: Joi.array().items(idSchema.id).required(),
     }),
     params: Joi.object().keys({
       taskId: taskSchema.taskId,
