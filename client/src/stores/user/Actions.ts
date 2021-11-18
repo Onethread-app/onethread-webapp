@@ -389,7 +389,7 @@ export const updateUserInfoAction =
   (basicInfo: { firstName: string; lastName: string }) =>
   async (dispatch: any, getState: any) => {
     try {
-      console.log(basicInfo);
+      // console.log(basicInfo);
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.put(

@@ -240,7 +240,10 @@ const ProjectsTable = (
           {page.map((row) => {
             prepareRow(row);
             return (
-              <StyledTableRowContainer key={row.id} totalItems={rows.length}>
+              <StyledTableRowContainer
+                key={row.id}
+                totalItems={rows.length}
+              >
                 <StyledTableRow
                   {...row.getRowProps()}
                   onClick={() => handleClick(row.original)}
@@ -291,18 +294,18 @@ const ProjectsTable = (
                         <MoreVertIcon
                           fontSize="small"
                           className={
-                            row.original.concernedAdmin._id ===
-                              props.userId
+                            row.original?.concernedAdmin?._id ===
+                            props.userId
                               ? ''
                               : 'not-allowed'
                           }
                           onClick={(e) =>
-                            row.original.concernedAdmin._id ===
-                              props.userId
+                            row.original?.concernedAdmin?._id ===
+                            props.userId
                               ? handleOptionsClick(
-                                e,
-                                row.original._id,
-                              )
+                                  e,
+                                  row.original._id,
+                                )
                               : e.stopPropagation()
                           }
                         />
@@ -329,12 +332,12 @@ const ProjectsTable = (
                 ? [12, 25, 50, 100]
                 : [rows.length, 10, 25, 50, 100]
               : window.innerHeight > 800
-                ? rows.length >= 8
-                  ? [8, 10, 25, 50, 100]
-                  : [rows.length, 10, 25, 50, 100]
-                : rows.length >= 6
-                  ? [6, 10, 25, 50, 100]
-                  : [rows.length, 10, 25, 50, 100]
+              ? rows.length >= 8
+                ? [8, 10, 25, 50, 100]
+                : [rows.length, 10, 25, 50, 100]
+              : rows.length >= 6
+              ? [6, 10, 25, 50, 100]
+              : [rows.length, 10, 25, 50, 100]
           }
           count={rows.length}
           page={pageIndex}

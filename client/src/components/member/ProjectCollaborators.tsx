@@ -22,7 +22,7 @@ import './Index.scss';
 import { AssociateList } from 'layouts/company/project/team/AssociateList';
 import { AddProjectMemberForm } from 'layouts/company/project/team/AddProjectMemberForm';
 import { AddProjectAssociateForm } from 'layouts/company/project/team/AddProjectAssociateForm';
-import Colleagues from 'layouts/company/colleagues/CompanyColleagues';
+import ProjectTeammates from './ProjectTeammates';
 
 interface TeamMember {
   company: ICompany;
@@ -255,7 +255,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         </div> */}
 
         {teammatesList.length ? (
-          <Colleagues colleagues={teammatesList} type="teammates" />
+          <ProjectTeammates colleagues={teammatesList} />
         ) : null}
 
         <h1 className="f4 mv4">

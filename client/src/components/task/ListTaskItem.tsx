@@ -87,8 +87,8 @@ const TagSelect = styled.select`
     props.status === 'done'
       ? '#2EB67D'
       : props.status === 'in-progress'
-        ? '#08A0F7'
-        : '#FFA800'};
+      ? '#08A0F7'
+      : '#FFA800'};
   color: #f5f8fa;
   text-align-last: center;
   border: none;
@@ -200,7 +200,7 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
     // const payload = { taskId: task._id, columnId: task.columnId };
     // props.deleteTask(payload);
     setDeletingTask(true);
-    console.log('deleting task');
+    // console.log('deleting task');
   };
 
   useEffect(() => {

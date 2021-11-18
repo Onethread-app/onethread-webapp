@@ -15,6 +15,8 @@ import { ICompanyByUser, User } from 'stores/user/Reducer';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import {
   addAnnouncement,
+  addAnnouncementFailure,
+  addAnnouncementSuccess,
   getCompanyDetails,
 } from 'stores/company/Actions';
 import {
@@ -43,6 +45,8 @@ interface IProps {
   getCompanyDetails: (arg: string) => void;
   announcementLoading: boolean;
   announcementError: string;
+  addAnnouncementSuccess: (response) => void;
+  addAnnouncementFailure: (error) => void;
 }
 
 interface ICompanyOptionProps {
@@ -66,7 +70,7 @@ const Index = (props: IProps) => {
       setLoading(true);
       const headers = formTokenConfig(company);
       try {
-        await tigrowApi.post(
+        const response = await tigrowApi.post(
           `company/${company}/announcements`,
           { text: values.text },
           headers,
@@ -76,10 +80,12 @@ const Index = (props: IProps) => {
           name: selectValue[0].label,
           uniqueName: selectValue[0].uniqueName,
         });
+        props.addAnnouncementSuccess(response.data.newAnnouncement);
         props.setOpenAnnouncementDialog(false);
       } catch (error) {
         setLoading(false);
         errorToaster(returnErrorText(error));
+        props.addAnnouncementFailure(returnErrorText(error));
       }
     } else {
       setAssignedCompanyError(true);
@@ -297,7 +303,7 @@ const mapStateToProps = (state: any) => ({
 export default connect(mapStateToProps, {
   getAllCompaniesByUserId,
   addAnnouncement,
-  //   addAnnouncementSuccess,
-  //   addAnnouncementFailure,
+  addAnnouncementSuccess,
+  addAnnouncementFailure,
   getCompanyDetails,
 })(Index);

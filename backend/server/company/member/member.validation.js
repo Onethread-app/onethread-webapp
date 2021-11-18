@@ -92,10 +92,14 @@ module.exports = {
     }),
   }),
   acceptJoinRequest: Joi.object().keys({
-    params: memberId,
+    body: Joi.object().keys({
+      member: Joi.array().items(idSchema.id).required(),
+    }),
   }),
   rejectJoinRequest: Joi.object().keys({
-    params: memberId,
+    body: Joi.object().keys({
+      member: Joi.array().items(idSchema.id).required(),
+    }),
   }),
   // updateCompany: Joi.object().keys({
   //   body: Joi.object().keys({

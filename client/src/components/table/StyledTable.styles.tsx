@@ -39,6 +39,23 @@ export const StyledProjectTableData = styled(StyledTableData)`
   }
 `;
 
+export const StyledColleagueTableData = styled(StyledTableData)`
+  &:first-child {
+    width: 1.5rem;
+  }
+
+  &:not(:first-child) {
+    width: ${(props) => `${100 / (props.cols - 1)}%`};
+  }
+
+  &:nth-child(2) {
+    display: -webkit-box;
+    margin: auto 0;
+    justify-content: start;
+    padding: 0 1rem;
+  }
+`;
+
 export const StyledTaskTableData = styled(StyledTableData)`
   &:not(:first-child) {
     width: ${(props) => `${100 / (props.cols - 1)}%`};
@@ -65,6 +82,12 @@ export const StyledTableRow = styled.div`
   width: 100%;
 `;
 
+export const StyledColleagueTableRow = styled(StyledTableRow)`
+  &::first-child {
+    width: 2rem !important;
+  }
+`;
+
 export const StyledSubRow = styled(StyledTableRow)`
   padding: 0.75rem 1.5rem;
   background: #f8f8f8;
@@ -84,16 +107,21 @@ export const StyledTableRowContainer = styled.div`
 
   &:first-child {
     border-radius: ${(props) =>
-    props.totalItems === 1 ? '8px' : ' 8px 8px 0 0'};
+      props.totalItems === 1 ? '8px' : ' 8px 8px 0 0'};
   }
 
   :nth-last-child(2) {
-    border-radius: ${props => props.totalItems === 1 ? '8px' : props.totalItems === 2 ? '0 0 8px 8px' : 0};
+    border-radius: ${(props) =>
+      props.totalItems === 1
+        ? '8px'
+        : props.totalItems === 2
+        ? '0 0 8px 8px'
+        : 0};
   }
 
   &:last-child {
     border-radius: ${(props) =>
-    props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
+      props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
 
     ${StyledSubRow} {
       &:last-child {

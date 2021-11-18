@@ -26,7 +26,6 @@ import {
   Header,
   SortAndFilter,
   StyledFilterPopover,
-  CreatableItem,
   StyledInput,
   // StyledInput,
 } from 'components/table/StyledTable.styles';
@@ -36,6 +35,7 @@ import { Container } from './Index.styles';
 import { DateRange } from '@blueprintjs/datetime';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import TasksFilter from 'components/task/TasksFilter';
+import { Link } from 'react-router-dom';
 
 interface Props {
   userTasks: any;
@@ -268,11 +268,11 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
           loading ? (
             <TaskTableSkeleton />
           ) : (
-            <div className="flex flex-col">
-              <div>No task has been created.</div>
-              <CreatableItem onClick={() => setOpenTaskDialog(true)}>
-                <span>+ </span> Add new task
-              </CreatableItem>
+            <div className="flex flex-col mt3">
+              <div className="mr2">No task has been created.</div>
+              <Link to="#" onClick={() => setOpenTaskDialog(true)}>
+                Add new task?
+              </Link>
             </div>
           )
         ) : (

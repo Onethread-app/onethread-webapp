@@ -1,6 +1,6 @@
 import { all, put, call, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
-import { tokenConfig } from 'stores/UtilsActions';
+import { formTokenConfig, tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 import { CompanyActionTypes } from './Types';
 import {
@@ -472,19 +472,19 @@ export function* getAllCompanyAnnouncementAsync() {
 
 export function* addAnnouncementAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const companyId = yield select(getCompanyId);
+    const { companyId, text } = payload;
+    const headers = formTokenConfig(companyId);
     const announce = {
-      text: payload,
+      text,
     };
     if ((headers as any).headers.Authorization && companyId) {
-      yield tigrowApi.post(
+      const response = yield tigrowApi.post(
         `company/${companyId}/announcements`,
         announce,
         headers,
       );
       yield all([
-        put(addAnnouncementSuccess()),
+        put(addAnnouncementSuccess(response.data.newAnnounce)),
         put(getCompanyAnnouncement()),
       ]);
     }

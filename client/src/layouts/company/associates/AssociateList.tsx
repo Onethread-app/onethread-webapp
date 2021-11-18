@@ -37,7 +37,7 @@ export const AssociateListComponent = (
   useEffect(() => {
     async function loadAssociates(getAssociates: () => void) {
       setLoading(true);
-      await getAssociates();
+      getAssociates();
       setLoading(false);
     }
     loadAssociates(props.getAllAssociates);
@@ -164,6 +164,7 @@ export const AssociateListComponent = (
                 setShowAssociateDialog(!showAssociateDialog)
               }
               src={addIcon}
+              alt=""
               className={`fixed pointer addButton ${
                 showAssociateDialog ? 'dn' : 'db'
               }`}

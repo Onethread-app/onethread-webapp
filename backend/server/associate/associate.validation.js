@@ -11,22 +11,20 @@ const idSchema = {
     }),
 };
 
-const schema = {
-  company: idSchema.id,
-  associateCompany: Joi.string(),
-};
-
 module.exports = {
   createAssociate: Joi.object().keys({
     body: Joi.object().keys({
-      company: Joi.object().keys({
-        _id: schema.company.required(),
-        name: schema.associateCompany.required(),
-      }),
-      associateCompany: Joi.object().keys({
-        _id: schema.company.required(),
-        name: schema.associateCompany.required(),
-      }),
+      associateCompanyId: idSchema.id.required(),
+    }),
+  }),
+  acceptPending: Joi.object().keys({
+    body: Joi.object().keys({
+      associates: Joi.array().items(idSchema.id).min(1).required(),
+    }),
+  }),
+  rejectPending: Joi.object().keys({
+    body: Joi.object().keys({
+      associates: Joi.array().items(idSchema.id).min(1).required(),
     }),
   }),
 };

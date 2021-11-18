@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import {
   useTable,
@@ -7,18 +7,16 @@ import {
   useSortBy,
   useAsyncDebounce,
   usePagination,
+  useRowSelect,
 } from 'react-table';
 
-import { getAllProjects } from 'stores/project/Actions';
-import { IProject } from 'stores/project/Reducer';
 import { ColleagueTableColumns } from './ColleagueTableColumns';
-import { TeammatesTableColumns } from './TeammatesTableColumns';
 
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
   Container,
   HeaderContainer,
@@ -30,40 +28,50 @@ import {
 import { AlignCenter } from 'components/UtilComponents';
 import ColleaguesTable from './ColleaguesTable';
 import ColleagueTableSkeleton from './ColleagueTableSkeleton';
+import IndeterminateCheckbox from 'components/table/IndeterminateCheckbox';
+import { Position } from '@blueprintjs/core';
+import { ICompanyMembers } from 'stores/company/Reducer';
+import { SimpleButton } from 'components/announcement/AnnouncementDialog.styles';
+import { DangerButton } from 'components/project/Project.styles';
+import { tokenConfig } from 'stores/UtilsActions';
+import { tigrowApi } from 'config';
+import {
+  errorToaster,
+  successToaster,
+} from 'components/toast/Toaster';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { getCompanyMembers } from 'stores/company/Actions';
 
 interface ICompanyProjects {
-  projectList: IProject[];
-  gettingAllProjects: boolean;
   gettingCompanyDetails: boolean;
-  errorOnGettingAllProjects: string;
   uniqueCompanyName: string;
   currentCompanyId: string;
-  colleagues: any;
-  getAllProjects: (companyId: string) => void;
-  type: string;
+  colleagues: ICompanyMembers[];
+  getCompanyMembers: () => void;
 }
 
 const Colleagues = (props: ICompanyProjects) => {
-  const {
-    colleagues,
-    gettingAllProjects,
-    gettingCompanyDetails,
-    errorOnGettingAllProjects,
-    uniqueCompanyName,
-    type,
-  } = props;
+  const { colleagues } = props;
   const [loadingData, setLoadingData] = useState<boolean>(true);
-  const [error, setError] = useState<string>('');
+  const [header, setHeader] = useState<string>('All');
+  const [showPopover, setShowPopover] = useState<boolean>(false);
   const [showInputField, setShowInputField] =
     useState<boolean>(false);
-  const data = useMemo(() => colleagues, [colleagues]);
-  const columns = useMemo(
-    () =>
-      type === 'teammates'
-        ? TeammatesTableColumns
-        : ColleagueTableColumns,
-    [],
-  );
+  const [tableData, setTableData] = useState(colleagues);
+  const [joinedColleagues, setJoinedColleagues] = useState<
+    ICompanyMembers[]
+  >([]);
+  const [pendingColleagues, setPendingColleagues] = useState<
+    ICompanyMembers[]
+  >([]);
+  const [invitedColleagues, setInvitedColleagues] = useState<
+    ICompanyMembers[]
+  >([]);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const data = useMemo(() => tableData, [tableData]);
+  const columns = useMemo(() => ColleagueTableColumns, []);
 
   const {
     getTableProps,
@@ -78,6 +86,7 @@ const Colleagues = (props: ICompanyProjects) => {
     page,
     setPageSize,
     gotoPage,
+    selectedFlatRows,
   } = useTable(
     {
       columns,
@@ -89,14 +98,36 @@ const Colleagues = (props: ICompanyProjects) => {
             : window.innerHeight > 800
             ? 8
             : 6,
-        hiddenColumns: ['createdAt'],
-        // sortBy: [{ id: 'createdAt', desc: true }],
+        hiddenColumns: ['division', 'position'],
       },
     },
     useFilters,
     useGlobalFilter,
     useSortBy,
     usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: 'selection',
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox
+                {...getToggleAllRowsSelectedProps()}
+              />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox
+                {...row.getToggleRowSelectedProps()}
+              />
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    },
   );
 
   const { globalFilter, pageSize, pageIndex } = state;
@@ -106,48 +137,164 @@ const Colleagues = (props: ICompanyProjects) => {
   }, 500);
 
   useEffect(() => {
-    if (uniqueCompanyName) {
-      props.getAllProjects(props.currentCompanyId);
+    setJoinedColleagues(
+      colleagues.filter((colleague) => colleague.type === 'joined'),
+    );
+    setPendingColleagues(
+      colleagues.filter((colleague) => colleague.type === 'pending'),
+    );
+    setInvitedColleagues(
+      colleagues.filter((colleague) => colleague.type === 'invited'),
+    );
+  }, [colleagues]);
+
+  const updateData = useCallback(() => {
+    if (header === 'All') {
+      setTableData(colleagues);
     }
-  }, [uniqueCompanyName]);
+    if (header === 'Joined') {
+      setTableData(joinedColleagues);
+    }
+    if (header === 'Invited') {
+      setTableData(invitedColleagues);
+    }
+    if (header === 'Requested') {
+      setTableData(pendingColleagues);
+    }
+  }, [header, colleagues]);
 
   useEffect(() => {
-    if (gettingCompanyDetails === false) {
-      if (
-        loadingData === true &&
-        gettingAllProjects === false &&
-        errorOnGettingAllProjects === ''
-      ) {
-        setLoadingData(false);
-      }
-      if (
-        loadingData === true &&
-        gettingAllProjects === false &&
-        errorOnGettingAllProjects !== ''
-      ) {
-        setLoadingData(false);
-        setError(
-          'There was an error fetching project list, try reloading the page.',
-        );
-      }
-    } else {
-      setLoadingData(true);
+    setLoadingData(true);
+    updateData();
+    setLoadingData(false);
+  }, [header]);
+
+  const acceptInvitedColleagues = () => {
+    setLoading(true);
+    const members = selectedFlatRows.map((row) => row.original.id);
+    try {
+      const headers = tokenConfig();
+      tigrowApi.post(
+        `/company/${props.currentCompanyId}/members/accept-request`,
+        { member: members },
+        headers,
+      );
+      props.getCompanyMembers();
+      successToaster(
+        `${members.length} ${
+          members.length > 1 ? 'members were' : 'member was'
+        } accepted successfully.`,
+      );
+    } catch (error) {
+      errorToaster(returnErrorText(error));
     }
-  }, [
-    loadingData,
-    gettingAllProjects,
-    errorOnGettingAllProjects,
-    gettingCompanyDetails,
-  ]);
+    setLoading(false);
+  };
+
+  const rejectInvitedColleagues = () => {
+    setLoading(true);
+    const members = selectedFlatRows.map((row) => row.original.id);
+    try {
+      const headers = tokenConfig();
+      tigrowApi.post(
+        `/company/${props.currentCompanyId}/members/reject-request`,
+        { member: members },
+        headers,
+      );
+      props.getCompanyMembers();
+      successToaster(
+        `${members.length} ${
+          members.length > 1 ? 'members were' : 'member was'
+        } rejected successfully.`,
+      );
+    } catch (error) {
+      errorToaster(returnErrorText(error));
+    }
+    setLoading(false);
+  };
 
   return (
     <Container>
       <HeaderContainer>
-        <Header>
-          {type === 'teammates' ? 'Teammates' : 'Colleagues'}{' '}
-          {colleagues.length > 0 && (
-            <span>({colleagues.length})</span>
-          )}
+        <Header className="flex items-center">
+          {header} <span className="ml2">({tableData.length})</span>
+          <Popover
+            position={Position.BOTTOM}
+            isOpen={showPopover}
+            canEscapeKeyClose={true}
+            onClose={() => setShowPopover(false)}
+            content={
+              <div className="pa3 pr4">
+                <div
+                  onClick={() => {
+                    setTableData(colleagues);
+                    setHeader('All');
+                    setShowPopover(false);
+                  }}
+                  className="mt1 mb2 pointer"
+                >
+                  All{' '}
+                  {colleagues.length > 0 ? (
+                    <span>({colleagues.length})</span>
+                  ) : null}
+                </div>
+                <div
+                  onClick={() => {
+                    setHeader('Joined');
+                    setShowPopover(false);
+                  }}
+                  className="mt1 mb2 pointer"
+                >
+                  Joined <span>({joinedColleagues.length})</span>
+                </div>
+                <div
+                  onClick={() => {
+                    setHeader('Invited');
+                    setShowPopover(false);
+                  }}
+                  className="mt1 mb2 pointer"
+                >
+                  Invited <span>({invitedColleagues.length})</span>
+                </div>
+                <div
+                  onClick={() => {
+                    setHeader('Requested');
+                    setShowPopover(false);
+                  }}
+                  className="mt1 mb2 pointer"
+                >
+                  Requested <span>({pendingColleagues.length})</span>
+                </div>
+              </div>
+            }
+            target={
+              <ExpandMoreIcon
+                className="mt1 pointer"
+                onClick={() => setShowPopover(true)}
+              />
+            }
+          />
+          {selectedFlatRows.length > 0 ? (
+            <div>
+              {header === 'Requested' ? (
+                <div className="flex items-center ml3">
+                  <SimpleButton
+                    className="mr3"
+                    onClick={() => acceptInvitedColleagues()}
+                    disabled={loading}
+                  >
+                    Accept
+                  </SimpleButton>
+                  <DangerButton
+                    onClick={() => rejectInvitedColleagues()}
+                    disabled={loading}
+                  >
+                    Reject
+                  </DangerButton>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </Header>
         <SortAndFilter>
           <ClickAwayListener
@@ -172,19 +319,21 @@ const Colleagues = (props: ICompanyProjects) => {
             content={
               <StyledFilterPopover>
                 <p className="bb">Customize Table</p>
-                {allColumns.map((column) => (
-                  <div key={column.id}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={column.isVisible}
-                        disabled={column.id === 'name'}
-                        {...column.getToggleHiddenProps()}
-                      />{' '}
-                      {column.Header}
-                    </label>
-                  </div>
-                ))}
+                {allColumns.map((column) =>
+                  column.id !== 'selection' ? (
+                    <div key={column.id}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={column.isVisible}
+                          disabled={column.id === 'name'}
+                          {...column.getToggleHiddenProps()}
+                        />{' '}
+                        {column.Header}
+                      </label>
+                    </div>
+                  ) : null,
+                )}
               </StyledFilterPopover>
             }
             target={<MoreVertIcon fontSize="small" />}
@@ -194,9 +343,9 @@ const Colleagues = (props: ICompanyProjects) => {
       {colleagues.length === 0 ? (
         loadingData ? (
           <ColleagueTableSkeleton />
-        ) : error ? (
-          <div className="mt3">{error}</div>
         ) : (
+          // ) : error ? (
+          //   <div className="mt3">{error}</div>
           <div className="mt3">No Colleague. </div>
         )
       ) : (
@@ -212,7 +361,6 @@ const Colleagues = (props: ICompanyProjects) => {
           pageSize={pageSize}
           pageIndex={pageIndex}
           setPageSize={setPageSize}
-          type={type}
         />
       )}
     </Container>
@@ -220,15 +368,11 @@ const Colleagues = (props: ICompanyProjects) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  projectList: state.projectReducer.allProjects,
-  gettingAllProjects: state.projectReducer.gettingAllProjects,
-  errorOnGettingAllProjects:
-    state.projectReducer.errorOnGettingAllProjects,
   uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
-  currentCompanyId: state.companyReducer.currentCompany.id,
+  currentCompanyId: state.companyReducer.currentCompany._id,
   gettingCompanyDetails: state.companyReducer.gettingCompanyDetails,
 });
 
-export default connect(mapStateToProps, { getAllProjects })(
-  Colleagues,
-);
+export default connect(mapStateToProps, {
+  getCompanyMembers,
+})(Colleagues);

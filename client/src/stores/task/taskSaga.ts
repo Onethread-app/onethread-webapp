@@ -356,7 +356,6 @@ export function* updateTask({ payload }: any) {
         newPayload,
         headers,
       );
-      console.log(res);
       yield put(
         updateTaskSuccess({
           updatedTask: res.data.task,
@@ -515,7 +514,7 @@ export function* createSubTask(action) {
       yield put(createSubTaskSuccess(response.data));
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     yield put(createSubTaskFailure(returnErrorText(error)));
   }
 }

@@ -31,7 +31,6 @@ import { Container } from './Index.styles';
 import ProjectDialog from 'components/home/project-section/ProjectDialog';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {
-  CreatableItem,
   Header,
   HeaderContainer,
   SortAndFilter,
@@ -40,6 +39,7 @@ import {
 } from 'components/table/StyledTable.styles';
 import { ClickAwayListener } from '@material-ui/core';
 import { AlignCenter } from 'components/UtilComponents';
+import { Link } from 'react-router-dom';
 
 interface INewCompanyResponse {
   message: string;
@@ -197,11 +197,11 @@ const Index = (props: IProps) => {
         loading ? (
           <ProjectsTableSkeleton />
         ) : (
-          <div className="flex flex-col">
-            <div>No project has been created.</div>
-            <CreatableItem onClick={() => setOpenProjectDialog(true)}>
-              <span>+ </span> Create Project
-            </CreatableItem>
+          <div className="flex flex-col mt3">
+            <div className="mr2">No project has been created.</div>
+            <Link to="#" onClick={() => setOpenProjectDialog(true)}>
+              Create New Project?
+            </Link>
           </div>
         )
       ) : (

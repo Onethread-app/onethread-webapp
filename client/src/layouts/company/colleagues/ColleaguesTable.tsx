@@ -27,14 +27,13 @@ import {
   StyledTableRow,
   StyledTableHeader,
   StyledTableBody,
-  StyledProjectTableData,
   SortIcon,
   StyledTableRowContainer,
   CreatableItem,
+  StyledColleagueTableRow,
+  StyledColleagueTableData,
 } from 'components/table/StyledTable.styles';
-import TeammatesOptions from './TeammatesOptions';
 import { AddColleaguesForm } from './AddColleaguesForm';
-import { AddProjectMemberForm } from '../project/team/AddProjectMemberForm';
 
 interface IColleaguesTable {
   getTableProps: any;
@@ -62,7 +61,6 @@ interface IColleaguesTableProps {
     memberId: string,
   ) => void;
   deleteCompanyMember: (accountId: string) => void;
-  type: string;
 }
 
 const divisions = [
@@ -95,8 +93,6 @@ const ColleaguesTable = (
   const [showDialogEdit, setShowDialogEdit] =
     useState<boolean>(false);
   const [showDialogAdd, setShowDialogAdd] = useState<boolean>(false);
-  const [showAddTeammates, setShowAddTeammates] =
-    useState<boolean>(false);
   const [showAddColleagues, setShowAddColleagues] =
     useState<boolean>(false);
   const handleOptionsClick = (e, id) => {
@@ -114,9 +110,7 @@ const ColleaguesTable = (
   };
 
   const checkPage = (o) => {
-    return props.type === 'teammates'
-      ? isEqual(o.member.account._id, props.user._id)
-      : isEqual(o.m.account._id, props.user._id);
+    return isEqual(o.m.account._id, props.user._id);
   };
 
   return (
@@ -124,9 +118,11 @@ const ColleaguesTable = (
       <StyledTable {...getTableProps()}>
         <StyledTableHeader>
           {headerGroups.map((headerGroup) => (
-            <StyledTableRow {...headerGroup.getHeaderGroupProps()}>
+            <StyledColleagueTableRow
+              {...headerGroup.getHeaderGroupProps()}
+            >
               {headerGroup.headers.map((column) => (
-                <StyledProjectTableData
+                <StyledColleagueTableData
                   cols={visibleColumns.length}
                   {...column.getHeaderProps(
                     column.getSortByToggleProps(),
@@ -134,47 +130,52 @@ const ColleaguesTable = (
                   key={column.id}
                 >
                   {column.render('Header')}
-                  <SortIcon>
-                    <Icon
-                      icon="symbol-triangle-up"
-                      size={7.5}
-                      color={
-                        column.isSorted
-                          ? column.isSortedDesc
-                            ? '#cfcfcf'
-                            : '#000'
-                          : '#cfcfcf'
-                      }
-                    />
-                    <Icon
-                      icon="symbol-triangle-down"
-                      size={7.5}
-                      color={
-                        column.isSorted
-                          ? column.isSortedDesc
-                            ? '#000'
+                  {column.id !== 'selection' ? (
+                    <SortIcon>
+                      <Icon
+                        icon="symbol-triangle-up"
+                        size={7.5}
+                        color={
+                          column.isSorted
+                            ? column.isSortedDesc
+                              ? '#cfcfcf'
+                              : '#000'
                             : '#cfcfcf'
-                          : '#cfcfcf'
-                      }
-                    />
-                  </SortIcon>
-                </StyledProjectTableData>
+                        }
+                      />
+                      <Icon
+                        icon="symbol-triangle-down"
+                        size={7.5}
+                        color={
+                          column.isSorted
+                            ? column.isSortedDesc
+                              ? '#000'
+                              : '#cfcfcf'
+                            : '#cfcfcf'
+                        }
+                      />
+                    </SortIcon>
+                  ) : null}
+                </StyledColleagueTableData>
               ))}
               <MoreVertIcon fontSize="small" className={`o-0`} />
-            </StyledTableRow>
+            </StyledColleagueTableRow>
           ))}
         </StyledTableHeader>
         <StyledTableBody {...getTableBodyProps()}>
           {page.map((row) => {
             prepareRow(row);
             return (
-              <StyledTableRowContainer key={row.id} totalItems={rows.length}>
+              <StyledTableRowContainer
+                key={row.id}
+                totalItems={rows.length}
+              >
                 <StyledTableRow
                   {...row.getRowProps()}
                   className="row"
                 >
                   {row.cells.map((cell) => (
-                    <StyledProjectTableData
+                    <StyledColleagueTableData
                       cols={visibleColumns.length}
                       title={
                         cell.column.id === 'name'
@@ -183,11 +184,11 @@ const ColleaguesTable = (
                       }
                       {...cell.getCellProps()}
                       key={cell.column.id}
+                      id={`${cell.column.id}`}
                     >
                       {cell.render('Cell')}
-                    </StyledProjectTableData>
+                    </StyledColleagueTableData>
                   ))}
-
                   <Popover
                     popoverClassName="bp3-popover-content-sizing"
                     position={Position.BOTTOM_RIGHT}
@@ -196,30 +197,30 @@ const ColleaguesTable = (
                     }
                     onClose={() => setShowPopover('')}
                     content={
-                      props.type === 'teammates' ? (
-                        <TeammatesOptions row={row.original} />
-                      ) : (
-                        <ColleaguesOptions
-                          row={row}
-                          setEditMember={setEditMember}
-                          setShowDialogEdit={setShowDialogEdit}
-                          setShowDialogAdd={setShowDialogAdd}
-                        />
-                      )
+                      <ColleaguesOptions
+                        row={row}
+                        setEditMember={setEditMember}
+                        setShowDialogEdit={setShowDialogEdit}
+                        setShowDialogAdd={setShowDialogAdd}
+                      />
                     }
                     target={
                       <MoreVertIcon
                         fontSize="small"
                         className={
-                          companyPermit(props.company.role) ||
-                            checkPage(row.original)
-                            ? ''
+                          row.original.type === 'joined'
+                            ? companyPermit(props.company.role) ||
+                              checkPage(row.original)
+                              ? ''
+                              : 'not-allowed'
                             : 'not-allowed'
                         }
                         onClick={(e) => {
-                          companyPermit(props.company.role) ||
-                            checkPage(row.original)
-                            ? handleOptionsClick(e, row.original.id)
+                          row.original.type === 'joined'
+                            ? companyPermit(props.company.role) ||
+                              checkPage(row.original)
+                              ? handleOptionsClick(e, row.original.id)
+                              : e.stopPropagation()
                             : e.stopPropagation();
                         }}
                       />
@@ -229,15 +230,10 @@ const ColleaguesTable = (
               </StyledTableRowContainer>
             );
           })}
-          {props.type === 'teammates' ? (
-            <CreatableItem onClick={() => setShowAddTeammates(true)}>
-              <span>+</span> Add Teammates
-            </CreatableItem>
-          ) : (
-            <CreatableItem onClick={() => setShowAddColleagues(true)}>
-              <span>+</span> Add Colleagues
-            </CreatableItem>
-          )}
+
+          <CreatableItem onClick={() => setShowAddColleagues(true)}>
+            <span>+</span> Add Colleagues
+          </CreatableItem>
         </StyledTableBody>
       </StyledTable>
       <div className="flex justify-center mt2 w-100">
@@ -247,8 +243,8 @@ const ColleaguesTable = (
             window.innerHeight > 1020
               ? [12, 25, 50, 100]
               : window.innerHeight > 800
-                ? [8, 10, 25, 50, 100]
-                : [6, 10, 25, 50, 100]
+              ? [8, 10, 25, 50, 100]
+              : [6, 10, 25, 50, 100]
           }
           count={rows.length}
           page={pageIndex}
@@ -303,19 +299,6 @@ const ColleaguesTable = (
           <AddColleaguesForm
             showDialog={showAddColleagues}
             setShowDialog={setShowAddColleagues}
-          />
-        </Dialog>
-      ) : null}
-      {showAddTeammates ? (
-        <Dialog
-          onClose={() => setShowAddTeammates(!showAddTeammates)}
-          isOpen={showAddTeammates}
-          style={{ background: '#fff' }}
-          className="ma2"
-        >
-          <AddProjectMemberForm
-            showDialog={showAddTeammates}
-            setShowDialog={setShowAddTeammates}
           />
         </Dialog>
       ) : null}
