@@ -80,7 +80,7 @@ const getFormattedTaskForClient = async (tasks) => {
 };
 
 const getIds = (array) => {
-  if (Array.isArray(array)) return array.map((a) => a._id);
+  if (Array.isArray(array)) return array.map((a) => a._id.toString());
   return [];
 };
 

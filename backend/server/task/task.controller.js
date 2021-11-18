@@ -270,109 +270,62 @@ const getMembers = async (req, res, next) => {
   }
 };
 
-// TODO: Not Done
 const addMember = async (req, res, next) => {
   try {
     const requestedMembers = req.body.assignmembers;
-    const boardID = req.task.boardId;
-
-    //get current task board to check members in board
-    const currentTaskBoard = await Board.findOne({
-      _id: boardID,
-    });
-
-    //convert current taskboard members to check the difference between them
-    const Members = currentTaskBoard.members.map((member) =>
-      member.toString(),
+    let existedMembers = await TaskAssign.find({
+      taskId: req.task._id,
+      assignedPerson: requestedMembers,
+    }).select('assignedPerson');
+    existedMembers = existedMembers.map((e) =>
+      e.assignedPerson.toString(),
     );
-
-    //new members who are  not in baord
-    const newBoardmember = _.difference(requestedMembers, Members);
-
-    //new members to add in task
-    const newMembers = requestedMembers.map((memberId) => {
+    const diff = [];
+    for (let index = 0; index < requestedMembers.length; index++) {
+      const exists = existedMembers.find(
+        (e) => e === requestedMembers[index],
+      );
+      if (!exists) {
+        diff.push(requestedMembers[index]);
+      }
+    }
+    const newMembers = diff.map((memberId) => {
       return {
         taskId: req.task._id,
         account: req.user._id,
         assignedPerson: memberId,
       };
     });
-    //check the difference's
-    //if new member who is already in board , just add in task
-    //others add them in board first
 
-    if (_.isEmpty(newMembers)) {
-      TaskAssign.insertMany(newMembers).then((taskMember) => {
-        TaskAssign.find({
-          taskId: req.task._id,
-          assignedPerson: {
-            $in: requestedMembers,
-          },
-        })
-          .select('_id assignedPerson account')
-          .populate([
-            {
-              path: 'assignedPerson account',
-              select: '_id firstName lastName profileImage',
-            },
-          ])
-          .exec()
-          .then((result) => {
-            result.map(async (e) => {
-              if (req.user._id !== e.assignedPerson._id) {
-                await taskAssignNotificationToUsers(
-                  req.user._id,
-                  req.headers.companyid,
-                  e._id,
-                  e.assignedPerson._id,
-                  {
-                    _id: req.user._id,
-                    name: req.user.name,
-                    pusherSock: req.headers.clientid,
-                  },
-                );
-              }
-            });
-            return sendJSONresponse(res, 201, result);
-          });
-      });
-    } else {
-      TaskAssign.insertMany(newMembers).then((taskMember) => {
-        TaskAssign.find({
-          taskId: req.task._id,
-          assignedPerson: {
-            $in: requestedMembers,
-          },
-        })
-          .select('_id assignedPerson account')
-          .populate([
-            {
-              path: 'assignedPerson account',
-              select: '_id firstName lastName profileImage',
-            },
-          ])
-          .exec()
-          .then((result) => {
-            //TODO: need to combine both function
-            result.map(async (e) => {
-              if (req.user._id !== e.assignedPerson._id) {
-                await taskAssignNotificationToUsers(
-                  req.user._id,
-                  req.headers.companyid,
-                  e._id,
-                  e.assignedPerson._id,
-                  {
-                    _id: req.user._id,
-                    name: req.user.name,
-                    pusherSock: req.headers.clientid,
-                  },
-                );
-              }
-            });
-            return sendJSONresponse(res, 201, result);
-          });
-      });
-    }
+    await TaskAssign.insertMany(newMembers);
+    const taskAssign = await TaskAssign.find({
+      taskId: req.task._id,
+      assignedPerson: requestedMembers,
+    })
+      .select('_id assignedPerson account')
+      .populate([
+        {
+          path: 'assignedPerson account',
+          select: '_id firstName lastName profileImage',
+        },
+      ]);
+
+    // taskAssign.map(async (e) => {
+    //   if (req.user._id !== e.assignedPerson._id) {
+    //     await taskAssignNotificationToUsers(
+    //       req.user._id,
+    //       req.headers.companyid,
+    //       e._id,
+    //       e.assignedPerson._id,
+    //       {
+    //         _id: req.user._id,
+    //         name: req.user.name,
+    //         pusherSock: req.headers.clientid,
+    //       },
+    //     );
+    //   }
+    // });
+    return sendJSONresponse(res, 201, taskAssign);
   } catch (error) {
     logger.error(`Task: ${error}`);
     next(error);
