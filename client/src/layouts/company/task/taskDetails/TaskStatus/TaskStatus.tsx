@@ -36,9 +36,12 @@ const TaskStatus = (props: Props) => {
   };
 
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between items-center">
       <h1 className="f6">Task Status:</h1>
-      <StyledTaskStatusSelect onChange={(e) => handleStatusChange(e)}>
+      <StyledTaskStatusSelect
+        value={props.currentTask.status?._id}
+        onChange={(e) => handleStatusChange(e)}
+      >
         {props.currentTask.statusList?.map((status: ITaskStatus) => (
           <option key={status._id} value={status._id}>
             {status.name}

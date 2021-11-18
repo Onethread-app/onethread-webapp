@@ -10,7 +10,7 @@ import {
 
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 
-import { IColumn, ITaskStatus, TaskBoard } from 'stores/task/Reducer';
+import { ITaskStatus } from 'stores/task/Reducer';
 import {
   dragAndDropTask,
   updateColumn,
@@ -47,8 +47,6 @@ const AddColumnButton = styled.div`
 `;
 
 interface IColumnsContainerInternalProps {
-  columns: IColumn[];
-  currentBoard: TaskBoard;
   dragAndDropTask: (
     taskId: string,
     sourceColumnId: string,
@@ -60,6 +58,9 @@ interface IColumnsContainerInternalProps {
   companyId: string;
   projectId: string;
   taskStatusList: ITaskStatus[];
+  updateTaskStatus?: (task) => void;
+  updatingTask: boolean;
+  errorOnUpdatingTask: string;
 }
 
 const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
@@ -67,6 +68,7 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
   // const [columns,setColumns] = useState<IColumn[]>([]);
   const [showColumnFormDialog, setShowColumnFormDialog] =
     useState(false);
+  const [task, setTask] = useState<any>({});
 
   const dragEnd = (result: DropResult) => {
     if (!result.destination) {
@@ -79,16 +81,24 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
       return;
     }
     if (result.type === 'task') {
+      props.updateTaskStatus?.({
+        _id: result.draggableId,
+        status: result.destination.droppableId,
+      });
       props.updateTask({
         taskId: result.draggableId,
         companyId: props.companyId,
         projectId: props.projectId,
         status: result.destination.droppableId,
       });
+      setTask({
+        _id: result.draggableId,
+        status: result.source.droppableId,
+      });
     }
 
     if (result.type === 'column') {
-      errorToaster('You can not move task here.');
+      errorToaster('You can not move column here.');
       // console.log(result);
       // const newCols = Array.from(columns);
       // const val = columns[result.source.index];
@@ -118,6 +128,16 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
   useEffect(() => {
     setStatues(props.taskStatusList);
   }, [props.taskStatusList]);
+
+  useEffect(() => {
+    if (
+      props.updatingTask === false &&
+      props.errorOnUpdatingTask !== ''
+    ) {
+      errorToaster('There was an error moving the task');
+      props.updateTask(task);
+    }
+  }, [props.updatingTask, props.errorOnUpdatingTask]);
 
   return (
     <DragDropContext
@@ -170,11 +190,12 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  columns: state.taskIndexReducer.taskReducer.currentBoard.columns,
-  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
   companyId: state.companyReducer.currentCompany._id,
   projectId: state.projectReducer.projectDetails._id,
   taskStatusList: state.projectReducer.projectDetails.taskStatus,
+  updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+  errorOnUpdatingTask:
+    state.taskIndexReducer.taskReducer.errorOnUpdatingTask,
 });
 
 export default connect(mapStateToProps, {

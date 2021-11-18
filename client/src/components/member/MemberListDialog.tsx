@@ -29,11 +29,10 @@ interface IMemberListDialog {
 }
 
 const MemberListDialog = (props: IMemberListDialog) => {
-  console.log(props.members);
   return (
     <Container>
-      {props.members.map((member: IAccount) => (
-        <MemberContainer key={member._id}>
+      {props.members?.map((member: IAccount) => (
+        <MemberContainer key={member?._id}>
           <Avatar
             alt={`${member?.firstName} ${member?.lastName}`}
             src={member?.profileImage ?? UserIcon}

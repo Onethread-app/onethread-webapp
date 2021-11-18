@@ -14,7 +14,7 @@ import {
 import { TasksTableContext } from './TasksTableContext';
 import { TaskTableColumns } from './TaskTableColumns';
 import { getAllProjectTasks } from 'stores/task/Actions';
-import { ITask } from 'stores/task/Reducer';
+import { ITask, ITaskStatus } from 'stores/task/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { formatTasksForCalendar, tasksFilterFn } from 'helpers/utils';
@@ -55,6 +55,7 @@ interface IProjectTasksProps {
   singleProjectLoading: boolean;
   errorOnFetchingProjectTasks: string;
   getAllProjectTasks: () => void;
+  statusList: ITaskStatus[];
 }
 
 const ProjectTasks = (props: IProjectTasksProps) => {
@@ -246,6 +247,17 @@ const ProjectTasks = (props: IProjectTasksProps) => {
     ],
   );
 
+  const updateTaskStatus = (data) => {
+    const status = props.statusList.filter(
+      (status) => status._id === data.status,
+    )[0];
+    setTaskList(
+      projectTaskList.map((task: ITask) =>
+        task._id === data._id ? { ...task, status: status } : task,
+      ),
+    );
+  };
+
   return (
     <TasksTableContext.Provider value={providerValue}>
       <Container>
@@ -351,7 +363,9 @@ const ProjectTasks = (props: IProjectTasksProps) => {
                 setOpenTaskDialog={setOpenTaskDialog}
               />
             ),
-            board: <ColumnsContainer />,
+            board: (
+              <ColumnsContainer updateTaskStatus={updateTaskStatus} />
+            ),
             calendar: <CalendarView tasks={tasksForCalendarView} />,
           }[selectedView]
         )}
@@ -380,6 +394,7 @@ const mapStateToProps = (state: any) => ({
   errorOnFetchingProjectTasks:
     state.taskIndexReducer.taskReducer.errorOnFetchingProjectTasks,
   company: state.companyReducer.currentCompany,
+  statusList: state.projectReducer.projectDetails.taskStatus,
 });
 
 export default connect(mapStateToProps, {

@@ -150,7 +150,11 @@ const createSubtask = async (req, res, next) => {
       status: draftStatus._id,
     });
 
-    return sendJSONresponse(res, 201, subTask);
+    const subTaskDetails = await subTask
+      .populate(populateArray)
+      .execPopulate();
+
+    return sendJSONresponse(res, 201, subTaskDetails);
   } catch (error) {
     logger.error(`SubTask Creation: ${error}`);
     next(error);
@@ -200,7 +204,6 @@ const create = async (req, res, next) => {
     //     message: 'Task Status (Draft) not found',
     //   });
     // }
-    console.log(req.body);
 
     // Create Task
     const task = await Task.create({
@@ -395,7 +398,6 @@ const update = async (req, res, next) => {
       req.body,
       { new: true },
     ).populate(populateArray);
-
     task = task.toJSON();
     // Subtasks
     task.subTasks = await findSubtasksByTaskId(

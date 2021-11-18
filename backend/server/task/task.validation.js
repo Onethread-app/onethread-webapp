@@ -22,6 +22,7 @@ const taskSchema = {
   columnId: idSchema.id,
   boardId: idSchema.id,
   taskId: idSchema.id,
+  isCompleted: Joi.boolean(),
 };
 module.exports = {
   createTask: Joi.object().keys({
@@ -59,6 +60,7 @@ module.exports = {
       dueDate: taskSchema.dueDate,
       priority: taskSchema.priority,
       status: taskSchema.status,
+      isCompleted: taskSchema.isCompleted,
     }),
   }),
   deleteTask: Joi.object().keys({
