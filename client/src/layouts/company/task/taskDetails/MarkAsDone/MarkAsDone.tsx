@@ -37,7 +37,7 @@ const TaskStatus = (props: Props) => {
 
   return (
     <div className="flex justify-between items-center">
-      <h1 className="f6">Task Status:</h1>
+      <h1 className="f6">Task Completed:</h1>
       <MarkAsDoneSelect
         value={String(props.currentTask.isCompleted)}
         onChange={(e) => handleIsComplete(e)}
