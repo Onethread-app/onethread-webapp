@@ -149,6 +149,7 @@ const CompanyInfoFormComponent = (
             boxShadow: 'none',
             height: '2.5rem',
           }}
+          readOnly={true}
           className={`br2 ${
             errors.name ? 'ba b--red' : 'ba b--black-40'
           }`}
@@ -400,7 +401,8 @@ const CompanyInfoFormComponent = (
           onClick={(e: any) => {
             e.preventDefault();
             if (!emptyValueCheck() && emptyErrorCheck()) {
-              props.editCompanyInfoAction(values);
+              const { name, ...newValues } = values;
+              props.editCompanyInfoAction(newValues);
               props.setShowDialog(false);
             }
           }}

@@ -357,7 +357,6 @@ export function* updateTask({ payload }: any) {
       yield put(
         updateTaskSuccess({
           updatedTask: res.data.task,
-          parent: res.data.task.parentTask ?? 'null',
         }),
       );
     }
@@ -442,7 +441,6 @@ export function* deleteTaskAsync({ payload }: any) {
       }
     }
   } catch (error) {
-    console.log(error);
     yield put(deleteTaskFailure(returnErrorText(error)));
   }
 }

@@ -129,6 +129,7 @@ const Index = (props: IProps) => {
         budget: values.budget ? Number(values.budget) : 0,
         currency: selectCurrency[0]?.symbol,
         deadline: values.date || undefined,
+        statusList: [{ name: 'Draft', positionInBoard: 0 }],
       });
       setSuccessMessage(
         `The project ${values.name} has been created in ${selectValue[0]?.label}`,

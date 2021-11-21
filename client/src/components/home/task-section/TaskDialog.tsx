@@ -12,7 +12,11 @@ import DateFnsUtils from '@date-io/date-fns';
 
 import { tigrowApi } from 'config';
 import { ICompanyTeamMembers } from 'stores/company/Reducer';
-import { createTask, getAllUserTasks } from 'stores/task/Actions';
+import {
+  createTask,
+  getAllTaskStatusInProject,
+  getAllUserTasks,
+} from 'stores/task/Actions';
 import { saveTaskForm } from 'stores/taskForm/Actions';
 import { priorityColor, formTokenConfig } from 'stores/UtilsActions';
 
@@ -40,6 +44,7 @@ import {
   successToaster,
 } from 'components/toast/Toaster';
 import { SmallTextAvatar } from 'components/avatar/TextAvatar';
+import { ITaskStatus } from 'stores/task/Reducer';
 
 interface ICreateTaskDialogProps {
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -48,20 +53,22 @@ interface ICreateTaskDialogProps {
 interface ICreateTaskDialogInternalProps
   extends ICreateTaskDialogProps {
   projectId: string;
-  currentBoard: any;
   creatingTask: boolean;
   errorOnCreatingTask: string;
   createTask: (task: any) => void;
   saveTaskForm: any;
   previousData: any;
   projects: [];
-  boardList: { _id: string }[];
-  fetchingBoards: boolean;
   companies: any;
   getCompanyDetails: (arg0: string) => void;
   createProjectInCompanySuccess: (project: IProject) => void;
   getAllUserTasks: () => void;
   userProjects: IProject[];
+  getAllTaskStatusInProject: (args: {
+    projectId: string;
+    companyId: string;
+  }) => void;
+  taskStatusList: ITaskStatus[];
 }
 
 export interface IOption {
@@ -117,6 +124,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
         priority: selectedOption.value,
         projectId: project[0]?.value,
         companyId: company[0]?.value,
+        status: props.taskStatusList[0]._id,
       };
       props.createTask(modifiedTask);
       setCreatingTask(true);
@@ -158,6 +166,10 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
             },
           ]);
           props.createProjectInCompanySuccess(response.data.project);
+          props.getAllTaskStatusInProject({
+            companyId: company[0].value,
+            projectId: response.data.project._id,
+          });
           successToaster(
             `The project ${response.data.project.name} has been created`,
           );
@@ -173,6 +185,10 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           label: selected.label,
         },
       ]);
+      props.getAllTaskStatusInProject({
+        companyId: company[0].value,
+        projectId: selected.value,
+      });
     }
   };
 
@@ -628,14 +644,12 @@ const mapStateToProps = (state: any) => ({
   projectId: state.projectReducer.projectDetails._id,
   projects: state.projectReducer.allProjects,
   userProjects: state.projectReducer.userProjects,
-  boardList: state.taskIndexReducer.taskReducer.boardList,
-  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
   creatingTask: state.taskIndexReducer.taskReducer.creatingTask,
   errorOnCreatingTask:
     state.taskIndexReducer.taskReducer.errorOnCreatingTask,
   previousData: state.taskFormReducer.data,
   companies: state.userReducer.user.companies,
-  fetchingBoards: state.taskIndexReducer.taskReducer.fetchingBoards,
+  taskStatusList: state.taskIndexReducer.taskReducer.taskStatusList,
 });
 
 export default connect(mapStateToProps, {
@@ -644,4 +658,5 @@ export default connect(mapStateToProps, {
   getCompanyDetails,
   createProjectInCompanySuccess,
   getAllUserTasks,
+  getAllTaskStatusInProject,
 })(TaskDialog);

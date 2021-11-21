@@ -296,12 +296,8 @@ export const updateTaskStatus = (tasks, task) => {
   return tasks.map((t) => (t._id === task._id ? task : t));
 };
 
-export const updateTask = (
-  tasks: ITask[],
-  task: ITask,
-  parent: string,
-) => {
-  return parent === 'null'
+export const updateTask = (tasks: ITask[], task: ITask) => {
+  return !task.parentTask
     ? tasks.map((t: ITask) => (t._id === task._id ? task : t))
     : tasks.map((t: ITask) =>
         t._id === task.parentTask
@@ -313,27 +309,13 @@ export const updateTask = (
             }
           : t,
       );
-  // return tasks.map((t: ITask) =>
-  //   task.parentTask === 'null'
-  //     ? t._id === task._id
-  //       ? task
-  //       : t
-  //     : t._id === task.parentTask
-  //     ? {
-  //         ...t,
-  //         subTasks: t.subTasks.map((subTask: ITask) =>
-  //           subTask._id === task._id ? task : subTask,
-  //         ),
-  //       }
-  //     : t,
-  // );
 };
 
 export const deleteTask = (
   tasks: ITask[],
   task: { _id: string; parentTask: string },
 ) => {
-  return task.parentTask === 'null'
+  return !task.parentTask
     ? tasks.filter((t: ITask) => t._id !== task._id)
     : tasks.map((t: ITask) =>
         t._id === task.parentTask
@@ -658,34 +640,31 @@ export const TaskReducer = (state = InitialState, action: any) => {
         updatingTask: true,
       };
     case TaskActionType.UPDATE_TASK_SUCCESS:
-      const { updatedTask, parent } = action.payload;
+      const { updatedTask } = action.payload;
       return {
         ...state,
-        currentTask:
-          parent === 'null'
-            ? state.currentTask._id === updatedTask._id
-              ? updatedTask
-              : state.currentTask
-            : {
-                ...state.currentTask,
-                subTasks: state.currentTask.subTasks.map(
-                  (subTask: ITask) =>
-                    subTask._id === updatedTask._id
-                      ? updatedTask
-                      : subTask,
-                ),
-              },
+        currentTask: !updatedTask.parent
+          ? state.currentTask._id === updatedTask._id
+            ? updatedTask
+            : state.currentTask
+          : {
+              ...state.currentTask,
+              subTasks: state.currentTask.subTasks.map(
+                (subTask: ITask) =>
+                  subTask._id === updatedTask._id
+                    ? updatedTask
+                    : subTask,
+              ),
+            },
         projectTaskList: updateTask(
           state.projectTaskList,
           updatedTask,
-          parent,
         ),
         companyTaskList: updateTask(
           state.companyTaskList,
           updatedTask,
-          parent,
         ),
-        userTasks: updateTask(state.userTasks, updatedTask, parent),
+        userTasks: updateTask(state.userTasks, updatedTask),
         updatingTask: false,
       };
     case TaskActionType.UPDATE_TASK_FAILURE:

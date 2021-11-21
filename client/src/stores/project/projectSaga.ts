@@ -158,6 +158,7 @@ export function* createProjectInCompanyAsync({ payload }: any) {
         companyId,
         budget: payload.budget ?? 0,
         currency: payload.currency,
+        statusList: payload.statusList,
       };
       const response = yield tigrowApi.post(
         `projects/create-project`,
