@@ -225,7 +225,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                   })}
                   <Popover
                     popoverClassName="bp3-popover-content-sizing"
-                    position={Position.BOTTOM_RIGHT}
+                    position={Position.BOTTOM}
                     isOpen={
                       row.original._id === showPopover ? true : false
                     }
@@ -268,8 +268,8 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
             window.innerHeight > 1020
               ? [10, 25, 50, 100]
               : window.innerHeight > 800
-              ? [7, 10, 25, 50, 100]
-              : [5, 10, 25, 50, 100]
+                ? [7, 10, 25, 50, 100]
+                : [5, 10, 25, 50, 100]
           }
           count={rows.length}
           page={pageIndex}

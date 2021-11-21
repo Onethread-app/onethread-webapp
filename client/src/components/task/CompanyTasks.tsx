@@ -44,6 +44,7 @@ import CalendarView, {
   ITaskForCalendar,
 } from 'components/calendar/CalendarView';
 import ColumnsContainer from 'components/column/ColumnsContainer';
+import ExportTasks from 'components/export-tasks/ExportTasks';
 
 interface ICompanyTasks {
   companyTaskList: ITask[];
@@ -113,8 +114,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-            ? 7
-            : 5,
+              ? 7
+              : 5,
         hiddenColumns: ['createdAt', 'priority'],
         // sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -260,6 +261,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
           <Header>
             Tasks{' '}
             {taskList.length > 0 && <span>({taskList.length})</span>}
+            <ExportTasks data={taskList} name={`${props.uniqueCompanyName}`} />
           </Header>
           <TaskViewSelect
             selectedView={selectedView}
@@ -270,11 +272,11 @@ const CompanyTasks = (props: ICompanyTasks) => {
               {(!isEmpty(selectedStatusList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {

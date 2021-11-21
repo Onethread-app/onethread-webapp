@@ -46,6 +46,7 @@ import CalendarView, {
 import TaskViewSelect from './TaskViewSelect';
 import ColumnsContainer from 'components/column/ColumnsContainer';
 import { Link } from 'react-router-dom';
+import ExportTasks from 'components/export-tasks/ExportTasks';
 
 interface IProjectTasksProps {
   projectTaskList: ITask[];
@@ -115,8 +116,8 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-            ? 7
-            : 5,
+              ? 7
+              : 5,
         hiddenColumns: ['createdAt', 'priority'],
         // sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -265,6 +266,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           <Header>
             Tasks{' '}
             {taskList.length > 0 && <span>({taskList.length})</span>}
+            <ExportTasks data={taskList} name={`${props.project.name}`} />
           </Header>
           <TaskViewSelect
             selectedView={selectedView}
@@ -274,11 +276,11 @@ const ProjectTasks = (props: IProjectTasksProps) => {
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {

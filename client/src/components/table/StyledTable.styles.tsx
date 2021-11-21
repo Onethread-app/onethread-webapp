@@ -228,10 +228,25 @@ export const Header = styled.div`
   font-weight: 500;
   font-size: 20px;
   line-height: 27px;
+  display: flex;
+  align-items: center;
 
   span {
     font-size: 14px;
     line-height: 21px;
+  }
+
+  .bp3-icon {
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    border-radius: 4px;
+    padding: 0.25rem;
+    transition: all 0.2s ease-in;
+
+    &:hover {
+      border: 1px solid #575757;
+      border-radius: 4px;
+      padding: 0.25rem;
+    }
   }
 `;
 

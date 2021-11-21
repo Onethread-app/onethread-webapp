@@ -76,7 +76,7 @@ interface LayoutProps {
 
 interface LayoutInternalProps
   extends LayoutProps,
-    RouteComponentProps {
+  RouteComponentProps {
   user: User;
   fetchingUser: boolean;
   fetchUserAction: () => void;
@@ -350,8 +350,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         background: isMobileOnly
           ? 'white'
           : loading
-          ? '#fff'
-          : '#303053',
+            ? '#fff'
+            : '#303053',
       }}
       onScroll={() =>
         scrollRef &&
@@ -392,9 +392,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           <CustomView condition={!isMobileOnly}>
             <div
               id="main-layout"
-              className={`flex relative vh-100 ${
-                props.rightSidebarOpen && 'main-layout-overlay'
-              }`}
+              className={`flex relative vh-100 ${props.rightSidebarOpen && 'main-layout-overlay'
+                }`}
             >
               <div
                 className={`relative`}
@@ -424,8 +423,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       ? '55%'
                       : '85%'
                     : props.rightSidebarOpen
-                    ? '66%'
-                    : '96%',
+                      ? '66%'
+                      : '96%',
                 }}
               >
                 <span
@@ -480,9 +479,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
             {queries.view === 'default' ? (
               <div
                 id="main-layout"
-                className={`flex relative h-100 vh-100 ${
-                  props.rightSidebarOpen && 'main-layout-overlay'
-                }`}
+                className={`flex relative h-100 vh-100 ${props.rightSidebarOpen && 'main-layout-overlay'
+                  }`}
               >
                 <div
                   className="relative br3 pv1"
@@ -712,8 +710,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       {props.match.url.includes(
         `/company/${props.company?.uniqueName}`,
       ) &&
-      subscriptionExpired === true &&
-      props.company.role !== 'superAdmin' ? (
+        subscriptionExpired === true &&
+        props.company.role !== 'superAdmin' ? (
         <Modal
           isOpen={subscriptionExpired}
           onRequestClose={closeSubErrorModal}
@@ -722,11 +720,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         >
           <ErrorText
             closeModal={closeSubErrorModal}
-            text={`${
-              props.company.role === 'superAdmin'
+            text={`${props.company.role === 'superAdmin'
                 ? 'Your Subscription has expired'
                 : 'Your Subscription has expired, contact with Super Admin'
-            }`}
+              }`}
             subtext="To keep using Onethread without interruption you need to pay your
             dues."
           />
