@@ -213,7 +213,7 @@ const UpdatedNavbar = (props: Props) => {
                   }
                 >
                   <div className="flex items-center">
-                    {props.user.profileImage !== '' ? (
+                    {props.user.profileImage ? (
                       <ProfilePicture
                         src={props.user.profileImage}
                         alt="profile"
@@ -274,7 +274,7 @@ const UpdatedNavbar = (props: Props) => {
               </ButtonGroup>
             }
             target={
-              props.user.profileImage !== '' ? (
+              props.user.profileImage ? (
                 <ProfilePicture
                   src={props.user.profileImage}
                   alt="profile"

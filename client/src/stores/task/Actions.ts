@@ -376,9 +376,12 @@ export const updateTaskStatusFailure = (errorMessage: string) => ({
   payload: errorMessage,
 });
 
-export const getAllTaskStatusInProject = (projectId: string) => ({
+export const getAllTaskStatusInProject = (payload: {
+  projectId: string;
+  companyId: string;
+}) => ({
   type: TaskActionType.GET_ALL_TASK_STATUS,
-  payload: projectId,
+  payload,
 });
 
 export const getAllTaskStatusInProjectSuccess = (response: any) => ({

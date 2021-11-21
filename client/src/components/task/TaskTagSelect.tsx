@@ -63,7 +63,7 @@ const TaskTagSelect = (props: ITaskTagSelect) => {
         taskId: task._id,
         companyId: task.company._id,
         projectId: task.project._id,
-        status: { _id: selected[0].value, name: selected[0].label },
+        status: selected[0].value,
       };
       props.updateTask(payload);
     }

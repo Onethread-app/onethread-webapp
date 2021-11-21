@@ -191,20 +191,6 @@ const create = async (req, res, next) => {
     const companyId = req.headers.companyid;
     const pid = req.query.pid;
 
-    // TODO: Do we need this?
-    // Get Task Status
-    // const taskStatus = await TaskStatus.findOne({
-    //   name: 'Draft',
-    //   project: pid,
-    // }).select('_id project');
-
-    // // Validation & Error Checking
-    // if (!taskStatus) {
-    //   return sendErrorResponse(res, 404, 'NotFound', {
-    //     message: 'Task Status (Draft) not found',
-    //   });
-    // }
-
     // Create Task
     const task = await Task.create({
       name: req.body.name,
