@@ -3,11 +3,11 @@ import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 import { Tooltip } from '@blueprintjs/core/lib/esm/components/tooltip/tooltip';
 
 import { ICompany } from 'stores/company/Reducer';
-import { ISubtaskMember } from 'stores/subtask/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
+import { IAccount } from 'stores/task/Reducer';
 
 interface ISubtaskMemberIcon {
-  member: ISubtaskMember;
+  member: IAccount;
   subTaskId?: string;
   company?: ICompany;
   deleteSubTaskMember: (payload) => void;

@@ -163,7 +163,7 @@ export const SubTaskViewPageComponent = (
                     }
                   />
                   <div className="mt3 mb3">
-                    {props.subTaskList.map((subTask) => (
+                    {props.subTaskList.map((subTask: ITask) => (
                       <Accordion>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
@@ -185,12 +185,14 @@ export const SubTaskViewPageComponent = (
                                   checked={subTask.isCompleted}
                                   color="primary"
                                   onChange={(event: any) => {
-                                    const subtaskData = {
-                                      _id: subTask._id,
+                                    props.updateTask({
+                                      taskId: subTask._id,
+                                      companyId: subTask.company?._id,
+                                      projectId: subTask.project?._id,
+                                      parentTask: subTask.parentTask,
                                       isCompleted:
                                         event.target.checked,
-                                    };
-                                    props.updateTask(subtaskData);
+                                    });
                                   }}
                                 />
                               }
@@ -199,33 +201,31 @@ export const SubTaskViewPageComponent = (
                             <div className="flex items-center">
                               <div
                                 className={
-                                  subTask.assignedMembers &&
-                                  subTask.assignedMembers?.length > 0
+                                  subTask.members &&
+                                  subTask.members?.length > 0
                                     ? 'mr3 flex'
                                     : 'dn'
                                 }
                                 style={{ width: 'max-content' }}
                               >
-                                {subTask.assignedMembers &&
-                                  subTask.assignedMembers.map(
-                                    (subMember) => (
-                                      <SubTaskMemberIcon
-                                        key={subMember._id}
-                                        deleteSubTaskMember={
-                                          props.deleteMember
-                                        }
-                                        member={subMember}
-                                        subTaskId={subTask._id}
-                                        deletingMember={
-                                          props.deletingMember
-                                        }
-                                        errorOnDeletingMember={
-                                          props.errorOnDeletingMember
-                                        }
-                                        company={props.company}
-                                      />
-                                    ),
-                                  )}
+                                {subTask.members &&
+                                  subTask.members.map((subMember) => (
+                                    <SubTaskMemberIcon
+                                      key={subMember._id}
+                                      deleteSubTaskMember={
+                                        props.deleteMember
+                                      }
+                                      subTaskId={subTask._id}
+                                      deletingMember={
+                                        props.deletingMember
+                                      }
+                                      errorOnDeletingMember={
+                                        props.errorOnDeletingMember
+                                      }
+                                      company={props.company}
+                                      member={subMember.account}
+                                    />
+                                  ))}
                               </div>
                               <div>
                                 {props.company ? (

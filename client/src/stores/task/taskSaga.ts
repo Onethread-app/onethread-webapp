@@ -256,7 +256,6 @@ export function* createTask({ payload }: any) {
   try {
     const { companyId, projectId, ...newPayload } = payload;
     const headers = formTokenConfig(companyId);
-    console.log(payload);
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
         `tasks?pid=${projectId}`,
@@ -277,7 +276,6 @@ export function* createTask({ payload }: any) {
       );
     }
   } catch (error) {
-    console.log(error);
     yield put(
       createTaskFailure(returnErrorText(error) || 'Unknown error'),
     );
@@ -348,13 +346,7 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
 
 export function* updateTask({ payload }: any) {
   try {
-    const {
-      companyId,
-      projectId,
-      taskId,
-      parentTask,
-      ...newPayload
-    } = payload;
+    const { companyId, projectId, taskId, ...newPayload } = payload;
     const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.put(
@@ -365,6 +357,7 @@ export function* updateTask({ payload }: any) {
       yield put(
         updateTaskSuccess({
           updatedTask: res.data.task,
+          parent: res.data.task.parentTask ?? 'null',
         }),
       );
     }
@@ -449,6 +442,7 @@ export function* deleteTaskAsync({ payload }: any) {
       }
     }
   } catch (error) {
+    console.log(error);
     yield put(deleteTaskFailure(returnErrorText(error)));
   }
 }
@@ -517,7 +511,6 @@ export function* createSubTask(action) {
         newPayload,
         headers,
       );
-      console.log(response.data);
       yield put(createSubTaskSuccess(response.data));
     }
   } catch (error) {

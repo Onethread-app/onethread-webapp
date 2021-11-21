@@ -296,33 +296,37 @@ export const updateTaskStatus = (tasks, task) => {
   return tasks.map((t) => (t._id === task._id ? task : t));
 };
 
-export const updateTask = (tasks: ITask[], task: ITask) => {
-  // return task.parentTask === 'null'
-  //   ? tasks.map((t: ITask) => (t._id === task._id ? task : t))
-  //   : tasks.map((t: ITask) =>
-  //       t._id === task.parentTask
-  //         ? {
-  //             ...t,
-  //             subTasks: t.subTasks.map((subTask: ITask) =>
-  //               subTask._id === task._id ? task : subTask,
-  //             ),
-  //           }
-  //         : t,
-  //     );
-  return tasks.map((t: ITask) =>
-    task.parentTask === 'null'
-      ? t._id === task._id
-        ? task
-        : t
-      : t._id === task.parentTask
-      ? {
-          ...t,
-          subTasks: t.subTasks.map((subTask: ITask) =>
-            subTask._id === task._id ? task : subTask,
-          ),
-        }
-      : t,
-  );
+export const updateTask = (
+  tasks: ITask[],
+  task: ITask,
+  parent: string,
+) => {
+  return parent === 'null'
+    ? tasks.map((t: ITask) => (t._id === task._id ? task : t))
+    : tasks.map((t: ITask) =>
+        t._id === task.parentTask
+          ? {
+              ...t,
+              subTasks: t.subTasks.map((s: ITask) =>
+                s?._id === task._id ? task : s,
+              ),
+            }
+          : t,
+      );
+  // return tasks.map((t: ITask) =>
+  //   task.parentTask === 'null'
+  //     ? t._id === task._id
+  //       ? task
+  //       : t
+  //     : t._id === task.parentTask
+  //     ? {
+  //         ...t,
+  //         subTasks: t.subTasks.map((subTask: ITask) =>
+  //           subTask._id === task._id ? task : subTask,
+  //         ),
+  //       }
+  //     : t,
+  // );
 };
 
 export const deleteTask = (
@@ -335,12 +339,9 @@ export const deleteTask = (
         t._id === task.parentTask
           ? {
               ...t,
-              subTasks:
-                t.subTasks?.length > 0
-                  ? t.subTasks.filter(
-                      (subTask: ITask) => subTask?._id !== task._id,
-                    )
-                  : [],
+              subTasks: t.subTasks.filter(
+                (subTask: ITask) => subTask?._id !== task._id,
+              ),
             }
           : t,
       );
@@ -351,7 +352,7 @@ export const addSubTask = (tasks: ITask[], task: ITask) => {
     t._id === task.parentTask
       ? {
           ...t,
-          subTasks: [t.subTasks, task],
+          subTasks: [t.subTasks, { ...task }],
         }
       : t,
   );
@@ -657,22 +658,34 @@ export const TaskReducer = (state = InitialState, action: any) => {
         updatingTask: true,
       };
     case TaskActionType.UPDATE_TASK_SUCCESS:
-      const { updatedTask } = action.payload;
+      const { updatedTask, parent } = action.payload;
       return {
         ...state,
         currentTask:
-          state.currentTask._id === updatedTask._id
-            ? updatedTask
-            : state.currentTask,
-        projectTaskList: state.projectTaskList.map((task) =>
-          task._id === updatedTask._id ? updatedTask : task,
+          parent === 'null'
+            ? state.currentTask._id === updatedTask._id
+              ? updatedTask
+              : state.currentTask
+            : {
+                ...state.currentTask,
+                subTasks: state.currentTask.subTasks.map(
+                  (subTask: ITask) =>
+                    subTask._id === updatedTask._id
+                      ? updatedTask
+                      : subTask,
+                ),
+              },
+        projectTaskList: updateTask(
+          state.projectTaskList,
+          updatedTask,
+          parent,
         ),
-        companyTaskList: state.companyTaskList.map((task) =>
-          task._id === updatedTask._id ? updatedTask : task,
+        companyTaskList: updateTask(
+          state.companyTaskList,
+          updatedTask,
+          parent,
         ),
-        userTasks: state.userTasks.map((task) =>
-          task._id === updatedTask._id ? updatedTask : task,
-        ),
+        userTasks: updateTask(state.userTasks, updatedTask, parent),
         updatingTask: false,
       };
     case TaskActionType.UPDATE_TASK_FAILURE:
@@ -767,10 +780,15 @@ export const TaskReducer = (state = InitialState, action: any) => {
       let { taskId, parentTask } = action.payload;
       return {
         ...state,
-        currentTask: deleteTask([state.currentTask], {
-          _id: taskId,
-          parentTask,
-        }),
+        currentTask:
+          state.currentTask._id === parentTask
+            ? {
+                ...state.currentTask,
+                subTasks: state.currentTask.subTasks.filter(
+                  (task: ITask) => task._id !== taskId,
+                ),
+              }
+            : state.currentTask,
         userTasks: deleteTask(state.userTasks, {
           _id: taskId,
           parentTask,
@@ -888,7 +906,10 @@ export const TaskReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         taskStatusLoading: false,
-        taskStatusList: [...state.taskStatusList, action.payload],
+        taskStatusList: [
+          ...state.taskStatusList,
+          { ...action.payload },
+        ],
       };
     case TaskActionType.CREATE_TASK_STATUS_FAILURE:
     case TaskActionType.UPDATE_TASK_STATUS_FAILURE:
@@ -906,7 +927,16 @@ export const TaskReducer = (state = InitialState, action: any) => {
     case TaskActionType.CREATE_SUBTASK_SUCCESS:
       return {
         ...state,
-        currentTask: addSubTask([state.currentTask], action.payload),
+        currentTask:
+          state.currentTask._id === action.payload.parentTask
+            ? {
+                ...state.currentTask,
+                subTasks: [
+                  ...state.currentTask.subTasks,
+                  { ...action.payload },
+                ],
+              }
+            : state.currentTask,
         userTasks: addSubTask(state.userTasks, action.payload),
         companyTaskList: addSubTask(
           state.companyTaskList,
