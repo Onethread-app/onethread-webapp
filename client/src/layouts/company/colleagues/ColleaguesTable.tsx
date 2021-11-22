@@ -168,7 +168,7 @@ const ColleaguesTable = (
           {page.map((row) => {
             prepareRow(row);
             return (
-              <StyledTableRowContainer key={row.id}>
+              <StyledTableRowContainer key={row.id} totalItems={rows.length}>
                 <StyledTableRow
                   {...row.getRowProps()}
                   className="row"
@@ -212,13 +212,13 @@ const ColleaguesTable = (
                         fontSize="small"
                         className={
                           companyPermit(props.company.role) ||
-                          checkPage(row.original)
+                            checkPage(row.original)
                             ? ''
                             : 'not-allowed'
                         }
                         onClick={(e) => {
                           companyPermit(props.company.role) ||
-                          checkPage(row.original)
+                            checkPage(row.original)
                             ? handleOptionsClick(e, row.original.id)
                             : e.stopPropagation();
                         }}
@@ -247,8 +247,8 @@ const ColleaguesTable = (
             window.innerHeight > 1020
               ? [12, 25, 50, 100]
               : window.innerHeight > 800
-              ? [8, 10, 25, 50, 100]
-              : [6, 10, 25, 50, 100]
+                ? [8, 10, 25, 50, 100]
+                : [6, 10, 25, 50, 100]
           }
           count={rows.length}
           page={pageIndex}

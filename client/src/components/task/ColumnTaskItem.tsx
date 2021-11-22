@@ -21,7 +21,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
-import { IAccount, ITask } from 'stores/task/Reducer';
+import { ITask, ITaskMember } from 'stores/task/Reducer';
 import {
   getSelectedTaskDetails,
   deleteTask,
@@ -69,11 +69,10 @@ const TaskItemContainer = styled.div`
   padding: 1rem 1.25rem;
   border-radius: 5px;
   box-shadow: ${(props) => `
-  rgba(17, 17, 26, 0.05) 0px 1px 0px, ${
-    props.isDragging
+  rgba(17, 17, 26, 0.05) 0px 1px 0px, ${props.isDragging
       ? '#3484F0'
       : find(priorityColor, ['code', props.priority])!.value
-  } 0px 0px 4px`};
+    } 0px 0px 4px`};
   background-color: #fff;
   color: #182026 !important;
   display: flex;
@@ -111,7 +110,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   const [taskDelete, setTaskDelete] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
-  const [members, setMembers] = useState<IAccount[]>([]);
+  const [members, setMembers] = useState<ITaskMember[]>([]);
   const handleClick = () => {
     props.getSelectedTaskDetails({
       taskId: task._id,
@@ -131,7 +130,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   };
 
   useEffect(() => {
-    setMembers([...task.members.map((member) => member.account)]);
+    setMembers(task.members);
   }, [task]);
 
   useEffect(() => {

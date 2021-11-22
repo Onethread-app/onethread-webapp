@@ -67,6 +67,9 @@ const {
 const {
   findSubtasksByTaskId,
 } = require('../services/task/task.service');
+const {
+  getTaskLabel,
+} = require('../services/taskLabel/taskLabel.service');
 
 const options = [
   {
@@ -1010,11 +1013,7 @@ const userTaskList = async (req, res, next) => {
     const response = [];
     await Promise.all(
       filteredTask.map(async (ft) => {
-        const taskMembers = await getAssignedMembers(ft.taskId._id);
-        const members = taskMembers.map((tMember) => {
-          return tMember.assignedPerson;
-        });
-
+        const members = await getAssignedMembers(ft.taskId._id);
         const statusList = await getAllStatusInProject(
           ft.taskId.project._id,
         );
@@ -1045,6 +1044,7 @@ const userTaskList = async (req, res, next) => {
             name: ft.taskId.project.company.name,
           },
           subtasks: await findSubtasksByTaskId(ft.taskId._id),
+          labels: await getTaskLabel(ft.taskId._id),
         };
         response.push(modifiedTask);
       }),

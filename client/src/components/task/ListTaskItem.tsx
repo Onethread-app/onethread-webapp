@@ -19,7 +19,7 @@ import ForumIcon from '@material-ui/icons/Forum';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
-import { IAccount, IColumn, ITask } from 'stores/task/Reducer';
+import { IColumn, ITask, ITaskMember } from 'stores/task/Reducer';
 import {
   dragAndDropTask,
   deleteTask,
@@ -87,8 +87,8 @@ const TagSelect = styled.select`
     props.status === 'done'
       ? '#2EB67D'
       : props.status === 'in-progress'
-      ? '#08A0F7'
-      : '#FFA800'};
+        ? '#08A0F7'
+        : '#FFA800'};
   color: #f5f8fa;
   text-align-last: center;
   border: none;
@@ -149,7 +149,7 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
   const [showPopover, setShowPopover] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
-  const [members, setMembers] = useState<IAccount[]>([]);
+  const [members, setMembers] = useState<ITaskMember[]>([]);
 
   const handleClick = () => {
     props.getSelectedTaskDetails({
@@ -204,7 +204,7 @@ const ListTaskItem = (props: IListTaskItemInternalProps) => {
   };
 
   useEffect(() => {
-    setMembers([...task.members.map((member) => member.account)]);
+    setMembers(task.members);
   }, [task]);
 
   useEffect(() => {

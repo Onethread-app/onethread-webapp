@@ -78,6 +78,9 @@ const ProjectTasks = (props: IProjectTasksProps) => {
   const [selectedStatusList, setSelectedStatusList] = useState<any>(
     [],
   );
+  const [selectedLabelList, setSelectedLabelList] = useState<any>(
+    [],
+  );
   const [selectedDueDateOption, setSelectedDueDateOption] =
     useState<string>('');
   const [selectedDueDateRange, setSelectedDueDateRange] =
@@ -137,6 +140,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
 
   const handleClearFilter = () => {
     setSelectedStatusList([]);
+    setSelectedLabelList([]);
     setSelectedDueDateRange([null, null]);
     setSelectedDueDateOption('');
     setTaskList(projectTaskList);
@@ -163,7 +167,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
       (!isNil(globalFilter) && !isEmpty(globalFilter)) ||
       (!isNil(selectedDueDateOption) &&
         !isEmpty(selectedDueDateOption)) ||
-      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList))
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) || (!isNil(selectedLabelList) && !isEmpty(selectedLabelList))
     ) {
       const tasks = tasksFilterFn(
         projectTaskList,
@@ -171,6 +175,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
         selectedDueDateOption,
         selectedDueDateRange,
         selectedStatusList,
+        selectedLabelList,
       );
       setTasksForCalendarView(formatTasksForCalendar(tasks));
     } else {
@@ -179,13 +184,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
         formatTasksForCalendar(projectTaskList),
       );
     }
-  }, [
-    projectTaskList,
-    globalFilter,
-    selectedDueDateOption,
-    selectedDueDateRange,
-    selectedStatusList,
-  ]);
+  }, [projectTaskList, globalFilter, selectedDueDateOption, selectedDueDateRange, selectedStatusList, selectedLabelList]);
 
   useEffect(() => {
     if (singleProjectLoading === false) {
@@ -221,6 +220,10 @@ const ProjectTasks = (props: IProjectTasksProps) => {
   }, [selectedStatusList]);
 
   useEffect(() => {
+    setFilter('labels', selectedLabelList);
+  }, [selectedLabelList]);
+
+  useEffect(() => {
     const filterValue = {
       type: selectedDueDateOption,
       range: selectedDueDateRange,
@@ -233,9 +236,11 @@ const ProjectTasks = (props: IProjectTasksProps) => {
       globalFilter,
       tasks: data,
       selectedStatusList,
+      selectedLabelList,
       selectedDueDateOption,
       selectedDueDateRange,
       setSelectedStatusList,
+      setSelectedLabelList,
       setSelectedDueDateOption,
       setSelectedDueDateRange,
     }),
@@ -245,6 +250,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
       selectedDueDateOption,
       selectedDueDateRange,
       selectedStatusList,
+      selectedLabelList
     ],
   );
 
@@ -275,6 +281,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           <SortAndFilter>
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
+                !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedDueDateOption)) && (
                   <ClearOutlinedIcon
                     fontSize="small"

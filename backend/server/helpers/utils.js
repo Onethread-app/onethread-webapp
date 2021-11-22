@@ -8,7 +8,11 @@ const {
 
 const {
   findSubtasksByTaskId,
+  getAssignedMembers,
 } = require('../services/task/task.service');
+const {
+  getTaskLabel,
+} = require('../services/taskLabel/taskLabel.service');
 
 const getTaskMembers = async (taskId) => {
   const taskMembers = await TaskAssign.find({
@@ -62,17 +66,16 @@ const getFormattedTaskForClient = async (tasks) => {
   for (let i = 0; i < tasks.length; i += 1) {
     const task = tasks[i];
     const subtasks = await findSubtasksByTaskId(task._id);
-    const taskMembers = await getTaskMembers(task._id);
-    const members = taskMembers.map((tMember) => {
-      return tMember.assignedPerson;
-    });
+    const members = await getAssignedMembers(task._id);
     const statusList = await getAllStatusInProject(task.project._id);
+    const labels = await getTaskLabel(task._id);
 
     const formattedTask = {
       ...task._doc,
       subtasks,
       members,
       statusList,
+      labels,
     };
     formattedTasks.push(formattedTask);
   }

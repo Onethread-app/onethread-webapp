@@ -202,6 +202,7 @@ export const tasksFilterFn = (
   selectedDueDateOption: string,
   selectedDueDateRange: [null | Date, null | Date],
   selectedStatusList: string[],
+  selectedLabelList: string[],
   selectedProjectList?: string[] | undefined,
 ) => {
   if (!isNil(globalFilter) || !isEmpty(globalFilter)) {

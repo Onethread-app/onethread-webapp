@@ -83,11 +83,15 @@ export const StyledTableRowContainer = styled.div`
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 
   &:first-child {
-    border-radius: 8px 8px 0 0;
+    border-radius: ${props => props.totalItems === 1 ? '8px' : ' 8px 8px 0 0'};
+  }
+
+  :nth-last-child(2) {
+    border-radius: ${props => props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
   }
 
   &:last-child {
-    border-radius: 0 0 8px 8px;
+    border-radius: ${props => props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
 
     ${StyledSubRow} {
       &:last-child {

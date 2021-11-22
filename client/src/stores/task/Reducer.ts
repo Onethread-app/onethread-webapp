@@ -78,6 +78,12 @@ export interface TaskBoard {
   preferredView?: 'board' | 'list';
 }
 
+export interface ITaskLabel {
+  _id: string;
+  name: string;
+  color: string;
+}
+
 export interface ITask {
   parentTask: string;
   _id: string;
@@ -110,6 +116,7 @@ export interface ITask {
     lastName: string;
     profileImage?: string;
   };
+  labels: ITaskLabel[];
   subTasks: ITask[];
   members: ITaskMember[];
 }
@@ -230,6 +237,7 @@ const initialCurrentTask = {
   timeSpent: 0,
   subTasks: [],
   members: [],
+  labels: [],
 };
 
 const InitialState: ITaskReducer = {
@@ -565,7 +573,7 @@ export const TaskReducer = (state = InitialState, action: any) => {
           ...state.userTasks,
           {
             ...task,
-            members: task.members.map((member) => member.account),
+            // members: task.members.map((member) => member.account),
           },
         ],
         companyTaskList:
@@ -574,9 +582,9 @@ export const TaskReducer = (state = InitialState, action: any) => {
                 ...state.companyTaskList,
                 {
                   ...task,
-                  members: task.members.map(
-                    (member) => member.account,
-                  ),
+                  // members: task.members.map(
+                  //   (member) => member.account,
+                  // ),
                 },
               ]
             : state.companyTaskList,
@@ -586,9 +594,9 @@ export const TaskReducer = (state = InitialState, action: any) => {
                 ...state.projectTaskList,
                 {
                   ...task,
-                  members: task.members.map(
-                    (member) => member.account,
-                  ),
+                  // members: task.members.map(
+                  //   (member) => member.account,
+                  // ),
                 },
               ]
             : state.projectTaskList,

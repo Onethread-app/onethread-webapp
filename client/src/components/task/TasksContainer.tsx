@@ -41,6 +41,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
     globalFilter,
     selectedProjectList,
     selectedStatusList,
+    selectedLabelList,
     selectedDueDateOption,
     selectedDueDateRange,
   } = useTasksTableContext();
@@ -69,6 +70,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
           selectedDueDateOption,
           selectedDueDateRange,
           selectedStatusList,
+          selectedLabelList,
           selectedProjectList,
         ),
       );
@@ -82,6 +84,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
     selectedDueDateRange,
     selectedProjectList,
     selectedStatusList,
+    selectedLabelList
   ]);
 
   return (

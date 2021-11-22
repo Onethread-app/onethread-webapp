@@ -5,6 +5,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import StatusPanel from './StatusPanel';
 import DueDatePanel from './DueDatePanel';
 import ProjectsPanel from './ProjectsPanel';
+import LabelPanel from './LabelPanel';
 import { BackButton, PanelViewContainer } from './StyledPanel';
 
 interface IPanelView {
@@ -30,6 +31,7 @@ const PanelView = (props: IPanelView) => {
           0: <StatusPanel />,
           1: <DueDatePanel />,
           2: <ProjectsPanel />,
+          3: <LabelPanel />,
         }[selectedPanel!]
       }
     </PanelViewContainer>

@@ -8,6 +8,7 @@ import { toTitleCase } from 'helpers/utils';
 import MemberGroup from 'components/member/MemberGroup';
 import TaskPriorityTag from './TaskPriorityTag';
 import TaskTagSelect from './TaskTagSelect';
+import LabelListView from 'components/label/LabelListView';
 
 const customProjectFilter = (rows, id, filterValue) => {
   return rows.filter((row) =>
@@ -24,6 +25,19 @@ const customStatusFilter = (rows, id, filterValue) => {
       : filterValue.includes(row.original.status._id),
   );
 };
+
+const customLabelFilter = (rows, id, filterValue) => {
+  return rows.filter(row => {
+    if (isEmpty(filterValue)) return row;
+
+    let found = false;
+    const rowLabels = row.original.labels.map(label => label._id);
+    return rowLabels.some(label => {
+      found = filterValue.includes(label);
+      return found;
+    });
+  });
+}
 
 const customDueDateFilter = (rows, id, filterValue) => {
   return rows.filter((row) => {
@@ -135,12 +149,22 @@ export const TaskTableColumns = [
     filter: customStatusFilter,
   },
   {
+    Header: 'Label',
+    Footer: 'Label',
+    accessor: 'labels',
+    sticky: 'center',
+    Cell: ({ row }) => {
+      return <LabelListView labels={row.original.labels} />
+    },
+    filter: customLabelFilter,
+  },
+  {
     Header: 'Created At',
     Footer: 'Created At',
     accessor: 'createdAt',
     Cell: ({ value }) => {
       return value
-        ? moment(value).format('MMMM d, YYYY')
+        ? moment(value).format('MMMM DD, YYYY')
         : 'Not scheduled';
     },
     sticky: 'center',
@@ -151,7 +175,7 @@ export const TaskTableColumns = [
     accessor: 'dueDate',
     Cell: ({ value }) => {
       return value
-        ? moment(value).format('MMMM d, YYYY')
+        ? moment(value).format('MMMM DD, YYYY')
         : 'Not scheduled';
     },
     filter: customDueDateFilter,

@@ -18,6 +18,7 @@ const FilterPanel = () => {
     selectedProjectList,
     selectedDueDateOption,
     selectedStatusList,
+    selectedLabelList
   } = useTasksTableContext();
   const [selectedPanel, setSelectedPanel] = useState<number | null>(
     null,
@@ -51,6 +52,13 @@ const FilterPanel = () => {
               <ChevronRightIcon />
             </PanelTitle>
           )}
+          <PanelTitle
+            onClick={() => setSelectedPanel(3)}
+            active={!isEmpty(selectedLabelList)}
+          >
+            <p>Label</p>
+            <ChevronRightIcon />
+          </PanelTitle>
         </PanelsTitleContainer>
       ) : (
         <PanelView

@@ -73,6 +73,9 @@ const CompanyTasks = (props: ICompanyTasks) => {
   const [selectedStatusList, setSelectedStatusList] = useState<any>(
     [],
   );
+  const [selectedLabelList, setSelectedLabelList] = useState<any>(
+    [],
+  );
   const [selectedProjectList, setSelectedProjectList] = useState<any>(
     [],
   );
@@ -135,6 +138,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
 
   const handleClearFilter = () => {
     setSelectedStatusList([]);
+    setSelectedLabelList([]);
     setSelectedProjectList([]);
     setSelectedDueDateRange([null, null]);
     setSelectedDueDateOption('');
@@ -191,7 +195,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
       (!isNil(globalFilter) && !isEmpty(globalFilter)) ||
       (!isNil(selectedDueDateOption) &&
         !isEmpty(selectedDueDateOption)) ||
-      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList))
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) || (!isNil(selectedLabelList) && !isEmpty(selectedLabelList))
     ) {
       const tasks = tasksFilterFn(
         companyTaskList,
@@ -199,6 +203,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
         selectedDueDateOption,
         selectedDueDateRange,
         selectedStatusList,
+        selectedLabelList,
       );
       setTasksForCalendarView(formatTasksForCalendar(tasks));
     } else {
@@ -212,7 +217,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
     globalFilter,
     selectedDueDateOption,
     selectedDueDateRange,
-    selectedStatusList,
+    selectedLabelList,
+    selectedStatusList
   ]);
 
   useEffect(() => {
@@ -222,6 +228,10 @@ const CompanyTasks = (props: ICompanyTasks) => {
   useEffect(() => {
     setFilter('status', selectedStatusList);
   }, [selectedStatusList]);
+
+  useEffect(() => {
+    setFilter('labels', selectedLabelList);
+  }, [selectedLabelList]);
 
   useEffect(() => {
     const filterValue = {
@@ -236,10 +246,12 @@ const CompanyTasks = (props: ICompanyTasks) => {
       globalFilter,
       tasks: data,
       selectedStatusList,
+      selectedLabelList,
       selectedProjectList,
       selectedDueDateOption,
       selectedDueDateRange,
       setSelectedStatusList,
+      setSelectedLabelList,
       setSelectedProjectList,
       setSelectedDueDateOption,
       setSelectedDueDateRange,
@@ -251,6 +263,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
       selectedDueDateRange,
       selectedProjectList,
       selectedStatusList,
+      selectedLabelList,
     ],
   );
 
@@ -270,6 +283,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
           <SortAndFilter>
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
+                !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
                   <ClearOutlinedIcon

@@ -41,11 +41,16 @@ const {
 
 const {
   findSubtasksByTaskId,
+  getAssignedMembers,
 } = require('../services/task/task.service');
 
 const {
   getAllStatusInProject,
 } = require('../services/task/taskStatus/taskStatus.service');
+
+const {
+  getTaskLabel,
+} = require('../services/taskLabel/taskLabel.service');
 
 // create a company profile
 const changeName = async (req, res, next) => {
@@ -625,12 +630,12 @@ const companyTasks = async (company, addDoneTasks = false) => {
       tasks.map(async (task) => {
         let modifiedTask = {};
         const subtasks = await findSubtasksByTaskId(task._id);
-        const taskMembers = await getTaskMembers(task._id);
-        const members = taskMembers.map((t) => t.assignedPerson);
-
+        const members = await getAssignedMembers(task._id);
+        const labels = await getTaskLabel(task._id);
         const statusList = await getAllStatusInProject(
           task.project._id,
         );
+
         modifiedTask._id = task._id;
         modifiedTask.name = task.name;
         modifiedTask.account = task.account;
@@ -643,6 +648,7 @@ const companyTasks = async (company, addDoneTasks = false) => {
         modifiedTask.company = task.company;
         modifiedTask.subtasks = subtasks;
         modifiedTask.statusList = statusList;
+        modifiedTask.labels = labels;
         taskCompilation.push(modifiedTask);
       }),
     );

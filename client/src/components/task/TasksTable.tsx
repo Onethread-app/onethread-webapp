@@ -170,6 +170,10 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                   )}
                 </StyledTaskTableData>
               ))}
+              <MoreVertIcon
+                fontSize="small"
+                className='o-0'
+              />
             </StyledTableRow>
           ))}
         </StyledTableHeader>
@@ -177,7 +181,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
           {page.map((row) => {
             prepareRow(row);
             return (
-              <StyledTableRowContainer key={row.id}>
+              <StyledTableRowContainer key={row.id} totalItems={rows.length}>
                 <StyledTableRow {...row.getRowProps()}>
                   <Icon
                     icon={
@@ -266,10 +270,16 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
           component="div"
           rowsPerPageOptions={
             window.innerHeight > 1020
-              ? [10, 25, 50, 100]
+              ? rows.length >= 10
+                ? [10, 25, 50, 100]
+                : [rows.length, 10, 25, 50, 100]
               : window.innerHeight > 800
-                ? [7, 10, 25, 50, 100]
-                : [5, 10, 25, 50, 100]
+                ? rows.length >= 7
+                  ? [7, 10, 25, 50, 100]
+                  : [rows.length, 7, 10, 25, 50, 100]
+                : rows.length >= 5
+                  ? [5, 10, 25, 50, 100]
+                  : [rows.length, 5, 10, 25, 50, 100]
           }
           count={rows.length}
           page={pageIndex}
