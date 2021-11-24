@@ -78,9 +78,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
   const [selectedStatusList, setSelectedStatusList] = useState<any>(
     [],
   );
-  const [selectedLabelList, setSelectedLabelList] = useState<any>(
-    [],
-  );
+  const [selectedLabelList, setSelectedLabelList] = useState<any>([]);
   const [selectedDueDateOption, setSelectedDueDateOption] =
     useState<string>('');
   const [selectedDueDateRange, setSelectedDueDateRange] =
@@ -119,8 +117,8 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-              ? 7
-              : 5,
+            ? 7
+            : 5,
         hiddenColumns: ['createdAt', 'priority'],
         // sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -167,7 +165,8 @@ const ProjectTasks = (props: IProjectTasksProps) => {
       (!isNil(globalFilter) && !isEmpty(globalFilter)) ||
       (!isNil(selectedDueDateOption) &&
         !isEmpty(selectedDueDateOption)) ||
-      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) || (!isNil(selectedLabelList) && !isEmpty(selectedLabelList))
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) ||
+      (!isNil(selectedLabelList) && !isEmpty(selectedLabelList))
     ) {
       const tasks = tasksFilterFn(
         projectTaskList,
@@ -184,7 +183,14 @@ const ProjectTasks = (props: IProjectTasksProps) => {
         formatTasksForCalendar(projectTaskList),
       );
     }
-  }, [projectTaskList, globalFilter, selectedDueDateOption, selectedDueDateRange, selectedStatusList, selectedLabelList]);
+  }, [
+    projectTaskList,
+    globalFilter,
+    selectedDueDateOption,
+    selectedDueDateRange,
+    selectedStatusList,
+    selectedLabelList,
+  ]);
 
   useEffect(() => {
     if (singleProjectLoading === false) {
@@ -250,7 +256,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
       selectedDueDateOption,
       selectedDueDateRange,
       selectedStatusList,
-      selectedLabelList
+      selectedLabelList,
     ],
   );
 
@@ -259,7 +265,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
       (status) => status._id === data.status,
     )[0];
     setTaskList(
-      projectTaskList.map((task: ITask) =>
+      projectTaskList?.map((task: ITask) =>
         task._id === data._id ? { ...task, status: status } : task,
       ),
     );
@@ -272,7 +278,10 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           <Header>
             Tasks{' '}
             {taskList.length > 0 && <span>({taskList.length})</span>}
-            <ExportTasks data={taskList} name={`${props.project.name}`} />
+            <ExportTasks
+              data={taskList}
+              name={`${props.project.name}`}
+            />
           </Header>
           <TaskViewSelect
             selectedView={selectedView}
@@ -283,11 +292,11 @@ const ProjectTasks = (props: IProjectTasksProps) => {
               {(!isEmpty(selectedStatusList) ||
                 !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                  <ClearOutlinedIcon
-                    fontSize="small"
-                    onClick={handleClearFilter}
-                  />
-                )}
+                <ClearOutlinedIcon
+                  fontSize="small"
+                  onClick={handleClearFilter}
+                />
+              )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {

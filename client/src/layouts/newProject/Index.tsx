@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { useState, useMemo } from 'react';
 
 import { User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
@@ -30,10 +31,11 @@ import {
 
 import BackImg from 'resources/svg/project_back.svg';
 import RightImg from 'resources/svg/project_right.svg';
-import { ChangeEvent, lazy, Suspense, useState } from 'react';
+import { ChangeEvent, lazy, Suspense } from 'react';
 import { StyledTab, StyledTabs } from 'components/tab/NavTabs';
 import TabPanel from 'components/tab/TabPanel';
 import SuspenseLoader from 'components/loader/SuspenseLoader';
+import useQuery from 'helpers/hooks/useQuery';
 
 interface IProjectDashboardProps {
   user: User;
@@ -62,7 +64,11 @@ const Index = (props: IProjectDashboardProps) => {
     project,
     singleProjectLoading,
   } = props;
-  const [value, setValue] = useState<number>(0);
+  const query = useQuery();
+  const tabValue = useMemo(() => {
+    return query.get('ptab') || '0';
+  }, [query]);
+  const [value, setValue] = useState<number>(parseInt(tabValue) || 0);
 
   const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -133,7 +139,12 @@ const Index = (props: IProjectDashboardProps) => {
         scrollButtons="auto"
       >
         {allTabs.map((tab, i) => (
-          <StyledTab label={tab.label} key={i} />
+          <StyledTab
+            label={tab.label}
+            key={i}
+            tab={value}
+            tabName="ptab"
+          />
         ))}
       </StyledTabs>
       {allTabs.map((tab, i) => (

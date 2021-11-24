@@ -1,12 +1,14 @@
 .editor {
+  background: #ffffff;
+  border: 1px solid #e2e2e2;
   box-sizing: border-box;
-  border: 1px solid #ddd;
-  cursor: text;
-  padding: 16px;
-  border-radius: 2px;
-  /* margin-bottom: 2em; */
-  box-shadow: inset 0px 1px 8px -3px #ababab;
-  background: #fefefe;
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 90%;
+  height: 60px;
+  padding: 10px 100px 0 15px;
+  margin: 0 2rem;
+  overflow-y: auto;
 }
 
 .editor :global(.public-DraftEditor-content) {
