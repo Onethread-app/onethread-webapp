@@ -30,7 +30,7 @@ import CalendarView, {
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 // import ColumnsContainer from 'components/column/ColumnsContainer';
 import TaskList from 'components/task/TaskList';
-import MemberGroup from 'components/member/MemberGroup';
+// import MemberGroup from 'components/member/MemberGroup';
 import MultiSelectComponent from 'components/dashboard/project-status/MultiSelectComponent';
 import CreateTaskButton from 'components/task/CreateTaskButton';
 import PriorityColorList from 'components/task/PriorityColorList';
@@ -141,9 +141,8 @@ const BoardDetails = (props: IBoardDetails) => {
               items={[
                 {
                   text: `Board`,
-                  href: `/company/${
-                    props.company.uniqueName
-                  }/project/${props.currentProject!._id}/board`,
+                  href: `/company/${props.company.uniqueName
+                    }/project/${props.currentProject!._id}/board`,
                 },
                 {
                   text: `${props.currentBoard.name}`,
@@ -159,19 +158,17 @@ const BoardDetails = (props: IBoardDetails) => {
             {props.currentProject.name}
           </ProjectName>
           <div
-            className={`flex ${
-              isMobileOnly ? 'justify-center' : 'justify-end'
-            }`}
+            className={`flex ${isMobileOnly ? 'justify-center' : 'justify-end'
+              }`}
             style={{ width: isMobileOnly ? 'auto' : 'calc(100%/3)' }}
           >
-            <MemberGroup members={props.currentBoard.members} />
+            {/* <MemberGroup members={props.currentBoard.members} /> */}
           </div>
         </div>
         <SecondaryHeader className="flex flex-column flex-row-ns items-center">
           <div
-            className={`flex items-center ${
-              isMobileOnly && 'justify-between'
-            }`}
+            className={`flex items-center ${isMobileOnly && 'justify-between'
+              }`}
           >
             <TasksNumber>
               <h3>{t('app.project.Tasks.Tasks')}</h3>
@@ -226,19 +223,18 @@ const BoardDetails = (props: IBoardDetails) => {
             </ViewSelectDiv>
           </div>
           <div
-            className={`flex ${
-              isMobileOnly ? 'justify-center' : 'justify-end'
-            }`}
+            className={`flex ${isMobileOnly ? 'justify-center' : 'justify-end'
+              }`}
           >
             <div className="flex items-center">
               {(props.currentBoard.sortBy !== undefined ||
                 selectedAssignee.length > 0) && (
-                <ClearOutlinedIcon
-                  className="mr2 pointer grow ba br2"
-                  style={{ color: '#656565', borderColor: '#656565' }}
-                  onClick={clearSort}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    className="mr2 pointer grow ba br2"
+                    style={{ color: '#656565', borderColor: '#656565' }}
+                    onClick={clearSort}
+                  />
+                )}
               <SortingDiv className="flex items-center justify-between">
                 <Popover
                   interactionKind="click"

@@ -62,7 +62,7 @@ export const ProjectTableColumns = [
     accessor: 'createdAt',
     Cell: ({ value }) => {
       return value
-        ? moment(value).format('MMMM d, YYYY')
+        ? moment(value).format('MMMM DD, YYYY')
         : 'Not scheduled';
     },
     sticky: 'center',
@@ -72,7 +72,7 @@ export const ProjectTableColumns = [
     Footer: 'Due Date',
     accessor: 'deadline',
     Cell: ({ value }) => {
-      return value ? moment(value).format('MMMM d, YYYY') : 'Not Set';
+      return value ? moment(value).format('MMMM DD, YYYY') : 'Not Set';
     },
     sticky: 'center',
   },

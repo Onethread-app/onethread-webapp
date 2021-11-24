@@ -51,6 +51,23 @@ const Header = styled.header`
   line-height: 27px;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  
+  .bp3-icon {
+    font-size: 14px;
+    line-height: 21px;
+    border: 1px solid rgba(0, 0, 0, 0.0);
+    border-radius: 4px;
+    padding: 0.25rem;
+    transition: all 0.2s ease-in;
+
+    &:hover {
+      border: 1px solid #575757;
+      border-radius: 4px;
+      padding: 0.25rem;
+    }
+
+  }
 `;
 
 const TextInput = styled(StyledTextInput)`

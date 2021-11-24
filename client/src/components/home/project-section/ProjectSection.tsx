@@ -41,6 +41,7 @@ import {
 import { ClickAwayListener } from '@material-ui/core';
 import { AlignCenter } from 'components/UtilComponents';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { isEmpty, isNil } from 'lodash';
 
 interface INewCompanyResponse {
   message: string;
@@ -83,7 +84,7 @@ const Index = (props: IProps) => {
   const [openProjectDialog, setOpenProjectDialog] =
     useState<boolean>(false);
   const [projects, setProjects] = useState<IProject[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [expand, setExpand] = useState<boolean>(true);
 
   const data = useMemo(() => projects, [projects]);
@@ -126,17 +127,24 @@ const Index = (props: IProps) => {
   }, 500);
 
   useEffect(() => {
-    if (props.user._id && props.userProjects?.length === 0) {
+    if (props.user._id) {
       props.getAllUserProjects();
-      setLoading(true);
     }
   }, [props.user._id]);
 
   useEffect(() => {
-    if (props.userProjects?.length > 0) {
-      setProjects(props.userProjects);
+    if (loading === true &&
+      props.fetchingUserProjects === false) {
       setLoading(false);
     }
+  }, [loading,
+    props.fetchingUserProjects,
+    props.errorOnFetchingUserProjects]);
+
+  useEffect(() => {
+    (!isNil(props.userProjects) &&
+      !isEmpty(props.userProjects)) &&
+      setProjects(props.userProjects);
   }, [props.userProjects]);
   return (
     <Container>
@@ -258,7 +266,7 @@ const mapStateToProps = (state: any) => ({
   creatingCompany: state.companyReducer.creatingCompany,
   errorOnCreatingCompany: state.companyReducer.errorOnCreatingCompany,
   errorOnCreatingProject: state.projectReducer.error,
-  fetchingUserProjects: state.projectReducer.fetchingUserProjects,
+  fetchingUserProjects: state.projectReducer.fetchingAllUserProjects,
   errorOnFetchingUserProjects:
     state.projectReducer.errorOnFetchingUserProjects,
   previousData: state.projectFormReducer.data,

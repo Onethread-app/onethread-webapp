@@ -35,6 +35,7 @@ import { ClickAwayListener } from '@material-ui/core';
 import TasksFilter from 'components/task/TasksFilter';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import { DateRange } from '@blueprintjs/datetime';
+import ExportTasks from 'components/export-tasks/ExportTasks';
 
 interface Props {
   userTasks: any;
@@ -42,6 +43,7 @@ interface Props {
 
 interface ITaskSectionInternalProps extends Props {
   userId: string;
+  userName: string;
   fetchingUserTasks: boolean;
   errorOnFetchingUserTasks: string;
   getAllUserTasks: () => void;
@@ -196,6 +198,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
               />
             )}
             Tasks due soon
+            <ExportTasks data={taskList} name={`${props.userName}`} />
           </span>
         </Header>
         <SortAndFilter>
@@ -203,11 +206,11 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
             {(!isEmpty(selectedStatusList) ||
               !isEmpty(selectedProjectList) ||
               !isEmpty(selectedDueDateOption)) && (
-              <ClearOutlinedIcon
-                fontSize="small"
-                onClick={handleClearFilter}
-              />
-            )}
+                <ClearOutlinedIcon
+                  fontSize="small"
+                  onClick={handleClearFilter}
+                />
+              )}
           </AlignCenter>
           <ClickAwayListener
             onClickAway={() => {
@@ -314,6 +317,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
 
 const mapStateToProps = (state: any) => ({
   userId: state.userReducer.user._id,
+  userName: state.userReducer.user.name,
   userTasks: state.taskIndexReducer.taskReducer.userTasks,
   fetchingUserTasks:
     state.taskIndexReducer.taskReducer.fetchingUserTasks,

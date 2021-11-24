@@ -5,30 +5,11 @@ import SuspenseLoader from 'components/loader/SuspenseLoader';
 import { priorityColor } from 'stores/UtilsActions';
 import { find } from 'lodash';
 import moment from 'moment';
-
-export interface ITaskMember {
-  firstName: string;
-  lastName: string;
-  _id: string;
-  profileImage: string;
-}
-
-export interface ICompanyTask {
-  boardId: string;
-  company: { _id: string; uniqueName: string };
-  createdAt: string;
-  dueDate: string;
-  name: string;
-  priority: number;
-  project: {
-    name: string;
-    _id: string;
-  };
-  status: string;
-  members: ITaskMember[];
-  doneSubtasks: number;
-  totalSubtasks: number;
-}
+import { ITask } from 'stores/task/Reducer';
+import Tooltip from '@material-ui/core/Tooltip';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { isMobileOnly } from 'react-device-detect';
 
 interface ITaskForExport {
   name: string;
@@ -40,9 +21,9 @@ interface ITaskForExport {
   assignee: string[];
 }
 
-interface IExportTasks {
-  loading: boolean;
-  data: ICompanyTask[];
+interface IExportTasksDialog {
+  loading?: boolean;
+  data: ITask[];
   name: string;
 }
 
@@ -56,8 +37,8 @@ const headers = [
   { label: 'Due Date', key: 'dueDate' },
 ];
 
-const ExportTasks = (props: IExportTasks) => {
-  const { loading, data, name } = props;
+const ExportTasksDialog = (props: IExportTasksDialog) => {
+  const { data, name } = props;
   const [processing, setProcessing] = useState<boolean>(true);
   const [processedData, setProcessedData] = useState<
     ITaskForExport[]
@@ -70,29 +51,29 @@ const ExportTasks = (props: IExportTasks) => {
   };
 
   useEffect(() => {
-    if (loading === false && data.length > 0) {
-      const modifiedData = data.map((d: ICompanyTask) => {
+    if (data.length > 0) {
+      const modifiedData = data.map((d: ITask) => {
         return {
           name: d.name,
           priority: find(priorityColor, ['code', d.priority])!.name,
-          status: d.status.replace(/-|\s/g, ' '),
+          status: d.status.name,
           dueDate: moment(d.dueDate).format('MMMM Do YYYY, h:mm a'),
           createdAt: moment(d.createdAt).format(
             'MMMM Do YYYY, h:mm a',
           ),
           project: d.project.name,
           assignee: d.members.map(
-            (m) => `${m.firstName} ${m.lastName}`,
+            (m) => `${m.assignedPerson.firstName} ${m.assignedPerson.lastName}`,
           ),
         };
       });
       setProcessedData(modifiedData);
       setProcessing(false);
     }
-    if (loading === false && data.length === 0) {
+    if (data.length === 0) {
       setProcessing(false);
     }
-  }, [data, loading]);
+  }, [data]);
 
   return (
     <div className={`w-100 h-100 flex items-center justify-center`}>
@@ -111,5 +92,48 @@ const ExportTasks = (props: IExportTasks) => {
     </div>
   );
 };
+interface IExportTasksIconProps {
+  data: ITask[];
+  name: string;
+}
+
+const ExportTasks = (props: IExportTasksIconProps) => {
+  const { data, name } = props;
+  const [openExportDialog, setOpenExportDialog] = useState<boolean>(false);
+
+  return (
+    <>
+      <Tooltip title="Export" placement='top'>
+        <Icon
+          icon={'export'}
+          className={`ml3 pointer`}
+          aria-label={`Export`}
+          onClick={() => { setOpenExportDialog(true) }}
+        />
+      </Tooltip>
+      {openExportDialog && (
+        <Dialog
+          isOpen={openExportDialog}
+          onClose={() => setOpenExportDialog(false)}
+          canEscapeKeyClose={true}
+          canOutsideClickClose={true}
+          className={`pb0`}
+          style={{
+            width: isMobileOnly ? '95%' : '420px',
+            maxWidth: '420px',
+            height: '173px',
+            background: '#ffffff',
+            borderRadius: '20px',
+          }}
+        >
+          <ExportTasksDialog
+            data={data}
+            name={name}
+          />
+        </Dialog>
+      )}
+    </>
+  )
+}
 
 export default ExportTasks;

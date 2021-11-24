@@ -240,7 +240,7 @@ const ProjectsTable = (
           {page.map((row) => {
             prepareRow(row);
             return (
-              <StyledTableRowContainer key={row.id}>
+              <StyledTableRowContainer key={row.id} totalItems={rows.length}>
                 <StyledTableRow
                   {...row.getRowProps()}
                   onClick={() => handleClick(row.original)}
@@ -292,17 +292,17 @@ const ProjectsTable = (
                           fontSize="small"
                           className={
                             row.original.concernedAdmin._id ===
-                            props.userId
+                              props.userId
                               ? ''
                               : 'not-allowed'
                           }
                           onClick={(e) =>
                             row.original.concernedAdmin._id ===
-                            props.userId
+                              props.userId
                               ? handleOptionsClick(
-                                  e,
-                                  row.original._id,
-                                )
+                                e,
+                                row.original._id,
+                              )
                               : e.stopPropagation()
                           }
                         />
@@ -325,10 +325,16 @@ const ProjectsTable = (
           component="div"
           rowsPerPageOptions={
             window.innerHeight > 1020
-              ? [12, 25, 50, 100]
+              ? rows.length >= 12
+                ? [12, 25, 50, 100]
+                : [rows.length, 10, 25, 50, 100]
               : window.innerHeight > 800
-              ? [8, 10, 25, 50, 100]
-              : [6, 10, 25, 50, 100]
+                ? rows.length >= 8
+                  ? [8, 10, 25, 50, 100]
+                  : [rows.length, 10, 25, 50, 100]
+                : rows.length >= 6
+                  ? [6, 10, 25, 50, 100]
+                  : [rows.length, 10, 25, 50, 100]
           }
           count={rows.length}
           page={pageIndex}

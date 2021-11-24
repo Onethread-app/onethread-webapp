@@ -44,6 +44,7 @@ import CalendarView, {
   ITaskForCalendar,
 } from 'components/calendar/CalendarView';
 import ColumnsContainer from 'components/column/ColumnsContainer';
+import ExportTasks from 'components/export-tasks/ExportTasks';
 
 interface ICompanyTasks {
   companyTaskList: ITask[];
@@ -70,6 +71,9 @@ const CompanyTasks = (props: ICompanyTasks) => {
   const [showInputField, setShowInputField] =
     useState<boolean>(false);
   const [selectedStatusList, setSelectedStatusList] = useState<any>(
+    [],
+  );
+  const [selectedLabelList, setSelectedLabelList] = useState<any>(
     [],
   );
   const [selectedProjectList, setSelectedProjectList] = useState<any>(
@@ -113,8 +117,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-            ? 7
-            : 5,
+              ? 7
+              : 5,
         hiddenColumns: ['createdAt', 'priority'],
         // sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -134,6 +138,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
 
   const handleClearFilter = () => {
     setSelectedStatusList([]);
+    setSelectedLabelList([]);
     setSelectedProjectList([]);
     setSelectedDueDateRange([null, null]);
     setSelectedDueDateOption('');
@@ -190,7 +195,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
       (!isNil(globalFilter) && !isEmpty(globalFilter)) ||
       (!isNil(selectedDueDateOption) &&
         !isEmpty(selectedDueDateOption)) ||
-      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList))
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) || (!isNil(selectedLabelList) && !isEmpty(selectedLabelList))
     ) {
       const tasks = tasksFilterFn(
         companyTaskList,
@@ -198,6 +203,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
         selectedDueDateOption,
         selectedDueDateRange,
         selectedStatusList,
+        selectedLabelList,
       );
       setTasksForCalendarView(formatTasksForCalendar(tasks));
     } else {
@@ -211,7 +217,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
     globalFilter,
     selectedDueDateOption,
     selectedDueDateRange,
-    selectedStatusList,
+    selectedLabelList,
+    selectedStatusList
   ]);
 
   useEffect(() => {
@@ -221,6 +228,10 @@ const CompanyTasks = (props: ICompanyTasks) => {
   useEffect(() => {
     setFilter('status', selectedStatusList);
   }, [selectedStatusList]);
+
+  useEffect(() => {
+    setFilter('labels', selectedLabelList);
+  }, [selectedLabelList]);
 
   useEffect(() => {
     const filterValue = {
@@ -235,10 +246,12 @@ const CompanyTasks = (props: ICompanyTasks) => {
       globalFilter,
       tasks: data,
       selectedStatusList,
+      selectedLabelList,
       selectedProjectList,
       selectedDueDateOption,
       selectedDueDateRange,
       setSelectedStatusList,
+      setSelectedLabelList,
       setSelectedProjectList,
       setSelectedDueDateOption,
       setSelectedDueDateRange,
@@ -250,6 +263,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
       selectedDueDateRange,
       selectedProjectList,
       selectedStatusList,
+      selectedLabelList,
     ],
   );
 
@@ -260,6 +274,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
           <Header>
             Tasks{' '}
             {taskList.length > 0 && <span>({taskList.length})</span>}
+            <ExportTasks data={taskList} name={`${props.uniqueCompanyName}`} />
           </Header>
           <TaskViewSelect
             selectedView={selectedView}
@@ -268,13 +283,14 @@ const CompanyTasks = (props: ICompanyTasks) => {
           <SortAndFilter>
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
+                !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {
