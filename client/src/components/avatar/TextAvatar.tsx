@@ -1,6 +1,10 @@
 import Skeleton from '@material-ui/lab/Skeleton';
 
-import { NameAvatar, SmallNameAvatar } from './TextAvatar.styles';
+import {
+  CompanyNameAvatar,
+  NameAvatar,
+  SmallNameAvatar,
+} from './TextAvatar.styles';
 
 interface ITextAvatarProps {
   name: string;
@@ -23,4 +27,10 @@ export const SmallTextAvatar = (
   const { name, bgColor } = props;
 
   return <SmallNameAvatar bgColor={bgColor}>{name}</SmallNameAvatar>;
+};
+
+export const CompanyAvatar = (props: { name; onClick }) => {
+  const { name } = props;
+
+  return <CompanyNameAvatar>{name.slice(0, 1)}</CompanyNameAvatar>;
 };

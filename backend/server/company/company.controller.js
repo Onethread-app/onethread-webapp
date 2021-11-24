@@ -205,7 +205,6 @@ const createCompany = async (req, res, next) => {
 
 // get companies list for individual user
 const getCompanyIndividual = async (req, res, next) => {
-  console.log(req.user._id);
   try {
     // populate options
     let options = [
@@ -242,7 +241,6 @@ const getCompanyIndividual = async (req, res, next) => {
 
     return sendJSONresponse(res, 200, { companies: container });
   } catch (error) {
-    console.log(error);
     logger.error(`Company: ${error}`);
     next(error);
   }

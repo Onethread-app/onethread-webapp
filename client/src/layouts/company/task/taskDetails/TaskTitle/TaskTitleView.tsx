@@ -60,8 +60,10 @@ export const TaskTitleViewComponent = (
             }}
           >
             Task created by{' '}
-            {`${props.currentTask.account?.firstName} 
+            <span className="capitalize">
+              {`${props.currentTask.account?.firstName} 
               ${props.currentTask.account?.lastName}`}{' '}
+            </span>
             at{' '}
             {moment(props.currentTask!.createdAt).format(
               'MMMM d, YYYY',

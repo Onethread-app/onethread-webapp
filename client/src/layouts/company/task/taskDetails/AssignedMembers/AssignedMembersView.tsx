@@ -48,7 +48,7 @@ export const AssignedMembersViewComponent = (
                   className="br2 h2 w2 pointer mh2"
                   alt="avatar"
                 />
-                <p>{`${list.firstName} ${list.lastName}`}</p>
+                <p className="capitalize">{`${list.firstName} ${list.lastName}`}</p>
               </div>
               <AssignedMemeberListEditor assignMemberId={list._id} />
             </div>

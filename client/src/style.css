@@ -111,3 +111,7 @@ textarea.message-input {
 .message-text:hover .highlighted-icon {
   display: flex;
 }
+
+.capitalize {
+  text-transform: capitalize;
+}

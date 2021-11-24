@@ -12,6 +12,9 @@ import { Dialog } from '@blueprintjs/core';
 import useQuery from 'helpers/hooks/useQuery';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
+import { Link } from 'react-router-dom';
+
+import { companyPermit } from 'stores/UtilsActions';
 
 import SuspenseLoader from 'components/loader/SuspenseLoader';
 import { StyledTab, StyledTabs } from 'components/tab/NavTabs';
@@ -89,10 +92,22 @@ const Index = (props: ICompanyDashboardProps) => {
             <Skeleton width={140} height={40} />
           ) : (
             <>
-              <CompanyName>{company.name}</CompanyName>
-              <CompanyEditButton onClick={() => setShowDialog(true)}>
-                Edit Company
-              </CompanyEditButton>
+              <div className="flex flex-column">
+                <CompanyName>{company.name}</CompanyName>
+                <Link
+                  to={`/company/${company.uniqueName}/profile`}
+                  className="profile-link"
+                >
+                  View Profile
+                </Link>
+              </div>
+              {companyPermit(props.company.role) ? (
+                <CompanyEditButton
+                  onClick={() => setShowDialog(true)}
+                >
+                  Edit Company
+                </CompanyEditButton>
+              ) : null}
             </>
           )}
         </CompanyOptions>

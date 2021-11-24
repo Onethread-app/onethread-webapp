@@ -86,6 +86,7 @@ export interface ICompany {
   colleagueError: string;
   invitingColleague: boolean;
   errorOnInvitingColleague: string;
+  totalEmployees: string;
 }
 
 export interface ICompanyResponse {
@@ -120,6 +121,7 @@ const InitialState = {
     products: [],
     totalMember: 0,
     totalAssociate: 0,
+    totalEmployees: '',
   },
   createCompanyError: {
     message: '',

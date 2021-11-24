@@ -576,7 +576,7 @@
       "Create-company": {
         "Create": "Create Company",
         "Name": "Company Name (Required)",
-        "Address": "Company Address",
+        "Address": "Company Headquarter",
         "Type": "Please Select a company type",
         "Email": "Company Email Address",
         "Legal-name": "Legal Owner's Name",

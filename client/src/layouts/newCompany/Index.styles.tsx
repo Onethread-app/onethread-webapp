@@ -22,6 +22,11 @@ export const CompanyOptions = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  .profile-link {
+    color: #323030;
+    font-size: 10px;
+  }
 `;
 
 export const CompanyIconAndName = styled.div`

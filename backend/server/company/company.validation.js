@@ -123,6 +123,7 @@ module.exports = {
       email: schema.email,
       legalOwnerName: schema.legalOwnerName,
       legalOwnerMail: schema.legalOwnerMail,
+      totalEmployees: schema.totalEmployees.allow(),
     }),
     params: companyId,
   }),
