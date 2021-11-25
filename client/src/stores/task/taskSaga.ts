@@ -356,6 +356,7 @@ export function* updateTask({ payload }: any) {
         newPayload,
         headers,
       );
+      console.log(res);
       yield put(
         updateTaskSuccess({
           updatedTask: res.data.task,
