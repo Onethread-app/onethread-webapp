@@ -81,7 +81,7 @@ const FormContainer = styled.div`
   }
 
   div p {
-    margin-top: 5rem;
+    margin-top: 2rem;
   }
 
   p a {

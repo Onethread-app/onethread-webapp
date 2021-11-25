@@ -270,7 +270,7 @@ const Container = styled.div`
   }
 
   @media (max-width: 1367px) {
-    --default-margin: 1rem;
+    --default-margin: 0.5rem;
   }
 
   @media (max-width: 721px) {
