@@ -10,7 +10,9 @@ import {
   useExpanded,
 } from 'react-table';
 import { isEmpty, isNil } from 'lodash';
+
 import { getAllUserTasks } from 'stores/task/Actions';
+import { TasksTableContext } from 'components/task/TasksTableContext';
 
 import { ClickAwayListener } from '@material-ui/core';
 
@@ -65,6 +67,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     useState<string>('');
   const [selectedDueDateRange, setSelectedDueDateRange] =
     useState<DateRange>([null, null]);
+  const [selectedLabelList, setSelectedLabelList] = useState<any>([]);
   const [filterOpen, setFilterOpen] = useState(false);
 
   const { userTasks } = props;
@@ -160,116 +163,147 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     setFilter('dueDate', filterValue);
   }, [selectedDueDateOption, selectedDueDateRange]);
 
+  const providerValue = useMemo(
+    () => ({
+      globalFilter,
+      tasks: data,
+      selectedStatusList,
+      selectedLabelList,
+      selectedProjectList,
+      selectedDueDateOption,
+      selectedDueDateRange,
+      setSelectedStatusList,
+      setSelectedLabelList,
+      setSelectedProjectList,
+      setSelectedDueDateOption,
+      setSelectedDueDateRange,
+    }),
+    [
+      globalFilter,
+      data,
+      selectedDueDateOption,
+      selectedDueDateRange,
+      selectedProjectList,
+      selectedStatusList,
+      selectedLabelList,
+    ],
+  );
+
   return (
-    <Container>
-      <HeaderContainer>
-        <Header>
-          Tasks{' '}
-          {taskList.length > 0 && <span>({taskList.length})</span>}
-        </Header>
-        <SortAndFilter>
-          <AlignCenter>
-            {(!isEmpty(selectedStatusList) ||
-              !isEmpty(selectedProjectList) ||
-              !isEmpty(selectedDueDateOption)) && (
-              <ClearOutlinedIcon
-                fontSize="small"
-                onClick={handleClearFilter}
-              />
-            )}
-          </AlignCenter>
-          <ClickAwayListener
-            onClickAway={() => {
-              if (globalFilter === '' || globalFilter === undefined) {
-                setShowInputField(false);
-              }
-            }}
-          >
-            <AlignCenter
-              onClick={() => {
-                setShowInputField(true);
+    <TasksTableContext.Provider value={providerValue}>
+      <Container>
+        <HeaderContainer>
+          <Header>
+            Tasks{' '}
+            {taskList.length > 0 && <span>({taskList.length})</span>}
+          </Header>
+          <SortAndFilter>
+            <AlignCenter>
+              {(!isEmpty(selectedStatusList) ||
+                !isEmpty(selectedProjectList) ||
+                !isEmpty(selectedDueDateOption)) && (
+                <ClearOutlinedIcon
+                  fontSize="small"
+                  onClick={handleClearFilter}
+                />
+              )}
+            </AlignCenter>
+            <ClickAwayListener
+              onClickAway={() => {
+                if (
+                  globalFilter === '' ||
+                  globalFilter === undefined
+                ) {
+                  setShowInputField(false);
+                }
               }}
             >
-              {showInputField ? (
-                <StyledInput onChange={handleSearchChange} />
-              ) : (
-                <Icon icon="search" />
-              )}
-              Search
-            </AlignCenter>
-          </ClickAwayListener>
-          <TasksFilter
-            filterOpen={filterOpen}
-            setFilterOpen={setFilterOpen}
-          />
-          <Popover
-            interactionKind="click"
-            position="bottom-right"
-            content={
-              <StyledFilterPopover>
-                <p className="bb">Customize Table</p>
-
-                {allColumns.map(
-                  (column) =>
-                    column.id !== 'expander' && (
-                      <div key={column.id}>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={column.isVisible}
-                            disabled={column.id === 'name'}
-                            {...column.getToggleHiddenProps()}
-                          />{' '}
-                          {column.Header}
-                        </label>
-                      </div>
-                    ),
+              <AlignCenter
+                onClick={() => {
+                  setShowInputField(true);
+                }}
+              >
+                {showInputField ? (
+                  <StyledInput onChange={handleSearchChange} />
+                ) : (
+                  <Icon icon="search" />
                 )}
-              </StyledFilterPopover>
-            }
-            target={<MoreVertIcon fontSize="small" />}
-          />
-        </SortAndFilter>
-      </HeaderContainer>
-      {taskList.length === 0 ? (
-        loading ? (
-          <TaskTableSkeleton />
+                Search
+              </AlignCenter>
+            </ClickAwayListener>
+            <TasksFilter
+              filterOpen={filterOpen}
+              setFilterOpen={setFilterOpen}
+            />
+            <Popover
+              interactionKind="click"
+              position="bottom-right"
+              content={
+                <StyledFilterPopover>
+                  <p className="bb">Customize Table</p>
+
+                  {allColumns.map(
+                    (column) =>
+                      column.id !== 'expander' && (
+                        <div key={column.id}>
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={column.isVisible}
+                              disabled={column.id === 'name'}
+                              {...column.getToggleHiddenProps()}
+                            />{' '}
+                            {column.Header}
+                          </label>
+                        </div>
+                      ),
+                  )}
+                </StyledFilterPopover>
+              }
+              target={<MoreVertIcon fontSize="small" />}
+            />
+          </SortAndFilter>
+        </HeaderContainer>
+        {taskList.length === 0 ? (
+          loading ? (
+            <TaskTableSkeleton />
+          ) : (
+            <div className="flex flex-col">
+              <div>No task has been created.</div>
+              <CreatableItem onClick={() => setOpenTaskDialog(true)}>
+                <span>+ </span> Add new task
+              </CreatableItem>
+            </div>
+          )
         ) : (
-          <div className="flex flex-col">
-            <div>No task has been created.</div>
-            <CreatableItem onClick={() => setOpenTaskDialog(true)}>
-              <span>+ </span> Add new task
-            </CreatableItem>
-          </div>
-        )
-      ) : (
-        <TasksTable
-          getTableProps={getTableProps}
-          getTableBodyProps={getTableBodyProps}
-          headerGroups={headerGroups}
-          rows={rows}
-          prepareRow={prepareRow}
-          visibleColumns={visibleColumns}
-          page={page}
-          pageIndex={pageIndex}
-          gotoPage={gotoPage}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-          setOpenTaskDialog={setOpenTaskDialog}
-        />
-      )}
-      <Dialog
-        canOutsideClickClose={true}
-        canEscapeKeyClose={true}
-        autoFocus
-        style={{ borderRadius: '1rem' }}
-        className="w-auto h-auto pb0"
-        isOpen={openTaskDialog}
-        onClose={() => setOpenTaskDialog(false)}
-      >
-        <TaskDialog setShowDialog={setOpenTaskDialog} />
-      </Dialog>
-    </Container>
+          <TasksTable
+            getTableProps={getTableProps}
+            getTableBodyProps={getTableBodyProps}
+            headerGroups={headerGroups}
+            rows={rows}
+            prepareRow={prepareRow}
+            visibleColumns={visibleColumns}
+            page={page}
+            pageIndex={pageIndex}
+            gotoPage={gotoPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+            setOpenTaskDialog={setOpenTaskDialog}
+          />
+        )}
+        <Dialog
+          canOutsideClickClose={true}
+          canEscapeKeyClose={true}
+          autoFocus
+          style={{ borderRadius: '1rem' }}
+          className="w-auto h-auto pb0"
+          isOpen={openTaskDialog}
+          onClose={() => setOpenTaskDialog(false)}
+        >
+          <TaskDialog setShowDialog={setOpenTaskDialog} />
+        </Dialog>
+      </Container>
+    </TasksTableContext.Provider>
   );
 };
 
