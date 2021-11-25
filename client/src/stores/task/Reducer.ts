@@ -648,22 +648,23 @@ export const TaskReducer = (state = InitialState, action: any) => {
         updatingTask: true,
       };
     case TaskActionType.UPDATE_TASK_SUCCESS:
-      const { updatedTask } = action.payload;
+      const updatedTask: ITask = action.payload.updatedTask;
       return {
         ...state,
-        currentTask: !updatedTask.parent
-          ? state.currentTask._id === updatedTask._id
+        currentTask:
+          updatedTask.parentTask === state.currentTask._id
+            ? {
+                ...state.currentTask,
+                subTasks: state.currentTask.subTasks.map(
+                  (subtask: ITask) =>
+                    subtask._id === updatedTask._id
+                      ? updatedTask
+                      : subtask,
+                ),
+              }
+            : updatedTask._id === state.currentTask._id
             ? updatedTask
-            : state.currentTask
-          : {
-              ...state.currentTask,
-              subTasks: state.currentTask.subTasks.map(
-                (subTask: ITask) =>
-                  subTask._id === updatedTask._id
-                    ? updatedTask
-                    : subTask,
-              ),
-            },
+            : state.currentTask,
         projectTaskList: updateTask(
           state.projectTaskList,
           updatedTask,
