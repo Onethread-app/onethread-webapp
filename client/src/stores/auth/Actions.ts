@@ -5,7 +5,7 @@ import { tokenConfig, parseJwt } from '../UtilsActions';
 import {
   FETCH_USER,
   USER_FETCH_ERROR,
-  CLEAR_USER_REDUCER_STATE,
+  // CLEAR_USER_REDUCER_STATE,
 } from 'stores/user/Types';
 import {
   USER_CHANGE_EMAIL_FAILURE,
@@ -16,13 +16,13 @@ import {
   USER_SIGNUP_START,
   USER_SIGNUP_SUCCESS,
 } from './Types';
-import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
-import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
+// import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
+// import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { createBrowserHistory } from 'history';
 import { tigrowApi } from 'config';
 import { Toaster } from '@blueprintjs/core';
-import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+// import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 
 // import { removePushSubscriptionFromServer } from '../../usePushNotifications';
@@ -195,8 +195,10 @@ export const fetchUserAction = () => async (dispatch: any) => {
   if (refreshTokenExpiredTime < Date.now()) {
     localStorage.removeItem('ot_access_id');
     localStorage.removeItem('ot_refresh_id');
+    dispatch({ type: 'RESET' });
   } else if (accessTokenExpiredTime < Date.now()) {
     // when access token is expired
+    dispatch({ type: 'RESET' });
     await resfreshApiAction();
   }
   try {
@@ -229,6 +231,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
     // tslint:disable-next-line: no-console
     localStorage.removeItem('ot_access_id');
     localStorage.removeItem('ot_refresh_id');
+    dispatch({ type: 'RESET' });
     window.location.assign('/signin');
   }
 };
@@ -261,11 +264,8 @@ export const logoutAction =
           localStorage.removeItem('pushSubscription');
           localStorage.removeItem('ot_access_id');
           localStorage.removeItem('ot_refresh_id');
+          dispatch({ type: 'RESET' });
           routeHistory.push('/signin');
-          await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
-          await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
-          await dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
-          await dispatch({ type: CLEAR_USER_REDUCER_STATE });
         }
       } else {
         // tslint:disable-next-line: no-console
