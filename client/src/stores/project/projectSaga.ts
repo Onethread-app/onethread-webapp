@@ -95,6 +95,7 @@ import {
   errorToaster,
   successToaster,
 } from 'components/toast/Toaster';
+import { updateUserCompanyProjectCount } from 'stores/user/Actions';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
