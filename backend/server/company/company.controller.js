@@ -215,7 +215,7 @@ const getCompanyIndividual = async (req, res, next) => {
     ];
 
     let companies = await Member.find({
-      account: req.params.account,
+      account: req.user._id,
       removed: false,
     })
       .select('_id company role')

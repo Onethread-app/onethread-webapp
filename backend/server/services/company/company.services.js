@@ -40,10 +40,8 @@ const allProjectIdOfCompany = async (companyId) => {
 };
 
 const numbOfTasksOfACompany = async (companyId) => {
-  const projectIds = await allProjectIdOfCompany(companyId);
   return Task.countDocuments({
-    project: projectIds,
-    removed: false,
+    company: companyId,
     parentTask: null,
   });
 };
