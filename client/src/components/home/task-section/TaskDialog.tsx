@@ -443,7 +443,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                       render={({ input, meta }) => (
                         <div className="flex items-center">
                           <label className="ml3 w-4 mr3">
-                            In:
+                            Project:
                             <div>
                               {assignedProjectError && (
                                 <small

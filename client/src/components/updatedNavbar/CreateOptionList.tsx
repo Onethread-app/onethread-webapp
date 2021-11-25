@@ -12,6 +12,9 @@ interface Props {
     setOpenAnnouncementDialog: React.Dispatch<
       React.SetStateAction<boolean>
     >;
+    setOpenDiscussionDialog: React.Dispatch<
+      React.SetStateAction<boolean>
+    >;
   };
 }
 
@@ -21,6 +24,7 @@ const CreateOptionList = (props: Props) => {
     setOpenProjectDialog,
     setOpenTaskDialog,
     setOpenAnnouncementDialog,
+    setOpenDiscussionDialog,
   } = props.listProps();
   return (
     <CreateDialogList>
@@ -30,7 +34,9 @@ const CreateOptionList = (props: Props) => {
       <div onClick={() => setOpenAnnouncementDialog(true)}>
         Announcement
       </div>
-      <div>Room</div>
+      <div onClick={() => setOpenDiscussionDialog(true)}>
+        Discussion
+      </div>
     </CreateDialogList>
   );
 };
