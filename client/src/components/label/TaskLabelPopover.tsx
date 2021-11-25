@@ -67,7 +67,8 @@ const TaskLabelPopover = (props: TaskLabelPopoverProps) => {
         <>
           <LabelPopoverHeader>Labels</LabelPopoverHeader>
           <StyledSearchInput
-            placeholder="Filter label"
+            placeholder="Search label"
+            // onFocus={(e) => e.target.placeholder = "Type at least 3 character"}
             onChange={handleSearch}
           />
           <AllLabelContainer>
@@ -82,7 +83,7 @@ const TaskLabelPopover = (props: TaskLabelPopoverProps) => {
                 <>
                   {keyword.length > 2 &&
                     props.suggestedLabels.map((label) => (
-                      <LabelContainer key={label._id}>
+                      <LabelContainer key={label._id} label={`Toggle Select`}>
                         <Label color={label.color}>
                           <HiddenCheckbox
                             type="checkbox"

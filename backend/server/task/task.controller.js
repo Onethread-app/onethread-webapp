@@ -38,6 +38,10 @@ const {
   getAssignedMembers,
 } = require('../services/task/task.service');
 
+const {
+  getTaskLabel,
+} = require('../services/taskLabel/taskLabel.service');
+
 const populateArray = [
   { path: 'project', select: '_id name' },
   { path: 'company', select: '_id name uniqueName' },
@@ -119,6 +123,7 @@ const load = async (req, res, next, id) => {
     );
     // Members
     taskDetails.members = await getAssignedMembers(task._id);
+    taskDetails.labels = await getTaskLabel(task._id);
     req.task = taskDetails;
     logger.info('Task loading completed');
     next();
