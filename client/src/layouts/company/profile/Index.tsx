@@ -89,12 +89,16 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
           <span className="capitalize">{props.company.name}</span>
         </div>
         <div className="mt2 mb2">
-          {props.company.about
-            ? props.company.about
-            : 'No about information set for this company.'}{' '}
-          <Link to="#" onClick={() => setShowDialogAbout(true)}>
-            Set now?
-          </Link>
+          {props.company.about ? (
+            props.company.about
+          ) : (
+            <>
+              No about information set for this company.{' '}
+              <Link to="#" onClick={() => setShowDialogAbout(true)}>
+                Set now?
+              </Link>
+            </>
+          )}{' '}
         </div>
       </div>
       <Table>

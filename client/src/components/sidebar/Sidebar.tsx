@@ -14,7 +14,7 @@ import task from 'resources/images/TasksIcon.png';
 import upArrow from 'resources/images/upArrow.png';
 import downArrow from 'resources/images/downArrow.png';
 import star from 'resources/images/Star.png';
-import documents from 'resources/images/favorite.png';
+// import documents from 'resources/images/favorite.png';
 import onethread from 'resources/images/onethread.png';
 import {
   ArrayItem,
@@ -135,10 +135,10 @@ const Sidebar = (props: Props) => {
           <img src={task} alt="Tasks icon" />
           <span className="left-open">Tasks</span>
         </Item>
-        <Item to={`/documents`}>
+        {/* <Item to={`/documents`}>
           <img src={documents} alt="Document icon" />
           <span className="left-open">Documents</span>
-        </Item>
+        </Item> */}
       </ContainerBody>
       <Favourites className="left-open">
         <span className="left-open">Favourites</span>
