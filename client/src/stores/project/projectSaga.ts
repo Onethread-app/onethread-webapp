@@ -168,7 +168,7 @@ export function* createProjectInCompanyAsync({ payload }: any) {
       );
       yield all([
         put(createProjectInCompanySuccess(response.data.project)),
-        put(updateUserCompanyProjectCount(companyId)),
+        put(getAllProjects()),
       ]);
       // currentCompanyId
       //   ? yield put(getAllProjects(payload.companyId))
