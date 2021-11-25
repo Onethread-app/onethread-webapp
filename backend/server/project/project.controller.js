@@ -1023,7 +1023,7 @@ const getAllProjectForUser = async (req, res, next) => {
       }),
     );
     const sortedProjects = sortProjectsByStatus(projects);
-    console.log(projects);
+    // console.log(projects);
     return sendJSONresponse(res, 200, sortedProjects);
   } catch (error) {
     logger.error(`Project ${error}`);

@@ -46,6 +46,12 @@ router
     SchemaValidator(joiSchema.find),
     companyCtrl.FindCompanyAtBeginning,
   );
+
+// companies list for individual user
+router
+  .route('/individual')
+  .get(authorization, companyCtrl.getCompanyIndividual);
+
 // get company
 router.route('/:cname').get(
   authorization,
@@ -165,11 +171,6 @@ router
 router
   .route('/:companyId/public')
   .get(companyCtrl.publicCompanyInformation);
-
-// companies list for individual user
-router
-  .route('/individual/')
-  .get(authorization, companyCtrl.getCompanyIndividual);
 
 // redirect to member
 router.use('/:companyId/members', memberRoutes);

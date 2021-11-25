@@ -95,6 +95,7 @@ import {
   errorToaster,
   successToaster,
 } from 'components/toast/Toaster';
+import { updateUserCompanyProjectCount } from 'stores/user/Actions';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -167,7 +168,7 @@ export function* createProjectInCompanyAsync({ payload }: any) {
       );
       yield all([
         put(createProjectInCompanySuccess(response.data.project)),
-        // put(getAllProjects()),
+        put(updateUserCompanyProjectCount(companyId)),
       ]);
       // currentCompanyId
       //   ? yield put(getAllProjects(payload.companyId))

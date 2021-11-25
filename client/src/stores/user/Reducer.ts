@@ -25,6 +25,8 @@ import {
   REFRESH_USER_TOKEN_START,
   REFRESH_USER_TOKEN_FAILURE,
   USER_COMPANIES,
+  UPDATE_USER_COMPANY_PROJECT_COUNT,
+  UPDATE_USER_COMPANY_TASK_COUNT,
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 export interface ICompanyByUser {
@@ -289,6 +291,44 @@ export const UserReducer = (state = InitialState, action: any) => {
         ...state,
         tokenRefreshedLoading: false,
         tokenRefreshedError: action.payload,
+      };
+    case UPDATE_USER_COMPANY_PROJECT_COUNT:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          companies: state.user.companies.map((c: ICompanyByUser) => {
+            if (c.company._id === action.payload) {
+              return {
+                ...c,
+                company: {
+                  ...c.company,
+                  numberOfProjects: c.company.numberOfProjects + 1,
+                },
+              };
+            }
+            return c;
+          }),
+        },
+      };
+    case UPDATE_USER_COMPANY_TASK_COUNT:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          companies: state.user.companies.map((c: ICompanyByUser) => {
+            if (c.company._id === action.payload) {
+              return {
+                ...c,
+                company: {
+                  ...c.company,
+                  numberOfTasks: c.company.numberOfTasks + 1,
+                },
+              };
+            }
+            return c;
+          }),
+        },
       };
     default:
       return state;
