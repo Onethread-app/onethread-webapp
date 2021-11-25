@@ -32,6 +32,18 @@ const Type = [
   'Other',
 ];
 
+const totalEmployees = [
+  'Fewer than 5 People',
+  '5 - 10 People',
+  '11 - 50 People',
+  '51 - 100 People',
+  '101 - 200 People',
+  '201 - 300 People',
+  '301 - 500 People',
+  '501 - 1000 People',
+  'Above 1000 People',
+];
+
 const CompanyInfoFormComponent = (
   props: {
     // should use CompanyBasicInfo interface
@@ -48,6 +60,7 @@ const CompanyInfoFormComponent = (
     email: props.companyInfo.email,
     legalOwnerName: props.companyInfo.legalOwnerName,
     legalOwnerMail: props.companyInfo.legalOwnerMail,
+    totalEmployees: props.companyInfo.totalEmployees,
   });
 
   const [errors, setErrors] = useState({
@@ -70,30 +83,25 @@ const CompanyInfoFormComponent = (
   };
 
   const emptyErrorCheck = () => {
-    if (
-      isEmpty(errors.legalOwnerMail) &&
-      isEmpty(errors.email) &&
-      isEmpty(errors.address) &&
-      isEmpty(errors.legalOwnerName)
-    ) {
+    if (isEmpty(errors.legalOwnerMail) && isEmpty(errors.email)) {
       return true;
     } else {
       return false;
     }
   };
 
-  const emptyValueCheck = () => {
-    if (isEmpty(values.address)) {
-      let e = errors;
-      if (isEmpty(values.address)) {
-        e = { ...e, address: 'Required' };
-      }
-      setErrors(e);
-      return true;
-    } else {
-      return false;
-    }
-  };
+  // const emptyValueCheck = () => {
+  //   if (isEmpty(values.address)) {
+  //     let e = errors;
+  //     if (isEmpty(values.address)) {
+  //       e = { ...e, address: 'Required' };
+  //     }
+  //     setErrors(e);
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
   const handleChange = (name: string | number) => (event: any) => {
     const value = isNumber(event)
@@ -120,12 +128,20 @@ const CompanyInfoFormComponent = (
 
   useEffect(() => {
     setValues({
-      name: props.previousData.name,
-      type: props.previousData.type,
-      address: props.previousData.address,
-      email: props.previousData.email,
-      legalOwnerName: props.previousData.legalOwnerName,
-      legalOwnerMail: props.previousData.legalOwnerMail,
+      name: props.previousData.name || props.companyInfo.name,
+      type: props.previousData.type || props.companyInfo.type,
+      address:
+        props.previousData.address || props.companyInfo.address,
+      email: props.previousData.email || props.companyInfo.email,
+      legalOwnerName:
+        props.previousData.legalOwnerName ||
+        props.companyInfo.legalOwnerName,
+      legalOwnerMail:
+        props.previousData.legalOwnerMail ||
+        props.companyInfo.legalOwnerMail,
+      totalEmployees:
+        props.previousData.totalEmployees ||
+        props.companyInfo.totalEmployees,
     });
   }, []);
 
@@ -139,7 +155,13 @@ const CompanyInfoFormComponent = (
         {t('app.company.Company-profile.Basic')}
       </h1>
       <div className={` ${errors.name ? 'mb2' : 'mb3'}`}>
-        <InputGroupFieldWithLabel
+        <label>
+          Company Name:{' '}
+          <span style={{ textTransform: 'capitalize' }}>
+            {props.companyInfo.name}
+          </span>
+        </label>
+        {/* <InputGroupFieldWithLabel
           id="name"
           value={values.name}
           onChange={handleChange('name')}
@@ -174,7 +196,7 @@ const CompanyInfoFormComponent = (
           <small style={{ color: 'red' }}>{errors.name}</small>
         ) : (
           ''
-        )}
+        )} */}
       </div>
       <div className={` ${errors.type ? 'mb2' : 'mb3'}`}>
         <div className="flex flex-column">
@@ -196,9 +218,7 @@ const CompanyInfoFormComponent = (
             }}
           >
             <option selected value={values.type}>
-              {values.type
-                ? values.type
-                : `Select a company type (Required)`}
+              {values.type ? values.type : `Select a company type`}
             </option>
             {Type.map((t) => (
               <option value={t}>{t}</option>
@@ -216,9 +236,7 @@ const CompanyInfoFormComponent = (
           id="address"
           value={values.address}
           onChange={handleChange('address')}
-          placeHolder={`${t(
-            'app.forms.Create-company.Address',
-          )} (Required)`}
+          placeHolder={`${t('app.forms.Create-company.Address')}`}
           style={{
             boxShadow: 'none',
             height: '2.5rem',
@@ -389,6 +407,22 @@ const CompanyInfoFormComponent = (
           ''
         )}
       </div>
+      <div className="mb3 flex flex-column">
+        <label className="fw5 mb2" style={{ fontSize: '0.8rem' }}>
+          Company Size
+        </label>
+        <select
+          value={values.totalEmployees}
+          onChange={handleChange('totalEmployees')}
+          style={{
+            height: '40px',
+          }}
+        >
+          {totalEmployees.map((employee) => (
+            <option value={employee}>{employee}</option>
+          ))}
+        </select>
+      </div>
       <div className="flex justify-end">
         <Button
           type="submit"
@@ -400,7 +434,7 @@ const CompanyInfoFormComponent = (
           }}
           onClick={(e: any) => {
             e.preventDefault();
-            if (!emptyValueCheck() && emptyErrorCheck()) {
+            if (emptyErrorCheck()) {
               const { name, ...newValues } = values;
               props.editCompanyInfoAction(newValues);
               props.setShowDialog(false);
