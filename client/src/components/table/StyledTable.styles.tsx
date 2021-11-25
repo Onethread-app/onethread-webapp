@@ -84,17 +84,16 @@ export const StyledTableRowContainer = styled.div`
 
   &:first-child {
     border-radius: ${(props) =>
-      props.totalItems === 1 ? '8px' : ' 8px 8px 0 0'};
+    props.totalItems === 1 ? '8px' : ' 8px 8px 0 0'};
   }
 
   :nth-last-child(2) {
-    border-radius: ${(props) =>
-      props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
+    border-radius: ${props => props.totalItems === 1 ? '8px' : props.totalItems === 2 ? '0 0 8px 8px' : 0};
   }
 
   &:last-child {
     border-radius: ${(props) =>
-      props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
+    props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
 
     ${StyledSubRow} {
       &:last-child {
@@ -293,7 +292,6 @@ export const CreatableItem = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin: auto;
   margin-top: 4px;
   cursor: pointer;
   color: black;
