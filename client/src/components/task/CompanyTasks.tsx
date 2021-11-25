@@ -73,9 +73,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
   const [selectedStatusList, setSelectedStatusList] = useState<any>(
     [],
   );
-  const [selectedLabelList, setSelectedLabelList] = useState<any>(
-    [],
-  );
+  const [selectedLabelList, setSelectedLabelList] = useState<any>([]);
   const [selectedProjectList, setSelectedProjectList] = useState<any>(
     [],
   );
@@ -117,8 +115,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-              ? 7
-              : 5,
+            ? 7
+            : 5,
         hiddenColumns: ['createdAt', 'priority'],
         // sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -195,7 +193,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
       (!isNil(globalFilter) && !isEmpty(globalFilter)) ||
       (!isNil(selectedDueDateOption) &&
         !isEmpty(selectedDueDateOption)) ||
-      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) || (!isNil(selectedLabelList) && !isEmpty(selectedLabelList))
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) ||
+      (!isNil(selectedLabelList) && !isEmpty(selectedLabelList))
     ) {
       const tasks = tasksFilterFn(
         companyTaskList,
@@ -218,7 +217,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
     selectedDueDateOption,
     selectedDueDateRange,
     selectedLabelList,
-    selectedStatusList
+    selectedStatusList,
   ]);
 
   useEffect(() => {
@@ -274,7 +273,10 @@ const CompanyTasks = (props: ICompanyTasks) => {
           <Header>
             Tasks{' '}
             {taskList.length > 0 && <span>({taskList.length})</span>}
-            <ExportTasks data={taskList} name={`${props.uniqueCompanyName}`} />
+            <ExportTasks
+              data={taskList}
+              name={`${props.uniqueCompanyName}`}
+            />
           </Header>
           <TaskViewSelect
             selectedView={selectedView}
@@ -286,11 +288,11 @@ const CompanyTasks = (props: ICompanyTasks) => {
                 !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                  <ClearOutlinedIcon
-                    fontSize="small"
-                    onClick={handleClearFilter}
-                  />
-                )}
+                <ClearOutlinedIcon
+                  fontSize="small"
+                  onClick={handleClearFilter}
+                />
+              )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {
@@ -354,7 +356,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
               No Tasks.{' '}
               <Link
                 to="#"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   setOpenTaskDialog(true);
                 }}
               >
@@ -384,17 +387,21 @@ const CompanyTasks = (props: ICompanyTasks) => {
             calendar: <CalendarView tasks={tasksForCalendarView} />,
           }[selectedView]
         )}
-        <Dialog
-          canOutsideClickClose={true}
-          canEscapeKeyClose={true}
-          autoFocus
-          style={{ borderRadius: '1rem' }}
-          className="w-auto h-auto pb0"
-          onClose={() => setOpenTaskDialog(false)}
-          isOpen={openTaskDialog}
-        >
-          <TaskDialog setShowDialog={setOpenTaskDialog}></TaskDialog>
-        </Dialog>
+        {openTaskDialog ? (
+          <Dialog
+            canOutsideClickClose={true}
+            canEscapeKeyClose={true}
+            autoFocus
+            style={{ borderRadius: '1rem' }}
+            className="w-auto h-auto pb0"
+            onClose={() => setOpenTaskDialog(false)}
+            isOpen={openTaskDialog}
+          >
+            <TaskDialog
+              setShowDialog={setOpenTaskDialog}
+            ></TaskDialog>
+          </Dialog>
+        ) : null}
       </Container>
     </TasksTableContext.Provider>
   );

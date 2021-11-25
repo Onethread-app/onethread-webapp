@@ -69,7 +69,6 @@ const Index = (props: ICompanyDashboardProps) => {
     { component: <CompanyProjects />, label: 'Projects' },
     { component: <CompanyTasks />, label: 'Tasks' },
     { component: <ColleaguesPage />, label: 'Colleagues' },
-    { label: 'Discussion' },
     {
       component: <CompanyAnnouncements />,
       label: 'Announcements',

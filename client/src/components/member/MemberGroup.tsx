@@ -49,9 +49,9 @@ const MemberGroup = (props: IMemberGroup) => {
         <AvatarGroup max={3} className="pointer">
           {props.members.map((member) => (
             <Avatar
-              alt={`${member?.assignedPerson.firstName}`}
-              src={member?.assignedPerson.profileImage ?? UserIcon}
-              key={member?.assignedPerson._id}
+              alt={`${member?.assignedPerson?.firstName}`}
+              src={member?.assignedPerson?.profileImage ?? UserIcon}
+              key={member?.assignedPerson?._id}
               className={props.small ? classes.small : classes.large}
             />
           ))}

@@ -77,16 +77,10 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
               // tslint:disable-next-line: max-line-length
               props.currentCompany
                 ? history.push(
-                    `/company/${props.currentCompany}/project/${
-                      props.room.project
-                    }/room?roomId=${props.room._id}${
-                      queries.view ? '&view=' + queries.view : ''
-                    }`,
+                    `/company/${props.currentCompany}/project/${props.room.project}/?ptab=3&discussion=${props.room._id}&thread=0`,
                   )
                 : history.push(
-                    `${location.pathname}?roomId=${props.room._id}${
-                      queries.view ? '&view=' + queries.view : ''
-                    }`,
+                    `${location.pathname}?ptab=3&discussion=${props.room._id}&thread=0`,
                   );
             }
             if (isMobileOnly) {

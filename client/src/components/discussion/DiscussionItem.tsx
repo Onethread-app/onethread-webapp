@@ -43,13 +43,13 @@ const DiscussionItem = (props: Props) => {
       onClick={() => changeRoom(discussion._id)}
       active={active}
     >
-      <span className="black">
+      <span className="black flex">
         {discussion.name}{' '}
         {unreadCount > 0 ? (
           <h6
             className="bg-tigrowLightBlue white fw8 ma0 ml1"
             style={{
-              padding: '4px 8px',
+              padding: '3px 6px',
               borderRadius: '50%',
             }}
           >
