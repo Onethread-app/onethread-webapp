@@ -21,6 +21,8 @@ import { CHANGE_ROOM, CURRENT_ROOM } from 'stores/room/Types';
 import DiscussionItem from './DiscussionItem';
 import { Loading } from 'components/Loading';
 import DiscussionSkeleton from './DiscussionSkeleton';
+import { IProject } from 'stores/project/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 interface IProps {
   getRooms: () => void;
   rooms: IRoom[];
@@ -34,6 +36,8 @@ interface IProps {
   roomLoading: boolean;
   projectId: string;
   currentRoom: IRoom;
+  currentProject: IProject;
+  currentCompany: ICompany;
 }
 
 const ProjectDiscussion = (props: IProps) => {
@@ -169,7 +173,11 @@ const ProjectDiscussion = (props: IProps) => {
           canOutsideClickClose={true}
           className="pb0 h-auto w-auto"
         >
-          <CreateForm setShowDialog={setShowDiscussionForm} />
+          <CreateForm
+            setShowDialog={setShowDiscussionForm}
+            currentProject={props.currentProject}
+            currentCompany={props.currentCompany}
+          />
         </Dialog>
       ) : null}
     </Container>
@@ -184,6 +192,8 @@ const mapStateToProps = (state: any) => ({
   projectId: state.projectReducer.projectDetails._id,
   roomLoading: state.roomReducer.loading,
   currentRoom: state.roomReducer.currentRoom,
+  currentProject: state.projectReducer.projectDetails,
+  currentCompany: state.companyReducer.currentCompany,
 });
 
 export default connect(mapStateToProps, {

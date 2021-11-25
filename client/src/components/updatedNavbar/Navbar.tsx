@@ -42,6 +42,7 @@ import { CompanySignupForm } from 'components/home/company-section/CompanyDialog
 import TaskDialog from 'components/home/task-section/TaskDialog';
 import AnnouncementDialog from 'components/announcement/AnnouncementDialog';
 import TimerWatch from 'components/timer/TimerWatch';
+import { CreateForm } from 'layouts/company/room/leftSidebar/Form';
 
 interface Props extends RouteComponentProps {
   user: User;
@@ -78,6 +79,8 @@ const UpdatedNavbar = (props: Props) => {
     useState<boolean>(false);
   const [openAnnouncementDialog, setOpenAnnouncementDialog] =
     useState<boolean>(false);
+  const [openDiscussionDialog, setOpenDiscussionDialog] =
+    useState<boolean>(false);
   const history = useHistory();
   const { t } = useTranslation();
 
@@ -97,6 +100,7 @@ const UpdatedNavbar = (props: Props) => {
       setOpenProjectDialog,
       setOpenTaskDialog,
       setOpenAnnouncementDialog,
+      setOpenDiscussionDialog,
     };
   };
 
@@ -299,60 +303,75 @@ const UpdatedNavbar = (props: Props) => {
             </div>
           </Dialog>
         ) : null}
-
-        <Dialog
-          canOutsideClickClose={true}
-          canEscapeKeyClose={true}
-          autoFocus
-          style={{ borderRadius: '1rem' }}
-          className="w-auto h-auto pb0"
-          onClose={() => setOpenProjectDialog(false)}
-          isOpen={openProjectDialog}
-        >
-          <ProjectDialog
-            // setProjects={setProjects}
-            setOpenProjectDialog={setOpenProjectDialog}
-          />
-        </Dialog>
-
-        <Dialog
-          isOpen={openCompanyDialog}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
-          autoFocus
-          style={{ borderRadius: '1rem' }}
-          onClose={() => setOpenCompanyDialog(false)}
-          className="w-auto h-auto pb0"
-        >
-          <CompanySignupForm setShowDialog={setOpenCompanyDialog} />
-        </Dialog>
-
-        <Dialog
-          isOpen={openTaskDialog}
-          canOutsideClickClose={true}
-          canEscapeKeyClose={true}
-          autoFocus
-          style={{ borderRadius: '1rem' }}
-          onClose={() => setOpenTaskDialog(false)}
-          className="w-auto h-auto pb0"
-        >
-          <TaskDialog setShowDialog={setOpenTaskDialog} />
-        </Dialog>
-
-        <Dialog
-          isOpen={openAnnouncementDialog}
-          canEscapeKeyClose={true}
-          canOutsideClickClose={true}
-          autoFocus
-          style={{ borderRadius: '1rem' }}
-          onClose={() => setOpenAnnouncementDialog(false)}
-          className="w-auto h-auto pb0"
-        >
-          <AnnouncementDialog
-            setOpenAnnouncementDialog={setOpenAnnouncementDialog}
-            setOpenCompanyDialog={setOpenCompanyDialog}
-          />
-        </Dialog>
+        {openProjectDialog ? (
+          <Dialog
+            canOutsideClickClose={true}
+            canEscapeKeyClose={true}
+            autoFocus
+            style={{ borderRadius: '1rem' }}
+            className="w-auto h-auto pb0"
+            onClose={() => setOpenProjectDialog(false)}
+            isOpen={openProjectDialog}
+          >
+            <ProjectDialog
+              // setProjects={setProjects}
+              setOpenProjectDialog={setOpenProjectDialog}
+            />
+          </Dialog>
+        ) : null}
+        {openCompanyDialog ? (
+          <Dialog
+            isOpen={openCompanyDialog}
+            canEscapeKeyClose={true}
+            canOutsideClickClose={true}
+            autoFocus
+            style={{ borderRadius: '1rem' }}
+            onClose={() => setOpenCompanyDialog(false)}
+            className="w-auto h-auto pb0"
+          >
+            <CompanySignupForm setShowDialog={setOpenCompanyDialog} />
+          </Dialog>
+        ) : null}
+        {openTaskDialog ? (
+          <Dialog
+            isOpen={openTaskDialog}
+            canOutsideClickClose={true}
+            canEscapeKeyClose={true}
+            autoFocus
+            style={{ borderRadius: '1rem' }}
+            onClose={() => setOpenTaskDialog(false)}
+            className="w-auto h-auto pb0"
+          >
+            <TaskDialog setShowDialog={setOpenTaskDialog} />
+          </Dialog>
+        ) : null}
+        {openAnnouncementDialog ? (
+          <Dialog
+            isOpen={openAnnouncementDialog}
+            canEscapeKeyClose={true}
+            canOutsideClickClose={true}
+            autoFocus
+            style={{ borderRadius: '1rem' }}
+            onClose={() => setOpenAnnouncementDialog(false)}
+            className="w-auto h-auto pb0"
+          >
+            <AnnouncementDialog
+              setOpenAnnouncementDialog={setOpenAnnouncementDialog}
+              setOpenCompanyDialog={setOpenCompanyDialog}
+            />
+          </Dialog>
+        ) : null}
+        {openDiscussionDialog ? (
+          <Dialog
+            isOpen={openDiscussionDialog}
+            onClose={() => setOpenDiscussionDialog(false)}
+            canEscapeKeyClose={true}
+            canOutsideClickClose={true}
+            className="pb0 h-auto w-auto"
+          >
+            <CreateForm setShowDialog={setOpenDiscussionDialog} />
+          </Dialog>
+        ) : null}
       </Container>
     </>
   );
