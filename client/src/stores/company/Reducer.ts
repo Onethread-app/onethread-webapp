@@ -468,7 +468,10 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          announce: action.payload,
+          announce: [
+            ...state.currentCompany.announce,
+            action.payload,
+          ],
         },
         loading: false,
       };

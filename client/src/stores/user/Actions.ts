@@ -22,6 +22,7 @@ import {
   REFRESH_USER_TOKEN_FAILURE,
   CLEAR_USER_REDUCER_STATE,
   USER_COMPANIES,
+  UPDATE_USER_COMPANY_PROJECT_COUNT,
 } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
@@ -30,6 +31,7 @@ import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
 import { SET_INITIAL_CURRENT_COMPANY } from 'stores/company/Types';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { UPDATE_USER_COMPANY_TASK_COUNT } from 'stores/user/Types';
 
 export const editUserInfoAction =
   (basicInfo: User) => async (dispatch: any, getState: any) => {
@@ -155,7 +157,7 @@ export const getAllCompaniesByUserId =
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.get(
-          `company/individual/${userId}`,
+          `company/individual`,
           headers,
         );
         dispatch({
@@ -409,3 +411,13 @@ export const updateUserInfoAction =
       return false;
     }
   };
+
+export const updateUserCompanyProjectCount = (companyId: string) => ({
+  type: UPDATE_USER_COMPANY_PROJECT_COUNT,
+  payload: companyId,
+});
+
+export const updateUserCompanyTask = (companyId: string) => ({
+  type: UPDATE_USER_COMPANY_TASK_COUNT,
+  payload: companyId,
+});

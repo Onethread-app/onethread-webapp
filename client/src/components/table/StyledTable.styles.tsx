@@ -83,15 +83,18 @@ export const StyledTableRowContainer = styled.div`
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 
   &:first-child {
-    border-radius: ${props => props.totalItems === 1 ? '8px' : ' 8px 8px 0 0'};
+    border-radius: ${(props) =>
+      props.totalItems === 1 ? '8px' : ' 8px 8px 0 0'};
   }
 
   :nth-last-child(2) {
-    border-radius: ${props => props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
+    border-radius: ${(props) =>
+      props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
   }
 
   &:last-child {
-    border-radius: ${props => props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
+    border-radius: ${(props) =>
+      props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
 
     ${StyledSubRow} {
       &:last-child {
@@ -161,7 +164,7 @@ export const StyledTableHeader = styled.div`
 `;
 
 export const StyledTable = styled.div`
-  flex-grow: 1;
+  /* flex-grow: 1; */
   background: transparent;
   display: flex;
   flex-direction: column;
@@ -241,7 +244,7 @@ export const Header = styled.div`
   }
 
   .bp3-icon {
-    border: 1px solid rgba(0, 0, 0, 0.0);
+    border: 1px solid rgba(0, 0, 0, 0);
     border-radius: 4px;
     padding: 0.25rem;
     transition: all 0.2s ease-in;

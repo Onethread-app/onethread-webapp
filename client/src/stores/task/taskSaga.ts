@@ -62,6 +62,7 @@ import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
 import { getCurrentBoard } from './Selector';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { updateUserCompanyTask } from 'stores/user/Actions';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -274,6 +275,7 @@ export function* createTask({ payload }: any) {
           currentProjectId,
         }),
       );
+      yield put(updateUserCompanyTask(companyId));
     }
   } catch (error) {
     yield put(
