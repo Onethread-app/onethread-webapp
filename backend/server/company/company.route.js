@@ -168,7 +168,7 @@ router
 
 // companies list for individual user
 router
-  .route('/individual/:account')
+  .route('/individual/')
   .get(authorization, companyCtrl.getCompanyIndividual);
 
 // redirect to member
