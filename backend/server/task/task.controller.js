@@ -136,15 +136,6 @@ const load = async (req, res, next, id) => {
 // OK
 const createSubtask = async (req, res, next) => {
   try {
-    const draftStatus = await TaskStatus.findOne({
-      project: req.query.pid,
-      positionInBoard: 0,
-    });
-    if (!draftStatus) {
-      return sendErrorResponse(res, 404, 'NotFound', {
-        message: 'Task Status not found',
-      });
-    }
     const subTask = await Task.create({
       name: req.body.name,
       description: req.body.description,
@@ -152,7 +143,7 @@ const createSubtask = async (req, res, next) => {
       parentTask: req.task._id,
       company: req.headers.companyid,
       project: req.query.pid,
-      status: draftStatus._id,
+      status: req.task.status,
     });
 
     const subTaskDetails = await subTask

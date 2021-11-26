@@ -74,7 +74,8 @@ const {
 const options = [
   {
     path: 'taskId',
-    select: '_id name account project dueDate status priority',
+    select:
+      '_id name account project dueDate status priority isCompleted',
     populate: [
       {
         path: 'project',
@@ -184,6 +185,13 @@ const storeAccountInELK = async (user) => {
 const signup = async (req, res, next) => {
   try {
     const { email } = req.body;
+    const isDuplicate = await findAccountByEmail(email);
+    if (isDuplicate) {
+      logger.error(`user already exists with this email: ${email}`);
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'user already exists',
+      });
+    }
     const token = {
       hash: generateToken(),
       exp: Date.now() + 604800,
@@ -213,6 +221,13 @@ const signup = async (req, res, next) => {
 const resendEmail = async (req, res, next) => {
   try {
     const { email } = req.body;
+    const isDuplicate = await findAccountByEmail(email);
+    if (isDuplicate) {
+      logger.error(`user already exists with this email: ${email}`);
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'user already exists',
+      });
+    }
     const token = {
       hash: generateToken(),
       exp: Date.now() + 604800,
@@ -357,172 +372,6 @@ const accountUpdate = async (req, res, next) => {
   }
 };
 
-// const getAccessTokenForVerifyAccount = async (req, res, next) => {
-//   try {
-//     // TODO: Check this token is blacklisted or not...
-//     client
-//       .multi()
-//       .get(`verifyAccountToken:${req.params.token}`)
-//       .exec(async (err, data) => {
-//         if (err) {
-//           logger.error(`${err}`);
-//           return next(err);
-//         }
-//         let email = data[0];
-
-//         if (typeof email === 'string') {
-//           const user = await Account.findOneAndUpdate(
-//             { email },
-//             { $set: { isAccountVerified: true } },
-//             { safe: true, upsert: true, new: true },
-//           );
-//           await client.del(`verifyAccountToken:${req.params.token}`);
-//           await setDocument(accountIndex, '_doc', {
-//             mongo_id: user._id,
-//             name: user.name, // Random Token
-//             email: user.email,
-//             firstName: user.firstName, // Undefined
-//             lastName: user.lastName, // Undefined
-//           });
-//           logger.info(
-//             chalk.blueBright(
-//               `ElasticSearch document added on ${accountIndex}`,
-//             ),
-//           );
-//           const [accessToken, refreshToken] = genAuthToken(user);
-//           return sendJSONresponse(res, 200, {
-//             message: 'Account Verified Successfully',
-//             accessToken,
-//             refreshToken,
-//           });
-//         } else {
-//           return sendErrorResponse(res, 401, 'TokenExpireError', {
-//             isAccountVerified: false,
-//             message: 'Link is expired',
-//           });
-//         }
-//       });
-//   } catch (err) {
-//     logger.error(`Account: ${err}`);
-//     next(err);
-//   }
-// };
-
-// create a new account for individual users
-// const register = async (req, res, next) => {
-//   const data = req.body;
-//   if (!data.email || !data.password) {
-//     return sendJSONresponse(res, 400, {
-//       message: 'You must provide email and password.',
-//     });
-//   }
-//   const result = await Account.countDocuments({
-//     firstName: data.firstName,
-//     lastName: data.lastName,
-//   });
-//   let firstName = createSlug(data.firstName);
-//   let lastName = createSlug(data.lastName);
-//   let uniqueId = result + 1;
-//   const name = firstName + '-' + lastName + '-' + uniqueId;
-//   let account = new Account({
-//     email: data.email,
-//     firstName: data.firstName,
-//     lastName: data.lastName,
-//     name,
-//     contactNo: Date.now(),
-//     password: data.password,
-//     isAccountVerified: false,
-//   });
-//   await account
-//     .save()
-//     .then(async (user) => {
-//       if (user.isAccountVerified)
-//         return sendJSONresponse(res, 201, {
-//           message: 'User created',
-//         });
-//       let verifyToken = generateToken();
-//       let verifyAccountTokenExpiration = Date.now() + 604800;
-
-//       let pendingMember = await PendingMember.find({
-//         email: account.email,
-//       }).select('-__v -createdAt -updatedAt');
-
-//       if (pendingMember.length > 0) {
-//         let pendingMemberToMember = pendingMember.map((m) => {
-//           return { account: account._id, company: m.company };
-//         });
-
-//         const pendingMemberToMemberAccounts =
-//           pendingMemberToMember.map((member) => member.account);
-//         const pendingMemberToMemberCompany =
-//           pendingMemberToMember.map((member) => member.company);
-
-//         await Member.create(pendingMemberToMember);
-
-//         const elasticIndexedMembers = await Member.find({
-//           account: { $in: pendingMemberToMemberAccounts },
-//           company: { $in: pendingMemberToMemberCompany },
-//         }).populate({
-//           path: 'account',
-//           select: '_id name firstName lastName email',
-//         });
-
-//         const memberStructure = (data) => {
-//           return {
-//             mongo_id: data.mongo_id,
-//             account: data.account,
-//             company: data.company,
-//           };
-//         };
-
-//         await bulkInsert(
-//           memberIndex,
-//           elasticIndexedMembers,
-//           memberStructure,
-//         );
-//         logger.info(
-//           chalk.blueBright(
-//             `ElasticSearch successfully documented with bulk on ${memberIndex}`,
-//           ),
-//         );
-
-//         await PendingMember.updateMany(
-//           { email: account.email },
-//           {
-//             removed: true,
-//           },
-//         );
-//       }
-
-//       sendEmailForVerifyAccount(
-//         user.firstName,
-//         user.lastName,
-//         user.email,
-//         verifyToken,
-//       );
-//       accountVerificationToken(
-//         `verifyAccountToken:${verifyToken}`,
-//         user._id,
-//         verifyAccountTokenExpiration,
-//       );
-//       return sendJSONresponse(res, 201, {
-//         message: 'User created',
-//         token: verifyToken,
-//       });
-//     })
-//     .catch((err) => {
-//       logger.error(`Account: ${err}`);
-//       next(err);
-//     });
-// };
-/**
- * Returns jwt token if valid uname and password is provided
- * @param req
- * @param res
- * @param next
- * @returns {* token}
- */
-
 // account holder can login their account
 const login = async (req, res, next) => {
   try {
@@ -598,41 +447,6 @@ const getAccount = async (req, res, next) => {
   }
 };
 
-// TODO: Recheck
-const userDailyProgress = async (req, res, next) => {
-  try {
-    // not completed tasks
-    const taskList = await findTodaysTask(false);
-    let taskId = getIds(taskList);
-    // not completed - number of assigned task
-    const notComAssignedTask = await findAssignedNumberOfTasks(
-      taskId,
-      req.user._id,
-    );
-
-    // completed tasks
-    const doneTaskList = await findTodaysTask(true);
-    taskId = getIds(doneTaskList);
-    // completed - number of assigned task
-    const comAssignedTask = await findAssignedNumberOfTasks(
-      taskId,
-      req.user._id,
-    );
-    let dailyProgress = 0;
-    if (notComAssignedTask === 0) {
-      dailyProgress = 100;
-    } else {
-      dailyProgress = comAssignedTask / notComAssignedTask;
-      dailyProgress = parseInt((dailyProgress * 100).toFixed(2));
-    }
-
-    return sendJSONresponse(res, 200, dailyProgress);
-  } catch (error) {
-    logger.error(`Account: ${error}`);
-    next(error);
-  }
-};
-
 const skillArea = async (req, res, next) => {
   try {
     const user = await findAccountById(req.user._id);
@@ -664,64 +478,6 @@ const timeline = async (req, res, next) => {
     next(error);
   }
 };
-// token verification for mail
-// const getAccessTokenForVerifyAccount = async (req, res, next) => {
-//   try {
-//     let multi = client.multi();
-//     multi.get(`verifyAccountToken:${req.params.token}`);
-//     multi.exec(async (err, data) => {
-//       if (err) {
-//         logger.error(`${err}`);
-//         next(err);
-//       }
-//       let userID = JSON.parse(data[0]);
-//       if (typeof userID === 'string') {
-//         const user = await Account.findByIdAndUpdate(
-//           { _id: userID },
-//           { $set: { isAccountVerified: true } },
-//           { safe: true, upsert: true, new: true },
-//         ).exec();
-//         client.del(`verifyAccountToken:${req.params.token}`);
-//         await setDocument(accountIndex, '_doc', {
-//           mongo_id: user._id,
-//           name: user.name,
-//           email: user.email,
-//           firstName: user.firstName,
-//           lastName: user.lastName,
-//         });
-
-//         logger.info(
-//           chalk.blueBright(
-//             `ElasticSearch document added on ${accountIndex}`,
-//           ),
-//         );
-//         return sendJSONresponse(res, 200, {
-//           isAccountVerified: true,
-//           message: 'Account Verified Successfully',
-//         });
-//       } else {
-//         return sendErrorResponse(res, 400, 'TokenExpireError', {
-//           isAccountVerified: false,
-//           message: 'Link is expired',
-//         });
-//       }
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-// // account holder can update their account information
-// const accountUpdate = async (req, res, next) => {
-//   try {
-//     await findAccountByIdAndUpdate(req.user._id, req.body);
-//     return sendJSONresponse(res, 200, {
-//       message: 'profile updated',
-//     });
-//   } catch (error) {
-//     logger.error(`${error}`);
-//     next(error);
-//   }
-// };
 
 const getExpireTime = (exp) => {
   return (
@@ -1006,9 +762,10 @@ const userTaskList = async (req, res, next) => {
       .limit(+limit)
       .select('taskId')
       .populate(options);
-    const filteredTask = tasks.filter(
-      (task) => task.taskId !== null && task.taskId.status !== 'done',
-    );
+
+    const filteredTask = tasks.filter((task) => {
+      return task.taskId !== null && task.taskId.isCompleted !== true;
+    });
 
     const response = [];
     await Promise.all(
@@ -1052,43 +809,6 @@ const userTaskList = async (req, res, next) => {
     const sortedTasks = sortTasksByStatus(response);
 
     return sendJSONresponse(res, 200, sortedTasks);
-  } catch (error) {
-    logger.error(`Account: ${error}`);
-    next(error);
-  }
-};
-
-const userDueTask = async (req, res, next) => {
-  try {
-    let yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    let yesWeek = new Date();
-    yesWeek.setDate(yesWeek.getDate() - 7);
-    const dueTask = await Task.find({
-      dueDate: { $lt: yesterday, $gte: yesWeek },
-      status: { $ne: 'done' },
-      parentTask: null,
-    }).sort({ createdAt: -1 });
-    taskId = dueTask.map((e) => e._id);
-    const assignToUserDue = await TaskAssign.find({
-      taskId: taskId,
-      assignedPerson: req.user._id,
-    })
-      .select('taskId')
-      .populate(options);
-    const assignByUserDue = await TaskAssign.find({
-      taskId: taskId,
-      account: req.user._id,
-      assignedPerson: { $nin: { _id: req.user._id } },
-    })
-      .sort({ createdAt: -1 })
-      .select('taskId')
-      .populate(options);
-    const userTask = {
-      assignToUserDue: [...assignToUserDue],
-      assignByUserDue: [...assignByUserDue],
-    };
-    return sendJSONresponse(res, 200, userTask);
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
@@ -1150,12 +870,20 @@ const saveLanguage = async (req, res, next) => {
 
 const updateEmail = async (req, res, next) => {
   try {
+    const { email } = req.body;
+    const isDuplicate = await findAccountByEmail(email);
+    if (isDuplicate) {
+      logger.error(`user already exists with this email: ${email}`);
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'user already exists',
+      });
+    }
     await Account.findByIdAndUpdate(
       {
         _id: req.body.id,
       },
       {
-        $set: { email: req.body.email },
+        $set: { email: email },
       },
       { upsert: true, new: true },
     );
@@ -1165,7 +893,7 @@ const updateEmail = async (req, res, next) => {
     };
 
     try {
-      await signupMail(req.body.email, token.hash);
+      await signupMail(email, token.hash);
     } catch (err) {
       logger.error(err);
       return sendJSONresponse(res, 422, {
@@ -1188,12 +916,10 @@ const updateEmail = async (req, res, next) => {
 };
 
 module.exports = {
-  // register,
   resendEmail,
   login,
   logout,
   accountUpdate,
-  // getAccessTokenForVerifyAccount,
   getAccount,
   timeline,
   registerInitiate,
@@ -1206,8 +932,6 @@ module.exports = {
   userTaskList,
   userSubtasks,
   subtaskMarkAsDone,
-  userDueTask,
-  userDailyProgress,
   saveLanguage,
   updateEmail,
   changeEmail,
