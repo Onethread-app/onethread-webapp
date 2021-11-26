@@ -19,7 +19,8 @@ export const StyledDataContainer = styled.div`
 `;
 
 export const StyledTableData = styled(StyledDataContainer)`
-  width: ${(props) => `${100 / props.cols}%`};
+  width: ${(props) => `calc(${100 / props.cols}% - 1rem)`};
+  padding: 0 .5rem;
 `;
 
 export const StyledSubRowData = styled(StyledDataContainer)`
@@ -118,7 +119,7 @@ export const StyledTableBody = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: 760px;
+  min-width: 900px;
 
   &:hover {
     ${StyledSubRow} {
@@ -149,7 +150,7 @@ export const StyledTableHeader = styled.div`
   line-height: 15px;
   letter-spacing: 0.11em;
   color: #666666;
-  min-width: 760px;
+  min-width: 900px;
 
   ${StyledTableRow} {
     background: transparent;
@@ -171,6 +172,7 @@ export const StyledTable = styled.div`
   max-width: 100%;
   margin-top: 0.5rem;
   padding: 0.25rem;
+  overflow-x: scroll;
 
   @media only screen and (max-width: 768px) {
     overflow-x: auto;
