@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { isEqual } from 'lodash';
 
 import { Toaster } from '@blueprintjs/core/lib/esm/components/toast/toaster';
-import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+// import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 import { resendMailForSignup } from 'stores/auth/Actions';
+import {
+  Logo,
+  SmallContainer,
+  TextLink,
+  StyledButton,
+} from './Index.styles';
+import { CircularProgress } from '@material-ui/core';
 
-import successfulEmailImage from './../../resources/images/successfulEmail.png';
+// import successfulEmailImage from './../../resources/images/successfulEmail.png';
 
 const SignupConfirmationPageComponent = () => {
   const [loading, setLoading] = useState(false);
@@ -19,6 +26,7 @@ const SignupConfirmationPageComponent = () => {
     if (response.message === 200) {
       Toaster.create().show({
         message: 'Email has been send successfully',
+        intent: 'success',
       });
     }
     if (isEqual(response.message, 'Network Error')) {
@@ -34,34 +42,57 @@ const SignupConfirmationPageComponent = () => {
 
   return (
     <div className="fl w-100 pa2">
-      <div className="fl w-100" style={{ height: '90vh' }}>
+      <div
+        className="fl w-100 flex flex-column"
+        style={{ height: '90vh' }}
+      >
         <div className="flex flex-column h-100 items-center justify-center f3-l f4-m f5 fw5">
-          <p>
+          {/* <p>
             <img src={successfulEmailImage} />
-          </p>
-          <p className="tc">
-            We have sent an email with a confirmation link to{' '}
-            <strong>{email}</strong>
-            <br />
-            Please allow 5-10 minutes for this message to arrive.
+          </p> */}
+          <div className="tc">
+            <Logo to="/">
+              One<span>Thread</span>
+            </Logo>
+            <h1>Please verify your email address</h1>
+            We will send an email with a confirmation link to{' '}
+            <strong>{email}</strong> <br />
+            within the next 5 minutes.
             <br />
             The link will be valid for next 45 minutes.
-            <h4>Haven't got any mail?</h4>
+            <h4>You didn’t received the confirmation email?</h4>
             <br />
-            Please, check your spam folder.
-            <h4>Still, Didn't get any mail?</h4>
-            Submit your issue at contact@onethread.app
-          </p>
-          <Button
-            className="br3 f5 f4-m f3-l fw6 mt3 ph4 pv3"
-            text="Resend mail"
-            onClick={onSubmit}
-            loading={loading}
-            disabled={loading}
-          />
+          </div>
+          <StyledButton onClick={onSubmit}>
+            {loading ? (
+              <CircularProgress size="1rem" />
+            ) : (
+              'Resend link'
+            )}
+          </StyledButton>
+          <SmallContainer>
+            <p>
+              It’s the wrong email address?{' '}
+              <TextLink
+                to={{
+                  pathname: '/signup',
+                  state: {
+                    changeEmail: true,
+                    oldEmail: email,
+                  },
+                }}
+              >
+                Change my email
+              </TextLink>
+            </p>
+            <p>
+              Already have an account?{' '}
+              <TextLink to="/signin">Log in</TextLink>
+            </p>
+          </SmallContainer>
         </div>
       </div>
-      <div
+      {/* <div
         className="fl pl4 pl2-l pt3 w-100"
         style={{ height: '10vh' }}
       >
@@ -72,7 +103,7 @@ const SignupConfirmationPageComponent = () => {
             icon="arrow-left"
           />
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -39,6 +39,13 @@ export interface ICompanyMembers {
   };
   role: string;
   designations: [IDesignations];
+  type?: string;
+}
+
+export interface ICompanyAllMembers {
+  acceptedMembers: ICompanyMembers[];
+  pendingMembers: ICompanyMembers[];
+  invitedMembers: ICompanyMembers[];
 }
 
 export interface ICompanyTeamMembers {
@@ -71,6 +78,7 @@ export interface ICompany {
   divisions: Entity[];
   departments: Entity[];
   members: ICompanyMembers[];
+  allMembers: ICompanyAllMembers;
   pendingMembers: ICompanyPendingMembers[];
   role: string;
   about: string;
@@ -86,6 +94,7 @@ export interface ICompany {
   colleagueError: string;
   invitingColleague: boolean;
   errorOnInvitingColleague: string;
+  totalEmployees: string;
 }
 
 export interface ICompanyResponse {
@@ -120,6 +129,8 @@ const InitialState = {
     products: [],
     totalMember: 0,
     totalAssociate: 0,
+    totalEmployees: '',
+    allMembers: [],
   },
   createCompanyError: {
     message: '',
@@ -189,12 +200,14 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         creatingCompany: true,
         errorOnCreatingCompany: '',
+        companyCreated: false,
       };
     case CompanyActionTypes.CREATE_COMPANY_SUCCESS:
       return {
         ...state,
         currentCompany: action.payload.company,
         creatingCompany: false,
+        companyCreated: true,
       };
     case CompanyActionTypes.CREATE_COMPANY_FAILURE:
       return {
@@ -226,7 +239,8 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          members: action.payload.members,
+          members: action.payload.acceptedMembers,
+          allMembers: action.payload,
         },
         loading: false,
       };
@@ -474,6 +488,13 @@ export const CompanyReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         loading: false,
+        currentCompany: {
+          ...state.currentCompany,
+          announce:
+            state.currentCompany._id === action.payload.company
+              ? [...state.currentCompany.announce, action.payload]
+              : state.currentCompany.announce,
+        },
       };
 
     case CompanyActionTypes.GET_ALL_PRODUCT_SUCCESS:
@@ -586,6 +607,60 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           uniqueName: action.payload.company.uniqueName,
           role: action.payload.role,
         },
+      };
+    case CompanyActionTypes.FIND_COMPANY_BY_NAME_START:
+      return {
+        ...state,
+        companySearchLoading: true,
+        companySearchFailure: false,
+      };
+    case CompanyActionTypes.FIND_COMPANY_BY_NAME_SUCCESS:
+      return {
+        ...state,
+        companySearchResults: action.payload,
+        companySearchLoading: false,
+      };
+    case CompanyActionTypes.FIND_COMPANY_BY_NAME_FAILURE:
+      return {
+        ...state,
+        companySearchFailure: action.payload,
+        companySearchLoading: false,
+      };
+    case CompanyActionTypes.JOIN_COMPANY_REQUEST_START:
+      return {
+        ...state,
+        companyJoinRequestLoading: true,
+        companyJoinRequestFailure: '',
+      };
+    case CompanyActionTypes.JOIN_COMPANY_REQUEST_SUCCESS:
+      return {
+        ...state,
+        companyJoinRequestLoading: false,
+      };
+    case CompanyActionTypes.JOIN_COMPANY_REQUEST_FAILURE:
+      return {
+        ...state,
+        companyJoinRequestLoading: false,
+        companyJoinRequestFailure: action.payload,
+      };
+    case CompanyActionTypes.PUBLIC_COMPANY_DETAILS_START:
+      return {
+        ...state,
+        publicInformationLoading: true,
+        publicInformationError: '',
+      };
+    case CompanyActionTypes.PUBLIC_COMPANY_DETAILS_SUCCESS:
+      return {
+        ...state,
+        currentCompany: action.payload,
+        publicInformationLoading: false,
+        publicInformationError: '',
+      };
+    case CompanyActionTypes.PUBLIC_COMPANY_DETAILS_FAILURE:
+      return {
+        ...state,
+        publicInformationLoading: false,
+        publicInformationError: action.payload,
       };
     default:
       return state;

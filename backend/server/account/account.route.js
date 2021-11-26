@@ -11,30 +11,53 @@ const {
 const {
   authentication,
 } = require('../middlewares/authenticationMiddleware');
-router
-  .route('/invite-signup')
-  .post(
-    schemaValidator(paramValidation.inviteSignup),
-    accountCtrl.inviteSignup,
-  );
-// authentication
+
 router
   .route('/signup')
-  .post(
-    schemaValidator(paramValidation.register),
-    accountCtrl.register,
+  .post(schemaValidator(paramValidation.signup), accountCtrl.signup);
+
+router
+  .route('/init')
+  .put(
+    schemaValidator(paramValidation.init),
+    accountCtrl.registerInitiate,
   );
-router.route('/resend-email').post(accountCtrl.resendEmail);
-router.get(
-  '/verify-account/:token',
-  accountCtrl.getAccessTokenForVerifyAccount,
-);
+
+router
+  .route('/update')
+  .put(
+    authorization,
+    schemaValidator(paramValidation.update),
+    accountCtrl.accountUpdate,
+  );
+
 router
   .route('/login')
   .post(
     authentication,
     schemaValidator(paramValidation.login),
     accountCtrl.login,
+  );
+
+router
+  .route('/update-email')
+  .put(
+    schemaValidator(paramValidation.updateEmail),
+    accountCtrl.updateEmail,
+  );
+
+router
+  .route('/resend-email')
+  .post(
+    schemaValidator(paramValidation.resendEmail),
+    accountCtrl.resendEmail,
+  );
+
+router
+  .route('/change-email')
+  .put(
+    schemaValidator(paramValidation.changeEmail),
+    accountCtrl.changeEmail,
   );
 
 router.route('/').get(authorization, accountCtrl.getAccount);
@@ -52,18 +75,8 @@ router
     schemaValidator(paramValidation.subTaskMarkAsDone),
     accountCtrl.subtaskMarkAsDone,
   );
-router.route('/due-task').get(authorization, accountCtrl.userDueTask);
-router
-  .route('/daily-progress')
-  .get(authorization, accountCtrl.userDailyProgress);
 router.route('/timeline').get(authorization, accountCtrl.timeline);
-router
-  .route('/update')
-  .put(
-    authorization,
-    schemaValidator(paramValidation.update),
-    accountCtrl.accountUpdate,
-  );
+
 router
   .route('/logout')
   .post(
@@ -90,11 +103,8 @@ router
 router.route('/refresh').post(accountCtrl.tokenRefresh);
 
 router
-  .route("/save-language")
-  .post(
-    authorization,
-    accountCtrl.saveLanguage,
-  );
+  .route('/save-language')
+  .post(authorization, accountCtrl.saveLanguage);
 
 // for admin
 // router

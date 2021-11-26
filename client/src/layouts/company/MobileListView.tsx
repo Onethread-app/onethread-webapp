@@ -76,7 +76,7 @@ export const ListViewComponent = (
     ) {
       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
       setGettingDetails(false);
-      history.push(`/company/${companyName}/dashboard`);
+      history.push(`/company/${companyName}`);
       props.setShowDialog(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,7 +90,7 @@ export const ListViewComponent = (
   return (
     <>
       <div>
-        <div style={{ backgroundColor: '#34b3e9' }}>
+        <div style={{ backgroundColor: '#08A0F7' }}>
           <Icon
             icon="delete"
             iconSize={20}
@@ -128,7 +128,7 @@ export const ListViewComponent = (
         <NavLink
           exact
           className="w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2"
-          activeStyle={{ background: '#34b3e9', color: 'white' }}
+          activeStyle={{ background: '#08A0F7', color: 'white' }}
           style={{ color: 'black' }}
           to={`/${props.user.name}/settings`}
           onClick={() => props.setShowDialog(false)}
@@ -143,7 +143,7 @@ export const ListViewComponent = (
         <NavLink
           exact
           className="w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2"
-          activeStyle={{ background: '#34b3e9', color: 'white' }}
+          activeStyle={{ background: '#08A0F7', color: 'white' }}
           style={{ color: 'black' }}
           to={`/${props.user.name}/home`}
           onClick={() => props.setShowDialog(false)}

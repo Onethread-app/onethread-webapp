@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import StopIcon from '@material-ui/icons/Stop';
-
 import { addTrackedTime } from 'stores/time-tracker/Action';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
-import { StyledTimer, StyledWatch } from './Timer.styles';
+import { StopButton, StyledWatch } from './Timer.styles';
+import StopIcon from '@material-ui/icons/Stop';
 
-const TimerWatch = () => {
+const NewTimerWatch = () => {
   const currentlyTracking: ICurrentTrack = useSelector(
     (state: any) => state.timeTrackerReducer.currentlyTracking,
   );
@@ -23,26 +22,31 @@ const TimerWatch = () => {
   };
 
   return (
-    <StyledTimer>
-      <StopIcon
-        className="pointer"
-        color="error"
-        fontSize="small"
-        onClick={handleStop}
-      />
+    <div
+      className="w-100 h-auto white flex justify-end items-center"
+      style={{ backgroundColor: '#08A0F7' }}
+    >
       <StyledWatch>
+        <span className="mr2">Timer on:</span>
         <span>
-          {('0' + Math.floor((time / 3600000) % 60)).slice(-2)}:
+          {time > 360000
+            ? ('0' + Math.floor((time / 3600000) % 60)).slice(-2) +
+              'h'
+            : ''}{' '}
         </span>
         <span>
-          {('0' + Math.floor((time / 60000) % 60)).slice(-2)}:
+          {('0' + Math.floor((time / 60000) % 60)).slice(-2)}m{' '}
         </span>
         <span>
-          {('0' + Math.floor((time / 1000) % 60)).slice(-2)}
+          {('0' + Math.floor((time / 1000) % 60)).slice(-2)}s
         </span>
       </StyledWatch>
-    </StyledTimer>
+      <StopButton onClick={handleStop}>
+        <StopIcon />
+        Stop
+      </StopButton>
+    </div>
   );
 };
 
-export default TimerWatch;
+export default NewTimerWatch;

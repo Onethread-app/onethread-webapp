@@ -11,17 +11,27 @@ export interface IColumn {
   tasks?: ITask[];
 }
 
+export interface ITaskStatus {
+  _id: string;
+  name: string;
+}
+
 export interface IFile {
   _id: string;
   link: string;
   s3Key: string;
 }
 
-export interface ITaskMember {
+export interface IAccount {
   _id: string;
   firstName: string;
   lastName: string;
   profileImage?: string;
+}
+export interface ITaskMember {
+  _id: string;
+  account: IAccount;
+  assignedPerson: IAccount;
 }
 
 export interface IBoardMember {
@@ -35,6 +45,22 @@ export interface IBoardMember {
 export interface IFilterUser {
   id: string;
   label: string;
+}
+
+export interface ISubTask {
+  _id: string;
+  priority: number;
+  file: IFile[];
+  timeSpent: number;
+  isCompleted: boolean;
+  parentTask: string;
+  name: string;
+  account: string;
+  company: string;
+  project: string;
+  status: string;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
 
 export interface TaskBoard {
@@ -52,24 +78,47 @@ export interface TaskBoard {
   preferredView?: 'board' | 'list';
 }
 
-export interface ITask {
+export interface ITaskLabel {
   _id: string;
   name: string;
-  description?: string;
-  columnId: string;
-  currentColumnName: string;
+  color: string;
+}
+
+export interface ITask {
+  parentTask: string;
+  _id: string;
+  name: string;
+  isCompleted: boolean;
+  description: string;
   createdAt: Date | null;
   createdBy: string;
-  status: string;
+  status: ITaskStatus;
   assignedMembers?: ITaskMember[];
   dueDate?: Date | null;
   priority: number;
   file?: IFile[];
   comments?: Object[];
-  column?: IColumn;
-  boardId?: string;
+  timeSpent: number;
   activityCount?: number;
-  timeSpent?: number;
+  statusList: ITaskStatus[];
+  project: {
+    _id: string;
+    name: string;
+  };
+  company: {
+    _id: string;
+    name: string;
+    uniqueName: string;
+  };
+  account: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    profileImage?: string;
+  };
+  labels: ITaskLabel[];
+  subTasks: ITask[];
+  members: ITaskMember[];
 }
 
 export interface IBoard {
@@ -105,7 +154,93 @@ export interface IBoard {
   errorOnTaskFileDelete: string;
 }
 
-const InitialState: IBoard = {
+export interface ITaskReducer {
+  boardList: TaskBoard[];
+  currentBoard: TaskBoard;
+  currentTask: ITask;
+  userTasks: ITask[];
+  companyTaskList: ITask[];
+  projectTaskList: ITask[];
+  taskStatusList: ITaskStatus[];
+  boardError: string;
+  boardColumnError: string;
+  boardTaskError: string;
+  creatingBoard: boolean;
+  creatingTask: boolean;
+  creatingSubTask: boolean;
+  fetchingTaskStatus: boolean;
+  fetchingBoards: boolean;
+  fetchingBoard: boolean;
+  fetchingColumn: boolean;
+  fetchingTask: boolean;
+  fetchingUserTasks: boolean;
+  fetchingCompanyTasks: boolean;
+  fetchingProjectTasks: boolean;
+  updatingColumn: boolean;
+  updatingBoard: boolean;
+  updatingBoardName: boolean;
+  updatingTask: boolean;
+  deletingTask: boolean;
+  dragAndDrop: boolean;
+  uploadingTaskFile: boolean;
+  deletingTaskFile: boolean;
+  taskError: string;
+  taskStatusLoading: boolean;
+  errorOnTaskStatus: string;
+  errorOnFetchingTaskStatus: string;
+  errorOnCreatingTask: string;
+  errorOnCreatingSubTask: string;
+  errorOnUpdatingBoardName: string;
+  errorOnFetchingBoard: string;
+  errorOnFetchingUserTasks: string;
+  errorOnUpdatingTask: string;
+  errorOnTaskDelete: string;
+  errorOnUploadingTaskFile: string;
+  errorOnTaskFileDelete: string;
+  errorOnFetchingProjectTasks: string;
+  errorOnFetchingCompanyTasks: string;
+}
+
+const initialCurrentTask = {
+  parentTask: 'null',
+  _id: '',
+  name: '',
+  description: '',
+  createdAt: null,
+  createdBy: '',
+  status: {
+    _id: '',
+    name: '',
+  },
+  isCompleted: false,
+  assignedMembers: [],
+  dueDate: null,
+  priority: 2,
+  file: [],
+  comments: [],
+  statusList: [],
+  company: {
+    _id: '',
+    name: '',
+    uniqueName: '',
+  },
+  project: {
+    _id: '',
+    name: '',
+  },
+  account: {
+    _id: '',
+    firstName: '',
+    lastName: '',
+    profileImage: '',
+  },
+  timeSpent: 0,
+  subTasks: [],
+  members: [],
+  labels: [],
+};
+
+const InitialState: ITaskReducer = {
   boardList: [] as any,
   currentBoard: {
     _id: '',
@@ -121,37 +256,21 @@ const InitialState: IBoard = {
     filteredUsers: [],
     preferredView: 'list',
   },
-  currentTask: {
-    _id: '',
-    name: '',
-    description: '',
-    columnId: '',
-    currentColumnName: '',
-    createdAt: null,
-    createdBy: '',
-    status: '',
-    assignedMembers: [],
-    dueDate: null,
-    priority: 2,
-    file: [],
-    comments: [],
-    column: {
-      _id: '',
-      name: '',
-      positionInBoard: 0,
-    },
-    boardId: '',
-    activityCount: 0,
-    timeSpent: 0,
-  },
+  currentTask: { ...initialCurrentTask },
   userTasks: [],
+  companyTaskList: [],
+  projectTaskList: [],
+  taskStatusList: [],
   creatingBoard: false,
   creatingTask: false,
+  creatingSubTask: false,
   fetchingBoards: false,
   fetchingBoard: false,
   fetchingColumn: false,
   fetchingTask: false,
   fetchingUserTasks: false,
+  fetchingCompanyTasks: false,
+  fetchingProjectTasks: false,
   updatingColumn: false,
   updatingBoard: false,
   updatingBoardName: false,
@@ -160,17 +279,73 @@ const InitialState: IBoard = {
   dragAndDrop: false,
   uploadingTaskFile: false,
   deletingTaskFile: false,
+  taskStatusLoading: false,
+  fetchingTaskStatus: false,
   boardError: '',
   boardColumnError: '',
   boardTaskError: '',
   taskError: '',
   errorOnCreatingTask: '',
+  errorOnCreatingSubTask: '',
   errorOnUpdatingBoardName: '',
   errorOnFetchingBoard: '',
   errorOnFetchingUserTasks: '',
+  errorOnUpdatingTask: '',
   errorOnTaskDelete: '',
   errorOnUploadingTaskFile: '',
   errorOnTaskFileDelete: '',
+  errorOnFetchingCompanyTasks: '',
+  errorOnFetchingProjectTasks: '',
+  errorOnFetchingTaskStatus: '',
+  errorOnTaskStatus: '',
+};
+
+export const updateTaskStatus = (tasks, task) => {
+  return tasks.map((t) => (t._id === task._id ? task : t));
+};
+
+export const updateTask = (tasks: ITask[], task: ITask) => {
+  return !task.parentTask
+    ? tasks.map((t: ITask) => (t._id === task._id ? task : t))
+    : tasks.map((t: ITask) =>
+        t._id === task.parentTask
+          ? {
+              ...t,
+              subTasks: t.subTasks.map((s: ITask) =>
+                s?._id === task._id ? task : s,
+              ),
+            }
+          : t,
+      );
+};
+
+export const deleteTask = (
+  tasks: ITask[],
+  task: { _id: string; parentTask: string },
+) => {
+  return !task.parentTask
+    ? tasks.filter((t: ITask) => t._id !== task._id)
+    : tasks.map((t: ITask) =>
+        t._id === task.parentTask
+          ? {
+              ...t,
+              subTasks: t.subTasks.filter(
+                (subTask: ITask) => subTask?._id !== task._id,
+              ),
+            }
+          : t,
+      );
+};
+
+export const addSubTask = (tasks: ITask[], task: ITask) => {
+  return tasks.map((t: ITask) =>
+    t._id === task.parentTask
+      ? {
+          ...t,
+          subTasks: [t.subTasks, { ...task }],
+        }
+      : t,
+  );
 };
 
 export const TaskReducer = (state = InitialState, action: any) => {
@@ -238,6 +413,42 @@ export const TaskReducer = (state = InitialState, action: any) => {
         ...state,
         errorOnFetchingUserTasks: action.payload,
         fetchingUserTasks: false,
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_COMPANY_START:
+      return {
+        ...state,
+        fetchingCompanyTasks: true,
+        errorOnFetchingCompanyTasks: '',
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_COMPANY_SUCCESS:
+      return {
+        ...state,
+        fetchingCompanyTasks: false,
+        companyTaskList: action.payload,
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_COMPANY_FAILURE:
+      return {
+        ...state,
+        fetchingCompanyTasks: false,
+        errorOnFetchingCompanyTasks: action.payload,
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_PROJECT_START:
+      return {
+        ...state,
+        fetchingProjectTasks: true,
+        errorOnFetchingProjectTasks: '',
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_PROJECT_SUCCESS:
+      return {
+        ...state,
+        projectTaskList: action.payload,
+        fetchingProjectTasks: false,
+      };
+    case TaskActionType.GET_ALL_TASKS_FOR_PROJECT_FAILURE:
+      return {
+        ...state,
+        errorOnFetchingProjectTasks: action.payload,
+        fetchingProjectTasks: false,
       };
     case TaskActionType.SELECT_BOARD_START:
       return {
@@ -354,20 +565,41 @@ export const TaskReducer = (state = InitialState, action: any) => {
         errorOnCreatingTask: '',
       };
     case TaskActionType.CREATE_TASK_SUCCESS:
+      const { task, currentCompanyId, currentProjectId } =
+        action.payload;
       return {
         ...state,
-        currentBoard: {
-          ...state.currentBoard,
-          columns: state.currentBoard.columns.map(
-            (column: IColumn, i) =>
-              column._id === action.payload.columnId
-                ? {
-                    ...column,
-                    tasks: [...column.tasks!, action.payload],
-                  }
-                : column,
-          ),
-        },
+        userTasks: [
+          ...state.userTasks,
+          {
+            ...task,
+            // members: task.members.map((member) => member.account),
+          },
+        ],
+        companyTaskList:
+          currentCompanyId === task.company._id
+            ? [
+                ...state.companyTaskList,
+                {
+                  ...task,
+                  // members: task.members.map(
+                  //   (member) => member.account,
+                  // ),
+                },
+              ]
+            : state.companyTaskList,
+        projectTaskList:
+          currentProjectId === task.project._id
+            ? [
+                ...state.projectTaskList,
+                {
+                  ...task,
+                  // members: task.members.map(
+                  //   (member) => member.account,
+                  // ),
+                },
+              ]
+            : state.projectTaskList,
         creatingTask: false,
       };
     case TaskActionType.CREATE_TASK_FAILURE:
@@ -384,10 +616,6 @@ export const TaskReducer = (state = InitialState, action: any) => {
     case TaskActionType.DRAG_AND_DROP_TASK_SUCCESS:
       return {
         ...state,
-        currentBoard: {
-          ...state.currentBoard,
-          columns: action.payload,
-        },
         dragAndDrop: false,
       };
     case TaskActionType.DRAG_AND_DROP_TASK_FAILURE:
@@ -414,25 +642,50 @@ export const TaskReducer = (state = InitialState, action: any) => {
         fetchingTask: false,
       };
     case TaskActionType.UPDATE_TASK_START:
+    case TaskActionType.TASK_MARK_AS_COMPLETED:
       return {
         ...state,
         updatingTask: true,
       };
     case TaskActionType.UPDATE_TASK_SUCCESS:
+      const updatedTask: ITask = action.payload.updatedTask;
       return {
         ...state,
-        currentBoard: {
-          ...state.currentBoard,
-          columns: action.payload.allColumns,
-        },
-        currentTask: action.payload.response,
+        currentTask:
+          updatedTask.parentTask === state.currentTask._id
+            ? {
+                ...state.currentTask,
+                subTasks: state.currentTask.subTasks.map(
+                  (subtask: ITask) =>
+                    subtask._id === updatedTask._id
+                      ? updatedTask
+                      : subtask,
+                ),
+              }
+            : updatedTask._id === state.currentTask._id
+            ? updatedTask
+            : state.currentTask,
+        projectTaskList: updateTask(
+          state.projectTaskList,
+          updatedTask,
+        ),
+        companyTaskList: updateTask(
+          state.companyTaskList,
+          updatedTask,
+        ),
+        userTasks: updateTask(state.userTasks, updatedTask),
         updatingTask: false,
       };
     case TaskActionType.UPDATE_TASK_FAILURE:
+    case TaskActionType.TASK_MARK_AS_COMPLETED_FAILURE:
       return {
         ...state,
         taskError: action.payload,
         updatingTask: false,
+      };
+    case TaskActionType.TASK_MARK_AS_COMPLETED_SUCCESS:
+      return {
+        ...state,
       };
     case TaskActionType.UPDATE_TASK_TIME_SPENT:
       return {
@@ -480,35 +733,6 @@ export const TaskReducer = (state = InitialState, action: any) => {
     case TaskActionType.TASK_FILE_UP_SUCCESS:
       return {
         ...state,
-        // currentBoard: {
-        //   ...state.currentBoard,
-        //   columns: (state.currentBoard.columns as any).map(
-        //     (column: IColumn) =>
-        //       column._id === action.payload.columnId
-        //         ? {
-        //             ...column,
-        //             tasks:
-        //               column.tasks && column.tasks.length > 0
-        //                 ? column.tasks.map((task: ITask) =>
-        //                     task._id === action.payload.taskId
-        //                       ? {
-        //                           ...task,
-        //                           file: [
-        //                             ...task.file!,
-        //                             {
-        //                               _id: action.payload._id,
-        //                               link: action.payload.link,
-        //                               s3Key: action.payload.s3Key,
-        //                             },
-        //                           ],
-        //                         }
-        //                       : task,
-        //                   )
-        //                 : [],
-        //           }
-        //         : column,
-        //   ),
-        // },
         uploadingTaskFile: false,
       };
     case TaskActionType.TASK_FILE_UP_FAILURE:
@@ -526,34 +750,6 @@ export const TaskReducer = (state = InitialState, action: any) => {
     case TaskActionType.TASK_FILE_DELETE_SUCCESS:
       return {
         ...state,
-        // currentBoard: {
-        //   ...state.currentBoard,
-        //   columns: (state.currentBoard.columns as any).map(
-        //     (column: IColumn) =>
-        //       column._id === action.payload.columnId
-        //         ? {
-        //             ...column,
-        //             tasks:
-        //               column.tasks && column.tasks.length > 0
-        //                 ? column.tasks.map((task: ITask) =>
-        //                     task._id === action.payload.taskId
-        //                       ? {
-        //                           ...task,
-        //                           file: task.file
-        //                             ? task.file.filter(
-        //                                 (f) =>
-        //                                   f._id !==
-        //                                   action.payload.fileId,
-        //                               )
-        //                             : task.file,
-        //                         }
-        //                       : task,
-        //                   )
-        //                 : [],
-        //           }
-        //         : column,
-        //   ),
-        // },
         deletingTaskFile: false,
       };
     case TaskActionType.TASK_FILE_DELETE_FAILURE:
@@ -569,23 +765,30 @@ export const TaskReducer = (state = InitialState, action: any) => {
         errorOnTaskDelete: '',
       };
     case TaskActionType.DELETE_TASK_SUCCESS:
+      let { taskId, parentTask } = action.payload;
       return {
         ...state,
-        currentBoard: {
-          ...state.currentBoard,
-          columns: state.currentBoard.columns.map((column: IColumn) =>
-            column._id === action.payload.columnId
-              ? {
-                  ...column,
-                  tasks: column.tasks
-                    ? column.tasks.filter(
-                        (task) => task._id !== action.payload.taskId,
-                      )
-                    : column.tasks,
-                }
-              : column,
-          ),
-        },
+        currentTask:
+          state.currentTask._id === parentTask
+            ? {
+                ...state.currentTask,
+                subTasks: state.currentTask.subTasks.filter(
+                  (task: ITask) => task._id !== taskId,
+                ),
+              }
+            : state.currentTask,
+        userTasks: deleteTask(state.userTasks, {
+          _id: taskId,
+          parentTask,
+        }),
+        companyTaskList: deleteTask(state.companyTaskList, {
+          _id: taskId,
+          parentTask,
+        }),
+        projectTaskList: deleteTask(state.projectTaskList, {
+          _id: taskId,
+          parentTask,
+        }),
         deletingTask: false,
       };
     case TaskActionType.DELETE_TASK_FAILURE: {
@@ -655,6 +858,94 @@ export const TaskReducer = (state = InitialState, action: any) => {
           columnId: action.payload.columnId,
           status: action.payload.status,
         },
+      };
+    case TaskActionType.CLEAR_COMPANY_TASKS:
+      return {
+        ...state,
+        companyTaskList: [],
+      };
+    case TaskActionType.GET_ALL_TASK_STATUS:
+      return {
+        ...state,
+        fetchingTaskStatus: true,
+        errorOnFetchingTaskStatus: '',
+      };
+    case TaskActionType.GET_ALL_TASK_STATUS_SUCCESS:
+      return {
+        ...state,
+        fetchingTaskStatus: false,
+        taskStatusList: action.payload,
+      };
+    case TaskActionType.GET_ALL_TASK_STATUS_FAILURE:
+      return {
+        ...state,
+        fetchingTaskStatus: false,
+        errorOnFetchingTaskStatus: action.payload,
+      };
+    case TaskActionType.CREATE_TASK_STATUS:
+    case TaskActionType.UPDATE_TASK_STATUS:
+      return {
+        ...state,
+        taskStatusLoading: true,
+        errorOnTaskStatus: '',
+      };
+    case TaskActionType.CREATE_TASK_STATUS_SUCCESS:
+    case TaskActionType.UPDATE_TASK_STATUS_SUCCESS:
+      return {
+        ...state,
+        taskStatusLoading: false,
+        taskStatusList: [
+          ...state.taskStatusList,
+          { ...action.payload },
+        ],
+      };
+    case TaskActionType.CREATE_TASK_STATUS_FAILURE:
+    case TaskActionType.UPDATE_TASK_STATUS_FAILURE:
+      return {
+        ...state,
+        taskStatusLoading: false,
+        errorOnTaskStatus: action.payload,
+      };
+    case TaskActionType.CREATE_SUBTASK:
+      return {
+        ...state,
+        creatingSubTask: true,
+        errorOnCreatingSubTask: '',
+      };
+    case TaskActionType.CREATE_SUBTASK_SUCCESS:
+      return {
+        ...state,
+        currentTask:
+          state.currentTask._id === action.payload.parentTask
+            ? {
+                ...state.currentTask,
+                subTasks: [
+                  ...state.currentTask.subTasks,
+                  { ...action.payload },
+                ],
+              }
+            : state.currentTask,
+        userTasks: addSubTask(state.userTasks, action.payload),
+        companyTaskList: addSubTask(
+          state.companyTaskList,
+          action.payload,
+        ),
+        projectTaskList: addSubTask(
+          state.projectTaskList,
+          action.payload,
+        ),
+        creatingSubTask: false,
+      };
+    case TaskActionType.CREATE_SUBTASK_FAILURE:
+      return {
+        ...state,
+        creatingSubTask: false,
+        errorOnCreatingSubTask: action.payload,
+      };
+    case TaskActionType.CLEAR_CURRENT_TASK:
+      return {
+        ...state,
+        currentTask: { ...initialCurrentTask },
       };
     default:
       return state;

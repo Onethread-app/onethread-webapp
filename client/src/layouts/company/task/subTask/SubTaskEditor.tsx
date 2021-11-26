@@ -9,7 +9,6 @@ import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 
 import { ISubTask } from 'stores/subtask/Reducer';
-import { createSubTask, updateSubTask } from 'stores/subtask/Actions';
 
 import {
   required,
@@ -19,20 +18,25 @@ import {
 } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
+import { ITask } from 'stores/task/Reducer';
+import { createSubTask, updateTask } from 'stores/task/Actions';
+import { errorToaster } from 'components/toast/Toaster';
 
 interface ITaskDescriptionCreateFormProps {
   setShowSubTaskForm: (val: boolean) => void;
   showSubtaskForm: boolean;
-  createSubTask: (subTask: ISubTask) => void;
-  subtask?: ISubTask;
+  createSubTask: (subTask) => void;
+  errorOnCreatingSubTask: string;
+  subtask?: ITask;
   setsubtask: (subTask: ISubTask) => void;
-  updateSubTask: (subTask: ISubTask) => void;
+  updateTask: (subTask) => void;
   creatingSubTask: boolean;
   updatingSubTask: boolean;
+  currentTask: ITask;
 }
 interface ISubTaskDescriptionDeleteFormProps {
-  subTask: ISubTask;
-  deleteSubTask: (subTask: ISubTask) => void;
+  subTask: ITask;
+  deleteSubTask: (subTask) => void;
 }
 
 export const SubTaskCreatorComponent = (
@@ -46,23 +50,40 @@ export const SubTaskCreatorComponent = (
       const subTaskData = {
         name: values.subtaskTitle,
         description: values.subtaskDesc,
+        companyId: props.currentTask.company._id,
+        projectId: props.currentTask.project._id,
+        taskId: props.currentTask._id,
       };
       props.createSubTask(subTaskData);
       setCreating(true);
     } else {
       const updateSubTaskData = {
-        _id: props.subtask!._id,
+        taskId: props.subtask!._id,
         name: values.subtaskTitle,
         description: values.subtaskDesc,
+        companyId: props.subtask?.company._id,
+        projectId: props.subtask?.project._id,
       };
-      props.updateSubTask(updateSubTaskData);
+      props.updateTask(updateSubTaskData);
       setUpdating(true);
     }
   };
 
   useEffect(() => {
-    if (creating === true && props.creatingSubTask === false) {
+    if (
+      creating === true &&
+      props.creatingSubTask === false &&
+      props.errorOnCreatingSubTask === ''
+    ) {
       props.setShowSubTaskForm(!props.showSubtaskForm);
+    }
+    if (
+      creating === true &&
+      props.creatingSubTask === false &&
+      props.errorOnCreatingSubTask === ''
+    ) {
+      errorToaster(props.errorOnCreatingSubTask);
+      setCreating(false);
     }
   }, [creating, props.creatingSubTask]);
 
@@ -156,7 +177,7 @@ export const SubTaskCreatorComponent = (
               <div className="flex justify-end mt2">
                 <Button
                   type="submit"
-                  style={{ background: '#34b3e9' }}
+                  style={{ background: '#08A0F7' }}
                   loading={submitting}
                   icon={
                     <Icon
@@ -172,7 +193,7 @@ export const SubTaskCreatorComponent = (
                   style={{ background: 'transparent' }}
                   icon="cross"
                   onClick={async () => {
-                    await props.setsubtask({});
+                    // props.setsubtask({});
                     props.setShowSubTaskForm(!props.showSubtaskForm);
                   }}
                 />
@@ -188,15 +209,18 @@ export const SubTaskCreatorComponent = (
 const mapStateToProps = (state: any) => {
   return {
     creatingSubTask:
-      state.taskIndexReducer.subTaskReducer.creatingSubTask,
+      state.taskIndexReducer.taskReducer.creatingSubTask,
+    errorOnCreatingSubTask:
+      state.taskIndexReducer.taskReducer.errorOnCreatingSubTask,
     updatingSubTask:
       state.taskIndexReducer.subTaskReducer.updatingSubTask,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
   };
 };
 
 export const SubTaskCreator = connect(mapStateToProps, {
   createSubTask,
-  updateSubTask,
+  updateTask,
 })(withRouter(SubTaskCreatorComponent));
 
 export const SubTaskDelete = (
@@ -215,14 +239,19 @@ export const SubTaskDelete = (
               <Button
                 className="grow h2 pointer white bp3-minimal w4 mr3"
                 style={{
-                  background: '#34b3e9',
+                  background: '#08A0F7',
                   outline: 'none',
                   color: 'white',
                 }}
                 // loading={submitting}
                 type="submit"
                 onClick={() => {
-                  props.deleteSubTask(props.subTask);
+                  props.deleteSubTask({
+                    taskId: props.subTask._id,
+                    companyId: props.subTask.company._id,
+                    projectId: props.subTask.project._id,
+                    parentTask: props.subTask.parentTask,
+                  });
                   setDeletePopover(false);
                 }}
               >
@@ -233,8 +262,8 @@ export const SubTaskDelete = (
                 style={{
                   background: '#fff',
                   outline: 'none',
-                  border: '1px solid #34b3e9',
-                  color: '#34b3e9',
+                  border: '1px solid #08A0F7',
+                  color: '#08A0F7',
                 }}
                 onClick={() => setDeletePopover(false)}
               >

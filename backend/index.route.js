@@ -19,7 +19,6 @@ const educationRoutes = require('./server/education/education.route');
 const boardRoutes = require('./server/board/board.route');
 const boardColumnRoutes = require('./server/boardColumn/boardColumn.route');
 const taskRoutes = require('./server/task/task.route');
-const subTasks = require('./server/task/subtask/subtask.route');
 const utilsRoutes = require('./server/utils/utils.route');
 const associateRoutes = require('./server/associate/associate.route');
 const teamRoutes = require('./server/team-member/team.route');
@@ -32,6 +31,7 @@ const videoConferencesRoute = require('./server/videoConferences/videoConference
 const feedbackRoutes = require('./server/feedback/feedback.route');
 const reportRoutes = require('./server/report/report.route');
 const timeTrackerRoutes = require('./server/time-tracker/time-tracker.route');
+const taskStatusRoutes = require('./server/task/taskStatus/taskStatus.route');
 const labelRoutes = require('./server/label/label.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -58,7 +58,7 @@ router.use('/files', fileRoutes);
 router.use('/boards', boardRoutes);
 router.use('/boardColumns', boardColumnRoutes); // board-columns
 router.use('/tasks', taskRoutes);
-router.use('/subTasks', subTasks);
+router.use('/taskStatus', taskStatusRoutes);
 router.use('/utils', utilsRoutes);
 router.use('/projects', projectRoutes);
 router.use('/associate', associateRoutes); // associates
@@ -72,7 +72,5 @@ router.use('/subscriptions', subscriptionRoutes);
 router.use('/video-conferences', videoConferencesRoute);
 router.use('/feedback', feedbackRoutes); // feedbacks
 router.use('/reports', reportRoutes);
-router.use('/track', timeTrackerRoutes); // tracks
-router.use('/labels', labelRoutes);
-
-module.exports = router;
+router.use('/time-trackers', timeTrackerRoutes);
+router.use('/labels', labelRoutes), (module.exports = router);

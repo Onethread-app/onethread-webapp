@@ -1,51 +1,59 @@
-import { isMobileOnly } from 'react-device-detect';
+import { useEffect } from 'react';
+import { connect, useDispatch } from 'react-redux';
 
-import VideoConference from 'components/home/VideoConference';
-import { Tasks } from 'components/home/Tasks';
-import Profile from 'components/home/Profile';
-// import Weather from 'components/home/Weather';
-// import ProfileProgress from 'components/home/ProfileProgress';
-import Projects from 'components/home/Projects';
-import Subtasks from 'components/home/Subtasks';
+// import { getProjectsIndividual } from 'stores/project/Actions';
+import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
+import { capitalizeFirstLetter } from 'helpers/utils';
 
+// import VideoConference from 'components/home/VideoConference';
+import CompanySection from 'components/home/company-section/CompanySection';
+import ProjectSection from 'components/home/project-section/ProjectSection';
+import TaskSection from 'components/home/task-section/TaskSection';
+
+import { Avatar, Container, Row } from './Index.styles';
 import './Index.styles.scss';
+import { User } from 'stores/user/Reducer';
+import { clearCurrentTask } from 'stores/task/Actions';
 
-const index = () => {
-  return isMobileOnly ? (
-    <div className="home-container">
-      <div>
-        <Tasks />
-      </div>
-      <div>
-        <Subtasks />
-      </div>
-      <div>
-        <Projects />
-      </div>
-      <div>
-        <VideoConference />
-      </div>
-      {/* <div>
-        <ProfileProgress />
-      </div> */}
-    </div>
-  ) : (
-    <div className="home-container">
-      <div className="w-100">
-        <Projects />
-        <VideoConference />
-      </div>
-      <div className="w-100">
-        {/* <Weather /> */}
-        <Tasks />
-        <Subtasks />
-      </div>
-      <div className="w-100">
-        <Profile />
-        {/* <ProfileProgress /> */}
-      </div>
-    </div>
+interface IProps {
+  user: User;
+  clearCurrentTask: () => void;
+}
+
+const Index = (props: IProps) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+    props.clearCurrentTask();
+  }, []);
+
+  return (
+    <Container>
+      <span>PERSONAL DASHBOARD</span>
+      <Row justify="flex-start">
+        {props.user.profileImage ? (
+          <img
+            className="profile-pic"
+            src={props.user.profileImage}
+            alt=""
+          />
+        ) : (
+          <Avatar>{props.user?.firstName?.substring(0, 2)}</Avatar>
+        )}{' '}
+        Hi, {capitalizeFirstLetter(props.user.firstName)}
+      </Row>
+      <CompanySection />
+      <ProjectSection />
+      <TaskSection />
+    </Container>
   );
 };
 
-export default index;
+const mapStateToProps = (state: any) => ({
+  user: state.userReducer.user,
+});
+
+export default connect(mapStateToProps, {
+  clearCurrentTask,
+})(Index);

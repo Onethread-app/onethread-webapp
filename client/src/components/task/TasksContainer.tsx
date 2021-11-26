@@ -1,122 +1,109 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { IColumn, ITask, TaskBoard } from 'stores/task/Reducer';
+import { ITaskStatus, ITask } from 'stores/task/Reducer';
+import { useTasksTableContext } from './TasksTableContext';
 
 import {
-  sortTasksByDueDate,
-  sortTasksByPriority,
+  // filterTasksByProject,
+  // filterTasksByStatus,
+  // globalFilterFn,
+  tasksFilterFn,
 } from 'helpers/utils';
 import useWindowSize from 'helpers/hooks/useWindowSize';
 import ColumnTaskItem from 'components/task/ColumnTaskItem';
+import { isEmpty, isNil } from 'lodash';
 
 const TasksContainerDiv = styled.div`
   gap: 0.75rem;
   display: flex;
-  max-height: ${(props) =>
-    props.windowSize.height < 1080 ? '360px' : '560px'};
   padding: 0.5rem 0.35rem;
-  min-height: ${(props) =>
-    props.windowSize.height < 1080 ? '360px' : '560px'};
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  ::-webkit-scrollbar-track {
-    border: none;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #dbdbdb;
-    border: none;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-  }
-
-  &:hover {
-    &::-webkit-scrollbar {
-      display: block;
-      background-color: transparent;
-    }
-  }
+  border: ${(props) =>
+    props.isDraggingOver
+      ? '1px solid #34B3E9'
+      : '1px solid rgba(0,0,0,0)'};
+  border-radius: 4px;
 `;
 
 interface ITasksContainerProps {
-  column: IColumn;
+  status: ITaskStatus;
 }
 
 interface ITasksContainerInternalProps extends ITasksContainerProps {
-  currentBoard: TaskBoard;
+  // currentBoard: TaskBoard;
 }
 
 const TasksContainer = (props: ITasksContainerInternalProps) => {
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const {
+    tasks,
+    globalFilter,
+    selectedProjectList,
+    selectedStatusList,
+    selectedLabelList,
+    selectedDueDateOption,
+    selectedDueDateRange,
+  } = useTasksTableContext();
+  const { status } = props;
+  const memoizedTasks = useMemo(
+    () => tasks.filter((task) => task.status._id === status._id),
+    [status._id, tasks],
+  );
+  const [columnTasks, setColumnTasks] =
+    useState<ITask[]>(memoizedTasks);
   const windowSize = useWindowSize();
 
   useEffect(() => {
-    if (props.currentBoard.sortBy === 'dueDate') {
-      setTasks(
-        sortTasksByDueDate([...tasks], props.currentBoard.orderBy),
-      );
-    } else if (props.currentBoard.sortBy === 'priority') {
-      setTasks(
-        sortTasksByPriority([...tasks], props.currentBoard.orderBy),
+    if (
+      (!isNil(globalFilter) && !isEmpty(globalFilter)) ||
+      (!isNil(selectedDueDateOption) &&
+        !isEmpty(selectedDueDateOption)) ||
+      (!isNil(selectedProjectList) &&
+        !isEmpty(selectedProjectList)) ||
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList))
+    ) {
+      setColumnTasks(
+        tasksFilterFn(
+          memoizedTasks,
+          globalFilter,
+          selectedDueDateOption,
+          selectedDueDateRange,
+          selectedStatusList,
+          selectedLabelList,
+          selectedProjectList,
+        ),
       );
     } else {
-      if (props.column.tasks) setTasks(props.column.tasks);
+      setColumnTasks(memoizedTasks);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    props.column,
-    props.currentBoard.orderBy,
-    props.currentBoard.sortBy,
+    globalFilter,
+    memoizedTasks,
+    selectedDueDateOption,
+    selectedDueDateRange,
+    selectedProjectList,
+    selectedStatusList,
+    selectedLabelList
   ]);
 
-  useEffect(() => {
-    if (props.currentBoard.filteredUsers!.length > 0) {
-      const filteredTasks: ITask[] = [];
-      for (const task of props.column.tasks!) {
-        let found = false;
-        if (task?.assignedMembers) {
-          for (const member of task.assignedMembers) {
-            const res = props.currentBoard.filteredUsers.find(
-              (fUser) => fUser.id === member._id,
-            );
-            if (res) {
-              found = true;
-              break;
-            }
-          }
-          if (found) {
-            filteredTasks.push(task);
-          }
-        }
-      }
-      setTasks(filteredTasks);
-    } else {
-      if (props.column.tasks) setTasks(props.column.tasks);
-    }
-  }, [props.currentBoard.filteredUsers]);
-
   return (
-    <Droppable droppableId={props.column._id} type="task">
+    <Droppable droppableId={props.status._id} type="task">
       {(provided, snapshot) => {
         const allowedProps = { ref: provided.innerRef };
         return (
           <TasksContainerDiv
-            className={`flex flex-column h-100 overflow-x-hidden overflow-y-auto`}
+            className={`flex flex-column h-100`}
             windowSize={windowSize}
             isDraggingOver={snapshot.isDraggingOver}
             {...provided.droppableProps}
             {...allowedProps}
           >
-            {tasks.map((task, index) => (
+            {columnTasks.map((task, index) => (
               <ColumnTaskItem
                 task={task}
                 index={index}
-                key={task._id}
+                key={String(task._id)}
               />
             ))}
           </TasksContainerDiv>
@@ -127,7 +114,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
+  // currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
 });
 
 export default connect(mapStateToProps)(TasksContainer);

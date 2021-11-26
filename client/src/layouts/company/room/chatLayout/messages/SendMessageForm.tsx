@@ -235,7 +235,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
         //   emoji="sunglasses"
         //   title="Onethread app"
         //   autoFocus={true}
-        //   color="#34b3e9"
+        //   color="#08A0F7"
         //   ref={emojiRef}
         // />
         <> </>
@@ -260,7 +260,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                   className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
                   style={{
                     backgroundColor: 'white',
-                    color: '#34b3e9',
+                    color: '#08A0F7',
                     borderRadius: '30px',
                     paddingTop: '1px',
                   }}
@@ -335,7 +335,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                   src={SmileIcon}
                   width="30px"
                   height="30px"
-                  color="#34b3e9"
+                  color="#08A0F7"
                   alt=""
                 />
               </span>
@@ -349,7 +349,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                 src={AttachmentIcon}
                 width="30px"
                 height="30px"
-                color="#34b3e9"
+                color="#08A0F7"
                 alt=""
               />
             </span>
@@ -363,7 +363,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                 src={SendIcon}
                 width="30px"
                 height="30px"
-                color="#34b3e9"
+                color="#08A0F7"
                 alt=""
               />
             </span>

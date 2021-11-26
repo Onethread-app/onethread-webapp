@@ -1,9 +1,6 @@
 const { Associate } = require('../../associate/associate.model');
 const findByAssociateId = async (_id) => {
-  return await Associate.findOne({
-    _id: _id,
-    removed: false,
-  })
+  return await Associate.findById(_id)
     .select('_id company associateCompany createdAt account')
     .populate(
       'associateCompany',

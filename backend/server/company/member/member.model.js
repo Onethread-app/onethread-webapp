@@ -35,6 +35,14 @@ const member = new Schema(
       type: Boolean,
       default: false,
     },
+    isApproved: {
+      type: Boolean,
+      default: true,
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+    },
   },
   {
     timestamps: true,

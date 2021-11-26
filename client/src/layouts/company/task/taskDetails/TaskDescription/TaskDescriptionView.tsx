@@ -10,7 +10,8 @@ import { ICompany } from 'stores/company/Reducer';
 
 import { componentDecorator } from 'helpers/LinkifyHelper';
 import { TaskDescriptionEditor } from './TaskDescriptionEditor';
-
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 interface TaskDescriptionViewInternalProps {
   description?: ITask['description'];
   company?: ICompany;
@@ -22,13 +23,12 @@ export const TaskDescriptionViewComponent = (
   const { t } = useTranslation();
   const [editDescriptionDialog, setEditDescriptionDialog] =
     useState(false);
+  const [expandDescription, setExpandDescription] =
+    useState<boolean>(false);
 
   return (
     <>
-      <div
-        className="flex justify-between"
-        style={{ height: '50px' }}
-      >
+      <div className="flex justify-between items-center">
         <h1
           style={{
             color: '#323030',
@@ -36,7 +36,19 @@ export const TaskDescriptionViewComponent = (
             fontWeight: 700,
             lineHeight: '28px',
           }}
+          className="flex items-center"
         >
+          {expandDescription ? (
+            <ArrowDropDownIcon
+              className="mr1"
+              onClick={() => setExpandDescription(false)}
+            />
+          ) : (
+            <ArrowRightIcon
+              className="mr1"
+              onClick={() => setExpandDescription(true)}
+            />
+          )}
           {t('app.project.Project-boards.Description')}:
         </h1>
         <div className="pr2 pt1">
@@ -62,27 +74,31 @@ export const TaskDescriptionViewComponent = (
             setEditDescriptionDialog(!editDescriptionDialog)
           }
         />
-      ) : props.description ? (
-        <Linkify componentDecorator={componentDecorator}>
-          <p
-            className="pr2 ws-break"
-            style={{
-              whiteSpace: 'pre-line',
-              maxHeight: '160px',
-              overflowY: 'auto',
-              fontSize: '14px',
-              lineHeight: '24px',
-              fontWeight: 400,
-            }}
-          >
-            {props.description}
-          </p>
-        </Linkify>
-      ) : (
-        <p className="pr2">
-          {t('app.project.Project-boards.No-description')}
-        </p>
-      )}
+      ) : expandDescription ? (
+        <div className="ml2">
+          {props.description ? (
+            <Linkify componentDecorator={componentDecorator}>
+              <p
+                className="pr2 ws-break"
+                style={{
+                  whiteSpace: 'pre-line',
+                  maxHeight: '160px',
+                  overflowY: 'auto',
+                  fontSize: '14px',
+                  lineHeight: '24px',
+                  fontWeight: 400,
+                }}
+              >
+                {props.description}
+              </p>
+            </Linkify>
+          ) : (
+            <p className="pr2 ml2">
+              {t('app.project.Project-boards.No-description')}
+            </p>
+          )}
+        </div>
+      ) : null}
     </>
   );
 };

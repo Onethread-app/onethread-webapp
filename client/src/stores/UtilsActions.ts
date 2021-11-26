@@ -16,15 +16,15 @@ export interface Entity {
 export const tokenConfig = () => {
   const token =
     typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+    localStorage.getItem('ot_access_id')
+      ? JSON.parse(localStorage.getItem('ot_access_id')!)
       : null;
   if (
-    !localStorage.getItem('tigrow_acc_id') ||
-    !localStorage.getItem('tigrow_real_id')
+    !localStorage.getItem('ot_access_id') ||
+    !localStorage.getItem('ot_refresh_id')
   ) {
-    localStorage.removeItem('tigrow_acc_id');
-    localStorage.removeItem('tigrow_real_id');
+    localStorage.removeItem('ot_access_id');
+    localStorage.removeItem('ot_refresh_id');
     toaster.show({
       message: 'Token is invalid. Please sign in.',
       intent: 'danger',
@@ -42,6 +42,35 @@ export const tokenConfig = () => {
   };
 };
 
+export const formTokenConfig = (companyId: string) => {
+  const token =
+    typeof window !== undefined &&
+    localStorage.getItem('ot_access_id')
+      ? JSON.parse(localStorage.getItem('ot_access_id')!)
+      : null;
+  if (
+    !localStorage.getItem('ot_access_id') ||
+    !localStorage.getItem('ot_refresh_id')
+  ) {
+    localStorage.removeItem('ot_access_id');
+    localStorage.removeItem('ot_refresh_id');
+    toaster.show({
+      message: 'Token is invalid. Please sign in.',
+      intent: 'danger',
+    });
+    History.push('/signin');
+    window.location.reload();
+  }
+  return {
+    headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      ClientId: store.getState().notificationReducer.socketId,
+      CompanyId: companyId,
+    },
+  };
+};
+
 export const adminTokenConfig = () => {
   return {
     headers: {
@@ -54,15 +83,15 @@ export const adminTokenConfig = () => {
 export const tokenConfigFIleUpload = () => {
   const token =
     typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+    localStorage.getItem('ot_access_id')
+      ? JSON.parse(localStorage.getItem('ot_access_id')!)
       : null;
   if (
-    !localStorage.getItem('tigrow_acc_id') ||
-    !localStorage.getItem('tigrow_real_id')
+    !localStorage.getItem('ot_access_id') ||
+    !localStorage.getItem('ot_refresh_id')
   ) {
-    localStorage.removeItem('tigrow_acc_id');
-    localStorage.removeItem('tigrow_real_id');
+    localStorage.removeItem('ot_access_id');
+    localStorage.removeItem('ot_refresh_id');
     toaster.show({
       message: 'Token is invalid. Please sign in.',
       intent: 'danger',
@@ -83,10 +112,10 @@ export const isAuthenticate = () => {
     return false;
   }
   if (
-    localStorage.getItem('tigrow_acc_id') &&
-    localStorage.getItem('tigrow_real_id')
+    localStorage.getItem('ot_access_id') &&
+    localStorage.getItem('ot_refresh_id')
   ) {
-    return JSON.parse(localStorage.getItem('tigrow_acc_id')!);
+    return JSON.parse(localStorage.getItem('ot_access_id')!);
   } else {
     return false;
   }
@@ -116,8 +145,8 @@ export const companyPermit = (
   companyRole: string,
   optionalPermissions?: AdminOptionalPermissioRoles,
 ): boolean => {
-  const adminPermissions = store.getState().companyReducer
-    .currentCompany.optionalRole;
+  const adminPermissions =
+    store.getState().companyReducer.currentCompany.optionalRole;
   let permitStatus = false;
   switch (companyRole) {
     case 'superAdmin':
@@ -141,7 +170,8 @@ export const companyPermit = (
 };
 
 export const passwordValidation = (password: string) => {
-  const regex = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
+  const regex =
+    /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
   if (password.match(regex)) {
     return true;
   } else {
@@ -188,7 +218,8 @@ export const parseJwt = (token: any) => {
 };
 
 export const isEmail = (email: string) => {
-  const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regexForEmailValidation =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if (email.match(regexForEmailValidation)) {
     return true;
   }

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 interface IProps {
   errorMessage: any;
+  style?: any;
 }
 const Error = styled.span({
   color: 'red',

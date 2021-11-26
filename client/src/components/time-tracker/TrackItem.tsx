@@ -4,7 +4,7 @@ import { ITrack } from 'stores/time-tracker/Reducer';
 
 import { msToTime } from 'helpers/utils';
 import useWindowSize from 'helpers/hooks/useWindowSize';
-import TaskStatusTag from 'components/task/TaskStatusTag';
+// import TaskStatusTag from 'components/task/TaskStatusTag';
 import MemberIcon from 'components/member/MemberIcon';
 
 import {
@@ -30,11 +30,11 @@ const TrackItem = (props: ITrackItem) => {
         <p>{moment(item.startTime).format('MMM DD, hh:mm a')}</p>
       </TrackPart>
       <TrackPart>
-        <TaskStatusTag status={item.column.name.replace(/ /g, '-')} />
+        {/* <TaskStatusTag status={item.column.name.replace(/ /g, '-')} /> */}
         <MemberIcon
-          _id={item.account._id}
-          name={`${item.account.firstName} ${item.account.lastName}`}
-          profileImage={item.account.profileImage}
+          _id={item.task.account._id}
+          name={`${item.task.account.firstName} ${item.task.account.lastName}`}
+          profileImage={item.task.account.profileImage}
           small
         />
       </TrackPart>

@@ -12,6 +12,8 @@ import companySaga from './company/companySaga';
 import taskMembersSaga from './taskMembers/taskMembersSaga';
 import subtaskSaga from './subtask/subtaskSaga';
 import timeTrackerSaga from './time-tracker/timeTrackerSaga';
+import userSaga from './user/UserSaga';
+import authSaga from './auth/AuthSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -28,5 +30,7 @@ export default function* rootSaga() {
     taskMembersSaga(),
     subtaskSaga(),
     timeTrackerSaga(),
+    userSaga(),
+    authSaga(),
   ]);
 }

@@ -77,16 +77,10 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
               // tslint:disable-next-line: max-line-length
               props.currentCompany
                 ? history.push(
-                    `/company/${props.currentCompany}/project/${
-                      props.room.project
-                    }/room?roomId=${props.room._id}${
-                      queries.view ? '&view=' + queries.view : ''
-                    }`,
+                    `/company/${props.currentCompany}/project/${props.room.project}/?ptab=3&discussion=${props.room._id}&thread=0`,
                   )
                 : history.push(
-                    `${location.pathname}?roomId=${props.room._id}${
-                      queries.view ? '&view=' + queries.view : ''
-                    }`,
+                    `${location.pathname}?ptab=3&discussion=${props.room._id}&thread=0`,
                   );
             }
             if (isMobileOnly) {
@@ -150,7 +144,7 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
                 width="20px"
                 height="20px"
                 style={{}}
-                color="#34b3e9"
+                color="#08A0F7"
                 alt=""
               />
               <span className="f5 ml2 fw7">

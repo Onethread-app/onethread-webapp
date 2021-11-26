@@ -44,7 +44,7 @@ const useStyles = makeStyles({
     color: 'white',
     fontSize: 14,
     padding: '6px 16px',
-    backgroundColor: '#34b3e9',
+    backgroundColor: '#08A0F7',
     textTransform: 'none',
     fontFamily: [
       '-apple-system',
@@ -59,7 +59,7 @@ const useStyles = makeStyles({
       '"Segoe UI Symbol"',
     ].join(','),
     '&:hover': {
-      backgroundColor: '#34b3e9',
+      backgroundColor: '#08A0F7',
     },
     '&:active': {
       backgroundColor: '#27CB53',
@@ -368,7 +368,7 @@ function _Checkout(props: ICheckout) {
               <h4
                 className="b"
                 style={{
-                  color: '#34b3e9',
+                  color: '#08A0F7',
                 }}
               >
                 Package Name
@@ -399,7 +399,7 @@ function _Checkout(props: ICheckout) {
                 justify="space-between"
                 container
                 style={{
-                  backgroundColor: '#34b3e9',
+                  backgroundColor: '#08A0F7',
                   color: 'white',
                 }}
               >

@@ -9,7 +9,7 @@ import {
 
 import TimeTrackerTypes from './Types';
 
-import { tokenConfig } from 'stores/UtilsActions';
+import { formTokenConfig, tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 
@@ -25,9 +25,14 @@ import { getCurrentTaskId } from 'stores/task/Selector';
 
 function* addTrackedTimeAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
+    const { project, company, ...newPayload } = payload;
+    const headers = formTokenConfig(company);
     if ((headers as any).headers.Authorization) {
-      const res = yield tigrowApi.post(`track/`, payload, headers);
+      const res = yield tigrowApi.post(
+        `time-trackers?pid=${project}`,
+        newPayload,
+        headers,
+      );
       yield all([
         put(updateProjectTimeSpent(res.data.timeTracker)),
         put(updateTaskTimeSpent(res.data.timeTracker)),
@@ -39,18 +44,30 @@ function* addTrackedTimeAsync({ payload }: any) {
   }
 }
 
-function* getTaskTrackersAsync() {
+function* getTaskTrackersAsync(action) {
   try {
     const currentTaskId = yield select(getCurrentTaskId);
-    const headers = tokenConfig();
+    const headers = formTokenConfig(action.payload);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.get(
-        `track/task?taskId=${currentTaskId}`,
+        `time-trackers/task/${currentTaskId}`,
         headers,
       );
       yield put(getTaskTrackersSuccess(res.data));
     }
   } catch (error) {
+    yield put(getTaskTrackersFailure(returnErrorText(error)));
+  }
+}
+
+function* getTaskTrackersByUserAsync() {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const res = yield tigrowApi.get(`time-trackers/user`, headers);
+      yield put(getTaskTrackersSuccess(res.data));
+    }
+  } catch (error: any) {
     yield put(getTaskTrackersFailure(returnErrorText(error)));
   }
 }
@@ -69,6 +86,17 @@ function* onGetTaskTrackers() {
   );
 }
 
+function* onGetTaskTrackersByUser() {
+  yield takeLatest(
+    TimeTrackerTypes.USER_TIME_TRACKER,
+    getTaskTrackersByUserAsync,
+  );
+}
+
 export default function* timeTrackerSaga() {
-  yield all([call(onAddTrackedTime), call(onGetTaskTrackers)]);
+  yield all([
+    call(onAddTrackedTime),
+    call(onGetTaskTrackers),
+    call(onGetTaskTrackersByUser),
+  ]);
 }

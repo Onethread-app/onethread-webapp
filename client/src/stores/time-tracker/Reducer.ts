@@ -18,33 +18,31 @@ export interface ITrack {
   task: {
     _id: string;
     name: string;
-    boardId: {
+    parentTask: string;
+    subtask?: {
       _id: string;
+      name: string;
     };
-  };
-  subtask?: {
-    _id: string;
-    name: string;
-  };
-  column: {
-    _id: string;
-    name: string;
-  };
-  project: {
-    _id: string;
-    name: string;
-  };
-  company: {
-    _id: string;
-    name: string;
-    uniqueName: string;
-  };
-  account: {
-    _id: string;
-    name: string;
-    firstName: string;
-    lastName: string;
-    profileImage: string;
+    project: {
+      _id: string;
+      name: string;
+    };
+    company: {
+      _id: string;
+      name: string;
+      uniqueName: string;
+    };
+    account: {
+      _id: string;
+      name: string;
+      firstName: string;
+      lastName: string;
+      profileImage: string;
+    };
+    status: {
+      _id: string;
+      name: string;
+    };
   };
 }
 
@@ -56,6 +54,8 @@ export interface ITimeTracker {
   errorOnAddingTrack: string;
   gettingTrackList: boolean;
   errorOnGettingTrackList: string;
+  fetchingTrackedList: boolean;
+  errorOnFeatchingTrackedList: string;
 }
 
 const InitialState: ITimeTracker = {
@@ -70,6 +70,8 @@ const InitialState: ITimeTracker = {
     startTime: null,
     duration: 0,
   },
+  fetchingTrackedList: false,
+  errorOnFeatchingTrackedList: '',
   trackListForCurrentTask: [],
   addingTrack: false,
   errorOnAddingTrack: '',
@@ -139,6 +141,24 @@ export const TimeTrackerReducer = (
         ...state,
         errorOnGettingTrackList: action.payload,
         gettingTrackList: false,
+      };
+    case TimeTrackerTypes.USER_TIME_TRACKER:
+      return {
+        ...state,
+        fetchingTrackedList: true,
+        errorOnFeatchingTrackedList: '',
+      };
+    case TimeTrackerTypes.USER_TIME_TRACKER_SUCCESS:
+      return {
+        ...state,
+        fetchingTrackedList: false,
+        trackedList: action.payload,
+      };
+    case TimeTrackerTypes.USER_TIME_TRACKER_FAILURE:
+      return {
+        ...state,
+        errorOnFeatchingTrackedList: action.payload,
+        fetchingTrackedList: false,
       };
     default:
       return state;

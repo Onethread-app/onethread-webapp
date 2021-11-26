@@ -1,5 +1,5 @@
 import { ProjectActionTypes } from './Types';
-import { IPendingProject } from './Reducer';
+import { IPendingProject, IProject } from './Reducer';
 
 export const getAllProjects = () => ({
   type: ProjectActionTypes.GET_ALL_PROJECTS_START,
@@ -34,8 +34,11 @@ export const createProjectInCompany = (payload: any) => ({
   payload,
 });
 
-export const createProjectInCompanySuccess = () => ({
+export const createProjectInCompanySuccess = (
+  response: IProject,
+) => ({
   type: ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_SUCCESS,
+  payload: response,
 });
 
 export const createProjectInCompanyFailure = (errorMessage: any) => ({
@@ -101,17 +104,9 @@ export const getProjectArchiveFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
-export const updateProject = (
-  projectName: string,
-  projectId: string,
-  color: string,
-  deadline: Date,
-) => ({
+export const updateProject = (payload) => ({
   type: ProjectActionTypes.UPDATE_PROJECT_START,
-  projectName,
-  projectId,
-  color,
-  deadline,
+  payload,
 });
 
 export const updateProjectSuccess = (response: any) => ({
@@ -421,4 +416,99 @@ export const updateProjectTimeSpent = (payload: any) => ({
 export const deleteTeamMember = (teamId: string) => ({
   type: ProjectActionTypes.DELETE_TEAM_MEMBER_START,
   payload: teamId,
+});
+
+export const getAllUserProjects = () => ({
+  type: ProjectActionTypes.GET_ALL_USER_PROJECTS_START,
+});
+
+export const getAllUserProjectsSuccess = (response: any) => ({
+  type: ProjectActionTypes.GET_ALL_USER_PROJECTS_SUCCESS,
+  payload: response,
+});
+
+export const getAllUserProjectsFailure = (errorMessage: any) => ({
+  type: ProjectActionTypes.GET_ALL_USER_PROJECTS_FAILURE,
+  payload: errorMessage,
+});
+
+export const getUserFavouriteProjects = () => ({
+  type: ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_START,
+});
+
+export const getUserFavouriteProjectsSuccess = (response: any) => ({
+  type: ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_SUCCESS,
+  payload: response,
+});
+
+export const getUserFavouriteProjectFailure = (
+  errorMessage: any,
+) => ({
+  type: ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_FAILURE,
+  payload: errorMessage,
+});
+
+export const favouriteProject = (response) => ({
+  type: ProjectActionTypes.FAVOURITE_PROJECT,
+  payload: response,
+});
+
+export const favouriteProjectSuccess = (response: any) => ({
+  type: ProjectActionTypes.FAVOURITE_PROJECT_SUCCESS,
+  payload: response,
+});
+
+export const favouriteProjectFailure = (response: string) => ({
+  type: ProjectActionTypes.FAVOURITE_PROJECT_FAILURE,
+  payload: response,
+});
+
+export const newArchiveProject = (payload: {
+  projectId;
+  companyId;
+}) => ({
+  type: ProjectActionTypes.NEW_ARCHIVE_PROJECT_START,
+  payload,
+});
+
+export const newUpdateProject = (payload: {
+  projectName: string;
+  projectId: string;
+  color: string;
+  deadline: Date;
+  companyId: string;
+}) => ({
+  type: ProjectActionTypes.NEW_UPDATE_PROJECT_START,
+  payload,
+});
+
+export const newUnarchiveProject = (payload: {
+  projectId;
+  companyId;
+}) => ({
+  type: ProjectActionTypes.NEW_UNARCHIVE_PROJECT_START,
+  payload,
+});
+
+export const newDeleteProject = (payload: {
+  projectId: string;
+  companyId: string;
+}) => ({
+  type: ProjectActionTypes.NEW_DELETE_PROJECT_START,
+  payload,
+});
+
+export const newArchiveProjectSuccess = (response: string) => ({
+  type: ProjectActionTypes.NEW_ARCHIVE_PROJECT_SUCCESS,
+  payload: response,
+});
+
+export const newUnarchiveProjectSuccess = (response: string) => ({
+  type: ProjectActionTypes.NEW_UNARCHIVE_PROJECT_SUCCESS,
+  payload: response,
+});
+
+export const newDeleteProjectSuccess = (response: string) => ({
+  type: ProjectActionTypes.NEW_DELETE_PROJECT_SUCCESS,
+  payload: response,
 });

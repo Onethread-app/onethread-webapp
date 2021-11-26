@@ -2,14 +2,13 @@ import { all, put, call, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
 import {
+  formTokenConfig,
   tokenConfig,
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
 import { TaskActionType } from './Types';
-import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
-import { Toaster } from '@blueprintjs/core';
 import {
   createBoardFailure,
   createBoardSuccess,
@@ -42,19 +41,28 @@ import {
   updateBoardNameFailure,
   updateBoardNameSuccess,
   dragAndDropTaskFailure,
-  updateCurrentTaskColumnId,
   getAllUserTasksSuccess,
   getAllUserTasksFailure,
+  getAllCompanyTasksFailure,
+  getAllCompanyTasksSuccess,
+  getAllProjectTasksSuccess,
+  getAllProjectTasksFailure,
+  createTaskStatusSuccess,
+  createTaskStatusFailure,
+  getAllTaskStatusInProjectSuccess,
+  getAllTaskStatusInProjectFailure,
+  updateTaskStatusFailure,
+  createSubTaskSuccess,
+  createSubTaskFailure,
+  taskMarkAsCompletedSuccess,
+  taskMarkAsCompletedFailure,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
-import {
-  getCurrentBoard,
-  getCurrentTaskId,
-  selectColumnName,
-} from './Selector';
+import { getCurrentBoard } from './Selector';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { updateUserCompanyTask } from 'stores/user/Actions';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -118,6 +126,41 @@ function* getAllUserTasksAsync() {
     }
   } catch (error) {
     yield put(getAllUserTasksFailure(returnErrorText(error)));
+  }
+}
+
+function* getAllCompanyTasksAsync() {
+  yield put(showLoading());
+  try {
+    const headers = tokenConfig();
+    const companyId = yield select(getCompanyId);
+    if ((headers.headers as any).Authorization) {
+      const response = yield tigrowApi.get(
+        `/company/${companyId}/all-tasks`,
+        headers,
+      );
+      yield put(getAllCompanyTasksSuccess(response.data.tasks));
+    }
+  } catch (error) {
+    yield put(getAllCompanyTasksFailure(returnErrorText(error)));
+  } finally {
+    yield put(hideLoading());
+  }
+}
+
+function* getAllProjectTasksAsync() {
+  try {
+    const headers = tokenConfig();
+    const projectId = yield select(getProjectId);
+    if ((headers.headers as any).Authorization) {
+      const response = yield tigrowApi.get(
+        `/projects/tasks?pid=${projectId}`,
+        headers,
+      );
+      yield put(getAllProjectTasksSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(getAllProjectTasksFailure(returnErrorText(error)));
   }
 }
 
@@ -212,105 +255,58 @@ export function* updateColumn({ payload }: any) {
 
 export function* createTask({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const projectId = yield select(getProjectId);
-    const { columnId } = payload;
-    const col = yield select(selectColumnName(columnId));
-    const newPayload = {
-      status: col[0].name.toLowerCase().split(' ').join('-'),
-      ...payload,
-    };
+    const { companyId, projectId, ...newPayload } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
         `tasks?pid=${projectId}`,
         newPayload,
         headers,
       );
-      const responseValue = {
-        ...response.data,
-        columnId: payload.columnId,
-      };
-      yield put(createTaskSuccess(responseValue));
+
+      const currentCompanyId = yield select(getCompanyId);
+      const currentProjectId = yield select(getProjectId);
+      yield put(
+        createTaskSuccess({
+          task: {
+            ...response.data,
+          },
+          currentCompanyId,
+          currentProjectId,
+        }),
+      );
+      yield put(updateUserCompanyTask(companyId));
     }
   } catch (error) {
-    yield put(createTaskFailure(returnErrorText(error)));
+    yield put(
+      createTaskFailure(returnErrorText(error) || 'Unknown error'),
+    );
   }
 }
 
 export function* dragAndDrop({
   taskId,
-  sourceColumnId,
-  destinationColumnId,
-  taskIndexOfDestinationColumn,
+  companyId,
+  destinationStatusId,
+  sourceStatusId,
 }: any) {
   try {
-    const headers = tokenConfig();
-    const currentBoard: TaskBoard = yield select(getCurrentBoard);
-    const destColumn = yield select(
-      selectColumnName(destinationColumnId),
-    );
-    const status = destColumn[0].name
-      .toLowerCase()
-      .split(' ')
-      .join('-');
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
-      const requestData = {
-        taskId,
-        status,
-        sourceColumnId,
-        destinationColumnId,
-        taskIndexOfDestinationColumn,
-      };
-      const allColumns = currentBoard.columns!;
-      let addedTask: ITask = {} as any;
-      let destCol = 0;
-
-      // find the dragged task, removed from source and save destination column index
-      allColumns.forEach((column, i) => {
-        if (sourceColumnId === column._id) {
-          const index = column.tasks!.findIndex(
-            (task) => task._id === taskId,
-          );
-          column.tasks![index].status = status;
-          column.tasks![index].columnId = destinationColumnId;
-          addedTask = column.tasks!.slice(index, index + 1)[0];
-          column.tasks!.splice(index, 1);
-        }
-        if (destinationColumnId === column._id) {
-          destCol = i;
-        }
-      });
-      allColumns[destCol].tasks!.splice(
-        taskIndexOfDestinationColumn,
-        0,
-        addedTask,
+      yield tigrowApi.post(
+        `tasks/dragTask`,
+        { sourceStatusId, destinationStatusId, taskId },
+        headers,
       );
-      const currentTaskId = yield select(getCurrentTaskId);
-      if (taskId === currentTaskId) {
-        yield put(
-          updateCurrentTaskColumnId({
-            columnId: destinationColumnId,
-            status,
-          }),
-        );
-      }
-      yield put(dragAndDropTaskSuccess(allColumns));
-      yield tigrowApi.post(`tasks/dragTask`, requestData, headers);
     }
+    yield put(
+      dragAndDropTaskSuccess({ taskId, destinationStatusId }),
+    );
   } catch (error) {
-    Toaster.create().show({
-      message: 'Operation Unsuccessful',
-      action: {
-        icon: 'refresh',
-        className: 'bp3-intent-warning b',
-        onClick: () => {
-          window.location.reload();
-        },
-        text: 'Reload',
-      },
-      timeout: 300000,
-    });
-    yield put(dragAndDropTaskFailure(returnErrorText(error)));
+    const errorText = returnErrorText(error);
+
+    // TODO: send errorText to error toaster
+    yield put(dragAndDropTaskFailure(errorText));
   }
 }
 
@@ -334,34 +330,15 @@ export function* addTeamMembersIntoBoard({ members, boardId }: any) {
 export function* getSelectedTaskDetailsAsync({ payload }: any) {
   try {
     yield put(showLoading());
-    const headers = tokenConfig();
-    // const projectId = yield select(getProjectId);
-    // if (projectId) {
+    const { companyId, projectId, taskId } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization && payload) {
-      const res = yield tigrowApi.get(`tasks/${payload}`, headers);
-      const response = {
-        _id: res.data._id,
-        name: res.data.name,
-        createdAt: res.data.createdAt,
-        dueDate: res.data.dueDate,
-        createdBy:
-          res.data.account.firstName +
-          ' ' +
-          res.data.account.lastName,
-        description: res.data.description,
-        priority: res.data.priority,
-        currentColumnName: res.data.columnId.name,
-        columnId: res.data.columnId._id,
-        boardId: res.data.boardId,
-        file: res.data.file,
-        status: res.data.status,
-        timeSpent: res.data.timeSpent,
-      };
-      yield put(getSelectedTaskDetailsSuccess(response));
+      const res = yield tigrowApi.get(
+        `tasks/${taskId}?pid=${projectId}`,
+        headers,
+      );
+      yield put(getSelectedTaskDetailsSuccess(res.data));
     }
-    // } else {
-    //   yield put(updateTaskLoading(false));
-    // }
   } catch (error) {
     yield put(getSelectedTaskDetailsFailure(returnErrorText(error)));
   } finally {
@@ -371,55 +348,19 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
 
 export function* updateTask({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const taskId = yield select(getCurrentTaskId);
-    const projectId = yield select(getProjectId);
-    const currentBoard = yield select(getCurrentBoard);
+    const { companyId, projectId, taskId, ...newPayload } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.put(
         `tasks/${taskId}?pid=${projectId}`,
-        payload,
+        newPayload,
         headers,
       );
-      const response = {
-        _id: res.data._id,
-        name: res.data.name,
-        createdAt: res.data.createdAt,
-        dueDate: res.data.dueDate,
-        createdBy:
-          res.data.account.firstName +
-          ' ' +
-          res.data.account.lastName,
-        description: res.data.description,
-        priority: res.data.priority,
-        currentColumnName: res.data.columnId.name,
-        columnId: res.data.columnId._id,
-      };
-
-      const allColumns = currentBoard.columns!;
-      allColumns.forEach((column, i) => {
-        if (response.columnId === column._id) {
-          const index = column.tasks!.findIndex(
-            (task) => task._id === taskId,
-          );
-          column.tasks![
-            index
-          ].status = response.currentColumnName
-            .toLowerCase()
-            .split(' ')
-            .join('-');
-          column.tasks![index]._id = response._id;
-          column.tasks![index].name = response.name;
-          column.tasks![index].dueDate = response.dueDate;
-          column.tasks![index].description = response.description;
-          column.tasks![index].priority = response.priority;
-          column.tasks![index].currentColumnName =
-            response.currentColumnName;
-          column.tasks![index].columnId = response.columnId;
-        }
-      });
-
-      yield put(updateTaskSuccess({ allColumns, response }));
+      yield put(
+        updateTaskSuccess({
+          updatedTask: res.data.task,
+        }),
+      );
     }
   } catch (error) {
     errorMessgeHandler(error);
@@ -441,11 +382,19 @@ export function* taskFileUploadAsync({ payload }: any) {
         taskId: res.data.task,
         link: res.data.link,
         s3Key: res.data.s3key,
-        columnId: payload.columnId,
+        columnId: payload.columnId, // need to change
       };
+      const companyId = yield select(getCompanyId);
+      const projectId = yield select(getProjectId);
       yield all([
         put(taskFileUploadSuccess(response)),
-        put(getSelectedTaskDetails(payload.taskId)),
+        put(
+          getSelectedTaskDetails({
+            taskId: payload.taskId,
+            companyId,
+            projectId,
+          }),
+        ),
       ]);
     }
   } catch (error) {
@@ -462,9 +411,17 @@ export function* taskFileDeleteAsync({ payload }: any) {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       yield tigrowApi.put(`files/file-delete-task`, reqBody, headers);
+      const companyId = yield select(getCompanyId);
+      const projectId = yield select(getProjectId);
       yield all([
         put(taskFileDeleteSuccess(payload)),
-        put(getSelectedTaskDetails(payload.taskId)),
+        put(
+          getSelectedTaskDetails({
+            taskId: payload.taskId,
+            companyId,
+            projectId,
+          }),
+        ),
       ]);
     }
   } catch (error) {
@@ -474,24 +431,114 @@ export function* taskFileDeleteAsync({ payload }: any) {
 
 export function* deleteTaskAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const projectId = yield select(getProjectId);
+    const { taskId, projectId, companyId, parentTask } = payload;
+    const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization && payload) {
       const response = yield tigrowApi.delete(
-        `tasks/${payload.taskId}?pid=${projectId}`,
-        {
-          data: {
-            columnId: payload.columnId,
-          },
-          headers: headers.headers,
-        },
+        `tasks/${taskId}?pid=${projectId}`,
+        headers,
       );
       if (response.status === 200) {
-        yield put(deleteTaskSuccess(payload));
+        yield put(deleteTaskSuccess({ taskId, parentTask }));
       }
     }
   } catch (error) {
     yield put(deleteTaskFailure(returnErrorText(error)));
+  }
+}
+
+export function* createTaskStatusAsync({ payload }: any) {
+  try {
+    const { projectId, companyId, ...newPayload } = payload;
+    const headers = formTokenConfig(companyId);
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.post(
+        `taskStatus?pid=${projectId}`,
+        newPayload,
+        headers,
+      );
+      yield put(createTaskStatusSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(createTaskStatusFailure(returnErrorText(error)));
+  }
+}
+
+export function* getAllTaskStatusInProjectAsync({ payload }: any) {
+  try {
+    const { projectId, companyId } = payload;
+    const headers = formTokenConfig(companyId);
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(
+        `taskStatus?pid=${projectId}`,
+        headers,
+      );
+      yield put(getAllTaskStatusInProjectSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(
+      getAllTaskStatusInProjectFailure(returnErrorText(error)),
+    );
+  }
+}
+
+export function* updateTaskStatusAsync({ payload }: any) {
+  try {
+    const { projectId, companyId, taskStatusId, ...newPayload } =
+      payload;
+    const headers = formTokenConfig(companyId);
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.put(
+        `taskStatus/${taskStatusId}?pid=${projectId}`,
+        newPayload,
+        headers,
+      );
+      yield put(updateTaskSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(updateTaskStatusFailure(returnErrorText(error)));
+  }
+}
+
+export function* createSubTask(action) {
+  try {
+    const { projectId, companyId, taskId, ...newPayload } =
+      action.payload;
+    const headers = formTokenConfig(companyId);
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.post(
+        `tasks/${taskId}/subtask?pid=${projectId}`,
+        newPayload,
+        headers,
+      );
+      yield put(createSubTaskSuccess(response.data));
+    }
+  } catch (error) {
+    // console.log(error);
+    yield put(createSubTaskFailure(returnErrorText(error)));
+  }
+}
+
+export function* taskMarkAsCompleted({ payload }: any) {
+  try {
+    const { projectId, companyId, taskId } = payload;
+    const headers = formTokenConfig(companyId);
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.post(
+        `tasks/${taskId}/mark-as-completed?pid=${projectId}`,
+        {},
+        headers,
+      );
+      yield put(
+        taskMarkAsCompletedSuccess({
+          projectId,
+          companyId,
+          updatedTask: { _id: taskId, isCompleted: true },
+        }),
+      );
+    }
+  } catch (error) {
+    yield put(taskMarkAsCompletedFailure(returnErrorText(error)));
   }
 }
 
@@ -513,8 +560,22 @@ export function* onGetAllUserTasks() {
   );
 }
 
-export function* onGetSelectedBoard() {
+export function* onGetAllCompanyTasks() {
   yield takeLatest(
+    TaskActionType.GET_ALL_TASKS_FOR_COMPANY_START,
+    getAllCompanyTasksAsync,
+  );
+}
+
+export function* onGetAllProjectTasks() {
+  yield takeLatest(
+    TaskActionType.GET_ALL_TASKS_FOR_PROJECT_START,
+    getAllProjectTasksAsync,
+  );
+}
+
+export function* onGetSelectedBoard() {
+  yield takeEvery(
     TaskActionType.SELECT_BOARD_START,
     getSelectedBoard,
   );
@@ -582,11 +643,45 @@ export function* onDeleteTask() {
   yield takeEvery(TaskActionType.DELETE_TASK_START, deleteTaskAsync);
 }
 
+export function* onCreateTaskStatus() {
+  yield takeEvery(
+    TaskActionType.CREATE_TASK_STATUS,
+    createTaskStatusAsync,
+  );
+}
+
+export function* onGetAllTaskStatusInProject() {
+  yield takeEvery(
+    TaskActionType.GET_ALL_TASK_STATUS,
+    getAllTaskStatusInProjectAsync,
+  );
+}
+
+export function* onUpdateTaskStatus() {
+  yield takeEvery(
+    TaskActionType.UPDATE_TASK_STATUS,
+    updateTaskStatusAsync,
+  );
+}
+
+export function* onCreateSubTask() {
+  yield takeEvery(TaskActionType.CREATE_SUBTASK, createSubTask);
+}
+
+export function* onTaskMarkAsCompleted() {
+  yield takeEvery(
+    TaskActionType.TASK_MARK_AS_COMPLETED,
+    taskMarkAsCompleted,
+  );
+}
+
 export default function* taskSaga() {
   yield all([
     call(onCreateBoard),
     call(onGetAllBoards),
     call(onGetAllUserTasks),
+    call(onGetAllCompanyTasks),
+    call(onGetAllProjectTasks),
     call(onGetSelectedBoard),
     call(onUpdateBoardName),
     call(onCreateColumn),
@@ -599,5 +694,9 @@ export default function* taskSaga() {
     call(onTaskFileUpload),
     call(onTaskFileDelete),
     call(onDeleteTask),
+    call(onCreateTaskStatus),
+    call(onGetAllTaskStatusInProject),
+    call(onUpdateTaskStatus),
+    call(onCreateSubTask),
   ]);
 }

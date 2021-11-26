@@ -6,16 +6,15 @@ import DateFnsUtils from '@date-io/date-fns';
 import { KeyboardDatePicker } from '@material-ui/pickers/DatePicker/DatePicker';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers/MuiPickersUtilsProvider';
 
-import { ISubTask } from 'stores/subtask/Reducer';
-import { updateSubTask } from 'stores/subtask/Actions';
-
 import { checkError } from 'components/final-form/utils';
 
 import '../task.scss';
+import { ITask } from 'stores/task/Reducer';
+import { updateTask } from 'stores/task/Actions';
 
 interface IDueDateFormProps {
-  updateSubTask: (subTask: ISubTask) => void;
-  subTask: ISubTask;
+  updateTask: (subTask) => void;
+  subTask: ITask;
   dueDate: Date | undefined;
   updatingSubTask: boolean;
   errorOnUpdate: string;
@@ -25,9 +24,12 @@ const DueDateEditor = (props: IDueDateFormProps) => {
   const { t } = useTranslation();
 
   const onSubmit = (values: any) => {
-    props.updateSubTask({
-      _id: props.subTask._id,
+    props.updateTask({
+      taskId: props.subTask._id,
       dueDate: values.dueDate,
+      projectId: props.subTask.project._id,
+      companyId: props.subTask.company._id,
+      parentTask: props.subTask.parentTask,
     });
   };
 
@@ -90,5 +92,5 @@ const mapStateToProps = (state: any) => ({
 });
 
 export default connect(mapStateToProps, {
-  updateSubTask,
+  updateTask,
 })(DueDateEditor);

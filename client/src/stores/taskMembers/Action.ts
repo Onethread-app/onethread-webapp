@@ -13,7 +13,7 @@ import {
   GET_ALL_MEMBER_FAILURE,
 } from './Types';
 
-import { ITaskMember } from './Reducer';
+// import { ITaskMember } from './Reducer';
 
 export const addTaskMember = (members: string[]) => ({
   type: ASSIGN_MEMBER_START,
@@ -44,9 +44,9 @@ export const getAllMembersFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
-export const deleteMember = (memberId: ITaskMember['_id']) => ({
+export const deleteMember = (payload) => ({
   type: DELETE_MEMBER_START,
-  memberId,
+  payload,
 });
 
 export const deleteMemberSuccess = (response: any) => ({

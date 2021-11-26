@@ -10,7 +10,7 @@ import createSagaMiddleware from 'redux-saga';
 // const initialState = {} as any;
 
 const persistConfig = {
-  key: 'projectType',
+  key: 'onethread',
   storage,
   whitelist: [
     'projectReducer',

@@ -4,7 +4,7 @@ import Axios from 'axios';
 import { server } from 'config';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { tokenConfig } from 'stores/UtilsActions';
+import { formTokenConfig } from 'stores/UtilsActions';
 import {
   TaskLabelContainer,
   AddLabelButton,
@@ -12,8 +12,13 @@ import {
 } from './TaskLabel.styles';
 import TaskLabelPopover from './TaskLabelPopover';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+import { ITask } from 'stores/task/Reducer';
 
-const TaskLabel = (props) => {
+interface ITaskLabelProps {
+  currentTask: ITask;
+}
+
+const TaskLabel = (props: ITaskLabelProps) => {
   const [suggestedLabels, setSuggestedLabels] = useState<any>([]);
   const [allLabels, setAllLabels] = useState<any>([]);
   const [deleteIsLoading, setDeleteIsLoading] = useState(false);
@@ -21,7 +26,7 @@ const TaskLabel = (props) => {
   const taskId = props.currentTask._id;
 
   const loadAllLabels = async (task) => {
-    const headers = tokenConfig();
+    const headers = formTokenConfig(props.currentTask.company._id);
     if ((headers as any).headers.Authorization) {
       try {
         const response = await Axios.get(
@@ -46,7 +51,7 @@ const TaskLabel = (props) => {
   };
 
   const selectLabelFromSuggestion = async (labelId) => {
-    const headers = tokenConfig();
+    const headers = formTokenConfig(props.currentTask.company._id);
     if ((headers as any).headers.Authorization) {
       try {
         await Axios.post(
@@ -64,7 +69,7 @@ const TaskLabel = (props) => {
   };
 
   const suggestLabels = async (keyword) => {
-    const headers = tokenConfig();
+    const headers = formTokenConfig(props.currentTask.company._id);
     if ((headers as any).headers.Authorization) {
       try {
         const response = await Axios.get(
@@ -90,7 +95,7 @@ const TaskLabel = (props) => {
   };
 
   const createLabel = async (body) => {
-    const headers = tokenConfig();
+    const headers = formTokenConfig(props.currentTask.company._id);
     if ((headers as any).headers.Authorization) {
       await Axios.post(`${server}labels/`, body, headers);
       await loadAllLabels(taskId);
@@ -99,7 +104,7 @@ const TaskLabel = (props) => {
 
   const deleteLabel = async (taskLabelId) => {
     setDeleteIsLoading(true);
-    const headers = tokenConfig();
+    const headers = formTokenConfig(props.currentTask.company._id);
     if ((headers as any).headers.Authorization) {
       try {
         await Axios.delete(
@@ -140,8 +145,8 @@ const TaskLabel = (props) => {
           }
           target={
             <AddLabelButton>
-              <Icon icon="tag" color="#5a5a5a" className="mr1" /> Add
-              Label
+              <Icon icon="tag" color="#5a5a5a" className="mr1" />
+              Add Label
             </AddLabelButton>
           }
         />
@@ -152,11 +157,11 @@ const TaskLabel = (props) => {
         </div>
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {allLabels.map((a) => (
+          {allLabels.map((a, i) => (
             <div
               className="mv1 fl"
               style={{ cursor: 'pointer' }}
-              key={a.label_id}
+              key={i}
             >
               <span
                 className="bp3-tag ma1 pv1 ph3 ws-break"
@@ -194,4 +199,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default connect(mapStateToProps, {})(TaskLabel);
+export default connect(mapStateToProps)(TaskLabel);

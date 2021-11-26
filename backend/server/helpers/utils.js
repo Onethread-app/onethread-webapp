@@ -1,0 +1,101 @@
+const _ = require('lodash');
+
+// const { getTaskMembers } = require('../task/task.controller');
+const TaskAssign = require('../task/taskAssign.model');
+const {
+  getAllStatusInProject,
+} = require('../services/task/taskStatus/taskStatus.service');
+
+const {
+  findSubtasksByTaskId,
+  getAssignedMembers,
+} = require('../services/task/task.service');
+const {
+  getTaskLabel,
+} = require('../services/taskLabel/taskLabel.service');
+
+const getTaskMembers = async (taskId) => {
+  const taskMembers = await TaskAssign.find({
+    taskId,
+  })
+    .select('_id assignedPerson')
+    .populate([
+      {
+        path: 'assignedPerson',
+        select: '_id firstName lastName profileImage',
+      },
+    ])
+    .exec();
+  return taskMembers;
+};
+
+const sortTasksByStatus = (tasks) => {
+  const primaryStatus = ['in-progress', 'to-do', 'done'];
+  const rank = {
+    'in-progress': 0,
+    'to-do': 1,
+    other: 3,
+    done: 999,
+  };
+
+  const sortedTasks = _.sortBy(tasks, (task) => {
+    return primaryStatus.includes(task.status)
+      ? rank[task.status]
+      : rank['other'];
+  });
+  _.sortBy(sortedTasks, (task) => {
+    return new Date(task.dueDate);
+  });
+
+  return sortedTasks;
+};
+
+const sortProjectsByStatus = (projects) => {
+  const rank = {
+    ongoing: 0,
+    'not-started': 1,
+    completed: 2,
+  };
+  return _.sortBy(projects, (project) => {
+    return rank[project.status];
+  });
+};
+
+const getFormattedTaskForClient = async (tasks) => {
+  const formattedTasks = [];
+  for (let i = 0; i < tasks.length; i += 1) {
+    const task = tasks[i];
+    const subtasks = await findSubtasksByTaskId(task._id);
+    const members = await getAssignedMembers(task._id);
+    const statusList = await getAllStatusInProject(task.project._id);
+    const labels = await getTaskLabel(task._id);
+
+    const formattedTask = {
+      ...task._doc,
+      subtasks,
+      members,
+      statusList,
+      labels,
+    };
+    formattedTasks.push(formattedTask);
+  }
+  return formattedTasks;
+};
+
+const getIds = (array) => {
+  if (Array.isArray(array)) return array.map((a) => a._id.toString());
+  return [];
+};
+
+const removeDuplicateFromArray = (arr) => {
+  return arr.filter((val, idx, self) => self.indexOf(val) === idx);
+};
+
+module.exports = {
+  sortTasksByStatus,
+  sortProjectsByStatus,
+  getFormattedTaskForClient,
+  getTaskMembers,
+  getIds,
+  removeDuplicateFromArray,
+};

@@ -22,7 +22,7 @@ export function videoConferencesReducers(
       };
 
     case GET_VIDEO_CONFERENCE_SUCCESS:
-      console.log('succes', action);
+      // console.log('succes', action);
 
       return {
         ...state,

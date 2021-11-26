@@ -21,11 +21,10 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener/ClickAwayListener';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
-import { ITask } from 'stores/task/Reducer';
+import { ITask, ITaskMember } from 'stores/task/Reducer';
 import {
   getSelectedTaskDetails,
   deleteTask,
-  ITaskDelete,
 } from 'stores/task/Actions';
 import { priorityColor } from 'stores/UtilsActions';
 
@@ -36,15 +35,15 @@ import MemberGroup from 'components/member/MemberGroup';
 const ThirdRow = styled.div`
   overflow: hidden;
   height: 0;
-  transition: all 0.3s ease-in;
-  transition-delay: 0.4s;
+  transition: all 0.2s ease-in;
+  transition-delay: 0.3s;
 `;
 
 const SecondRow = styled.div`
   overflow: hidden;
   height: 0;
-  transition: all 0.3s ease-in;
-  transition-delay: 0.4s;
+  transition: all 0.2s ease-in;
+  transition-delay: 0.3s;
 `;
 
 const TaskDueDate = styled.div`
@@ -70,11 +69,10 @@ const TaskItemContainer = styled.div`
   padding: 1rem 1.25rem;
   border-radius: 5px;
   box-shadow: ${(props) => `
-  rgba(17, 17, 26, 0.05) 0px 1px 0px, ${
-    props.isDragging
+  rgba(17, 17, 26, 0.05) 0px 1px 0px, ${props.isDragging
       ? '#3484F0'
       : find(priorityColor, ['code', props.priority])!.value
-  } 0px 0px 4px`};
+    } 0px 0px 4px`};
   background-color: #fff;
   color: #182026 !important;
   display: flex;
@@ -101,29 +99,39 @@ interface IColumnTaskItemInternalProps extends IColumnTaskItem {
   projectId: string;
   deletingTask: boolean;
   errorOnTaskDelete: string;
-  getSelectedTaskDetails: (task: string) => void;
-  deleteTask: ({ taskId, columnId }: ITaskDelete) => void;
+  getSelectedTaskDetails: ({ taskId, companyId, projectId }) => void;
+  deleteTask: ({ taskId, companyId, projectId }) => void;
 }
 
 const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
   const { task } = props;
   const history = useHistory();
-  // const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [taskDelete, setTaskDelete] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
-
+  const [members, setMembers] = useState<ITaskMember[]>([]);
   const handleClick = () => {
-    props.getSelectedTaskDetails(task._id);
+    props.getSelectedTaskDetails({
+      taskId: task._id,
+      companyId: task.company._id,
+      projectId: task.project._id,
+    });
     setLoading(true);
   };
 
   const handleTaskDelete = () => {
-    const payload = { taskId: task._id, columnId: task.columnId };
-    props.deleteTask(payload);
+    props.deleteTask({
+      taskId: task._id,
+      companyId: task.company._id,
+      projectId: task.project._id,
+    });
     setDeletingTask(true);
   };
+
+  useEffect(() => {
+    setMembers(task.members);
+  }, [task]);
 
   useEffect(() => {
     if (
@@ -131,8 +139,9 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
       props.fetchingTask === false &&
       props.taskError === ''
     ) {
+      setLoading(false);
       history.push(
-        `/company/${props.uniqueCompanyName}/project/${props.projectId}/board/${task.boardId}/task/${task._id}`,
+        `/company/${props.uniqueCompanyName}/project/${props.projectId}/task/${task._id}`,
       );
     }
   }, [loading, props.fetchingTask, props.taskError]);
@@ -150,7 +159,7 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
 
   return (
     <>
-      <Draggable draggableId={task._id} index={props.index}>
+      <Draggable draggableId={String(task._id)} index={props.index}>
         {(provided, snapshot) => {
           const allowedProps = { ref: provided.innerRef };
           return (
@@ -226,13 +235,9 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
                 className={`flex justify-between items-center`}
               >
                 <TaskPriorityTag priority={task.priority} />
-                {task.assignedMembers &&
-                  task.assignedMembers.length > 0 && (
-                    <MemberGroup
-                      members={task.assignedMembers}
-                      small
-                    />
-                  )}
+                {members && members.length > 0 && (
+                  <MemberGroup members={members} small />
+                )}
               </ThirdRow>
             </TaskItemContainer>
             // </Link>

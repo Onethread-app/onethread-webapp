@@ -8,6 +8,21 @@ import {
   PROFILE_IMAGE_UPLOAD,
   COVER_IMAGE_UPLOAD,
   VIDEO_CONFERENCE,
+  REFRESH_USER_INFO_START,
+  REFRESH_USER_TOKEN_START,
+  REFRESH_USER_INFO_FAILURE,
+  REFRESH_USER_INFO_SUCCESS,
+  TOKEN_VERIFY_START,
+  TOKEN_VERIFY_SUCCESS,
+  TOKEN_VERIFY_FAILURE,
+  SAVE_USER_AUTHENTICATION_INFO_START,
+  SAVE_USER_AUTHENTICATION_INFO_SUCCESS,
+  SAVE_USER_AUTHENTICATION_INFO_FAILURE,
+  REFRESH_USER_TOKEN_SUCCESS,
+  REFRESH_USER_TOKEN_FAILURE,
+  CLEAR_USER_REDUCER_STATE,
+  USER_COMPANIES,
+  UPDATE_USER_COMPANY_PROJECT_COUNT,
 } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
@@ -15,6 +30,8 @@ import { User } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
 import { SET_INITIAL_CURRENT_COMPANY } from 'stores/company/Types';
+import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { UPDATE_USER_COMPANY_TASK_COUNT } from 'stores/user/Types';
 
 export const editUserInfoAction =
   (basicInfo: User) => async (dispatch: any, getState: any) => {
@@ -136,10 +153,11 @@ export const getAllCompaniesByUserId =
   (userId: string, type?: string) =>
   async (dispatch: any, getState: any) => {
     try {
+      dispatch({ type: USER_COMPANIES });
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.get(
-          `company/individual/${userId}`,
+          `company/individual`,
           headers,
         );
         dispatch({
@@ -155,9 +173,6 @@ export const getAllCompaniesByUserId =
                 : null,
           });
         }
-      } else {
-        // tslint:disable-next-line: no-console
-        //
       }
     } catch (error) {
       // tslint:disable-next-line: no-console
@@ -308,3 +323,101 @@ export const getAllVideoHistory =
       //
     }
   };
+
+export const refreshUserInfoStart = () => ({
+  type: REFRESH_USER_INFO_START,
+});
+
+export const refreshUserInfoSuccess = (response) => ({
+  type: REFRESH_USER_INFO_SUCCESS,
+  payload: response,
+});
+
+export const refreshUserInfoFailure = (response: string) => ({
+  type: REFRESH_USER_INFO_FAILURE,
+  payload: response,
+});
+
+export const verifyUserTokenStart = (token: string) => ({
+  type: TOKEN_VERIFY_START,
+  payload: token,
+});
+
+export const verifyUserTokenSuccess = (response) => ({
+  type: TOKEN_VERIFY_SUCCESS,
+  payload: response,
+});
+
+export const verifyUserTokenFailure = (response: string) => ({
+  type: TOKEN_VERIFY_FAILURE,
+  payload: response,
+});
+
+export const updateUserTokenStart = (response: string) => ({
+  type: REFRESH_USER_TOKEN_START,
+  payload: response,
+});
+
+export const updateUserTokenSuccess = () => ({
+  type: REFRESH_USER_TOKEN_SUCCESS,
+});
+
+export const updateUserTokenFailure = (response: string) => ({
+  type: REFRESH_USER_TOKEN_FAILURE,
+  payload: response,
+});
+
+export const updateUserAuthInfoStart = ({ userInfo, token }) => ({
+  type: SAVE_USER_AUTHENTICATION_INFO_START,
+  payload: { userInfo, token },
+});
+
+export const updateUserAuthInfoSuccess = () => ({
+  type: SAVE_USER_AUTHENTICATION_INFO_SUCCESS,
+});
+
+export const updateUserAuthInfoFailure = (response: string) => ({
+  type: SAVE_USER_AUTHENTICATION_INFO_FAILURE,
+  payload: response,
+});
+
+export const userClearState = () => ({
+  type: CLEAR_USER_REDUCER_STATE,
+});
+
+export const updateUserInfoAction =
+  (basicInfo: { firstName: string; lastName: string }) =>
+  async (dispatch: any, getState: any) => {
+    try {
+      // console.log(basicInfo);
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const response = await tigrowApi.put(
+          `accounts/update`,
+          basicInfo,
+          headers,
+        );
+        dispatch({
+          type: EDIT_BASIC_INFO,
+          payload: response.data.user,
+        });
+      }
+      return true;
+    } catch (error) {
+      dispatch({
+        type: USER_FETCH_ERROR,
+        payload: returnErrorText(error),
+      });
+      return false;
+    }
+  };
+
+export const updateUserCompanyProjectCount = (companyId: string) => ({
+  type: UPDATE_USER_COMPANY_PROJECT_COUNT,
+  payload: companyId,
+});
+
+export const updateUserCompanyTask = (companyId: string) => ({
+  type: UPDATE_USER_COMPANY_TASK_COUNT,
+  payload: companyId,
+});

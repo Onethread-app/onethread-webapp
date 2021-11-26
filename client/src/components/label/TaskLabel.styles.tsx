@@ -1,5 +1,24 @@
 import styled from 'styled-components';
 
+export const LabelListColumnViewContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .25rem;
+  padding: .5rem;
+  > span {
+    width: 100%;
+  }
+`
+
+export const LabelListViewContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  max-width: 100%;
+`
+
 export const CreateEditLabelButton = styled.div`
   display: flex;
   align-items: center;

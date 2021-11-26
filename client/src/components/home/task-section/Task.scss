@@ -1,0 +1,52 @@
+.select-option-mdfy {
+  width: 100%;
+  .css-yk16xz-control {
+    min-height: 20px !important;
+    min-width: 10rem !important;
+  }
+
+  .css-yk16xz-control:focus {
+    min-height: 20px !important;
+    min-width: 10rem !important;
+  }
+
+  .css-tlfecz-indicatorContainer {
+    padding: 5px !important;
+  }
+}
+
+.duedate-priority-container {
+  display: flex;
+  align-items: center;
+  @media screen and (max-width: 710px) {
+    display: block;
+  }
+}
+
+.task-dueDate {
+  width: 220px !important;
+  margin-right: 1rem;
+  @media screen and (max-width: 710px) {
+    margin-right: 0rem;
+    width: 100% !important;
+  }
+}
+
+.create-task-dialog {
+  background-color: #fff;
+  width: 700px;
+  @media screen and (max-width: 710px) {
+    width: 95% !important;
+  }
+}
+
+.text-width {
+  min-width: 100px;
+}
+
+// .text-width-dueDate {
+//   width: 7.28rem;
+//   @media screen and (max-width: 710px) {
+//     width: 9rem;
+//   }
+// }

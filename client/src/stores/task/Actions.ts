@@ -4,16 +4,16 @@ import {
   ITask,
   SortTasksBy,
   IFilterUser,
+  // ITaskStatus,
 } from './Reducer';
 
 export interface ITaskDelete {
   taskId: string;
-  columnId: string;
+  // columnId: string;
 }
 
 export interface ITaskFileUpload {
   file: any;
-  columnId: string;
   taskId: string;
 }
 
@@ -66,6 +66,33 @@ export const getAllUserTasksFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
+export const getAllCompanyTasks = () => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_COMPANY_START,
+});
+
+export const getAllCompanyTasksSuccess = (response: any) => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_COMPANY_SUCCESS,
+  payload: response,
+});
+
+export const getAllCompanyTasksFailure = (errorMessage: any) => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_COMPANY_FAILURE,
+  payload: errorMessage,
+});
+
+export const getAllProjectTasks = () => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_PROJECT_START,
+});
+
+export const getAllProjectTasksSuccess = (response: any) => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_PROJECT_SUCCESS,
+  payload: response,
+});
+
+export const getAllProjectTasksFailure = (errorMessage: any) => ({
+  type: TaskActionType.GET_ALL_TASKS_FOR_PROJECT_FAILURE,
+  payload: errorMessage,
+});
 export const getSelectedBoard = (boardId: string | undefined) => ({
   type: TaskActionType.SELECT_BOARD_START,
   payload: boardId,
@@ -185,9 +212,13 @@ export const addTeamMembersIntoBoardFailure = (
   payload: errorMessage,
 });
 
-export const getSelectedTaskDetails = (taskId: string) => ({
+export const getSelectedTaskDetails = (payload: {
+  taskId: string;
+  companyId: string;
+  projectId: string;
+}) => ({
   type: TaskActionType.SELECT_TASK_START,
-  payload: taskId,
+  payload,
 });
 
 export const getSelectedTaskDetailsSuccess = (response: any) => ({
@@ -250,7 +281,7 @@ export const deleteTask = (payload: ITaskDelete) => ({
   payload,
 });
 
-export const deleteTaskSuccess = (payload: ITaskDelete) => ({
+export const deleteTaskSuccess = (payload) => ({
   type: TaskActionType.DELETE_TASK_SUCCESS,
   payload,
 });
@@ -299,4 +330,126 @@ export const updateCurrentTaskColumnId = (data) => ({
 export const updateTaskTimeSpent = (payload: number) => ({
   type: TaskActionType.UPDATE_TASK_TIME_SPENT,
   payload,
+});
+
+export const clearCompanyTasks = () => ({
+  type: TaskActionType.CLEAR_COMPANY_TASKS,
+});
+
+export const createTaskStatus = (payload: {
+  name: string;
+  type: string;
+  positionInBoard: number;
+  projectId: string;
+}) => ({
+  type: TaskActionType.CREATE_TASK_STATUS,
+  payload,
+});
+
+export const createTaskStatusSuccess = (response: any) => ({
+  type: TaskActionType.CREATE_TASK_STATUS_SUCCESS,
+  payload: response,
+});
+
+export const createTaskStatusFailure = (errorMessage: string) => ({
+  type: TaskActionType.CREATE_TASK_STATUS_FAILURE,
+  payload: errorMessage,
+});
+
+export const updateTaskStatus = (payload: {
+  name: string;
+  positionInBoard: number;
+  taskStatusId: string;
+  projectId: string;
+}) => ({
+  type: TaskActionType.UPDATE_TASK_STATUS,
+  payload,
+});
+
+export const updateTaskStatusSuccess = (response: any) => ({
+  type: TaskActionType.UPDATE_TASK_STATUS_SUCCESS,
+  payload: response,
+});
+
+export const updateTaskStatusFailure = (errorMessage: string) => ({
+  type: TaskActionType.UPDATE_TASK_STATUS_FAILURE,
+  payload: errorMessage,
+});
+
+export const getAllTaskStatusInProject = (payload: {
+  projectId: string;
+  companyId: string;
+}) => ({
+  type: TaskActionType.GET_ALL_TASK_STATUS,
+  payload,
+});
+
+export const getAllTaskStatusInProjectSuccess = (response: any) => ({
+  type: TaskActionType.GET_ALL_TASK_STATUS_SUCCESS,
+  payload: response,
+});
+
+export const getAllTaskStatusInProjectFailure = (
+  errorMessage: string,
+) => ({
+  type: TaskActionType.GET_ALL_TASK_STATUS_FAILURE,
+  payload: errorMessage,
+});
+
+export const createSubTask = (payload: {
+  name: string;
+  taskId: string;
+  projectId: string;
+  companyId: string;
+}) => ({
+  type: TaskActionType.CREATE_SUBTASK,
+  payload,
+});
+
+export const createSubTaskSuccess = (payload) => ({
+  type: TaskActionType.CREATE_SUBTASK_SUCCESS,
+  payload,
+});
+
+export const createSubTaskFailure = (errorMessage: string) => ({
+  type: TaskActionType.CREATE_SUBTASK_FAILURE,
+  payload: errorMessage,
+});
+
+export const taskMarkAsCompleted = (payload: {
+  projectId: string;
+  taskId: string;
+  companyId: string;
+}) => ({
+  type: TaskActionType.TASK_MARK_AS_COMPLETED,
+  payload,
+});
+
+export const taskMarkAsCompletedSuccess = (response: any) => ({
+  type: TaskActionType.TASK_MARK_AS_COMPLETED_SUCCESS,
+  payload: response,
+});
+
+export const taskMarkAsCompletedFailure = (errorMessage: string) => ({
+  type: TaskActionType.TASK_MARK_AS_COMPLETED_FAILURE,
+  payload: errorMessage,
+});
+
+export const getTaskMembers = (payload: {}) => ({
+  type: TaskActionType.GET_TASK_MEMBERS,
+  payload,
+});
+
+export const getTaskMembersSuccess = (response: any) => ({
+  type: TaskActionType.GET_TASK_MEMBERS_SUCCESS,
+  payload: response,
+});
+
+export const getTaskMembersFailure = (errorMessage: string) => ({
+  type: TaskActionType.GET_TASK_MEMBERS_FAILURE,
+  payload: errorMessage,
+});
+
+export const clearCurrentTask = () => ({
+  type: TaskActionType.CLEAR_CURRENT_TASK,
 });

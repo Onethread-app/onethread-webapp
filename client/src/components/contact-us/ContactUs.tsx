@@ -5,6 +5,8 @@ import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 import './ContactUs.styles.scss';
 
+// Todo: Replace snackbar with toaster
+
 interface IContactUs {
   setShowContactUs: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSnackbar: React.Dispatch<React.SetStateAction<boolean>>;

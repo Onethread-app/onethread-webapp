@@ -56,6 +56,71 @@ const changeRole = async (req, res, next) => {
   }
 };
 
+// Request: account -> Company
+const sendJoinRequest = async (req, res, next) => {
+  try {
+    const isExists = await Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
+    });
+    if (isExists) {
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'member already exists',
+      });
+    }
+
+    const member = await Member.create({
+      account: req.user._id,
+      company: req.company._id,
+      isApproved: false,
+    });
+    return sendJSONresponse(res, 201, {
+      message: 'Member join sucessful. please wait for approval',
+      memberId: member._id,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
+const rejectJoinRequest = async (req, res, next) => {
+  try {
+    await Promise.all(
+      req.body.member.map(async (member) => {
+        await Member.findByIdAndDelete(member);
+      }),
+    );
+    return sendJSONresponse(res, 200, {
+      message: 'Member rejected.',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
+const acceptJoinRequest = async (req, res, next) => {
+  try {
+    await Promise.all(
+      req.body.member.map(async (member) => {
+        await Member.findByIdAndUpdate(
+          { _id: member },
+          { $set: { isApproved: true, approvedBy: req.user._id } },
+          { safe: true, upsert: true, new: true },
+        );
+      }),
+    );
+
+    return sendJSONresponse(res, 200, {
+      message: 'Member join sucessful.',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
 const addMember = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
@@ -116,7 +181,7 @@ const addMember = async (req, res, next) => {
         },
       );
 
-      createMembers(req, accounts);
+      await createMembers(req, accounts);
       // add new members in company
 
       logger.info(
@@ -168,8 +233,27 @@ const list = async (req, res, next) => {
           populate: [{ path: 'department', select: 'name' }],
         },
       ]);
+
+    const acceptedMembers = members.filter(
+      (m) => m.isApproved === true,
+    );
+    const invitedMembers = members.filter(
+      (m) => m.isApproved === false,
+    );
+
+    const pendingMembers = await PendingMember.find({
+      company: req.company._id,
+      removed: false,
+    })
+      .sort({ createdAt: 1 })
+      .skip(+skip)
+      .limit(+limit)
+      .select('-__v -company -createdAt -updatedAt');
+
     return res.status(200).json({
-      members,
+      acceptedMembers,
+      invitedMembers,
+      pendingMembers,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -446,8 +530,9 @@ const bulkInsertMember = async (req, res, next) => {
       (el) => !haveMemberAccounts.includes(el),
     );
 
-    if (notifiyUsersIds.length > 0)
-      createMembers(req, notifiyUsersIds);
+    if (notifiyUsersIds.length > 0) {
+      await createMembers(req, notifiyUsersIds);
+    }
 
     return sendJSONresponse(res, 200, {
       inviteEmailUsers: inviteEmailUsers,
@@ -465,6 +550,8 @@ const createMembers = async (req, notifiyUsersIds) => {
       return {
         account: c,
         company: req.company._id,
+        isApproved: true,
+        approvedBy: req.user._id,
       };
     });
     await Member.create(newMembers);
@@ -510,7 +597,11 @@ const createMembers = async (req, notifiyUsersIds) => {
 const createPendingMembers = async (req, memberEmails) => {
   try {
     let pendingMembersInfo = memberEmails.map((m) => {
-      return { email: m, company: req.company._id };
+      return {
+        email: m,
+        company: req.company._id,
+        createdBy: req.user._id,
+      };
     });
     pendingMembers = await PendingMember.create(pendingMembersInfo);
 
@@ -531,4 +622,7 @@ module.exports = {
   searchMember,
   changeRole,
   checkInvitedMemberStatus,
+  sendJoinRequest,
+  acceptJoinRequest,
+  rejectJoinRequest,
 };

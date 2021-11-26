@@ -3,6 +3,7 @@ import {
   CLEAR_CHANGE_COMPANY_NAME_ERROR,
   CLEAR_ADD_DEPARTMENT_ERROR,
   CompanyActionTypes,
+  CLEAR_COMPANY_REDUCER_STATE,
 } from './Types';
 
 export const getCompanyDetails = (name: string) => ({
@@ -32,7 +33,7 @@ export const createCompanyActionSuccess = (response: any) => ({
 
 export const createCompanyActionFailure = (errorMessage: any) => ({
   type: CompanyActionTypes.CREATE_COMPANY_FAILURE,
-  payload: errorMessage,
+  payload: errorMessage || true,
 });
 
 export const getCompanyMembers = () => ({
@@ -327,8 +328,9 @@ export const addAnnouncement = (announcement: any) => ({
   payload: announcement,
 });
 
-export const addAnnouncementSuccess = () => ({
+export const addAnnouncementSuccess = (payload) => ({
   type: CompanyActionTypes.ADD_COMPANY_ANNOUNCEMENT_SUCCESS,
+  payload,
 });
 
 export const addAnnouncementFailure = (errorMessage: any) => ({
@@ -399,17 +401,15 @@ export const clearCompanyError = () => ({
   type: CompanyActionTypes.CLEAR_COMPANY_ERROR,
 });
 
-export const clearAddDepartmentError = () => async (
-  dispatch: any,
-) => {
-  dispatch({ type: CLEAR_ADD_DEPARTMENT_ERROR });
-};
+export const clearAddDepartmentError =
+  () => async (dispatch: any) => {
+    dispatch({ type: CLEAR_ADD_DEPARTMENT_ERROR });
+  };
 
-export const clearChangeCompanyNameError = () => async (
-  dispatch: any,
-) => {
-  dispatch({ type: CLEAR_CHANGE_COMPANY_NAME_ERROR });
-};
+export const clearChangeCompanyNameError =
+  () => async (dispatch: any) => {
+    dispatch({ type: CLEAR_CHANGE_COMPANY_NAME_ERROR });
+  };
 
 export const updateCompanyLoading = (loading: boolean) => ({
   type: CompanyActionTypes.UPDATE_COMPANY_LOADING,
@@ -418,4 +418,55 @@ export const updateCompanyLoading = (loading: boolean) => ({
 
 export const clearErrorOnCompanyCreate = () => ({
   type: CompanyActionTypes.CLEAR_ERROR_ON_COMPANY_CREATE,
+});
+
+export const requestToJoinCompanyStart = (response: string) => ({
+  type: CompanyActionTypes.JOIN_COMPANY_REQUEST_START,
+  payload: response,
+});
+
+export const requestToJoinCompanySuccess = (response) => ({
+  type: CompanyActionTypes.JOIN_COMPANY_REQUEST_SUCCESS,
+  payload: response,
+});
+
+export const requestToJoinCompanyFailure = (response: string) => ({
+  type: CompanyActionTypes.JOIN_COMPANY_REQUEST_FAILURE,
+  payload: response,
+});
+
+export const getCompanySearchResultStart = (response: string) => ({
+  type: CompanyActionTypes.FIND_COMPANY_BY_NAME_START,
+  payload: response,
+});
+
+export const getCompanySearchResultSuccess = (response) => ({
+  type: CompanyActionTypes.FIND_COMPANY_BY_NAME_SUCCESS,
+  payload: response,
+});
+
+export const getCompanySearchResultFailure = (response: string) => ({
+  type: CompanyActionTypes.FIND_COMPANY_BY_NAME_FAILURE,
+  payload: response,
+});
+
+export const getCompanyPublicInformation = (response: string) => ({
+  type: CompanyActionTypes.PUBLIC_COMPANY_DETAILS_START,
+  payload: response,
+});
+
+export const getCompanyPublicInformationSuccess = (response) => ({
+  type: CompanyActionTypes.PUBLIC_COMPANY_DETAILS_SUCCESS,
+  payload: response,
+});
+
+export const getCompanyPublicInformationFailure = (
+  response: string,
+) => ({
+  type: CompanyActionTypes.PUBLIC_COMPANY_DETAILS_FAILURE,
+  payload: response,
+});
+
+export const clearCompanyState = () => ({
+  type: CLEAR_COMPANY_REDUCER_STATE,
 });

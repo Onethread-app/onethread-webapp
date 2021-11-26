@@ -17,10 +17,12 @@ const schema = {
   description: Joi.string().max(2500).allow(''),
   outline: Joi.string().max(5000).allow(''),
   budget: Joi.number().min(0),
+  currency: Joi.string(),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
   deadline: Joi.date(),
   color: Joi.number(),
+  positionInBoard: Joi.number(),
   company: idSchema.id,
   size: Joi.number().required(),
   associate: idSchema.id,
@@ -37,26 +39,22 @@ const accountId = Joi.object().keys({
 });
 
 module.exports = {
-  createNewProjectForCompany: Joi.object().keys({
-    body: Joi.object().keys({
-      name: schema.name.required(),
-      // concernedAdmin: Joi.object().keys({
-      //   memberId: schema.memberId.required(),
-      //   accountId: idSchema.id,
-      // }),
-      companyId: schema.company,
-      departments: schema.departments,
-      deadline: schema.deadline,
-      color: schema.color,
-      associates: schema.associates,
-    }),
-  }),
   createProjectFromHome: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
       companyId: schema.company.required(),
+      statusList: Joi.array()
+        .items(
+          Joi.object().keys({
+            name: schema.name.required(),
+            positionInBoard: schema.positionInBoard.required(),
+          }),
+        )
+        .required(),
       deadline: schema.deadline,
       color: schema.color,
+      budget: schema.budget,
+      currency: schema.currency,
     }),
   }),
   addAssociate: Joi.object().keys({
@@ -102,6 +100,7 @@ module.exports = {
       color: schema.color,
       deadline: schema.deadline,
       budget: schema.budget,
+      currency: schema.currency,
     }),
     query: Joi.object().keys({
       pid: schema.pid.required(),
@@ -130,7 +129,21 @@ module.exports = {
       name: schema.name.required(),
     }),
   }),
+  getTasks: Joi.object().keys({
+    query: Joi.object().keys({
+      pid: schema.pid.required(),
+    }),
+  }),
   deleteTeamMember: Joi.object().keys({
     params: accountId,
+  }),
+  favouriteProject: Joi.object().keys({
+    body: Joi.object().keys({
+      memberId: schema.memberId.required(),
+      isFavourite: Joi.boolean().required(),
+    }),
+    query: Joi.object().keys({
+      pid: schema.pid.required(),
+    }),
   }),
 };

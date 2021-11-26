@@ -3,13 +3,38 @@ const router = express.Router();
 const {
   authorization,
 } = require('../../middlewares/authorizationMiddleware');
-const subCtrl = require('../../subscription/subscription.controller');
+const subCtrl = require('../../middlewares/subscriptionCheckerMiddleware');
 const joiSchema = require('./member.validation');
 const memberCtrl = require('./member.controller');
+const {
+  authorizeUser,
+} = require('../../middlewares/companyRoleMiddleware');
 
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
+router
+  .route('/join-request')
+  .post(authorization, memberCtrl.sendJoinRequest);
+
 router.use('/', subCtrl.subscriptionExpireCheck());
+
+router
+  .route('/accept-request')
+  .put(
+    authorization,
+    SchemaValidator(joiSchema.acceptJoinRequest),
+    authorizeUser('all', 'admin', 'superAdmin'),
+    memberCtrl.acceptJoinRequest,
+  );
+
+router
+  .route('/reject-request')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.rejectJoinRequest),
+    authorizeUser('all', 'admin', 'superAdmin'),
+    memberCtrl.rejectJoinRequest,
+  );
 
 router.route('/search').get(authorization, memberCtrl.searchMember);
 
@@ -23,15 +48,12 @@ router
   )
   .get(authorization, memberCtrl.list);
 
-  router
-  .route('/bulk')
-  .post(
-    authorization,
-    // TODO: member validations
-     SchemaValidator(joiSchema.bulkMember),
-    memberCtrl.bulkInsertMember,
-  );
-  
+router.route('/bulk').post(
+  authorization,
+  // TODO: member validations
+  SchemaValidator(joiSchema.bulkMember),
+  memberCtrl.bulkInsertMember,
+);
 
 router.route('/pending').get(authorization, memberCtrl.pendingList);
 
@@ -42,6 +64,10 @@ router
     SchemaValidator(joiSchema.checkInvitedMemberStatus),
     memberCtrl.checkInvitedMemberStatus,
   );
+
+router
+  .route('/accept-request')
+  .post(authorization, memberCtrl.acceptJoinRequest);
 
 router
   .route('/:memberId')

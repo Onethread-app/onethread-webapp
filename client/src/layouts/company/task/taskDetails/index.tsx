@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
-
+import moment from 'moment';
+import { IconNames } from '@blueprintjs/icons';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { ITask } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 
@@ -36,7 +38,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   return (
     <div className="w-100 ph2">
       <div className="w-100">
-        <TaskTitleView />
+        <TaskTitleView currentTask={props.currentTask} />
       </div>
       <div className="w-100">
         <div className="flex justify-start">
@@ -78,21 +80,90 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               projectId={props.currentProjectId}
             />
           </div>
+          <div className="flex justify-end ml-auto">
+            {props.currentTask!.dueDate && (
+              <>
+                {Math.ceil(
+                  moment(props.currentTask!.dueDate).diff(
+                    moment(),
+                    'days',
+                    true,
+                  ),
+                ) === 0 ? (
+                  <p className="fw6 red ml-auto mv2">
+                    Deadline ends today
+                  </p>
+                ) : Math.ceil(
+                    moment(props.currentTask!.dueDate).diff(
+                      moment(),
+                      'days',
+                      true,
+                    ),
+                  ) < 0 ? (
+                  <p className="fw6 red ml-auto mv2">Expired</p>
+                ) : Math.ceil(
+                    moment(props.currentTask!.dueDate).diff(
+                      moment(),
+                      'days',
+                      true,
+                    ),
+                  ) === 1 ? (
+                  <p className="fw6 mv2 flex ml-auto items-center">
+                    <Icon
+                      style={{
+                        color: '#323030',
+                      }}
+                      icon={IconNames.TIME}
+                      iconSize={12}
+                      className="grow pointer pl2 pr2"
+                    />{' '}
+                    {Math.ceil(
+                      moment(props.currentTask!.dueDate).diff(
+                        moment(),
+                        'days',
+                        true,
+                      ),
+                    )}{' '}
+                    day remaining
+                  </p>
+                ) : (
+                  <p className="fw6  mv2 flex items-center">
+                    <Icon
+                      style={{
+                        color: '#323030',
+                      }}
+                      icon={IconNames.TIME}
+                      iconSize={12}
+                      className="grow pointer pl2 pr2"
+                    />{' '}
+                    {Math.ceil(
+                      moment(props.currentTask!.dueDate).diff(
+                        moment(),
+                        'days',
+                        true,
+                      ),
+                    )}{' '}
+                    days remaining
+                  </p>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
       <div className="w-100">
-        <div className="mv3">
+        <div className="mv1">
           <TaskDescriptionView />
         </div>
         {isMobileOnly && (
-          <div className="mv3">
+          <div className="mv1">
             <ActivityView />
           </div>
         )}
-        <div className="mv3">
+        <div className="mv1">
           <SubTaskView />
         </div>
-        <div className="mv3">
+        <div className="mv1">
           <TaskFiles />
         </div>
       </div>
@@ -108,6 +179,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const TaskDetails = connect(mapStateToProps)(
-  TaskDetailsComponent,
-);
+export const TaskDetails = connect(
+  mapStateToProps,
+  {},
+)(TaskDetailsComponent);

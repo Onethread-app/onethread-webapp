@@ -77,7 +77,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
         className={`${props.leftOpen ? 'db ml4 mv3' : 'dn'} `}
         style={{ width: '6rem' }}
       >
-        <NavLink to={`/${props.user.name}/home`}>
+        <NavLink to={`/`} className="flex ml-auto mr-auto">
           {props.leftOpen ? (
             <img src={logo} alt="" />
           ) : (
@@ -586,7 +586,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                 style={{ color: 'white' }}
                 activeStyle={{ background: ' #3484F0' }}
-                to={`/company/${props.company.uniqueName}`}
+                to={`/company/${props.company.uniqueName}/profile`}
                 onClick={() => setActiveTab('company-profile')}
               >
                 {props.leftOpen ? (

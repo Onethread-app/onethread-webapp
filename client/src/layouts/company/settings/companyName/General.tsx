@@ -49,7 +49,7 @@ const GeneralViewComponent = (
                 className="grow pointer outline-0 shadow-0 h2 changecompanybutton"
                 text={t('app.company.Settings.Change-Name')}
                 style={{
-                  background: '#34b3e9',
+                  background: '#08A0F7',
                   color: 'white',
                 }}
                 onClick={() => setShowDialog(true)}
@@ -92,7 +92,7 @@ const GeneralViewComponent = (
                     leftIconColor={`${
                       errors || props.errorCompanyName
                         ? 'red'
-                        : '#34b3e9'
+                        : '#08A0F7'
                     }`}
                     style={{
                       boxShadow: 'none',
@@ -125,7 +125,7 @@ const GeneralViewComponent = (
                 type="submit"
                 className="w4 grow h2 pointer mr3"
                 style={{
-                  background: '#34b3e9',
+                  background: '#08A0F7',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -159,8 +159,8 @@ const GeneralViewComponent = (
                 style={{
                   background: '#fff',
                   outline: 'none',
-                  border: '1px solid #34b3e9',
-                  color: '#34b3e9',
+                  border: '1px solid #08A0F7',
+                  color: '#08A0F7',
                 }}
                 onClick={(e: any) => {
                   e.preventDefault();

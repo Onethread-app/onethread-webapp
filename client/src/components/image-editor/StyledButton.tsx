@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
-  background: var(--primary-bg-color, #34b3e9);
+  background: var(--primary-bg-color, #08a0f7);
   width: fit-content;
   padding: 1rem;
   color: var(--primary-color, #fff);
@@ -12,9 +12,9 @@ const StyledButton = styled.button`
   transition: all 500ms ease-in-out;
   font-weight: bold;
   &:hover {
-    color: var(--primary-bg-color, #34b3e9);
+    color: var(--primary-bg-color, #08a0f7);
     background-color: var(--primary-color, #fff);
-    border-color: var(--primary-bg-color, #34b3e9);
+    border-color: var(--primary-bg-color, #08a0f7);
   }
   &::disabled {
     color: var(--dark-color, black);

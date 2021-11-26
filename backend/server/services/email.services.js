@@ -22,7 +22,7 @@ let host = ``;
 if (config.env === 'production') {
   host = `https://www.onethread.app`;
 } else if (config.env === 'test') {
-  host = `https://stage.tigrow.co`;
+  host = `https://stage.onethread.app`;
 } else if (config.env === 'test3') {
   host = `http://test3.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
 } else if (config.env === 'test4') {
@@ -100,8 +100,8 @@ module.exports.sendEmailForVerifyAccount = async (
   });
 };
 
-module.exports.inviteSignupEmail = async (email) => {
-  const link = `${host}/signup?email=${email}`;
+module.exports.signupMail = async (email, token) => {
+  const link = `${host}/user-info?email=${email}&token=${token}`;
   const mailOptions = {
     from: config.emailAddress,
     to: email,
@@ -112,13 +112,7 @@ module.exports.inviteSignupEmail = async (email) => {
     },
   };
 
-  return transporter.sendMail(mailOptions, function (err, res) {
-    if (err) {
-      logger.error(' Message send to failed ' + err);
-    } else {
-      logger.info(`send confirmation mail to user successfully`);
-    }
-  });
+  return transporter.sendMail(mailOptions);
 };
 
 module.exports.sendInviteColleague = async (

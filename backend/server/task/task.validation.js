@@ -13,7 +13,7 @@ const idSchema = {
 const taskSchema = {
   name: Joi.string(),
   description: Joi.string(),
-  status: Joi.string(),
+  status: idSchema.id,
   priority: Joi.number(),
   account: idSchema.id,
   project: idSchema.id,
@@ -22,31 +22,35 @@ const taskSchema = {
   columnId: idSchema.id,
   boardId: idSchema.id,
   taskId: idSchema.id,
+  isCompleted: Joi.boolean(),
 };
 module.exports = {
   createTask: Joi.object().keys({
     body: Joi.object().keys({
       name: taskSchema.name.required(),
       description: taskSchema.description.allow(''),
-      status: taskSchema.status,
-      columnId: taskSchema.columnId.required(),
-      boardId: taskSchema.boardId.required(),
       dueDate: taskSchema.dueDate.required(),
       priority: taskSchema.priority.required(),
       assignmembers: Joi.array().items().required(),
+      status: taskSchema.status.required(),
     }),
 
     query: Joi.object().keys({
       pid: taskSchema.project.required(),
     }),
   }),
+
+  createSubtask: Joi.object().keys({
+    body: Joi.object().keys({
+      name: taskSchema.name.required(),
+      description: taskSchema.description,
+    }),
+  }),
   dragTask: Joi.object().keys({
     body: Joi.object().keys({
       taskId: Joi.string().required(),
-      status: taskSchema.status.required(),
-      sourceColumnId: Joi.string().required(),
-      destinationColumnId: Joi.string().required(),
-      taskIndexOfDestinationColumn: Joi.number().required(),
+      sourceStatusId: Joi.string().required(),
+      destinationStatusId: Joi.string().required(),
     }),
   }),
   updateTask: Joi.object().keys({
@@ -55,20 +59,18 @@ module.exports = {
       description: taskSchema.description.allow(''),
       dueDate: taskSchema.dueDate,
       priority: taskSchema.priority,
+      status: taskSchema.status,
+      isCompleted: taskSchema.isCompleted,
     }),
   }),
   deleteTask: Joi.object().keys({
-    body: Joi.object().keys({
-      columnId: taskSchema.columnId.required(),
-    }),
     params: Joi.object().keys({
       taskId: taskSchema.taskId,
     }),
   }),
-
   addMember: Joi.object().keys({
     body: Joi.object().keys({
-      assignmembers: Joi.array().items().required(),
+      assignmembers: Joi.array().items(idSchema.id).required(),
     }),
     params: Joi.object().keys({
       taskId: taskSchema.taskId,
@@ -81,6 +83,11 @@ module.exports = {
     query: Joi.object().keys({
       pid: taskSchema.project.required(),
       assignedMemberid: idSchema.id.required(),
+    }),
+  }),
+  markAsCompleted: Joi.object().keys({
+    body: Joi.object().keys({
+      task: Joi.array().items(idSchema.id).required(),
     }),
   }),
 };

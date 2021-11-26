@@ -174,7 +174,7 @@
 
       "Projects": {
         "Overview": "Overview",
-        "Name": "Project name",
+        "Name": "Project Name",
         "Project-Settings": "Project Settings",
         "My-projects": "My Projects",
         "Search-projects": "Search projects",
@@ -489,8 +489,8 @@
         "Filter-projects": "Filter by projects",
         "Filter-assignee": "Filter by assignee",
         "Filter-Duedate": "Filter by Due date",
-        "Task-name": "Task name",
-        "Project-name": "Project name",
+        "Task-name": "Task Name",
+        "Project-name": "Project Name",
         "Assignee": "Assignee",
         "Priority": "Priority",
         "Status": "Status",
@@ -575,12 +575,13 @@
     "forms": {
       "Create-company": {
         "Create": "Create Company",
-        "Name": "Comapny Name (Required)",
-        "Address": "Company Address",
+        "Name": "Company Name (Required)",
+        "Address": "Company Headquarter",
         "Type": "Please Select a company type",
         "Email": "Company Email Address",
         "Legal-name": "Legal Owner's Name",
-        "Legal-email": "Legal Owner's Email Address"
+        "Legal-email": "Legal Owner's Email Address",
+        "Name-not-required": "Company Name"
       },
 
       "Start-project": {

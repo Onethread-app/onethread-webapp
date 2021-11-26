@@ -12,11 +12,13 @@ import { StyledTimer, StyledWatch } from './Timer.styles';
 import {
   addItemToTrack,
   addTrackedTime,
+  getTaskTrackers,
 } from 'stores/time-tracker/Action';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 import { ITask } from 'stores/task/Reducer';
 
 import TrackedListDialog from 'components/time-tracker/TrackedListDialog';
+import { useParams } from 'react-router';
 
 interface ITimerProps {
   task: ITask;
@@ -30,6 +32,7 @@ interface ITimerInternalProps extends ITimerProps {
   errorOnAddingTrack: string;
   addItemToTrack: (item: ICurrentTrack) => void;
   addTrackedTime: (payload: ICurrentTrack) => void;
+  getTaskTrackers: (companyId: string) => void;
 }
 
 const Timer = (props: ITimerInternalProps) => {
@@ -49,12 +52,21 @@ const Timer = (props: ITimerInternalProps) => {
       ? currentlyTracking.duration
       : 0,
   );
+  const { taskId } = useParams<any>();
   const [timerOn, setTimerOn] = useState(
     currentlyTracking.task === task._id,
   );
   const [loading, setLoading] = useState(false);
   const timerRef = useRef(null);
   const timerHover = useHover(timerRef);
+
+  useEffect(() => {
+    setTime(
+      currentlyTracking.task === taskId
+        ? currentlyTracking.duration
+        : 0,
+    );
+  }, [taskId]);
 
   useEffect(() => {
     if (task.timeSpent) setTotalTime(task.timeSpent);
@@ -88,7 +100,7 @@ const Timer = (props: ITimerInternalProps) => {
     const payload = {
       name: task.name,
       task: task._id,
-      column: task.columnId,
+      column: task.status._id, // need to change
       project: projectId,
       company: companyId,
       startTime: new Date(),
@@ -111,6 +123,12 @@ const Timer = (props: ITimerInternalProps) => {
     e.stopPropagation();
     setTimerOn(false);
     addTrackedTime(currentlyTracking);
+    const timeout = () => {
+      setTimeout(() => {
+        props.getTaskTrackers(currentlyTracking.company);
+      }, 500);
+    };
+    timeout();
   };
 
   return (
@@ -153,4 +171,5 @@ const mapStateToProps = (state: any) => ({
 export default connect(mapStateToProps, {
   addItemToTrack,
   addTrackedTime,
+  getTaskTrackers,
 })(Timer);

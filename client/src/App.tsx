@@ -8,7 +8,7 @@ import {
   // useLocation,
 } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { isMobileOnly } from 'react-device-detect';
+// import { isMobileOnly } from 'react-device-detect';
 import ReactGA from 'react-ga';
 
 import ErrorBoundary from 'components/error-boundary/ErrorBoundary';
@@ -17,6 +17,7 @@ import SuspenseLoader from 'components/loader/SuspenseLoader';
 import { isAuthenticate } from 'stores/UtilsActions';
 
 import GlobalStyle from './App.styles';
+import { toast } from 'react-toastify';
 
 const AutoLoginPage = lazy(() => import('components/AutoLogin'));
 const NewLanding = lazy(() => import('layouts/landingx/Index'));
@@ -36,51 +37,20 @@ const SignupConfirmationPage = lazy(
   () => import('layouts/signupConfirmation/Index'),
 );
 const Layout = lazy(() => import('components/Layout'));
-const FeedPage = lazy(() => import('layouts/company/feed/Index'));
 const HomePage = lazy(() => import('layouts/home/Index'));
-const DashboardView = lazy(() => import('layouts/dashBoard/Index'));
-const ColleaguesPage = lazy(
-  () => import('layouts/company/colleagues/Index'),
-);
-const BoardPage = lazy(() => import('layouts/company/board/Index'));
-const AssociatesDetailsView = lazy(
-  () => import('layouts/company/associateDetails/Index'),
-);
-const OverviewPage = lazy(
-  () => import('layouts/company/overview/Index'),
-);
-const AssociatesPage = lazy(
-  () => import('layouts/company/associates/Index'),
+const CompanyDashboard = lazy(
+  () => import('layouts/newCompany/Index'),
 );
 const CompanyProfilePage = lazy(
   () => import('layouts/company/profile/Index'),
 );
-const ProjectPage = lazy(
-  () => import('layouts/company/project/Index'),
-);
-const ProjectPrefaceView = lazy(
-  () => import('layouts/company/project/ProjectPrefaceView'),
-);
-const ProjectSettingsPage = lazy(
-  () => import('layouts/company/project/settings/Index'),
-);
-const ProjectTeamPage = lazy(
-  () => import('layouts/company/project/team/Index'),
-);
-const RoomPage = lazy(() => import('layouts/company/room/Index'));
-const RoomPageMobile = lazy(
-  () => import('layouts/company/room/IndexMobile'),
+const ProjectDashboard = lazy(
+  () => import('layouts/newProject/Index'),
 );
 const SettingsPage = lazy(
   () => import('layouts/company/settings/Index'),
 );
-const BoardDetails = lazy(
-  () => import('layouts/company/boardDetails/BoardDetails'),
-);
 const TaskPage = lazy(() => import('layouts/company/task'));
-// const TaskModal = lazy(() =>
-//   import('components/task/Modal/TaskModal'),
-// );
 const UserProfilePage = lazy(
   () => import('layouts/user/profile/Index'),
 );
@@ -98,7 +68,21 @@ const Meeting = lazy(
 );
 const Success = lazy(() => import('components/Success'));
 const Feedback = lazy(() => import('layouts/feedback/Feedback'));
-
+const UserInfo = lazy(() => import('layouts/userInfo/Index'));
+const CreateCompany = lazy(
+  () => import('layouts/createCompany/Index'),
+);
+const SearchCompany = lazy(
+  () => import('layouts/searchCompany/Index'),
+);
+const AddMembers = lazy(() => import('layouts/addMembers/Index'));
+const JoinCompanyPage = lazy(
+  () => import('layouts/joinCompany/Index'),
+);
+const AllTasksPage = lazy(() => import('layouts/allTasks/Index'));
+const AllProjectsPage = lazy(
+  () => import('layouts/allProjects/Index'),
+);
 const PrivateRoute = (props: {
   component: any;
   path: string | string[];
@@ -156,6 +140,7 @@ const NotFound = () => (
 );
 
 const App = () => {
+  toast.configure();
   // const location: any = useLocation();
   // const background = location.state && location.state.background;
   return (
@@ -235,7 +220,31 @@ const App = () => {
               isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
             }
           />
+          <Route path="/user-info" component={UserInfo} />
+          <Route path="/create-company" component={CreateCompany} />
+          <Route path="/search-company" component={SearchCompany} />
+          <Route path="/add-members" component={AddMembers} />
+          <Route
+            path="/join/:companyId"
+            component={JoinCompanyPage}
+          />
+
           <PrivateRoute exact path="/" component={Demo} />
+          <PrivateRoute
+            path="/tasks"
+            exact={false}
+            component={AllTasksPage}
+          />
+          <PrivateRoute
+            path="/projects"
+            exact={false}
+            component={AllProjectsPage}
+          />
+          <PrivateRoute
+            path="/feedback"
+            exact={true}
+            component={Feedback}
+          />
           <PrivateRoute
             path="/:username"
             exact={true}
@@ -259,50 +268,17 @@ const App = () => {
           <PrivateRoute
             exact={true}
             path="/company/:cname"
+            component={CompanyDashboard}
+          />
+          <PrivateRoute
+            exact={true}
+            path="/company/:cname/profile"
             component={CompanyProfilePage}
           />
           <PrivateRoute
-            path="/company/:cname/feed"
-            exact={true}
-            component={FeedPage}
-          />
-          <PrivateRoute
-            path="/company/:cname/feedback"
-            exact={true}
-            component={Feedback}
-          />
-          <PrivateRoute
-            path="/company/:cname/project/:projectId/room"
-            exact={true}
-            component={isMobileOnly ? RoomPageMobile : RoomPage}
-          />
-          <PrivateRoute
-            path="/company/:cname/project/:projectId/board"
-            exact={true}
-            component={BoardPage}
-          />
-          <PrivateRoute
-            path="/company/:cname/project/:projectId/overview"
-            exact={true}
-            component={OverviewPage}
-          />
-          <PrivateRoute
-            path={[
-              '/company/:cname/project/:projectId/board/:boardId',
-              '/task/:taskId',
-            ]}
-            exact={true}
-            component={BoardDetails}
-          />
-          <PrivateRoute
-            path="/company/:cname/project/:projectId/board/:boardId/task/:taskId"
+            path="/company/:cname/project/:projectId/task/:taskId"
             exact={true}
             component={TaskPage}
-          />
-          <PrivateRoute
-            path="/company/:cname/colleague"
-            exact={true}
-            component={ColleaguesPage}
           />
           <PrivateRoute
             path="/company/:cname/settings"
@@ -315,40 +291,15 @@ const App = () => {
             component={Success}
           />
           <PrivateRoute
-            path="/company/:cname/dashboard"
-            exact={true}
-            component={DashboardView}
-          />
-          <PrivateRoute
-            path="/company/:cname/project"
-            exact={true}
-            component={ProjectPage}
-          />
-          <PrivateRoute
             path="/company/:cname/project/:projectId"
             exact={true}
-            component={ProjectPrefaceView}
+            component={ProjectDashboard}
           />
-          <PrivateRoute
-            path="/company/:cname/project/:projectId/team"
-            exact={true}
-            component={ProjectTeamPage}
-          />
-          <PrivateRoute
-            path="/company/:cname/project/:projectId/settings"
-            exact={true}
-            component={ProjectSettingsPage}
-          />
-          <PrivateRoute
-            path="/company/:cname/associates"
-            exact={true}
-            component={AssociatesPage}
-          />
-          <PrivateRoute
+          {/* <PrivateRoute
             path="/company/:cname/associate/:associateId"
             exact={true}
             component={AssociatesDetailsView}
-          />
+          /> */}
           <PrivateRoute
             path="/video/conferences"
             exact={true}

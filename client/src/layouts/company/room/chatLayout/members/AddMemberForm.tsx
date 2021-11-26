@@ -39,6 +39,7 @@ interface RoomMembersViewInternalProps extends RoomMembersViewProps {
   currentRoom: IRoomReducer['currentRoom'];
   companyId: string;
   projectId: string;
+  room?: any;
 }
 
 const AddMemberFormComponent = (
@@ -51,13 +52,23 @@ const AddMemberFormComponent = (
   );
   const [error, setError] = useState('');
 
+  const [currentRoom, setCurrentRoom] = useState(
+    props?.room || props.currentRoom,
+  );
+
+  useEffect(() => {
+    if (props?.room?._id) {
+      setCurrentRoom(props.room);
+    }
+  }, [props?.room]);
+
   const getSuggestionsForRoomMembers = async () => {
     try {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         // tslint:disable-next-line:max-line-length
         const response = await tigrowApi.get(
-          `/rooms/suggest-member?pid=${props.projectId}&roomId=${props.currentRoom._id}`,
+          `/rooms/suggest-member?pid=${props.projectId}&roomId=${currentRoom._id}`,
           headers,
         );
         setSuggestedMembers(response.data.members);
@@ -99,7 +110,7 @@ const AddMemberFormComponent = (
 
   useEffect(() => {
     if (
-      isEmpty(props.currentRoom._id) === false &&
+      isEmpty(currentRoom._id) === false &&
       isEmpty(props.companyId) === false
     ) {
       getSuggestionsForRoomMembers();
@@ -174,7 +185,7 @@ const AddMemberFormComponent = (
           }
           onClick={async () => {
             const data = {
-              room: props.currentRoom._id,
+              room: currentRoom._id,
               company: props.companyId,
               project: props.projectId,
               members: selectedRoomMember.map((m: any) => {
@@ -184,7 +195,7 @@ const AddMemberFormComponent = (
                 };
               }),
             };
-            await props.addRoomMembers(data, selectedRoomMember);
+            props.addRoomMembers(data, selectedRoomMember);
             // if (props.roomStatus === 201) {
             //   props.setShowDialog(!props.showDialog);
             // } else if (props.roomStatus === 400) {

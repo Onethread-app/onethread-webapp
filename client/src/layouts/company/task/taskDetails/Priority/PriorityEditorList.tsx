@@ -11,6 +11,7 @@ interface IPriorityEditorProps {
   updateTask: (task: ITask) => any;
   colorCode: Number;
   updatingTask: boolean;
+  currentTask: ITask;
 }
 
 const TagSelectPriority = styled.select`
@@ -52,8 +53,11 @@ export const PriorityEditorListComponent = (
     setSelectedPriority(e.target.value);
     const values: any = {
       priority: e.target.value,
+      taskId: props.currentTask._id,
+      companyId: props.currentTask.company._id,
+      projectId: props.currentTask.project._id,
     };
-    await props.updateTask(values);
+    props.updateTask(values);
   };
 
   const handlePriorityClick = (e) => {
@@ -109,6 +113,7 @@ const mapStateToProps = (state: any) => {
     colorCode:
       state.taskIndexReducer.taskReducer.currentTask.priority,
     updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
   };
 };
 

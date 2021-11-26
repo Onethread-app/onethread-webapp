@@ -84,7 +84,7 @@ const FeedbackForm = (props: IFeedbackForm) => {
           status: 0,
           message: '',
         });
-        history.push(`/company/${props.uniqueCompanyName}/feedback`);
+        history.push(`/`);
       }, 4000);
     }
 

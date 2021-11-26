@@ -21,6 +21,7 @@ export interface IMember {
   _id: string;
 }
 export interface IProject {
+  isFavourite: boolean;
   _id: string;
   name: string;
   color: number;
@@ -31,9 +32,18 @@ export interface IProject {
   totalMember: number;
   concernAdmin: User;
   createdAt: Date;
-  status: String;
+  status: string;
   timeSpent?: number;
+  deadline: Date;
+  budget: number;
+  currency: string;
+  company: {
+    _id: string;
+    uniqueName: string;
+  };
 }
+
+export interface IProjectForTable {}
 
 export interface IPendingProject {
   _id: string;
@@ -48,6 +58,8 @@ export interface ProjectModel {
   allProjects: IProject[];
   allArchive: IProject[];
   projectDetails: IProject;
+  userProjects: IProject[];
+  favouriteProjects: IProject[];
 }
 
 export interface IProjectTeam {
@@ -73,6 +85,8 @@ export interface IProjectTeam {
 
 const initialState = {
   allProjects: [],
+  userProjects: [],
+  favouriteProjects: [],
   allArchive: [],
   pendingProjects: [],
   projectDetails: {
@@ -99,12 +113,14 @@ const initialState = {
   unarchivingProject: false,
   updatingProject: false,
   deletingProject: false,
+  fetchingUserProjects: false,
   error: '',
   errorOnGettingAllProjects: '',
   errorOnUnarchive: '',
   errorOnUpdatingProject: '',
   errorOnSingleProjectLoading: '',
   errorOnDeletingProject: '',
+  errorOnFetchingUserProjects: '',
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -124,6 +140,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_START:
     case ProjectActionTypes.PROJECT_PREFACE_DES_UP_START:
     case ProjectActionTypes.ARCHIVE_PROJECT_START:
+    case ProjectActionTypes.NEW_ARCHIVE_PROJECT_START:
     case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_START:
     case ProjectActionTypes.CREATE_PROJECT_START:
     case ProjectActionTypes.DELETE_TEAM_MEMBER_START:
@@ -139,7 +156,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_SUCCESS:
     case ProjectActionTypes.PROJECT_PREFACE_DES_UP_SUCCESS:
     case ProjectActionTypes.ARCHIVE_PROJECT_SUCCESS:
-    case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_SUCCESS:
     case ProjectActionTypes.CREATE_PROJECT_SUCCESS:
       return {
         ...state,
@@ -168,6 +184,12 @@ export const ProjectReducer = (state = initialState, action: any) => {
         error: action.payload,
         projectLoading: false,
       };
+    case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_SUCCESS:
+      return {
+        ...state,
+        projectLoading: false,
+        userProjects: [...state.userProjects, action.payload],
+      };
     case ProjectActionTypes.UPDATE_PROJECT_START:
       return {
         ...state,
@@ -175,9 +197,23 @@ export const ProjectReducer = (state = initialState, action: any) => {
         errorOnUpdatingProject: '',
       };
     case ProjectActionTypes.UPDATE_PROJECT_SUCCESS:
+      console.log(action.payload);
       return {
         ...state,
         updatingProject: false,
+        userProjects: state.userProjects.map((project: IProject) => {
+          if (project._id === action.payload.project._id) {
+            return { ...project, ...action.payload.project };
+          }
+          return project;
+        }),
+        allProjects: state.allProjects.map((project: IProject) => {
+          if (project._id === action.payload.project._id) {
+            return { ...project, ...action.payload.project };
+          }
+          return project;
+        }),
+        errorOnUpdatingProject: '',
       };
     case ProjectActionTypes.UPDATE_PROJECT_FAILURE:
       return {
@@ -213,10 +249,31 @@ export const ProjectReducer = (state = initialState, action: any) => {
         unarchivingProject: true,
         errorOnUnarchive: '',
       };
+    case ProjectActionTypes.NEW_UNARCHIVE_PROJECT_START:
+      return {
+        ...state,
+        unarchivingProject: true,
+        errorOnUnarchive: '',
+      };
     case ProjectActionTypes.UNARCHIVE_PROJECT_SUCCESS:
       return {
         ...state,
         unarchivingProject: false,
+      };
+    case ProjectActionTypes.NEW_UNARCHIVE_PROJECT_SUCCESS:
+      return {
+        ...state,
+        unarchivingProject: false,
+        allProjects: state.allProjects.map((project: IProject) =>
+          project._id === String(action.payload)
+            ? { ...project, status: 'ongoing' }
+            : project,
+        ),
+        userProjects: state.userProjects.map((project: IProject) =>
+          project._id === String(action.payload)
+            ? { ...project, status: 'ongoing' }
+            : project,
+        ),
       };
     case ProjectActionTypes.UNARCHIVE_PROJECT_FAILURE:
       return {
@@ -230,6 +287,55 @@ export const ProjectReducer = (state = initialState, action: any) => {
         deletingProject: true,
         errorOnDeletingProject: '',
       };
+    case ProjectActionTypes.NEW_DELETE_PROJECT_START:
+      return {
+        ...state,
+        deletingProject: true,
+        errorOnDeletingProject: '',
+      };
+    case ProjectActionTypes.NEW_ARCHIVE_PROJECT_SUCCESS:
+      return {
+        ...state,
+        projectLoading: false,
+        userProjects: state.userProjects.map((project: any) =>
+          project._id === String(action.payload)
+            ? {
+                ...project,
+                status: 'archived',
+              }
+            : project,
+        ),
+        favouriteProjects: state.favouriteProjects.filter(
+          (project: IProject) =>
+            project._id !== String(action.payload),
+        ),
+        allProjects: state.allProjects.map((project: IProject) =>
+          project._id !== action.payload
+            ? project
+            : { ...project, status: 'archived' },
+        ),
+      };
+    case ProjectActionTypes.NEW_DELETE_PROJECT_SUCCESS:
+      return {
+        ...state,
+        deletingProject: false,
+        errorOnDeletingProject: '',
+        allArchive: state.allArchive.filter(
+          (project: IProject) =>
+            project._id !== String(action.payload),
+        ),
+        userProjects: state.userProjects.filter(
+          (project: IProject) =>
+            project._id !== String(action.payload),
+        ),
+        favouriteProjects: state.favouriteProjects.filter(
+          (project: IProject) =>
+            project._id !== String(action.payload),
+        ),
+        allProjects: state.allProjects.filter(
+          (project: IProject) => project._id !== action.payload,
+        ),
+      };
     case ProjectActionTypes.DELETE_PROJECT_SUCCESS:
       // console.log(
       //   action.payload,
@@ -240,7 +346,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         allArchive: state.allArchive.filter(
-          (arch: any) => arch._id !== String(action.paylaod),
+          (arch: any) => arch._id !== String(action.payload),
         ),
         deletingProject: false,
       };
@@ -366,6 +472,23 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         projectList: [...state.projectList, action.payload],
       };
+    case ProjectActionTypes.GET_ALL_USER_PROJECTS_START:
+      return {
+        ...state,
+        errorOnFetchingUserProjects: '',
+        fetchingAllUserProjects: true,
+      };
+    case ProjectActionTypes.GET_ALL_USER_PROJECTS_SUCCESS:
+      return {
+        ...state,
+        userProjects: action.payload,
+        fetchingAllUserProjects: false,
+      };
+    case ProjectActionTypes.GET_ALL_USER_PROJECTS_FAILURE:
+      return {
+        ...state,
+        errorOnFetchingUserProjects: action.payload,
+      };
     case PROJECT.PROJECT_LIST_CLEAR:
       return {
         ...state,
@@ -392,6 +515,44 @@ export const ProjectReducer = (state = initialState, action: any) => {
           (team: any) => team._id !== action.payload,
         ),
         loading: false,
+      };
+    case ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_START:
+      return {
+        ...state,
+        fetchingUserFavouriteProjects: true,
+        fetchingUserFavouriteProjectsError: '',
+      };
+    case ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_SUCCESS:
+      return {
+        ...state,
+        favouriteProjects: action.payload,
+        fetchingUserFavouriteProjects: false,
+      };
+    case ProjectActionTypes.GET_ALL_FAVOURITE_PROJECTS_FAILURE:
+      return {
+        ...state,
+        fetchingUserFavouriteProjects: false,
+        fetchingUserFavouriteProjectsError: action.payload,
+      };
+    case ProjectActionTypes.FAVOURITE_PROJECT_SUCCESS:
+      return {
+        ...state,
+        allProjects: state.allProjects?.map((project: IProject) =>
+          project._id === action.payload.projectId
+            ? {
+                ...project,
+                isFavourite: action.payload.isFavourite,
+              }
+            : project,
+        ),
+        userProjects: state.userProjects?.map((project: IProject) =>
+          project._id === action.payload.projectId
+            ? {
+                ...project,
+                isFavourite: action.payload.isFavourite,
+              }
+            : project,
+        ),
       };
     default:
       return state;

@@ -408,6 +408,19 @@ export const RoomReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         users: [...state.users, ...action.payload],
+        currentRoom: {
+          ...state.currentRoom,
+          memberCount:
+            state.currentRoom.memberCount + action.payload.length,
+        },
+        rooms: state.rooms.map((room: IRoom) =>
+          room._id === state.currentRoom._id
+            ? {
+                ...room,
+                memberCount: room.memberCount + action.payload.length,
+              }
+            : room,
+        ),
         addingRoomMembers: false,
       };
     case RoomActionTypes.ADD_ROOM_MEMBERS_FAILURE:
@@ -538,6 +551,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
             updatedAt: action.payload.updatedAt,
             archive: action.payload.archive,
             removed: action.payload.removed,
+            memberCount: 1,
           },
         ],
         errorOnRoomCreate: '',

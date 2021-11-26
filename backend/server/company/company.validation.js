@@ -123,6 +123,7 @@ module.exports = {
       email: schema.email,
       legalOwnerName: schema.legalOwnerName,
       legalOwnerMail: schema.legalOwnerMail,
+      totalEmployees: schema.totalEmployees.allow(),
     }),
     params: companyId,
   }),
@@ -148,6 +149,9 @@ module.exports = {
     params: companyId,
   }),
   search: Joi.object().keys({
+    query: sname,
+  }),
+  find: Joi.object().keys({
     query: sname,
   }),
   dashboard: Joi.object().keys({

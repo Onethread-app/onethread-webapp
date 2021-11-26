@@ -20,15 +20,22 @@ interface ITaskDescriptionFormProps {
   description: ITask['description'];
   setEditDescriptionDialog: (val: boolean) => void;
   editDescriptionDialog: boolean;
-  updateTask: (task: ITask) => any;
+  updateTask: (task) => any;
   updatingTask: boolean;
+  currentTask: ITask;
 }
 
 export const TaskDescriptionEditorComponent = (
   props: ITaskDescriptionFormProps,
 ) => {
   const onSubmit = async (values: any) => {
-    const response = await props.updateTask(values);
+    const response = await props.updateTask({
+      ...values,
+      taskId: props.currentTask._id,
+      projectId: props.currentTask.project._id,
+      companyId: props.currentTask.company._id,
+      parentTask: 'null',
+    });
     if (response && !props.updatingTask) {
       props.setEditDescriptionDialog(false);
       return true;
@@ -81,7 +88,7 @@ export const TaskDescriptionEditorComponent = (
                 <Button
                   className="mr2"
                   type="submit"
-                  style={{ background: '#34b3e9' }}
+                  style={{ background: '#08A0F7' }}
                   loading={submitting}
                   icon={
                     <Icon
@@ -115,6 +122,7 @@ const mapStateToProps = (state: any) => {
     description:
       state.taskIndexReducer.taskReducer.currentTask.description,
     updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
+    currentTask: state.taskIndexReducer.taskReducer.currentTask,
   };
 };
 

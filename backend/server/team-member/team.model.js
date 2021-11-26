@@ -31,6 +31,10 @@ const teamMember = new Schema(
       type: Boolean,
       default: false,
     },
+    isFavourite: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

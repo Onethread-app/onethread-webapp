@@ -1,18 +1,13 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
 
-import moment from 'moment';
-import { IconNames } from '@blueprintjs/icons';
-import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
-
 import { ITask } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import { projectPermit } from 'stores/UtilsActions';
-
+import moment from 'moment';
 import { TaskTitleEditor } from './TaskTitleEditor';
 
 interface TaskDetailsInternalProps {
-  currentTask?: ITask;
+  currentTask: ITask;
   company?: ICompany;
 }
 
@@ -27,14 +22,15 @@ export const TaskTitleViewComponent = (
         <TaskTitleEditor
           nameEdit={nameEdit}
           setNameEdit={(e) => setNameEdit(!nameEdit)}
+          currentTask={props.currentTask}
         />
       ) : (
-        <div className="mv2">
+        <div>
           <h5
             style={{
               fontSize: '12px',
               color: '#666666',
-              lineHeight: '15px',
+              lineHeight: '0px',
               fontWeight: 400,
               margin: '0.2rem 0rem',
             }}
@@ -49,9 +45,7 @@ export const TaskTitleViewComponent = (
               fontSize: '25px',
             }}
             onClick={() => {
-              props.company && projectPermit(props.company.role)
-                ? setNameEdit(true)
-                : setNameEdit(false);
+              props.company ? setNameEdit(true) : setNameEdit(false);
             }}
           >
             {props.currentTask!.name}
@@ -65,75 +59,16 @@ export const TaskTitleViewComponent = (
               margin: '0.2rem 0rem',
             }}
           >
-            Task created by {props.currentTask!.createdBy}
-          </h5>
-          <div className="flex justify-end">
-            {props.currentTask!.dueDate && (
-              <>
-                {Math.ceil(
-                  moment(props.currentTask!.dueDate).diff(
-                    moment(),
-                    'days',
-                    true,
-                  ),
-                ) === 0 ? (
-                  <p className="fw6 red mv2">Deadline ends today</p>
-                ) : Math.ceil(
-                    moment(props.currentTask!.dueDate).diff(
-                      moment(),
-                      'days',
-                      true,
-                    ),
-                  ) < 0 ? (
-                  <p className="fw6 red mv2">Expired</p>
-                ) : Math.ceil(
-                    moment(props.currentTask!.dueDate).diff(
-                      moment(),
-                      'days',
-                      true,
-                    ),
-                  ) === 1 ? (
-                  <p className="fw6 mv2 flex items-center">
-                    <Icon
-                      style={{
-                        color: '#323030',
-                      }}
-                      icon={IconNames.TIME}
-                      iconSize={12}
-                      className="grow pointer pl2 pr2"
-                    />{' '}
-                    {Math.ceil(
-                      moment(props.currentTask!.dueDate).diff(
-                        moment(),
-                        'days',
-                        true,
-                      ),
-                    )}{' '}
-                    day remaining
-                  </p>
-                ) : (
-                  <p className="fw6  mv2 flex items-center">
-                    <Icon
-                      style={{
-                        color: '#323030',
-                      }}
-                      icon={IconNames.TIME}
-                      iconSize={12}
-                      className="grow pointer pl2 pr2"
-                    />{' '}
-                    {Math.ceil(
-                      moment(props.currentTask!.dueDate).diff(
-                        moment(),
-                        'days',
-                        true,
-                      ),
-                    )}{' '}
-                    days remaining
-                  </p>
-                )}
-              </>
+            Task created by{' '}
+            <span className="capitalize">
+              {`${props.currentTask.account?.firstName} 
+              ${props.currentTask.account?.lastName}`}{' '}
+            </span>
+            at{' '}
+            {moment(props.currentTask!.createdAt).format(
+              'MMMM d, YYYY',
             )}
-          </div>
+          </h5>
         </div>
       )}
     </>

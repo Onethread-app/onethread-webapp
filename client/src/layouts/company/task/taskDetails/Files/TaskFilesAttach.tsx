@@ -91,7 +91,6 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
   const handleSubmit = async (e: any) => {
     const payload = {
       file: imageSelected,
-      columnId: props.currentTask.columnId,
       taskId: props.currentTask._id,
     };
     await props.taskFileUpload(payload);
@@ -135,7 +134,7 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
           text="Attach"
           className="grow h2 pointer w-40 fr mt2"
           style={{
-            background: '#34b3e9',
+            background: '#08A0F7',
             outline: 'none',
             color: 'white',
           }}

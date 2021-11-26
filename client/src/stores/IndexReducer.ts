@@ -25,6 +25,7 @@ import { UserBasicInfoFormReducer } from './UserBasicInfoDetailsForm/Reducer';
 import { CompanyBasicInfoFormReducer } from './companyBasicInfoForm/Reducer';
 
 import { loadingBarReducer } from 'react-redux-loading-bar';
+import { AuthReducer } from './auth/Reducer';
 
 export interface AppState {
   layoutReducer: any;
@@ -51,7 +52,7 @@ export interface AppState {
   companyBasicInfoFormReducer: any;
 }
 
-export const rootReducer = combineReducers({
+export const appReducer = combineReducers({
   layoutReducer: LayoutReducer,
   roomReducer: RoomReducer,
   userReducer: UserReducer,
@@ -76,4 +77,16 @@ export const rootReducer = combineReducers({
   jobDetailsFormReducer: JobDetailsFormReducer,
   eduDetailsFormReducer: EduDetailsFormReducer,
   companyBasicInfoFormReducer: CompanyBasicInfoFormReducer,
+  authReducer: AuthReducer,
 });
+
+export const rootReducer = (state, action) => {
+  if (action.type === 'RESET') {
+    localStorage.removeItem('persist:root');
+    localStorage.removeItem('persist:projectType');
+    localStorage.removeItem('persist:onethread');
+    return appReducer(undefined, action);
+  }
+
+  return appReducer(state, action);
+};

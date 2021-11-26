@@ -5,12 +5,19 @@ import i18next from 'i18next';
 export const returnErrorText = (error) => {
   if (error.response) {
     const { data, config } = error.response;
-    // console.log(
-    //   `${data.type} on method ${config.method} at ${config.baseURL}${config.url}`,
-    // );
+
     if (data.type === 'Network Error') {
       return `${i18next.t('app.Error-text.Network-Error')}`;
     } else if (data.status === 400) {
+      if (data.type === 'ValidationError') {
+        let errorText = '';
+        data.errors.forEach((error, i) => {
+          errorText += `${i > 1 ? ' ' : ''} ${
+            error.message.split(':')[0]
+          },`;
+        });
+        return errorText.replace(/.$/, '.');
+      }
       return `${i18next.t('app.Error-text.Bad-Request')}`;
     } else if (data.status === 401) {
       return `${i18next.t('app.Error-text.Unauthorized-user')}`;
@@ -22,12 +29,20 @@ export const returnErrorText = (error) => {
     } else if (data.status === 404) {
       return `${i18next.t('app.Error-text.Method-Not-Found')}`;
     } else if (data.status === 409) {
-      return `${i18next.t('app.Error-text.Duplicate-Value')}`;
+      let errorText = '';
+      data.errors.forEach((error, i) => {
+        errorText += `${i > 1 ? ' ' : ''} ${
+          error.message.split(':')[0]
+        },`;
+      });
+      return errorText.replace(/.$/, '.');
+      // `${i18next.t('app.Error-text.Duplicate-Value')}`;
     } else {
       return data.type;
     }
   }
 };
+// TODO: Show error messages with correct error type.
 
 const handleError = (error, errorHandler) => {
   if (error.response) {

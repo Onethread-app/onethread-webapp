@@ -6,12 +6,7 @@ const { Member } = require('./member/member.model');
 const Plan = require('../plan/plan.model');
 const { createSlug } = require('../helpers/SlugCreator');
 const Task = require('../task/task.model');
-const SubTask = require('../task/subtask/subtask.model');
-const Boardcolumn = require('../boardColumn/boardColumn.model');
-const { getTaskMembers } = require('../task/task.controller');
-const {
-  projectTeamMembers,
-} = require('../team-member/team.controller');
+const { getTaskMembers } = require('../helpers/utils');
 const {
   triggerNotification,
 } = require('../services/webpush.services');
@@ -21,9 +16,7 @@ const {
   Subscription,
 } = require('../subscription/subscription.model');
 
-const {
-  createCompanyRoleNotification,
-} = require('../notification/notification.controller');
+const { sortTasksByStatus } = require('../helpers/utils');
 
 const {
   search,
@@ -38,6 +31,27 @@ const {
 } = require('../helpers/jsonResponse');
 const logger = require('../../config/winston');
 const { Project } = require('../project/project.model');
+
+const {
+  numOfProjectInACompany,
+  allProjectIdOfCompany,
+  numbOfTasksOfACompany,
+  checkCompanySubscription,
+} = require('../services/company/company.services');
+
+const {
+  findSubtasksByTaskId,
+  getAssignedMembers,
+} = require('../services/task/task.service');
+
+const {
+  getAllStatusInProject,
+} = require('../services/task/taskStatus/taskStatus.service');
+
+const {
+  getTaskLabel,
+} = require('../services/taskLabel/taskLabel.service');
+
 // create a company profile
 const changeName = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -105,7 +119,7 @@ const createCompany = async (req, res, next) => {
       name: req.body.name,
     });
     if (duplicate) {
-      return sendErrorResponse(res, 409, 'DuplicateNameError', {
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
         message: 'Name already exist',
       });
     }
@@ -114,7 +128,7 @@ const createCompany = async (req, res, next) => {
 
     const planId = await Plan.findOne({ name: 'trial' });
     if (!planId) {
-      return sendErrorResponse(res, 404, 'PlanNotFoundError', {
+      return sendErrorResponse(res, 404, 'NotFound', {
         message: 'Plan is not created',
       });
     }
@@ -201,15 +215,31 @@ const getCompanyIndividual = async (req, res, next) => {
     ];
 
     let companies = await Member.find({
-      account: req.params.account,
+      account: req.user._id,
       removed: false,
     })
       .select('_id company role')
       .populate(options);
 
-    return sendJSONresponse(res, 200, {
-      companies,
-    });
+    let container = [];
+    await Promise.all(
+      companies.map(async (company) => {
+        let comDetails = company.toJSON();
+        if (comDetails.company) {
+          comDetails.company.numberOfProjects =
+            await numOfProjectInACompany(company.company._id);
+
+          comDetails.company.numberOfTasks =
+            await numbOfTasksOfACompany(company.company._id);
+
+          comDetails.company.isSubscribed =
+            await checkCompanySubscription(company.company._id);
+        }
+        container.push(comDetails);
+      }),
+    );
+
+    return sendJSONresponse(res, 200, { companies: container });
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);
@@ -230,7 +260,7 @@ const getCompany = async (req, res, next) => {
     let member = await Member.findOne({
       account: req.user._id,
       company: company._id,
-    }).select('-_id role');
+    }).select('_id role');
     let certificate = await Certificate.find({
       company: company._id,
     }).select('-__v');
@@ -244,8 +274,18 @@ const getCompany = async (req, res, next) => {
         role: member.role,
         certificate: certificate,
         totalMember: memberCount,
+        member: member._id,
       },
     });
+  } catch (error) {
+    logger.error(`Company: ${error}`);
+    next(error);
+  }
+};
+
+const publicCompanyInformation = async (req, res, next) => {
+  try {
+    return sendJSONresponse(res, 200, req.company);
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);
@@ -334,10 +374,9 @@ const updateRole = async (req, res, next) => {
 // company will be found on req.company
 const getCompanyLoad = async (req, res, next) => {
   try {
-    const company = await Company.findOne({
-      _id: req.params.companyId,
-    }).populate('account', '_id firstName lastName email contactNo');
-
+    const company = await Company.findById(
+      req.params.companyId,
+    ).populate('account', '_id firstName lastName email contactNo');
     if (company) {
       req.company = company;
       return next();
@@ -386,31 +425,43 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeUser = (functionalRole, ...userRoles) => {
-  return async function (req, res, next) {
-    try {
-      const member = await Member.findOne({
-        account: req.user._id,
-        company:
-          req.headers.companyid ||
-          req.params.companyId ||
-          req.body.companyId, //apatoto pore name or id hobe
-      }).exec();
-      if (
-        !member ||
-        (functionalRole === 'all' && !userRoles.includes(member.role))
-      ) {
-        return sendErrorResponse(res, 403, 'PermissionError', {
-          message: `Restricted`,
-        });
-      }
+const FindCompanyAtBeginning = async (req, res, next) => {
+  try {
+    const { limit = 50, skip = 0, name } = req.query;
 
-      next();
-    } catch (error) {
-      logger.error(`Company: ${error}`);
-      next(error);
+    if (name) {
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool: {
+            must: [
+              {
+                match_phrase_prefix: {
+                  name: name,
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      const response = await search(companyIndex, '_doc', body);
+
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits.map((h) => h._source),
+      });
+    } else {
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
+      });
     }
-  };
+  } catch (error) {
+    logger.error(`Company: ${error}`);
+    next(error);
+  }
 };
 
 const searchCompany = async (req, res, next) => {
@@ -496,14 +547,9 @@ const editCertification = async (req, res, next) => {
     });
 
     if (!certificate) {
-      return sendErrorResponse(
-        res,
-        404,
-        'CertificateIdNotFoundError',
-        {
-          message: `certificateId not found`,
-        },
-      );
+      return sendErrorResponse(res, 404, 'NotFound', {
+        message: `certificateId not found`,
+      });
     } else {
       for (const key in req.body) {
         if (req.body.hasOwnProperty(key)) {
@@ -551,83 +597,58 @@ const parentOrg = async (req, res, next) => {
   }
 };
 
-const companyTasks = async (allProjectIds, withDone = false) => {
+const companyTasks = async (company, addDoneTasks = false) => {
   try {
     let taskCompilation = [];
     let tasks = [];
+    let queryObject = { company };
+    let sortObject = { priority: 0 };
+    let populateArray = [
+      { path: 'project', select: '_id name' },
+      { path: 'company', select: '_id name uniqueName' },
+      {
+        path: 'status',
+        select: '_id name',
+      },
+      {
+        path: 'account',
+        select: '_id firstName lastName profileImage',
+      },
+    ];
+    let selectString = `_id name account status dueDate project priority createdAt`;
 
-    if (withDone) {
-      tasks = await Task.find({
-        project: { $in: allProjectIds },
-      })
-        .sort({ priority: 0 })
-        .select(
-          '_id name status dueDate project boardId priority createdAt',
-        )
-        .populate({
-          path: 'project',
-          select: '_id name',
-          populate: [
-            {
-              path: 'company',
-              select: '_id uniqueName',
-            },
-          ],
-        });
-    } else {
-      tasks = await Task.find({
-        project: { $in: allProjectIds },
-        status: { $ne: 'done' },
-      })
-        .sort({ priority: 0 })
-        .select(
-          '_id name status dueDate project boardId priority createdAt',
-        )
-        .populate({
-          path: 'project',
-          select: '_id name',
-          populate: [
-            {
-              path: 'company',
-              select: '_id uniqueName',
-            },
-          ],
-        });
+    if (!addDoneTasks) {
+      queryObject.isCompleted = false;
     }
+
+    tasks = await Task.find(queryObject)
+      .sort(sortObject)
+      .select(selectString)
+      .populate(populateArray);
 
     await Promise.all(
       tasks.map(async (task) => {
         let modifiedTask = {};
-        const totalSubtasks = await SubTask.find({
-          taskId: task._id,
-        }).countDocuments();
-        const doneSubtasks = await SubTask.find({
-          $and: [{ taskId: task._id, done: true }],
-        }).countDocuments();
-
-        const taskMembers = await getTaskMembers(task._id);
-        const members = taskMembers.map((tMember) => {
-          return tMember.assignedPerson;
-        });
+        const subtasks = await findSubtasksByTaskId(task._id);
+        const members = await getAssignedMembers(task._id);
+        const labels = await getTaskLabel(task._id);
+        const statusList = await getAllStatusInProject(
+          task.project._id,
+        );
 
         modifiedTask._id = task._id;
         modifiedTask.name = task.name;
+        modifiedTask.account = task.account;
         modifiedTask.status = task.status;
         modifiedTask.dueDate = task.dueDate;
         modifiedTask.members = members;
-        modifiedTask.boardId = task.boardId;
         modifiedTask.priority = task.priority;
         modifiedTask.createdAt = task.createdAt;
-        modifiedTask.project = {
-          _id: task.project._id,
-          name: task.project.name,
-        };
-        modifiedTask.company = {
-          _id: task.project.company._id,
-          uniqueName: task.project.company.uniqueName,
-        };
-        modifiedTask.doneSubtasks = doneSubtasks;
-        modifiedTask.totalSubtasks = totalSubtasks;
+        modifiedTask.project = task.project;
+        modifiedTask.company = task.company;
+        modifiedTask.subtasks = subtasks;
+        modifiedTask.statusList = statusList;
+        modifiedTask.labels = labels;
         taskCompilation.push(modifiedTask);
       }),
     );
@@ -637,7 +658,7 @@ const companyTasks = async (allProjectIds, withDone = false) => {
     );
     return taskCompilation;
   } catch (error) {
-    logger.error(`Compnay: ${error}`);
+    logger.error(`Company: ${error}`);
     return error;
   }
 };
@@ -645,19 +666,14 @@ const companyTasks = async (allProjectIds, withDone = false) => {
 const allCompanytasks = async (req, res, next) => {
   try {
     const companyId = req.params.companyId;
-    const projectList = await Project.find({
-      $or: [{ company: companyId }, { associate: companyId }],
-      removed: false,
-      hasDeleted: false,
-    }).exec();
-    const allProjectIds = projectList.map((p) => p._id);
-    const taskCompilation = await companyTasks(allProjectIds, true);
+    const taskCompilation = await companyTasks(companyId, true);
+    const sortedTasks = sortTasksByStatus(taskCompilation);
     return sendJSONresponse(res, 200, {
       success: true,
-      taskCompilation,
+      tasks: sortedTasks,
     });
   } catch (error) {
-    logger.error(`Company: ${error}`);
+    logger.error(`All Company Tasks: ${error}`);
     next(error);
   }
 };
@@ -675,13 +691,13 @@ const dashBoard = async (req, res, next) => {
       (p) => p.status === 'completed',
     ).length;
     let runningProjects = projectList.length - completedProjects;
-    const allProjectIds = projectList.map((p) => p._id);
 
     const totalTasks = await Task.countDocuments({
-      project: { $in: allProjectIds },
+      company: companyId,
+      parentTask: null,
     });
 
-    const taskCompilation = await companyTasks(allProjectIds);
+    const taskCompilation = await companyTasks(companyId);
 
     return sendJSONresponse(res, 200, {
       success: true,
@@ -716,7 +732,7 @@ const latestCompletedTasks = async (req, res, next) => {
         ],
       })
         .select('name updatedAt')
-        .populate('boardId project', 'name name')
+        .populate('project', 'name name')
         .exec();
       completedTaskCompilation.push(doneTask);
     }
@@ -756,8 +772,17 @@ const noticePostByCompany = async (req, res, next) => {
     const options = [
       {
         path: 'memberId',
-        select: 'designations',
-        populate: 'designations',
+        select: 'designations account role',
+        populate: [
+          {
+            path: 'account',
+            select: 'firstName lastName _id',
+          },
+          {
+            path: 'designations',
+            select: 'name',
+          },
+        ],
       },
     ];
 
@@ -840,8 +865,8 @@ const adminSuperAdminFinder = async (req, res, next) => {
     next(error);
   }
 };
+
 module.exports = {
-  authorizeUser,
   createCompany,
   getCompany,
   updateBasicInfo,
@@ -861,4 +886,6 @@ module.exports = {
   adminSuperAdminFinder,
   editCertification,
   allCompanytasks,
+  FindCompanyAtBeginning,
+  publicCompanyInformation,
 };

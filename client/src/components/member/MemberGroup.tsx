@@ -5,7 +5,7 @@ import Avatar from '@material-ui/core/Avatar/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup/AvatarGroup';
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 
-import { IBoardMember, ITaskMember } from 'stores/task/Reducer';
+import { ITaskMember } from 'stores/task/Reducer';
 
 import UserIcon from 'resources/images/profilePhoto.svg';
 
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IMemberGroup {
-  members: IBoardMember[] | ITaskMember[];
+  members: ITaskMember[];
   small?: boolean;
 }
 
@@ -49,9 +49,9 @@ const MemberGroup = (props: IMemberGroup) => {
         <AvatarGroup max={3} className="pointer">
           {props.members.map((member) => (
             <Avatar
-              alt={`${member.name}`}
-              src={member.profileImage ?? UserIcon}
-              key={member._id}
+              alt={`${member?.assignedPerson?.firstName}`}
+              src={member?.assignedPerson?.profileImage ?? UserIcon}
+              key={member?.assignedPerson?._id}
               className={props.small ? classes.small : classes.large}
             />
           ))}

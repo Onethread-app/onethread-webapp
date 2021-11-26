@@ -8,11 +8,13 @@ import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 import addMembers from 'resources/images/addMembers.png';
 
 import { DueDateEditor } from '../taskDetails/DueDate/DueDateEditor';
-import { TaskStatusEdior } from '../TaskStatusEditor/TaskStatusEdior';
+// import { TaskStatusEdior } from '../TaskStatusEditor/TaskStatusEdior';
 import { PriorityEditorList } from '../taskDetails/Priority/PriorityEditorList';
 import { AssignedMembersEditor } from '../taskDetails/AssignedMembers/AssignedMembersEditor';
-import { AssignedMembersView } from '../taskDetails/AssignedMembers/AssignedMembersView';
+import AssignedMembersView from '../taskDetails/AssignedMembers/AssignedMembersView';
 import TaskLabel from 'components/label/TaskLabel';
+import TaskStatus from '../taskDetails/TaskStatus/TaskStatus';
+import MarkAsDone from '../taskDetails/MarkAsDone/MarkAsDone';
 
 const TaskInfoViewComponent = () => {
   // const history = useHistory();
@@ -35,9 +37,7 @@ const TaskInfoViewComponent = () => {
           {t('app.project.Tasks.Task-Details')}:
         </h3>
         <div className="mt3">
-          <div className="mb2">
-            <TaskStatusEdior />
-          </div>
+          <div className="mb2">{/* <TaskStatusEdior /> */}</div>
           <div className="task-info-items">
             <h1 className="f6">
               {t('app.project.Tasks.Assigned-To')}:
@@ -77,6 +77,8 @@ const TaskInfoViewComponent = () => {
           <DueDateEditor />
           <PriorityEditorList />
           <TaskLabel />
+          <TaskStatus />
+          <MarkAsDone />
           <div className="mt4">
             <AssignedMembersView />
           </div>
