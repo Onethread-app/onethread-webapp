@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography/Typography';
 import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 
 // import { companyPermit } from 'stores/UtilsActions';
-import CompanyAnnouncementItem from 'components/dashboard/company-announcements-new/CompanyAnnouncementItem';
+import CompanyAnnouncementItem from './CompanyAnnouncementItem';
 import AnnouncementDialog from 'components/announcement/AnnouncementDialog';
 import { CompanySignupForm } from 'components/home/company-section/CompanyDialog';
 import { ICompany } from 'stores/company/Reducer';
