@@ -60,13 +60,6 @@ router
     accountCtrl.changeEmail,
   );
 
-// router
-//   .route('/verify-account/:token')
-//   .get(
-//     schemaValidator(paramValidation.getAccessTokenForVerifyAccount),
-//     accountCtrl.getAccessTokenForVerifyAccount,
-//   );
-
 router.route('/').get(authorization, accountCtrl.getAccount);
 router.route('/skill-area').get(authorization, accountCtrl.skillArea);
 router
@@ -82,10 +75,6 @@ router
     schemaValidator(paramValidation.subTaskMarkAsDone),
     accountCtrl.subtaskMarkAsDone,
   );
-router.route('/due-task').get(authorization, accountCtrl.userDueTask);
-router
-  .route('/daily-progress')
-  .get(authorization, accountCtrl.userDailyProgress);
 router.route('/timeline').get(authorization, accountCtrl.timeline);
 
 router
