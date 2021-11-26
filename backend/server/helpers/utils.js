@@ -63,23 +63,26 @@ const sortProjectsByStatus = (projects) => {
 
 const getFormattedTaskForClient = async (tasks) => {
   const formattedTasks = [];
-  for (let i = 0; i < tasks.length; i += 1) {
-    const task = tasks[i];
-    const subtasks = await findSubtasksByTaskId(task._id);
-    const members = await getAssignedMembers(task._id);
-    const statusList = await getAllStatusInProject(task.project._id);
-    const labels = await getTaskLabel(task._id);
+  await Promise.all(
+    tasks.map(async (task) => {
+      const subtasks = tasks.filter((t) => t.parentTask === task._id);
+      const members = await getAssignedMembers(task._id);
+      const statusList = await getAllStatusInProject(
+        task.project._id,
+      );
+      const labels = await getTaskLabel(task._id);
 
-    const formattedTask = {
-      ...task._doc,
-      subtasks,
-      members,
-      statusList,
-      labels,
-    };
-    formattedTasks.push(formattedTask);
-  }
-  return formattedTasks;
+      const formattedTask = {
+        ...task._doc,
+        subtasks,
+        members,
+        statusList,
+        labels,
+      };
+      formattedTasks.push(formattedTask);
+    }),
+  );
+  return formattedTasks.filter((ft) => ft.parentTask === null);
 };
 
 const getIds = (array) => {
