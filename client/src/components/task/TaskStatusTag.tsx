@@ -5,7 +5,7 @@ interface ITaskStatusTag {
 }
 
 const TaskStatusTag = (props: ITaskStatusTag) => {
-  console.log(props.status);
+  // console.log(props.status);
   return (
     <span
       className="bp3-tag ttc"

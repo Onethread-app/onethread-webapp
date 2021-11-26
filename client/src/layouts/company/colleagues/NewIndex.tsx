@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
-import { upperFirst, chunk } from 'lodash';
+import { upperFirst } from 'lodash';
 
-import { HTMLTable } from '@blueprintjs/core/lib/esm/components/html-table/htmlTable';
 import Snackbar from '@material-ui/core/Snackbar/Snackbar';
 import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
 import MuiAlert from '@material-ui/lab/Alert';
 
-import { IProjectTeam } from 'stores/project/Reducer';
 import {
   ICompanyMembers,
-  ICompanyPendingMembers,
   ICompany,
+  ICompanyAllMembers,
 } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
 import {
@@ -26,15 +23,14 @@ import {
   deleteCompanyMember,
   inviteColleagueInBulk,
 } from 'stores/company/Actions';
-import { companyPermit } from 'stores/UtilsActions';
 
 import Navbar from 'components/navbar/Navbar';
 import { InviteColleagueView } from './InviteColleagueView';
-import { Loading } from 'components/Loading';
 import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
 
 import './Index.scss';
 import CompanyColleagues from './CompanyColleagues';
+import { SimpleButton } from 'components/announcement/AnnouncementDialog.styles';
 
 interface Colleagues {
   company: ICompany;
@@ -64,9 +60,7 @@ export const getDivisionName = {
   operationalEmployee: 'Operational Employee',
 };
 
-export const showDepartment = (
-  member: ICompanyMembers | IProjectTeam['member'],
-) => {
+export const showDepartment = (member: ICompanyMembers) => {
   if (
     member.designations.length &&
     ['director', 'cxo'].includes(member.designations[0].division) ===
@@ -87,17 +81,17 @@ export const showDepartment = (
 };
 
 const ColleaguesPageComponent = (props: Colleagues) => {
-  const { t } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
   const [
     showDialogForInviteColleague,
     setshowDialogForInviteColleague,
   ] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
-  const [pendingList, setPendingList] = useState<
-    ICompanyPendingMembers[][]
-  >([]);
-  const [members, setMembers] = useState<ICompanyMembers[]>([]);
+  const [allMembers, setAllMembers] = useState<ICompanyAllMembers>({
+    acceptedMembers: [],
+    pendingMembers: [],
+    invitedMembers: [],
+  });
   const [colleaguesList, setColleaguesList] = useState<any[]>([]);
 
   useEffect(() => {
@@ -119,97 +113,85 @@ const ColleaguesPageComponent = (props: Colleagues) => {
   useEffect(() => {
     if (
       props.company &&
-      props.company.members &&
-      props.company.members.length
+      props.company.allMembers &&
+      props.company.allMembers.acceptedMembers?.length
     ) {
-      setMembers(props.company.members);
+      setAllMembers(props.company.allMembers);
     }
-  }, [props.company.members]);
+  }, [props.company.allMembers]);
 
-  useEffect(() => {
-    if (
-      props.company &&
-      props.company.pendingMembers &&
-      props.company.pendingMembers.length
-    ) {
-      setPendingList(chunk(props.company.pendingMembers, 4));
-    }
-  }, [props.company]);
-
-  useEffect(() => {
-    let allColleagues = members.map((m: any, i) => ({
+  const handleMembers = (m, type) => {
+    return {
       id: m._id,
-      name: `${upperFirst(m.account.firstName)}${' '}${upperFirst(
-        m.account.lastName,
-      )}`,
-      accountId: m.account._id,
-      profileImage: m.account.profileImage
+      name: `${upperFirst(
+        m.account?.firstName || '',
+      )}${' '}${upperFirst(m.account?.lastName || '')}`,
+      accountId: m.account?._id || '',
+      profileImage: m.account?.profileImage
         ? m.account.profileImage
         : null,
-      email: m.account.email,
+      email: m.account?.email,
       division: `${
-        m.designations.length > 0 &&
+        m.designations?.length > 0 &&
         getDivisionName[m.designations[0].division]
       }`,
       position: `${
-        m.designations.length > 0 && m.designations[0].position
+        m.designations?.length > 0 && m.designations[0].position
       }`,
       role: m.role,
-      designations: m.designations,
+      designations: m?.designations,
       m: m,
-    }));
+      type,
+    };
+  };
+
+  useEffect(() => {
+    let allColleagues = [
+      ...allMembers.acceptedMembers.map((m: any, i) =>
+        handleMembers(m, 'joined'),
+      ),
+      ...allMembers.invitedMembers.map((m: any, i) =>
+        handleMembers(m, 'pending'),
+      ),
+      ...allMembers.pendingMembers.map((m: any, i) => {
+        return {
+          id: m._id,
+          name: '',
+          accountId: '',
+          profileImage: null,
+          email: m.email,
+          division: '',
+          position: '',
+          role: '',
+          designations: '',
+          m: m,
+          type: 'invited',
+        };
+      }),
+    ];
     setColleaguesList(allColleagues);
-  }, [members]);
+  }, [allMembers]);
 
   return (
     <>
       {isMobileOnly && <Navbar type="company" />}
+      <div className="flex justify-end">
+        <SimpleButton
+          className="mr3"
+          onClick={() => setShowDialog(true)}
+        >
+          Add Colleagues
+        </SimpleButton>
+        <SimpleButton
+          onClick={() => setshowDialogForInviteColleague(true)}
+        >
+          Invite Colleagues
+        </SimpleButton>
+      </div>
       <div style={{ minHeight: '100%' }}>
         {colleaguesList.length ? (
-          <CompanyColleagues colleagues={colleaguesList} type="" />
+          <CompanyColleagues colleagues={colleaguesList} />
         ) : null}
-
-        {/* pending list starts */}
-        {companyPermit(props.company.role) ? (
-          <>
-            <h1 className="f4 tigrow-lightGray-1">
-              {t('app.company.Colleagues.Invited-Colleagues')}
-            </h1>
-            <HTMLTable className="w-100 mv3" striped={true}>
-              {props.companyLoading ? (
-                <Loading />
-              ) : pendingList.length ? (
-                // tslint:disable-next-line: no-shadowed-variable
-                pendingList.map((chunkMembers, i1) => (
-                  <tbody className="bg-white">
-                    {chunkMembers.map((member) => (
-                      <tr className="hide-child" key={i1}>
-                        <td
-                          style={{
-                            borderBottom: '1px solid #E8E8E8',
-                          }}
-                        >
-                          <span className="mr2 f7 f6-ns">
-                            {member.email}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                ))
-              ) : (
-                <tbody>
-                  <tr>
-                    <td colSpan={3}>
-                      {t('app.company.Colleagues.No-pending')}
-                    </td>
-                  </tr>
-                </tbody>
-              )}
-            </HTMLTable>
-          </>
-        ) : null}
-        {/* pending list ends */}
       </div>
       <Snackbar
         open={showSnackbar}

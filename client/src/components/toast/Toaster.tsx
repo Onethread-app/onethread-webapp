@@ -162,7 +162,7 @@ export const AnnouncementToaster = (company: {
             The announcement has been created in {company.name}
           </div>
           <Link
-            to={`/company/${company.uniqueName}?tab=4`}
+            to={`/company/${company.uniqueName}?tab=3`}
             className="mt2 green"
           >
             Check it out!

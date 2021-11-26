@@ -3,7 +3,10 @@ const { Associate } = require('./associate.model');
 
 const logger = require('../../config/winston');
 const { BadRequestError } = require('../helpers/APIError');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const { log } = require('debug');
 const _ = require('lodash');
 const {
@@ -23,7 +26,12 @@ const chalk = require('chalk');
 const get = async (req, res, next) => {
   try {
     const colResult = await findByAssociateId(req.params.associateId);
-    if (req.params.companyId === colResult.company._id.toString()) {
+    if (!colResult) {
+      return sendErrorResponse(res, 404, 'NotFound', {
+        message: 'Associate not found',
+      });
+    }
+    if (req.headers.companyid === colResult.company._id.toString()) {
       colResult.company = undefined;
     } else {
       colResult.associateCompany = colResult.company;
@@ -31,34 +39,26 @@ const get = async (req, res, next) => {
     }
     return sendJSONresponse(res, 200, colResult);
   } catch (error) {
-    logger.error(`Associate create: ${e}`);
-    next(e);
+    logger.error(`Associate create: ${error}`);
+    next(error);
   }
 };
 
 const createPending = async (req, res, next) => {
   try {
-    const companyId = req.body.company._id;
-    const assoId = req.body.associateCompany._id;
+    const companyId = req.headers.companyid;
+    const associateCompanyId = req.body.associateCompanyId;
     let associate = await Associate.findOne({
       company: companyId,
-      associateCompany: assoId,
-      isAccepted: false,
-      isRejected: true,
+      associateCompany: associateCompanyId,
     });
 
-    if (_.isEmpty(associate)) {
-      associate = new Associate({
+    if (!associate) {
+      associate = await Associate.create({
         company: companyId,
-        associateCompany: assoId,
-        isAccepted: false,
-        isRejected: false,
+        associateCompany: associateCompanyId,
         account: req.user._id,
       });
-      await associate.save();
-    } else {
-      associate.isRejected = false;
-      await associate.save();
     }
     await Associate.populate(associate, {
       path: 'associateCompany',
@@ -66,7 +66,7 @@ const createPending = async (req, res, next) => {
     });
     await createPendingAssociateRequest(
       companyId,
-      assoId,
+      associateCompanyId,
       associate._id,
       {
         _id: req.user._id,
@@ -83,40 +83,49 @@ const createPending = async (req, res, next) => {
 
 const acceptPending = async (req, res, next) => {
   try {
-    let associate = await Associate.findOneAndUpdate(
-      { _id: req.body.associateId },
-      { isAccepted: true, isRejected: false },
-      { safe: true, upsert: true, new: true },
-    ).exec();
+    let associates = [];
+    await Promise.all(
+      req.body.associates.map(async (associateId) => {
+        let associate = await Associate.findOneAndUpdate(
+          { _id: associateId },
+          { isAccepted: true },
+          { safe: true, upsert: true, new: true },
+        ).exec();
 
-    associate = await Associate.populate(associate, {
-      path: 'company associateCompany',
-      select: '_id name type',
-    });
+        associate = await Associate.populate(associate, {
+          path: 'company associateCompany',
+          select: '_id name type',
+        });
+        associates.push(associate);
 
-    await setDocument(associateIndex, '_doc', {
-      mongo_id: associate._id,
-      company_id: associate.company._id,
-      companyName: associate.company.name,
-      associateCompany_id: associate.associateCompany._id,
-      associateCompanyName: associate.associateCompany.name,
-    });
+        if (associate) {
+          await setDocument(associateIndex, '_doc', {
+            mongo_id: associate._id,
+            company_id: associate.company._id,
+            companyName: associate.company.name,
+            associateCompany_id: associate.associateCompany._id,
+            associateCompanyName: associate.associateCompany.name,
+          });
 
-    logger.info(
-      chalk.blueBright(
-        `Elasticsearch document added on ${associateIndex}`,
-      ),
+          logger.info(
+            chalk.blueBright(
+              `Elasticsearch document added on ${associateIndex}`,
+            ),
+          );
+          await acceptAssociateRequest(
+            req.headers.companyid,
+            associate.company,
+            {
+              _id: req.user._id,
+              name: req.user.name,
+              pusherSock: req.headers.clientid,
+            },
+          );
+        }
+      }),
     );
-    await acceptAssociateRequest(
-      req.headers.companyid,
-      associate.company,
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-    );
-    return sendJSONresponse(res, 200, associate);
+
+    return sendJSONresponse(res, 200, associates);
   } catch (error) {
     logger.error(`Associate accept: ${error}`);
     next(error);
@@ -125,27 +134,24 @@ const acceptPending = async (req, res, next) => {
 
 const rejectPending = async (req, res, next) => {
   try {
-    let associate = await Associate.findOneAndUpdate(
-      { _id: req.body.associateId },
-      { isRejected: true },
-      { safe: true, upsert: true, new: true },
-    ).exec();
-
-    associate = await Associate.populate(associate, {
-      path: 'associateCompany',
-      select: '_id name type',
-    });
-    await rejectAssociateRequest(
-      req.headers.companyid,
-      associate.company,
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
+    await Promise.all(
+      req.body.associates.map(async (associateId) => {
+        let associate = await Associate.findByIdAndDelete(
+          associateId,
+        );
+        await rejectAssociateRequest(
+          req.headers.companyid,
+          associate.company,
+          {
+            _id: req.user._id,
+            name: req.user.name,
+            pusherSock: req.headers.clientid,
+          },
+        );
+        logger.info(`successfully rejected`);
+      }),
     );
-    logger.info(`successfully rejected`);
-    return sendJSONresponse(res, 200, { remove: true });
+    return sendJSONresponse(res, 200, { message: 'rejected' });
   } catch (error) {
     logger.error(`Associate Reject: ${error}`);
     next(error);
@@ -155,14 +161,11 @@ const rejectPending = async (req, res, next) => {
 const list = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
 
+  const companyId = req.headers.companyid;
+  // console.log({ companyId });
   await Associate.find({
-    $or: [
-      { company: req.params.companyId },
-      { associateCompany: req.params.companyId },
-    ],
+    $or: [{ company: companyId }, { associateCompany: companyId }],
     isAccepted: true,
-    removed: false,
-    isRejected: false,
   })
     .select('_id company associateCompany createdAt')
     .populate('company', '_id name type ')
@@ -172,6 +175,7 @@ const list = async (req, res, next) => {
     .limit(+limit)
     .exec()
     .then((result) => {
+      // console.log(result);
       return sendJSONresponse(res, 200, result);
     })
     .catch((e) => next(e));
@@ -181,10 +185,8 @@ const listPending = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
 
   await Associate.find({
-    $or: [{ associateCompany: req.params.companyId }],
+    $or: [{ associateCompany: req.headers.companyid }],
     isAccepted: false,
-    removed: false,
-    isRejected: false,
   })
     .select('_id company associateCompany createdAt')
     .populate('company', '_id name type about')
@@ -202,10 +204,10 @@ const listPending = async (req, res, next) => {
 };
 
 module.exports = {
-  list,
+  list, // OK
   get,
-  listPending,
-  createPending,
-  acceptPending,
-  rejectPending,
+  listPending, // OK
+  createPending, // OK
+  acceptPending, // OK
+  rejectPending, // OK
 };

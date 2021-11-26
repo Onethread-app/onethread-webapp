@@ -1,4 +1,3 @@
-import { isMobileOnly } from 'react-device-detect';
 import { useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 
@@ -6,10 +5,7 @@ import { connect, useDispatch } from 'react-redux';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import { capitalizeFirstLetter } from 'helpers/utils';
 
-import VideoConference from 'components/home/VideoConference';
-import { Tasks } from 'components/home/Tasks';
-import Projects from 'components/home/Projects';
-import Subtasks from 'components/home/Subtasks';
+// import VideoConference from 'components/home/VideoConference';
 import CompanySection from 'components/home/company-section/CompanySection';
 import ProjectSection from 'components/home/project-section/ProjectSection';
 import TaskSection from 'components/home/task-section/TaskSection';
@@ -32,25 +28,7 @@ const Index = (props: IProps) => {
     props.clearCurrentTask();
   }, []);
 
-  return isMobileOnly ? (
-    <div className="home-container">
-      <div>
-        <Tasks />
-      </div>
-      <div>
-        <Subtasks />
-      </div>
-      <div>
-        <Projects />
-      </div>
-      <div>
-        <VideoConference />
-      </div>
-      {/* <div>
-        <ProfileProgress />
-      </div> */}
-    </div>
-  ) : (
+  return (
     <Container>
       <span>PERSONAL DASHBOARD</span>
       <Row justify="flex-start">

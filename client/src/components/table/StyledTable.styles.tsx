@@ -19,7 +19,8 @@ export const StyledDataContainer = styled.div`
 `;
 
 export const StyledTableData = styled(StyledDataContainer)`
-  width: ${(props) => `${100 / props.cols}%`};
+  width: ${(props) => `calc(${100 / props.cols}% - 1rem)`};
+  padding: 0 .5rem;
 `;
 
 export const StyledSubRowData = styled(StyledDataContainer)`
@@ -36,6 +37,23 @@ export const StyledSubRowData = styled(StyledDataContainer)`
 export const StyledProjectTableData = styled(StyledTableData)`
   &:first-child {
     justify-content: start;
+  }
+`;
+
+export const StyledColleagueTableData = styled(StyledTableData)`
+  &:first-child {
+    width: 1.5rem;
+  }
+
+  &:not(:first-child) {
+    width: ${(props) => `${100 / (props.cols - 1)}%`};
+  }
+
+  &:nth-child(2) {
+    display: -webkit-box;
+    margin: auto 0;
+    justify-content: start;
+    padding: 0 1rem;
   }
 `;
 
@@ -65,6 +83,12 @@ export const StyledTableRow = styled.div`
   width: 100%;
 `;
 
+export const StyledColleagueTableRow = styled(StyledTableRow)`
+  &::first-child {
+    width: 2rem !important;
+  }
+`;
+
 export const StyledSubRow = styled(StyledTableRow)`
   padding: 0.75rem 1.5rem;
   background: #f8f8f8;
@@ -84,16 +108,21 @@ export const StyledTableRowContainer = styled.div`
 
   &:first-child {
     border-radius: ${(props) =>
-    props.totalItems === 1 ? '8px' : ' 8px 8px 0 0'};
+      props.totalItems === 1 ? '8px' : ' 8px 8px 0 0'};
   }
 
   :nth-last-child(2) {
-    border-radius: ${props => props.totalItems === 1 ? '8px' : props.totalItems === 2 ? '0 0 8px 8px' : 0};
+    border-radius: ${(props) =>
+      props.totalItems === 1
+        ? '8px'
+        : props.totalItems === 2
+        ? '0 0 8px 8px'
+        : 0};
   }
 
   &:last-child {
     border-radius: ${(props) =>
-    props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
+      props.totalItems === 1 ? '8px' : '0 0 8px 8px'};
 
     ${StyledSubRow} {
       &:last-child {
@@ -118,7 +147,7 @@ export const StyledTableBody = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: 760px;
+  min-width: 900px;
 
   &:hover {
     ${StyledSubRow} {
@@ -149,7 +178,7 @@ export const StyledTableHeader = styled.div`
   line-height: 15px;
   letter-spacing: 0.11em;
   color: #666666;
-  min-width: 760px;
+  min-width: 900px;
 
   ${StyledTableRow} {
     background: transparent;
@@ -171,6 +200,7 @@ export const StyledTable = styled.div`
   max-width: 100%;
   margin-top: 0.5rem;
   padding: 0.25rem;
+  overflow-x: scroll;
 
   @media only screen and (max-width: 768px) {
     overflow-x: auto;

@@ -56,6 +56,7 @@ const changeRole = async (req, res, next) => {
   }
 };
 
+// Request: account -> Company
 const sendJoinRequest = async (req, res, next) => {
   try {
     const isExists = await Member.findOne({
@@ -85,7 +86,11 @@ const sendJoinRequest = async (req, res, next) => {
 
 const rejectJoinRequest = async (req, res, next) => {
   try {
-    await Member.findByIdAndDelete(req.params.memberId);
+    await Promise.all(
+      req.body.member.map(async (member) => {
+        await Member.findByIdAndDelete(member);
+      }),
+    );
     return sendJSONresponse(res, 200, {
       message: 'Member rejected.',
     });
@@ -97,10 +102,14 @@ const rejectJoinRequest = async (req, res, next) => {
 
 const acceptJoinRequest = async (req, res, next) => {
   try {
-    await Member.findByIdAndUpdate(
-      { _id: req.params.memberId },
-      { $set: { isApproved: true, approvedBy: req.user._id } },
-      { safe: true, upsert: true, new: true },
+    await Promise.all(
+      req.body.member.map(async (member) => {
+        await Member.findByIdAndUpdate(
+          { _id: member },
+          { $set: { isApproved: true, approvedBy: req.user._id } },
+          { safe: true, upsert: true, new: true },
+        );
+      }),
     );
 
     return sendJSONresponse(res, 200, {
@@ -224,8 +233,27 @@ const list = async (req, res, next) => {
           populate: [{ path: 'department', select: 'name' }],
         },
       ]);
+
+    const acceptedMembers = members.filter(
+      (m) => m.isApproved === true,
+    );
+    const invitedMembers = members.filter(
+      (m) => m.isApproved === false,
+    );
+
+    const pendingMembers = await PendingMember.find({
+      company: req.company._id,
+      removed: false,
+    })
+      .sort({ createdAt: 1 })
+      .skip(+skip)
+      .limit(+limit)
+      .select('-__v -company -createdAt -updatedAt');
+
     return res.status(200).json({
-      members,
+      acceptedMembers,
+      invitedMembers,
+      pendingMembers,
     });
   } catch (error) {
     logger.error(`${error}`);

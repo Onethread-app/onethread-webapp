@@ -39,6 +39,13 @@ export interface ICompanyMembers {
   };
   role: string;
   designations: [IDesignations];
+  type?: string;
+}
+
+export interface ICompanyAllMembers {
+  acceptedMembers: ICompanyMembers[];
+  pendingMembers: ICompanyMembers[];
+  invitedMembers: ICompanyMembers[];
 }
 
 export interface ICompanyTeamMembers {
@@ -71,6 +78,7 @@ export interface ICompany {
   divisions: Entity[];
   departments: Entity[];
   members: ICompanyMembers[];
+  allMembers: ICompanyAllMembers;
   pendingMembers: ICompanyPendingMembers[];
   role: string;
   about: string;
@@ -122,6 +130,7 @@ const InitialState = {
     totalMember: 0,
     totalAssociate: 0,
     totalEmployees: '',
+    allMembers: [],
   },
   createCompanyError: {
     message: '',
@@ -230,7 +239,8 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          members: action.payload.members,
+          members: action.payload.acceptedMembers,
+          allMembers: action.payload,
         },
         loading: false,
       };
@@ -470,10 +480,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          announce: [
-            ...state.currentCompany.announce,
-            action.payload,
-          ],
+          announce: action.payload,
         },
         loading: false,
       };
@@ -481,6 +488,13 @@ export const CompanyReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         loading: false,
+        currentCompany: {
+          ...state.currentCompany,
+          announce:
+            state.currentCompany._id === action.payload.company
+              ? [...state.currentCompany.announce, action.payload]
+              : state.currentCompany.announce,
+        },
       };
 
     case CompanyActionTypes.GET_ALL_PRODUCT_SUCCESS:

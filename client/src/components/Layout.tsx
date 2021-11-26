@@ -10,7 +10,6 @@ import {
   withRouter,
   RouteComponentProps,
   Link,
-  NavLink,
   useLocation,
 } from 'react-router-dom';
 import Modal from 'react-modal';
@@ -18,8 +17,6 @@ import { connect, useDispatch } from 'react-redux';
 import { isEmpty, isEqual, isNil } from 'lodash';
 import { useBeforeunload } from 'react-beforeunload';
 import { ToastContainer, Slide } from 'react-toastify';
-
-import { Navbar } from '@blueprintjs/core/lib/esm/components/navbar/navbar';
 
 import { ICompanyByUser, User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
@@ -39,7 +36,6 @@ import {
   getRoomSharedFiles,
   getRoomDiscussions,
 } from 'stores/room/Actions';
-import { companyPermit } from 'stores/UtilsActions';
 import { addTrackedTime } from 'stores/time-tracker/Action';
 import { updateDurationPersecond } from 'stores/time-tracker/Action';
 import { setSubscriptionNotExpire } from 'stores/subscriptionBilling/Actions';
@@ -48,13 +44,6 @@ import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 
 import arrowLeft from '../resources/images/leftArrow.svg';
 import arrowRight from '../resources/images/rightArrow.svg';
-import companyProfile from '../resources/images/sidebarCompanyProfile.svg';
-import dashboard from '../resources/images/sideBarDashboard.svg';
-import project from '../resources/images/ProjectsIcon.svg';
-import team from '../resources/images/sidebarTeam.svg';
-import associate from '../resources/images/sideBarAssociates.svg';
-import settings from '../resources/images/sidebarSettings.svg';
-import feedbackLight from '../resources/images/feedback-light.svg';
 
 import SuspenseLoader from './loader/SuspenseLoader';
 import { SecondaryLayout } from './SecondaryLayout';
@@ -76,7 +65,7 @@ interface LayoutProps {
 
 interface LayoutInternalProps
   extends LayoutProps,
-  RouteComponentProps {
+    RouteComponentProps {
   user: User;
   fetchingUser: boolean;
   fetchUserAction: () => void;
@@ -92,7 +81,6 @@ interface LayoutInternalProps
   taskId: string;
   companyLoading: boolean;
   projectLoading: boolean;
-  boardLoading: boolean;
   rooms: IRoom[];
   currentlyTracking: ICurrentTrack;
   subscriptiontExpired: boolean;
@@ -350,8 +338,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         background: isMobileOnly
           ? 'white'
           : loading
-            ? '#fff'
-            : '#303053',
+          ? '#fff'
+          : '#303053',
       }}
       onScroll={() =>
         scrollRef &&
@@ -392,8 +380,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           <CustomView condition={!isMobileOnly}>
             <div
               id="main-layout"
-              className={`flex relative vh-100 ${props.rightSidebarOpen && 'main-layout-overlay'
-                }`}
+              className={`flex relative vh-100 ${
+                props.rightSidebarOpen && 'main-layout-overlay'
+              }`}
             >
               <div
                 className={`relative`}
@@ -423,8 +412,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       ? '55%'
                       : '85%'
                     : props.rightSidebarOpen
-                      ? '66%'
-                      : '96%',
+                    ? '66%'
+                    : '96%',
                 }}
               >
                 <span
@@ -479,8 +468,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
             {queries.view === 'default' ? (
               <div
                 id="main-layout"
-                className={`flex relative h-100 vh-100 ${props.rightSidebarOpen && 'main-layout-overlay'
-                  }`}
+                className={`flex relative h-100 vh-100 ${
+                  props.rightSidebarOpen && 'main-layout-overlay'
+                }`}
               >
                 <div
                   className="relative br3 pv1"
@@ -495,181 +485,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       className="flex-grow-1 overflow-y-auto bg-white"
                       style={{
                         borderRadius: '0px 0px 0.5rem 0.5rem',
+                        marginTop: '60px',
                       }}
                     >
                       <SecondaryLayout Component={props.Component} />
                     </div>
-                    {(props.match.params as any).cname ? (
-                      props.rightSidebarOpen ? undefined : (
-                        <Navbar
-                          className="flex"
-                          style={{
-                            position: 'fixed',
-                            bottom: '0',
-                            height: '65px',
-                            overflowX: 'scroll',
-                          }}
-                        >
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#08A0F7',
-                              color: 'white',
-                            }}
-                            style={{ color: '#08A0F7' }}
-                            to={`/company/${props.company.uniqueName}`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={companyProfile}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                                alt=""
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              {t('app.user.Personal-profile.Profile')}
-                            </small>
-                          </NavLink>
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#08A0F7',
-                              color: 'white',
-                            }}
-                            style={{ color: '#08A0F7' }}
-                            to={`/company/${props.company.uniqueName}/dashboard`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={dashboard}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                                alt=""
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              {t('app.company.Dashboard.Headline')}
-                            </small>
-                          </NavLink>
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#08A0F7',
-                              color: 'white',
-                            }}
-                            style={{ color: '#08A0F7' }}
-                            to={`/company/${props.company.uniqueName}/project`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={project}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                                alt=""
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              {t('app.homepage.Projects')}
-                            </small>
-                          </NavLink>
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#08A0F7',
-                              color: 'white',
-                            }}
-                            style={{ color: '#08A0F7' }}
-                            to={`/company/${props.company.uniqueName}/colleague`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={team}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                                alt=""
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              {t('app.company.Colleagues.Colleagues')}
-                            </small>
-                          </NavLink>
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#08A0F7',
-                              color: 'white',
-                            }}
-                            style={{ color: '#08A0F7' }}
-                            to={`/company/${props.company.uniqueName}/associates`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={associate}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                                alt=""
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              {t('app.company.Partners.Partners')}
-                            </small>
-                          </NavLink>
-                          {companyPermit(props.company.role) &&
-                            props.company.role !== 'employee' && (
-                              <NavLink
-                                exact
-                                activeStyle={{
-                                  background: '#08A0F7',
-                                  color: 'white',
-                                }}
-                                style={{ color: '#08A0F7' }}
-                                to={`/company/${props.company.uniqueName}/settings`}
-                                className="hover-bg-black-20 pa2 flex flex-column items-center"
-                              >
-                                <span className="">
-                                  <img
-                                    alt="settings icon"
-                                    src={settings}
-                                    className="br3"
-                                    style={{ width: '1.4rem' }}
-                                  />
-                                </span>
-                                <small style={{ color: 'inherit' }}>
-                                  {t('app.company.Settings.Settings')}
-                                </small>
-                              </NavLink>
-                            )}
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#08A0F7',
-                              color: 'white',
-                            }}
-                            style={{ color: '#08A0F7' }}
-                            to={`/company/${props.company.uniqueName}/feedback`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={feedbackLight}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                                alt=""
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              {t('app.company.Feedback.Feedback')}
-                            </small>
-                          </NavLink>
-                        </Navbar>
-                      )
-                    ) : (
+                    {props.rightSidebarOpen ? undefined : (
                       <NavbarTop type="home" />
                     )}
                   </div>
@@ -710,8 +531,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       {props.match.url.includes(
         `/company/${props.company?.uniqueName}`,
       ) &&
-        subscriptionExpired === true &&
-        props.company.role !== 'superAdmin' ? (
+      subscriptionExpired === true &&
+      props.company.role !== 'superAdmin' ? (
         <Modal
           isOpen={subscriptionExpired}
           onRequestClose={closeSubErrorModal}
@@ -720,10 +541,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         >
           <ErrorText
             closeModal={closeSubErrorModal}
-            text={`${props.company.role === 'superAdmin'
+            text={`${
+              props.company.role === 'superAdmin'
                 ? 'Your Subscription has expired'
                 : 'Your Subscription has expired, contact with Super Admin'
-              }`}
+            }`}
             subtext="To keep using Onethread without interruption you need to pay your
             dues."
           />
@@ -745,7 +567,6 @@ const mapStateToProps = (state: any) => {
     rooms: state.roomReducer.rooms,
     companyLoading: state.companyReducer.loading,
     projectLoading: state.projectReducer.singleProjectLoading,
-    boardLoading: state.taskIndexReducer.taskReducer.fetchingBoard,
     currentlyTracking: state.timeTrackerReducer.currentlyTracking,
     subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,

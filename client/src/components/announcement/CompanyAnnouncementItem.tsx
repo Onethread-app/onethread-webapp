@@ -1,7 +1,7 @@
 import Linkify from 'react-linkify';
 import { upperFirst } from 'lodash';
 
-import icon from '../../../resources/images/icons/announcement.png';
+import icon from 'resources/images/icons/announcement.png';
 
 import { componentDecorator } from 'helpers/LinkifyHelper';
 
