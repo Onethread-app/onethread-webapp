@@ -46,7 +46,7 @@ const MemberGroup = (props: IMemberGroup) => {
       content={<MemberListDialog members={props.members} />}
       interactionKind="hover"
       target={
-        <AvatarGroup max={3} className="pointer">
+        <AvatarGroup max={3} className={`pointer ${props.small ? classes.small : classes.large}`}>
           {props.members.map((member) => (
             <Avatar
               alt={`${member?.assignedPerson?.firstName}`}
