@@ -328,8 +328,9 @@ export const addAnnouncement = (announcement: any) => ({
   payload: announcement,
 });
 
-export const addAnnouncementSuccess = () => ({
+export const addAnnouncementSuccess = (payload) => ({
   type: CompanyActionTypes.ADD_COMPANY_ANNOUNCEMENT_SUCCESS,
+  payload,
 });
 
 export const addAnnouncementFailure = (errorMessage: any) => ({

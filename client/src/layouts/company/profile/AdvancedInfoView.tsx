@@ -46,7 +46,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
       try {
         await props.getAllProduct();
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
     getAPI();

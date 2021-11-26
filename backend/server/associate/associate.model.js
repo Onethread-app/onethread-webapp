@@ -16,15 +16,7 @@ const AssociateSchema = new mongoose.Schema(
       unique: false,
       required: true,
     },
-    removed: {
-      type: Boolean,
-      default: false,
-    },
     isAccepted: {
-      type: Boolean,
-      default: false,
-    },
-    isRejected: {
       type: Boolean,
       default: false,
     },
@@ -39,10 +31,6 @@ const AssociateSchema = new mongoose.Schema(
         ref: 'Project',
       },
     ],
-    version: {
-      type: Number,
-      default: 0,
-    },
   },
   { timestamps: true },
 );

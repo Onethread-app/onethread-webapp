@@ -45,11 +45,14 @@ const ColleaguesPage = lazy(
 const CompanyAnnouncements = lazy(
   () => import('components/announcement/CompanyAnnouncements'),
 );
-
+const CompanyPartners = lazy(
+  () => import('../company/associates/Index'),
+);
 interface ICompanyDashboardProps {
   user: User;
   company: ICompany;
   gettingCompanyDetails: boolean;
+  subscriptionExpired: boolean;
 }
 
 const Index = (props: ICompanyDashboardProps) => {
@@ -75,6 +78,17 @@ const Index = (props: ICompanyDashboardProps) => {
     {
       component: <CompanyAnnouncements />,
       label: 'Announcements',
+    },
+    {
+      component: (
+        <CompanyPartners
+          user={props.user}
+          company={props.company}
+          subscriptiontExpired={props.subscriptionExpired}
+        />
+      ),
+      label: 'Partners',
+      show: companyPermit(props.company.role),
     },
   ];
 
@@ -119,17 +133,21 @@ const Index = (props: ICompanyDashboardProps) => {
         variant="scrollable"
         scrollButtons="auto"
       >
-        {allTabs.map((tab, i) => (
-          <StyledTab label={tab.label} key={i} tab={value} />
-        ))}
+        {allTabs.map((tab, i) =>
+          tab.show !== false ? (
+            <StyledTab label={tab.label} key={i} tab={value} />
+          ) : null,
+        )}
       </StyledTabs>
-      {allTabs.map((tab, i) => (
-        <TabPanel value={value} index={i} key={i}>
-          <Suspense fallback={<SuspenseLoader insideComponent />}>
-            {tab.component}
-          </Suspense>
-        </TabPanel>
-      ))}
+      {allTabs.map((tab, i) =>
+        tab.show !== false ? (
+          <TabPanel value={value} index={i} key={i}>
+            <Suspense fallback={<SuspenseLoader insideComponent />}>
+              {tab.component}
+            </Suspense>
+          </TabPanel>
+        ) : null,
+      )}
       {showDialog ? (
         <Dialog
           onClose={() => {
@@ -152,6 +170,7 @@ const mapStateToProps = (state: any) => ({
   user: state.userReducer.user,
   company: state.companyReducer.currentCompany,
   gettingCompanyDetails: state.companyReducer.gettingCompanyDetails,
+  subscriptionExpired: state.subscriptionReducer.subscriptionExpired,
 });
 
 export default connect(mapStateToProps)(Index);

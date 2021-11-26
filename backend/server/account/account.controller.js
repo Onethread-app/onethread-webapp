@@ -783,7 +783,7 @@ const sendEmailForForgetPassword = async (req, res, next) => {
         message: 'no user found',
         fieldName: 'email',
       });
-    sendEmailForResetPassword(
+    await sendEmailForResetPassword(
       user.firstName,
       user.lastName,
       user.email,
@@ -814,7 +814,7 @@ const resetPassword = async (req, res, next) => {
         logger.error(`${err}`);
         next(err);
       }
-      let userID = JSON.parse(data[0]);
+      let userID = data[0];
       if (typeof userID === 'string') {
         const user = await Account.findById({
           _id: userID,

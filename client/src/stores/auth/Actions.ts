@@ -212,7 +212,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
         timeline = timeline.data.user.timeline;
       } catch (error) {
         // tslint:disable-next-line: no-console
-        console.log(error);
+        // console.log(error);
       }
       response = { ...response.data.user, timeline };
       accessToken = localStorage.getItem('ot_access_id');
@@ -269,11 +269,11 @@ export const logoutAction =
         }
       } else {
         // tslint:disable-next-line: no-console
-        console.log('No token found in logout action');
+        // console.log('No token found in logout action');
       }
     } catch (error) {
       // tslint:disable-next-line: no-console
-      console.log('error in logout', error);
+      // console.log('error in logout', error);
     }
   };
 

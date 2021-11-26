@@ -19,8 +19,8 @@ router
 router.use('/', subCtrl.subscriptionExpireCheck());
 
 router
-  .route('/:memberId/accept-request')
-  .post(
+  .route('/accept-request')
+  .put(
     authorization,
     SchemaValidator(joiSchema.acceptJoinRequest),
     authorizeUser('all', 'admin', 'superAdmin'),
@@ -28,8 +28,8 @@ router
   );
 
 router
-  .route('/:memberId/reject-request')
-  .delete(
+  .route('/reject-request')
+  .post(
     authorization,
     SchemaValidator(joiSchema.rejectJoinRequest),
     authorizeUser('all', 'admin', 'superAdmin'),

@@ -60,7 +60,7 @@ function* createRoom({ payload }) {
         { name: payload.name },
         headers,
       );
-      console.log(response);
+      // console.log(response);
       yield all([
         put(setRoomLoading(true)),
         put(createRoomSuccess(response.data.room)),
