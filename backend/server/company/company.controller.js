@@ -772,8 +772,17 @@ const noticePostByCompany = async (req, res, next) => {
     const options = [
       {
         path: 'memberId',
-        select: 'designations',
-        populate: 'designations',
+        select: 'designations account role',
+        populate: [
+          {
+            path: 'account',
+            select: 'firstName lastName _id',
+          },
+          {
+            path: 'designations',
+            select: 'name',
+          },
+        ],
       },
     ];
 
