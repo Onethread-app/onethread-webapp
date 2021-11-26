@@ -164,7 +164,7 @@ export const TaskTableColumns = [
     accessor: 'createdAt',
     Cell: ({ value }) => {
       return value
-        ? moment(value).format('MMMM DD, YYYY')
+        ? moment(value).format('MMM DD, YYYY')
         : 'Not scheduled';
     },
     sticky: 'center',
@@ -175,7 +175,7 @@ export const TaskTableColumns = [
     accessor: 'dueDate',
     Cell: ({ value }) => {
       return value
-        ? moment(value).format('MMMM DD, YYYY')
+        ? moment(value).format('MMM DD, YYYY')
         : 'Not scheduled';
     },
     filter: customDueDateFilter,
