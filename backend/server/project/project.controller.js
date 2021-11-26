@@ -63,7 +63,6 @@ const projectRequestUpdate = async (pid, size) => {
 const getTasksNumbers = async (pid) => {
   const taskNumbers = await Task.find({
     project: pid,
-    parentTask: null,
   }).countDocuments();
   const doneTasks = await Task.find({
     project: pid,
