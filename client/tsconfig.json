@@ -5,12 +5,7 @@
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
-    "lib": [
-      "es6",
-      "dom",
-      "esnext",
-      "webworker"
-    ],
+    "lib": ["es6", "dom", "esnext", "webworker"],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react-jsx",
@@ -42,7 +37,5 @@
     "jest",
     "src/setupTests.ts"
   ],
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

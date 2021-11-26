@@ -76,7 +76,7 @@ export const ListViewComponent = (
     ) {
       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
       setGettingDetails(false);
-      history.push(`/company/${companyName}/dashboard`);
+      history.push(`/company/${companyName}`);
       props.setShowDialog(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
