@@ -261,9 +261,9 @@ const getCompany = async (req, res, next) => {
       account: req.user._id,
       company: company._id,
     }).select('_id role');
-    let certificate = await Certificate.find({
-      company: company._id,
-    }).select('-__v');
+    // let certificate = await Certificate.find({
+    //   company: company._id,
+    // }).select('-__v');
     let memberCount = await Member.find({
       company: company._id,
     }).countDocuments();
@@ -272,7 +272,7 @@ const getCompany = async (req, res, next) => {
       company: {
         ...company._doc,
         role: member.role,
-        certificate: certificate,
+        // certificate: certificate,
         totalMember: memberCount,
         member: member._id,
       },
@@ -615,7 +615,7 @@ const companyTasks = async (company, addDoneTasks = false) => {
         select: '_id firstName lastName profileImage',
       },
     ];
-    let selectString = `_id name account status dueDate project priority createdAt`;
+    // let selectString = `_id name account status dueDate project priority createdAt parentTask`;
 
     if (!addDoneTasks) {
       queryObject.isCompleted = false;
@@ -623,13 +623,15 @@ const companyTasks = async (company, addDoneTasks = false) => {
 
     tasks = await Task.find(queryObject)
       .sort(sortObject)
-      .select(selectString)
+      // .select(selectString)
       .populate(populateArray);
 
     await Promise.all(
       tasks.map(async (task) => {
         let modifiedTask = {};
-        const subtasks = await findSubtasksByTaskId(task._id);
+        const subtasks = tasks.filter(
+          (t) => t.parentTask === task._id,
+        );
         const members = await getAssignedMembers(task._id);
         const labels = await getTaskLabel(task._id);
         const statusList = await getAllStatusInProject(
@@ -649,14 +651,15 @@ const companyTasks = async (company, addDoneTasks = false) => {
         modifiedTask.subtasks = subtasks;
         modifiedTask.statusList = statusList;
         modifiedTask.labels = labels;
+        modifiedTask.parentTask = task.parentTask;
         taskCompilation.push(modifiedTask);
       }),
     );
 
-    taskCompilation.sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-    );
-    return taskCompilation;
+    // taskCompilation.sort(
+    //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    // );
+    return taskCompilation.filter((t) => t.parentTask === null);
   } catch (error) {
     logger.error(`Company: ${error}`);
     return error;
@@ -667,10 +670,9 @@ const allCompanytasks = async (req, res, next) => {
   try {
     const companyId = req.params.companyId;
     const taskCompilation = await companyTasks(companyId, true);
-    const sortedTasks = sortTasksByStatus(taskCompilation);
     return sendJSONresponse(res, 200, {
       success: true,
-      tasks: sortedTasks,
+      tasks: taskCompilation,
     });
   } catch (error) {
     logger.error(`All Company Tasks: ${error}`);

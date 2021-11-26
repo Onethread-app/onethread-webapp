@@ -44,6 +44,14 @@ router
     schemaValidator(projectValidation.createProjectFromHome),
     projectCtrl.createNewProjectFromHome,
   );
+
+router.route('/company-lists').get(
+  authorization,
+  subCtrl.subscriptionExpireCheck(),
+  // schemaValidator(projectValidation.showProjectList),
+  projectCtrl.showAllProjectsForCompany,
+);
+
 router
   .route('/:companyId/add-associates')
   .put(
@@ -51,14 +59,6 @@ router
     subCtrl.subscriptionExpireCheck(),
     schemaValidator(projectValidation.addAssociate),
     projectCtrl.addAssociateInProject,
-  );
-router
-  .route('/company-lists')
-  .get(
-    authorization,
-    subCtrl.subscriptionExpireCheck(),
-    schemaValidator(projectValidation.showProjectList),
-    projectCtrl.showAllProjectsForCompany,
   );
 
 router

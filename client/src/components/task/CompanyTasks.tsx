@@ -115,10 +115,10 @@ const CompanyTasks = (props: ICompanyTasks) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-            ? 7
-            : 5,
+              ? 7
+              : 5,
         hiddenColumns: ['createdAt', 'priority'],
-        // sortBy: [{ id: 'createdAt', desc: true }],
+        sortBy: [{ id: 'createdAt', desc: true }],
       },
     },
     useFilters,
@@ -288,11 +288,11 @@ const CompanyTasks = (props: ICompanyTasks) => {
                 !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {
