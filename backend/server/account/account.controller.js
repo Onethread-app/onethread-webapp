@@ -74,7 +74,8 @@ const {
 const options = [
   {
     path: 'taskId',
-    select: '_id name account project dueDate status priority createdAt isCompleted',
+    select:
+      '_id name account project dueDate status priority createdAt isCompleted parentTask',
     populate: [
       {
         path: 'project',
@@ -89,6 +90,10 @@ const options = [
       {
         path: 'status',
         select: '_id name',
+      },
+      {
+        path: 'account',
+        select: '_id firstName lastName profileImage',
       },
     ],
   },
@@ -773,7 +778,7 @@ const userTaskList = async (req, res, next) => {
         const statusList = await getAllStatusInProject(
           ft.taskId.project._id,
         );
-
+        //TODO : upgrade to use formattedTask from utils
         const modifiedTask = {
           _id: ft.taskId._id,
           name: ft.taskId.name,
@@ -799,15 +804,15 @@ const userTaskList = async (req, res, next) => {
             uniqueName: ft.taskId.project.company.uniqueName,
             name: ft.taskId.project.company.name,
           },
-          subtasks: await findSubtasksByTaskId(ft.taskId._id),
+          subtasks: tasks.filter(
+            (task) => task.parentTask === ft.taskId._id,
+          ),
           labels: await getTaskLabel(ft.taskId._id),
         };
-        response.push(modifiedTask);
+        ft.taskId.parentTask === null && response.push(modifiedTask);
       }),
     );
-    const sortedTasks = sortTasksByStatus(response);
-
-    return sendJSONresponse(res, 200, sortedTasks);
+    return sendJSONresponse(res, 200, response);
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);

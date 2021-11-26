@@ -63,6 +63,7 @@ const sortProjectsByStatus = (projects) => {
 
 const getFormattedTaskForClient = async (tasks) => {
   const formattedTasks = [];
+  // TODO: query optimize urgent
   await Promise.all(
     tasks.map(async (task) => {
       const subtasks = tasks.filter((t) => t.parentTask === task._id);
@@ -79,10 +80,11 @@ const getFormattedTaskForClient = async (tasks) => {
         statusList,
         labels,
       };
-      formattedTasks.push(formattedTask);
+      formattedTask.parentTask === null &&
+        formattedTasks.push(formattedTask);
     }),
   );
-  return formattedTasks.filter((ft) => ft.parentTask === null);
+  return formattedTasks;
 };
 
 const getIds = (array) => {

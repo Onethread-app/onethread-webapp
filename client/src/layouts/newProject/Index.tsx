@@ -49,7 +49,7 @@ interface IProjectDashboardProps {
 const ProjectTasks = lazy(
   () => import('components/task/ProjectTasks'),
 );
-const ProjectWiki = lazy(() => import('components/wiki/ProjectWiki'));
+// const ProjectWiki = lazy(() => import('components/wiki/ProjectWiki'));
 const ProjectCollaborators = lazy(
   () => import('components/member/ProjectCollaborators'),
 );
@@ -76,7 +76,7 @@ const Index = (props: IProjectDashboardProps) => {
 
   const allTabs = [
     { component: <ProjectTasks />, label: 'Tasks' },
-    { component: <ProjectWiki />, label: 'Wiki' },
+    // { component: <ProjectWiki />, label: 'Wiki' },
     {
       component: <ProjectCollaborators />,
       label: 'Teammates',

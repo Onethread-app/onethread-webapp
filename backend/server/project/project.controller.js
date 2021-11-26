@@ -63,6 +63,7 @@ const projectRequestUpdate = async (pid, size) => {
 const getTasksNumbers = async (pid) => {
   const taskNumbers = await Task.find({
     project: pid,
+    parentTask: null,
   }).countDocuments();
   const doneTasks = await Task.find({
     project: pid,
@@ -447,31 +448,32 @@ const rejectProjectRequest = async (req, res, next) => {
 
 const showAllProjectsForCompany = async (req, res, next) => {
   try {
-    let members = await Member.find({
-      account: req.user._id,
+    const allProjects = await Project.find({
       company: req.headers.companyid,
-    }).select('_id');
-    members = members.map((member) => member._id);
-    let teamProjects = await findAllProjectsByMemberId(members);
-    teamProjects = teamProjects.filter(
-      (tp) => tp.project.hasDeleted === false,
-    );
+    }).populate([
+      {
+        path: 'company',
+        select: '_id name uniqueName',
+      },
+      {
+        path: 'account',
+        select: '_id firstName lastName profileImage',
+      },
+    ]);
     const projects = await Promise.all(
-      teamProjects.map(async (tP) => {
+      allProjects.map(async (tP) => {
         const { taskNumbers, doneTasks } = await getTasksNumbers(
-          tP.project._id,
+          tP._id,
         );
         return {
           isFavourite: tP.isFavourite,
-          member: tP.member._id,
-          ...tP.project._doc,
+          ...tP._doc,
           totalTasks: taskNumbers,
           remainingTasks: taskNumbers - doneTasks,
         };
       }),
     );
-    const sortedProjects = sortProjectsByStatus(projects);
-    return sendJSONresponse(res, 200, sortedProjects);
+    return sendJSONresponse(res, 200, projects);
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);
