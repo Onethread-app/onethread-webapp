@@ -75,7 +75,7 @@ const options = [
   {
     path: 'taskId',
     select:
-      '_id name account project dueDate status priority isCompleted',
+      '_id name account project dueDate status priority createdAt isCompleted',
     populate: [
       {
         path: 'project',
