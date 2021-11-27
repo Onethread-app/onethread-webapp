@@ -9086,7 +9086,7 @@ paths:
                     companyUniqueName: abce
                     createdAt: 2021-08-07T03:31:39.648Z
       deprecated: false
-  /projects/delete-project:
+  /projects:
     delete:
       tags:
         - Project
