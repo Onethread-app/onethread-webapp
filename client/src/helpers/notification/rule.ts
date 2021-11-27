@@ -1,7 +1,7 @@
 import companyProfile from 'resources/images/sidebarCompanyProfile.svg';
 import associates from 'resources/images/sideBarAssociates.svg';
 import colleague from 'resources/images/sidebarTeam.svg';
-import project from 'resources/images/ProjectsIcon.svg';
+import project from 'resources/images/ProjectIcon.png';
 import room from 'resources/images/sidebarRoom.svg';
 import team from 'resources/images/sidebarProjectTeam.svg';
 
@@ -58,7 +58,6 @@ export const notificationType = {
   task: {
     img: project,
     path: async (notification: any) => {
-      console.log(notification);
       return `/company/${notification.company.uniqueName}/project/${notification.project}/task/${notification.task}`;
     },
   },
