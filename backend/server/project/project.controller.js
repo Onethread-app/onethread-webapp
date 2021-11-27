@@ -7,6 +7,7 @@ const Task = require('../task/task.model');
 const TaskAssign = require('../task/taskAssign.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
+const TaskStatus = require('../task/taskStatus/taskStatus.model');
 const {
   search,
   memberIndex,
@@ -37,6 +38,12 @@ const {
   createBulkTaskStatus,
   getAllStatusInProject,
 } = require('../services/task/taskStatus/taskStatus.service');
+const {
+  getAssignedMembers,
+} = require('../services/task/task.service');
+const {
+  getTaskLabel,
+} = require('../services/taskLabel/taskLabel.service');
 
 const isPidExist = async (pid) => {
   return Project.findOne({ _id: pid, removed: false });
@@ -1084,10 +1091,47 @@ const populateArray = [
 
 const getTasks = async (req, res, next) => {
   try {
+    const { pid } = req.query;
+
     const tasks = await Task.find({
-      project: req.query.pid,
-    }).populate(populateArray);
-    const formattedTasks = await getFormattedTaskForClient(tasks);
+      project: pid,
+    })
+      .select('-file -description')
+      .populate(populateArray);
+
+    const statusList = await TaskStatus.find({
+      project: pid,
+    }).select('_id name');
+
+    let taskSubtaskMapper = {};
+
+    // Task
+    const taskList = tasks.filter((t) => !t.parentTask);
+    await Promise.all(
+      taskList.map(async (task) => {
+        taskSubtaskMapper[task._id] = {
+          ...task._doc,
+          members: await getAssignedMembers(task._id),
+          subtasks: [],
+          statusList,
+          labels: await getTaskLabel(task._id),
+        };
+      }),
+    );
+    // Subtask
+    const subtaskList = tasks.filter((t) => t.parentTask);
+    await Promise.all(
+      subtaskList.map(async (subtask) => {
+        if (taskSubtaskMapper[subtask.parentTask]) {
+          taskSubtaskMapper[subtask.parentTask].subtasks.push({
+            ...subtask._doc,
+            members: await getAssignedMembers(subtask._id),
+          });
+        }
+      }),
+    );
+
+    const formattedTasks = Object.values(taskSubtaskMapper);
     return sendJSONresponse(res, 200, formattedTasks);
   } catch (error) {
     logger.error(`Project ${error}`);
