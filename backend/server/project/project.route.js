@@ -122,7 +122,14 @@ router
       'member',
     ),
     projectCtrl.getProjectDetails,
+  )
+  .delete(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    authorizeProjectRole('all', 'admin', 'projectModerator'),
+    projectCtrl.deleteProject,
   );
+
 router
   .route('/outline')
   .put(
@@ -199,15 +206,6 @@ router
 router
   .route('/list/overview')
   .get(authorization, projectCtrl.getListOverview);
-
-router
-  .route('/delete-project')
-  .delete(
-    authorization,
-    subCtrl.subscriptionExpireCheck(),
-    authorizeProjectRole('all', 'admin', 'projectModerator'),
-    projectCtrl.deleteProject,
-  );
 
 router
   .route('/tasks')
