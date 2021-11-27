@@ -9,8 +9,10 @@ import { IconNames } from '@blueprintjs/icons';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { ITask } from 'stores/task/Reducer';
 import { ICompany } from 'stores/company/Reducer';
+import { updateTask } from 'stores/task/Actions';
 
 import attachFiles from 'resources/images/attachFiles.png';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 import TaskFiles from './Files/TaskFiles';
 import TaskFilesAttach from './Files/TaskFilesAttach';
@@ -25,6 +27,7 @@ interface TaskDetailsInternalProps {
   currentTask: ITask;
   company: ICompany;
   currentProjectId: string;
+  updateTask: (task) => void;
 }
 
 const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
@@ -78,6 +81,30 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               task={props.currentTask}
               companyId={props.company._id}
               projectId={props.currentProjectId}
+            />
+          </div>
+          <div className="flex ml2">
+            <CheckCircleOutlineIcon
+              style={{
+                width: '2rem',
+                height: '2rem',
+                color: props.currentTask.isCompleted
+                  ? 'green'
+                  : 'gray',
+              }}
+              className={`${
+                props.currentTask.isCompleted ? '' : 'pointer'
+              }`}
+              onClick={() =>
+                props.currentTask.isCompleted
+                  ? null
+                  : props.updateTask({
+                      taskId: props.currentTask._id,
+                      companyId: props.currentTask.company._id,
+                      projectId: props.currentTask.project._id,
+                      isCompleted: true,
+                    })
+              }
             />
           </div>
           <div className="flex justify-end ml-auto">
@@ -179,7 +206,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const TaskDetails = connect(
-  mapStateToProps,
-  {},
-)(TaskDetailsComponent);
+export const TaskDetails = connect(mapStateToProps, {
+  updateTask,
+})(TaskDetailsComponent);

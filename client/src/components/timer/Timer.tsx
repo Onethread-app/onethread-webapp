@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
-import useHover from 'helpers/hooks/useHover';
 import { msToTime } from 'helpers/utils';
 
 import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
@@ -58,7 +57,6 @@ const Timer = (props: ITimerInternalProps) => {
   );
   const [loading, setLoading] = useState(false);
   const timerRef = useRef(null);
-  const timerHover = useHover(timerRef);
 
   useEffect(() => {
     setTime(
@@ -155,9 +153,7 @@ const Timer = (props: ITimerInternalProps) => {
       <StyledWatch>
         {timerOn ? <>{msToTime(time)}</> : <>{msToTime(totalTime)}</>}
       </StyledWatch>
-      {!!props.list ? null : (
-        <TrackedListDialog timerHover={timerHover} />
-      )}
+      {!!props.list ? null : <TrackedListDialog timerHover={true} />}
     </StyledTimer>
   );
 };

@@ -24,7 +24,7 @@ export const TaskDescriptionViewComponent = (
   const [editDescriptionDialog, setEditDescriptionDialog] =
     useState(false);
   const [expandDescription, setExpandDescription] =
-    useState<boolean>(false);
+    useState<boolean>(true);
 
   return (
     <>
