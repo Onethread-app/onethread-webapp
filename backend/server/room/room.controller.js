@@ -64,6 +64,8 @@ const create = async (req, res, next) => {
       req.query.pid,
       req.user._id,
       req.body.name,
+    ).then((r) =>
+      r.populate('company', '_id uniqueName').execPopulate(),
     );
 
     const roomMember = await createRoomMember(

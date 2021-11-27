@@ -146,11 +146,9 @@ const CreateFormComponent: React.FC<any> = (
       props.errorOnRoomCreate === ''
     ) {
       dispatch({ type: CHANGE_ROOM });
-      if (props.currentProject?._id) {
-        history.push(
-          `/company/${props.currentRoom.company.uniqueName}/project/${props.currentRoom.project}?tab=3&discussion=${props.currentRoom._id}`,
-        );
-      }
+      history.push(
+        `/company/${props.currentRoom.company.uniqueName}/project/${props.currentRoom.project}?ptab=3&discussion=${props.currentRoom._id}&thread=0`,
+      );
       successToaster('Discussion created successfully');
       setSubmitted(false);
       props.setShowDialog(false);
