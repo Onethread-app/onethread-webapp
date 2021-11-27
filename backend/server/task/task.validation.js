@@ -87,7 +87,13 @@ module.exports = {
   }),
   markAsCompleted: Joi.object().keys({
     body: Joi.object().keys({
-      task: Joi.array().items(idSchema.id).required(),
+      task: Joi.array()
+        .items({
+          _id: idSchema.id.required(),
+          pid: idSchema.id.required(),
+        })
+        .min(1)
+        .required(),
     }),
   }),
 };

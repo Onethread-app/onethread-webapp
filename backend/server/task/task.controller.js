@@ -425,13 +425,13 @@ const markAsCompleted = async (req, res, next) => {
     await Promise.all(
       req.body.task.map(async (task) => {
         await Task.findByIdAndUpdate(
-          { _id: task },
+          { _id: task._id },
           { $set: { isCompleted: true, completedBy: req.user._id } },
           { safe: true, upsert: true, new: true },
         );
-        const status = await calculateProjectStatus(req.query.pid);
+        const status = await calculateProjectStatus(task.pid);
         await Project.findByIdAndUpdate(
-          { _id: req.query.pid },
+          { _id: task.pid },
           { $set: { status } },
           { safe: true, upsert: true, new: true },
         );
