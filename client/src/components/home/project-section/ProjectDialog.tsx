@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
-// import Creatable from 'react-select/creatable';
 import Creatable from 'react-select/creatable';
 import { currencies } from 'currencies.json';
 import Select from 'react-select';
@@ -24,6 +23,7 @@ import { IProject } from 'stores/project/Reducer';
 import { Color, tokenConfig } from 'stores/UtilsActions';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { createProjectInCompany } from 'stores/project/Actions';
+import { IProjectFormState } from 'stores/projectForm/Reducer';
 import {
   clearErrorOnCompanyCreate,
   createCompanyActionFailure,
@@ -47,7 +47,6 @@ import {
   errorToaster,
 } from 'components/toast/Toaster';
 import { SmallTextAvatar } from 'components/avatar/TextAvatar';
-import { IProjectFormState } from 'stores/projectForm/Reducer';
 
 interface INewCompanyResponse {
   message: string;
@@ -63,11 +62,6 @@ interface INewCompanyResponse {
     role: string;
   };
 }
-
-// interface ICompanyOptions {
-//   value: string;
-//   label: string;
-// }
 
 interface IProps {
   setOpenProjectDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -224,14 +218,16 @@ const Index = (props: IProps) => {
 
   useEffect(() => {
     if (props.companies.length > 0) {
-      const gettingOptionsFromCompanies = props.companies.map(
-        (c: ICompanyByUser) => ({
+      const gettingOptionsFromCompanies = props.companies
+        .filter(
+          (c: ICompanyByUser) => c.company.isSubscribed === true,
+        )
+        .map((c: ICompanyByUser) => ({
           value: c.company._id,
           label: c.company.name,
           uniqueName: c.company.uniqueName,
           isSubscribed: c.company.isSubscribed,
-        }),
-      );
+        }));
       setOptions(gettingOptionsFromCompanies);
     }
   }, [props.companies]);

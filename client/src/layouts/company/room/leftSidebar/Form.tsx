@@ -8,6 +8,8 @@ import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import { IRoom } from 'stores/room/Reducer';
 import { createRoom } from 'stores/room/Actions';
 import { CHANGE_ROOM, room } from 'stores/room/Types';
+import { IProject } from 'stores/project/Reducer';
+import { ICompanyByUser } from 'stores/user/Reducer';
 
 import {
   required,
@@ -15,8 +17,6 @@ import {
   maxValue,
 } from 'components/final-form/utils';
 import { checkError } from 'components/final-form/utils';
-import { IProject } from 'stores/project/Reducer';
-import { ICompanyByUser } from 'stores/user/Reducer';
 import { SmallTextAvatar } from 'components/avatar/TextAvatar';
 import { ICompany } from 'stores/company/Reducer';
 import { successToaster } from 'components/toast/Toaster';
@@ -127,14 +127,16 @@ const CreateFormComponent: React.FC<any> = (
   }, []);
 
   useEffect(() => {
-    const optionsCompany = props.companies.map((company) => {
-      return {
-        value: company.company._id,
-        label: company.company.name,
-        uniqueName: company.company.uniqueName,
-        isSubscribed: company.company.isSubscribed,
-      };
-    });
+    const optionsCompany = props.companies
+      .filter((c: ICompanyByUser) => c.company.isSubscribed === true)
+      .map((company) => {
+        return {
+          value: company.company._id,
+          label: company.company.name,
+          uniqueName: company.company.uniqueName,
+          isSubscribed: company.company.isSubscribed,
+        };
+      });
     setCompanyOptions(optionsCompany);
   }, [props.companies]);
 
