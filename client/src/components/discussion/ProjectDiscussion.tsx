@@ -1,6 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 
-import { Container } from './ProjectDiscussion.styles';
+import {
+  Container,
+  DiscussionListContainer,
+} from './ProjectDiscussion.styles';
 import { CreatableItem } from 'components/table/StyledTable.styles';
 import {
   getRoomDiscussions,
@@ -133,7 +136,7 @@ const ProjectDiscussion = (props: IProps) => {
         </form>
         {!loading ? (
           <>
-            <div className="mb2 overflow-y-auto">
+            <DiscussionListContainer>
               {projectDiscussionList.length > 0 &&
                 projectDiscussionList.map((discussion: IRoom) => (
                   <DiscussionItem
@@ -143,7 +146,7 @@ const ProjectDiscussion = (props: IProps) => {
                     changeRoom={changeRoom}
                   />
                 ))}
-            </div>
+            </DiscussionListContainer>
             <CreatableItem
               onClick={() => setShowDiscussionForm(true)}
             >
