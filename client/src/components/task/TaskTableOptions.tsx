@@ -10,20 +10,20 @@ interface Props {
 const TaskTableOptions = (props: Props) => {
   return (
     <div className="flex flex-column">
-      <div
+      {/* <div
         onClick={(e) => {
           e.stopPropagation();
           props.setShowEditTaskDialog(true);
         }}
       >
         Edit
-      </div>
+      </div> */}
       <div
         onClick={(e) => {
           e.stopPropagation();
           props.setShowDeleteTaskDialog(true);
         }}
-        className="mt1"
+        className="pointer"
       >
         Delete
       </div>

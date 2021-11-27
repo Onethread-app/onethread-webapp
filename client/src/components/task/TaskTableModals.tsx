@@ -45,15 +45,20 @@ const TaskTableModals = (props: Props) => {
               This will delete all the subtasks, files and discussions
               of this task. Do you want to still delete this task?
             </div>
-            <div className="flex w-100 justify-center">
+            <div className="flex w-100 justify-center mt3">
               <Button
                 type="danger"
                 onClick={handleDeleteTask}
-                className="mr2"
+                className="mr2 pointer"
               >
                 Delete
               </Button>
-              <Button className="ml2">Cancel</Button>
+              <Button
+                className="ml2 pointer"
+                onClick={() => setShowDeleteTaskDialog(false)}
+              >
+                Cancel
+              </Button>
             </div>
           </Container>
         </Dialog>
