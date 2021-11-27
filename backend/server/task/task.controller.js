@@ -390,6 +390,7 @@ const update = async (req, res, next) => {
     task.statusList = await getAllStatusInProject(task.project._id);
     // Members
     task.members = await getAssignedMembers(task._id);
+    task.labels = await getTaskLabel(task._id);
     return sendJSONresponse(res, 200, {
       message: 'Task Updated.',
       task,

@@ -66,7 +66,12 @@ const getFormattedTaskForClient = async (tasks) => {
   // TODO: query optimize urgent
   await Promise.all(
     tasks.map(async (task) => {
-      const subtasks = tasks.filter((t) => t.parentTask === task._id);
+      let subtasks = [];
+      subtasks = tasks.filter((t) => {
+        if (t.parentTask) {
+          return t.parentTask.toString() === task._id.toString();
+        } else return false;
+      });
       const members = await getAssignedMembers(task._id);
       const statusList = await getAllStatusInProject(
         task.project._id,

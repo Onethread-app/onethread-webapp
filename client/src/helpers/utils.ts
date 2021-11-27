@@ -184,6 +184,7 @@ export const globalFilterFn = (tasks, filterValue) => {
     for (const key in flattenTask) {
       if (
         key !== '_id' &&
+        !isNil(flattenTask[key]) &&
         flattenTask[key]
           .toString()
           .toLowerCase()

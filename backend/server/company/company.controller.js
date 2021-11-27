@@ -628,9 +628,12 @@ const companyTasks = async (company, addDoneTasks = false) => {
     await Promise.all(
       tasks.map(async (task) => {
         let modifiedTask = {};
-        const subtasks = tasks.filter(
-          (t) => t.parentTask === task._id,
-        );
+        let subtasks = [];
+        subtasks = tasks.filter((t) => {
+          if (t.parentTask) {
+            return t.parentTask.toString() === task._id.toString();
+          } else return false;
+        });
         const members = await getAssignedMembers(task._id);
         const labels = await getTaskLabel(task._id);
         const statusList = await getAllStatusInProject(

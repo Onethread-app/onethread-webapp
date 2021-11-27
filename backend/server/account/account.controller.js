@@ -804,8 +804,11 @@ const userTaskList = async (req, res, next) => {
             uniqueName: ft.taskId.project.company.uniqueName,
             name: ft.taskId.project.company.name,
           },
-          subtasks: tasks.filter(
-            (task) => task.parentTask === ft.taskId._id,
+          subtasks: tasks.filter((task) => {
+            if (task.parentTask) {
+                return task.parentTask.toString() = ft.taskId._id.toString();
+              } else return false;
+            },
           ),
           labels: await getTaskLabel(ft.taskId._id),
         };
