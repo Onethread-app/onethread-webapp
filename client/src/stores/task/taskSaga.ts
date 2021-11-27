@@ -484,12 +484,11 @@ export function* getAllTaskStatusInProjectAsync({ payload }: any) {
 
 export function* updateTaskStatusAsync({ payload }: any) {
   try {
-    const { projectId, companyId, taskStatusId, ...newPayload } =
-      payload;
-    const headers = formTokenConfig(companyId);
+    const { projectId, _id, ...newPayload } = payload;
+    const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.put(
-        `taskStatus/${taskStatusId}?pid=${projectId}`,
+        `taskStatus/${_id}?pid=${projectId}`,
         newPayload,
         headers,
       );

@@ -357,9 +357,9 @@ export const createTaskStatusFailure = (errorMessage: string) => ({
 });
 
 export const updateTaskStatus = (payload: {
+  _id: string;
   name: string;
   positionInBoard: number;
-  taskStatusId: string;
   projectId: string;
 }) => ({
   type: TaskActionType.UPDATE_TASK_STATUS,
