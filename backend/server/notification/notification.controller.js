@@ -578,11 +578,11 @@ module.exports.taskAssignNotificationToUsers = async (
         null,
         taskAssign.taskId.project._id,
         null,
-        taskAssign.taskId.boardId._id,
+        null,
         taskAssign.taskId._id,
         null,
         companyId,
-        taskAssign.taskId.columnId._id,
+        null,
         null,
         adminUser._id,
       ),
@@ -608,75 +608,6 @@ module.exports.taskAssignNotificationToUsers = async (
     logger.error(`Notification: ${error}`);
   }
 };
-
-module.exports.subTaskAssignNotificationToUsers = async (
-  senderName,
-  companyId,
-  subTaskId,
-  reciever,
-  adminUser,
-) => {
-  try {
-    const options = [
-      {
-        path: 'taskId',
-        select: '_id name boardId columnId project',
-        populate: [
-          {
-            path: 'project',
-            select: '_id company',
-          },
-        ],
-      },
-      {
-        path: 'account',
-        select: '_id firstName lastName',
-      },
-    ];
-    //TODOS: don't need account find query in future
-    let senderFullName = await findAccountById(senderName);
-    let subTaskAssign = await Subtask.findById({
-      _id: subTaskId,
-    }).populate(options);
-    let notification = await createNotification(
-      notificationBuilder(
-        `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
-          senderFullName.lastName,
-        )} added you in subtask ${subTaskAssign.taskId.name} `,
-        'subtask',
-        null,
-        subTaskAssign.taskId.project,
-        null,
-        subTaskAssign.taskId.boardId,
-        subTaskAssign.taskId._id,
-        subTaskAssign._id,
-        companyId,
-        subTaskAssign.taskId.columnId,
-        null,
-        adminUser._id,
-      ),
-    );
-    notification = await notification
-      .populate('company', 'uniqueName _id')
-      .execPopulate();
-    let userNotification = await createNotificationForUser(
-      userNotificationBuilder(notification._id, reciever),
-    );
-    userNotification = {
-      ...userNotification._doc,
-      notification,
-    };
-    sendNotification(
-      reciever,
-      userNotification,
-      adminUser.pusherSock,
-    );
-    await triggerUnreadNotifications(reciever);
-  } catch (error) {
-    logger.error(`Notification: ${error}`);
-  }
-};
-
 module.exports.addTeamMateIntoRoomNotification = async (
   company, //fromHeader
   senderName,

@@ -291,21 +291,21 @@ const addMember = async (req, res, next) => {
         },
       ]);
 
-    // taskAssign.map(async (e) => {
-    //   if (req.user._id !== e.assignedPerson._id) {
-    //     await taskAssignNotificationToUsers(
-    //       req.user._id,
-    //       req.headers.companyid,
-    //       e._id,
-    //       e.assignedPerson._id,
-    //       {
-    //         _id: req.user._id,
-    //         name: req.user.name,
-    //         pusherSock: req.headers.clientid,
-    //       },
-    //     );
-    //   }
-    // });
+    taskAssign.map(async (e) => {
+      if (req.user._id !== e.assignedPerson._id) {
+        await taskAssignNotificationToUsers(
+          req.user._id,
+          req.headers.companyid,
+          e._id,
+          e.assignedPerson._id,
+          {
+            _id: req.user._id,
+            name: req.user.name,
+            pusherSock: req.headers.clientid,
+          },
+        );
+      }
+    });
     return sendJSONresponse(res, 201, taskAssign);
   } catch (error) {
     logger.error(`Task: ${error}`);
