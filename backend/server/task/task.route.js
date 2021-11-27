@@ -19,6 +19,11 @@ router
     authorization,
     SchemaValidator(joiSchema.createTask),
     taskCtrl.create,
+  )
+  .delete(
+    authorization,
+    SchemaValidator(joiSchema.deleteTask),
+    taskCtrl.deleteTask,
   );
 
 router
@@ -83,11 +88,6 @@ router
     authorization,
     SchemaValidator(joiSchema.updateTask),
     taskCtrl.update,
-  )
-  .delete(
-    authorization,
-    SchemaValidator(joiSchema.deleteTask),
-    taskCtrl.deleteTask,
   );
 
 // OK
