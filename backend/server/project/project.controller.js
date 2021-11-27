@@ -1101,7 +1101,7 @@ const getTasks = async (req, res, next) => {
 
     const statusList = await TaskStatus.find({
       project: pid,
-    }).select('_id name');
+    }).select('_id name positionInBoard');
 
     let taskSubtaskMapper = {};
 

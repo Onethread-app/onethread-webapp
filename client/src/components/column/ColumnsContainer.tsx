@@ -13,7 +13,7 @@ import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { ITaskStatus } from 'stores/task/Reducer';
 import {
   dragAndDropTask,
-  updateColumn,
+  updateTaskStatus,
   updateTask,
 } from 'stores/task/Actions';
 
@@ -21,6 +21,8 @@ import Column from 'components/column/Column';
 import { RightSidebar } from 'components/RightSidebar';
 import { ColumnForm } from 'components/column/ColumnForm';
 import { errorToaster } from 'components/toast/Toaster';
+import { useTasksTableContext } from 'components/task/TasksTableContext';
+import { isEqual } from 'lodash';
 
 const ColumnsContainerDiv = styled.div`
   gap: 1.25rem;
@@ -53,22 +55,23 @@ interface IColumnsContainerInternalProps {
     destinationColumnId: string,
     taskIndexOfDestinationColumn: number,
   ) => void;
-  updateColumn: (columnInfo: any) => void;
-  updateTask: (taskInfo) => void;
   companyId: string;
   projectId: string;
   taskStatusList: ITaskStatus[];
-  updateTaskStatus?: (task) => void;
   updatingTask: boolean;
   errorOnUpdatingTask: string;
+  updateTask: (taskInfo) => void;
+  updateTaskStatus: (task) => void;
+  updateTaskStatusForBoardLocally?: (task) => void;
 }
 
 const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
+  const { tasks } = useTasksTableContext();
   const [statuses, setStatues] = useState<ITaskStatus[]>([]);
   // const [columns,setColumns] = useState<IColumn[]>([]);
   const [showColumnFormDialog, setShowColumnFormDialog] =
     useState(false);
-  const [task, setTask] = useState<any>({});
+  const [updatingTask, setUpdatingTask] = useState<boolean>(false);
 
   const dragEnd = (result: DropResult) => {
     if (!result.destination) {
@@ -81,63 +84,53 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
       return;
     }
     if (result.type === 'task') {
-      props.updateTaskStatus?.({
+      setUpdatingTask(true);
+      props.updateTaskStatusForBoardLocally?.({
         _id: result.draggableId,
         status: result.destination.droppableId,
-      });
+      })
       props.updateTask({
         taskId: result.draggableId,
         companyId: props.companyId,
         projectId: props.projectId,
         status: result.destination.droppableId,
       });
-      setTask({
-        _id: result.draggableId,
-        status: result.source.droppableId,
-      });
     }
 
     if (result.type === 'column') {
-      errorToaster('You can not move column here.');
-      // console.log(result);
-      // const newCols = Array.from(columns);
-      // const val = columns[result.source.index];
-      // newCols.splice(result.source.index, 1);
-      // newCols.splice(result.destination.index, 0, val);
-      // newCols.map(async (col, index) => {
-      //   col.positionInBoard = index + 1;
-      //   if (isEqual(columns[index], col) === false) {
-      //     const columnInfo = {
-      //       _id: col._id,
-      //       name: col.name,
-      //       positionInBoard: col.positionInBoard,
-      //       boardId: props.currentBoard._id,
-      //     };
-      //     props.updateColumn(columnInfo);
-      //   }
-      // });
-      // setColumns(newCols);
+      const newCols = Array.from(statuses);
+      const val = statuses[result.source.index];
+      newCols.splice(result.source.index, 1);
+      newCols.splice(result.destination.index, 0, val);
+      newCols.map(async (col, index) => {
+        col.positionInBoard = index + 1;
+        if (isEqual(statuses[index], col) === false) {
+          const statusInfo = {
+            _id: col._id,
+            name: col.name,
+            positionInBoard: col.positionInBoard,
+          };
+          props.updateTaskStatus({ ...statusInfo, projectId: props.projectId });
+        }
+      });
+      setStatues(newCols.sort((a, b) => a.positionInBoard - b.positionInBoard));
     }
   };
 
-  // useEffect(() => {
-  //   const cols = orderBy(props.columns, ['positionInBoard']);
-  //   setColumns(cols);
-  // }, [props.columns]);
-
   useEffect(() => {
-    setStatues(props.taskStatusList);
-  }, [props.taskStatusList]);
+    tasks.length > 0 &&
+      setStatues(tasks[0].statusList.sort((a, b) => a.positionInBoard - b.positionInBoard));
+  }, [tasks]);
 
   useEffect(() => {
     if (
+      updatingTask &&
       props.updatingTask === false &&
       props.errorOnUpdatingTask !== ''
     ) {
       errorToaster('There was an error moving the task');
-      props.updateTask(task);
     }
-  }, [props.updatingTask, props.errorOnUpdatingTask]);
+  }, [props.updatingTask, props.errorOnUpdatingTask, updatingTask]);
 
   return (
     <DragDropContext
@@ -200,6 +193,6 @@ const mapStateToProps = (state: any) => ({
 
 export default connect(mapStateToProps, {
   dragAndDropTask,
-  updateColumn,
+  updateTaskStatus,
   updateTask,
 })(ColumnsContainer);

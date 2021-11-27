@@ -117,8 +117,8 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-            ? 7
-            : 5,
+              ? 7
+              : 5,
         hiddenColumns: ['createdAt', 'priority'],
         // sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -260,7 +260,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
     ],
   );
 
-  const updateTaskStatus = (data) => {
+  const updateTaskStatusForBoardLocally = (data) => {
     const status = props.statusList.filter(
       (status) => status._id === data.status,
     )[0];
@@ -292,11 +292,11 @@ const ProjectTasks = (props: IProjectTasksProps) => {
               {(!isEmpty(selectedStatusList) ||
                 !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {
@@ -382,7 +382,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
               />
             ),
             board: (
-              <ColumnsContainer updateTaskStatus={updateTaskStatus} />
+              <ColumnsContainer updateTaskStatusForBoardLocally={updateTaskStatusForBoardLocally} />
             ),
             calendar: <CalendarView tasks={tasksForCalendarView} />,
           }[selectedView]

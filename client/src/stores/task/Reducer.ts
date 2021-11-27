@@ -14,6 +14,7 @@ export interface IColumn {
 export interface ITaskStatus {
   _id: string;
   name: string;
+  positionInBoard: number;
 }
 
 export interface IFile {
@@ -211,6 +212,7 @@ const initialCurrentTask = {
   status: {
     _id: '',
     name: '',
+    positionInBoard: 0,
   },
   isCompleted: false,
   assignedMembers: [],
