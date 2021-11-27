@@ -164,7 +164,7 @@ export const SubTaskViewPageComponent = (
                   />
                   <div className="mt3 mb3">
                     {props.subTaskList.map((subTask: ITask) => (
-                      <Accordion>
+                      <Accordion defaultExpanded>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-label="Expand"

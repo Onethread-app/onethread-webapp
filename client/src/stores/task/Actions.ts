@@ -1,7 +1,6 @@
 import { TaskActionType } from './Types';
 import {
   TaskBoard,
-  ITask,
   SortTasksBy,
   IFilterUser,
   // ITaskStatus,
@@ -231,7 +230,7 @@ export const getSelectedTaskDetailsFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
-export const updateTask = (task: ITask) => ({
+export const updateTask = (task) => ({
   type: TaskActionType.UPDATE_TASK_START,
   payload: task,
 });
