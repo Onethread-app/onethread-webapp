@@ -114,7 +114,14 @@ const createNewProjectFromHome = async (req, res, next) => {
       outline: '',
       budget: req.body.budget,
       currency: req.body.currency,
-    });
+    }).then((project) =>
+      project
+        .populate([
+          { path: 'concernedAdmin', select: '_id name' },
+          { path: 'company', select: '_id uniqueName' },
+        ])
+        .execPopulate(),
+    );
     logger.info(`new project created`);
 
     const team = await teamCreate(
@@ -151,10 +158,17 @@ const createNewProjectFromHome = async (req, res, next) => {
     );
     logger.info(`Status Created`);
 
+    const response = {
+      ...project._doc,
+      isFavourite: false,
+      totalTasks: 0,
+      remainingTasks: 0,
+    };
+
     return sendJSONresponse(res, 201, {
       success: true,
       message: 'New project created',
-      project,
+      project: response,
     });
   } catch (error) {
     logger.error(`Project: ${error}`);
