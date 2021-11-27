@@ -601,7 +601,6 @@ const companyTasks = async (company, addDoneTasks = false) => {
   try {
     let taskCompilation = [];
     let tasks = [];
-    let queryObject = { company };
     let sortObject = { priority: 0 };
     let populateArray = [
       { path: 'project', select: '_id name' },
@@ -621,7 +620,7 @@ const companyTasks = async (company, addDoneTasks = false) => {
       queryObject.isCompleted = false;
     }
 
-    tasks = await Task.find(queryObject)
+    tasks = await Task.find({ company: company, isCompleted: false })
       .sort(sortObject)
       // .select(selectString)
       .populate(populateArray);
