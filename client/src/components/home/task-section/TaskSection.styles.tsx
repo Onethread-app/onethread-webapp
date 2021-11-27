@@ -52,11 +52,11 @@ const Header = styled.header`
   display: flex;
   flex-direction: row;
   align-items: center;
-  
+
   .bp3-icon {
     font-size: 14px;
     line-height: 21px;
-    border: 1px solid rgba(0, 0, 0, 0.0);
+    border: 1px solid rgba(0, 0, 0, 0);
     border-radius: 4px;
     padding: 0.25rem;
     transition: all 0.2s ease-in;
@@ -66,7 +66,6 @@ const Header = styled.header`
       border-radius: 4px;
       padding: 0.25rem;
     }
-
   }
 `;
 
@@ -172,6 +171,35 @@ const ModalContainer = styled.div`
 
   ${Container} {
     padding: 0.5rem;
+  }
+`;
+
+export const Row = styled.div`
+  display: flex;
+  column-gap: 18px;
+  padding: 0.5rem 0.5rem 0;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+export const SimpleTextButton = styled.button`
+  box-sizing: border-box;
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  color: #5a5a5a;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 18px;
+
+  color: #5a5a5a;
+
+  :disabled {
+    color: #bbbbbb;
+    cursor: not-allowed;
   }
 `;
 

@@ -38,6 +38,8 @@ interface ISubTaskViewInternalProps {
     taskId: string;
     projectId: string;
     companyId: string;
+    type: string;
+    taskList: string[];
   }) => void;
   deleteMember: (payload: {
     taskId: string;

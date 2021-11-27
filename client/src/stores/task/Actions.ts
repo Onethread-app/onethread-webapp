@@ -275,14 +275,19 @@ export const taskFileDeleteFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
-export const deleteTask = (payload: ITaskDelete) => ({
+export const deleteTask = (payload: {
+  projectId: string;
+  companyId: string;
+  taskList: string[];
+  type: string;
+  taskId?: string;
+}) => ({
   type: TaskActionType.DELETE_TASK_START,
   payload,
 });
 
-export const deleteTaskSuccess = (payload) => ({
+export const deleteTaskSuccess = () => ({
   type: TaskActionType.DELETE_TASK_SUCCESS,
-  payload,
 });
 
 export const deleteTaskFailure = (errorMessage: any) => ({
@@ -416,17 +421,15 @@ export const createSubTaskFailure = (errorMessage: string) => ({
 });
 
 export const taskMarkAsCompleted = (payload: {
-  projectId: string;
-  taskId: string;
+  task: { _id: string; pid: string }[];
   companyId: string;
 }) => ({
   type: TaskActionType.TASK_MARK_AS_COMPLETED,
   payload,
 });
 
-export const taskMarkAsCompletedSuccess = (response: any) => ({
+export const taskMarkAsCompletedSuccess = () => ({
   type: TaskActionType.TASK_MARK_AS_COMPLETED_SUCCESS,
-  payload: response,
 });
 
 export const taskMarkAsCompletedFailure = (errorMessage: string) => ({

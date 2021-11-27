@@ -1,0 +1,243 @@
+import { useCallback } from 'react';
+// import { Popover, Position } from '@blueprintjs/core';
+import { useHistory } from 'react-router-dom';
+import { isNil } from 'lodash';
+import moment from 'moment';
+import { connect } from 'react-redux';
+
+import { deleteTask, updateTask } from 'stores/task/Actions';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import TablePagination from '@material-ui/core/TablePagination';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {
+  StyledTable,
+  StyledTableRow,
+  StyledTableHeader,
+  StyledTableBody,
+  StyledUserTaskTableData,
+  SortIcon,
+  StyledTableRowContainer,
+  StyledSubRow,
+  StyledSubRowData,
+  StyledSubRowBody,
+  CreatableItem,
+} from '../../table/StyledTable.styles';
+import { ITask } from 'stores/task/Reducer';
+// import TaskTableOptions from './TaskTableOptions';
+
+interface ITasksTable {
+  getTableProps: any;
+  getTableBodyProps: any;
+  headerGroups: any;
+  rows: any;
+  prepareRow: any;
+  visibleColumns: any;
+  page: any;
+  gotoPage: any;
+  pageSize: any;
+  pageIndex: number;
+  setPageSize: any;
+  setOpenTaskDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  userCompanyLoading: boolean;
+}
+
+interface ITasksTableFunctions {
+  deleteTask: ({
+    taskId,
+    projectId,
+    companyId,
+    type,
+    taskList,
+  }) => void;
+  updateTask: (task: ITask) => void;
+}
+
+const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    visibleColumns,
+    page,
+    pageIndex,
+    gotoPage,
+    pageSize,
+    setPageSize,
+    setOpenTaskDialog,
+    userCompanyLoading,
+  } = props;
+  const history = useHistory();
+
+  const handlePageChange = (event, value) => {
+    gotoPage(value);
+  };
+
+  const handleChangeRowsPerPage = (e) => {
+    setPageSize(parseInt(e.target.value, 10));
+    gotoPage(0);
+  };
+
+  const handleClick = (task) => {
+    history.push(
+      `/company/${task.company.uniqueName}/project/${task.project._id}/task/${task._id}`,
+    );
+  };
+
+  // const handleOptionsClick = (e, task: ITask) => {
+  //   e.stopPropagation();
+  //   setShowPopover(task._id);
+  //   setSelectedTask(task);
+  // };
+
+  const renderRowSubComponent = useCallback(({ row }) => {
+    const { subtasks } = row.original;
+
+    return (
+      <StyledSubRowBody>
+        {subtasks.map((subtask) => (
+          <StyledSubRow>
+            <Icon
+              icon={subtask.done ? 'tick-circle' : 'circle'}
+              iconSize={16}
+              className="mr3"
+              color={subtask.done ? '#2EB67D' : 'inherit'}
+            />
+            <StyledSubRowData>{subtask.name}</StyledSubRowData>
+            <StyledSubRowData>
+              {!isNil(subtask.dueDate)
+                ? moment(subtask.dueDate).format('MMMM d, YYYY')
+                : 'Not Set'}
+            </StyledSubRowData>
+          </StyledSubRow>
+        ))}
+      </StyledSubRowBody>
+    );
+  }, []);
+
+  return (
+    <>
+      <StyledTable {...getTableProps()}>
+        <StyledTableHeader>
+          {headerGroups.map((headerGroup) => (
+            <StyledTableRow {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <StyledUserTaskTableData
+                  cols={visibleColumns.length}
+                  {...column.getHeaderProps(
+                    column.getSortByToggleProps(),
+                  )}
+                  key={column.id}
+                >
+                  {column.render('Header')}
+                  {column.id !== ('expander' || 'selection') && (
+                    <SortIcon>
+                      <Icon
+                        icon="symbol-triangle-up"
+                        size={7.5}
+                        color={
+                          column.isSorted
+                            ? column.isSortedDesc
+                              ? '#cfcfcf'
+                              : '#000'
+                            : '#cfcfcf'
+                        }
+                      />
+                      <Icon
+                        icon="symbol-triangle-down"
+                        size={7.5}
+                        color={
+                          column.isSorted
+                            ? column.isSortedDesc
+                              ? '#000'
+                              : '#cfcfcf'
+                            : '#cfcfcf'
+                        }
+                      />
+                    </SortIcon>
+                  )}
+                </StyledUserTaskTableData>
+              ))}
+              <MoreVertIcon fontSize="small" className="o-0" />
+            </StyledTableRow>
+          ))}
+        </StyledTableHeader>
+        <StyledTableBody {...getTableBodyProps()}>
+          {page.map((row) => {
+            prepareRow(row);
+            return (
+              <StyledTableRowContainer
+                key={row.id}
+                totalItems={rows.length}
+              >
+                <StyledTableRow {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <StyledUserTaskTableData
+                        cols={visibleColumns.length}
+                        title={
+                          cell.column.id === 'name'
+                            ? cell.row.original[cell.column.id]
+                            : ''
+                        }
+                        onClick={
+                          cell.column.id !== 'expander'
+                            ? () => handleClick(row.original)
+                            : null
+                        }
+                        {...cell.getCellProps()}
+                      >
+                        {cell.render('Cell')}
+                      </StyledUserTaskTableData>
+                    );
+                  })}
+                </StyledTableRow>
+                {row.isExpanded
+                  ? renderRowSubComponent({ row })
+                  : null}
+              </StyledTableRowContainer>
+            );
+          })}
+          {userCompanyLoading === false ? (
+            <CreatableItem onClick={() => setOpenTaskDialog(true)}>
+              <span>+ </span> Add new tasks
+            </CreatableItem>
+          ) : null}
+        </StyledTableBody>
+      </StyledTable>
+      <div className="flex justify-center mt2 w-100">
+        <TablePagination
+          component="div"
+          rowsPerPageOptions={
+            window.innerHeight > 1020
+              ? rows.length >= 10
+                ? [10, 25, 50, 100]
+                : [rows.length, 10, 25, 50, 100]
+              : window.innerHeight > 800
+              ? rows.length >= 7
+                ? [7, 10, 25, 50, 100]
+                : [rows.length, 7, 10, 25, 50, 100]
+              : rows.length >= 5
+              ? [5, 10, 25, 50, 100]
+              : [rows.length, 5, 10, 25, 50, 100]
+          }
+          count={rows.length}
+          page={pageIndex}
+          onPageChange={handlePageChange}
+          rowsPerPage={pageSize}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
+    </>
+  );
+};
+
+const mapStateToProps = (state) => ({
+  userCompanyLoading: state.userReducer.userCompanyLoading,
+});
+
+export default connect(mapStateToProps, {
+  deleteTask,
+  updateTask,
+})(TasksTable);

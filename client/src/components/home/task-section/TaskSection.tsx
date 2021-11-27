@@ -8,13 +8,23 @@ import {
   useAsyncDebounce,
   usePagination,
   useExpanded,
+  useRowSelect,
 } from 'react-table';
 
-import { getAllUserTasks } from 'stores/task/Actions';
+import {
+  deleteTask,
+  getAllUserTasks,
+  taskMarkAsCompleted,
+} from 'stores/task/Actions';
 
 import { TasksTableContext } from 'components/task/TasksTableContext';
 
-import { Container, Header } from './TaskSection.styles';
+import {
+  Container,
+  Header,
+  Row,
+  SimpleTextButton,
+} from './TaskSection.styles';
 
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -38,6 +48,9 @@ import TasksFilter from 'components/task/TasksFilter';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import { DateRange } from '@blueprintjs/datetime';
 import ExportTasks from 'components/export-tasks/ExportTasks';
+import TaskTableModals from 'components/task/TaskTableModals';
+import IndeterminateCheckbox from 'components/table/IndeterminateCheckbox';
+import { ITask } from 'stores/task/Reducer';
 
 interface Props {
   userTasks: any;
@@ -49,6 +62,8 @@ interface ITaskSectionInternalProps extends Props {
   fetchingUserTasks: boolean;
   errorOnFetchingUserTasks: string;
   getAllUserTasks: () => void;
+  taskMarkAsCompleted: (task) => void;
+  deleteTask: (task) => void;
 }
 
 const TaskSection = (props: ITaskSectionInternalProps) => {
@@ -73,6 +88,14 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     useState<DateRange>([null, null]);
   const [selectedLabelList, setSelectedLabelList] = useState<any>([]);
 
+  const [showEditTaskDialog, setShowEditTaskDialog] =
+    useState<boolean>(false);
+  const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
+    useState<boolean>(false);
+  const [selectedTask, setSelectedTask] = useState<ITask>(
+    {} as unknown as ITask,
+  );
+
   const data = useMemo(() => taskList, [taskList]);
   const columns = useMemo(() => TaskTableColumns, []);
 
@@ -91,6 +114,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     page,
     setPageSize,
     gotoPage,
+    selectedFlatRows,
   } = useTable(
     {
       columns,
@@ -106,6 +130,31 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     useSortBy,
     useExpanded,
     usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: 'selection',
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox
+                onClick={(e) => e.stopPropagation()}
+                {...getToggleAllRowsSelectedProps()}
+              />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox
+                onClick={(e) => e.stopPropagation()}
+                {...row.getToggleRowSelectedProps()}
+              />
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    },
   );
 
   const handleClearFilter = () => {
@@ -121,6 +170,33 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   const handleSearchChange = useAsyncDebounce((e) => {
     setGlobalFilter(e.target.value || undefined);
   }, 500);
+
+  const handleMarkAsComplete = () => {
+    const task = selectedFlatRows.map((row) => ({
+      _id: row.original._id,
+      pid: row.original.project._id,
+    }));
+    props.taskMarkAsCompleted({
+      task,
+      companyId: selectedFlatRows[0].original.company._id,
+      type: 'user',
+    });
+  };
+
+  const handleTaskDelete = () => {
+    const taskList = selectedFlatRows.map((row) => row.original._id);
+    props.deleteTask({
+      taskList,
+      companyId: selectedFlatRows[0].original.company._id,
+      type: 'user',
+      projectId: selectedFlatRows[0].original.project._id,
+    });
+  };
+
+  const handleTaskEdit = () => {
+    setSelectedTask(selectedFlatRows[0].original);
+    setShowEditTaskDialog(true);
+  };
 
   const { globalFilter, pageSize, pageIndex } = state;
 
@@ -245,11 +321,11 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
                 !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                  <ClearOutlinedIcon
-                    fontSize="small"
-                    onClick={handleClearFilter}
-                  />
-                )}
+                <ClearOutlinedIcon
+                  fontSize="small"
+                  onClick={handleClearFilter}
+                />
+              )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {
@@ -307,6 +383,26 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
             />
           </SortAndFilter>
         </HeaderContainer>
+        <Row>
+          <SimpleTextButton
+            disabled={selectedFlatRows.length === 0}
+            onClick={() => handleMarkAsComplete()}
+          >
+            Mark As Complete
+          </SimpleTextButton>
+          <SimpleTextButton
+            disabled={selectedFlatRows.length !== 1}
+            onClick={() => handleTaskEdit()}
+          >
+            Edit
+          </SimpleTextButton>
+          <SimpleTextButton
+            disabled={selectedFlatRows.length === 0}
+            onClick={() => handleTaskDelete()}
+          >
+            Delete
+          </SimpleTextButton>
+        </Row>
         {expand ? (
           <>
             {taskList.length === 0 ? (
@@ -354,6 +450,13 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
           <TaskDialog setShowDialog={setOpenTaskDialog} />
         </Dialog>
       </Container>
+      <TaskTableModals
+        setShowDeleteTaskDialog={setShowDeleteTaskDialog}
+        setShowEditTaskDialog={setShowEditTaskDialog}
+        showDeleteTaskDialog={showDeleteTaskDialog}
+        showEditTaskDialog={showEditTaskDialog}
+        task={selectedTask}
+      />
     </TasksTableContext.Provider>
   );
 };
@@ -368,6 +471,8 @@ const mapStateToProps = (state: any) => ({
     state.taskIndexReducer.taskReducer.errorOnFetchingUserTasks,
 });
 
-export default connect(mapStateToProps, { getAllUserTasks })(
-  TaskSection,
-);
+export default connect(mapStateToProps, {
+  getAllUserTasks,
+  taskMarkAsCompleted,
+  deleteTask,
+})(TaskSection);

@@ -40,6 +40,12 @@ module.exports = {
     }),
   }),
 
+  deleteTask: Joi.object().keys({
+    body: Joi.object().keys({
+      tasks: Joi.array().items(idSchema.id).required(),
+    }),
+  }),
+
   createSubtask: Joi.object().keys({
     body: Joi.object().keys({
       name: taskSchema.name.required(),
@@ -63,11 +69,6 @@ module.exports = {
       isCompleted: taskSchema.isCompleted,
     }),
   }),
-  deleteTask: Joi.object().keys({
-    params: Joi.object().keys({
-      taskId: taskSchema.taskId,
-    }),
-  }),
   addMember: Joi.object().keys({
     body: Joi.object().keys({
       assignmembers: Joi.array().items(idSchema.id).required(),
@@ -87,7 +88,13 @@ module.exports = {
   }),
   markAsCompleted: Joi.object().keys({
     body: Joi.object().keys({
-      task: Joi.array().items(idSchema.id).required(),
+      task: Joi.array()
+        .items({
+          _id: idSchema.id.required(),
+          pid: idSchema.id.required(),
+        })
+        .min(1)
+        .required(),
     }),
   }),
 };

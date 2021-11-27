@@ -27,8 +27,18 @@ import { useLiveSearch } from 'components/useLiveSearch';
 interface IMembersFormProps {
   setMembersPopover: (val: boolean) => void;
   project?: IProject;
-  currentTask?: ITask;
-  addTaskMember: (members: string[]) => any;
+  currentTask: ITask;
+  addTaskMember: ({
+    taskId,
+    projectId,
+    companyId,
+    assignmembers,
+  }: {
+    taskId: string;
+    projectId: string;
+    companyId: string;
+    assignmembers: string[];
+  }) => any;
   isEditingTask: boolean;
 }
 
@@ -47,7 +57,12 @@ export const AssignedMembersEditorComponent = (
   const [username, setUsername] = useState('');
 
   const onSubmit = async (values: any) => {
-    const response = await props.addTaskMember(values.member);
+    const response = await props.addTaskMember({
+      taskId: props.currentTask._id,
+      projectId: props.currentTask.project._id,
+      companyId: props.currentTask.company._id,
+      assignmembers: values.member,
+    });
     if (props.isEditingTask === false) {
       props.setMembersPopover(false);
       return true;

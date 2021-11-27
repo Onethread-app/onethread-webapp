@@ -1,6 +1,6 @@
-import { all, put, call, select } from 'redux-saga/effects';
+import { all, put, call } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
-import { formTokenConfig, tokenConfig } from 'stores/UtilsActions';
+import { formTokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
 import { isEmpty } from 'lodash';
 import {
@@ -8,7 +8,6 @@ import {
   DELETE_MEMBER_START,
   GET_ALL_MEMBER_START,
 } from './Types';
-import { getCurrentTaskId, getProjectDetailsId } from './Selector';
 import {
   getAllMembersSuccess,
   getAllMembersFailure,
@@ -23,12 +22,11 @@ const takeLatest: any = Eff.takeLatest;
 
 export function* addTaskMemberAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
+    const { taskId, projectId, companyId, assignmembers } = payload;
+    const headers = formTokenConfig(companyId);
     let response;
-    const taskId = yield select(getCurrentTaskId);
-    const projectId = yield select(getProjectDetailsId);
     if ((headers as any).headers.Authorization) {
-      const reqBody = { assignmembers: payload };
+      const reqBody = { assignmembers };
       response = yield tigrowApi.post(
         `tasks/member/${taskId}?pid=${projectId}`,
         reqBody,

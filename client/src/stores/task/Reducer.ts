@@ -682,12 +682,13 @@ export const TaskReducer = (state = InitialState, action: any) => {
     case TaskActionType.TASK_MARK_AS_COMPLETED_FAILURE:
       return {
         ...state,
-        taskError: action.payload,
+        errorOnUpdatingTask: action.payload,
         updatingTask: false,
       };
     case TaskActionType.TASK_MARK_AS_COMPLETED_SUCCESS:
       return {
         ...state,
+        updatingTask: false,
       };
     case TaskActionType.UPDATE_TASK_TIME_SPENT:
       return {
@@ -767,30 +768,30 @@ export const TaskReducer = (state = InitialState, action: any) => {
         errorOnTaskDelete: '',
       };
     case TaskActionType.DELETE_TASK_SUCCESS:
-      let { taskId, parentTask } = action.payload;
+      // let { taskId, parentTask } = action.payload;
       return {
         ...state,
-        currentTask:
-          state.currentTask._id === parentTask
-            ? {
-                ...state.currentTask,
-                subTasks: state.currentTask.subTasks.filter(
-                  (task: ITask) => task._id !== taskId,
-                ),
-              }
-            : state.currentTask,
-        userTasks: deleteTask(state.userTasks, {
-          _id: taskId,
-          parentTask,
-        }),
-        companyTaskList: deleteTask(state.companyTaskList, {
-          _id: taskId,
-          parentTask,
-        }),
-        projectTaskList: deleteTask(state.projectTaskList, {
-          _id: taskId,
-          parentTask,
-        }),
+        // currentTask:
+        //   state.currentTask._id === parentTask
+        //     ? {
+        //         ...state.currentTask,
+        //         subTasks: state.currentTask.subTasks.filter(
+        //           (task: ITask) => task._id !== taskId,
+        //         ),
+        //       }
+        //     : state.currentTask,
+        // userTasks: deleteTask(state.userTasks, {
+        //   _id: taskId,
+        //   parentTask,
+        // }),
+        // companyTaskList: deleteTask(state.companyTaskList, {
+        //   _id: taskId,
+        //   parentTask,
+        // }),
+        // projectTaskList: deleteTask(state.projectTaskList, {
+        //   _id: taskId,
+        //   parentTask,
+        // }),
         deletingTask: false,
       };
     case TaskActionType.DELETE_TASK_FAILURE: {

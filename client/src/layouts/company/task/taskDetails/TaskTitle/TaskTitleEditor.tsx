@@ -23,7 +23,7 @@ interface ITaskTitleFormProps {
   currentTask: ITask;
   updateTask: (task) => any;
   updatingTask: boolean;
-  taskError: string;
+  errorOnUpdatingTask: string;
 }
 
 const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
@@ -40,7 +40,10 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
 
   useEffect(() => {
     if (!props.nameEdit) {
-      if (props.updatingTask === false && props.taskError === '') {
+      if (
+        props.updatingTask === false &&
+        props.errorOnUpdatingTask === ''
+      ) {
         props.setNameEdit(false);
       }
     }
@@ -121,7 +124,8 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
 const mapStateToProps = (state: any) => {
   return {
     updatingTask: state.taskIndexReducer.taskReducer.updatingTask,
-    taskError: state.taskIndexReducer.taskReducer.taskError,
+    errorOnUpdatingTask:
+      state.taskIndexReducer.taskReducer.errorOnUpdatingTask,
   };
 };
 

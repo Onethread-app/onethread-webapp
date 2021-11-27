@@ -10,6 +10,8 @@ const {
   getAllStatusInProject,
 } = require('../services/task/taskStatus/taskStatus.service');
 
+const TaskLabel = require('../label/label.model');
+
 const {
   taskAssignNotificationToUsers,
   sendNotificationToProjectTeamMates,
@@ -400,16 +402,36 @@ const update = async (req, res, next) => {
 // OK
 const deleteTask = async (req, res, next) => {
   try {
-    const taskId = req.params.taskId;
-    await Task.deleteMany({ parentTask: taskId });
-    await Task.findByIdAndDelete(taskId);
-    const status = await calculateProjectStatus(req.query.pid);
-    await Project.findByIdAndUpdate(
-      { _id: req.query.pid },
-      { $set: { status } },
-      { safe: true, upsert: true, new: true },
+    await Promise.all(
+      req.body.tasks.map(async (task) => {
+        // Delete: Subtask Assign
+        let subtasks = await Task.find({ parentTask: task }).select(
+          '_id',
+        );
+        subtasks = subtasks.map((st) => st._id);
+        await Promise.all(
+          subtasks.map(async (subtaskId) => {
+            await TaskAssign.deleteMany({ taskId: subtaskId });
+          }),
+        );
+        // Delete: Task Assign
+        await TaskAssign.deleteMany({ taskId: task });
+        // Delete: Subtask
+        await Task.deleteMany({ parentTask: task });
+        // Delete: Task Label
+        await TaskLabel.deleteMany({ task });
+        // Delete Task
+        await Task.findByIdAndDelete(task);
+        const status = await calculateProjectStatus(req.query.pid);
+        await Project.findByIdAndUpdate(
+          { _id: req.query.pid },
+          { $set: { status } },
+          { safe: true, upsert: true, new: true },
+        );
+      }),
     );
-    return sendJSONresponse(res, 200, { message: 'Task Deleted.' });
+
+    return sendJSONresponse(res, 200);
   } catch (error) {
     logger.error(`Task Deletion: ${error}`);
     next(error);
@@ -421,13 +443,13 @@ const markAsCompleted = async (req, res, next) => {
     await Promise.all(
       req.body.task.map(async (task) => {
         await Task.findByIdAndUpdate(
-          { _id: task },
+          { _id: task._id },
           { $set: { isCompleted: true, completedBy: req.user._id } },
           { safe: true, upsert: true, new: true },
         );
-        const status = await calculateProjectStatus(req.query.pid);
+        const status = await calculateProjectStatus(task.pid);
         await Project.findByIdAndUpdate(
-          { _id: req.query.pid },
+          { _id: task.pid },
           { $set: { status } },
           { safe: true, upsert: true, new: true },
         );

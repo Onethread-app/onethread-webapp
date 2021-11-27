@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { Popover, Position } from '@blueprintjs/core';
+import { useCallback } from 'react';
+// import { Popover, Position } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { isNil } from 'lodash';
 import moment from 'moment';
@@ -23,8 +23,7 @@ import {
   CreatableItem,
 } from '../table/StyledTable.styles';
 import { ITask } from 'stores/task/Reducer';
-import TaskTableOptions from './TaskTableOptions';
-import TaskTableModals from './TaskTableModals';
+// import TaskTableOptions from './TaskTableOptions';
 
 interface ITasksTable {
   getTableProps: any;
@@ -43,7 +42,13 @@ interface ITasksTable {
 }
 
 interface ITasksTableFunctions {
-  deleteTask: ({ taskId, projectId, companyId }) => void;
+  deleteTask: ({
+    taskId,
+    projectId,
+    companyId,
+    type,
+    taskList,
+  }) => void;
   updateTask: (task: ITask) => void;
 }
 
@@ -64,12 +69,6 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
     userCompanyLoading,
   } = props;
   const history = useHistory();
-  const [showPopover, setShowPopover] = useState<string>('');
-  const [selectedTask, setSelectedTask] = useState<any>(null);
-  const [showEditTaskDialog, setShowEditTaskDialog] =
-    useState<boolean>(false);
-  const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
-    useState<boolean>(false);
 
   const handlePageChange = (event, value) => {
     gotoPage(value);
@@ -86,21 +85,11 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
     );
   };
 
-  const handleOptionsClick = (e, task: ITask) => {
-    e.stopPropagation();
-    setShowPopover(task._id);
-    setSelectedTask(task);
-  };
-
-  const handleDeleteTask = () => {
-    props.deleteTask({
-      taskId: selectedTask._id,
-      projectId: selectedTask.project._id,
-      companyId: selectedTask.company._id,
-    });
-    setShowDeleteTaskDialog(false);
-    setShowPopover('');
-  };
+  // const handleOptionsClick = (e, task: ITask) => {
+  //   e.stopPropagation();
+  //   setShowPopover(task._id);
+  //   setSelectedTask(task);
+  // };
 
   const renderRowSubComponent = useCallback(({ row }) => {
     const { subtasks } = row.original;
@@ -133,7 +122,6 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
         <StyledTableHeader>
           {headerGroups.map((headerGroup) => (
             <StyledTableRow {...headerGroup.getHeaderGroupProps()}>
-              <Icon icon="circle" iconSize={16} className="o-0 mr4" />
               {headerGroup.headers.map((column) => (
                 <StyledTaskTableData
                   cols={visibleColumns.length}
@@ -143,7 +131,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                   key={column.id}
                 >
                   {column.render('Header')}
-                  {column.id !== 'expander' && (
+                  {column.id !== 'expander' ? (
                     <SortIcon>
                       <Icon
                         icon="symbol-triangle-up"
@@ -168,7 +156,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                         }
                       />
                     </SortIcon>
-                  )}
+                  ) : null}
                 </StyledTaskTableData>
               ))}
               <MoreVertIcon fontSize="small" className="o-0" />
@@ -184,30 +172,6 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                 totalItems={rows.length}
               >
                 <StyledTableRow {...row.getRowProps()}>
-                  <Icon
-                    icon={
-                      row.original.status === 'done'
-                        ? 'tick-circle'
-                        : 'circle'
-                    }
-                    iconSize={16}
-                    className="mr3 pointer"
-                    color={
-                      row.original.status === 'done'
-                        ? '#2EB67D'
-                        : 'inherit'
-                    }
-                    style={{
-                      cursor:
-                        row.original.status === 'done'
-                          ? 'no-drop'
-                          : 'pointer',
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // console.log('clicked');
-                    }}
-                  />
                   {row.cells.map((cell) => {
                     return (
                       <StyledTaskTableData
@@ -228,30 +192,6 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                       </StyledTaskTableData>
                     );
                   })}
-                  <Popover
-                    popoverClassName="bp3-popover-content-sizing"
-                    position={Position.BOTTOM}
-                    isOpen={
-                      row.original._id === showPopover ? true : false
-                    }
-                    onClose={() => setShowPopover('')}
-                    content={
-                      <TaskTableOptions
-                        setShowDeleteTaskDialog={
-                          setShowDeleteTaskDialog
-                        }
-                        setShowEditTaskDialog={setShowEditTaskDialog}
-                      />
-                    }
-                    target={
-                      <MoreVertIcon
-                        fontSize="small"
-                        onClick={(e) =>
-                          handleOptionsClick(e, row.original)
-                        }
-                      />
-                    }
-                  />
                 </StyledTableRow>
                 {row.isExpanded
                   ? renderRowSubComponent({ row })
@@ -289,13 +229,6 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </div>
-      <TaskTableModals
-        handleDeleteTask={handleDeleteTask}
-        setShowDeleteTaskDialog={setShowDeleteTaskDialog}
-        setShowEditTaskDialog={setShowEditTaskDialog}
-        showDeleteTaskDialog={showDeleteTaskDialog}
-        showEditTaskDialog={showEditTaskDialog}
-      />
     </>
   );
 };

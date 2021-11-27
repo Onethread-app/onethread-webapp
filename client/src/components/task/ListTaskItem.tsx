@@ -22,7 +22,6 @@ import CircularProgress from '@material-ui/core/CircularProgress/CircularProgres
 import { IColumn, ITask, ITaskMember } from 'stores/task/Reducer';
 import {
   dragAndDropTask,
-  deleteTask,
   getSelectedTaskDetails,
 } from 'stores/task/Actions';
 
@@ -127,7 +126,6 @@ interface IListTaskItemInternalProps extends IListTaskItemProps {
     destinationColumnId: string,
     taskIndexOfDestinationColumn: number,
   ) => void;
-  deleteTask: ({ taskId, companyId, projectId }) => void;
   getSelectedTaskDetails: ({ taskId, companyId, projectId }) => void;
 }
 
@@ -447,6 +445,5 @@ const mapStateToProps = (state: any) => ({
 
 export default connect(mapStateToProps, {
   dragAndDropTask,
-  deleteTask,
   getSelectedTaskDetails,
 })(ListTaskItem);
