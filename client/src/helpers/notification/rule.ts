@@ -1,9 +1,7 @@
 import companyProfile from 'resources/images/sidebarCompanyProfile.svg';
 import associates from 'resources/images/sideBarAssociates.svg';
-import board from 'resources/images/sideBarBoard.svg';
 import colleague from 'resources/images/sidebarTeam.svg';
-import project from 'resources/images/ProjectsIcon.svg';
-import preface from 'resources/images/sideBarPreface.svg';
+import project from 'resources/images/ProjectIcon.png';
 import room from 'resources/images/sidebarRoom.svg';
 import team from 'resources/images/sidebarProjectTeam.svg';
 
@@ -29,7 +27,7 @@ export const notificationType = {
   announcement: {
     img: companyProfile,
     path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/dashboard`;
+      return `/company/${notification.company.uniqueName}?tab=3`;
     },
   },
   profile: {
@@ -42,18 +40,6 @@ export const notificationType = {
     img: project,
     path: async (notification: any) => {
       return `/company/${notification.company.uniqueName}/project`;
-    },
-  },
-  preface: {
-    img: preface,
-    path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/project/${notification.project}`;
-    },
-  },
-  board: {
-    img: board,
-    path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/project/${notification.project}/board/${notification.board}`;
     },
   },
   room: {
@@ -70,15 +56,15 @@ export const notificationType = {
   },
 
   task: {
-    img: board,
+    img: project,
     path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/project/${notification.project}/board/${notification.board}/task/${notification.task}`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/task/${notification.task}`;
     },
   },
   subtask: {
-    img: board,
+    img: project,
     path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/project/${notification.project}/board/${notification.board}/task/${notification.task}`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/task/${notification.task}`;
     },
   },
   others: {

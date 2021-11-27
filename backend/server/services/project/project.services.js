@@ -6,6 +6,10 @@ const projectListInCompany = async (cid) => {
   );
   return projectList;
 };
+const projectDetails = async (pid) => {
+  return await Project.find({ _id: pid }).select('name');
+};
 module.exports = {
   projectListInCompany,
+  projectDetails,
 };

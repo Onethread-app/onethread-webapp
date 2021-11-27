@@ -5,7 +5,6 @@ const { Project } = require('../project/project.model');
 const {
   calculateProjectStatus,
 } = require('../project/project.controller');
-const Board = require('../board/board.model');
 const TaskStatus = require('./taskStatus/taskStatus.model');
 const {
   getAllStatusInProject,
@@ -14,7 +13,6 @@ const {
 const {
   taskAssignNotificationToUsers,
   sendNotificationToProjectTeamMates,
-  notifyToBoardMembers,
 } = require('../notification/notification.controller');
 
 const {
@@ -221,19 +219,17 @@ const create = async (req, res, next) => {
     responseData.members = members;
     responseData.statusList = statusList;
     responseData.subTasks = [];
-    // await sendNotificationToProjectTeamMates(
-    //   req.user._id,
-    //   companyId,
-    //   pid,
-    //   task._id,
-    //   columnId,
-    //   boardId,
-    //   {
-    //     _id: req.user._id,
-    //     name: req.user.name,
-    //     pusherSock: req.headers.clientid,
-    //   },
-    // );
+    await sendNotificationToProjectTeamMates(
+      req.user._id,
+      companyId,
+      pid,
+      task._id,
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
+    );
     return sendJSONresponse(res, 201, responseData);
   } catch (error) {
     logger.error(`Task Creation: ${error}`);
@@ -295,21 +291,21 @@ const addMember = async (req, res, next) => {
         },
       ]);
 
-    // taskAssign.map(async (e) => {
-    //   if (req.user._id !== e.assignedPerson._id) {
-    //     await taskAssignNotificationToUsers(
-    //       req.user._id,
-    //       req.headers.companyid,
-    //       e._id,
-    //       e.assignedPerson._id,
-    //       {
-    //         _id: req.user._id,
-    //         name: req.user.name,
-    //         pusherSock: req.headers.clientid,
-    //       },
-    //     );
-    //   }
-    // });
+    taskAssign.map(async (e) => {
+      if (req.user._id !== e.assignedPerson._id) {
+        await taskAssignNotificationToUsers(
+          req.user._id,
+          req.headers.companyid,
+          e._id,
+          e.assignedPerson._id,
+          {
+            _id: req.user._id,
+            name: req.user.name,
+            pusherSock: req.headers.clientid,
+          },
+        );
+      }
+    });
     return sendJSONresponse(res, 201, taskAssign);
   } catch (error) {
     logger.error(`Task: ${error}`);

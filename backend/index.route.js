@@ -16,8 +16,6 @@ const messageRoutes = require('./server/message/message.route');
 const notificationRoutes = require('./server/notification/notification.route');
 const jobRoutes = require('./server/job/job.route');
 const educationRoutes = require('./server/education/education.route');
-const boardRoutes = require('./server/board/board.route');
-const boardColumnRoutes = require('./server/boardColumn/boardColumn.route');
 const taskRoutes = require('./server/task/task.route');
 const utilsRoutes = require('./server/utils/utils.route');
 const associateRoutes = require('./server/associate/associate.route');
@@ -54,9 +52,7 @@ router.use('/posts', postRoutes);
 router.use('/rooms', roomRoutes);
 // router.use('/saves', saveRoutes);
 router.use('/skills', skillRoutes);
-router.use('/files', fileRoutes);
-router.use('/boards', boardRoutes);
-router.use('/boardColumns', boardColumnRoutes); // board-columns
+router.use('/files', fileRoutes); // board-columns
 router.use('/tasks', taskRoutes);
 router.use('/taskStatus', taskStatusRoutes);
 router.use('/utils', utilsRoutes);

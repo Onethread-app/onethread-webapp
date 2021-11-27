@@ -243,10 +243,7 @@ export function* deleteProjectAsync({ payload }: any) {
     yield put(showLoading());
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      yield tigrowApi.delete(
-        `/projects/delete-project?pid=${payload}`,
-        headers,
-      );
+      yield tigrowApi.delete(`/projects?pid=${payload}`, headers);
       yield all([
         put(deleteProjectSuccess(payload)),
         put(getAllProjects()),
@@ -770,7 +767,7 @@ export function* newDeleteProjectAsync({ payload }: any) {
     const headers = formTokenConfig(payload.companyId);
     if ((headers as any).headers.Authorization) {
       yield tigrowApi.delete(
-        `/projects/delete-project?pid=${payload.projectId}`,
+        `/projects?pid=${payload.projectId}`,
         headers,
       );
       successToaster('The project has been deleted successfully.');
