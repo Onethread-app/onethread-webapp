@@ -111,6 +111,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   const handleClearFilter = () => {
     setSelectedStatusList([]);
     setSelectedProjectList([]);
+    setSelectedLabelList([]);
     setSelectedDueDateRange([null, null]);
     setSelectedDueDateOption('');
     setTaskList(userTasks);
@@ -171,6 +172,10 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   useEffect(() => {
     setFilter('project', selectedProjectList);
   }, [selectedProjectList]);
+
+  useEffect(() => {
+    setFilter('labels', selectedLabelList);
+  }, [selectedLabelList]);
 
   useEffect(() => {
     setFilter('status', selectedStatusList);
@@ -237,13 +242,14 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
           <SortAndFilter>
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
+                !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {

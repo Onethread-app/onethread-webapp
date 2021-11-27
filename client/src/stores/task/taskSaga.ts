@@ -56,6 +56,7 @@ import {
   createSubTaskFailure,
   taskMarkAsCompletedSuccess,
   taskMarkAsCompletedFailure,
+  updateTaskStatusSuccess,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
@@ -492,7 +493,7 @@ export function* updateTaskStatusAsync({ payload }: any) {
         newPayload,
         headers,
       );
-      yield put(updateTaskSuccess(response.data));
+      yield put(updateTaskStatusSuccess(response.data));
     }
   } catch (error) {
     yield put(updateTaskStatusFailure(returnErrorText(error)));
