@@ -88,6 +88,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
 
   const handleOptionsClick = (e, task: ITask) => {
     e.stopPropagation();
+    setShowPopover(task._id);
     setSelectedTask(task);
   };
 
@@ -246,7 +247,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                       <MoreVertIcon
                         fontSize="small"
                         onClick={(e) =>
-                          handleOptionsClick(e, row.original._id)
+                          handleOptionsClick(e, row.original)
                         }
                       />
                     }
