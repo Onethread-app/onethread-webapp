@@ -20,7 +20,6 @@ const {
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
-const { createBoard } = require('../board/board.controller');
 const {
   createRoom,
   createRoomMember,

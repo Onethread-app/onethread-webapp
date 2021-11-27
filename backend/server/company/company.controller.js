@@ -799,7 +799,7 @@ const noticePostByCompany = async (req, res, next) => {
         title: `Announcement from ${company.name}`,
         body: noticeText,
         icon: company.logo,
-        data: `company/${company.uniqueName}/dashboard`,
+        data: `company/${company.uniqueName}?tab=3`,
       },
     };
     const member = await Member.find({

@@ -26,10 +26,6 @@ const {
 const {
   findAccountById,
 } = require('../services/account/account.service');
-const { findBoardById } = require('../services/board/board.service');
-const {
-  findColumnById,
-} = require('../services/boardColumn/boardColumn.service');
 const {
   teamMemberListFindByProjectId,
 } = require('../services/teams/teams.services');
@@ -44,6 +40,9 @@ const {
   findCompanyById,
   companyAdminSuperAdminList,
 } = require('../services/company/company.services');
+const {
+  projectDetails,
+} = require('../services/project/project.services');
 
 const notificationBuilder = (
   text,
@@ -223,7 +222,7 @@ module.exports.notifyToTaskMember = async (
         null,
         task.project,
         null,
-        task.boardId,
+        null,
         taskId,
         null,
         company,
@@ -254,28 +253,27 @@ module.exports.sendNotificationToProjectTeamMates = async (
   company,
   pid,
   taskId,
-  columnId,
-  boardId,
   adminUser,
 ) => {
   try {
     let uName = await findAccountById(senderName);
     let projectMembers = await teamMemberListFindByProjectId(pid);
-    const board = await findBoardById(boardId);
     let notification = await createNotification(
       notificationBuilder(
         `${_.upperFirst(uName.firstName)} ${_.upperFirst(
           uName.lastName,
-        )} created a task in board ${board.name} `,
-        'board',
+        )} created a task in project ${
+          projectMembers[0].project.name
+        } `,
+        'task',
         null,
         pid,
         null,
-        boardId,
+        null,
         taskId,
         null,
         company,
-        columnId,
+        null,
         null,
         adminUser._id,
       ),
@@ -627,14 +625,6 @@ module.exports.subTaskAssignNotificationToUsers = async (
           {
             path: 'project',
             select: '_id company',
-          },
-          {
-            path: 'boardId',
-            select: '_id',
-          },
-          {
-            path: 'columnId',
-            select: '_id',
           },
         ],
       },

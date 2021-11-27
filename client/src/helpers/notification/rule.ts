@@ -1,6 +1,5 @@
 import companyProfile from 'resources/images/sidebarCompanyProfile.svg';
 import associates from 'resources/images/sideBarAssociates.svg';
-import board from 'resources/images/sideBarBoard.svg';
 import colleague from 'resources/images/sidebarTeam.svg';
 import project from 'resources/images/ProjectsIcon.svg';
 import preface from 'resources/images/sideBarPreface.svg';
@@ -50,12 +49,6 @@ export const notificationType = {
       return `/company/${notification.company.uniqueName}/project/${notification.project}`;
     },
   },
-  board: {
-    img: board,
-    path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/project/${notification.project}/board/${notification.board}`;
-    },
-  },
   room: {
     img: room,
     path: async (notification: any) => {
@@ -70,13 +63,14 @@ export const notificationType = {
   },
 
   task: {
-    img: board,
+    img: project,
     path: async (notification: any) => {
+      console.log(notification);
       return `/company/${notification.company.uniqueName}/project/${notification.project}/task/${notification.task}`;
     },
   },
   subtask: {
-    img: board,
+    img: project,
     path: async (notification: any) => {
       return `/company/${notification.company.uniqueName}/project/${notification.project}/task/${notification.task}`;
     },
