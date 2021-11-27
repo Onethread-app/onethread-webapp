@@ -247,10 +247,11 @@ export const SubTaskDelete = (
                 type="submit"
                 onClick={() => {
                   props.deleteSubTask({
-                    taskId: props.subTask._id,
+                    taskId: props.subTask.parentTask,
                     companyId: props.subTask.company._id,
                     projectId: props.subTask.project._id,
-                    parentTask: props.subTask.parentTask,
+                    type: 'task',
+                    taskList: [props.subTask._id],
                   });
                   setDeletePopover(false);
                 }}

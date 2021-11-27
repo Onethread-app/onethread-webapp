@@ -38,6 +38,8 @@ interface ISubTaskViewInternalProps {
     taskId: string;
     projectId: string;
     companyId: string;
+    type: string;
+    taskList: string[];
   }) => void;
   deleteMember: (payload: {
     taskId: string;
@@ -164,7 +166,7 @@ export const SubTaskViewPageComponent = (
                   />
                   <div className="mt3 mb3">
                     {props.subTaskList.map((subTask: ITask) => (
-                      <Accordion>
+                      <Accordion defaultExpanded>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-label="Expand"

@@ -57,6 +57,9 @@ import {
   taskMarkAsCompletedSuccess,
   taskMarkAsCompletedFailure,
   updateTaskStatusSuccess,
+  getAllUserTasks,
+  getAllCompanyTasks,
+  getAllProjectTasks,
 } from './Actions';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { getProjectId } from 'stores/project/Selector';
@@ -432,15 +435,27 @@ export function* taskFileDeleteAsync({ payload }: any) {
 
 export function* deleteTaskAsync({ payload }: any) {
   try {
-    const { taskId, projectId, companyId, parentTask } = payload;
+    const { projectId, companyId, taskList, type, taskId } = payload;
     const headers = formTokenConfig(companyId);
-    if ((headers as any).headers.Authorization && payload) {
-      const response = yield tigrowApi.delete(
-        `tasks/${taskId}?pid=${projectId}`,
-        headers,
-      );
-      if (response.status === 200) {
-        yield put(deleteTaskSuccess({ taskId, parentTask }));
+    const response = yield tigrowApi.put(
+      `tasks?pid=${projectId}`,
+      {
+        tasks: taskList,
+      },
+      headers,
+    );
+    if (response.status === 200) {
+      yield put(deleteTaskSuccess());
+      if (type === 'user') {
+        yield put(getAllUserTasks());
+      } else if (type === 'project') {
+        yield put(getAllProjectTasks());
+      } else if (type === 'company') {
+        yield put(getAllCompanyTasks());
+      } else if (type === 'task') {
+        yield put(
+          getSelectedTaskDetails({ taskId, companyId, projectId }),
+        );
       }
     }
   } catch (error) {
@@ -521,21 +536,22 @@ export function* createSubTask(action) {
 
 export function* taskMarkAsCompleted({ payload }: any) {
   try {
-    const { projectId, companyId, taskId } = payload;
+    const { companyId, task, type } = payload;
     const headers = formTokenConfig(companyId);
     if ((headers as any).headers.Authorization) {
-      yield tigrowApi.post(
-        `tasks/${taskId}/mark-as-completed?pid=${projectId}`,
-        {},
+      yield tigrowApi.put(
+        `tasks/mark-as-completed`,
+        { task },
         headers,
       );
-      yield put(
-        taskMarkAsCompletedSuccess({
-          projectId,
-          companyId,
-          updatedTask: { _id: taskId, isCompleted: true },
-        }),
-      );
+      yield put(taskMarkAsCompletedSuccess());
+      if (type === 'user') {
+        yield put(getAllUserTasks());
+      } else if (type === 'company') {
+        yield put(getAllCompanyTasks());
+      } else if (type === 'project') {
+        yield put(getAllProjectTasks());
+      }
     }
   } catch (error) {
     yield put(taskMarkAsCompletedFailure(returnErrorText(error)));
@@ -698,5 +714,6 @@ export default function* taskSaga() {
     call(onGetAllTaskStatusInProject),
     call(onUpdateTaskStatus),
     call(onCreateSubTask),
+    call(onTaskMarkAsCompleted),
   ]);
 }

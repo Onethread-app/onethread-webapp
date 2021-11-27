@@ -69,10 +69,11 @@ const TaskItemContainer = styled.div`
   padding: 1rem 1.25rem;
   border-radius: 5px;
   box-shadow: ${(props) => `
-  rgba(17, 17, 26, 0.05) 0px 1px 0px, ${props.isDragging
+  rgba(17, 17, 26, 0.05) 0px 1px 0px, ${
+    props.isDragging
       ? '#3484F0'
       : find(priorityColor, ['code', props.priority])!.value
-    } 0px 0px 4px`};
+  } 0px 0px 4px`};
   background-color: #fff;
   color: #182026 !important;
   display: flex;
@@ -100,7 +101,7 @@ interface IColumnTaskItemInternalProps extends IColumnTaskItem {
   deletingTask: boolean;
   errorOnTaskDelete: string;
   getSelectedTaskDetails: ({ taskId, companyId, projectId }) => void;
-  deleteTask: ({ taskId, companyId, projectId }) => void;
+  deleteTask: ({ companyId, projectId, taskList, type }) => void;
 }
 
 const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
@@ -122,9 +123,10 @@ const ColumnTaskItem = (props: IColumnTaskItemInternalProps) => {
 
   const handleTaskDelete = () => {
     props.deleteTask({
-      taskId: task._id,
       companyId: task.company._id,
       projectId: task.project._id,
+      taskList: [],
+      type: 'company',
     });
     setDeletingTask(true);
   };

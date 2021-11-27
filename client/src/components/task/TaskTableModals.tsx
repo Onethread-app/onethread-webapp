@@ -1,4 +1,8 @@
 import { Dialog } from '@blueprintjs/core';
+import EditTaskDialog from 'components/home/task-section/EditTaskDialog';
+import { connect } from 'react-redux';
+import { deleteTask } from 'stores/task/Actions';
+import { ITask } from 'stores/task/Reducer';
 import { Container, Button } from './Task.styles';
 
 interface Props {
@@ -10,7 +14,8 @@ interface Props {
   setShowDeleteTaskDialog: React.Dispatch<
     React.SetStateAction<boolean>
   >;
-  handleDeleteTask: () => void;
+  task: ITask;
+  deleteTask: ({ projectId, companyId, type, taskList }) => void;
 }
 
 const TaskTableModals = (props: Props) => {
@@ -19,8 +24,19 @@ const TaskTableModals = (props: Props) => {
     showEditTaskDialog,
     setShowDeleteTaskDialog,
     setShowEditTaskDialog,
-    handleDeleteTask,
+    task,
   } = props;
+
+  const handleDeleteTask = () => {
+    props.deleteTask({
+      projectId: task.project._id,
+      companyId: task.company._id,
+      type: 'user',
+      taskList: [{ _id: task._id, pid: task.project._id }],
+    });
+    setShowDeleteTaskDialog(false);
+  };
+
   return (
     <>
       {showEditTaskDialog ? (
@@ -30,7 +46,12 @@ const TaskTableModals = (props: Props) => {
           canEscapeKeyClose={true}
           canOutsideClickClose={true}
           className="h-auto w-auto pb0"
-        ></Dialog>
+        >
+          <EditTaskDialog
+            task={task}
+            setShowDialog={setShowEditTaskDialog}
+          />
+        </Dialog>
       ) : null}
       {showDeleteTaskDialog ? (
         <Dialog
@@ -67,4 +88,8 @@ const TaskTableModals = (props: Props) => {
   );
 };
 
-export default TaskTableModals;
+const mapStateToProps = (state: any) => ({});
+
+export default connect(mapStateToProps, { deleteTask })(
+  TaskTableModals,
+);

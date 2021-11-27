@@ -812,11 +812,14 @@ const suggestAssociateCompany = async (req, res, next) => {
 
 const deleteProject = async (req, res, next) => {
   try {
-    await Project.findByIdAndUpdate(
-      { _id: req.query.pid },
-      { $set: { hasDeleted: true } },
-      { safe: true, upsert: true, new: true },
-    );
+    const project = req.query.pid;
+    await Team.deleteMany({ project });
+    const tasks = await Task.find({ project }).select('_id');
+    const taskIds = tasks.map((task) => task._id);
+    await TaskAssign.deleteMany({ taskId: taskIds });
+    await TaskStatus.deleteMany({ project });
+    await Task.deleteMany({ project });
+    await Project.findByIdAndDelete(project);
     return sendJSONresponse(res, 200, { success: true });
   } catch (err) {
     logger.error(`Project: ${err}`);

@@ -15,9 +15,14 @@ import {
 
 // import { ITaskMember } from './Reducer';
 
-export const addTaskMember = (members: string[]) => ({
+export const addTaskMember = (payload: {
+  taskId: string;
+  projectId: string;
+  companyId: string;
+  assignmembers: string[];
+}) => ({
   type: ASSIGN_MEMBER_START,
-  payload: members,
+  payload,
 });
 
 export const addTaskMemberSuccess = (response: any) => ({

@@ -40,6 +40,12 @@ module.exports = {
     }),
   }),
 
+  deleteTask: Joi.object().keys({
+    body: Joi.object().keys({
+      tasks: Joi.array().items(idSchema.id).required(),
+    }),
+  }),
+
   createSubtask: Joi.object().keys({
     body: Joi.object().keys({
       name: taskSchema.name.required(),
@@ -61,11 +67,6 @@ module.exports = {
       priority: taskSchema.priority,
       status: taskSchema.status,
       isCompleted: taskSchema.isCompleted,
-    }),
-  }),
-  deleteTask: Joi.object().keys({
-    params: Joi.object().keys({
-      taskId: taskSchema.taskId,
     }),
   }),
   addMember: Joi.object().keys({
