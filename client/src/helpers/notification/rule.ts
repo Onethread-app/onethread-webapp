@@ -29,7 +29,7 @@ export const notificationType = {
   announcement: {
     img: companyProfile,
     path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/dashboard`;
+      return `/company/${notification.company.uniqueName}?tab=3`;
     },
   },
   profile: {
@@ -72,13 +72,13 @@ export const notificationType = {
   task: {
     img: board,
     path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/project/${notification.project}/board/${notification.board}/task/${notification.task}`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/task/${notification.task}`;
     },
   },
   subtask: {
     img: board,
     path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/project/${notification.project}/board/${notification.board}/task/${notification.task}`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/task/${notification.task}`;
     },
   },
   others: {
