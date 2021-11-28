@@ -9,7 +9,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { upperFirst } from 'lodash';
 
 import { logoutAction } from 'stores/auth/Actions';
-import { companySubscriber } from 'helpers/notification/subscribers';
+import { notificationSubscriber } from 'layouts/company/room/channelSubscribe';
 import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 
 import chatIcon from '../../resources/images/chatIcon.svg';
@@ -105,12 +105,12 @@ const UpdatedNavbar = (props: Props) => {
   };
 
   useEffect(() => {
-    props.getNotifications();
-    companySubscriber(props.companyId);
-    props.fetchRooms();
-    props.fetchChats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (props.user._id) {
+      props.getNotifications();
+      notificationSubscriber();
+      props.fetchChats();
+    }
+  }, [props.user._id]);
 
   return (
     <>
@@ -394,7 +394,6 @@ const mapStateToProps = (state: any) => {
 
 export default connect(mapStateToProps, {
   logoutAction,
-  companySubscriber,
   getNotifications,
   seenNotification,
   clearSeen,
