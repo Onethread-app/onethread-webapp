@@ -222,11 +222,11 @@ export const isTypingStopTrigger = async (
   channel.trigger('client-user-stop-typing', typingUser);
 };
 
-export const notificationSubscriber = (userId: string) => {
+export const notificationSubscriber = () => {
   const token =
     typeof window !== undefined &&
-    localStorage.getItem('tigrow_acc_id')
-      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+    localStorage.getItem('ot_access_id')
+      ? JSON.parse(localStorage.getItem('ot_access_id')!)
       : null;
 
   const user: User = store.getState().userReducer.user;
@@ -252,14 +252,14 @@ export const notificationSubscriber = (userId: string) => {
     });
   });
 
-  const channel = pusher.subscribe(`private-${userId}`);
+  const channel = pusher.subscribe(`private-${user._id}`);
 
   channel.bind('new-notification', (data: any) => {
+    console.log(data);
     store.dispatch(newNotification(data));
   });
   channel.bind('new-message', (data: IChat['message']) => {
-    const currentUserId = store.getState().userReducer.user._id;
-    const payload = { message: data, currentUserId };
+    const payload = { message: data, currentUserId: user._id };
     store.dispatch(newChat(payload));
   });
 };

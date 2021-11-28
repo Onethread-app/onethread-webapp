@@ -36,7 +36,7 @@ const Navbar = (props: INavbarInternalProps) => {
 
   useEffect(() => {
     props.getNotifications();
-    notificationSubscriber(props.user._id);
+    notificationSubscriber();
     props.fetchChats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -56,9 +56,8 @@ const Navbar = (props: INavbarInternalProps) => {
         />
       </div>
       <div
-        className={`pr5-ns bb flex justify-between items-center ${
-          isMobileOnly ? 'shadow-4' : ''
-        }`}
+        className={`pr5-ns bb flex justify-between items-center ${isMobileOnly ? 'shadow-4' : ''
+          }`}
         style={{
           height: '60px',
           borderColor: props.type === 'home' ? '#0F0C4E' : 'white',
@@ -90,8 +89,8 @@ const Navbar = (props: INavbarInternalProps) => {
                 props.type === 'company'
                   ? `/company/${props.uniqueCompanyName}/dashboard`
                   : match.url.includes('/notifications')
-                  ? `/${props.user.name}/notifications`
-                  : `/${props.user.name}`
+                    ? `/${props.user.name}/notifications`
+                    : `/${props.user.name}`
               }
             >
               <div
@@ -103,8 +102,8 @@ const Navbar = (props: INavbarInternalProps) => {
                 {props.type === 'company'
                   ? props.name
                   : match.url.includes('/notifications')
-                  ? 'Notifications'
-                  : ''}
+                    ? 'Notifications'
+                    : ''}
               </div>
             </NavLink>
           )}
