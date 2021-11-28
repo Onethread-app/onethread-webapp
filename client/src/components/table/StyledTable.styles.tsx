@@ -58,26 +58,37 @@ export const StyledColleagueTableData = styled(StyledTableData)`
 `;
 
 export const StyledTaskTableData = styled(StyledTableData)`
+  &:first-child {
+    width: 1rem;
+  }
+
   &:not(:first-child) {
     width: ${(props) => `${100 / (props.cols - 1)}%`};
   }
 
-  &:nth-child(2),
-  &:nth-child(3) {
+  &:nth-child(2) {
     display: -webkit-box;
     margin: auto 0;
     justify-content: start;
   }
 `;
 
-export const StyledUserTaskTableData = styled(StyledTableData)`
-  &:not(::first-child) {
-    width: ${(props) => `${100 / (props.cols - 1)}%`};
+export const StyledUserTaskTableData = styled(StyledDataContainer)`
+  padding: 0 0.5rem;
+
+  &:not(:first-child) {
+    width: ${(props) => `${100 / (props.cols - 2)}%`};
   }
-  &:nth-child(1) {
-    width: 24px;
+
+  &:first-child {
+    width: 1.5rem;
   }
-  &:nth-child(2),
+
+  &:nth-child(2) {
+    width: 24px !important;
+    justify-content: start;
+  }
+
   &:nth-child(3) {
     display: -webkit-box;
     margin: auto 0;

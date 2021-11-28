@@ -30,7 +30,6 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import TaskDialog from './TaskDialog';
 import { TaskTableColumns } from 'components/task/TaskTableColumns';
-import TasksTable from 'components/task/TasksTable';
 import TaskTableSkeleton from 'components/task/TaskTableSkeleton';
 import {
   CreatableItem,
@@ -51,6 +50,7 @@ import ExportTasks from 'components/export-tasks/ExportTasks';
 import TaskTableModals from 'components/task/TaskTableModals';
 import IndeterminateCheckbox from 'components/table/IndeterminateCheckbox';
 import { ITask } from 'stores/task/Reducer';
+import TemporaryTasksTable from './TemporaryTasksTable';
 
 interface Props {
   userTasks: any;
@@ -421,7 +421,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
                 </div>
               )
             ) : (
-              <TasksTable
+              <TemporaryTasksTable
                 getTableProps={getTableProps}
                 getTableBodyProps={getTableBodyProps}
                 headerGroups={headerGroups}

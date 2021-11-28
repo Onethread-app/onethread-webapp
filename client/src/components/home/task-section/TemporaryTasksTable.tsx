@@ -131,7 +131,8 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                   key={column.id}
                 >
                   {column.render('Header')}
-                  {column.id !== ('expander' || 'selection') && (
+                  {column.id !== 'expander' ||
+                  column.id !== 'selection' ? (
                     <SortIcon>
                       <Icon
                         icon="symbol-triangle-up"
@@ -156,7 +157,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                         }
                       />
                     </SortIcon>
-                  )}
+                  ) : null}
                 </StyledUserTaskTableData>
               ))}
               <MoreVertIcon fontSize="small" className="o-0" />
