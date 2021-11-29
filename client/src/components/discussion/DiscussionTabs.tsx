@@ -47,7 +47,7 @@ export const DiscussionTab = withStyles((theme: Theme) =>
   useEffect(() => {
     !isNil(tab) &&
       history.replace(
-        `${history.location.pathname}?ptab=3&discussion=${discussionId}&thread=${tab}`,
+        `${history.location.pathname}?ptab=2&discussion=${discussionId}&thread=${tab}`,
       );
   }, [tab]);
 

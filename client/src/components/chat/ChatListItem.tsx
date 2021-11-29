@@ -39,7 +39,7 @@ const ChatListItem = (props: IChatListItem) => {
     dispatch({ type: CHANGE_ROOM });
     history.push({
       pathname: `/company/${props.chat.room.company.uniqueName}/project/${props.chat.room.project._id}`,
-      search: `?ptab=3&discussion=${queries.roomId}&thread=0`,
+      search: `?ptab=2&discussion=${queries.roomId}&thread=0`,
     });
   };
 

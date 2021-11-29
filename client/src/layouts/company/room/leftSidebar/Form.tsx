@@ -149,7 +149,7 @@ const CreateFormComponent: React.FC<any> = (
     ) {
       dispatch({ type: CHANGE_ROOM });
       history.push(
-        `/company/${props.currentRoom.company.uniqueName}/project/${props.currentRoom.project}?ptab=3&discussion=${props.currentRoom._id}&thread=0`,
+        `/company/${props.currentRoom.company.uniqueName}/project/${props.currentRoom.project}?ptab=2&discussion=${props.currentRoom._id}&thread=0`,
       );
       successToaster('Discussion created successfully');
       setSubmitted(false);
