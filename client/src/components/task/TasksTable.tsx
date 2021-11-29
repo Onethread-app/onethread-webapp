@@ -14,13 +14,14 @@ import {
   StyledTableRow,
   StyledTableHeader,
   StyledTableBody,
-  StyledTaskTableData,
+  // StyledTaskTableData,
   SortIcon,
   StyledTableRowContainer,
   StyledSubRow,
   StyledSubRowData,
   StyledSubRowBody,
   CreatableItem,
+  StyledUserTaskTableData,
 } from '../table/StyledTable.styles';
 // import TaskTableOptions from './TaskTableOptions';
 
@@ -122,7 +123,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
           {headerGroups.map((headerGroup) => (
             <StyledTableRow {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <StyledTaskTableData
+                <StyledUserTaskTableData
                   cols={visibleColumns.length}
                   {...column.getHeaderProps(
                     column.getSortByToggleProps(),
@@ -130,7 +131,10 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                   key={column.id}
                 >
                   {column.render('Header')}
-                  {column.id !== 'expander' ? (
+                  {!(
+                    column.id === 'expander' ||
+                    column.id === 'selection'
+                  ) ? (
                     <SortIcon>
                       <Icon
                         icon="symbol-triangle-up"
@@ -156,7 +160,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                       />
                     </SortIcon>
                   ) : null}
-                </StyledTaskTableData>
+                </StyledUserTaskTableData>
               ))}
               <MoreVertIcon fontSize="small" className="o-0" />
             </StyledTableRow>
@@ -173,7 +177,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                 <StyledTableRow {...row.getRowProps()}>
                   {row.cells.map((cell) => {
                     return (
-                      <StyledTaskTableData
+                      <StyledUserTaskTableData
                         cols={visibleColumns.length}
                         title={
                           cell.column.id === 'name'
@@ -188,7 +192,7 @@ const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {
                         {...cell.getCellProps()}
                       >
                         {cell.render('Cell')}
-                      </StyledTaskTableData>
+                      </StyledUserTaskTableData>
                     );
                   })}
                 </StyledTableRow>

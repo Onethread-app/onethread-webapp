@@ -148,6 +148,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           const reqBody = {
             name: selected.value,
             companyId: company[0].value,
+            statusList: [{ name: 'Backlog', positionInBoard: 0 }],
           };
           const response = await tigrowApi.post(
             `projects/create-project`,

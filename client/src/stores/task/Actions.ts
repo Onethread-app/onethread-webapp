@@ -455,3 +455,13 @@ export const getTaskMembersFailure = (errorMessage: string) => ({
 export const clearCurrentTask = () => ({
   type: TaskActionType.CLEAR_CURRENT_TASK,
 });
+
+export const reloadTaskList = (type: string) => ({
+  type: TaskActionType.RELOAD_TASK_LIST,
+  payload: type,
+});
+
+export const filterTaskList = (payload) => ({
+  type: TaskActionType.FILTER_TASK_LIST,
+  payload,
+});

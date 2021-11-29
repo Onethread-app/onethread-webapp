@@ -10,21 +10,20 @@ import {
   useExpanded,
   useRowSelect,
 } from 'react-table';
+import { isEmpty, isNil } from 'lodash';
 
 import {
   deleteTask,
   getAllUserTasks,
+  reloadTaskList,
   taskMarkAsCompleted,
 } from 'stores/task/Actions';
+import { addItemToTrack } from 'stores/time-tracker/Action';
+import { ICurrentTrack } from 'stores/time-tracker/Reducer';
 
 import { TasksTableContext } from 'components/task/TasksTableContext';
 
-import {
-  Container,
-  Header,
-  Row,
-  SimpleTextButton,
-} from './TaskSection.styles';
+import { Container, Header } from './TaskSection.styles';
 
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -41,7 +40,6 @@ import {
 import { Dialog, Icon, Popover } from '@blueprintjs/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { AlignCenter } from 'components/UtilComponents';
-import { isEmpty, isNil } from 'lodash';
 import { ClickAwayListener } from '@material-ui/core';
 import TasksFilter from 'components/task/TasksFilter';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
@@ -49,8 +47,8 @@ import { DateRange } from '@blueprintjs/datetime';
 import ExportTasks from 'components/export-tasks/ExportTasks';
 import TaskTableModals from 'components/task/TaskTableModals';
 import IndeterminateCheckbox from 'components/table/IndeterminateCheckbox';
-import { ITask } from 'stores/task/Reducer';
-import TemporaryTasksTable from './TemporaryTasksTable';
+import TaskTableActions from 'components/task/TaskTableActions';
+import TasksTable from 'components/task/TasksTable';
 
 interface Props {
   userTasks: any;
@@ -64,6 +62,8 @@ interface ITaskSectionInternalProps extends Props {
   getAllUserTasks: () => void;
   taskMarkAsCompleted: (task) => void;
   deleteTask: (task) => void;
+  addItemToTrack: (item: ICurrentTrack) => void;
+  reloadTaskList: (type) => void;
 }
 
 const TaskSection = (props: ITaskSectionInternalProps) => {
@@ -92,9 +92,6 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     useState<boolean>(false);
   const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
     useState<boolean>(false);
-  const [selectedTask, setSelectedTask] = useState<ITask>(
-    {} as unknown as ITask,
-  );
 
   const data = useMemo(() => taskList, [taskList]);
   const columns = useMemo(() => TaskTableColumns, []);
@@ -170,33 +167,6 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   const handleSearchChange = useAsyncDebounce((e) => {
     setGlobalFilter(e.target.value || undefined);
   }, 500);
-
-  const handleMarkAsComplete = () => {
-    const task = selectedFlatRows.map((row) => ({
-      _id: row.original._id,
-      pid: row.original.project._id,
-    }));
-    props.taskMarkAsCompleted({
-      task,
-      companyId: selectedFlatRows[0].original.company._id,
-      type: 'user',
-    });
-  };
-
-  const handleTaskDelete = () => {
-    const taskList = selectedFlatRows.map((row) => row.original._id);
-    props.deleteTask({
-      taskList,
-      companyId: selectedFlatRows[0].original.company._id,
-      type: 'user',
-      projectId: selectedFlatRows[0].original.project._id,
-    });
-  };
-
-  const handleTaskEdit = () => {
-    setSelectedTask(selectedFlatRows[0].original);
-    setShowEditTaskDialog(true);
-  };
 
   const { globalFilter, pageSize, pageIndex } = state;
 
@@ -361,21 +331,23 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
                 <StyledFilterPopover>
                   <p className="bb">Customize Table</p>
 
-                  {allColumns.map(
-                    (column) =>
-                      column.id !== 'expander' && (
-                        <div key={column.id}>
-                          <label>
-                            <input
-                              type="checkbox"
-                              checked={column.isVisible}
-                              disabled={column.id === 'name'}
-                              {...column.getToggleHiddenProps()}
-                            />{' '}
-                            {column.Header}
-                          </label>
-                        </div>
-                      ),
+                  {allColumns.map((column) =>
+                    !(
+                      column.id === 'expander' ||
+                      column.id === 'selection'
+                    ) ? (
+                      <div key={column.id}>
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={column.isVisible}
+                            disabled={column.id === 'name'}
+                            {...column.getToggleHiddenProps()}
+                          />{' '}
+                          {column.Header}
+                        </label>
+                      </div>
+                    ) : null,
                   )}
                 </StyledFilterPopover>
               }
@@ -383,26 +355,12 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
             />
           </SortAndFilter>
         </HeaderContainer>
-        <Row>
-          <SimpleTextButton
-            disabled={selectedFlatRows.length === 0}
-            onClick={() => handleMarkAsComplete()}
-          >
-            Mark As Complete
-          </SimpleTextButton>
-          <SimpleTextButton
-            disabled={selectedFlatRows.length !== 1}
-            onClick={() => handleTaskEdit()}
-          >
-            Edit
-          </SimpleTextButton>
-          <SimpleTextButton
-            disabled={selectedFlatRows.length === 0}
-            onClick={() => handleTaskDelete()}
-          >
-            Delete
-          </SimpleTextButton>
-        </Row>
+        <TaskTableActions
+          setShowDeleteTaskDialog={setShowDeleteTaskDialog}
+          selectedTask={selectedFlatRows}
+          type="user"
+          setShowEditTaskDialog={setShowEditTaskDialog}
+        />
         {expand ? (
           <>
             {taskList.length === 0 ? (
@@ -421,7 +379,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
                 </div>
               )
             ) : (
-              <TemporaryTasksTable
+              <TasksTable
                 getTableProps={getTableProps}
                 getTableBodyProps={getTableBodyProps}
                 headerGroups={headerGroups}
@@ -455,7 +413,8 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
         setShowEditTaskDialog={setShowEditTaskDialog}
         showDeleteTaskDialog={showDeleteTaskDialog}
         showEditTaskDialog={showEditTaskDialog}
-        task={selectedTask}
+        taskList={selectedFlatRows}
+        type="user"
       />
     </TasksTableContext.Provider>
   );
@@ -475,4 +434,6 @@ export default connect(mapStateToProps, {
   getAllUserTasks,
   taskMarkAsCompleted,
   deleteTask,
+  addItemToTrack,
+  reloadTaskList,
 })(TaskSection);

@@ -444,16 +444,15 @@ export function* deleteTaskAsync({ payload }: any) {
     );
     if (response.status === 200) {
       yield put(deleteTaskSuccess());
-      if (type === 'user') {
-        yield put(getAllUserTasks());
-      } else if (type === 'project') {
-        yield put(getAllProjectTasks());
-      } else if (type === 'company') {
-        yield put(getAllCompanyTasks());
-      } else if (type === 'task') {
+      if (type === 'task') {
         yield put(
           getSelectedTaskDetails({ taskId, companyId, projectId }),
         );
+      } else {
+        yield put({
+          type: TaskActionType.FILTER_TASK_LIST,
+          payload: taskList,
+        });
       }
     }
   } catch (error) {
@@ -543,16 +542,26 @@ export function* taskMarkAsCompleted({ payload }: any) {
         headers,
       );
       yield put(taskMarkAsCompletedSuccess());
-      if (type === 'user') {
-        yield put(getAllUserTasks());
-      } else if (type === 'company') {
-        yield put(getAllCompanyTasks());
-      } else if (type === 'project') {
-        yield put(getAllProjectTasks());
+      if (type !== 'project') {
+        const taskList = task.map((t) => t._id);
+        yield put({
+          type: TaskActionType.FILTER_TASK_LIST,
+          payload: taskList,
+        });
       }
     }
   } catch (error) {
     yield put(taskMarkAsCompletedFailure(returnErrorText(error)));
+  }
+}
+
+export function* reloadTaskList(action) {
+  if (action.payload === 'user') {
+    yield put(getAllUserTasks());
+  } else if (action.payload === 'company') {
+    yield put(getAllCompanyTasks());
+  } else if (action.payload === 'project') {
+    yield put(getAllProjectTasks());
   }
 }
 
@@ -689,6 +698,10 @@ export function* onTaskMarkAsCompleted() {
   );
 }
 
+export function* onReloadTaskList() {
+  yield takeLatest(TaskActionType.RELOAD_TASK_LIST, reloadTaskList);
+}
+
 export default function* taskSaga() {
   yield all([
     call(onCreateBoard),
@@ -713,5 +726,6 @@ export default function* taskSaga() {
     call(onUpdateTaskStatus),
     call(onCreateSubTask),
     call(onTaskMarkAsCompleted),
+    call(onReloadTaskList),
   ]);
 }

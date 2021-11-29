@@ -10,6 +10,7 @@ import {
   useAsyncDebounce,
   usePagination,
   useExpanded,
+  useRowSelect,
 } from 'react-table';
 
 import { TasksTableContext } from './TasksTableContext';
@@ -45,6 +46,9 @@ import CalendarView, {
 } from 'components/calendar/CalendarView';
 import ColumnsContainer from 'components/column/ColumnsContainer';
 import ExportTasks from 'components/export-tasks/ExportTasks';
+import IndeterminateCheckbox from 'components/table/IndeterminateCheckbox';
+import TaskTableModals from './TaskTableModals';
+import TaskTableActions from './TaskTableActions';
 
 interface ICompanyTasks {
   companyTaskList: ITask[];
@@ -63,6 +67,11 @@ const CompanyTasks = (props: ICompanyTasks) => {
     uniqueCompanyName,
     gettingCompanyDetails,
   } = props;
+
+  const [showEditTaskDialog, setShowEditTaskDialog] =
+    useState<boolean>(false);
+  const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
+    useState<boolean>(false);
   const [openTaskDialog, setOpenTaskDialog] =
     useState<boolean>(false);
   const [loadingData, setLoadingData] = useState(true);
@@ -109,6 +118,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
     page,
     setPageSize,
     gotoPage,
+    selectedFlatRows,
   } = useTable(
     {
       columns,
@@ -129,6 +139,31 @@ const CompanyTasks = (props: ICompanyTasks) => {
     useSortBy,
     useExpanded,
     usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: 'selection',
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox
+                onClick={(e) => e.stopPropagation()}
+                {...getToggleAllRowsSelectedProps()}
+              />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox
+                onClick={(e) => e.stopPropagation()}
+                {...row.getToggleRowSelectedProps()}
+              />
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    },
   );
 
   const { globalFilter, pageSize, pageIndex } = state;
@@ -327,21 +362,23 @@ const CompanyTasks = (props: ICompanyTasks) => {
                 <StyledFilterPopover>
                   <p className="bb">Customize Table</p>
 
-                  {allColumns.map(
-                    (column) =>
-                      column.id !== 'expander' && (
-                        <div key={column.id}>
-                          <label>
-                            <input
-                              type="checkbox"
-                              checked={column.isVisible}
-                              disabled={column.id === 'name'}
-                              {...column.getToggleHiddenProps()}
-                            />{' '}
-                            {column.Header}
-                          </label>
-                        </div>
-                      ),
+                  {allColumns.map((column) =>
+                    !(
+                      column.id === 'expander' ||
+                      column.id === 'selection'
+                    ) ? (
+                      <div key={column.id}>
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={column.isVisible}
+                            disabled={column.id === 'name'}
+                            {...column.getToggleHiddenProps()}
+                          />{' '}
+                          {column.Header}
+                        </label>
+                      </div>
+                    ) : null,
                   )}
                 </StyledFilterPopover>
               }
@@ -349,6 +386,12 @@ const CompanyTasks = (props: ICompanyTasks) => {
             />
           </SortAndFilter>
         </HeaderContainer>
+        <TaskTableActions
+          setShowDeleteTaskDialog={setShowDeleteTaskDialog}
+          selectedTask={selectedFlatRows}
+          type="company"
+          setShowEditTaskDialog={setShowEditTaskDialog}
+        />
         {companyTaskList.length === 0 ? (
           loadingData ? (
             <TaskTableSkeleton />
@@ -406,6 +449,14 @@ const CompanyTasks = (props: ICompanyTasks) => {
           </Dialog>
         ) : null}
       </Container>
+      <TaskTableModals
+        setShowDeleteTaskDialog={setShowDeleteTaskDialog}
+        setShowEditTaskDialog={setShowEditTaskDialog}
+        showDeleteTaskDialog={showDeleteTaskDialog}
+        showEditTaskDialog={showEditTaskDialog}
+        taskList={selectedFlatRows}
+        type="company"
+      />
     </TasksTableContext.Provider>
   );
 };

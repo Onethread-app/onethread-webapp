@@ -14,8 +14,11 @@ interface Props {
   setShowDeleteTaskDialog: React.Dispatch<
     React.SetStateAction<boolean>
   >;
-  task: ITask;
-  deleteTask: ({ projectId, companyId, type, taskList }) => void;
+  taskList: {
+    original: ITask;
+  }[];
+  deleteTask: (task) => void;
+  type: string;
 }
 
 const TaskTableModals = (props: Props) => {
@@ -24,17 +27,18 @@ const TaskTableModals = (props: Props) => {
     showEditTaskDialog,
     setShowDeleteTaskDialog,
     setShowEditTaskDialog,
-    task,
+    taskList,
+    type,
   } = props;
 
-  const handleDeleteTask = () => {
+  const handleTaskDelete = () => {
+    const tasks = taskList.map((row) => row.original._id);
     props.deleteTask({
-      projectId: task.project._id,
-      companyId: task.company._id,
-      type: 'user',
-      taskList: [{ _id: task._id, pid: task.project._id }],
+      taskList: tasks,
+      companyId: taskList[0].original.company._id,
+      type,
+      projectId: taskList[0].original.project._id,
     });
-    setShowDeleteTaskDialog(false);
   };
 
   return (
@@ -48,7 +52,7 @@ const TaskTableModals = (props: Props) => {
           className="h-auto w-auto pb0"
         >
           <EditTaskDialog
-            task={task}
+            task={taskList[0].original}
             setShowDialog={setShowEditTaskDialog}
           />
         </Dialog>
@@ -64,12 +68,17 @@ const TaskTableModals = (props: Props) => {
           <Container>
             <div>
               This will delete all the subtasks, files and discussions
-              of this task. Do you want to still delete this task?
+              of {taskList.length > 1 ? 'these tasks' : 'this task'}.
+              Do you want to still delete{' '}
+              {taskList.length > 1 ? 'these tasks' : 'this task'}?
             </div>
             <div className="flex w-100 justify-center mt3">
               <Button
                 type="danger"
-                onClick={handleDeleteTask}
+                onClick={() => {
+                  handleTaskDelete();
+                  props.setShowDeleteTaskDialog(false);
+                }}
                 className="mr2 pointer"
               >
                 Delete

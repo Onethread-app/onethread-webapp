@@ -177,9 +177,9 @@ const ModalContainer = styled.div`
 export const Row = styled.div`
   display: flex;
   column-gap: 18px;
-  padding: 0.5rem 0.5rem 0;
+  padding: 1rem 0 0rem 0.5rem;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
 `;
 
 export const SimpleTextButton = styled.button`
@@ -194,8 +194,13 @@ export const SimpleTextButton = styled.button`
   font-weight: normal;
   font-size: 12px;
   line-height: 18px;
-
   color: #5a5a5a;
+  display: flex;
+  align-items: center;
+
+  :focus {
+    outline: none;
+  }
 
   :disabled {
     color: #bbbbbb;
