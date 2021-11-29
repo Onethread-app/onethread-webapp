@@ -8,7 +8,7 @@ import { updateTask } from 'stores/task/Actions';
 import { priorityColor } from 'stores/UtilsActions';
 
 interface IPriorityEditorProps {
-  updateTask: (task: ITask) => any;
+  updateTask: (task) => any;
   colorCode: Number;
   updatingTask: boolean;
   currentTask: ITask;

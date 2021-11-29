@@ -22,7 +22,6 @@ import {
   StyledSubRowBody,
   CreatableItem,
 } from '../table/StyledTable.styles';
-import { ITask } from 'stores/task/Reducer';
 // import TaskTableOptions from './TaskTableOptions';
 
 interface ITasksTable {
@@ -49,7 +48,7 @@ interface ITasksTableFunctions {
     type,
     taskList,
   }) => void;
-  updateTask: (task: ITask) => void;
+  updateTask: (task) => void;
 }
 
 const TasksTable = (props: ITasksTable & ITasksTableFunctions) => {

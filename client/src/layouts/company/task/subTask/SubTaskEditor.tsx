@@ -95,13 +95,11 @@ export const SubTaskCreatorComponent = (
 
   return (
     <div className="mb3 pa3">
-      <h3 className="tc">Create Subtask</h3>
+      <h3 className="tc">
+        {props.subtask?._id ? 'Update' : 'Create'} Subtask
+      </h3>
       <Form
         onSubmit={onSubmit}
-        initialValues={{
-          subtaskTitle: props.subtask ? props.subtask.name : '',
-          subtaskDesc: props.subtask ? props.subtask.description : '',
-        }}
         render={({
           handleSubmit,
           form,
@@ -117,6 +115,7 @@ export const SubTaskCreatorComponent = (
             <div className="pt2">
               <Field<string>
                 name="subtaskTitle"
+                defaultValue={props.subtask?.name}
                 validate={composeValidators(required, maxValue(100))}
                 render={({ input, meta }) => (
                   <div>
@@ -146,6 +145,7 @@ export const SubTaskCreatorComponent = (
               />
               <Field<string>
                 name="subtaskDesc"
+                defaultValue={props.subtask?.description}
                 validate={composeValidators(maxValue(250))}
                 render={({ input, meta }) => (
                   <div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -58,7 +58,7 @@ export const SubTaskViewPageComponent = (
 ) => {
   const { t } = useTranslation();
   const [showSubtaskForm, setShowSubTaskForm] = useState(false);
-  const [subtask, setsubtask] = useState(Object);
+  const [subtask, setSubtask] = useState(Object);
   const [membersPopover, setMembersPopover] = useState({
     _id: '',
     open: false,
@@ -68,8 +68,6 @@ export const SubTaskViewPageComponent = (
   //   _id: '',
   //   open: false,
   // });
-
-  useEffect(() => {}, []);
 
   const toggleMembersPopover = (id: string) => {
     setMembersPopover({ _id: id, open: !membersPopover.open });
@@ -114,7 +112,10 @@ export const SubTaskViewPageComponent = (
               icon={IconNames.PLUS}
               iconSize={20}
               className="pointer"
-              onClick={() => setShowSubTaskForm(true)}
+              onClick={() => {
+                setSubtask(null);
+                setShowSubTaskForm(true);
+              }}
             />
           </div>
           <div className="flex justify-end">
@@ -144,7 +145,7 @@ export const SubTaskViewPageComponent = (
               <SubTaskCreator
                 showSubtaskForm={showSubtaskForm}
                 subtask={subtask}
-                setsubtask={setsubtask}
+                setsubtask={setSubtask}
                 setShowSubTaskForm={(e) =>
                   setShowSubTaskForm(!showSubtaskForm)
                 }
@@ -166,7 +167,7 @@ export const SubTaskViewPageComponent = (
                   />
                   <div className="mt3 mb3">
                     {props.subTaskList.map((subTask: ITask) => (
-                      <Accordion defaultExpanded>
+                      <Accordion defaultExpanded key={subTask._id}>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-label="Expand"
@@ -291,7 +292,7 @@ export const SubTaskViewPageComponent = (
                                   }}
                                   icon="edit"
                                   onClick={async () => {
-                                    setsubtask(subTask);
+                                    setSubtask(subTask);
                                     setShowSubTaskForm(true);
                                   }}
                                 />
