@@ -60,6 +60,11 @@ export const List = styled(NavLink)`
   }
 `;
 
+export const DiscussionListContainer = styled.div`
+  overflow-y: auto;
+  max-height: 60vh;
+`;
+
 export const DiscussionViewContainer = styled.div`
   width: 100%;
   background: #ffffff;

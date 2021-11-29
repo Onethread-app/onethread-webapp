@@ -127,14 +127,16 @@ const CreateFormComponent: React.FC<any> = (
   }, []);
 
   useEffect(() => {
-    const optionsCompany = props.companies.map((company) => {
-      return {
-        value: company.company._id,
-        label: company.company.name,
-        uniqueName: company.company.uniqueName,
-        isSubscribed: company.company.isSubscribed,
-      };
-    });
+    const optionsCompany = props.companies
+      .filter((c: ICompanyByUser) => c.company.isSubscribed === true)
+      .map((company) => {
+        return {
+          value: company.company._id,
+          label: company.company.name,
+          uniqueName: company.company.uniqueName,
+          isSubscribed: company.company.isSubscribed,
+        };
+      });
     setCompanyOptions(optionsCompany);
   }, [props.companies]);
 
@@ -146,11 +148,9 @@ const CreateFormComponent: React.FC<any> = (
       props.errorOnRoomCreate === ''
     ) {
       dispatch({ type: CHANGE_ROOM });
-      if (props.currentProject?._id) {
-        history.push(
-          `/company/${props.currentRoom.company.uniqueName}/project/${props.currentRoom.project}?tab=3&discussion=${props.currentRoom._id}`,
-        );
-      }
+      history.push(
+        `/company/${props.currentRoom.company.uniqueName}/project/${props.currentRoom.project}?ptab=3&discussion=${props.currentRoom._id}&thread=0`,
+      );
       successToaster('Discussion created successfully');
       setSubmitted(false);
       props.setShowDialog(false);
