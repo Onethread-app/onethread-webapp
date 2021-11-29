@@ -222,6 +222,7 @@ async function createCompany(index, mapping, model) {
         bulk.push({
           mongo_id: data._id.toString(),
           name: data.name,
+          logo: data.logo,
         });
       });
 
@@ -361,6 +362,41 @@ function setDocument(indexName, indexType, document) {
   });
 }
 
+async function updateDocument(indexName, indexType, document, id) {
+  // await esclient.updateByQuery({
+  //   index: indexName,
+  //   type: indexType,
+  //   body: {
+  //     query: { term: { mongo_id: id } },
+  //     script: {
+  //       source: "ctx._source.logo = 'Hello mello'",
+  //       lang: 'painless',
+  //       params: {
+  //         logo: document.logo,
+  //       },
+  //     },
+  //   },
+  //   refresh: 'true',
+  // });
+  const response = await search(indexName, indexType, {
+    query: {
+      bool: { must: [{ term: { mongo_id: { value: id } } }] },
+    },
+  });
+  if (response.hits.hits.length > 0) {
+    const data = response.hits.hits.map((r) => r._source)[0];
+    await deleteDocument(indexName, indexType, {
+      query: { match: { mongo_id: id } },
+    });
+    await esclient.index({
+      index: indexName,
+      type: indexType,
+      body: { ...data, ...document },
+      refresh: 'true',
+    });
+  }
+}
+
 function search(indexName, indexType, body) {
   return esclient.search({
     index: indexName,
@@ -494,6 +530,7 @@ const companyMappnig = {
     properties: {
       mongo_id: { type: 'text' },
       name: { type: 'text' },
+      logo: { type: 'text' },
     },
   },
 };
@@ -526,6 +563,7 @@ module.exports = {
   labelMapping,
   storeLabelInElk,
   deleteLabelFromELKByMongoId,
+  updateDocument,
 };
 
 // function createMessages(index,model,mapping, structure){
