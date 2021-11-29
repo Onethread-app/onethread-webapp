@@ -19,6 +19,11 @@ const fileName = (userID, name) => {
   return userID + '_' + Date.now() + '_' + name;
 };
 
+const {
+  updateDocument,
+  companyIndex,
+} = require('../services/elastic.services');
+
 const checkMimetype = [
   'application/zip',
   'application/x-rar-compressed',
@@ -148,16 +153,19 @@ const companyLogo = async (req, res, next) => {
           logger.info('File Link successfully save to Database');
           if (data.imageType === 'company-logo') {
             await Company.findOneAndUpdate(
-              {
-                _id: companyID,
-              },
-              {
-                $set: { logo: data.link },
-              },
+              { _id: companyID },
+              { $set: { logo: data.link } },
               {
                 new: true,
                 upsert: true,
               },
+            );
+
+            await updateDocument(
+              companyIndex,
+              '_doc',
+              { logo: data.link },
+              companyID,
             );
 
             return sendJSONresponse(res, 200, data);
