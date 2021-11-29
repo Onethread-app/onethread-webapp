@@ -31,7 +31,7 @@ import SubtaskMemberPopover from 'components/subtask/SubtaskMemberPopover';
 
 interface ISubTaskViewInternalProps {
   subTaskList: ITask[];
-  company?: ICompany;
+  company: ICompany;
   currentTask: ITask;
   updateTask: (payload) => void;
   deleteTask: (payload: {
@@ -126,7 +126,7 @@ export const SubTaskViewPageComponent = (
                     (list) => list.isCompleted === true,
                   ).length /
                     props.subTaskList.length) *
-                  100,
+                    100,
                 )}
                 %
               </h1>
@@ -205,7 +205,7 @@ export const SubTaskViewPageComponent = (
                               <div
                                 className={
                                   subTask.members &&
-                                    subTask.members?.length > 0
+                                  subTask.members?.length > 0
                                     ? 'mr3 flex'
                                     : 'dn'
                                 }
@@ -218,15 +218,18 @@ export const SubTaskViewPageComponent = (
                                       deleteSubTaskMember={
                                         props.deleteMember
                                       }
-                                      subTaskId={subTask._id}
+                                      id={subMember._id}
+                                      subTask={subTask}
                                       deletingMember={
                                         props.deletingMember
                                       }
                                       errorOnDeletingMember={
                                         props.errorOnDeletingMember
                                       }
+                                      member={
+                                        subMember.assignedPerson
+                                      }
                                       company={props.company}
-                                      member={subMember.assignedPerson}
                                     />
                                   ))}
                               </div>
@@ -235,16 +238,20 @@ export const SubTaskViewPageComponent = (
                                   <Popover
                                     isOpen={
                                       membersPopover._id ===
-                                      subTask._id &&
+                                        subTask._id &&
                                       membersPopover.open
                                     }
                                     position="right"
-                                    popoverClassName='br3'
+                                    popoverClassName="br3"
                                     content={
                                       <div className="pa3 br3 cf bg-white">
                                         <div>
                                           <SubtaskMemberPopover
-                                            subtask={subTask} setMembersPopover={setMembersPopover} />
+                                            subtask={subTask}
+                                            setMembersPopover={
+                                              setMembersPopover
+                                            }
+                                          />
                                         </div>
                                       </div>
                                     }

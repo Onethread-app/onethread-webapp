@@ -17,6 +17,7 @@ import {
   addTaskMemberFailure,
 } from './Action';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
+import { getSelectedTaskDetails } from 'stores/task/Actions';
 
 const takeLatest: any = Eff.takeLatest;
 
@@ -62,6 +63,13 @@ export function* addTaskMemberAsync({ payload }: any) {
         }
       });
       yield put(addTaskMemberSuccess(responseData));
+      yield put(
+        getSelectedTaskDetails({
+          taskId,
+          projectId,
+          companyId,
+        }),
+      );
     }
     return addTaskMemberFailure(response);
   } catch (error) {
@@ -97,6 +105,9 @@ export function* deleteMemberAsync({ payload }: any) {
       );
       if (response.status === 200) {
         yield put(deleteMemberSuccess(assignedMemberId));
+        yield put(
+          getSelectedTaskDetails({ taskId, projectId, companyId }),
+        );
       }
     }
   } catch (error) {
