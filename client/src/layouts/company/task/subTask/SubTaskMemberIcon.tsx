@@ -2,26 +2,29 @@ import { useState } from 'react';
 import { Popover } from '@blueprintjs/core/lib/esm/components/popover/popover';
 import { Tooltip } from '@blueprintjs/core/lib/esm/components/tooltip/tooltip';
 
-import { ICompany } from 'stores/company/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
-import { IAccount } from 'stores/task/Reducer';
+import { IAccount, ITask } from 'stores/task/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 
 interface ISubtaskMemberIcon {
   member: IAccount;
-  subTaskId?: string;
-  company?: ICompany;
+  subTask: ITask;
+  company: ICompany;
   deleteSubTaskMember: (payload) => void;
   deletingMember: boolean;
   errorOnDeletingMember: string;
+  id: string;
 }
 
 const SubTaskMemberIcon = (props: ISubtaskMemberIcon) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleRemove = async () => {
-    if (props.subTaskId) {
+    if (props.subTask._id) {
       const payload = {
-        _id: props.subTaskId,
-        memberId: props.member._id,
+        taskId: props.subTask._id,
+        assignedMemberId: props.id,
+        projectId: props.subTask.project._id,
+        companyId: props.subTask.company._id,
       };
       await props.deleteSubTaskMember(payload);
       if (

@@ -7,10 +7,17 @@ import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 import { ITaskMember } from 'stores/taskMembers/Reducer';
 import { deleteMember } from 'stores/taskMembers/Action';
+import { ITask } from 'stores/task/Reducer';
 
 interface IAssignedMemeberListEditorComponentProps {
   assignMemberId: ITaskMember['_id'];
-  deleteMember: (assignMemberId: ITaskMember['_id']) => void;
+  deleteMember: ({
+    taskId,
+    companyId,
+    projectId,
+    assignedMemberId,
+  }) => void;
+  task: ITask;
 }
 
 export const AssignedMemeberListEditorComponent = (
@@ -35,7 +42,12 @@ export const AssignedMemeberListEditorComponent = (
               }}
               type="submit"
               onClick={async () => {
-                await props.deleteMember(props.assignMemberId);
+                props.deleteMember({
+                  taskId: props.task._id,
+                  assignedMemberId: props.assignMemberId,
+                  projectId: props.task.project._id,
+                  companyId: props.task.company._id,
+                });
                 setDeletePopover(false);
               }}
             >
@@ -51,7 +63,7 @@ export const AssignedMemeberListEditorComponent = (
               }}
               onClick={() => setDeletePopover(false)}
             >
-              No, Keep
+              No, Keep it
             </Button>
           </div>
         </div>
