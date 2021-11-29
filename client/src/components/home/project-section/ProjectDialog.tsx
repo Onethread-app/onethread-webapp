@@ -224,14 +224,16 @@ const Index = (props: IProps) => {
 
   useEffect(() => {
     if (props.companies.length > 0) {
-      const gettingOptionsFromCompanies = props.companies.map(
-        (c: ICompanyByUser) => ({
+      const gettingOptionsFromCompanies = props.companies
+        .filter(
+          (c: ICompanyByUser) => c.company.isSubscribed === true,
+        )
+        .map((c: ICompanyByUser) => ({
           value: c.company._id,
           label: c.company.name,
           uniqueName: c.company.uniqueName,
           isSubscribed: c.company.isSubscribed,
-        }),
-      );
+        }));
       setOptions(gettingOptionsFromCompanies);
     }
   }, [props.companies]);

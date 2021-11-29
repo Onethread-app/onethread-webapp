@@ -116,7 +116,8 @@ const Index = (props: IProps) => {
       const filteredOptionsFromCompanies = props.companies
         .filter(
           (c: ICompanyByUser) =>
-            c.role === 'superAdmin' || c.role === 'admin',
+            (c.role === 'superAdmin' || c.role === 'admin') &&
+            c.company.isSubscribed === true,
         )
         .map((c: ICompanyByUser) => ({
           value: c.company._id,

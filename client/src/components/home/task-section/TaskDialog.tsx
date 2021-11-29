@@ -23,6 +23,9 @@ import { priorityColor, formTokenConfig } from 'stores/UtilsActions';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { createProjectInCompanySuccess } from 'stores/project/Actions';
 import { IProject } from 'stores/project/Reducer';
+import { ITaskStatus } from 'stores/task/Reducer';
+import { ICompanyByUser } from 'stores/user/Reducer';
+
 import {
   checkError,
   composeValidators,
@@ -44,7 +47,6 @@ import {
   successToaster,
 } from 'components/toast/Toaster';
 import { SmallTextAvatar } from 'components/avatar/TextAvatar';
-import { ITaskStatus } from 'stores/task/Reducer';
 
 interface ICreateTaskDialogProps {
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -256,14 +258,16 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   };
 
   useEffect(() => {
-    const optionsCompany = props.companies.map((company) => {
-      return {
-        value: company.company._id,
-        label: company.company.name,
-        uniqueName: company.company.uniqueName,
-        isSubscribed: company.company.isSubscribed,
-      };
-    });
+    const optionsCompany = props.companies
+      .filter((c: ICompanyByUser) => c.company.isSubscribed === true)
+      .map((company) => {
+        return {
+          value: company.company._id,
+          label: company.company.name,
+          uniqueName: company.company.uniqueName,
+          isSubscribed: company.company.isSubscribed,
+        };
+      });
     setCompanyOptions(optionsCompany);
   }, [props.companies]);
 
