@@ -7,7 +7,6 @@ import {
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
 import { TaskActionType } from './Types';
-import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
 import {
   createBoardFailure,
@@ -367,7 +366,6 @@ export function* updateTask({ payload }: any) {
       );
     }
   } catch (error) {
-    errorMessgeHandler(error);
     yield put(updateTaskFailure(returnErrorText(error)));
   }
 }

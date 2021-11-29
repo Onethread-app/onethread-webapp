@@ -8,7 +8,6 @@ import { IconNames } from '@blueprintjs/icons';
 import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
-import { ITask } from 'stores/task/Reducer';
 import { updateTask } from 'stores/task/Actions';
 import { priorityColor } from 'stores/UtilsActions';
 
@@ -16,7 +15,7 @@ import { SubmitError } from 'components/final-form/SubmitError';
 
 interface IPriorityEditorProps {
   setPriorityPopover: (val: boolean) => void;
-  updateTask: (task: ITask) => any;
+  updateTask: (task) => any;
   colorCode: Number;
   updatingTask: boolean;
 }
