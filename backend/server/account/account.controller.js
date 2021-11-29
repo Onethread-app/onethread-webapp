@@ -771,9 +771,13 @@ const userTaskList = async (req, res, next) => {
       return task.taskId !== null && task.taskId.isCompleted !== true;
     });
 
+    let uniqueTaskIdMapper = {};
     const response = [];
     await Promise.all(
       filteredTask.map(async (ft) => {
+        const _id = ft.taskId._id.toString();
+        if(uniqueTaskIdMapper[_id]) return false;
+        uniqueTaskIdMapper[_id] = true;
         const members = await getAssignedMembers(ft.taskId._id);
         const statusList = await getAllStatusInProject(
           ft.taskId.project._id,
