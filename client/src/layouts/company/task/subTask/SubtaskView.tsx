@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -16,7 +16,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-// import { ISubTask } from 'stores/subtask/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { ITask } from 'stores/task/Reducer';
 import { deleteTask, updateTask } from 'stores/task/Actions';
@@ -25,9 +24,10 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { Loading } from 'components/Loading';
 import SubTaskMemberIcon from './SubTaskMemberIcon';
 import { SubTaskCreator, SubTaskDelete } from './SubTaskEditor';
-import AddSubtaskMember from './AddMember';
+// import AddSubtaskMember from './AddMember';
 import DueDateEditor from './DueDateEditor';
 import { deleteMember } from 'stores/taskMembers/Action';
+import SubtaskMemberPopover from 'components/subtask/SubtaskMemberPopover';
 
 interface ISubTaskViewInternalProps {
   subTaskList: ITask[];
@@ -68,8 +68,6 @@ export const SubTaskViewPageComponent = (
   //   _id: '',
   //   open: false,
   // });
-
-  useEffect(() => {}, []);
 
   const toggleMembersPopover = (id: string) => {
     setMembersPopover({ _id: id, open: !membersPopover.open });
@@ -125,7 +123,7 @@ export const SubTaskViewPageComponent = (
                     (list) => list.isCompleted === true,
                   ).length /
                     props.subTaskList.length) *
-                    100,
+                  100,
                 )}
                 %
               </h1>
@@ -166,7 +164,7 @@ export const SubTaskViewPageComponent = (
                   />
                   <div className="mt3 mb3">
                     {props.subTaskList.map((subTask: ITask) => (
-                      <Accordion defaultExpanded>
+                      <Accordion defaultExpanded key={subTask._id}>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-label="Expand"
@@ -204,7 +202,7 @@ export const SubTaskViewPageComponent = (
                               <div
                                 className={
                                   subTask.members &&
-                                  subTask.members?.length > 0
+                                    subTask.members?.length > 0
                                     ? 'mr3 flex'
                                     : 'dn'
                                 }
@@ -225,7 +223,7 @@ export const SubTaskViewPageComponent = (
                                         props.errorOnDeletingMember
                                       }
                                       company={props.company}
-                                      member={subMember.account}
+                                      member={subMember.assignedPerson}
                                     />
                                   ))}
                               </div>
@@ -234,23 +232,16 @@ export const SubTaskViewPageComponent = (
                                   <Popover
                                     isOpen={
                                       membersPopover._id ===
-                                        subTask._id &&
+                                      subTask._id &&
                                       membersPopover.open
                                     }
                                     position="right"
+                                    popoverClassName='br3'
                                     content={
-                                      <div className="pa3 cf bg-white">
+                                      <div className="pa3 br3 cf bg-white">
                                         <div>
-                                          <AddSubtaskMember
-                                            setMembersPopover={
-                                              setMembersPopover
-                                            }
-                                            id={
-                                              subTask._id
-                                                ? subTask._id
-                                                : ''
-                                            }
-                                          />
+                                          <SubtaskMemberPopover
+                                            subtask={subTask} setMembersPopover={setMembersPopover} />
                                         </div>
                                       </div>
                                     }
@@ -262,7 +253,8 @@ export const SubTaskViewPageComponent = (
                                           color: 'lightsteelblue',
                                         }}
                                         icon="people"
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                          e.stopPropagation();
                                           toggleMembersPopover(
                                             subTask._id
                                               ? subTask._id

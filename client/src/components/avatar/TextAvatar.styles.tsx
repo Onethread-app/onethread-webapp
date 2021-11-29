@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 export const NameAvatar = styled.div`
-  width: 40px;
-  height: 40px;
-  background: #9840dd;
+  width: ${props => props.small ? '24px' : '40px'} ;
+  height: ${props => props.small ? '24px' : '40px'} ;
+  background: ${props => props.small ? '#34B3E9' : '#9840dd'} ;
   color: #fff;
-  border-radius: 5px;
+  border-radius: ${props => props.small ? '50%' : '5px'} ;
   display: flex;
   justify-content: center;
   align-items: center;

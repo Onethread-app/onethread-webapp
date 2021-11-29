@@ -8,12 +8,13 @@ import {
 
 interface ITextAvatarProps {
   name: string;
+  small?: boolean;
 }
 
 const TextAvatar = (props: ITextAvatarProps) => {
-  const { name } = props;
+  const { name, small } = props;
 
-  return <NameAvatar>{name.slice(0, 1)}</NameAvatar>;
+  return <NameAvatar small={small}>{name.slice(0, 1)}</NameAvatar>;
 };
 
 export const TextAvatarSkeleton = () => (
@@ -34,3 +35,9 @@ export const CompanyAvatar = (props: { name; onClick }) => {
 
   return <CompanyNameAvatar>{name.slice(0, 1)}</CompanyNameAvatar>;
 };
+
+
+TextAvatar.defaultProps = {
+  small: false,
+  name: '',
+}
