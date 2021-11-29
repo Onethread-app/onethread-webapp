@@ -22,6 +22,8 @@ const TaskLabel = (props: ITaskLabelProps) => {
   const [suggestedLabels, setSuggestedLabels] = useState<any>([]);
   const [allLabels, setAllLabels] = useState<any>([]);
   const [deleteIsLoading, setDeleteIsLoading] = useState(false);
+  const [showLabelPopover, setShowLabelPopover] =
+    useState<boolean>(false);
 
   const taskId = props.currentTask._id;
 
@@ -131,6 +133,8 @@ const TaskLabel = (props: ITaskLabelProps) => {
         <LabelHeader>Label:</LabelHeader>
         <Popover
           minimal
+          isOpen={showLabelPopover}
+          onClose={() => setShowLabelPopover(false)}
           interactionKind="click"
           hasBackdrop={true}
           canEscapeKeyClose={true}
@@ -141,10 +145,11 @@ const TaskLabel = (props: ITaskLabelProps) => {
               selectLabelFromSuggestion={selectLabelFromSuggestion}
               createLabel={createLabel}
               allLabels={allLabels}
+              closePopover={() => setShowLabelPopover(false)}
             />
           }
           target={
-            <AddLabelButton>
+            <AddLabelButton onClick={() => setShowLabelPopover(true)}>
               <Icon icon="tag" color="#5a5a5a" className="mr1" />
               Add Label
             </AddLabelButton>
