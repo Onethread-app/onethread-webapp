@@ -22,6 +22,7 @@ interface TaskLabelPopoverProps {
   selectLabelFromSuggestion: (labelId: any) => Promise<void>;
   createLabel: (body: any) => Promise<void>;
   allLabels: any;
+  closePopover: () => void;
 }
 
 const TaskLabelPopover = (props: TaskLabelPopoverProps) => {
@@ -83,7 +84,10 @@ const TaskLabelPopover = (props: TaskLabelPopoverProps) => {
                 <>
                   {keyword.length > 2 &&
                     props.suggestedLabels.map((label) => (
-                      <LabelContainer key={label._id} label={`Toggle Select`}>
+                      <LabelContainer
+                        key={label._id}
+                        label={`Toggle Select`}
+                      >
                         <Label color={label.color}>
                           <HiddenCheckbox
                             type="checkbox"
@@ -118,10 +122,7 @@ const TaskLabelPopover = (props: TaskLabelPopoverProps) => {
               Create New Label
             </CreateLabelButton>
 
-            <CancelLabelButton
-              onClick={handleCreateLabel}
-              className={Classes.POPOVER_DISMISS}
-            >
+            <CancelLabelButton className={Classes.POPOVER_DISMISS}>
               Cancel
             </CancelLabelButton>
           </div>
@@ -132,6 +133,7 @@ const TaskLabelPopover = (props: TaskLabelPopoverProps) => {
           label={editLabel}
           setEditLabel={setEditLabel}
           createLabel={props.createLabel}
+          closePopover={props.closePopover}
         />
       )}
     </LabelPopoverContainer>

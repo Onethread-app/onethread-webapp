@@ -27,6 +27,7 @@ interface ILabelCreateEdit {
   };
   currentTask: any;
   createLabel: any;
+  closePopover: () => void;
 }
 
 const LabelCreateEdit = (props: ILabelCreateEdit) => {
@@ -50,6 +51,7 @@ const LabelCreateEdit = (props: ILabelCreateEdit) => {
   const handleGoBack = () => {
     props.setView('default');
     props.setEditLabel(null);
+    props.closePopover();
   };
 
   const submitLabel = async (e) => {
