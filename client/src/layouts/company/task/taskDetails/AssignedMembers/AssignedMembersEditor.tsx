@@ -14,8 +14,6 @@ import { ITask } from 'stores/task/Reducer';
 import { IProject } from 'stores/project/Reducer';
 import {
   addTaskMember,
-  addTaskMemberSuccess,
-  addTaskMemberFailure,
 } from 'stores/taskMembers/Action';
 import { tokenConfig } from 'stores/UtilsActions';
 
@@ -73,8 +71,7 @@ export const AssignedMembersEditorComponent = (
   const userRequestFactory = async (userName: string) => {
     const headers = tokenConfig();
     const response = await tigrowApi.get(
-      `tasks/${props.currentTask!._id}/suggest-member?pid=${
-        props.project!._id
+      `tasks/${props.currentTask!._id}/suggest-member?pid=${props.project!._id
       }`,
       headers,
     );
@@ -170,9 +167,9 @@ export const AssignedMembersEditorComponent = (
                                 isEmpty(filteredItems)
                                   ? undefined
                                   : filteredItems.map(
-                                      (member: ICompanyTeamMembers) =>
-                                        member._id,
-                                    ),
+                                    (member: ICompanyTeamMembers) =>
+                                      member._id,
+                                  ),
                               );
                             }}
                             large={true}
@@ -219,6 +216,4 @@ const mapStateToProps = (state: any) => {
 
 export const AssignedMembersEditor = connect(mapStateToProps, {
   addTaskMember,
-  addTaskMemberSuccess,
-  addTaskMemberFailure,
 })(AssignedMembersEditorComponent);

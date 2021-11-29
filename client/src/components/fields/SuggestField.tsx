@@ -93,30 +93,30 @@ export const SuggestField = (props: SuggestFieldProps) => {
           intent={
             props.multipleItemSelect === true
               ? (props.selectedItems as any).filter((si: any) =>
-                  isEqual(item.name, si.name),
-                ).length > 0
+                isEqual(item.name, si.name),
+              ).length > 0
                 ? Intent.PRIMARY
                 : Intent.NONE
               : isEqual(
-                  item.name,
-                  (props.selectedItems as ItemEntityProps).name,
-                )
-              ? Intent.PRIMARY
-              : Intent.NONE
+                item.name,
+                (props.selectedItems as ItemEntityProps).name,
+              )
+                ? Intent.PRIMARY
+                : Intent.NONE
           }
           icon={
             props.multipleItemSelect === true
               ? (props.selectedItems as any).filter((si: any) =>
-                  isEqual(item.name, si.name),
-                ).length > 0
+                isEqual(item.name, si.name),
+              ).length > 0
                 ? 'tick'
                 : 'square'
               : isEqual(
-                  item.name,
-                  (props.selectedItems as ItemEntityProps).name,
-                )
-              ? 'tick'
-              : 'square'
+                item.name,
+                (props.selectedItems as ItemEntityProps).name,
+              )
+                ? 'tick'
+                : 'square'
           }
         />
       )}
