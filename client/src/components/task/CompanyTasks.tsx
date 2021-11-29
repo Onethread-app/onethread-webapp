@@ -83,7 +83,10 @@ const CompanyTasks = (props: ICompanyTasks) => {
     useState<DateRange>([null, null]);
   const [selectedView, setSelectedView] = useState<
     'list' | 'board' | 'calendar'
-  >((localStorage.getItem('selectedView') as any) || 'list');
+  >(() => {
+    const x = (localStorage.getItem('selectedView') as any) || 'list';
+    return x === 'board' ? 'list' : x;
+  });
   const [tasksForCalendarView, setTasksForCalendarView] = useState<
     ITaskForCalendar[]
   >([]);
@@ -115,8 +118,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-              ? 7
-              : 5,
+            ? 7
+            : 5,
         hiddenColumns: ['createdAt', 'priority'],
         sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -288,11 +291,11 @@ const CompanyTasks = (props: ICompanyTasks) => {
                 !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                  <ClearOutlinedIcon
-                    fontSize="small"
-                    onClick={handleClearFilter}
-                  />
-                )}
+                <ClearOutlinedIcon
+                  fontSize="small"
+                  onClick={handleClearFilter}
+                />
+              )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {
