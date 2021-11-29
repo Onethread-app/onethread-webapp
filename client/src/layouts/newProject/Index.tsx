@@ -143,7 +143,7 @@ const Index = (props: IProjectDashboardProps) => {
             label={tab.label}
             key={i}
             tab={value}
-            tabName="ptab"
+            tabname="ptab"
           />
         ))}
       </StyledTabs>

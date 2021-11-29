@@ -77,10 +77,10 @@ const RoomListItemComponent = (props: RoomListItemProps) => {
               // tslint:disable-next-line: max-line-length
               props.currentCompany
                 ? history.push(
-                    `/company/${props.currentCompany}/project/${props.room.project}/?ptab=3&discussion=${props.room._id}&thread=0`,
+                    `/company/${props.currentCompany}/project/${props.room.project}/?ptab=2&discussion=${props.room._id}&thread=0`,
                   )
                 : history.push(
-                    `${location.pathname}?ptab=3&discussion=${props.room._id}&thread=0`,
+                    `${location.pathname}?ptab=2&discussion=${props.room._id}&thread=0`,
                   );
             }
             if (isMobileOnly) {

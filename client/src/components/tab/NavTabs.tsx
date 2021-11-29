@@ -18,7 +18,7 @@ interface StyledTabProps {
   label: string;
   value?: number;
   tab?: number;
-  tabName?: string;
+  tabname?: string;
 }
 
 export const StyledTabs = withStyles({
@@ -56,15 +56,15 @@ export const StyledTab = withStyles((theme: Theme) =>
 )((props: StyledTabProps) => {
   const history = useHistory();
   const tab = useMemo(() => props.tab, [props.tab]);
-  const tabName = useMemo(
-    () => props.tabName || 'tab',
-    [props.tabName],
+  const tabname = useMemo(
+    () => props.tabname || 'tab',
+    [props.tabname],
   );
 
   useEffect(() => {
     !isNil(tab) &&
       history.replace(
-        `${history.location.pathname}?${tabName}=${tab}`,
+        `${history.location.pathname}?${tabname}=${tab}`,
       );
   }, [tab]);
 
