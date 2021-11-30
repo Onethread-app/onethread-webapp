@@ -27,6 +27,10 @@ router
   );
 
 router
+  .route('/task-due-soon')
+  .get(authorization, taskCtrl.taskDueSoon);
+
+router
   .route('/suggest-member')
   .get(authorization, taskCtrl.suggestMemberForCreatingTask);
 

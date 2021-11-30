@@ -13,6 +13,10 @@ const {
 const TaskLabel = require('../label/label.model');
 
 const {
+  findTaskAssignedByUser,
+} = require('../services/taskAssign/taskAssign.services');
+
+const {
   taskAssignNotificationToUsers,
   sendNotificationToProjectTeamMates,
 } = require('../notification/notification.controller');
@@ -508,6 +512,121 @@ const dragTask = async (req, res, next) => {
   }
 };
 
+const taskDueSoon = async (req, res, next) => {
+  const { limit = 50, skip = 0, start = 7, end = 7 } = req.query;
+
+  let startDate = new Date();
+  startDate.setDate(startDate.getDate() - start);
+  startDate.setHours(0, 0, 0, 0);
+
+  let endDate = new Date();
+  endDate.setDate(endDate.getDate() + end);
+  endDate.setHours(23, 59, 59, 999);
+
+  try {
+    const tasks = await findTaskAssignedByUser(
+      req.user._id,
+      limit,
+      skip,
+    );
+
+    const fTaskList = [];
+    // check which main tasks are completed.
+    const completedTaskMapper = {};
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i].taskId;
+      if (task === null) continue;
+      if (task.parentTask === null) {
+        completedTaskMapper[task._id] = task.isCompleted;
+      }
+    }
+    let uniqueTaskIdMapper = {};
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i].taskId;
+      // checking task is null or not..
+      if (task === null) continue;
+      const _id = task._id;
+      if (uniqueTaskIdMapper[_id]) continue;
+      uniqueTaskIdMapper[_id] = true;
+      // keep only incompleted tasks
+      if (task.isCompleted === true) continue;
+      // keep those subtasks whose parent task is incomplete.
+      if (
+        task.parentTask != null &&
+        completedTaskMapper[task.parentTask] === true
+      ) {
+        continue;
+      }
+      const d = new Date(task.dueDate);
+      if (d >= startDate && d <= endDate) {
+        fTaskList.push(tasks[i]);
+      }
+    }
+    const subtasksMapper = {};
+    fTaskList.map((ft) => {
+      // check subtask
+      if (ft.taskId.parentTask) {
+        if (subtasksMapper[ft.taskId.parentTask]) {
+          subtasksMapper[ft.taskId.parentTask].push(ft.taskId);
+        } else {
+          subtasksMapper[ft.taskId.parentTask] = [ft.taskId];
+        }
+      }
+    });
+
+    const statusListMapper = {};
+    const response = [];
+    await Promise.all(
+      fTaskList.map(async (ft) => {
+        const task = ft.taskId;
+        if (task.parentTask) return false;
+        let statusList;
+        if (statusListMapper[task.project._id]) {
+          statusList = statusListMapper[task.project._id];
+        } else {
+          statusList = await getAllStatusInProject(task.project._id);
+          statusListMapper[task.project._id] = statusList;
+        }
+        const chk = (a) => (a ? a : []);
+        //TODO : upgrade to use formattedTask from utils
+        const modifiedTask = {
+          _id: task._id,
+          name: task.name,
+          account: {
+            _id: ft.account._id,
+            firstName: ft.account.firstName,
+            lastName: ft.account.lastName,
+            name: ft.account.name,
+            profileImage: ft.account.profileImage,
+          },
+          status: task.status,
+          dueDate: task.dueDate,
+          priority: task.priority,
+          members: await getAssignedMembers(task._id),
+          createdAt: task.createdAt,
+          statusList: statusListMapper[task.project._id],
+          project: {
+            _id: task.project._id,
+            name: task.project.name,
+          },
+          company: {
+            _id: task.project.company._id,
+            uniqueName: task.project.company.uniqueName,
+            name: task.project.company.name,
+          },
+          subtasks: chk(subtasksMapper[task._id]),
+          labels: await getTaskLabel(task._id),
+        };
+        response.push(modifiedTask);
+      }),
+    );
+    return sendJSONresponse(res, 200, response);
+  } catch (error) {
+    logger.error(`Task Due Soon: ${error}`);
+    next(error);
+  }
+};
+
 const taskReminder = async (req, res, next) => {
   try {
     // For Sending Mail (Map: Account -> Task)
@@ -732,4 +851,5 @@ module.exports = {
   taskReminder,
   createSubtask,
   markAsCompleted,
+  taskDueSoon,
 };
