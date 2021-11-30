@@ -18,7 +18,11 @@ import {
   getAllUserTasks,
 } from 'stores/task/Actions';
 import { saveTaskForm } from 'stores/taskForm/Actions';
-import { priorityColor, formTokenConfig } from 'stores/UtilsActions';
+import {
+  priorityColor,
+  formTokenConfig,
+  getRandomColor,
+} from 'stores/UtilsActions';
 
 import { getCompanyDetails } from 'stores/company/Actions';
 import { createProjectInCompanySuccess } from 'stores/project/Actions';
@@ -32,7 +36,6 @@ import {
   maxValue,
   required,
 } from 'components/final-form/utils';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import './Task.scss';
 
 import {
@@ -40,6 +43,9 @@ import {
   Container,
   ModalContainer,
   SimpleButton,
+  TextInput,
+  LabelItem,
+  LabelContainer,
 } from './TaskSection.styles';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 import {
@@ -111,6 +117,9 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   const [projectLoading, setProjectLoading] =
     useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
+  const [labelLoading, setLabelLoading] = useState<boolean>(false);
+  const [labelOptions, setLabelOptions] = useState<any>([{}]);
+  const [labelValue, setLabelValue] = useState<any>([]);
 
   const onSubmit = (values) => {
     if (!company[0].value) {
@@ -120,6 +129,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
       setAssignedProjectError(true);
     }
     if (selectedTeamMember.length) {
+      const labels = labelValue.map((l) => l.value);
       const modifiedTask = {
         ...values,
         assignmembers: selectedTeamMember,
@@ -127,6 +137,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
         projectId: project[0]?.value,
         companyId: company[0]?.value,
         status: props.taskStatusList[0]._id,
+        labels,
       };
       props.createTask(modifiedTask);
       setCreatingTask(true);
@@ -217,6 +228,53 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
     });
   };
 
+  const handleLabels = async (selected) => {
+    setLabelValue(selected);
+    setData({
+      ...data,
+      labelValue: selected,
+    });
+  };
+
+  const handleCreateLabel = async (selected) => {
+    setLabelLoading(true);
+    try {
+      const headers = formTokenConfig(company[0].value);
+      const response = await tigrowApi.post(
+        `labels/create-for-company`,
+        {
+          name: selected,
+          color: getRandomColor(),
+        },
+        headers,
+      );
+      setLabelOptions([
+        ...labelOptions,
+        {
+          value: response.data.label._id,
+          label: response.data.label.name,
+        },
+      ]);
+      setLabelValue([
+        ...labelValue,
+        {
+          value: response.data.label._id,
+          label: response.data.label.name,
+        },
+      ]);
+    } catch (err) {
+      errorToaster(returnErrorText(err));
+    }
+    setLabelLoading(false);
+    return;
+  };
+
+  const handleLabelFilter = (filter: string) => {
+    setLabelValue((labels) =>
+      labels.filter((label) => label.value !== filter),
+    );
+  };
+
   const mdfy = (members) => {
     const membersList = members?.map((m) => ({
       value: m?._id,
@@ -271,6 +329,27 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
       });
     setCompanyOptions(optionsCompany);
   }, [props.companies]);
+
+  useEffect(() => {
+    const loadLabels = async () => {
+      setLabelLoading(true);
+      const headers = formTokenConfig(company[0].value);
+      const response = await tigrowApi.get(
+        'labels/suggest-by-company',
+        headers,
+      );
+      setLabelOptions(
+        response.data.data.map((l) => ({
+          value: l.mongo_id,
+          label: l.name,
+        })),
+      );
+      setLabelLoading(false);
+    };
+    if (company[0]?.value) {
+      loadLabels();
+    }
+  }, [company[0]?.value]);
 
   useEffect(() => {
     const loadTeamMembers = async () => {
@@ -343,6 +422,7 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
   return (
     <ModalContainer>
       <Container>
+        <div className="mb3">CREATE TASK</div>
         <Form
           onSubmit={onSubmit}
           initialValues={{
@@ -369,35 +449,15 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     maxValue(150),
                   )}
                   render={({ input, meta }) => (
-                    <div className="mb2">
-                      <p
-                        style={{
-                          fontSize: '10px',
-                          color: '#666666',
-                          fontWeight: 400,
-                        }}
-                      >
-                        NEW TASK
-                      </p>
-                      <InputGroupFieldWithError
-                        id="name"
-                        value={input.value}
-                        onChange={(e) => {
-                          input.onChange(e);
-                          handleChange('name', e.target.value);
-                        }}
-                        style={{
-                          border: '0px',
-                          boxShadow: 'none',
-                          fontSize: '22px',
-                          paddingLeft: '0px',
-                        }}
-                        error={
+                    <div className="mb2 flex items-center">
+                      <label className="text-width">Name:</label>
+                      <TextInput
+                        {...input}
+                        placeholder="Task Name required"
+                        hasError={
                           checkError(meta) &&
                           (meta.error || meta.submitError)
                         }
-                        placeHolder="Task Name"
-                        autoFocus={true}
                       />
                     </div>
                   )}
@@ -413,9 +473,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                       isDisabled={companyLoading}
                       options={companyOptions}
                       onChange={handleCompany}
-                      // formatCreateLabel={(userInput) =>
-                      //   `New: ${userInput}`
-                      // }
                       className="w-100 react-select"
                       isOptionDisabled={(option) => {
                         return option.isSubscribed === false;
@@ -589,6 +646,40 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                     </div>
                   </div>
                 </div>
+                <div className="w-100 flex flex-row justify-between items-center mt2 mb3 mr-auto">
+                  <label className="text-width">Labels:</label>
+                  <Creatable
+                    className="w-100 react-select"
+                    name="labels"
+                    onChange={handleLabels}
+                    onCreateOption={handleCreateLabel}
+                    formatCreateLabel={(userInput) =>
+                      `New label: ${userInput}`
+                    }
+                    options={labelOptions}
+                    value={labelValue}
+                    isMulti
+                    isDisabled={company[0]?.value ? false : true}
+                    isLoading={labelLoading}
+                    placeholder="Type to select or create a label"
+                    controlShouldRenderValue={false}
+                  />
+                </div>
+                <div className="flex">
+                  <span className="text-width"></span>
+                  <LabelContainer>
+                    {labelValue.map((l) => (
+                      <LabelItem key={l.value}>
+                        {l.label}
+                        <span
+                          onClick={() => handleLabelFilter(l.value)}
+                        >
+                          x
+                        </span>
+                      </LabelItem>
+                    ))}
+                  </LabelContainer>
+                </div>
                 <Field<string>
                   name="description"
                   render={({ input, meta }) => (
@@ -610,14 +701,13 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                   )}
                 />
                 <div className="flex justify-between mt3">
-                  {/* 
-                  <div>
-                    <SimpleButton>Attach files</SimpleButton>
-                  <SimpleButton>Invite members</SimpleButton>
-                  <SimpleButton>Create subtask</SimpleButton> 
-                  </div>
-                  */}
-                  <StyledButton type="submit">
+                  <StyledButton
+                    type="submit"
+                    disabled={
+                      selectedTeamMember.length === 0 ||
+                      labelValue === 0
+                    }
+                  >
                     {loading ? (
                       <>
                         Creating Task{' '}

@@ -202,6 +202,11 @@ export const priorityColor = [
   { code: 4, name: 'Lowest', value: '#093F68', container: '#E4EAEE' },
 ];
 
+export const getRandomColor = () => {
+  const random = Math.floor(Math.random() * Color.length);
+  return Color[random].value;
+};
+
 export const parseJwt = (token: any) => {
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');

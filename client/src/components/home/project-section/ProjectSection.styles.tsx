@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 
-import {
-  StyledTextInput,
-  StyledRadioInput as RadioInput,
-} from 'components/form-components/Index.styles';
+import { StyledRadioInput as RadioInput } from 'components/form-components/Index.styles';
 
 const StyledButton = styled.button`
   display: flex;
@@ -59,20 +56,23 @@ const StyledRadioInput = styled(RadioInput)`
   height: 0;
 `;
 
-const TextInput = styled(StyledTextInput)`
-  height: 36px;
-  border-radius: 0.5rem;
+export const TextInput = styled.input`
+  height: 36px !important;
+  border-radius: 4px;
   width: 100%;
   border: ${({ hasError }) =>
-    hasError
-      ? '1px solid red !important'
-      : '1px solid transparent !important'};
+    hasError ? '1px solid red !important' : 'none'};
   vertical-align: middle;
-  font-size: 24px;
-  font-weight: bold;
+  font-weight: 400;
   margin-top: 4px;
   text-indent: 0px;
   background-color: #fff;
+  width: 100%;
+  box-shadow: rgb(0 0 0 / 2%) 0px 1px 3px 0px,
+    rgb(27 31 35 / 15%) 0px 0px 0px 1px;
+  padding: 0.5 rem;
+  color: #000 !important;
+  text-indent: 5px;
 
   & + span {
     color: ${({ hasError }) =>
@@ -80,8 +80,10 @@ const TextInput = styled(StyledTextInput)`
   }
 
   &:focus {
-    outline: none;
-    font-weight: bolder;
+    outline: ${({ hasError }) =>
+      hasError
+        ? '1px transparent !important'
+        : '1px #08a0f7 !important'};
   }
 `;
 
@@ -254,7 +256,6 @@ export {
   ModalContainer,
   Container,
   SimpleButton,
-  TextInput,
   StyledRadioInput,
   Icon,
   Column,
