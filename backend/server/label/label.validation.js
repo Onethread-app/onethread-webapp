@@ -31,6 +31,13 @@ module.exports = {
       task: labelSchema.task.required(),
     }),
   }),
+  createForCompany: Joi.object().keys({
+    body: Joi.object().keys({
+      name: labelSchema.name.required(),
+      color: labelSchema.color.required(),
+      description: labelSchema.description,
+    }),
+  }),
   suggestLabel: Joi.object().keys({
     query: Joi.object().keys({
       keyword: labelSchema.keyword.required(),

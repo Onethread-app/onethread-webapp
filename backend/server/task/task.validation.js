@@ -33,6 +33,7 @@ module.exports = {
       priority: taskSchema.priority.required(),
       assignmembers: Joi.array().items().required(),
       status: taskSchema.status.required(),
+      labels: Joi.array().items(idSchema.id).required(),
     }),
 
     query: Joi.object().keys({

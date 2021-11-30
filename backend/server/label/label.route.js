@@ -19,12 +19,24 @@ router
   );
 
 router
+  .route('/create-for-company')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.createForCompany),
+    labelCtrl.createForCompany,
+  );
+
+router
   .route('/suggest')
   .get(
     authorization,
     SchemaValidator(joiSchema.suggestLabel),
     labelCtrl.suggestLabel,
   );
+
+router
+  .route('/suggest-by-company')
+  .get(authorization, labelCtrl.getLabelByCompany);
 
 router
   .route('/task/:task')

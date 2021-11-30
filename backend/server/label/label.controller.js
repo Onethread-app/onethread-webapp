@@ -14,7 +14,12 @@ const {
   deleteLabelFromELKByMongoId,
 } = require('../services/elastic.services');
 
-const create = async (req) => {
+const {
+  taskLabelCreation,
+} = require('../services/taskLabel/taskLabel.service');
+
+const create = async (req, taskCreated) => {
+  const response = [];
   const label = await Label.create({
     name: req.body.name,
     createdBy: req.user._id,
@@ -22,17 +27,21 @@ const create = async (req) => {
     description: req.body.description,
     company: req.headers.companyid,
   });
-  const taskLabel = await TaskLabel.create({
-    task: req.body.task,
-    label: label._id,
-  });
+  response.push(label);
+  if (taskCreated) {
+    const taskLabel = await taskLabelCreation(
+      req.body.task,
+      label._id,
+    );
+    response.push(taskLabel);
+  }
   await storeLabelInElk(label);
-  return [label, taskLabel];
+  return response;
 };
 
 const createLabel = async (req, res, next) => {
   try {
-    const [label, taskLabel] = await create(req);
+    const [label, taskLabel] = await create(req, true);
     return sendJSONresponse(res, 200, { label, taskLabel });
   } catch (error) {
     logger.error(`Label Creation: ${error}`);
@@ -40,39 +49,66 @@ const createLabel = async (req, res, next) => {
   }
 };
 
+const createForCompany = async (req, res, next) => {
+  try {
+    const [label] = await create(req, false);
+    return sendJSONresponse(res, 200, { label });
+  } catch (error) {
+    logger.error(`Label Creation: ${error}`);
+    next(error);
+  }
+};
+
+const generateQueryBody = (size, from, termValue, partialSearch) => {
+  const queryMust = [];
+  if (termValue) {
+    queryMust.push({ term: termValue });
+  }
+  if (partialSearch) {
+    queryMust.push({ match_phrase_prefix: partialSearch });
+  }
+
+  return {
+    size: size,
+    from: from,
+    query: { bool: { must: queryMust } },
+  };
+};
+
 const suggestLabel = async (req, res, next) => {
   try {
     const { keyword } = req.query;
-    let body = {
-      size: 200,
-      from: 0,
-      query: {
-        bool: {
-          must: [
-            {
-              term: {
-                company: {
-                  value: req.headers.companyid,
-                },
-              },
-            },
-            {
-              match_phrase_prefix: {
-                name: keyword,
-              },
-            },
-          ],
-        },
-      },
-    };
+    let body = generateQueryBody(
+      200,
+      0,
+      { company: { value: req.headers.companyid } },
+      { name: keyword },
+    );
     const response = await search(labelIndex, '_doc', body);
 
     return sendJSONresponse(res, 200, {
-      data: response.hits.hits,
+      data: response.hits.hits.map((r) => r._source),
     });
   } catch (error) {
     logger.error(`Suggest Label: ${error}`);
     next(error);
+  }
+};
+
+const getLabelByCompany = async (req, res, next) => {
+  try {
+    let body = generateQueryBody(200, 0, {
+      company: { value: req.headers.companyid },
+    });
+
+    const response = await search(labelIndex, '_doc', body);
+
+    return sendJSONresponse(res, 200, {
+      data: response.hits.hits.map((r) => r._source),
+    });
+  } catch (err) {
+    logger.error(`Get Company By Labels: ${err}`);
+    next(err);
   }
 };
 
@@ -185,4 +221,6 @@ module.exports = {
   labelDetails,
   getTaskLabels,
   createTaskLabel,
+  getLabelByCompany,
+  createForCompany,
 };
