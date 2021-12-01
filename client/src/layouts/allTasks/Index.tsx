@@ -8,6 +8,7 @@ import {
   useAsyncDebounce,
   usePagination,
   useExpanded,
+  useRowSelect,
 } from 'react-table';
 import { isEmpty, isNil } from 'lodash';
 
@@ -36,6 +37,9 @@ import { DateRange } from '@blueprintjs/datetime';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import TasksFilter from 'components/task/TasksFilter';
 import { Link } from 'react-router-dom';
+import IndeterminateCheckbox from 'components/table/IndeterminateCheckbox';
+import TaskTableActions from 'components/task/TaskTableActions';
+import TaskTableModals from 'components/task/TaskTableModals';
 
 interface Props {
   userTasks: any;
@@ -70,6 +74,11 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   const [selectedLabelList, setSelectedLabelList] = useState<any>([]);
   const [filterOpen, setFilterOpen] = useState(false);
 
+  const [showEditTaskDialog, setShowEditTaskDialog] =
+    useState<boolean>(false);
+  const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
+    useState<boolean>(false);
+
   const { userTasks } = props;
 
   const {
@@ -87,6 +96,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     page,
     setPageSize,
     gotoPage,
+    selectedFlatRows,
   } = useTable(
     {
       columns,
@@ -102,6 +112,31 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     useSortBy,
     useExpanded,
     usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: 'selection',
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox
+                onClick={(e) => e.stopPropagation()}
+                {...getToggleAllRowsSelectedProps()}
+              />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox
+                onClick={(e) => e.stopPropagation()}
+                {...row.getToggleRowSelectedProps()}
+              />
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    },
   );
 
   useEffect(() => {
@@ -242,21 +277,23 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
                 <StyledFilterPopover>
                   <p className="bb">Customize Table</p>
 
-                  {allColumns.map(
-                    (column) =>
-                      column.id !== 'expander' && (
-                        <div key={column.id}>
-                          <label>
-                            <input
-                              type="checkbox"
-                              checked={column.isVisible}
-                              disabled={column.id === 'name'}
-                              {...column.getToggleHiddenProps()}
-                            />{' '}
-                            {column.Header}
-                          </label>
-                        </div>
-                      ),
+                  {allColumns.map((column) =>
+                    !(
+                      column.id === 'expander' ||
+                      column.id === 'selection'
+                    ) ? (
+                      <div key={column.id}>
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={column.isVisible}
+                            disabled={column.id === 'name'}
+                            {...column.getToggleHiddenProps()}
+                          />{' '}
+                          {column.Header}
+                        </label>
+                      </div>
+                    ) : null,
                   )}
                 </StyledFilterPopover>
               }
@@ -276,20 +313,28 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
             </div>
           )
         ) : (
-          <TasksTable
-            getTableProps={getTableProps}
-            getTableBodyProps={getTableBodyProps}
-            headerGroups={headerGroups}
-            rows={rows}
-            prepareRow={prepareRow}
-            visibleColumns={visibleColumns}
-            page={page}
-            pageIndex={pageIndex}
-            gotoPage={gotoPage}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setOpenTaskDialog={setOpenTaskDialog}
-          />
+          <>
+            <TaskTableActions
+              setShowDeleteTaskDialog={setShowDeleteTaskDialog}
+              selectedTask={selectedFlatRows}
+              type="user"
+              setShowEditTaskDialog={setShowEditTaskDialog}
+            />
+            <TasksTable
+              getTableProps={getTableProps}
+              getTableBodyProps={getTableBodyProps}
+              headerGroups={headerGroups}
+              rows={rows}
+              prepareRow={prepareRow}
+              visibleColumns={visibleColumns}
+              page={page}
+              pageIndex={pageIndex}
+              gotoPage={gotoPage}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setOpenTaskDialog={setOpenTaskDialog}
+            />
+          </>
         )}
         <Dialog
           canOutsideClickClose={true}
@@ -303,6 +348,14 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
           <TaskDialog setShowDialog={setOpenTaskDialog} />
         </Dialog>
       </Container>
+      <TaskTableModals
+        setShowDeleteTaskDialog={setShowDeleteTaskDialog}
+        setShowEditTaskDialog={setShowEditTaskDialog}
+        showDeleteTaskDialog={showDeleteTaskDialog}
+        showEditTaskDialog={showEditTaskDialog}
+        taskList={selectedFlatRows}
+        type="user"
+      />
     </TasksTableContext.Provider>
   );
 };

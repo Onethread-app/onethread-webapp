@@ -313,6 +313,7 @@ const EditTaskDialog = (props: IUpdateTaskDialogInternalProps) => {
                 <div className="duedate-priority-container">
                   <Field<string>
                     name="dueDate"
+                    defaultValue={String(task.dueDate)}
                     validate={required}
                     render={({ input, meta }) => (
                       <div className="flex items-center w-100 mb3">
@@ -340,7 +341,7 @@ const EditTaskDialog = (props: IUpdateTaskDialogInternalProps) => {
                             value={
                               input.value
                                 ? new Date(input.value)
-                                : task.dueDate
+                                : null
                             }
                             onChange={input.onChange}
                             className="due-date-input due-date-subtask"

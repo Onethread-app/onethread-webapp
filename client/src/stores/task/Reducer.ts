@@ -648,6 +648,7 @@ export const TaskReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         updatingTask: true,
+        errorOnUpdatingTask: '',
       };
     case TaskActionType.UPDATE_TASK_SUCCESS:
       const updatedTask: ITask = action.payload.updatedTask;
@@ -949,6 +950,19 @@ export const TaskReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         currentTask: { ...initialCurrentTask },
+      };
+    case TaskActionType.FILTER_TASK_LIST:
+      return {
+        ...state,
+        companyTaskList: state.companyTaskList.filter(
+          (task: ITask) => !task._id.includes(action.payload),
+        ),
+        projectTaskList: state.projectTaskList.filter(
+          (task: ITask) => !task._id.includes(action.payload),
+        ),
+        userTasks: state.userTasks.filter(
+          (task: ITask) => !task._id.includes(action.payload),
+        ),
       };
     default:
       return state;

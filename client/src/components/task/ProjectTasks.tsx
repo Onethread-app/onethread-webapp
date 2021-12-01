@@ -9,6 +9,7 @@ import {
   useAsyncDebounce,
   usePagination,
   useExpanded,
+  useRowSelect,
 } from 'react-table';
 
 import { TasksTableContext } from './TasksTableContext';
@@ -47,6 +48,9 @@ import TaskViewSelect from './TaskViewSelect';
 import ColumnsContainer from 'components/column/ColumnsContainer';
 import { Link } from 'react-router-dom';
 import ExportTasks from 'components/export-tasks/ExportTasks';
+import IndeterminateCheckbox from 'components/table/IndeterminateCheckbox';
+import TaskTableModals from './TaskTableModals';
+import TaskTableActions from './TaskTableActions';
 
 interface IProjectTasksProps {
   projectTaskList: ITask[];
@@ -89,6 +93,11 @@ const ProjectTasks = (props: IProjectTasksProps) => {
   const [tasksForCalendarView, setTasksForCalendarView] = useState<
     ITaskForCalendar[]
   >([]);
+  const [showEditTaskDialog, setShowEditTaskDialog] =
+    useState<boolean>(false);
+  const [showDeleteTaskDialog, setShowDeleteTaskDialog] =
+    useState<boolean>(false);
+
   const [filterOpen, setFilterOpen] = useState(false);
   const data = useMemo(() => taskList, [taskList]);
   const columns = useMemo(() => TaskTableColumns, []);
@@ -108,6 +117,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
     page,
     setPageSize,
     gotoPage,
+    selectedFlatRows,
   } = useTable(
     {
       columns,
@@ -117,8 +127,8 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-              ? 7
-              : 5,
+            ? 7
+            : 5,
         hiddenColumns: ['createdAt', 'priority'],
         // sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -128,6 +138,31 @@ const ProjectTasks = (props: IProjectTasksProps) => {
     useSortBy,
     useExpanded,
     usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: 'selection',
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox
+                onClick={(e) => e.stopPropagation()}
+                {...getToggleAllRowsSelectedProps()}
+              />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox
+                onClick={(e) => e.stopPropagation()}
+                {...row.getToggleRowSelectedProps()}
+              />
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    },
   );
 
   const { globalFilter, pageSize, pageIndex } = state;
@@ -292,11 +327,11 @@ const ProjectTasks = (props: IProjectTasksProps) => {
               {(!isEmpty(selectedStatusList) ||
                 !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                  <ClearOutlinedIcon
-                    fontSize="small"
-                    onClick={handleClearFilter}
-                  />
-                )}
+                <ClearOutlinedIcon
+                  fontSize="small"
+                  onClick={handleClearFilter}
+                />
+              )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {
@@ -328,21 +363,23 @@ const ProjectTasks = (props: IProjectTasksProps) => {
                 <StyledFilterPopover>
                   <p className="bb">Customize Table</p>
 
-                  {allColumns.map(
-                    (column) =>
-                      column.id !== 'expander' && (
-                        <div key={column.id}>
-                          <label>
-                            <input
-                              type="checkbox"
-                              checked={column.isVisible}
-                              disabled={column.id === 'name'}
-                              {...column.getToggleHiddenProps()}
-                            />{' '}
-                            {column.Header}
-                          </label>
-                        </div>
-                      ),
+                  {allColumns.map((column) =>
+                    !(
+                      column.id === 'expander' ||
+                      column.id === 'selection'
+                    ) ? (
+                      <div key={column.id}>
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={column.isVisible}
+                            disabled={column.id === 'name'}
+                            {...column.getToggleHiddenProps()}
+                          />{' '}
+                          {column.Header}
+                        </label>
+                      </div>
+                    ) : null,
                   )}
                 </StyledFilterPopover>
               }
@@ -366,23 +403,35 @@ const ProjectTasks = (props: IProjectTasksProps) => {
         ) : (
           {
             list: (
-              <TasksTable
-                getTableProps={getTableProps}
-                getTableBodyProps={getTableBodyProps}
-                headerGroups={headerGroups}
-                rows={rows}
-                prepareRow={prepareRow}
-                visibleColumns={visibleColumns}
-                page={page}
-                pageIndex={pageIndex}
-                gotoPage={gotoPage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                setOpenTaskDialog={setOpenTaskDialog}
-              />
+              <>
+                <TaskTableActions
+                  setShowDeleteTaskDialog={setShowDeleteTaskDialog}
+                  selectedTask={selectedFlatRows}
+                  type="project"
+                  setShowEditTaskDialog={setShowEditTaskDialog}
+                />
+                <TasksTable
+                  getTableProps={getTableProps}
+                  getTableBodyProps={getTableBodyProps}
+                  headerGroups={headerGroups}
+                  rows={rows}
+                  prepareRow={prepareRow}
+                  visibleColumns={visibleColumns}
+                  page={page}
+                  pageIndex={pageIndex}
+                  gotoPage={gotoPage}
+                  pageSize={pageSize}
+                  setPageSize={setPageSize}
+                  setOpenTaskDialog={setOpenTaskDialog}
+                />
+              </>
             ),
             board: (
-              <ColumnsContainer updateTaskStatusForBoardLocally={updateTaskStatusForBoardLocally} />
+              <ColumnsContainer
+                updateTaskStatusForBoardLocally={
+                  updateTaskStatusForBoardLocally
+                }
+              />
             ),
             calendar: <CalendarView tasks={tasksForCalendarView} />,
           }[selectedView]
@@ -399,6 +448,14 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           <TaskDialog setShowDialog={setOpenTaskDialog}></TaskDialog>
         </Dialog>
       </Container>
+      <TaskTableModals
+        setShowDeleteTaskDialog={setShowDeleteTaskDialog}
+        setShowEditTaskDialog={setShowEditTaskDialog}
+        showDeleteTaskDialog={showDeleteTaskDialog}
+        showEditTaskDialog={showEditTaskDialog}
+        taskList={selectedFlatRows}
+        type="project"
+      />
     </TasksTableContext.Provider>
   );
 };
