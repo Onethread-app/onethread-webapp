@@ -756,10 +756,7 @@ const userTaskList = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   try {
     const tasks = await TaskAssign.find({
-      $or: [
-        { account: req.user._id },
-        { assignedPerson: req.user._id },
-      ],
+      assignedPerson: req.user._id,
     })
       .sort({ createdAt: -1 })
       .skip(+skip)
@@ -776,7 +773,7 @@ const userTaskList = async (req, res, next) => {
     await Promise.all(
       filteredTask.map(async (ft) => {
         const _id = ft.taskId._id.toString();
-        if(uniqueTaskIdMapper[_id]) return false;
+        if (uniqueTaskIdMapper[_id]) return false;
         uniqueTaskIdMapper[_id] = true;
         const members = await getAssignedMembers(ft.taskId._id);
         const statusList = await getAllStatusInProject(
@@ -810,10 +807,12 @@ const userTaskList = async (req, res, next) => {
           },
           subtasks: tasks.filter((task) => {
             if (task.parentTask) {
-                return task.parentTask.toString() = ft.taskId._id.toString();
-              } else return false;
-            },
-          ),
+              return (
+                task.parentTask.toString() ===
+                ft.taskId._id.toString()
+              );
+            } else return false;
+          }),
           labels: await getTaskLabel(ft.taskId._id),
         };
         ft.taskId.parentTask === null && response.push(modifiedTask);
