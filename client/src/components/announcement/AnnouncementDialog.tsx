@@ -106,13 +106,6 @@ const Index = (props: IProps) => {
 
   useEffect(() => {
     if (props.companies.length > 0) {
-      // const gettingOptionsFromCompanies = props.companies.map(
-      //   (c: ICompanyByUser) => ({
-      //     value: c.company._id,
-      //     label: c.company.name,
-      //     uniqueName: c.company.uniqueName,
-      //   }),
-      // );
       const filteredOptionsFromCompanies = props.companies
         .filter(
           (c: ICompanyByUser) =>
@@ -127,28 +120,6 @@ const Index = (props: IProps) => {
       setOptions(filteredOptionsFromCompanies);
     }
   }, [props.companies]);
-
-  // useEffect(() => {
-  //   if (loading) {
-  //     if (
-  //       props.announcementError === '' &&
-  //       props.announcementLoading === false
-  //     ) {
-  //       setLoading(false);
-  //       successToaster(
-  //         'The announcement has been created successfully',
-  //       );
-  //       props.setOpenAnnouncementDialog(false);
-  //     }
-  //     if (
-  //       props.announcementError !== '' &&
-  //       props.announcementLoading === false
-  //     ) {
-  //       setLoading(false);
-  //       errorToaster(props.announcementError);
-  //     }
-  //   }
-  // }, [props.announcementError, props.announcementLoading]);
 
   useEffect(() => {
     if (company) {
@@ -234,6 +205,14 @@ const Index = (props: IProps) => {
                   />
                 </div>
                 <div className="flex flex-row w-100 justify-between items-center mt3">
+                  <SimpleButton
+                    type="button"
+                    onClick={() =>
+                      props.setOpenAnnouncementDialog(false)
+                    }
+                  >
+                    Cancel
+                  </SimpleButton>
                   <StyledButton type="submit">
                     {loading ? (
                       <>
@@ -244,14 +223,6 @@ const Index = (props: IProps) => {
                       'Create Announcement'
                     )}
                   </StyledButton>
-                  <SimpleButton
-                    type="button"
-                    onClick={() =>
-                      props.setOpenAnnouncementDialog(false)
-                    }
-                  >
-                    Cancel
-                  </SimpleButton>
                 </div>
               </form>
             )}

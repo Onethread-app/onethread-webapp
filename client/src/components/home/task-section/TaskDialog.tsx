@@ -148,6 +148,13 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
           const reqBody = {
             name: selected.value,
             companyId: company[0].value,
+            statusList: [
+              {
+                name: 'Backlog',
+                positionInBoard: 0,
+                color: '#ffa800',
+              },
+            ],
           };
           const response = await tigrowApi.post(
             `projects/create-project`,
@@ -609,13 +616,14 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                   )}
                 />
                 <div className="flex justify-between mt3">
-                  {/* 
-                  <div>
-                    <SimpleButton>Attach files</SimpleButton>
-                  <SimpleButton>Invite members</SimpleButton>
-                  <SimpleButton>Create subtask</SimpleButton> 
-                  </div>
-                  */}
+                  <SimpleButton
+                    onClick={() => {
+                      props.setShowDialog(false);
+                    }}
+                    type="button"
+                  >
+                    Cancel
+                  </SimpleButton>
                   <StyledButton type="submit">
                     {loading ? (
                       <>
@@ -626,14 +634,6 @@ const TaskDialog = (props: ICreateTaskDialogInternalProps) => {
                       'Create Task'
                     )}
                   </StyledButton>
-                  <SimpleButton
-                    onClick={() => {
-                      props.setShowDialog(false);
-                    }}
-                    type="button"
-                  >
-                    Cancel
-                  </SimpleButton>
                 </div>
               </div>
             </form>

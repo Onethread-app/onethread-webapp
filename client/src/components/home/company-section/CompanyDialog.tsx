@@ -157,14 +157,19 @@ const CompanySignupFormComponent = (
             />
 
             <div className="flex justify-between">
+              <SimpleButton
+                className="h2 pointer"
+                onClick={(e: any) => {
+                  e.preventDefault();
+                  props.setShowDialog(false);
+                  setLoading(false);
+                }}
+              >
+                Cancel
+              </SimpleButton>
               <StyledButton
                 type="submit"
                 className="h2 pointer"
-                // style={{
-                //   background: '#08A0F7',
-                //   outline: 'none',
-                //   color: 'white',
-                // }}
                 disabled={loading}
               >
                 {loading ? (
@@ -176,22 +181,6 @@ const CompanySignupFormComponent = (
                   'Create Company'
                 )}
               </StyledButton>
-              <SimpleButton
-                className="h2 pointer"
-                // style={{
-                //   background: '#fff',
-                //   outline: 'none',
-                //   border: '1px solid #08A0F7',
-                //   color: '#08A0F7',
-                // }}
-                onClick={(e: any) => {
-                  e.preventDefault();
-                  props.setShowDialog(false);
-                  setLoading(false);
-                }}
-              >
-                Cancel
-              </SimpleButton>
             </div>
           </form>
         )}

@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
-// import Creatable from 'react-select/creatable';
 import Creatable from 'react-select/creatable';
 import { currencies } from 'currencies.json';
 import Select from 'react-select';
 
-import { Spinner } from '@blueprintjs/core/lib/esm/components/spinner/spinner';
 import {
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
@@ -48,6 +46,7 @@ import {
 } from 'components/toast/Toaster';
 import { SmallTextAvatar } from 'components/avatar/TextAvatar';
 import { IProjectFormState } from 'stores/projectForm/Reducer';
+import CreateStatus from './CreateStatus';
 
 interface INewCompanyResponse {
   message: string;
@@ -63,11 +62,6 @@ interface INewCompanyResponse {
     role: string;
   };
 }
-
-// interface ICompanyOptions {
-//   value: string;
-//   label: string;
-// }
 
 interface IProps {
   setOpenProjectDialog: React.Dispatch<React.SetStateAction<boolean>>;
@@ -96,7 +90,6 @@ const Index = (props: IProps) => {
     { value: string; label: string }[]
   >([]);
   const [defaultValues, setDefaultValues] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const [companyLoading, setCompanyLoading] =
     useState<boolean>(false);
   const [options, setOptions] = useState<
@@ -114,27 +107,53 @@ const Index = (props: IProps) => {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [creatingProject, setCreatingProject] =
     useState<boolean>(false);
+  const [createStatus, setCreateStatus] = useState<boolean>(false);
+  const [statusList, setStatusList] = useState<
+    { name: string; positionInBoard: number; color: string }[]
+  >([{ name: 'Backlog', positionInBoard: 0, color: '#ffa800' }]);
 
   const { previousData } = props;
 
   const { t } = useTranslation();
 
   const onSubmit = async (values: any) => {
+    props.createProjectInCompany({
+      name: values.name,
+      companyId: company,
+      color: checkColor,
+      budget: values.budget ? Number(values.budget) : 0,
+      currency: selectCurrency[0]?.symbol,
+      deadline: values.date || undefined,
+      statusList: statusList,
+    });
+    setSuccessMessage(
+      `The project ${values.name} has been created in ${selectValue[0]?.label}`,
+    );
+    setCreatingProject(true);
+  };
+
+  const submitForm = (values, statuses) => {
+    props.createProjectInCompany({
+      name: values.name,
+      companyId: company,
+      color: checkColor,
+      budget: values.budget ? Number(values.budget) : 0,
+      currency: selectCurrency[0]?.symbol,
+      deadline: values.date || undefined,
+      statusList: statuses,
+    });
+    setSuccessMessage(
+      `The project ${values.name} has been created in ${selectValue[0]?.label}`,
+    );
+    setCreatingProject(true);
+  };
+
+  const checkForm = (values) => {
     if (company) {
-      setLoading(true);
-      props.createProjectInCompany({
-        name: values.name,
-        companyId: company,
-        color: checkColor,
-        budget: values.budget ? Number(values.budget) : 0,
-        currency: selectCurrency[0]?.symbol,
-        deadline: values.date || undefined,
-        statusList: [{ name: 'Backlog', positionInBoard: 0 }],
-      });
-      setSuccessMessage(
-        `The project ${values.name} has been created in ${selectValue[0]?.label}`,
-      );
-      setCreatingProject(true);
+      if (values.name) {
+        setCreateStatus(true);
+      }
+      return;
     } else {
       setAssignedCompanyError(true);
     }
@@ -257,7 +276,6 @@ const Index = (props: IProps) => {
       ) {
         props.saveProjectForm({});
         props.setOpenProjectDialog(false);
-        setLoading(false);
         successToaster(successMessage);
         setCreatingProject(false);
       }
@@ -265,7 +283,6 @@ const Index = (props: IProps) => {
         props.errorOnCreatingProject !== '' &&
         props.projectLoading === false
       ) {
-        setLoading(false);
         errorToaster(returnErrorText(props.errorOnCreatingProject));
         setCreatingProject(false);
         setSuccessMessage('');
@@ -275,9 +292,9 @@ const Index = (props: IProps) => {
 
   return (
     <ModalContainer>
-      <h1 className="f5 lh-title mb1">
-        {t('app.forms.Start-project.Create-project')}
-      </h1>
+      <p className="f5 lh-title mb1">
+        {createStatus ? 'Project' : 'Create Project'}
+      </p>
       <Form
         onSubmit={onSubmit}
         validate={(values: any) => {
@@ -295,230 +312,235 @@ const Index = (props: IProps) => {
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <Field<string>
-              name="name"
-              type="text"
-              validate={composeValidators(required)}
-              render={({ input, meta }) => (
-                <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
-                  <label className="label">Project Name</label>
-                  <TextInput
-                    {...input}
-                    placeholder="Required"
-                    hasError={
-                      checkError(meta) &&
-                      (meta.error || meta.submitError)
+            {!createStatus ? (
+              <>
+                <Field<string>
+                  name="name"
+                  type="text"
+                  validate={composeValidators(required)}
+                  render={({ input, meta }) => (
+                    <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
+                      <label className="label">Project Name</label>
+                      <TextInput
+                        {...input}
+                        placeholder="Required"
+                        hasError={
+                          checkError(meta) &&
+                          (meta.error || meta.submitError)
+                        }
+                      />
+                    </div>
+                  )}
+                />
+                <div className="w-100 flex flex-row justify-start items-center mt2 mr-auto">
+                  <label className="label">Company</label>
+                  <Creatable
+                    defaultValue={data?.company}
+                    value={defaultValues.value && selectValue}
+                    id="company"
+                    isLoading={companyLoading}
+                    options={options}
+                    onChange={handleCompanyChange}
+                    className="react-select w-60"
+                    isOptionDisabled={(option) =>
+                      option.isSubscribed === false
                     }
+                    formatCreateLabel={(inputValue: string) => (
+                      <div className="w-100 font-bold flex">
+                        <div className="h-100 mr2">New</div>{' '}
+                        {inputValue}
+                      </div>
+                    )}
+                    createOptionPosition="first"
+                    formatOptionLabel={(data) => (
+                      <div className="flex items-center">
+                        {typeof data.label === 'string' ? (
+                          <SmallTextAvatar
+                            name={data.label.slice(0, 1)}
+                          />
+                        ) : null}
+                        <span className="ml2">{data.label}</span>
+                      </div>
+                    )}
                   />
                 </div>
-              )}
-            />
-            <div className="w-100 flex flex-row justify-start items-center mt2 mr-auto">
-              <label className="label">Company</label>
-              <Creatable
-                defaultValue={data?.company}
-                value={defaultValues.value && selectValue}
-                id="company"
-                isLoading={companyLoading}
-                options={options}
-                onChange={handleCompanyChange}
-                className="react-select w-60"
-                isOptionDisabled={(option) =>
-                  option.isSubscribed === false
-                }
-                formatCreateLabel={(inputValue: string) => (
-                  <div className="w-100 font-bold flex">
-                    <div className="h-100 mr2">New</div> {inputValue}
-                  </div>
-                )}
-                createOptionPosition="first"
-                formatOptionLabel={(data) => (
-                  <div className="flex items-center">
-                    {typeof data.label === 'string' ? (
-                      <SmallTextAvatar
-                        name={data.label.slice(0, 1)}
-                      />
-                    ) : null}
-                    <span className="ml2">{data.label}</span>
-                  </div>
-                )}
-              />
-            </div>
-            {assignedCompanyError && (
-              <small
-                style={{
-                  color: 'red',
-                  margin: '1rem 0rem',
-                }}
-              >
-                Required
-              </small>
-            )}
-            <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
-              <label className="label">Due date</label>
-              <Field<string>
-                name="date"
-                validate={required}
-                type="date"
-                render={({ input, meta }) => (
-                  <>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <KeyboardDateTimePicker
-                        disablePast
-                        defaultValue={data?.deadline}
-                        inputVariant="outlined"
-                        id="date-picker-dialog"
-                        format="MM/dd/yyyy"
-                        value={
-                          input.value ? new Date(input.value) : null
-                        }
-                        onChange={(date) => {
-                          input.onChange(date);
-                          setData({
-                            ...data,
-                            deadline: date,
-                          });
-                        }}
-                        className="due-date-input due-date-subtask w-60"
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
-                        placeholder={t(
-                          'app.project.Project-boards.Select-date',
-                        )}
-                        minDate={new Date()}
-                        // style={{ width: '250px' }}
-                      />
-                    </MuiPickersUtilsProvider>
-                    {checkError(meta) && (
-                      <small
-                        className="mv3 ml2"
-                        style={{ color: 'red' }}
-                      >
-                        {meta.error || meta.submitError}
-                      </small>
-                    )}
-                  </>
-                )}
-              />
-            </div>
-            <div className="w-100 flex flex-row justify-start items-center mr-auto">
-              <div className="w-100 flex mr3 items-center">
-                <label className="label">Budget</label>
-                <Field<string>
-                  defaultValue={data?.budget}
-                  name="budget"
-                  type="string"
-                  parse={(value: string) =>
-                    value.replaceAll(/[^0-9]/g, '')
-                  }
-                  render={({ input, meta }) => (
-                    <>
-                      <input
-                        {...input}
-                        onChange={(e) => {
-                          input.onChange(e.target.value);
-                          setData({
-                            ...data,
-                            budget: e.target.value,
-                          });
-                        }}
-                        value={input.value ?? ''}
-                        style={{
-                          width: '100%',
-                          boxShadow:
-                            'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
-                          border: 'none',
-                          padding: '0.5rem',
-                          borderRadius: '0.2rem',
-                          height: 'auto',
-                        }}
-                        placeholder="Enter your budget for this project"
-                      />
-                    </>
-                  )}
-                />
-              </div>
-              <div className="flex w-30">
-                {/* <label className=""></label> */}
-                <Field<string>
-                  name="currency"
-                  type="string"
-                  render={({ input, meta }) => (
-                    <Select
-                      value={selectCurrency}
-                      id="currency"
-                      options={currencies}
-                      onChange={handleCurrencyChange}
-                      className="react-select w-100"
-                      getOptionLabel={(option) => option.name}
-                      getOptionValue={(option) => option.symbol}
-                    />
-                  )}
-                />
-              </div>
-            </div>
-            <div className="w-100 flex flex-row justify-start mt3 items-center">
-              <label className="label mb3">Label</label>
-
-              {Color.map((color) => (
-                <label
-                  onClick={() => {
-                    setCheckColor(color.code);
-                    setData({ ...data, label: color?.code });
-                  }}
-                  key={color.code}
-                  className="pointer mb3 flex items-center mr4"
-                >
-                  <Icon
-                    color={color.value}
-                    checked={checkColor === color.code}
+                {assignedCompanyError && (
+                  <small
+                    style={{
+                      color: 'red',
+                      margin: '1rem 0rem',
+                    }}
                   >
-                    <span>
-                      <CheckIcon
-                        className={`${
-                          checkColor === color.code ? 'white' : ''
-                        }`}
-                      />
-                    </span>
-                  </Icon>
-                  <Field
-                    name="label"
-                    type="radio"
-                    defaultValue={data?.label}
-                    component={StyledRadioInput}
-                    value={color.code}
-                    key={color.code}
-                  />
-                </label>
-              ))}
-            </div>
-            <div className="flex justify-between">
-              <StyledButton
-                type="submit"
-                className="h2 pointer"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    Creating Project{' '}
-                    <Spinner className="ml2" size={15} />
-                  </>
-                ) : (
-                  'Create Project'
+                    Required
+                  </small>
                 )}
-              </StyledButton>
-              <SimpleButton
-                className="h2 pointer"
-                onClick={(e: any) => {
-                  e.preventDefault();
-                  props.setOpenProjectDialog(false);
-                  setLoading(false);
-                }}
-              >
-                Cancel
-              </SimpleButton>
-            </div>
+                <div className="w-100 flex flex-row justify-start items-center mt2 h3 mr-auto">
+                  <label className="label">Due date</label>
+                  <Field<string>
+                    name="date"
+                    validate={required}
+                    type="date"
+                    render={({ input, meta }) => (
+                      <>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                          <KeyboardDateTimePicker
+                            disablePast
+                            defaultValue={data?.deadline}
+                            inputVariant="outlined"
+                            id="date-picker-dialog"
+                            format="MM/dd/yyyy"
+                            value={
+                              input.value
+                                ? new Date(input.value)
+                                : null
+                            }
+                            onChange={(date) => {
+                              input.onChange(date);
+                              setData({
+                                ...data,
+                                deadline: date,
+                              });
+                            }}
+                            className="due-date-input due-date-subtask w-60"
+                            KeyboardButtonProps={{
+                              'aria-label': 'change date',
+                            }}
+                            placeholder={t(
+                              'app.project.Project-boards.Select-date',
+                            )}
+                            minDate={new Date()}
+                          />
+                        </MuiPickersUtilsProvider>
+                        {checkError(meta) && (
+                          <small
+                            className="mv3 ml2"
+                            style={{ color: 'red' }}
+                          >
+                            {meta.error || meta.submitError}
+                          </small>
+                        )}
+                      </>
+                    )}
+                  />
+                </div>
+                <div className="w-100 flex flex-row justify-start items-center mr-auto">
+                  <div className="w-100 flex mr3 items-center">
+                    <label className="label">Budget</label>
+                    <Field<string>
+                      defaultValue={data?.budget}
+                      name="budget"
+                      type="string"
+                      parse={(value: string) =>
+                        value.replaceAll(/[^0-9]/g, '')
+                      }
+                      render={({ input, meta }) => (
+                        <>
+                          <input
+                            {...input}
+                            onChange={(e) => {
+                              input.onChange(e.target.value);
+                              setData({
+                                ...data,
+                                budget: e.target.value,
+                              });
+                            }}
+                            value={input.value ?? ''}
+                            style={{
+                              width: '100%',
+                              boxShadow:
+                                'rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px',
+                              border: 'none',
+                              padding: '0.5rem',
+                              borderRadius: '0.2rem',
+                              height: 'auto',
+                            }}
+                            placeholder="Enter your budget for this project"
+                          />
+                        </>
+                      )}
+                    />
+                  </div>
+                  <div className="flex w-30">
+                    <Field<string>
+                      name="currency"
+                      type="string"
+                      render={({ input, meta }) => (
+                        <Select
+                          value={selectCurrency}
+                          id="currency"
+                          options={currencies}
+                          onChange={handleCurrencyChange}
+                          className="react-select w-100"
+                          getOptionLabel={(option) => option.name}
+                          getOptionValue={(option) => option.symbol}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="w-100 flex flex-row justify-start mt3 items-center">
+                  <label className="label mb3">Label</label>
+
+                  {Color.map((color) => (
+                    <label
+                      onClick={() => {
+                        setCheckColor(color.code);
+                        setData({ ...data, label: color?.code });
+                      }}
+                      key={color.code}
+                      className="pointer mb3 flex items-center mr4"
+                    >
+                      <Icon
+                        color={color.value}
+                        checked={checkColor === color.code}
+                      >
+                        <span>
+                          <CheckIcon
+                            className={`${
+                              checkColor === color.code ? 'white' : ''
+                            }`}
+                          />
+                        </span>
+                      </Icon>
+                      <Field
+                        name="label"
+                        type="radio"
+                        defaultValue={data?.label}
+                        component={StyledRadioInput}
+                        value={color.code}
+                        key={color.code}
+                      />
+                    </label>
+                  ))}
+                </div>
+                <div className="flex justify-between">
+                  <SimpleButton
+                    className="h2 pointer"
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                      props.setOpenProjectDialog(false);
+                    }}
+                  >
+                    Cancel
+                  </SimpleButton>
+                  <StyledButton
+                    type="button"
+                    className="h2 pointer"
+                    onClick={() => checkForm(values)}
+                  >
+                    Next
+                  </StyledButton>
+                </div>
+              </>
+            ) : (
+              <CreateStatus
+                handleSubmit={submitForm}
+                setStatusList={setStatusList}
+                statusList={statusList}
+                values={values}
+                setShowDialog={props.setOpenProjectDialog}
+              />
+            )}
           </form>
         )}
       />

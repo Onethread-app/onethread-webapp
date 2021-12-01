@@ -227,6 +227,184 @@ const ModalContainer = styled.div`
   }
 `;
 
+export const CreateStatusContainer = styled.div`
+  background: #ffffff;
+  border-radius: 4px;
+
+  .label {
+    min-width: 120px;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    column-gap: 1rem;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    row-gap: 0.5rem;
+    margin: 0.25rem 0;
+  }
+
+  input {
+    width: 200px;
+    height: 30px;
+    padding-left: 2rem;
+    border: 1px solid #b1b1b1;
+    box-sizing: border-box;
+    border-radius: 4px;
+  }
+
+  .error {
+    color: red;
+  }
+
+  .button-container {
+    width: 100%;
+    display: flex;
+    margin-bottom: auto;
+    margin-top: 1rem;
+    column-gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .input-div {
+    width: 200px;
+    position: relative;
+  }
+
+  .status-container {
+    display: grid;
+    width: 100%;
+    row-gap: 2px;
+    height: auto;
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 0.25rem 1rem 0.25rem 0;
+    z-index: 100;
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const StatusGrid = styled.div`
+  background: ${({ bg }) => bg};
+  border-radius: 4px;
+  color: ${({ color }) => color};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px 7px;
+  border: ${({ border }) => border};
+  width: fit-content;
+`;
+
+export const StatusGridContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+  row-gap: 1rem;
+  column-gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0 1rem 0 0;
+`;
+
+export const Line = styled.div`
+  width: 1rem;
+  height: 2px;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ColorContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 200px;
+  padding: 0.5rem;
+`;
+
+export const ColorItem = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background-color: ${({ bg }) => bg};
+  cursor: pointer;
+`;
+
+export const CustomStatusContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 1rem 0;
+  width: min(500px, 90vw);
+`;
+
+export const SelectColor = styled.div`
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background-color: ${({ bg }) => (bg ? bg : '#B1B1B1')};
+  transform: ${({ translate }) => translate};
+  cursor: pointer;
+`;
+
+export const ProjectHeader = styled.div`
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 36px;
+  color: #323030;
+  text-transform: capitalize;
+  margin-bottom: 20px;
+`;
+
+export const Status = styled.div`
+  background: ${({ bg }) => bg};
+  border-radius: 3.31579px;
+  padding: 4px 8px;
+`;
+
+export const StatusContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto 50px;
+  column-gap: 12px;
+  color: white;
+`;
+
+export const StatusItem = styled.div`
+  width: 200px;
+  height: 30px;
+  padding-left: 2rem;
+  border: 1px solid #b1b1b1;
+  box-sizing: border-box;
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
 const SimpleButton = styled.button`
   border: 1px solid #b1b1b1;
   box-sizing: border-box;

@@ -16,6 +16,7 @@ const createBulkTaskStatus = async (statusList, project, account) => {
         name: status.name,
         project,
         positionInBoard: status.positionInBoard,
+        color: status.color,
         account,
       });
     }),

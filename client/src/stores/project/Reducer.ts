@@ -147,6 +147,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         projectLoading: true,
+        error: '',
       };
     case ProjectActionTypes.ADD_PROJECT_ASSOCIATES_SUCCESS:
     case ProjectActionTypes.UPDATE_PROJECT_ROLE_SUCCESS:

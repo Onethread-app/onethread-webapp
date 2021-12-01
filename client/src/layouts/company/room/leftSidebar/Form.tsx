@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import Select from 'react-select';
 import { Form, Field } from 'react-final-form';
-import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 import { IRoom } from 'stores/room/Reducer';
 import { createRoom } from 'stores/room/Actions';
@@ -20,6 +19,11 @@ import { ICompanyByUser } from 'stores/user/Reducer';
 import { SmallTextAvatar } from 'components/avatar/TextAvatar';
 import { ICompany } from 'stores/company/Reducer';
 import { successToaster } from 'components/toast/Toaster';
+import {
+  SimpleButton,
+  StyledButton,
+} from 'components/announcement/AnnouncementDialog.styles';
+import { CircularProgress } from '@material-ui/core';
 
 interface ICreateFormProps {
   setShowDialog: (val: boolean) => void;
@@ -265,14 +269,23 @@ const CreateFormComponent: React.FC<any> = (
             {props.errorOnRoomCreate && (
               <small className="red">{props.errorOnRoomCreate}</small>
             )}
-            <div className="flex justify-end mt4">
-              <Button
-                className="grow h2 pointer white bp3-minimal w4 mr3"
-                style={{
-                  background: '#08A0F7',
-                  outline: 'none',
-                  color: 'white',
+            <div className="w-100 flex justify-between mt4">
+              <SimpleButton
+                // className="grow h2 pointer white bp3-minimal w4"
+                // style={{
+                //   background: '#fff',
+                //   outline: 'none',
+                //   border: '1px solid #08A0F7',
+                //   color: '#08A0F7',
+                // }}
+                onClick={() => {
+                  props.setShowDialog(false);
+                  dispatch({ type: room.CLEAR_STATUS_CODE });
                 }}
+              >
+                Cancel
+              </SimpleButton>
+              <StyledButton
                 loading={submitting}
                 type="submit"
                 disabled={
@@ -282,23 +295,15 @@ const CreateFormComponent: React.FC<any> = (
                     false
                 }
               >
-                Create
-              </Button>
-              <Button
-                className="grow h2 pointer white bp3-minimal w4"
-                style={{
-                  background: '#fff',
-                  outline: 'none',
-                  border: '1px solid #08A0F7',
-                  color: '#08A0F7',
-                }}
-                onClick={() => {
-                  props.setShowDialog(false);
-                  dispatch({ type: room.CLEAR_STATUS_CODE });
-                }}
-              >
-                Cancel
-              </Button>
+                {submitting ? (
+                  <>
+                    <CircularProgress className="ml2" size={20} />
+                    Creating Discussion
+                  </>
+                ) : (
+                  'Create Discussion'
+                )}
+              </StyledButton>
             </div>
           </form>
         </>
