@@ -2,50 +2,52 @@ import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 
 import { Form, Field } from 'react-final-form';
-import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
-import { TaskBoard, IColumn } from 'stores/task/Reducer';
-import { createColumn, updateColumn } from 'stores/task/Actions';
+import {
+  createTaskStatus,
+  updateTaskStatus,
+} from 'stores/task/Actions';
 
 import {
   required,
   checkError,
   composeValidators,
   maxValue,
-  checkTaskName,
 } from 'components/final-form/utils';
-import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
+import {
+  TextInput,
+  StyledButton,
+  SimpleButton,
+} from 'components/home/task-section/TaskSection.styles';
+import { ITaskStatus } from 'stores/task/Reducer';
+import { IProject } from 'stores/project/Reducer';
 
 interface ColumnFormProps {
   setShowColumnFormDialog: (val: boolean) => void;
-  column?: IColumn;
+  status?: ITaskStatus;
 }
 
 interface ColumnFormInternalProps extends ColumnFormProps {
-  currentBoard: TaskBoard;
-  createColumn: (columnInfo: any) => void;
-  updateColumn: (columnIndo: any) => void;
+  project: IProject;
+  createTaskStatus: (statusInfo: any) => void;
+  updateTaskStatus: (statusInfo: any) => void;
 }
 
 const ColumnFormComponent = (props: ColumnFormInternalProps) => {
   const onSubmit = async (values: any) => {
-    const columnInfo = {
+    const statusInfo = {
       ...values,
-      _id: props.column ? props.column._id : undefined,
-      positionInBoard:
-        props.column && isEmpty(props.column.name) === false
-          ? props.column.positionInBoard
-          : props.currentBoard.columns
-          ? props.currentBoard.columns.length + 1
-          : 1,
-      boardId: props.currentBoard._id,
+      _id: props.status ? props.status._id : undefined,
+      positionInBoard: Number(values.positionInBoard),
+      projectId: props.project._id,
+      companyId: props.project.company._id,
     };
-    if (props.column && isEmpty(props.column.name) === false) {
+    if (props.status && isEmpty(props.status.name) === false) {
       // edit column name
-      await props.updateColumn(columnInfo);
+      props.updateTaskStatus(statusInfo);
     } else {
       // New column create
-      await props.createColumn(columnInfo);
+      props.createTaskStatus(statusInfo);
     }
     if (props.setShowColumnFormDialog) {
       props.setShowColumnFormDialog(false);
@@ -55,13 +57,14 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
 
   return (
     <div className="pa3">
-      <div style={{ marginTop: '7rem' }}>
-        {props.column ? <h3>Edit Column</h3> : <h3>Create Column</h3>}
+      <div>
+        {props.status ? <h3>Edit Status</h3> : <h3>Create Status</h3>}
       </div>
       <Form
         onSubmit={onSubmit}
         initialValues={{
-          name: props.column ? props.column.name : undefined,
+          name: props.status ? props.status.name : undefined,
+          positionInBoard: props.status?.positionInBoard,
         }}
         render={({
           handleSubmit,
@@ -77,63 +80,62 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
             <div className="pv3 justify-content w-100">
               <Field<string>
                 name="name"
-                validate={composeValidators(
-                  required,
-                  maxValue(60),
-                  checkTaskName,
-                )}
+                validate={composeValidators(required, maxValue(60))}
                 render={({ input, meta }) => (
-                  <div
-                    className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
-                  >
-                    <InputGroupFieldWithLabel
+                  <div className={`flex items-center`}>
+                    <label className="text-width">Name</label>
+                    <TextInput
                       id="name"
                       value={input.value}
                       onChange={input.onChange}
-                      style={{
-                        boxShadow: 'none',
-                        fontSize: '18px',
-                      }}
-                      error={
+                      style={{ border: '1px solid #b1b1b1' }}
+                      hasError={
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      label="Column Name"
-                      autoFocus={true}
                     />
                   </div>
                 )}
               />
-              <div className="fr">
-                <Button
-                  className="grow pointer white bp3-minimal w4 mt2 mr3"
-                  style={{
-                    background: '#08A0F7',
-                    outline: 'none',
-                    color: 'white',
-                  }}
-                  loading={submitting}
+              <Field<string>
+                name="positionInBoard"
+                validate={composeValidators(required, maxValue(5))}
+                parse={(value) => value.replaceAll(/[^0-9]/g, '')}
+                placeholder="Position in board"
+                render={({ input, meta }) => (
+                  <div className={`flex items-center `}>
+                    <label className="text-width">Position</label>
+                    <TextInput
+                      {...input}
+                      value={input.value}
+                      onChange={input.onChange}
+                      style={{ border: '1px solid #b1b1b1' }}
+                      hasError={
+                        checkError(meta) &&
+                        (meta.error || meta.submitError)
+                      }
+                    />
+                  </div>
+                )}
+              />
+              <div className="flex justify-between items-center mt3">
+                <StyledButton
                   type="submit"
-                  disabled={submitting || pristine}
+                  disabled={
+                    submitting || pristine || hasValidationErrors
+                  }
                 >
-                  {props.column ? 'Update' : 'Create'}
-                </Button>
-                <Button
-                  className="w4 grow h2 pointer"
-                  style={{
-                    background: '#fff',
-                    outline: 'none',
-                    border: '1px solid #08A0F7',
-                    color: '#08A0F7',
-                  }}
+                  {props.status ? 'Update' : 'Create'}
+                </StyledButton>
+                <SimpleButton
                   onClick={(e: any) => {
                     if (props.setShowColumnFormDialog) {
                       props.setShowColumnFormDialog(false);
                     }
                   }}
                 >
-                  cancel
-                </Button>
+                  Cancel
+                </SimpleButton>
               </div>
             </div>
           </form>
@@ -143,13 +145,11 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
-  };
-};
+const mapStateToProps = (state: any) => ({
+  project: state.projectReducer.projectDetails,
+});
 
 export const ColumnForm = connect(mapStateToProps, {
-  createColumn,
-  updateColumn,
+  createTaskStatus,
+  updateTaskStatus,
 })(ColumnFormComponent);

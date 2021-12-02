@@ -6,6 +6,7 @@ import { ITaskStatus } from 'stores/task/Reducer';
 import { useTasksTableContext } from 'components/task/TasksTableContext';
 
 import TasksContainer from 'components/task/TasksContainer';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 
 const ColumnContainer = styled.div`
   padding: 1rem 0.5rem;
@@ -49,6 +50,8 @@ const HeaderIcon = styled.span`
 interface IColumnProps {
   index: number;
   status: ITaskStatus;
+  setUpdateStatus: React.Dispatch<React.SetStateAction<ITaskStatus>>;
+  setShowEditStatus: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Column = (props: IColumnProps) => {
@@ -74,12 +77,19 @@ const Column = (props: IColumnProps) => {
             >
               <ColumnHeader {...provided.dragHandleProps}>
                 <HeaderIcon columnName={columnName} />
-                {status.name}{' '}
+                {status.name}
                 <span className="ml2">{`(${
                   tasks.filter(
-                    (task) => task.status._id === status._id,
+                    (task) => task.status?._id === status?._id,
                   ).length
                 })`}</span>
+                <EditOutlinedIcon
+                  className="ml-auto"
+                  onClick={() => {
+                    props.setShowEditStatus(true);
+                    props.setUpdateStatus(status);
+                  }}
+                />
               </ColumnHeader>
               <TasksContainer status={status} />
             </ColumnContainer>

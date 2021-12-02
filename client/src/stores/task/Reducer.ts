@@ -894,15 +894,32 @@ export const TaskReducer = (state = InitialState, action: any) => {
         errorOnTaskStatus: '',
       };
     case TaskActionType.CREATE_TASK_STATUS_SUCCESS:
-    case TaskActionType.UPDATE_TASK_STATUS_SUCCESS:
+      const statusList = [...state.taskStatusList, action.payload];
       return {
         ...state,
         taskStatusLoading: false,
-        taskStatusList: [
-          ...state.taskStatusList,
-          { ...action.payload },
-        ],
+        taskStatusList: statusList,
+        projectTaskList: state.projectTaskList.map((task: ITask) => ({
+          ...task,
+          statusList,
+        })),
       };
+    case TaskActionType.UPDATE_TASK_STATUS_SUCCESS:
+      const updatedStatusList = state.taskStatusList.map((status) =>
+        status._id === action.payload._id
+          ? { ...action.payload }
+          : status,
+      );
+      return {
+        ...state,
+        taskStatusLoading: false,
+        taskStatusList: updatedStatusList,
+        projectTaskList: state.projectTaskList.map((task: ITask) => ({
+          ...task,
+          statusList: updatedStatusList,
+        })),
+      };
+
     case TaskActionType.CREATE_TASK_STATUS_FAILURE:
     case TaskActionType.UPDATE_TASK_STATUS_FAILURE:
       return {

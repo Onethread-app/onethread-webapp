@@ -18,11 +18,11 @@ import {
 } from 'stores/task/Actions';
 
 import Column from 'components/column/Column';
-import { RightSidebar } from 'components/RightSidebar';
 import { ColumnForm } from 'components/column/ColumnForm';
 import { errorToaster } from 'components/toast/Toaster';
 import { useTasksTableContext } from 'components/task/TasksTableContext';
 import { isEqual } from 'lodash';
+import { Dialog } from '@blueprintjs/core';
 
 const ColumnsContainerDiv = styled.div`
   gap: 1.25rem;
@@ -67,11 +67,15 @@ interface IColumnsContainerInternalProps {
 
 const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
   const { tasks } = useTasksTableContext();
-  const [statuses, setStatues] = useState<ITaskStatus[]>([]);
+  const [statuses, setStatuses] = useState<ITaskStatus[]>([]);
   // const [columns,setColumns] = useState<IColumn[]>([]);
   const [showColumnFormDialog, setShowColumnFormDialog] =
     useState(false);
+  const [showEditStatus, setShowEditStatus] = useState(false);
   const [updatingTask, setUpdatingTask] = useState<boolean>(false);
+  const [updateStatus, setUpdateStatus] = useState<ITaskStatus>(
+    {} as ITaskStatus,
+  );
 
   const dragEnd = (result: DropResult) => {
     if (!result.destination) {
@@ -88,7 +92,7 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
       props.updateTaskStatusForBoardLocally?.({
         _id: result.draggableId,
         status: result.destination.droppableId,
-      })
+      });
       props.updateTask({
         taskId: result.draggableId,
         companyId: props.companyId,
@@ -110,16 +114,25 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
             name: col.name,
             positionInBoard: col.positionInBoard,
           };
-          props.updateTaskStatus({ ...statusInfo, projectId: props.projectId });
+          props.updateTaskStatus({
+            ...statusInfo,
+            projectId: props.projectId,
+          });
         }
       });
-      setStatues(newCols.sort((a, b) => a.positionInBoard - b.positionInBoard));
+      setStatuses(
+        newCols.sort((a, b) => a.positionInBoard - b.positionInBoard),
+      );
     }
   };
 
   useEffect(() => {
     tasks.length > 0 &&
-      setStatues(tasks[0].statusList.sort((a, b) => a.positionInBoard - b.positionInBoard));
+      setStatuses(
+        tasks[0].statusList.sort(
+          (a, b) => a.positionInBoard - b.positionInBoard,
+        ),
+      );
   }, [tasks]);
 
   useEffect(() => {
@@ -155,6 +168,8 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
                   status={status}
                   index={index}
                   key={status._id}
+                  setUpdateStatus={setUpdateStatus}
+                  setShowEditStatus={setShowEditStatus}
                 />
               ))}
               {/* {columns.map((col: IColumn, index) => (
@@ -166,14 +181,32 @@ const ColumnsContainer = (props: IColumnsContainerInternalProps) => {
                 <Icon icon="plus" color="#08A0F7" />
               </AddColumnButton>
               {showColumnFormDialog && (
-                <RightSidebar
+                <Dialog
+                  isOpen={showColumnFormDialog}
+                  canOutsideClickClose={true}
+                  canEscapeKeyClose={true}
                   onClose={() => setShowColumnFormDialog(false)}
+                  className="h-auto w-auto pb0 bg-white"
                 >
                   <ColumnForm
                     setShowColumnFormDialog={setShowColumnFormDialog}
                   />
-                </RightSidebar>
+                </Dialog>
               )}
+              {showEditStatus ? (
+                <Dialog
+                  isOpen={showEditStatus}
+                  canOutsideClickClose={true}
+                  canEscapeKeyClose={true}
+                  className="h-auto w-auto pb0 bg-white"
+                  onClose={() => setShowEditStatus(false)}
+                >
+                  <ColumnForm
+                    setShowColumnFormDialog={setShowEditStatus}
+                    status={updateStatus}
+                  />
+                </Dialog>
+              ) : null}
             </ColumnsContainerDiv>
           );
         }}
