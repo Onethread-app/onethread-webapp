@@ -66,6 +66,10 @@ import { getCompanyId } from 'stores/company/Selector';
 import { getCurrentBoard } from './Selector';
 import { returnErrorText } from 'helpers/HandleSagaErrors';
 import { updateUserCompanyTask } from 'stores/user/Actions';
+import {
+  errorToaster,
+  successToaster,
+} from 'components/toast/Toaster';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -471,9 +475,14 @@ export function* createTaskStatusAsync({ payload }: any) {
         headers,
       );
       yield put(createTaskStatusSuccess(response.data));
+      successToaster(
+        `Task Status ${newPayload.name} created successfully`,
+      );
+      // yield put(getAllProjectTasks());
     }
   } catch (error) {
     yield put(createTaskStatusFailure(returnErrorText(error)));
+    errorToaster(returnErrorText(error));
   }
 }
 
@@ -506,9 +515,13 @@ export function* updateTaskStatusAsync({ payload }: any) {
         headers,
       );
       yield put(updateTaskStatusSuccess(response.data));
+      successToaster(
+        `Task Status ${newPayload.name} updated successfully`,
+      );
     }
   } catch (error) {
     yield put(updateTaskStatusFailure(returnErrorText(error)));
+    errorToaster(returnErrorText(error));
   }
 }
 

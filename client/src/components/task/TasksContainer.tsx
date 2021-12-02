@@ -47,8 +47,8 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
   } = useTasksTableContext();
   const { status } = props;
   const memoizedTasks = useMemo(
-    () => tasks.filter((task) => task.status._id === status._id),
-    [status._id, tasks],
+    () => tasks.filter((task) => task.status?._id === status?._id),
+    [status?._id, tasks],
   );
   const [columnTasks, setColumnTasks] =
     useState<ITask[]>(memoizedTasks);
@@ -84,7 +84,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
     selectedDueDateRange,
     selectedProjectList,
     selectedStatusList,
-    selectedLabelList
+    selectedLabelList,
   ]);
 
   return (
