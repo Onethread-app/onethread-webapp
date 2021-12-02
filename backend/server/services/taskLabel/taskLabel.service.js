@@ -10,6 +10,11 @@ const getTaskLabel = async (taskId) => {
   return labels.map((label) => label.label);
 };
 
+const taskLabelCreation = async (task, label) => {
+  return TaskLabel.create({ task, label });
+};
+
 module.exports = {
   getTaskLabel,
+  taskLabelCreation,
 };

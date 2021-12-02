@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import Select from 'react-select';
 import { Form, Field } from 'react-final-form';
-import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 
 import { IRoom } from 'stores/room/Reducer';
 import { createRoom } from 'stores/room/Actions';
@@ -20,6 +19,11 @@ import { ICompanyByUser } from 'stores/user/Reducer';
 import { SmallTextAvatar } from 'components/avatar/TextAvatar';
 import { ICompany } from 'stores/company/Reducer';
 import { successToaster } from 'components/toast/Toaster';
+import {
+  TextInput,
+  StyledButton,
+  SimpleButton,
+} from 'components/home/task-section/TaskSection.styles';
 
 interface ICreateFormProps {
   setShowDialog: (val: boolean) => void;
@@ -181,18 +185,18 @@ const CreateFormComponent: React.FC<any> = (
                 validate={composeValidators(required, maxValue(32))}
                 render={({ input, meta }) => (
                   <div className="flex flex-column">
-                    <input
+                    <TextInput
                       id={input.name}
                       placeholder="Discussion name"
                       value={input.value}
                       onChange={input.onChange}
-                      style={{
-                        boxShadow: 'none',
-                        height: '2rem',
-                        borderRadius: '0.25rem',
-                        textIndent: '0.5rem',
-                        border: '1px solid #e6e6ee6',
-                      }}
+                      // style={{
+                      //   boxShadow: 'none',
+                      //   height: '2rem',
+                      //   borderRadius: '0.25rem',
+                      //   textIndent: '0.5rem',
+                      //   border: '1px solid #e6e6ee6',
+                      // }}
                     />
                     {checkError(meta) ? (
                       <span>{meta.error || meta.submitError}</span>
@@ -265,15 +269,8 @@ const CreateFormComponent: React.FC<any> = (
             {props.errorOnRoomCreate && (
               <small className="red">{props.errorOnRoomCreate}</small>
             )}
-            <div className="flex justify-end mt4">
-              <Button
-                className="grow h2 pointer white bp3-minimal w4 mr3"
-                style={{
-                  background: '#08A0F7',
-                  outline: 'none',
-                  color: 'white',
-                }}
-                loading={submitting}
+            <div className="flex justify-between mt4">
+              <StyledButton
                 type="submit"
                 disabled={
                   submitting ||
@@ -282,23 +279,18 @@ const CreateFormComponent: React.FC<any> = (
                     false
                 }
               >
-                Create
-              </Button>
-              <Button
-                className="grow h2 pointer white bp3-minimal w4"
-                style={{
-                  background: '#fff',
-                  outline: 'none',
-                  border: '1px solid #08A0F7',
-                  color: '#08A0F7',
-                }}
+                {submitting
+                  ? 'Creating Discussion'
+                  : 'Create Discussion'}
+              </StyledButton>
+              <SimpleButton
                 onClick={() => {
                   props.setShowDialog(false);
                   dispatch({ type: room.CLEAR_STATUS_CODE });
                 }}
               >
                 Cancel
-              </Button>
+              </SimpleButton>
             </div>
           </form>
         </>

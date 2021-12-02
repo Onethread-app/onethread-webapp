@@ -23,7 +23,7 @@ export const AssignedMembersViewComponent = (
   const [memberList, setMemberList] = useState<any>([]);
   useEffect(() => {
     setLoading(true);
-    if (props.currentTask.members.length > 0) {
+    if (props.currentTask.members?.length > 0) {
       const subtaskMembers = props.currentTask.subTasks.map(
         (subtask) => subtask.members || [],
       );

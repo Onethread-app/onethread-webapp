@@ -175,6 +175,7 @@ const ProjectDiscussion = (props: IProps) => {
           canEscapeKeyClose={true}
           canOutsideClickClose={true}
           className="pb0 h-auto w-auto"
+          style={{ backgroundColor: '#fff' }}
         >
           <CreateForm
             setShowDialog={setShowDiscussionForm}

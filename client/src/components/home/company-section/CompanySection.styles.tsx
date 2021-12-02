@@ -1,4 +1,3 @@
-import { StyledTextInput } from 'components/form-components/Index.styles';
 import styled from 'styled-components';
 
 const Header = styled.header`
@@ -210,14 +209,14 @@ const StyledButton = styled.button`
   }
 `;
 
-const TextInput = styled(StyledTextInput)`
-  height: 36px;
+const TextInput = styled.input`
+  height: 36px !important;
   border-radius: 4px;
   width: 100%;
   border: ${({ hasError }) =>
     hasError ? '1px solid red !important' : 'none'};
   vertical-align: middle;
-  font-weight: bold;
+  font-weight: 400;
   margin-top: 4px;
   text-indent: 0px;
   background-color: #fff;
@@ -235,10 +234,9 @@ const TextInput = styled(StyledTextInput)`
 
   &:focus {
     outline: ${({ hasError }) =>
-      hasError
-        ? '1px transparent !important'
-        : '1px #08a0f7 !important'};
-    font-weight: bolder;
+      !hasError
+        ? '1px #08a0f7 !important'
+        : '1px transparent !important'};
   }
 `;
 

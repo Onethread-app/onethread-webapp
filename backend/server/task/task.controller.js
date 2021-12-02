@@ -11,6 +11,9 @@ const {
 } = require('../services/task/taskStatus/taskStatus.service');
 
 const TaskLabel = require('../label/label.model');
+const {
+  taskLabelCreation,
+} = require('../services/taskLabel/taskLabel.service');
 
 const {
   findTaskAssignedByUser,
@@ -190,6 +193,7 @@ const create = async (req, res, next) => {
     // Get Company & Project ID
     const companyId = req.headers.companyid;
     const pid = req.query.pid;
+    const labels = req.body.labels;
 
     // Create Task
     const task = await Task.create({
@@ -202,6 +206,12 @@ const create = async (req, res, next) => {
       dueDate: req.body.dueDate,
       company: companyId,
     });
+
+    await Promise.all(
+      labels.map(async (label) => {
+        await taskLabelCreation(task._id, label);
+      }),
+    );
 
     const populatedTask = await task
       .populate(populateArray)
