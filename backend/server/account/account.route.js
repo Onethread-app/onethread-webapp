@@ -54,6 +54,13 @@ router
   );
 
 router
+  .route('/store-table-setting')
+  .post(
+    schemaValidator(paramValidation.storeTableSetting),
+    accountCtrl.storeTableSetting,
+  );
+
+router
   .route('/change-email')
   .put(
     schemaValidator(paramValidation.changeEmail),

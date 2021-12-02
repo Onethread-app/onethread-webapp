@@ -74,6 +74,15 @@ const addTokenToBlackList = async (token, tokenExpire) => {
   logger.info(`access and refresh token add to blacklist`);
 };
 
+const storeUserSettingInCache = async (
+  setting,
+  account,
+  tokenExpire,
+) => {
+  await client.set(`setting:${account}`, setting, 'PX', tokenExpire);
+  logger.info(`Setting is stored in cache`);
+};
+
 module.exports = {
   findAccountById,
   findAccountByIdAndUpdateAccountStatus,
@@ -85,4 +94,5 @@ module.exports = {
   deleteVerifyToken,
   tokenVerify,
   addTokenToBlackList,
+  storeUserSettingInCache,
 };

@@ -165,4 +165,20 @@ module.exports = {
       newEmail: schema.email.required(),
     }),
   }),
+  storeTableSetting: Joi.object().keys({
+    body: Joi.object().keys({
+      settings: Joi.array()
+        .items(
+          Joi.object().keys({
+            name: Joi.string().required(), // 'task_due_soon'
+            rowsPerPage: Joi.number().integer().required(),
+            columns: Joi.array().items(Joi.string()).required(),
+            view: Joi.string()
+              .valid('list', 'board', 'calendar')
+              .required(),
+          }),
+        )
+        .required(),
+    }),
+  }),
 };

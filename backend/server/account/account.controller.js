@@ -51,6 +51,7 @@ const {
   deleteVerifyToken,
   tokenVerify,
   addTokenToBlackList,
+  storeUserSettingInCache,
 } = require('../services/account/account.service');
 const Task = require('../task/task.model');
 const SubTask = require('../task/subtask/subtask.model'); // TODO: REMOVE
@@ -776,7 +777,7 @@ const userTaskList = async (req, res, next) => {
     await Promise.all(
       filteredTask.map(async (ft) => {
         const _id = ft.taskId._id.toString();
-        if(uniqueTaskIdMapper[_id]) return false;
+        if (uniqueTaskIdMapper[_id]) return false;
         uniqueTaskIdMapper[_id] = true;
         const members = await getAssignedMembers(ft.taskId._id);
         const statusList = await getAllStatusInProject(
@@ -810,10 +811,12 @@ const userTaskList = async (req, res, next) => {
           },
           subtasks: tasks.filter((task) => {
             if (task.parentTask) {
-                return task.parentTask.toString() = ft.taskId._id.toString();
-              } else return false;
-            },
-          ),
+              return (
+                task.parentTask.toString() ===
+                ft.taskId._id.toString()
+              );
+            } else return false;
+          }),
           labels: await getTaskLabel(ft.taskId._id),
         };
         ft.taskId.parentTask === null && response.push(modifiedTask);
@@ -838,6 +841,20 @@ const userSubtasks = async (req, res, next) => {
     sendJSONresponse(res, 200, subtasksAssignedToUser);
   } catch (error) {
     logger.error(`Subtask for users: ${error}`);
+    next(error);
+  }
+};
+
+const storeTableSetting = async (req, res, next) => {
+  const { settings } = req.body;
+  try {
+    await storeUserSettingInCache(
+      settings,
+      req.user._id,
+      config.accessTokenExpire,
+    );
+  } catch (error) {
+    logger.error(`Store Table Setting: ${error}`);
     next(error);
   }
 };
