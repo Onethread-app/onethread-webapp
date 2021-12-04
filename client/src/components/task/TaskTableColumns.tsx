@@ -9,6 +9,7 @@ import MemberGroup from 'components/member/MemberGroup';
 import TaskPriorityTag from './TaskPriorityTag';
 import TaskTagSelect from './TaskTagSelect';
 import LabelListView from 'components/label/LabelListView';
+import { ITaskMember } from 'stores/task/Reducer';
 
 const customProjectFilter = (rows, id, filterValue) => {
   return rows.filter((row) =>
@@ -37,7 +38,20 @@ const customLabelFilter = (rows, id, filterValue) => {
       return found;
     });
   });
-}
+};
+
+const customAssigneeFilter = (rows, id, filterValue) => {
+  return rows.filter(row => {
+    if (isEmpty(filterValue)) return row;
+
+    let found = false;
+    const rowAssignees = row.original.members.map((member: ITaskMember) => member.assignedPerson._id);
+    return rowAssignees.some(assignee => {
+      found = filterValue.includes(assignee);
+      return found;
+    });
+  });
+};
 
 const customDueDateFilter = (rows, id, filterValue) => {
   return rows.filter((row) => {
@@ -132,6 +146,7 @@ export const TaskTableColumns = [
       ) : (
         'Not Assigned'
       ),
+    filter: customAssigneeFilter,
   },
   {
     Header: 'Priority',

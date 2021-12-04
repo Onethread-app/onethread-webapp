@@ -204,6 +204,7 @@ export const tasksFilterFn = (
   selectedDueDateRange: [null | Date, null | Date],
   selectedStatusList: string[],
   selectedLabelList: string[],
+  selectedAssigneeList: string[],
   selectedProjectList?: string[] | undefined,
 ) => {
   if (!isNil(globalFilter) || !isEmpty(globalFilter)) {
@@ -255,6 +256,7 @@ export const tasksFilterFn = (
       } else return task;
     });
   }
+
   if (!isNil(selectedProjectList) && !isEmpty(selectedProjectList)) {
     tasks = filterTasksByProject(tasks, selectedProjectList);
   }
@@ -262,6 +264,18 @@ export const tasksFilterFn = (
   if (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) {
     tasks = filterTasksByStatus(tasks, selectedStatusList);
   }
+
+  if (!isNil(selectedLabelList) && !isEmpty(selectedLabelList)) {
+    tasks = filterTasksByLabel(tasks, selectedLabelList);
+  }
+
+  if (
+    !isNil(selectedAssigneeList) &&
+    !isEmpty(selectedAssigneeList)
+  ) {
+    tasks = filterTasksByAssignee(tasks, selectedAssigneeList);
+  }
+
   return tasks;
 };
 
@@ -275,6 +289,37 @@ export const filterTasksByProject = (tasks, selectedProjectList) => {
   return tasks.filter((task) =>
     selectedProjectList.includes(task.project._id),
   );
+};
+
+export const filterTasksByLabel = (tasks, selectedLabelList) => {
+  return tasks.filter((task) => {
+    if (isEmpty(selectedLabelList)) return task;
+
+    let found = false;
+    const taskLabels = task.labels.map((label) => label._id);
+    return taskLabels.some((label) => {
+      found = selectedLabelList.includes(label);
+      return found;
+    });
+  });
+};
+
+export const filterTasksByAssignee = (
+  tasks,
+  selectedAssigneeList,
+) => {
+  return tasks.filter((task: ITask) => {
+    if (isEmpty(selectedAssigneeList)) return task;
+
+    let found = false;
+    const taskAssignees = task.members.map(
+      (member) => member.assignedPerson._id,
+    );
+    return taskAssignees.some((assignee) => {
+      found = selectedAssigneeList.includes(assignee);
+      return found;
+    });
+  });
 };
 
 export const formatTasksForCalendar = (projectTaskList) => {

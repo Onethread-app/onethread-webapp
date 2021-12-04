@@ -83,6 +83,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
     [],
   );
   const [selectedLabelList, setSelectedLabelList] = useState<any>([]);
+  const [selectedAssigneeList, setSelectedAssigneeList] = useState<any>([]);
   const [selectedDueDateOption, setSelectedDueDateOption] =
     useState<string>('');
   const [selectedDueDateRange, setSelectedDueDateRange] =
@@ -127,8 +128,8 @@ const ProjectTasks = (props: IProjectTasksProps) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-            ? 7
-            : 5,
+              ? 7
+              : 5,
         hiddenColumns: ['createdAt', 'priority'],
         // sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -174,6 +175,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
   const handleClearFilter = () => {
     setSelectedStatusList([]);
     setSelectedLabelList([]);
+    setSelectedAssigneeList([]);
     setSelectedDueDateRange([null, null]);
     setSelectedDueDateOption('');
     setTaskList(projectTaskList);
@@ -201,7 +203,8 @@ const ProjectTasks = (props: IProjectTasksProps) => {
       (!isNil(selectedDueDateOption) &&
         !isEmpty(selectedDueDateOption)) ||
       (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) ||
-      (!isNil(selectedLabelList) && !isEmpty(selectedLabelList))
+      (!isNil(selectedLabelList) && !isEmpty(selectedLabelList)) ||
+      (!isNil(selectedAssigneeList) && !isEmpty(selectedAssigneeList))
     ) {
       const tasks = tasksFilterFn(
         projectTaskList,
@@ -210,6 +213,7 @@ const ProjectTasks = (props: IProjectTasksProps) => {
         selectedDueDateRange,
         selectedStatusList,
         selectedLabelList,
+        selectedAssigneeList
       );
       setTasksForCalendarView(formatTasksForCalendar(tasks));
     } else {
@@ -218,14 +222,17 @@ const ProjectTasks = (props: IProjectTasksProps) => {
         formatTasksForCalendar(projectTaskList),
       );
     }
-  }, [
-    projectTaskList,
-    globalFilter,
-    selectedDueDateOption,
-    selectedDueDateRange,
-    selectedStatusList,
-    selectedLabelList,
-  ]);
+  },
+    [
+      globalFilter,
+      projectTaskList,
+      selectedDueDateOption,
+      selectedDueDateRange,
+      selectedStatusList,
+      selectedLabelList,
+      selectedAssigneeList
+    ]
+  );
 
   useEffect(() => {
     if (singleProjectLoading === false) {
@@ -265,6 +272,10 @@ const ProjectTasks = (props: IProjectTasksProps) => {
   }, [selectedLabelList]);
 
   useEffect(() => {
+    setFilter('members', selectedAssigneeList);
+  }, [selectedAssigneeList]);
+
+  useEffect(() => {
     const filterValue = {
       type: selectedDueDateOption,
       range: selectedDueDateRange,
@@ -278,20 +289,23 @@ const ProjectTasks = (props: IProjectTasksProps) => {
       tasks: data,
       selectedStatusList,
       selectedLabelList,
+      selectedAssigneeList,
       selectedDueDateOption,
       selectedDueDateRange,
       setSelectedStatusList,
       setSelectedLabelList,
+      setSelectedAssigneeList,
       setSelectedDueDateOption,
       setSelectedDueDateRange,
     }),
     [
-      data,
       globalFilter,
-      selectedDueDateOption,
-      selectedDueDateRange,
+      data,
       selectedStatusList,
       selectedLabelList,
+      selectedAssigneeList,
+      selectedDueDateOption,
+      selectedDueDateRange
     ],
   );
 
@@ -326,12 +340,13 @@ const ProjectTasks = (props: IProjectTasksProps) => {
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
                 !isEmpty(selectedLabelList) ||
+                !isEmpty(selectedAssigneeList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {

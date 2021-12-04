@@ -87,6 +87,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   const [selectedDueDateRange, setSelectedDueDateRange] =
     useState<DateRange>([null, null]);
   const [selectedLabelList, setSelectedLabelList] = useState<any>([]);
+  const [selectedAssigneeList, setSelectedAssigneeList] = useState<any>([]);
 
   const [showEditTaskDialog, setShowEditTaskDialog] =
     useState<boolean>(false);
@@ -228,6 +229,10 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   }, [selectedStatusList]);
 
   useEffect(() => {
+    setFilter('members', selectedAssigneeList);
+  }, [selectedAssigneeList]);
+
+  useEffect(() => {
     const filterValue = {
       type: selectedDueDateOption,
       range: selectedDueDateRange,
@@ -241,11 +246,13 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
       tasks: data,
       selectedStatusList,
       selectedLabelList,
+      selectedAssigneeList,
       selectedProjectList,
       selectedDueDateOption,
       selectedDueDateRange,
       setSelectedStatusList,
       setSelectedLabelList,
+      setSelectedAssigneeList,
       setSelectedProjectList,
       setSelectedDueDateOption,
       setSelectedDueDateRange,
@@ -255,9 +262,10 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
       data,
       selectedStatusList,
       selectedLabelList,
+      selectedAssigneeList,
       selectedProjectList,
       selectedDueDateOption,
-      selectedDueDateRange,
+      selectedDueDateRange
     ],
   );
 
@@ -289,13 +297,14 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
                 !isEmpty(selectedLabelList) ||
+                !isEmpty(selectedAssigneeList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {

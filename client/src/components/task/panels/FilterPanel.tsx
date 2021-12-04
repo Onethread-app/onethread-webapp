@@ -59,6 +59,13 @@ const FilterPanel = () => {
             <p>Label</p>
             <ChevronRightIcon />
           </PanelTitle>
+          <PanelTitle
+            onClick={() => setSelectedPanel(4)}
+            active={!isEmpty(selectedDueDateOption)}
+          >
+            <p>Assignee</p>
+            <ChevronRightIcon />
+          </PanelTitle>
         </PanelsTitleContainer>
       ) : (
         <PanelView
