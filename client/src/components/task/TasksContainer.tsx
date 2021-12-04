@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import { ITaskStatus, ITask } from 'stores/task/Reducer';
@@ -44,6 +43,7 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
     selectedLabelList,
     selectedDueDateOption,
     selectedDueDateRange,
+    selectedAssigneeList,
   } = useTasksTableContext();
   const { status } = props;
   const memoizedTasks = useMemo(
@@ -61,7 +61,9 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
         !isEmpty(selectedDueDateOption)) ||
       (!isNil(selectedProjectList) &&
         !isEmpty(selectedProjectList)) ||
-      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList))
+      (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) ||
+      (!isNil(selectedLabelList) && !isEmpty(selectedLabelList)) ||
+      (!isNil(selectedAssigneeList) && !isEmpty(selectedAssigneeList))
     ) {
       setColumnTasks(
         tasksFilterFn(
@@ -71,21 +73,25 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
           selectedDueDateRange,
           selectedStatusList,
           selectedLabelList,
+          selectedAssigneeList,
           selectedProjectList,
         ),
       );
     } else {
       setColumnTasks(memoizedTasks);
     }
-  }, [
-    globalFilter,
-    memoizedTasks,
-    selectedDueDateOption,
-    selectedDueDateRange,
-    selectedProjectList,
-    selectedStatusList,
-    selectedLabelList,
-  ]);
+  },
+    [
+      globalFilter,
+      memoizedTasks,
+      selectedDueDateOption,
+      selectedDueDateRange,
+      selectedProjectList,
+      selectedStatusList,
+      selectedLabelList,
+      selectedAssigneeList
+    ]
+  );
 
   return (
     <Droppable droppableId={props.status._id} type="task">
@@ -113,8 +119,4 @@ const TasksContainer = (props: ITasksContainerInternalProps) => {
   );
 };
 
-const mapStateToProps = (state: any) => ({
-  // currentBoard: state.taskIndexReducer.taskReducer.currentBoard,
-});
-
-export default connect(mapStateToProps)(TasksContainer);
+export default TasksContainer;

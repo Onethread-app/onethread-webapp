@@ -83,6 +83,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
     [],
   );
   const [selectedLabelList, setSelectedLabelList] = useState<any>([]);
+  const [selectedAssigneeList, setSelectedAssigneeList] = useState<any>([]);
   const [selectedProjectList, setSelectedProjectList] = useState<any>(
     [],
   );
@@ -128,8 +129,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
           window.innerHeight > 1020
             ? 10
             : window.innerHeight > 800
-            ? 7
-            : 5,
+              ? 7
+              : 5,
         hiddenColumns: ['createdAt', 'priority'],
         sortBy: [{ id: 'createdAt', desc: true }],
       },
@@ -175,6 +176,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
   const handleClearFilter = () => {
     setSelectedStatusList([]);
     setSelectedLabelList([]);
+    setSelectedAssigneeList([]);
     setSelectedProjectList([]);
     setSelectedDueDateRange([null, null]);
     setSelectedDueDateOption('');
@@ -232,7 +234,8 @@ const CompanyTasks = (props: ICompanyTasks) => {
       (!isNil(selectedDueDateOption) &&
         !isEmpty(selectedDueDateOption)) ||
       (!isNil(selectedStatusList) && !isEmpty(selectedStatusList)) ||
-      (!isNil(selectedLabelList) && !isEmpty(selectedLabelList))
+      (!isNil(selectedLabelList) && !isEmpty(selectedLabelList)) ||
+      (!isNil(selectedAssigneeList) && !isEmpty(selectedAssigneeList))
     ) {
       const tasks = tasksFilterFn(
         companyTaskList,
@@ -241,6 +244,7 @@ const CompanyTasks = (props: ICompanyTasks) => {
         selectedDueDateRange,
         selectedStatusList,
         selectedLabelList,
+        selectedAssigneeList
       );
       setTasksForCalendarView(formatTasksForCalendar(tasks));
     } else {
@@ -249,14 +253,17 @@ const CompanyTasks = (props: ICompanyTasks) => {
         formatTasksForCalendar(companyTaskList),
       );
     }
-  }, [
-    companyTaskList,
-    globalFilter,
-    selectedDueDateOption,
-    selectedDueDateRange,
-    selectedLabelList,
-    selectedStatusList,
-  ]);
+  },
+    [
+      companyTaskList,
+      globalFilter,
+      selectedAssigneeList,
+      selectedDueDateOption,
+      selectedDueDateRange,
+      selectedLabelList,
+      selectedStatusList
+    ]
+  );
 
   useEffect(() => {
     setFilter('project', selectedProjectList);
@@ -269,6 +276,10 @@ const CompanyTasks = (props: ICompanyTasks) => {
   useEffect(() => {
     setFilter('labels', selectedLabelList);
   }, [selectedLabelList]);
+
+  useEffect(() => {
+    setFilter('members', selectedAssigneeList);
+  }, [selectedAssigneeList]);
 
   useEffect(() => {
     const filterValue = {
@@ -284,11 +295,13 @@ const CompanyTasks = (props: ICompanyTasks) => {
       tasks: data,
       selectedStatusList,
       selectedLabelList,
+      selectedAssigneeList,
       selectedProjectList,
       selectedDueDateOption,
       selectedDueDateRange,
       setSelectedStatusList,
       setSelectedLabelList,
+      setSelectedAssigneeList,
       setSelectedProjectList,
       setSelectedDueDateOption,
       setSelectedDueDateRange,
@@ -296,11 +309,12 @@ const CompanyTasks = (props: ICompanyTasks) => {
     [
       globalFilter,
       data,
-      selectedDueDateOption,
-      selectedDueDateRange,
-      selectedProjectList,
       selectedStatusList,
       selectedLabelList,
+      selectedAssigneeList,
+      selectedProjectList,
+      selectedDueDateOption,
+      selectedDueDateRange
     ],
   );
 
@@ -324,13 +338,14 @@ const CompanyTasks = (props: ICompanyTasks) => {
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
                 !isEmpty(selectedLabelList) ||
+                !isEmpty(selectedAssigneeList) ||
                 !isEmpty(selectedProjectList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {

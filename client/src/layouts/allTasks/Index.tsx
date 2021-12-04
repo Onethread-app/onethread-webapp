@@ -72,6 +72,7 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   const [selectedDueDateRange, setSelectedDueDateRange] =
     useState<DateRange>([null, null]);
   const [selectedLabelList, setSelectedLabelList] = useState<any>([]);
+  const [selectedAssigneeList, setSelectedAssigneeList] = useState<any>([]);
   const [filterOpen, setFilterOpen] = useState(false);
 
   const [showEditTaskDialog, setShowEditTaskDialog] =
@@ -170,6 +171,8 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   const handleClearFilter = () => {
     setSelectedStatusList([]);
     setSelectedProjectList([]);
+    setSelectedLabelList([]);
+    setSelectedAssigneeList([]);
     setSelectedDueDateRange([null, null]);
     setSelectedDueDateOption('');
     setTaskList(userTasks);
@@ -191,6 +194,14 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
   }, [selectedStatusList]);
 
   useEffect(() => {
+    setFilter('labels', selectedAssigneeList);
+  }, [selectedAssigneeList]);
+
+  useEffect(() => {
+    setFilter('members', selectedAssigneeList);
+  }, [selectedAssigneeList]);
+
+  useEffect(() => {
     const filterValue = {
       type: selectedDueDateOption,
       range: selectedDueDateRange,
@@ -204,11 +215,13 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
       tasks: data,
       selectedStatusList,
       selectedLabelList,
+      selectedAssigneeList,
       selectedProjectList,
       selectedDueDateOption,
       selectedDueDateRange,
       setSelectedStatusList,
       setSelectedLabelList,
+      setSelectedAssigneeList,
       setSelectedProjectList,
       setSelectedDueDateOption,
       setSelectedDueDateRange,
@@ -216,11 +229,12 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
     [
       globalFilter,
       data,
-      selectedDueDateOption,
-      selectedDueDateRange,
-      selectedProjectList,
       selectedStatusList,
       selectedLabelList,
+      selectedAssigneeList,
+      selectedProjectList,
+      selectedDueDateOption,
+      selectedDueDateRange
     ],
   );
 
@@ -236,12 +250,14 @@ const TaskSection = (props: ITaskSectionInternalProps) => {
             <AlignCenter>
               {(!isEmpty(selectedStatusList) ||
                 !isEmpty(selectedProjectList) ||
+                !isEmpty(selectedAssigneeList) ||
+                !isEmpty(selectedLabelList) ||
                 !isEmpty(selectedDueDateOption)) && (
-                <ClearOutlinedIcon
-                  fontSize="small"
-                  onClick={handleClearFilter}
-                />
-              )}
+                  <ClearOutlinedIcon
+                    fontSize="small"
+                    onClick={handleClearFilter}
+                  />
+                )}
             </AlignCenter>
             <ClickAwayListener
               onClickAway={() => {
