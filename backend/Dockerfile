@@ -1,6 +1,6 @@
 # Use leightweight linux distrubution
 # Choose alpine because it's size only 5MB 
-FROM alpine:3.7
+FROM alpine:3.16.7
 
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_ENV=local
