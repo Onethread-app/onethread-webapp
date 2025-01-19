@@ -65,7 +65,7 @@
     "loadtest": "^3.0.7",
     "lodash": "^4.17.15",
     "method-override": "^3.0.0",
-    "mongoose": "^5.6.4",
+    "mongoose": "^6.13.6",
     "mongoose-timestamp": "^0.6.0",
     "morgan": "1.10.0",
     "ms": "^2.1.2",
